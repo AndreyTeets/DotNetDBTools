@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DotNetDBTools.Analysis\DotNetDBTools.Analysis.csproj" />
+    <ProjectReference Include="..\..\Models\DotNetDBTools.Models.Agnostic\DotNetDBTools.Models.Agnostic.csproj" />
+  </ItemGroup>
+
+</Project>

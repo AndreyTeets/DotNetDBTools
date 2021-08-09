@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DotNetDBTools.DeployInteractor\DotNetDBTools.DeployInteractor.csproj" />
+    <ProjectReference Include="..\..\Models\DotNetDBTools.Models.MSSQL\DotNetDBTools.Models.MSSQL.csproj" />
+  </ItemGroup>
+
+</Project>
