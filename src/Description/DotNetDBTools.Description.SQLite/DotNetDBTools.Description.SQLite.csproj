@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DotNetDBTools.Description\DotNetDBTools.Description.csproj" />
+    <ProjectReference Include="..\..\Models\DotNetDBTools.Models.SQLite\DotNetDBTools.Models.SQLite.csproj" />
+  </ItemGroup>
+
+</Project>
