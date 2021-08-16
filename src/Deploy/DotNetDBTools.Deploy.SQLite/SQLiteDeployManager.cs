@@ -11,22 +11,41 @@ namespace DotNetDBTools.Deploy.SQLite
 {
     public class SQLiteDeployManager
     {
-        public void UpdateDatabase(string dbAssemblyPath)
+        private readonly bool _allowDbCreation; // TODO DeployOptions
+        private readonly bool _allowDataLoss;
+
+        public SQLiteDeployManager(bool allowDbCreation = default, bool allowDataLoss = default)
         {
-            Assembly dbAssembly = AssemblyLoader.LoadDbAssemblyFromDll(dbAssemblyPath);
-            UpdateDatabase(dbAssembly);
+            _allowDbCreation = allowDbCreation;
+            _allowDataLoss = allowDataLoss;
         }
 
-        public void UpdateDatabase(Assembly dbAssembly)
+        public void UpdateDatabase(string dbAssemblyPath, string connectionString)
         {
-            GetNewAndOldDatabasesInfos(dbAssembly, out SQLiteDatabaseInfo database, out SQLiteDatabaseInfo existingDatabase);
-            SQLiteInteractor interactor = new(new SQLiteQueryExecutor());
+            Assembly dbAssembly = AssemblyLoader.LoadDbAssemblyFromDll(dbAssemblyPath);
+            UpdateDatabase(dbAssembly, connectionString);
+        }
+
+        public void UpdateDatabase(Assembly dbAssembly, string connectionString)
+        {
+            SQLiteDatabaseInfo database = CreateSQLiteDatabaseInfo(dbAssembly);
+
+            SQLiteInteractor interactor = new(new SQLiteQueryExecutor(connectionString));
+            SQLiteDatabaseInfo existingDatabase = GetExistingDatabaseOrCreateEmptyIfNotExists(interactor);
+
+            if (!SQLiteDbValidator.CanUpdate(database, existingDatabase, _allowDataLoss, out string error))
+                throw new Exception($"Can not update database: {error}");
+
             interactor.UpdateDatabase(database, existingDatabase);
         }
 
-        public string GenerateUpdateScript(Assembly dbAssembly)
+        public string GenerateUpdateScript(Assembly dbAssembly, string connectionString)
         {
-            GetNewAndOldDatabasesInfos(dbAssembly, out SQLiteDatabaseInfo database, out SQLiteDatabaseInfo existingDatabase);
+            SQLiteDatabaseInfo database = CreateSQLiteDatabaseInfo(dbAssembly);
+
+            SQLiteInteractor interactor = new(new SQLiteQueryExecutor(connectionString));
+            SQLiteDatabaseInfo existingDatabase = interactor.GetExistingDatabase();
+
             return GenerateUpdateScript(database, existingDatabase);
         }
 
@@ -36,14 +55,6 @@ namespace DotNetDBTools.Deploy.SQLite
             SQLiteInteractor interactor = new(genSqlScriptQueryExecutor);
             interactor.UpdateDatabase(database, existingDatabase);
             return genSqlScriptQueryExecutor.GetFinalScript();
-        }
-
-        private static void GetNewAndOldDatabasesInfos(Assembly dbAssembly, out SQLiteDatabaseInfo database, out SQLiteDatabaseInfo existingDatabase)
-        {
-            database = CreateSQLiteDatabaseInfo(dbAssembly);
-            existingDatabase = GetExistingDatabase();
-            if (!SQLiteDbValidator.CanUpdate(database, existingDatabase, false, out string error))
-                throw new Exception($"Can not update database: {error}");
         }
 
         private static SQLiteDatabaseInfo CreateSQLiteDatabaseInfo(Assembly dbAssembly)
@@ -59,11 +70,26 @@ namespace DotNetDBTools.Deploy.SQLite
             return database;
         }
 
-        private static SQLiteDatabaseInfo GetExistingDatabase()
+        private SQLiteDatabaseInfo GetExistingDatabaseOrCreateEmptyIfNotExists(SQLiteInteractor interactor)
         {
-            SQLiteInteractor interactor = new(new SQLiteQueryExecutor());
-            SQLiteDatabaseInfo existingDatabase = interactor.GetExistingDatabase();
-            return existingDatabase;
+            bool databaseExists = interactor.DatabaseExists();
+            if (databaseExists)
+            {
+                SQLiteDatabaseInfo existingDatabase = interactor.GetExistingDatabase();
+                return existingDatabase;
+            }
+            else
+            {
+                if (_allowDbCreation)
+                {
+                    interactor.CreateEmptyDatabase();
+                    return new SQLiteDatabaseInfo();
+                }
+                else
+                {
+                    throw new Exception($"Database doesn't exist and it's creation is not allowed");
+                }
+            }
         }
     }
 }

@@ -1,19 +1,26 @@
 ﻿using DotNetDBTools.Models.SQLite;
+using Newtonsoft.Json;
 
 namespace DotNetDBTools.DeployInteractor.SQLite
 {
     public static class SQLiteDbObjectsSerializer
     {
+        private static readonly JsonSerializerSettings s_serializerSettings = new()
+        {
+            Formatting = Formatting.Indented,
+            TypeNameHandling = TypeNameHandling.Auto,
+        };
+
         public static string TableToJson(SQLiteTableInfo table)
         {
-            string tableMetadata = table.ToString();
-            return tableMetadata;
+            string tableJson = JsonConvert.SerializeObject(table, s_serializerSettings);
+            return tableJson;
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "<Pending>")]
         public static SQLiteTableInfo TableFromJson(string tableJson)
         {
-            return new SQLiteTableInfo();
+            SQLiteTableInfo table = JsonConvert.DeserializeObject<SQLiteTableInfo>(tableJson, s_serializerSettings);
+            return table;
         }
     }
 }

@@ -14,7 +14,6 @@ namespace DotNetDBTools.DeployInteractor.SQLite
             _queryExecutor = queryExecutor;
         }
 
-
         public void UpdateDatabase(SQLiteDatabaseInfo database, SQLiteDatabaseInfo existingDatabase)
         {
             foreach (SQLiteTableInfo table in database.Tables)
@@ -34,28 +33,28 @@ namespace DotNetDBTools.DeployInteractor.SQLite
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "<Pending>")]
+        public bool DatabaseExists()
+        {
+            bool databaseExists = _queryExecutor.QuerySingleOrDefault<bool>(Queries.DatabaseExists);
+            return databaseExists;
+        }
+
+        public void CreateEmptyDatabase()
+        {
+            _queryExecutor.Execute(Queries.CreateEmptyDatabase);
+        }
+
         public SQLiteDatabaseInfo GetExistingDatabase()
         {
             SQLiteDatabaseInfo databaseInfo = new();
-            object tables = _queryExecutor.Execute(Queries.GetExistingTables);
-            // foreach table in tables existingTable = SQLiteDbObjectsSerializer.TableFromJson(tableMetadata)
-            SQLiteTableInfo existingTable = new()
+            List<SQLiteTableInfo> tables = new();
+            IEnumerable<string> tablesMetadatas = _queryExecutor.Query<string>(Queries.GetExistingTables);
+            foreach (string tableMetadata in tablesMetadatas)
             {
-                ID = new Guid("299675E6-4FAA-4D0F-A36A-224306BA5BCB"),
-                Name = "OldMyTable1Name",
-                Columns = new List<SQLiteColumnInfo>()
-                {
-                    new SQLiteColumnInfo
-                    {
-                        ID = new Guid("A2F2A4DE-1337-4594-AE41-72ED4D05F317"),
-                        Name = "OldMyColumn1Name",
-                        DataType = "",
-                        DefaultValue = 1,
-                    }
-                }
-            };
-            databaseInfo.Tables = new List<SQLiteTableInfo> { existingTable };
+                SQLiteTableInfo table = SQLiteDbObjectsSerializer.TableFromJson(tableMetadata);
+                tables.Add(table);
+            }
+            databaseInfo.Tables = tables;
             return databaseInfo;
         }
 

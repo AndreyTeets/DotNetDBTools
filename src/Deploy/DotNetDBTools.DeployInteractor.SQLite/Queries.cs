@@ -6,38 +6,53 @@ namespace DotNetDBTools.DeployInteractor.SQLite
 {
     internal static class Queries
     {
+        public static readonly string DatabaseExists =
+$@"SELECT
+    true
+FROM sqlite_master 
+WHERE type = 'table' AND name = '{DNDBTSysTables.DNDBTDbObjects}';";
+
+        public static readonly string CreateEmptyDatabase =
+$@"CREATE TABLE {DNDBTSysTables.DNDBTDbObjects}
+(
+    {DNDBTSysTables.DNDBTDbObjects.ID} BLOB PRIMARY KEY,
+    {DNDBTSysTables.DNDBTDbObjects.Type} TEXT NOT NULL,
+    {DNDBTSysTables.DNDBTDbObjects.Name} TEXT NOT NULL,
+    {DNDBTSysTables.DNDBTDbObjects.Metadata} TEXT NOT NULL
+) WITHOUT ROWID;";
+
         public static readonly string GetExistingTables =
-$@"select
+$@"SELECT
     {DNDBTSysTables.DNDBTDbObjects.Metadata}
-from {DNDBTSysTables.DNDBTDbObjects}
-where {DNDBTSysTables.DNDBTDbObjects.Type} = '{SQLiteDbObjectsTypes.Table}'";
+FROM {DNDBTSysTables.DNDBTDbObjects}
+WHERE {DNDBTSysTables.DNDBTDbObjects.Type} = '{SQLiteDbObjectsTypes.Table}';";
 
         public static string CreateTable(SQLiteTableInfo table)
         {
             List<string> tableDefinitions = new();
             tableDefinitions.AddRange(table.Columns.Select(column => $@"    {column.Name} {column.DataType}"));
-            tableDefinitions.AddRange(table.ForeignKeys.Select(fk => $@"    constraint {fk.Name} foreign key ({string.Join(",", fk.ThisColumnNames)}) references {fk.ForeignTableName}({string.Join(",", fk.ForeignColumnNames)})"));
+            tableDefinitions.AddRange(table.ForeignKeys.Select(fk => $@"    CONSTRAINT {fk.Name} FOREIGN KEY ({string.Join(",", fk.ThisColumnNames)}) REFERENCES {fk.ForeignTableName}({string.Join(",", fk.ForeignColumnNames)})"));
 
             string query =
-$@"insert into {DNDBTSysTables.DNDBTDbObjects}
+$@"INSERT INTO {DNDBTSysTables.DNDBTDbObjects}
 (
     {DNDBTSysTables.DNDBTDbObjects.ID},
     {DNDBTSysTables.DNDBTDbObjects.Type},
     {DNDBTSysTables.DNDBTDbObjects.Name},
     {DNDBTSysTables.DNDBTDbObjects.Metadata}
 )
-values
+VALUES
 (
     '{table.ID}',
     '{SQLiteDbObjectsTypes.Table}',
     '{table.Name}',
     @{DNDBTSysTables.DNDBTDbObjects.Metadata}
-)
+);
 
-create table {table.Name}
+CREATE TABLE {table.Name}
 (
 {string.Join(",\n", tableDefinitions)}
-)";
+);";
 
             return query;
         }

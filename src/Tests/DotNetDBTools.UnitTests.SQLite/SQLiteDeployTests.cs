@@ -13,22 +13,6 @@ namespace DotNetDBTools.UnitTests.SQLite
     public class SQLiteDeployTests
     {
         [Fact]
-        public void Update_AgnosticSampleDB_Works()
-        {
-            Assembly dbAssembly = Assembly.GetAssembly(typeof(SampleDB.Agnostic.Tables.MyTable1));
-            SQLiteDeployManager deployManager = new();
-            deployManager.UpdateDatabase(dbAssembly);
-        }
-
-        [Fact]
-        public void Update_SQLiteSampleDB_Works()
-        {
-            Assembly dbAssembly = Assembly.GetAssembly(typeof(SampleDB.SQLite.Tables.MyTable1));
-            SQLiteDeployManager deployManager = new();
-            deployManager.UpdateDatabase(dbAssembly);
-        }
-
-        [Fact]
         public void GenerateUpdateScript_SQLiteSampleDB_CreatesCorrectScript()
         {
             Assembly dbAssembly = Assembly.GetAssembly(typeof(SampleDB.SQLite.Tables.MyTable1));

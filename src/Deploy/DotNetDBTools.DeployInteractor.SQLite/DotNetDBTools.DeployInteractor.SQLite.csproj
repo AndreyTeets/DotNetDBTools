@@ -5,6 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.0.90" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="5.0.9" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\DotNetDBTools.DeployInteractor\DotNetDBTools.DeployInteractor.csproj" />
     <ProjectReference Include="..\..\Models\DotNetDBTools.Models.SQLite\DotNetDBTools.Models.SQLite.csproj" />
   </ItemGroup>
