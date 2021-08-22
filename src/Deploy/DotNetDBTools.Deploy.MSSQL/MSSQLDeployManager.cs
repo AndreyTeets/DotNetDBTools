@@ -21,7 +21,8 @@ namespace DotNetDBTools.Deploy.MSSQL
         {
             GetNewAndOldDatabasesInfos(dbAssembly, out MSSQLDatabaseInfo database, out MSSQLDatabaseInfo existingDatabase);
             MSSQLInteractor interactor = new(new MSSQLQueryExecutor());
-            interactor.UpdateDatabase(database, existingDatabase);
+            MSSQLDatabaseDiff databaseDiff = MSSQLDiffCreator.CreateDatabaseDiff(database, existingDatabase);
+            interactor.UpdateDatabase(databaseDiff);
         }
 
         public string GenerateUpdateScript(Assembly dbAssembly)
@@ -34,7 +35,8 @@ namespace DotNetDBTools.Deploy.MSSQL
         {
             MSSQLGenSqlScriptQueryExecutor genSqlScriptQueryExecutor = new();
             MSSQLInteractor interactor = new(genSqlScriptQueryExecutor);
-            interactor.UpdateDatabase(database, existingDatabase);
+            MSSQLDatabaseDiff databaseDiff = MSSQLDiffCreator.CreateDatabaseDiff(database, existingDatabase);
+            interactor.UpdateDatabase(databaseDiff);
             return genSqlScriptQueryExecutor.GetFinalScript();
         }
 

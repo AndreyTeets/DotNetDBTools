@@ -41,5 +41,16 @@ create table {table.Name}
 
             return query;
         }
+
+        public static string DropTable(MSSQLTableInfo table)
+        {
+            string query =
+$@"DROP TABLE {table.Name};
+
+DELETE FROM {DNDBTSysTables.DNDBTDbObjects}
+WHERE {DNDBTSysTables.DNDBTDbObjects.ID} = '{table.ID}';";
+
+            return query;
+        }
     }
 }

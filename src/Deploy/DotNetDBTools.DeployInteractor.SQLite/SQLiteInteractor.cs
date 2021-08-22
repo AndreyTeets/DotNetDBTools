@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
+using DotNetDBTools.DeployInteractor.SQLite.Queries;
 using DotNetDBTools.Models.SQLite;
 
 namespace DotNetDBTools.DeployInteractor.SQLite
@@ -14,41 +13,32 @@ namespace DotNetDBTools.DeployInteractor.SQLite
             _queryExecutor = queryExecutor;
         }
 
-        public void UpdateDatabase(SQLiteDatabaseInfo database, SQLiteDatabaseInfo existingDatabase)
+        public void UpdateDatabase(SQLiteDatabaseDiff databaseDiff)
         {
-            foreach (SQLiteTableInfo table in database.Tables)
-            {
-                SQLiteTableInfo existingTable = (SQLiteTableInfo)existingDatabase.Tables.FirstOrDefault(x => x.ID == table.ID);
-                if (existingTable is null)
-                    CreateTable(table);
-                else
-                    AlterTable(table, existingTable);
-            }
-
-            foreach (SQLiteViewInfo view in database.Views)
-            {
-                if (existingDatabase.Views.Any(x => x.ID == view.ID))
-                    DropView(view);
-                CreateView(view);
-            }
+            foreach (SQLiteTableInfo table in databaseDiff.AddedTables)
+                CreateTable(table);
+            foreach (SQLiteTableInfo table in databaseDiff.RemovedTables)
+                DropTable(table);
+            foreach (SQLiteTableDiff tableDiff in databaseDiff.ChangedTables)
+                AlterTable(tableDiff);
         }
 
         public bool DatabaseExists()
         {
-            bool databaseExists = _queryExecutor.QuerySingleOrDefault<bool>(Queries.DatabaseExists);
+            bool databaseExists = _queryExecutor.QuerySingleOrDefault<bool>(DatabaseExistsQuery.Sql);
             return databaseExists;
         }
 
         public void CreateEmptyDatabase()
         {
-            _queryExecutor.Execute(Queries.CreateEmptyDatabase);
+            _queryExecutor.Execute(CreateEmptyDatabaseQuery.Sql);
         }
 
         public SQLiteDatabaseInfo GetExistingDatabase()
         {
             SQLiteDatabaseInfo databaseInfo = new();
             List<SQLiteTableInfo> tables = new();
-            IEnumerable<string> tablesMetadatas = _queryExecutor.Query<string>(Queries.GetExistingTables);
+            IEnumerable<string> tablesMetadatas = _queryExecutor.Query<string>(GetExistingTablesQuery.Sql);
             foreach (string tableMetadata in tablesMetadatas)
             {
                 SQLiteTableInfo table = SQLiteDbObjectsSerializer.TableFromJson(tableMetadata);
@@ -61,56 +51,20 @@ namespace DotNetDBTools.DeployInteractor.SQLite
         private void CreateTable(SQLiteTableInfo table)
         {
             string tableMetadata = SQLiteDbObjectsSerializer.TableToJson(table);
-            _queryExecutor.Execute(Queries.CreateTable(table),
-                new QueryParameter($"@{DNDBTSysTables.DNDBTDbObjects.Metadata}", tableMetadata));
-        }
-        private void AlterTable(SQLiteTableInfo table, SQLiteTableInfo existingTable)
-        {
-            Console.WriteLine($"AlterTable: ID={table.ID} Name={table.Name}");
-
-            foreach (SQLiteColumnInfo column in table.Columns)
-            {
-                if (existingTable.Columns.Any(x => x.ID == column.ID))
-                {
-                    SQLiteColumnInfo existingColumn = (SQLiteColumnInfo)existingTable.Columns.Single(x => x.ID == column.ID);
-                    if (column != existingColumn)
-                        AlterColumn(table, column);
-                }
-                else
-                {
-                    AddColumn(table, column);
-                }
-            }
+            _queryExecutor.Execute(CreateTableQuery.Sql(table),
+                new QueryParameter(CreateTableQuery.Parameters.Metadata, tableMetadata));
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "<Pending>")]
         private void DropTable(SQLiteTableInfo table)
         {
-            Console.WriteLine($"DropTable: ID={table.ID} Name={table.Name}");
+            _queryExecutor.Execute(DropTableQuery.Sql(table));
         }
 
-        private void AddColumn(SQLiteTableInfo table, SQLiteColumnInfo column)
+        private void AlterTable(SQLiteTableDiff tableDiff)
         {
-            Console.WriteLine($"AddColumn: ID={column.ID} TableName={table.Name} ColumnName={column.Name} ColumnType={column.DataType} DefaultValue={column.DefaultValue}");
-        }
-        private void AlterColumn(SQLiteTableInfo table, SQLiteColumnInfo column)
-        {
-            Console.WriteLine($"AlterColumn: ID={column.ID} TableName={table.Name} ColumnName={column.Name} ColumnType={column.DataType} DefaultValue={column.DefaultValue}");
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "<Pending>")]
-        private void DropColumn(SQLiteTableInfo table, SQLiteColumnInfo column)
-        {
-            Console.WriteLine($"DropColumn: ID={column.ID} TableName={table.Name} ColumnName={column.Name} ColumnType={column.DataType} DefaultValue={column.DefaultValue}");
-        }
-
-        private void CreateView(SQLiteViewInfo view)
-        {
-            Console.WriteLine($"CreateView: ID={view.ID} Name={view.Name} Code={view.Code}");
-        }
-        private void DropView(SQLiteViewInfo view)
-        {
-            Console.WriteLine($"DropView: ID={view.ID} Name={view.Name} Code={view.Code}");
+            string newTableMetadata = SQLiteDbObjectsSerializer.TableToJson(tableDiff.NewTable);
+            _queryExecutor.Execute(AlterTableQuery.Sql(tableDiff),
+                new QueryParameter(AlterTableQuery.Parameters.NewTableMetadata, newTableMetadata));
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using DotNetDBTools.Models.MSSQL;
 
 namespace DotNetDBTools.DeployInteractor.MSSQL
@@ -14,31 +13,28 @@ namespace DotNetDBTools.DeployInteractor.MSSQL
             _queryExecutor = queryExecutor;
         }
 
-
-        public void UpdateDatabase(MSSQLDatabaseInfo database, MSSQLDatabaseInfo existingDatabase)
+        public void UpdateDatabase(MSSQLDatabaseDiff databaseDiff)
         {
-            foreach (MSSQLTableInfo table in database.Tables)
-            {
-                MSSQLTableInfo existingTable = (MSSQLTableInfo)existingDatabase.Tables.FirstOrDefault(x => x.ID == table.ID);
-                if (existingTable is null)
-                    CreateTable(table);
-                else
-                    AlterTable(table, existingTable);
-            }
+            foreach (MSSQLTableInfo table in databaseDiff.AddedTables)
+                CreateTable(table);
+            foreach (MSSQLTableInfo table in databaseDiff.RemovedTables)
+                DropTable(table);
+            foreach (MSSQLTableDiff tableDiff in databaseDiff.ChangedTables)
+                AlterTable(tableDiff);
 
-            foreach (MSSQLViewInfo view in database.Views)
-            {
-                if (existingDatabase.Views.Any(x => x.ID == view.ID))
-                    DropView(view);
+            foreach (MSSQLViewInfo view in databaseDiff.AddedViews)
                 CreateView(view);
-            }
+            foreach (MSSQLViewInfo view in databaseDiff.RemovedViews)
+                DropView(view);
+            foreach (MSSQLViewDiff viewDiff in databaseDiff.ChangedViews)
+                AlterView(viewDiff);
 
-            foreach (MSSQLFunctionInfo function in database.Functions)
-            {
-                if (existingDatabase.Functions.Any(x => x.ID == function.ID))
-                    DropFunction(function);
+            foreach (MSSQLFunctionInfo function in databaseDiff.AddedFunctions)
                 CreateFunction(function);
-            }
+            foreach (MSSQLFunctionInfo function in databaseDiff.RemovedFunctions)
+                DropFunction(function);
+            foreach (MSSQLFunctionDiff functionDiff in databaseDiff.ChangedFunctions)
+                AlterFunction(functionDiff);
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "<Pending>")]
@@ -72,62 +68,75 @@ namespace DotNetDBTools.DeployInteractor.MSSQL
             _queryExecutor.Execute(Queries.CreateTable(table),
                 new QueryParameter($"@{DNDBTSysTables.DNDBTDbObjects.Metadata}", tableMetadata));
         }
-        private void AlterTable(MSSQLTableInfo table, MSSQLTableInfo existingTable)
-        {
-            Console.WriteLine($"AlterTable: ID={table.ID} Name={table.Name}");
 
-            foreach (MSSQLColumnInfo column in table.Columns)
-            {
-                if (existingTable.Columns.Any(x => x.ID == column.ID))
-                {
-                    MSSQLColumnInfo existingColumn = (MSSQLColumnInfo)existingTable.Columns.Single(x => x.ID == column.ID);
-                    if (column != existingColumn)
-                        AlterColumn(table, column);
-                }
-                else
-                {
-                    AddColumn(table, column);
-                }
-            }
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "<Pending>")]
         private void DropTable(MSSQLTableInfo table)
         {
-            Console.WriteLine($"DropTable: ID={table.ID} Name={table.Name}");
+            _queryExecutor.Execute(Queries.DropTable(table));
         }
 
-        private void AddColumn(MSSQLTableInfo table, MSSQLColumnInfo column)
+        private void AlterTable(MSSQLTableDiff tableDiff)
         {
-            Console.WriteLine($"AddColumn: ID={column.ID} TableName={table.Name} ColumnName={column.Name} ColumnType={column.DataType} DefaultValue={column.DefaultValue}");
-        }
-        private void AlterColumn(MSSQLTableInfo table, MSSQLColumnInfo column)
-        {
-            Console.WriteLine($"AlterColumn: ID={column.ID} TableName={table.Name} ColumnName={column.Name} ColumnType={column.DataType} DefaultValue={column.DefaultValue}");
+            if (tableDiff.NewTable.Name != tableDiff.OldTable.Name)
+                _queryExecutor.Execute($"sp_rename '{tableDiff.OldTable.Name}', '{tableDiff.NewTable.Name}'");
+
+            foreach (MSSQLColumnInfo column in tableDiff.AddedColumns)
+                AddColumn(tableDiff.NewTable.Name, column);
+
+            foreach (MSSQLColumnInfo column in tableDiff.RemovedColumns)
+                DropColumn(tableDiff.NewTable.Name, column);
+
+            foreach (MSSQLColumnDiff columnDiff in tableDiff.ChangedColumns)
+                AlterColumn(tableDiff.NewTable.Name, columnDiff);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "<Pending>")]
-        private void DropColumn(MSSQLTableInfo table, MSSQLColumnInfo column)
+        private void AddColumn(string tableName, MSSQLColumnInfo column)
         {
-            Console.WriteLine($"DropColumn: ID={column.ID} TableName={table.Name} ColumnName={column.Name} ColumnType={column.DataType} DefaultValue={column.DefaultValue}");
+            _queryExecutor.Execute($"alter table {tableName} add {column.Name} INT NOT NULL");
+        }
+
+        private void DropColumn(string tableName, MSSQLColumnInfo column)
+        {
+            _queryExecutor.Execute($"alter table {tableName} drop column {column.Name}");
+        }
+
+        private void AlterColumn(string tableName, MSSQLColumnDiff columnDiff)
+        {
+            if (columnDiff.NewColumn.Name != columnDiff.OldColumn.Name)
+                _queryExecutor.Execute($"sp_rename '{tableName}.{columnDiff.OldColumn.Name}', '{columnDiff.NewColumn.Name}', 'COLUMN'");
+
+            _queryExecutor.Execute($"alter table {tableName} alter column {columnDiff.NewColumn.Name} INT NOT NULL");
         }
 
         private void CreateView(MSSQLViewInfo view)
         {
-            Console.WriteLine($"CreateView: ID={view.ID} Name={view.Name} Code={view.Code}");
+            _queryExecutor.Execute($"create view {view.Name} {view.Code}");
         }
+
         private void DropView(MSSQLViewInfo view)
         {
-            Console.WriteLine($"DropView: ID={view.ID} Name={view.Name} Code={view.Code}");
+            _queryExecutor.Execute($"drop view {view.Name}");
+        }
+
+        private void AlterView(MSSQLViewDiff viewDiff)
+        {
+            DropView(viewDiff.OldView);
+            CreateView(viewDiff.NewView);
         }
 
         private void CreateFunction(MSSQLFunctionInfo function)
         {
-            Console.WriteLine($"CreateFunction: ID={function.ID} Name={function.Name} Code={function.Code}");
+            _queryExecutor.Execute($"create function {function.Name} {function.Code}");
         }
+
         private void DropFunction(MSSQLFunctionInfo function)
         {
-            Console.WriteLine($"DropFunction: ID={function.ID} Name={function.Name} Code={function.Code}");
+            _queryExecutor.Execute($"drop function {function.Name}");
+        }
+
+        private void AlterFunction(MSSQLFunctionDiff functionDiff)
+        {
+            DropFunction(functionDiff.OldFunction);
+            CreateFunction(functionDiff.NewFunction);
         }
     }
 }

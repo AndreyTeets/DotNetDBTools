@@ -36,7 +36,8 @@ namespace DotNetDBTools.Deploy.SQLite
             if (!SQLiteDbValidator.CanUpdate(database, existingDatabase, _allowDataLoss, out string error))
                 throw new Exception($"Can not update database: {error}");
 
-            interactor.UpdateDatabase(database, existingDatabase);
+            SQLiteDatabaseDiff databaseDiff = SQLiteDiffCreator.CreateDatabaseDiff(database, existingDatabase);
+            interactor.UpdateDatabase(databaseDiff);
         }
 
         public string GenerateUpdateScript(Assembly dbAssembly, string connectionString)
@@ -53,7 +54,8 @@ namespace DotNetDBTools.Deploy.SQLite
         {
             SQLiteGenSqlScriptQueryExecutor genSqlScriptQueryExecutor = new();
             SQLiteInteractor interactor = new(genSqlScriptQueryExecutor);
-            interactor.UpdateDatabase(database, existingDatabase);
+            SQLiteDatabaseDiff databaseDiff = SQLiteDiffCreator.CreateDatabaseDiff(database, existingDatabase);
+            interactor.UpdateDatabase(databaseDiff);
             return genSqlScriptQueryExecutor.GetFinalScript();
         }
 
