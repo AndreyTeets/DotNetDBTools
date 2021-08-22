@@ -11,18 +11,15 @@ namespace DotNetDBTools.SampleDeployUtil.SQLite
         private const string SQLiteDbFilePath = @".\tmp\SQLiteSampleDB.db";
         private static readonly string s_sqliteConnectionString = $"DataSource={SQLiteDbFilePath};Mode=ReadWriteCreate;";
 
-        public static void Main(string[] args)
+        public static void Main()
         {
+            System.Console.WriteLine("Deploying AgnosticSampleDB...");
             Directory.CreateDirectory(Path.GetDirectoryName(AgnosticDbFilePath));
-            Directory.CreateDirectory(Path.GetDirectoryName(SQLiteDbFilePath));
-
-            System.Console.WriteLine($"{nameof(DeployAgnosticSampleDB)}:");
             DeployAgnosticSampleDB();
-            System.Console.WriteLine(System.Environment.NewLine);
 
-            System.Console.WriteLine($"{nameof(DeploySQLiteSampleDB)}:");
+            System.Console.WriteLine("Deploying SQLiteSampleDB...");
+            Directory.CreateDirectory(Path.GetDirectoryName(SQLiteDbFilePath));
             DeploySQLiteSampleDB();
-            System.Console.WriteLine(System.Environment.NewLine);
         }
 
         private static void DeployAgnosticSampleDB()

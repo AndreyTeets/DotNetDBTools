@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using DotNetDBTools.DeployInteractor.MSSQL.Queries;
 using DotNetDBTools.Models.MSSQL;
 
 namespace DotNetDBTools.DeployInteractor.MSSQL
@@ -41,7 +42,7 @@ namespace DotNetDBTools.DeployInteractor.MSSQL
         public MSSQLDatabaseInfo GetExistingDatabase()
         {
             MSSQLDatabaseInfo databaseInfo = new();
-            object tables = _queryExecutor.Execute(Queries.GetExistingTables);
+            object tables = _queryExecutor.Execute(new GetExistingTablesQuery());
             // foreach table in tables existingTable = MSSQLDbObjectsSerializer.TableFromJson(tableMetadata)
             MSSQLTableInfo existingTable = new()
             {
@@ -65,19 +66,18 @@ namespace DotNetDBTools.DeployInteractor.MSSQL
         private void CreateTable(MSSQLTableInfo table)
         {
             string tableMetadata = MSSQLDbObjectsSerializer.TableToJson(table);
-            _queryExecutor.Execute(Queries.CreateTable(table),
-                new QueryParameter($"@{DNDBTSysTables.DNDBTDbObjects.Metadata}", tableMetadata));
+            _queryExecutor.Execute(new CreateTableQuery(table, tableMetadata));
         }
 
         private void DropTable(MSSQLTableInfo table)
         {
-            _queryExecutor.Execute(Queries.DropTable(table));
+            _queryExecutor.Execute(new DropTableQuery(table));
         }
 
         private void AlterTable(MSSQLTableDiff tableDiff)
         {
             if (tableDiff.NewTable.Name != tableDiff.OldTable.Name)
-                _queryExecutor.Execute($"sp_rename '{tableDiff.OldTable.Name}', '{tableDiff.NewTable.Name}'");
+                _queryExecutor.Execute(new GenericQuery($"sp_rename '{tableDiff.OldTable.Name}', '{tableDiff.NewTable.Name}'"));
 
             foreach (MSSQLColumnInfo column in tableDiff.AddedColumns)
                 AddColumn(tableDiff.NewTable.Name, column);
@@ -91,30 +91,30 @@ namespace DotNetDBTools.DeployInteractor.MSSQL
 
         private void AddColumn(string tableName, MSSQLColumnInfo column)
         {
-            _queryExecutor.Execute($"alter table {tableName} add {column.Name} INT NOT NULL");
+            _queryExecutor.Execute(new GenericQuery($"alter table {tableName} add {column.Name} INT NOT NULL"));
         }
 
         private void DropColumn(string tableName, MSSQLColumnInfo column)
         {
-            _queryExecutor.Execute($"alter table {tableName} drop column {column.Name}");
+            _queryExecutor.Execute(new GenericQuery($"alter table {tableName} drop column {column.Name}"));
         }
 
         private void AlterColumn(string tableName, MSSQLColumnDiff columnDiff)
         {
             if (columnDiff.NewColumn.Name != columnDiff.OldColumn.Name)
-                _queryExecutor.Execute($"sp_rename '{tableName}.{columnDiff.OldColumn.Name}', '{columnDiff.NewColumn.Name}', 'COLUMN'");
+                _queryExecutor.Execute(new GenericQuery($"sp_rename '{tableName}.{columnDiff.OldColumn.Name}', '{columnDiff.NewColumn.Name}', 'COLUMN'"));
 
-            _queryExecutor.Execute($"alter table {tableName} alter column {columnDiff.NewColumn.Name} INT NOT NULL");
+            _queryExecutor.Execute(new GenericQuery($"alter table {tableName} alter column {columnDiff.NewColumn.Name} INT NOT NULL"));
         }
 
         private void CreateView(MSSQLViewInfo view)
         {
-            _queryExecutor.Execute($"create view {view.Name} {view.Code}");
+            _queryExecutor.Execute(new GenericQuery($"create view {view.Name} {view.Code}"));
         }
 
         private void DropView(MSSQLViewInfo view)
         {
-            _queryExecutor.Execute($"drop view {view.Name}");
+            _queryExecutor.Execute(new GenericQuery($"drop view {view.Name}"));
         }
 
         private void AlterView(MSSQLViewDiff viewDiff)
@@ -125,12 +125,12 @@ namespace DotNetDBTools.DeployInteractor.MSSQL
 
         private void CreateFunction(MSSQLFunctionInfo function)
         {
-            _queryExecutor.Execute($"create function {function.Name} {function.Code}");
+            _queryExecutor.Execute(new GenericQuery($"create function {function.Name} {function.Code}"));
         }
 
         private void DropFunction(MSSQLFunctionInfo function)
         {
-            _queryExecutor.Execute($"drop function {function.Name}");
+            _queryExecutor.Execute(new GenericQuery($"drop function {function.Name}"));
         }
 
         private void AlterFunction(MSSQLFunctionDiff functionDiff)

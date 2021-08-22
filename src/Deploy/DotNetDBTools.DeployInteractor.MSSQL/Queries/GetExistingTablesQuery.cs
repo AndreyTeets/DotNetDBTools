@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace DotNetDBTools.DeployInteractor.SQLite.Queries
+namespace DotNetDBTools.DeployInteractor.MSSQL.Queries
 {
     internal class GetExistingTablesQuery : IQuery
     {
@@ -8,7 +8,7 @@ namespace DotNetDBTools.DeployInteractor.SQLite.Queries
 $@"SELECT
     {DNDBTSysTables.DNDBTDbObjects.Metadata}
 FROM {DNDBTSysTables.DNDBTDbObjects}
-WHERE {DNDBTSysTables.DNDBTDbObjects.Type} = '{SQLiteDbObjectsTypes.Table}';";
+WHERE {DNDBTSysTables.DNDBTDbObjects.Type} = '{MSSQLDbObjectsTypes.Table}';";
 
         public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
     }

@@ -13,31 +13,31 @@ namespace DotNetDBTools.DeployInteractor.SQLite
             _connectionString = connectionString;
         }
 
-        public int Execute(string query, params QueryParameter[] parameters)
+        public int Execute(IQuery query)
         {
             using SqliteConnection connection = new(_connectionString);
-            DynamicParameters dapperParameters = MapToDapperParameters(parameters);
-            int count = connection.Execute(query, dapperParameters);
+            DynamicParameters dapperParameters = MapToDapperParameters(query.Parameters);
+            int count = connection.Execute(query.Sql, dapperParameters);
             return count;
         }
 
-        public IEnumerable<TOut> Query<TOut>(string query, params QueryParameter[] parameters)
+        public IEnumerable<TOut> Query<TOut>(IQuery query)
         {
             using SqliteConnection connection = new(_connectionString);
-            DynamicParameters dapperParameters = MapToDapperParameters(parameters);
-            IEnumerable<TOut> results = connection.Query<TOut>(query, dapperParameters);
+            DynamicParameters dapperParameters = MapToDapperParameters(query.Parameters);
+            IEnumerable<TOut> results = connection.Query<TOut>(query.Sql, dapperParameters);
             return results;
         }
 
-        public TOut QuerySingleOrDefault<TOut>(string query, params QueryParameter[] parameters)
+        public TOut QuerySingleOrDefault<TOut>(IQuery query)
         {
             using SqliteConnection connection = new(_connectionString);
-            DynamicParameters dapperParameters = MapToDapperParameters(parameters);
-            TOut result = connection.QuerySingleOrDefault<TOut>(query, dapperParameters);
+            DynamicParameters dapperParameters = MapToDapperParameters(query.Parameters);
+            TOut result = connection.QuerySingleOrDefault<TOut>(query.Sql, dapperParameters);
             return result;
         }
 
-        private static DynamicParameters MapToDapperParameters(QueryParameter[] parameters)
+        private static DynamicParameters MapToDapperParameters(IEnumerable<QueryParameter> parameters)
         {
             DynamicParameters dapperParameters = new();
             foreach (QueryParameter parameter in parameters)

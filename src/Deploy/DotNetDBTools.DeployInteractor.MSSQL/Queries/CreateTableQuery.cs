@@ -1,8 +1,8 @@
-﻿using DotNetDBTools.Models.SQLite;
+﻿using DotNetDBTools.Models.MSSQL;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DotNetDBTools.DeployInteractor.SQLite.Queries
+namespace DotNetDBTools.DeployInteractor.MSSQL.Queries
 {
     internal class CreateTableQuery : IQuery
     {
@@ -13,7 +13,7 @@ namespace DotNetDBTools.DeployInteractor.SQLite.Queries
         public string Sql => _sql;
         public IEnumerable<QueryParameter> Parameters => _parameters;
 
-        public CreateTableQuery(SQLiteTableInfo table, string metadataParameterValue)
+        public CreateTableQuery(MSSQLTableInfo table, string metadataParameterValue)
         {
             _sql = GetSql(table);
             _parameters = new List<QueryParameter>
@@ -22,7 +22,7 @@ namespace DotNetDBTools.DeployInteractor.SQLite.Queries
             };
         }
 
-        private static string GetSql(SQLiteTableInfo table)
+        private static string GetSql(MSSQLTableInfo table)
         {
             string query =
 $@"INSERT INTO {DNDBTSysTables.DNDBTDbObjects}
@@ -35,7 +35,7 @@ $@"INSERT INTO {DNDBTSysTables.DNDBTDbObjects}
 VALUES
 (
     '{table.ID}',
-    '{SQLiteDbObjectsTypes.Table}',
+    '{MSSQLDbObjectsTypes.Table}',
     '{table.Name}',
     {MetadataParameterName}
 );
@@ -48,7 +48,7 @@ CREATE TABLE {table.Name}
             return query;
         }
 
-        private static string GetTableDefinitionsText(SQLiteTableInfo table)
+        private static string GetTableDefinitionsText(MSSQLTableInfo table)
         {
             List<string> tableDefinitions = new();
 

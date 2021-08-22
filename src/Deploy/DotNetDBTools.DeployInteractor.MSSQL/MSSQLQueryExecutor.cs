@@ -5,18 +5,18 @@ namespace DotNetDBTools.DeployInteractor.MSSQL
 {
     public class MSSQLQueryExecutor : IQueryExecutor
     {
-        public int Execute(string query, params QueryParameter[] parameters)
+        public int Execute(IQuery query)
         {
-            Console.WriteLine($"Query:\n{query}\n");
+            Console.WriteLine($"Query:\n{query.Sql}\n");
             return 0;
         }
 
-        public IEnumerable<TOut> Query<TOut>(string query, params QueryParameter[] parameters)
+        public IEnumerable<TOut> Query<TOut>(IQuery query)
         {
             throw new NotImplementedException();
         }
 
-        public TOut QuerySingleOrDefault<TOut>(string query, params QueryParameter[] parameters)
+        public TOut QuerySingleOrDefault<TOut>(IQuery query)
         {
             throw new NotImplementedException();
         }

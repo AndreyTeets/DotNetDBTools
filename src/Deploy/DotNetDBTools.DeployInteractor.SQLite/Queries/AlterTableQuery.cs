@@ -4,16 +4,26 @@ using System.Linq;
 
 namespace DotNetDBTools.DeployInteractor.SQLite.Queries
 {
-    internal static class AlterTableQuery
+    internal class AlterTableQuery : IQuery
     {
-        public static class Parameters
+        private const string DNDBTTempPrefix = "DNDBT_";
+        private const string NewTableMetadataParameterName = "@NewTableMetadata";
+        private readonly string _sql;
+        private readonly List<QueryParameter> _parameters;
+
+        public string Sql => _sql;
+        public IEnumerable<QueryParameter> Parameters => _parameters;
+
+        public AlterTableQuery(SQLiteTableDiff tableDiff, string newTableMetadataParameterValue)
         {
-            public const string NewTableMetadata = "@NewTableMetadata";
+            _sql = GetSql(tableDiff);
+            _parameters = new List<QueryParameter>
+            {
+                new QueryParameter(NewTableMetadataParameterName, newTableMetadataParameterValue),
+            };
         }
 
-        private const string DNDBTTempPrefix = "DNDBT_";
-
-        public static string Sql(SQLiteTableDiff tableDiff)
+        private static string GetSql(SQLiteTableDiff tableDiff)
         {
             string query =
 $@"PRAGMA foreign_keys=off;
@@ -37,7 +47,7 @@ PRAGMA foreign_keys=on;
 
 UPDATE {DNDBTSysTables.DNDBTDbObjects} SET
     {DNDBTSysTables.DNDBTDbObjects.Name} = '{tableDiff.NewTable.Name}',
-    {DNDBTSysTables.DNDBTDbObjects.Metadata} = {Parameters.NewTableMetadata}
+    {DNDBTSysTables.DNDBTDbObjects.Metadata} = {NewTableMetadataParameterName}
 WHERE {DNDBTSysTables.DNDBTDbObjects.ID} = '{tableDiff.NewTable.ID}';";
 
             return query;

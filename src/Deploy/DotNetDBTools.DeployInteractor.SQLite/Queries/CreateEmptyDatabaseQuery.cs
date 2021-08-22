@@ -1,8 +1,10 @@
-﻿namespace DotNetDBTools.DeployInteractor.SQLite.Queries
+﻿using System.Collections.Generic;
+
+namespace DotNetDBTools.DeployInteractor.SQLite.Queries
 {
-    internal static class CreateEmptyDatabaseQuery
+    internal class CreateEmptyDatabaseQuery : IQuery
     {
-        public static readonly string Sql =
+        public string Sql =>
 $@"CREATE TABLE {DNDBTSysTables.DNDBTDbObjects}
 (
     {DNDBTSysTables.DNDBTDbObjects.ID} BLOB PRIMARY KEY,
@@ -10,5 +12,7 @@ $@"CREATE TABLE {DNDBTSysTables.DNDBTDbObjects}
     {DNDBTSysTables.DNDBTDbObjects.Name} TEXT NOT NULL,
     {DNDBTSysTables.DNDBTDbObjects.Metadata} TEXT NOT NULL
 ) WITHOUT ROWID;";
+
+        public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
     }
 }

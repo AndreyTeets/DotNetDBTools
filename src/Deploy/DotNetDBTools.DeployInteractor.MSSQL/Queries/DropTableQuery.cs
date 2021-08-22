@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using DotNetDBTools.Models.SQLite;
+using DotNetDBTools.Models.MSSQL;
 
-namespace DotNetDBTools.DeployInteractor.SQLite.Queries
+namespace DotNetDBTools.DeployInteractor.MSSQL.Queries
 {
     internal class DropTableQuery : IQuery
     {
@@ -10,12 +10,12 @@ namespace DotNetDBTools.DeployInteractor.SQLite.Queries
         public string Sql => _sql;
         public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
 
-        public DropTableQuery(SQLiteTableInfo table)
+        public DropTableQuery(MSSQLTableInfo table)
         {
             _sql = GetSql(table);
         }
 
-        private static string GetSql(SQLiteTableInfo table)
+        private static string GetSql(MSSQLTableInfo table)
         {
             string query =
 $@"DROP TABLE {table.Name};

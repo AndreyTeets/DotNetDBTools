@@ -1,11 +1,15 @@
-﻿namespace DotNetDBTools.DeployInteractor.SQLite.Queries
+﻿using System.Collections.Generic;
+
+namespace DotNetDBTools.DeployInteractor.SQLite.Queries
 {
-    internal static class DatabaseExistsQuery
+    internal class DatabaseExistsQuery : IQuery
     {
-        public static readonly string Sql =
+        public string Sql =>
 $@"SELECT
     true
 FROM sqlite_master 
 WHERE type = 'table' AND name = '{DNDBTSysTables.DNDBTDbObjects}';";
+
+        public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
     }
 }

@@ -7,20 +7,20 @@ namespace DotNetDBTools.DeployInteractor.MSSQL
     {
         private readonly List<string> _queries = new();
 
-        public int Execute(string query, params QueryParameter[] parameters)
+        public int Execute(IQuery query)
         {
-            string paremetersDeclaration = string.Join("\n", parameters.Select(x => $"declare {x.Name} nvarchar(max) = '{x.Value}'"));
-            string queryWithParametersDeclaration = $"{paremetersDeclaration}\n\n{query}";
+            string paremetersDeclaration = string.Join("\n", query.Parameters.Select(x => $"DECLARE {x.Name} NVARCHAR(MAX) = '{x.Value}';"));
+            string queryWithParametersDeclaration = $"{paremetersDeclaration}\n\n{query.Sql}";
             _queries.Add(queryWithParametersDeclaration);
             return 0;
         }
 
-        public IEnumerable<TOut> Query<TOut>(string query, params QueryParameter[] parameters)
+        public IEnumerable<TOut> Query<TOut>(IQuery query)
         {
             throw new System.NotImplementedException();
         }
 
-        public TOut QuerySingleOrDefault<TOut>(string query, params QueryParameter[] parameters)
+        public TOut QuerySingleOrDefault<TOut>(IQuery query)
         {
             throw new System.NotImplementedException();
         }

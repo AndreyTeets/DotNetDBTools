@@ -25,20 +25,20 @@ namespace DotNetDBTools.DeployInteractor.SQLite
 
         public bool DatabaseExists()
         {
-            bool databaseExists = _queryExecutor.QuerySingleOrDefault<bool>(DatabaseExistsQuery.Sql);
+            bool databaseExists = _queryExecutor.QuerySingleOrDefault<bool>(new DatabaseExistsQuery());
             return databaseExists;
         }
 
         public void CreateEmptyDatabase()
         {
-            _queryExecutor.Execute(CreateEmptyDatabaseQuery.Sql);
+            _queryExecutor.Execute(new CreateEmptyDatabaseQuery());
         }
 
         public SQLiteDatabaseInfo GetExistingDatabase()
         {
             SQLiteDatabaseInfo databaseInfo = new();
             List<SQLiteTableInfo> tables = new();
-            IEnumerable<string> tablesMetadatas = _queryExecutor.Query<string>(GetExistingTablesQuery.Sql);
+            IEnumerable<string> tablesMetadatas = _queryExecutor.Query<string>(new GetExistingTablesQuery());
             foreach (string tableMetadata in tablesMetadatas)
             {
                 SQLiteTableInfo table = SQLiteDbObjectsSerializer.TableFromJson(tableMetadata);
@@ -51,20 +51,18 @@ namespace DotNetDBTools.DeployInteractor.SQLite
         private void CreateTable(SQLiteTableInfo table)
         {
             string tableMetadata = SQLiteDbObjectsSerializer.TableToJson(table);
-            _queryExecutor.Execute(CreateTableQuery.Sql(table),
-                new QueryParameter(CreateTableQuery.Parameters.Metadata, tableMetadata));
+            _queryExecutor.Execute(new CreateTableQuery(table, tableMetadata));
         }
 
         private void DropTable(SQLiteTableInfo table)
         {
-            _queryExecutor.Execute(DropTableQuery.Sql(table));
+            _queryExecutor.Execute(new DropTableQuery(table));
         }
 
         private void AlterTable(SQLiteTableDiff tableDiff)
         {
             string newTableMetadata = SQLiteDbObjectsSerializer.TableToJson(tableDiff.NewTable);
-            _queryExecutor.Execute(AlterTableQuery.Sql(tableDiff),
-                new QueryParameter(AlterTableQuery.Parameters.NewTableMetadata, newTableMetadata));
+            _queryExecutor.Execute(new AlterTableQuery(tableDiff, newTableMetadata));
         }
     }
 }
