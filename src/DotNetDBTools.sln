@@ -62,6 +62,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.Models.MSSQL", "Models\DotNetDBTools.Models.MSSQL\DotNetDBTools.Models.MSSQL.csproj", "{499D9D57-B6C5-4A67-B7F5-C81D013651DD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.SampleApplication.Agnostic", "Samples\DotNetDBTools.SampleApplication.Agnostic\DotNetDBTools.SampleApplication.Agnostic.csproj", "{BC2ACE5F-455D-4707-8E34-62BF5FB3CAD0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{51A89E8B-3C98-4D47-B48D-4CA665AEF833} = {51A89E8B-3C98-4D47-B48D-4CA665AEF833}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.SampleDB.Agnostic", "Samples\DotNetDBTools.SampleDB.Agnostic\DotNetDBTools.SampleDB.Agnostic.csproj", "{51A89E8B-3C98-4D47-B48D-4CA665AEF833}"
 EndProject
@@ -90,8 +93,16 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.SampleDB.SQLite", "Samples\DotNetDBTools.SampleDB.SQLite\DotNetDBTools.SampleDB.SQLite.csproj", "{B258DC47-A46F-4C53-99DF-A8DEDE81F7D5}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.SampleDeployUtil.SQLite", "Samples\DotNetDBTools.SampleDeployUtil.SQLite\DotNetDBTools.SampleDeployUtil.SQLite.csproj", "{0EDFDEAF-4DC4-441E-B3B9-8DC20495105C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B258DC47-A46F-4C53-99DF-A8DEDE81F7D5} = {B258DC47-A46F-4C53-99DF-A8DEDE81F7D5}
+		{51A89E8B-3C98-4D47-B48D-4CA665AEF833} = {51A89E8B-3C98-4D47-B48D-4CA665AEF833}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.IntegrationTests.SQLite", "Tests\DotNetDBTools.IntegrationTests.SQLite\DotNetDBTools.IntegrationTests.SQLite.csproj", "{AED8D65C-A544-43FE-98F7-64B32DA56C7F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{BC2ACE5F-455D-4707-8E34-62BF5FB3CAD0} = {BC2ACE5F-455D-4707-8E34-62BF5FB3CAD0}
+		{0EDFDEAF-4DC4-441E-B3B9-8DC20495105C} = {0EDFDEAF-4DC4-441E-B3B9-8DC20495105C}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.UnitTests.SQLite", "Tests\DotNetDBTools.UnitTests.SQLite\DotNetDBTools.UnitTests.SQLite.csproj", "{7582F557-B43B-4117-9B37-61ADC1C1BE87}"
 EndProject

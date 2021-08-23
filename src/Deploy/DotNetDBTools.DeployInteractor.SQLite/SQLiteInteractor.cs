@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using DotNetDBTools.DeployInteractor.SQLite.Queries;
 using DotNetDBTools.Models.SQLite;
 
@@ -17,8 +18,12 @@ namespace DotNetDBTools.DeployInteractor.SQLite
         {
             foreach (SQLiteTableInfo table in databaseDiff.AddedTables)
                 CreateTable(table);
+
+            HashSet<SQLiteTableInfo> droppedTables = new();
+            HashSet<SQLiteTableInfo> tablesToRemove = new(databaseDiff.RemovedTables);
             foreach (SQLiteTableInfo table in databaseDiff.RemovedTables)
-                DropTable(table);
+                DropTable(table, droppedTables, tablesToRemove);
+
             foreach (SQLiteTableDiff tableDiff in databaseDiff.ChangedTables)
                 AlterTable(tableDiff);
         }
@@ -54,9 +59,18 @@ namespace DotNetDBTools.DeployInteractor.SQLite
             _queryExecutor.Execute(new CreateTableQuery(table, tableMetadata));
         }
 
-        private void DropTable(SQLiteTableInfo table)
+        private void DropTable(SQLiteTableInfo table, HashSet<SQLiteTableInfo> droppedTables, HashSet<SQLiteTableInfo> tablesToRemove)
         {
+            List<SQLiteTableInfo> referencedTables = new(); // TODO Analysis.GetReferencedTables(table);
+            foreach (SQLiteTableInfo referencedTable in referencedTables)
+            {
+                bool referencedTableIsInRemovalList = tablesToRemove.Any(x => x.ID == referencedTable.ID);
+                bool referencedTableAlreadyDropped = droppedTables.Any(x => x.ID == referencedTable.ID);
+                if (referencedTableIsInRemovalList && !referencedTableAlreadyDropped)
+                    DropTable(referencedTable, droppedTables, tablesToRemove);
+            }
             _queryExecutor.Execute(new DropTableQuery(table));
+            droppedTables.Add(table);
         }
 
         private void AlterTable(SQLiteTableDiff tableDiff)

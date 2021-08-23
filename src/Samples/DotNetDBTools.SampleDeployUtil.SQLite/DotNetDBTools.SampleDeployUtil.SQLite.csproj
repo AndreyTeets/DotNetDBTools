@@ -6,7 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DotNetDBTools.SampleDB.SQLite\DotNetDBTools.SampleDB.SQLite.csproj" />
     <ProjectReference Include="..\..\Deploy\DotNetDBTools.Deploy.SQLite\DotNetDBTools.Deploy.SQLite.csproj" />
   </ItemGroup>
 

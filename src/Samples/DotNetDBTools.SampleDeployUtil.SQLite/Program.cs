@@ -1,39 +1,63 @@
-﻿using System.IO;
-using System.Reflection;
+﻿using System;
+using System.IO;
 using DotNetDBTools.Deploy.SQLite;
 
 namespace DotNetDBTools.SampleDeployUtil.SQLite
 {
     public class Program
     {
-        private const string AgnosticDbFilePath = @".\tmp\AgnosticSampleDB.db";
-        private static readonly string s_agnosticConnectionString = $"DataSource={AgnosticDbFilePath};Mode=ReadWriteCreate;";
-        private const string SQLiteDbFilePath = @".\tmp\SQLiteSampleDB.db";
-        private static readonly string s_sqliteConnectionString = $"DataSource={SQLiteDbFilePath};Mode=ReadWriteCreate;";
+        private const string AgnosticDbProjectBinDir = "../../../../../Samples/DotNetDBTools.SampleDB.Agnostic/bin";
+        private static readonly string s_agnosticDbAssemblyPath = $"{AgnosticDbProjectBinDir}/DbAssembly/DotNetDBTools.SampleDB.Agnostic.dll";
+        private static readonly string s_agnosticDbFilePath = $"{AgnosticDbProjectBinDir}/DbFile/AgnosticSampleDB.db";
+        private static readonly string s_agnosticConnectionString = $"DataSource={s_agnosticDbFilePath};Mode=ReadWriteCreate;";
+
+        private const string SQLiteDbProjectBinDir = "../../../../../Samples/DotNetDBTools.SampleDB.SQLite/bin";
+        private static readonly string s_sqliteDbAssemblyPath = $"{SQLiteDbProjectBinDir}/DbAssembly/DotNetDBTools.SampleDB.SQLite.dll";
+        private static readonly string s_sqliteDbFilePath = $"{SQLiteDbProjectBinDir}/DbFile/SQLiteSampleDB.db";
+        private static readonly string s_sqliteConnectionString = $"DataSource={s_sqliteDbFilePath};Mode=ReadWriteCreate;";
 
         public static void Main()
         {
-            System.Console.WriteLine("Deploying AgnosticSampleDB...");
-            Directory.CreateDirectory(Path.GetDirectoryName(AgnosticDbFilePath));
-            DeployAgnosticSampleDB();
+            RunAgnosticSampleDBExample();
+            RunSQLiteSampleDBExample();
+        }
 
-            System.Console.WriteLine("Deploying SQLiteSampleDB...");
-            Directory.CreateDirectory(Path.GetDirectoryName(SQLiteDbFilePath));
+        private static void RunAgnosticSampleDBExample()
+        {
+            DropDatabaseIfExists(s_agnosticDbFilePath);
+            Directory.CreateDirectory(Path.GetDirectoryName(s_agnosticDbFilePath));
+            Console.WriteLine("Creating new AgnosticSampleDB...");
+            DeployAgnosticSampleDB();
+            Console.WriteLine("Updating existing AgnosticSampleDB...");
+            DeployAgnosticSampleDB();
+        }
+
+        private static void RunSQLiteSampleDBExample()
+        {
+            DropDatabaseIfExists(s_sqliteDbFilePath);
+            Directory.CreateDirectory(Path.GetDirectoryName(s_sqliteDbFilePath));
+            Console.WriteLine("Creating new SQLiteSampleDB...");
+            DeploySQLiteSampleDB();
+            Console.WriteLine("Updating existing SQLiteSampleDB...");
             DeploySQLiteSampleDB();
         }
 
         private static void DeployAgnosticSampleDB()
         {
-            string dbAssemblyPath = "../../../../DotNetDBTools.SampleDB.Agnostic/bin/DbAssembly/DotNetDBTools.SampleDB.Agnostic.dll";
             SQLiteDeployManager deployManager = new(true, false);
-            deployManager.UpdateDatabase(dbAssemblyPath, s_agnosticConnectionString);
+            deployManager.UpdateDatabase(s_agnosticDbAssemblyPath, s_agnosticConnectionString);
         }
 
         private static void DeploySQLiteSampleDB()
         {
-            Assembly dbAssembly = Assembly.GetAssembly(typeof(SampleDB.SQLite.Tables.MyTable1));
             SQLiteDeployManager deployManager = new(true, false);
-            deployManager.UpdateDatabase(dbAssembly, s_sqliteConnectionString);
+            deployManager.UpdateDatabase(s_sqliteDbAssemblyPath, s_sqliteConnectionString);
+        }
+
+        private static void DropDatabaseIfExists(string dbFilePath)
+        {
+            if (File.Exists(dbFilePath))
+                File.Delete(dbFilePath);
         }
     }
 }

@@ -29,18 +29,18 @@ namespace DotNetDBTools.DeployInteractor.SQLite.Queries
 $@"PRAGMA foreign_keys=off;
 BEGIN TRANSACTION;
 
-ALTER TABLE {tableDiff.OldTable.Name} RENAME TO {DNDBTTempPrefix}{tableDiff.OldTable.Name};
-
-CREATE TABLE {tableDiff.NewTable.Name}
+CREATE TABLE {DNDBTTempPrefix}{tableDiff.NewTable.Name}
 (
 {GetTableDefinitionsText(tableDiff.NewTable)}
 );
 
-INSERT INTO {tableDiff.NewTable.Name}({GetChangedColumnsNewNamesText(tableDiff)})
+INSERT INTO  {DNDBTTempPrefix}{tableDiff.NewTable.Name}({GetChangedColumnsNewNamesText(tableDiff)})
 SELECT {GetChangedColumnsOldNamesText(tableDiff)}
-FROM {DNDBTTempPrefix}{tableDiff.OldTable.Name};
+FROM {tableDiff.OldTable.Name};
 
-DROP TABLE {DNDBTTempPrefix}{tableDiff.OldTable.Name};
+DROP TABLE {tableDiff.OldTable.Name};
+
+ALTER TABLE {DNDBTTempPrefix}{tableDiff.NewTable.Name} RENAME TO {tableDiff.NewTable.Name};
 
 COMMIT TRANSACTION;
 PRAGMA foreign_keys=on;
@@ -72,7 +72,7 @@ WHERE {DNDBTSysTables.DNDBTDbObjects.ID} = '{tableDiff.NewTable.ID}';";
             List<string> tableDefinitions = new();
 
             tableDefinitions.AddRange(table.Columns.Select(column =>
-$@"    {column.Name} {column.DataType}"));
+$@"    {column.Name} {column.DataType} UNIQUE"));
 
             tableDefinitions.AddRange(table.ForeignKeys.Select(fk =>
 $@"    CONSTRAINT {fk.Name} FOREIGN KEY ({string.Join(",", fk.ThisColumnNames)}) REFERENCES {fk.ForeignTableName}({string.Join(",", fk.ForeignColumnNames)})"));

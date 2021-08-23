@@ -53,8 +53,8 @@ VALUES
 
 CREATE TABLE MyTable1
 (
-    MyColumn1 IntDbType,
-    MyColumn2 StringDbType,
+    MyColumn1 IntDbType UNIQUE,
+    MyColumn2 StringDbType UNIQUE,
     CONSTRAINT FK_MyTable1_MyColumn1_MyTable2_MyColumn1 FOREIGN KEY (MyColumn1) REFERENCES MyTable2(MyColumn1)
 );
 
@@ -103,6 +103,6 @@ VALUES
 
 CREATE TABLE MyTable2
 (
-    MyColumn1 IntDbType,
-    MyColumn2 ByteDbType
+    MyColumn1 IntDbType UNIQUE,
+    MyColumn2 ByteDbType UNIQUE
 );
