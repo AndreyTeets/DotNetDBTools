@@ -31,7 +31,7 @@ namespace DotNetDBTools.SampleDefinitionGenerator.Agnostic
             }
 
             string configText = context.AdditionalFiles
-                .First(e => e.Path.EndsWith("generatorsettings.json"))
+                .First(e => e.Path.EndsWith("generatorsettings.json", StringComparison.Ordinal))
                 .GetText(context.CancellationToken)
                 .ToString();
             JObject config = JObject.Parse(configText);

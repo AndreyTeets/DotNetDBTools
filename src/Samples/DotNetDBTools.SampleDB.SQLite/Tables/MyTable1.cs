@@ -21,7 +21,6 @@ namespace DotNetDBTools.SampleDB.SQLite.Tables
             Default = "33",
         };
 
-
         public PrimaryKey PK_MyTable1 = new()
         {
             Columns = new string[] { nameof(MyColumn1) },

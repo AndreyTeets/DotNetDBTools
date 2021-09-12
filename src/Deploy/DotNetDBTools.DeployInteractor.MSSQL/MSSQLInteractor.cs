@@ -38,7 +38,6 @@ namespace DotNetDBTools.DeployInteractor.MSSQL
                 AlterFunction(functionDiff);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "<Pending>")]
         public MSSQLDatabaseInfo GetExistingDatabase()
         {
             MSSQLDatabaseInfo databaseInfo = new();

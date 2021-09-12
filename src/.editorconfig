@@ -1,51 +1,62 @@
-﻿# EditorConfig is awesome: https://EditorConfig.org
+﻿### EditorConfig is awesome: https://EditorConfig.org
 
 # top-most EditorConfig file
 root = true
 
-# Don't use tabs for indentation.
+### Don't use tabs for indentation.
 [*]
 indent_style = space
 # (Please don't specify an indent_size here; that has too many unintended consequences.)
 
-# Code files
+### Code files
 [*.{cs,csx,vb,vbx}]
 indent_size = 4
 insert_final_newline = true
 charset = utf-8-bom
 
-# XML project files
+### XML project files
 [*.{csproj,vbproj,vcxproj,vcxproj.filters,proj,projitems,shproj}]
 indent_size = 2
 
-# XML config files
+### XML config files
 [*.{props,targets,ruleset,config,nuspec,resx,vsixmanifest,vsct}]
 indent_size = 2
 
-# JSON files
+### JSON files
 [*.json]
 indent_size = 2
 
-# Powershell files
+### Powershell files
 [*.ps1]
 indent_size = 2
 
-# Shell script files
+### Shell script files
 [*.sh]
 end_of_line = lf
 indent_size = 2
 
-# CSharp code style settings:
+### CSharp files
 [*.cs]
 
-# Sort using and Import directives with System.* appearing first
-dotnet_sort_system_directives_first = true
-dotnet_separate_import_directive_groups = false
-# Avoid "this." if not necessary
+## Code style preferences
+# Modifier preferences
+csharp_prefer_static_local_function = true:none
+csharp_preferred_modifier_order = public,private,protected,internal,static,extern,new,virtual,abstract,sealed,override,readonly,unsafe,volatile,async:warning
+
+# Forbid using directives inside namespace
+csharp_using_directive_placement = outside_namespace:warning
+
+# Avoid "this."
 dotnet_style_qualification_for_field = false:warning
 dotnet_style_qualification_for_property = false:warning
 dotnet_style_qualification_for_method = false:warning
 dotnet_style_qualification_for_event = false:warning
+
+# Forbid unnecessary parentheses in operators
+dotnet_style_parentheses_in_arithmetic_binary_operators = never_if_unnecessary:warning
+dotnet_style_parentheses_in_other_binary_operators = never_if_unnecessary:warning
+dotnet_style_parentheses_in_relational_binary_operators = never_if_unnecessary:warning
+dotnet_style_parentheses_in_other_operators = never_if_unnecessary:warning
 
 # Explicit access modifier everywhere
 dotnet_style_require_accessibility_modifiers = always:warning
@@ -54,16 +65,102 @@ dotnet_style_require_accessibility_modifiers = always:warning
 dotnet_style_predefined_type_for_locals_parameters_members = true:warning
 dotnet_style_predefined_type_for_member_access = true:warning
 
+# Require readonly modifier
+dotnet_style_readonly_field = true:warning
+
+# Forbid unnecessary value assignment
+csharp_style_unused_value_assignment_preference = unused_local_variable:warning
+
+# Forbid unused parameters
+dotnet_code_quality_unused_parameters = all:warning
+
+# Forbid "var" everywhere
+csharp_style_var_for_built_in_types = false:warning
+csharp_style_var_when_type_is_apparent = false:warning
+csharp_style_var_elsewhere = false:warning
+
+# Expression body preferences
+csharp_style_expression_bodied_constructors = false:warning
+csharp_style_expression_bodied_methods = true:none
+csharp_style_expression_bodied_operators = true:none
+csharp_style_expression_bodied_properties = true:none
+csharp_style_expression_bodied_indexers = true:none
+csharp_style_expression_bodied_accessors = true:none
+csharp_style_expression_bodied_local_functions=true:none
+
 # Suggest more modern language features when available
 dotnet_style_object_initializer = true:suggestion
 dotnet_style_collection_initializer = true:suggestion
 dotnet_style_coalesce_expression = true:suggestion
 dotnet_style_null_propagation = true:suggestion
 dotnet_style_explicit_tuple_names = true:suggestion
+csharp_style_pattern_matching_over_is_with_cast_check = true:suggestion
+csharp_style_pattern_matching_over_as_with_null_check = true:suggestion
+csharp_style_inlined_variable_declaration = true:suggestion
+csharp_style_throw_expression = true:suggestion
+csharp_style_conditional_delegate_call = true:suggestion
 
 # Whitespace options
-dotnet_style_allow_multiple_blank_lines_experimental = false
+dotnet_style_allow_statement_immediately_after_block_experimental = true:warning
+dotnet_style_allow_multiple_blank_lines_experimental = false:warning
+csharp_style_allow_embedded_statements_on_same_line_experimental = true:warning
+csharp_style_allow_blank_lines_between_consecutive_braces_experimental = false:warning
+csharp_style_allow_blank_line_after_colon_in_constructor_initializer_experimental = true:warning
 
+# Require curly braces on multiple lines
+csharp_prefer_braces = when_multiline:warning
+
+## Formatting preferences
+# Sort using and Import directives with System.* appearing first
+dotnet_sort_system_directives_first = true
+dotnet_separate_import_directive_groups = false
+
+# Newline settings
+csharp_new_line_before_open_brace = all
+csharp_new_line_before_else = true
+csharp_new_line_before_catch = true
+csharp_new_line_before_finally = true
+csharp_new_line_before_members_in_object_initializers = true
+csharp_new_line_before_members_in_anonymous_types = true
+csharp_new_line_between_query_expression_clauses = true
+
+# Indentation preferences
+csharp_indent_block_contents = true
+csharp_indent_braces = false
+csharp_indent_case_contents = true
+csharp_indent_case_contents_when_block = true
+csharp_indent_switch_labels = true
+csharp_indent_labels = flush_left
+
+# Space preferences
+csharp_space_after_cast = false
+csharp_space_after_colon_in_inheritance_clause = true
+csharp_space_after_comma = true
+csharp_space_after_dot = false
+csharp_space_after_keywords_in_control_flow_statements = true
+csharp_space_after_semicolon_in_for_statement = true
+csharp_space_around_binary_operators = before_and_after
+csharp_space_around_declaration_statements = do_not_ignore
+csharp_space_before_colon_in_inheritance_clause = true
+csharp_space_before_comma = false
+csharp_space_before_dot = false
+csharp_space_before_open_square_brackets = false
+csharp_space_before_semicolon_in_for_statement = false
+csharp_space_between_empty_square_brackets = false
+csharp_space_between_method_call_empty_parameter_list_parentheses = false
+csharp_space_between_method_call_name_and_opening_parenthesis = false
+csharp_space_between_method_call_parameter_list_parentheses = false
+csharp_space_between_method_declaration_empty_parameter_list_parentheses = false
+csharp_space_between_method_declaration_name_and_open_parenthesis = false
+csharp_space_between_method_declaration_parameter_list_parentheses = false
+csharp_space_between_parentheses = false
+csharp_space_between_square_brackets = false
+
+# Single line blocks and statements preferences
+csharp_preserve_single_line_blocks = true
+csharp_preserve_single_line_statements = false
+
+## Naming preferences
 # Non-private fields are PascalCase
 dotnet_naming_rule.non_private_fields_should_be_pascal_case.severity = warning
 dotnet_naming_rule.non_private_fields_should_be_pascal_case.symbols = non_private_fields
@@ -134,93 +231,24 @@ dotnet_naming_symbols.all_members.applicable_kinds = *
 
 dotnet_naming_style.pascal_case_style.capitalization = pascal_case
 
-# Newline settings
-csharp_new_line_before_open_brace = all
-csharp_new_line_before_else = true
-csharp_new_line_before_catch = true
-csharp_new_line_before_finally = true
-csharp_new_line_before_members_in_object_initializers = true
-csharp_new_line_before_members_in_anonymous_types = true
-csharp_new_line_between_query_expression_clauses = true
+## Analyzers settings
+# IDE0003: Remove this or Me qualification
+dotnet_diagnostic.IDE0003.severity = warning
 
-# Indentation preferences
-csharp_indent_block_contents = true
-csharp_indent_braces = false
-csharp_indent_case_contents = true
-csharp_indent_case_contents_when_block = true
-csharp_indent_switch_labels = true
-csharp_indent_labels = flush_left
+# IDE0007: Use 'var' instead of explicit type
+dotnet_diagnostic.IDE0007.severity = warning
 
-# Whitespace options
-csharp_style_allow_embedded_statements_on_same_line_experimental = false
-csharp_style_allow_blank_lines_between_consecutive_braces_experimental = false
-csharp_style_allow_blank_line_after_colon_in_constructor_initializer_experimental = false
+# IDE0008: Use explicit type instead of 'var'
+dotnet_diagnostic.IDE0008.severity = warning
 
-# Prefer "var" everywhere
-csharp_style_var_for_built_in_types = false:warning
-csharp_style_var_when_type_is_apparent = false:warning
-csharp_style_var_elsewhere = false:warning
-
-# Prefer method-like constructs to have a block body
-csharp_style_expression_bodied_methods = false:none
-csharp_style_expression_bodied_constructors = false:none
-csharp_style_expression_bodied_operators = false:none
-
-# Prefer property-like constructs to have an expression-body
-csharp_style_expression_bodied_properties = true:none
-csharp_style_expression_bodied_indexers = true:none
-csharp_style_expression_bodied_accessors = true:none
-
-# Suggest more modern language features when available
-csharp_style_pattern_matching_over_is_with_cast_check = true:suggestion
-csharp_style_pattern_matching_over_as_with_null_check = true:suggestion
-csharp_style_inlined_variable_declaration = true:suggestion
-csharp_style_throw_expression = true:suggestion
-csharp_style_conditional_delegate_call = true:suggestion
-
-# Space preferences
-csharp_space_after_cast = false
-csharp_space_after_colon_in_inheritance_clause = true
-csharp_space_after_comma = true
-csharp_space_after_dot = false
-csharp_space_after_keywords_in_control_flow_statements = true
-csharp_space_after_semicolon_in_for_statement = true
-csharp_space_around_binary_operators = before_and_after
-csharp_space_around_declaration_statements = do_not_ignore
-csharp_space_before_colon_in_inheritance_clause = true
-csharp_space_before_comma = false
-csharp_space_before_dot = false
-csharp_space_before_open_square_brackets = false
-csharp_space_before_semicolon_in_for_statement = false
-csharp_space_between_empty_square_brackets = false
-csharp_space_between_method_call_empty_parameter_list_parentheses = false
-csharp_space_between_method_call_name_and_opening_parenthesis = false
-csharp_space_between_method_call_parameter_list_parentheses = false
-csharp_space_between_method_declaration_empty_parameter_list_parentheses = false
-csharp_space_between_method_declaration_name_and_open_parenthesis = false
-csharp_space_between_method_declaration_parameter_list_parentheses = false
-csharp_space_between_parentheses = false
-csharp_space_between_square_brackets = false
-
-# Blocks are allowed
-csharp_prefer_braces = true:silent
-csharp_preserve_single_line_blocks = true
-csharp_preserve_single_line_statements = true
-
-# Currently only enabled for C# due to crash in VB analyzer.  VB can be enabled once
-# https://github.com/dotnet/roslyn/pull/54259 has been published.
-dotnet_style_allow_statement_immediately_after_block_experimental = false
+# IDE0009: Add this or Me qualification
+dotnet_diagnostic.IDE0009.severity = warning
 
 # IDE0011: Add braces
-csharp_prefer_braces = when_multiline:warning
-# NOTE: We need the below severity entry for Add Braces due to https://github.com/dotnet/roslyn/issues/44201
 dotnet_diagnostic.IDE0011.severity = warning
 
-# IDE0055: Fix formatting
-dotnet_diagnostic.IDE0055.severity = warning
-
-# error RS2008: Enable analyzer release tracking for the analyzer project containing rule '{0}'
-dotnet_diagnostic.RS2008.severity = none
+# IDE0021: Use expression body for constructors
+dotnet_diagnostic.IDE0021.severity = warning
 
 # IDE0035: Remove unreachable code
 dotnet_diagnostic.IDE0035.severity = warning
@@ -228,24 +256,32 @@ dotnet_diagnostic.IDE0035.severity = warning
 # IDE0036: Order modifiers
 dotnet_diagnostic.IDE0036.severity = warning
 
+# IDE0040: Add accessibility modifiers
+dotnet_diagnostic.IDE0040.severity = warning
+
 # IDE0043: Format string contains invalid placeholder
 dotnet_diagnostic.IDE0043.severity = warning
 
 # IDE0044: Make field readonly
 dotnet_diagnostic.IDE0044.severity = warning
 
-# RS0016: Only enable if API files are present
-dotnet_public_api_analyzer.require_api_files = true
+# IDE0047: Remove unnecessary parentheses
+dotnet_diagnostic.IDE0047.severity = warning
 
-# IDE0040: Add accessibility modifiers
-dotnet_diagnostic.IDE0040.severity = warning
+# IDE0048: Add parentheses for clarity
+dotnet_diagnostic.IDE0048.severity = warning
 
-# CONSIDER: Are IDE0051 and IDE0052 too noisy to be warnings for IDE editing scenarios? Should they be made build-only warnings?
+# IDE0049: Use language keywords instead of framework type names for type references
+dotnet_diagnostic.IDE0049.severity = warning
+
 # IDE0051: Remove unused private member
 dotnet_diagnostic.IDE0051.severity = warning
 
 # IDE0052: Remove unread private member
 dotnet_diagnostic.IDE0052.severity = warning
+
+# IDE0055: Fix formatting
+dotnet_diagnostic.IDE0055.severity = warning
 
 # IDE0059: Unnecessary assignment to a value
 dotnet_diagnostic.IDE0059.severity = warning
@@ -253,17 +289,11 @@ dotnet_diagnostic.IDE0059.severity = warning
 # IDE0060: Remove unused parameter
 dotnet_diagnostic.IDE0060.severity = warning
 
+# IDE0065: 'using' directive placement
+dotnet_diagnostic.IDE0065.severity = warning
+
 # IDE1006: Naming rule violation
 dotnet_diagnostic.IDE1006.severity = warning
-
-# CA1012: Abstract types should not have public constructors
-dotnet_diagnostic.CA1012.severity = warning
-
-# CA1822: Make member static
-dotnet_diagnostic.CA1822.severity = suggestion
-
-# Prefer "var" everywhere
-dotnet_diagnostic.IDE0007.severity = warning
 
 # dotnet_style_allow_multiple_blank_lines_experimental
 dotnet_diagnostic.IDE2000.severity = warning
@@ -279,3 +309,21 @@ dotnet_diagnostic.IDE2003.severity = warning
 
 # csharp_style_allow_blank_line_after_colon_in_constructor_initializer_experimental
 dotnet_diagnostic.IDE2004.severity = warning
+
+# CA1012: Abstract types should not have public constructors
+dotnet_diagnostic.CA1012.severity = warning
+
+# CA1309: Use ordinal StringComparison
+dotnet_diagnostic.CA1309.severity = warning
+
+# CA1310: Specify StringComparison for correctness
+dotnet_diagnostic.CA1310.severity = warning
+
+# CA1822: Make member static
+dotnet_diagnostic.CA1822.severity = suggestion
+
+# RS0016: Only enable if API files are present
+dotnet_public_api_analyzer.require_api_files = true
+
+# RS2008: Enable analyzer release tracking for the analyzer project containing rule '{0}'
+dotnet_diagnostic.RS2008.severity = none

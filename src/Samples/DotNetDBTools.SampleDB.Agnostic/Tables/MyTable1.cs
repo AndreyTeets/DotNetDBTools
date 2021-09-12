@@ -21,7 +21,6 @@ namespace DotNetDBTools.SampleDB.Agnostic.Tables
             Default = "33",
         };
 
-
         public PrimaryKey PK_MyTable1 = new()
         {
             Columns = new string[] { nameof(MyColumn1) },
