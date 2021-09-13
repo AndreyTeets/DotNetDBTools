@@ -6,28 +6,13 @@ using DotNetDBTools.Deploy.MSSQL;
 using DotNetDBTools.Description.Agnostic;
 using DotNetDBTools.Models.Agnostic;
 using DotNetDBTools.Models.MSSQL;
+using FluentAssertions;
 using Xunit;
 
 namespace DotNetDBTools.UnitTests.MSSQL
 {
     public class MSSQLDeployTests
     {
-        [Fact]
-        public void Update_AgnosticSampleDB_Works()
-        {
-            Assembly dbAssembly = Assembly.GetAssembly(typeof(SampleDB.Agnostic.Tables.MyTable1));
-            MSSQLDeployManager deployManager = new();
-            deployManager.UpdateDatabase(dbAssembly);
-        }
-
-        [Fact]
-        public void Update_MSSQLSampleDB_Works()
-        {
-            Assembly dbAssembly = Assembly.GetAssembly(typeof(SampleDB.MSSQL.Tables.MyTable1));
-            MSSQLDeployManager deployManager = new();
-            deployManager.UpdateDatabase(dbAssembly);
-        }
-
         [Fact]
         public void GenerateUpdateScript_MSSQLSampleDB_CreatesCorrectScript()
         {
@@ -39,7 +24,7 @@ namespace DotNetDBTools.UnitTests.MSSQL
                 .Replace("\r\n", "\n").Trim();
             string expectedScript = File.ReadAllText(@"TestData\MSSQLSampleDB_ExpectedUpdateScript.sql")
                 .Replace("\r\n", "\n").Trim();
-            Assert.Equal(expectedScript, actualScript);
+            actualScript.Should().Be(expectedScript);
         }
 
         [Fact]
@@ -51,7 +36,7 @@ namespace DotNetDBTools.UnitTests.MSSQL
                 .Replace("\r\n", "\n").Trim();
             string expectedDescriptionCode = File.ReadAllText(@"TestData\AgnosticSampleDB_ExpectedDescriptionCode.cs")
                 .Replace("\r\n", "\n").Trim();
-            Assert.Equal(expectedDescriptionCode, actualDescriptionCode);
+            actualDescriptionCode.Should().Be(expectedDescriptionCode);
         }
     }
 }

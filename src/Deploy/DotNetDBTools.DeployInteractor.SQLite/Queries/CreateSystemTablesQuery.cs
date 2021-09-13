@@ -2,7 +2,7 @@
 
 namespace DotNetDBTools.DeployInteractor.SQLite.Queries
 {
-    internal class CreateEmptyDatabaseQuery : IQuery
+    internal class CreateSystemTablesQuery : IQuery
     {
         public string Sql =>
 $@"CREATE TABLE {DNDBTSysTables.DNDBTDbObjects}

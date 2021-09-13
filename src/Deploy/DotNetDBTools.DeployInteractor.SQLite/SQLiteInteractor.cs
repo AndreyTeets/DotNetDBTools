@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using DotNetDBTools.DeployInteractor.SQLite.Queries;
 using DotNetDBTools.Models.SQLite;
 
@@ -16,16 +15,12 @@ namespace DotNetDBTools.DeployInteractor.SQLite
 
         public void UpdateDatabase(SQLiteDatabaseDiff databaseDiff)
         {
-            foreach (SQLiteTableInfo table in databaseDiff.AddedTables)
-                CreateTable(table);
-
-            HashSet<SQLiteTableInfo> droppedTables = new();
-            HashSet<SQLiteTableInfo> tablesToRemove = new(databaseDiff.RemovedTables);
             foreach (SQLiteTableInfo table in databaseDiff.RemovedTables)
-                DropTable(table, droppedTables, tablesToRemove);
-
+                DropTable(table);
             foreach (SQLiteTableDiff tableDiff in databaseDiff.ChangedTables)
                 AlterTable(tableDiff);
+            foreach (SQLiteTableInfo table in databaseDiff.AddedTables)
+                CreateTable(table);
         }
 
         public bool DatabaseExists()
@@ -34,14 +29,13 @@ namespace DotNetDBTools.DeployInteractor.SQLite
             return databaseExists;
         }
 
-        public void CreateEmptyDatabase()
+        public void CreateSystemTables()
         {
-            _queryExecutor.Execute(new CreateEmptyDatabaseQuery());
+            _queryExecutor.Execute(new CreateSystemTablesQuery());
         }
 
         public SQLiteDatabaseInfo GetExistingDatabase()
         {
-            SQLiteDatabaseInfo databaseInfo = new();
             List<SQLiteTableInfo> tables = new();
             IEnumerable<string> tablesMetadatas = _queryExecutor.Query<string>(new GetExistingTablesQuery());
             foreach (string tableMetadata in tablesMetadatas)
@@ -49,8 +43,11 @@ namespace DotNetDBTools.DeployInteractor.SQLite
                 SQLiteTableInfo table = SQLiteDbObjectsSerializer.TableFromJson(tableMetadata);
                 tables.Add(table);
             }
-            databaseInfo.Tables = tables;
-            return databaseInfo;
+
+            return new SQLiteDatabaseInfo()
+            {
+                Tables = tables,
+            };
         }
 
         private void CreateTable(SQLiteTableInfo table)
@@ -59,18 +56,9 @@ namespace DotNetDBTools.DeployInteractor.SQLite
             _queryExecutor.Execute(new CreateTableQuery(table, tableMetadata));
         }
 
-        private void DropTable(SQLiteTableInfo table, HashSet<SQLiteTableInfo> droppedTables, HashSet<SQLiteTableInfo> tablesToRemove)
+        private void DropTable(SQLiteTableInfo table)
         {
-            List<SQLiteTableInfo> referencedTables = new(); // TODO Analysis.GetReferencedTables(table);
-            foreach (SQLiteTableInfo referencedTable in referencedTables)
-            {
-                bool referencedTableIsInRemovalList = tablesToRemove.Any(x => x.ID == referencedTable.ID);
-                bool referencedTableAlreadyDropped = droppedTables.Any(x => x.ID == referencedTable.ID);
-                if (referencedTableIsInRemovalList && !referencedTableAlreadyDropped)
-                    DropTable(referencedTable, droppedTables, tablesToRemove);
-            }
             _queryExecutor.Execute(new DropTableQuery(table));
-            droppedTables.Add(table);
         }
 
         private void AlterTable(SQLiteTableDiff tableDiff)

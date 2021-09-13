@@ -10,14 +10,16 @@ namespace DotNetDBTools.Analysis.MSSQL
         {
             IEnumerable<MSSQLTableInfo> addedTables = newDatabase.Tables
                 .Where(newDbTable => !oldDatabase.Tables.Any(oldDbTable => oldDbTable.ID == newDbTable.ID))
+                .PutReferencedFirst()
                 .Select(x => (MSSQLTableInfo)x);
 
             IEnumerable<MSSQLTableInfo> removedTables = oldDatabase.Tables
                 .Where(oldDbTable => !newDatabase.Tables.Any(newDbTable => newDbTable.ID == oldDbTable.ID))
+                .PutReferencedLast()
                 .Select(x => (MSSQLTableInfo)x);
 
             List<MSSQLTableDiff> changedTables = new();
-            foreach (MSSQLTableInfo newDbTable in newDatabase.Tables)
+            foreach (MSSQLTableInfo newDbTable in newDatabase.Tables.PutReferencedFirst())
             {
                 MSSQLTableInfo oldDbTable = (MSSQLTableInfo)oldDatabase.Tables.FirstOrDefault(x => x.ID == newDbTable.ID);
                 if (oldDbTable is not null)
@@ -26,6 +28,12 @@ namespace DotNetDBTools.Analysis.MSSQL
                     changedTables.Add(tableDiff);
                 }
             }
+
+            IEnumerable<MSSQLUserDefinedTypeInfo> addedUserDefinedTypes = newDatabase.UserDefinedTypes
+                .Where(newType => !oldDatabase.UserDefinedTypes.Any(oldType => oldType.ID == newType.ID));
+
+            IEnumerable<MSSQLUserDefinedTypeInfo> removedUserDefinedTypes = oldDatabase.UserDefinedTypes
+                .Where(oldType => !newDatabase.UserDefinedTypes.Any(newType => newType.ID == oldType.ID));
 
             return new MSSQLDatabaseDiff
             {
@@ -40,6 +48,9 @@ namespace DotNetDBTools.Analysis.MSSQL
                 AddedFunctions = new List<MSSQLFunctionInfo>(),
                 RemovedFunctions = new List<MSSQLFunctionInfo>(),
                 ChangedFunctions = new List<MSSQLFunctionDiff>(),
+                AddedUserDefinedTypes = addedUserDefinedTypes,
+                RemovedUserDefinedTypes = removedUserDefinedTypes,
+                ChangedUserDefinedTypes = new List<MSSQLUserDefinedTypeDiff>(),
             };
         }
 

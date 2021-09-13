@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using DotNetDBTools.DeployInteractor.MSSQL.Queries;
 using DotNetDBTools.Models.MSSQL;
 
@@ -16,50 +15,74 @@ namespace DotNetDBTools.DeployInteractor.MSSQL
 
         public void UpdateDatabase(MSSQLDatabaseDiff databaseDiff)
         {
-            foreach (MSSQLTableInfo table in databaseDiff.AddedTables)
-                CreateTable(table);
+            foreach (MSSQLUserDefinedTypeInfo userDefinedType in databaseDiff.RemovedUserDefinedTypes)
+                DropUserDefinedType(userDefinedType);
+            foreach (MSSQLUserDefinedTypeDiff userDefinedTypeDiff in databaseDiff.ChangedUserDefinedTypes)
+                AlterUserDefinedType(userDefinedTypeDiff);
+            foreach (MSSQLUserDefinedTypeInfo userDefinedType in databaseDiff.AddedUserDefinedTypes)
+                CreateUserDefinedType(userDefinedType);
+
             foreach (MSSQLTableInfo table in databaseDiff.RemovedTables)
                 DropTable(table);
             foreach (MSSQLTableDiff tableDiff in databaseDiff.ChangedTables)
                 AlterTable(tableDiff);
+            foreach (MSSQLTableInfo table in databaseDiff.AddedTables)
+                CreateTable(table);
 
-            foreach (MSSQLViewInfo view in databaseDiff.AddedViews)
-                CreateView(view);
             foreach (MSSQLViewInfo view in databaseDiff.RemovedViews)
                 DropView(view);
             foreach (MSSQLViewDiff viewDiff in databaseDiff.ChangedViews)
                 AlterView(viewDiff);
+            foreach (MSSQLViewInfo view in databaseDiff.AddedViews)
+                CreateView(view);
 
-            foreach (MSSQLFunctionInfo function in databaseDiff.AddedFunctions)
-                CreateFunction(function);
             foreach (MSSQLFunctionInfo function in databaseDiff.RemovedFunctions)
                 DropFunction(function);
             foreach (MSSQLFunctionDiff functionDiff in databaseDiff.ChangedFunctions)
                 AlterFunction(functionDiff);
+            foreach (MSSQLFunctionInfo function in databaseDiff.AddedFunctions)
+                CreateFunction(function);
+        }
+
+        public bool DatabaseExists(string databaseName)
+        {
+            bool databaseExists = _queryExecutor.QuerySingleOrDefault<bool>(new DatabaseExistsQuery(databaseName));
+            return databaseExists;
+        }
+
+        public void CreateDatabase(string databaseName)
+        {
+            _queryExecutor.Execute(new CreateDatabaseQuery(databaseName));
+        }
+
+        public void CreateSystemTables()
+        {
+            _queryExecutor.Execute(new CreateSystemTablesQuery());
         }
 
         public MSSQLDatabaseInfo GetExistingDatabase()
         {
-            MSSQLDatabaseInfo databaseInfo = new();
-            object tables = _queryExecutor.Execute(new GetExistingTablesQuery());
-            // foreach table in tables existingTable = MSSQLDbObjectsSerializer.TableFromJson(tableMetadata)
-            MSSQLTableInfo existingTable = new()
+            List<MSSQLTableInfo> tables = new();
+            IEnumerable<string> tablesMetadatas = _queryExecutor.Query<string>(new GetExistingTablesQuery());
+            foreach (string tableMetadata in tablesMetadatas)
             {
-                ID = new Guid("299675E6-4FAA-4D0F-A36A-224306BA5BCB"),
-                Name = "OldMyTable1Name",
-                Columns = new List<MSSQLColumnInfo>()
-                {
-                    new MSSQLColumnInfo
-                    {
-                        ID = new Guid("A2F2A4DE-1337-4594-AE41-72ED4D05F317"),
-                        Name = "OldMyColumn1Name",
-                        DataType = "",
-                        DefaultValue = 1,
-                    }
-                }
+                MSSQLTableInfo table = MSSQLDbObjectsSerializer.TableFromJson(tableMetadata);
+                tables.Add(table);
+            }
+
+            List<MSSQLUserDefinedTypeInfo> userDefinedTypes = new();
+            IEnumerable<string> userDefinedTypesMetadatas = _queryExecutor.Query<string>(new GetExistingTypesQuery());
+            foreach (string userDefinedTypeMetadata in userDefinedTypesMetadatas)
+            {
+                MSSQLUserDefinedTypeInfo userDefinedType = MSSQLDbObjectsSerializer.UserDefinedTypeFromJson(userDefinedTypeMetadata);
+                userDefinedTypes.Add(userDefinedType);
+            }
+
+            return new MSSQLDatabaseInfo()
+            {
+                Tables = tables,
+                UserDefinedTypes = userDefinedTypes,
             };
-            databaseInfo.Tables = new List<MSSQLTableInfo> { existingTable };
-            return databaseInfo;
         }
 
         private void CreateTable(MSSQLTableInfo table)
@@ -75,45 +98,18 @@ namespace DotNetDBTools.DeployInteractor.MSSQL
 
         private void AlterTable(MSSQLTableDiff tableDiff)
         {
-            if (tableDiff.NewTable.Name != tableDiff.OldTable.Name)
-                _queryExecutor.Execute(new GenericQuery($"sp_rename '{tableDiff.OldTable.Name}', '{tableDiff.NewTable.Name}'"));
-
-            foreach (MSSQLColumnInfo column in tableDiff.AddedColumns)
-                AddColumn(tableDiff.NewTable.Name, column);
-
-            foreach (MSSQLColumnInfo column in tableDiff.RemovedColumns)
-                DropColumn(tableDiff.NewTable.Name, column);
-
-            foreach (MSSQLColumnDiff columnDiff in tableDiff.ChangedColumns)
-                AlterColumn(tableDiff.NewTable.Name, columnDiff);
-        }
-
-        private void AddColumn(string tableName, MSSQLColumnInfo column)
-        {
-            _queryExecutor.Execute(new GenericQuery($"alter table {tableName} add {column.Name} INT NOT NULL"));
-        }
-
-        private void DropColumn(string tableName, MSSQLColumnInfo column)
-        {
-            _queryExecutor.Execute(new GenericQuery($"alter table {tableName} drop column {column.Name}"));
-        }
-
-        private void AlterColumn(string tableName, MSSQLColumnDiff columnDiff)
-        {
-            if (columnDiff.NewColumn.Name != columnDiff.OldColumn.Name)
-                _queryExecutor.Execute(new GenericQuery($"sp_rename '{tableName}.{columnDiff.OldColumn.Name}', '{columnDiff.NewColumn.Name}', 'COLUMN'"));
-
-            _queryExecutor.Execute(new GenericQuery($"alter table {tableName} alter column {columnDiff.NewColumn.Name} INT NOT NULL"));
+            string newTableMetadata = MSSQLDbObjectsSerializer.TableToJson(tableDiff.NewTable);
+            _queryExecutor.Execute(new AlterTableQuery(tableDiff, newTableMetadata));
         }
 
         private void CreateView(MSSQLViewInfo view)
         {
-            _queryExecutor.Execute(new GenericQuery($"create view {view.Name} {view.Code}"));
+            _queryExecutor.Execute(new GenericQuery($"create view {view.Name} {view.Code};"));
         }
 
         private void DropView(MSSQLViewInfo view)
         {
-            _queryExecutor.Execute(new GenericQuery($"drop view {view.Name}"));
+            _queryExecutor.Execute(new GenericQuery($"drop view {view.Name};"));
         }
 
         private void AlterView(MSSQLViewDiff viewDiff)
@@ -124,18 +120,35 @@ namespace DotNetDBTools.DeployInteractor.MSSQL
 
         private void CreateFunction(MSSQLFunctionInfo function)
         {
-            _queryExecutor.Execute(new GenericQuery($"create function {function.Name} {function.Code}"));
+            _queryExecutor.Execute(new GenericQuery($"create function {function.Name} {function.Code};"));
         }
 
         private void DropFunction(MSSQLFunctionInfo function)
         {
-            _queryExecutor.Execute(new GenericQuery($"drop function {function.Name}"));
+            _queryExecutor.Execute(new GenericQuery($"drop function {function.Name};"));
         }
 
         private void AlterFunction(MSSQLFunctionDiff functionDiff)
         {
             DropFunction(functionDiff.OldFunction);
             CreateFunction(functionDiff.NewFunction);
+        }
+
+        private void CreateUserDefinedType(MSSQLUserDefinedTypeInfo userDefinedType)
+        {
+            string userDefinedTypeMetadata = MSSQLDbObjectsSerializer.UserDefinedTypeToJson(userDefinedType);
+            _queryExecutor.Execute(new CreateTypeQuery(userDefinedType, userDefinedTypeMetadata));
+        }
+
+        private void DropUserDefinedType(MSSQLUserDefinedTypeInfo userDefinedType)
+        {
+            _queryExecutor.Execute(new DropTypeQuery(userDefinedType));
+        }
+
+        private void AlterUserDefinedType(MSSQLUserDefinedTypeDiff userDefinedTypeDiff)
+        {
+            DropUserDefinedType(userDefinedTypeDiff.OldUserDefinedType);
+            CreateUserDefinedType(userDefinedTypeDiff.NewUserDefinedType);
         }
     }
 }

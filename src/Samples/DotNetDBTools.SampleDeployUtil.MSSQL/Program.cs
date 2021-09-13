@@ -1,33 +1,84 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Data.SqlClient;
+using Dapper;
 using DotNetDBTools.Deploy.MSSQL;
 
 namespace DotNetDBTools.SampleDeployUtil.MSSQL
 {
     public class Program
     {
-        public static void Main(string[] args)
-        {
-            System.Console.WriteLine($"{nameof(DeployAgnosticSampleDB)}:");
-            DeployAgnosticSampleDB();
-            System.Console.WriteLine(System.Environment.NewLine);
+        private const string MsSqlServerPassword = "Strong(!)Passw0rd";
+        private const string MsSqlServerHostPort = "5005";
+        private const string AgnosticDatabaseName = "AgnosticSampleDB";
+        private const string MSSQLDatabaseName = "MSSQLSampleDB";
 
-            System.Console.WriteLine($"{nameof(DeployMSSQLSampleDB)}:");
+        private const string AgnosticDbProjectBinDir = "../../../../../Samples/DotNetDBTools.SampleDB.Agnostic/bin";
+        private static readonly string s_agnosticDbAssemblyPath = $"{AgnosticDbProjectBinDir}/DbAssembly/DotNetDBTools.SampleDB.Agnostic.dll";
+        private static readonly string s_agnosticConnectionString = $"Data Source=localhost,{MsSqlServerHostPort};Initial Catalog={AgnosticDatabaseName};Integrated Security=False;User ID=SA;Password={MsSqlServerPassword}";
+
+        private const string MSSQLDbProjectBinDir = "../../../../../Samples/DotNetDBTools.SampleDB.MSSQL/bin";
+        private static readonly string s_mssqlDbAssemblyPath = $"{MSSQLDbProjectBinDir}/DbAssembly/DotNetDBTools.SampleDB.MSSQL.dll";
+        private static readonly string s_mssqlConnectionString = $"Data Source=localhost,{MsSqlServerHostPort};Initial Catalog={MSSQLDatabaseName};Integrated Security=False;User ID=SA;Password={MsSqlServerPassword}";
+
+        public static void Main()
+        {
+            RunAgnosticSampleDBExample();
+            RunMSSQLSampleDBExample();
+        }
+
+        private static void RunAgnosticSampleDBExample()
+        {
+            DropDatabaseIfExists(s_agnosticConnectionString);
+
+            Console.WriteLine("Creating new AgnosticSampleDB...");
+            DeployAgnosticSampleDB();
+
+            Console.WriteLine("Updating existing AgnosticSampleDB...");
+            DeployAgnosticSampleDB();
+        }
+
+        private static void RunMSSQLSampleDBExample()
+        {
+            DropDatabaseIfExists(s_mssqlConnectionString);
+
+            Console.WriteLine("Creating new MSSQLSampleDB...");
             DeployMSSQLSampleDB();
-            System.Console.WriteLine(System.Environment.NewLine);
+
+            Console.WriteLine("Updating existing MSSQLSampleDB...");
+            DeployMSSQLSampleDB();
         }
 
         private static void DeployAgnosticSampleDB()
         {
-            string dbAssemblyPath = "../../../../DotNetDBTools.SampleDB.Agnostic/bin/DbAssembly/DotNetDBTools.SampleDB.Agnostic.dll";
-            MSSQLDeployManager deployManager = new();
-            deployManager.UpdateDatabase(dbAssemblyPath);
+            MSSQLDeployManager deployManager = new(true, false);
+            deployManager.UpdateDatabase(s_agnosticDbAssemblyPath, s_agnosticConnectionString);
         }
 
         private static void DeployMSSQLSampleDB()
         {
-            Assembly dbAssembly = Assembly.GetAssembly(typeof(SampleDB.MSSQL.Tables.MyTable1));
-            MSSQLDeployManager deployManager = new();
-            deployManager.UpdateDatabase(dbAssembly);
+            MSSQLDeployManager deployManager = new(true, false);
+            deployManager.UpdateDatabase(s_mssqlDbAssemblyPath, s_mssqlConnectionString);
+        }
+
+        private static void DropDatabaseIfExists(string connectionString)
+        {
+            SqlConnectionStringBuilder sqlConnectionBuilder = new(connectionString);
+            string databaseName = sqlConnectionBuilder.InitialCatalog;
+            sqlConnectionBuilder.InitialCatalog = string.Empty;
+            string connectionStringWithoutDb = sqlConnectionBuilder.ConnectionString;
+
+            using SqlConnection connection = new(connectionStringWithoutDb);
+            connection.Execute(
+$@"IF EXISTS (SELECT * FROM [sys].[databases] WHERE [name] = '{databaseName}')
+BEGIN
+    ALTER DATABASE {databaseName}
+    SET OFFLINE WITH ROLLBACK IMMEDIATE;
+
+    ALTER DATABASE {databaseName}
+    SET ONLINE;
+
+    DROP DATABASE {databaseName};
+END;");
         }
     }
 }

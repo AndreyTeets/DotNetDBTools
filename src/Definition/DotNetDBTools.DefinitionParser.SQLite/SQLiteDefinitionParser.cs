@@ -11,7 +11,8 @@ namespace DotNetDBTools.DefinitionParser.SQLite
     {
         public static SQLiteDatabaseInfo CreateDatabaseInfo(string dbAssemblyPath)
         {
-            throw new NotImplementedException();
+            Assembly dbAssembly = AssemblyLoader.LoadDbAssemblyFromDll(dbAssemblyPath);
+            return CreateDatabaseInfo(dbAssembly);
         }
 
         public static SQLiteDatabaseInfo CreateDatabaseInfo(Assembly dbAssembly)
@@ -19,11 +20,13 @@ namespace DotNetDBTools.DefinitionParser.SQLite
             IEnumerable<ITable> tables = dbAssembly.GetTypes()
                 .Where(x => x.GetInterfaces()
                     .Any(y => y == typeof(ITable)))
+                .OrderBy(x => x.Name, StringComparer.Ordinal)
                 .Select(x => (ITable)Activator.CreateInstance(x));
 
             IEnumerable<IView> views = dbAssembly.GetTypes()
                 .Where(x => x.GetInterfaces()
                     .Any(y => y == typeof(IView)))
+                .OrderBy(x => x.Name, StringComparer.Ordinal)
                 .Select(x => (IView)Activator.CreateInstance(x));
 
             return new SQLiteDatabaseInfo()
@@ -69,6 +72,7 @@ namespace DotNetDBTools.DefinitionParser.SQLite
         private static List<SQLiteColumnInfo> GetColumnInfos(ITable table)
             => table.GetType().GetPropertyOrFieldMembers()
                 .Where(x => typeof(Column).IsAssignableFrom(x.GetPropertyOrFieldType()))
+                .OrderBy(x => x.Name, StringComparer.Ordinal)
                 .Select(x =>
                 {
                     Column column = (Column)x.GetPropertyOrFieldValue(table);
@@ -76,7 +80,7 @@ namespace DotNetDBTools.DefinitionParser.SQLite
                     {
                         ID = column.ID,
                         Name = x.Name,
-                        DataType = column.Type.GetType().Name,
+                        DataType = ColumnTypeMapper.GetSqlType(column.Type),
                         DefaultValue = column.Default,
                     };
                 })
@@ -85,6 +89,7 @@ namespace DotNetDBTools.DefinitionParser.SQLite
         private static List<SQLiteForeignKeyInfo> GetForeignKeyInfos(ITable table)
             => table.GetType().GetPropertyOrFieldMembers()
                 .Where(x => typeof(ForeignKey).IsAssignableFrom(x.GetPropertyOrFieldType()))
+                .OrderBy(x => x.Name, StringComparer.Ordinal)
                 .Select(x =>
                 {
                     ForeignKey foreignKey = (ForeignKey)x.GetPropertyOrFieldValue(table);

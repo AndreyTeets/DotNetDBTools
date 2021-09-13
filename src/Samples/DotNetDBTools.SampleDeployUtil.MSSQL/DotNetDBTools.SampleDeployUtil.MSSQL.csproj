@@ -6,7 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DotNetDBTools.SampleDB.MSSQL\DotNetDBTools.SampleDB.MSSQL.csproj" />
     <ProjectReference Include="..\..\Deploy\DotNetDBTools.Deploy.MSSQL\DotNetDBTools.Deploy.MSSQL.csproj" />
   </ItemGroup>
 

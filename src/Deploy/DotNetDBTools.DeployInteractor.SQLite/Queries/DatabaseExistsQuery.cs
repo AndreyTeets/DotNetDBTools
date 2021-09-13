@@ -7,7 +7,7 @@ namespace DotNetDBTools.DeployInteractor.SQLite.Queries
         public string Sql =>
 $@"SELECT
     true
-FROM sqlite_master 
+FROM sqlite_master
 WHERE type = 'table' AND name = '{DNDBTSysTables.DNDBTDbObjects}';";
 
         public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();

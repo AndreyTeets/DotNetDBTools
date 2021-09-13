@@ -10,14 +10,16 @@ namespace DotNetDBTools.Analysis.SQLite
         {
             IEnumerable<SQLiteTableInfo> addedTables = newDatabase.Tables
                 .Where(newDbTable => !oldDatabase.Tables.Any(oldDbTable => oldDbTable.ID == newDbTable.ID))
+                .PutReferencedFirst()
                 .Select(x => (SQLiteTableInfo)x);
 
             IEnumerable<SQLiteTableInfo> removedTables = oldDatabase.Tables
                 .Where(oldDbTable => !newDatabase.Tables.Any(newDbTable => newDbTable.ID == oldDbTable.ID))
+                .PutReferencedLast()
                 .Select(x => (SQLiteTableInfo)x);
 
             List<SQLiteTableDiff> changedTables = new();
-            foreach (SQLiteTableInfo newDbTable in newDatabase.Tables)
+            foreach (SQLiteTableInfo newDbTable in newDatabase.Tables.PutReferencedFirst())
             {
                 SQLiteTableInfo oldDbTable = (SQLiteTableInfo)oldDatabase.Tables.FirstOrDefault(x => x.ID == newDbTable.ID);
                 if (oldDbTable is not null)

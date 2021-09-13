@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.SqlClient;
 using System.Reflection;
 using DotNetDBTools.Analysis.MSSQL;
 using DotNetDBTools.DefinitionParser;
@@ -9,25 +10,49 @@ using DotNetDBTools.Models.MSSQL;
 
 namespace DotNetDBTools.Deploy.MSSQL
 {
-    public class MSSQLDeployManager
+    public class MSSQLDeployManager : IDeployManager
     {
-        public void UpdateDatabase(string dbAssemblyPath)
+        private readonly bool _allowDbCreation; // TODO DeployOptions
+        private readonly bool _allowDataLoss;
+
+        public MSSQLDeployManager(bool allowDbCreation = default, bool allowDataLoss = default)
         {
-            Assembly dbAssembly = AssemblyLoader.LoadDbAssemblyFromDll(dbAssemblyPath);
-            UpdateDatabase(dbAssembly);
+            _allowDbCreation = allowDbCreation;
+            _allowDataLoss = allowDataLoss;
         }
 
-        public void UpdateDatabase(Assembly dbAssembly)
+        public void UpdateDatabase(string dbAssemblyPath, string connectionString)
         {
-            GetNewAndOldDatabasesInfos(dbAssembly, out MSSQLDatabaseInfo database, out MSSQLDatabaseInfo existingDatabase);
-            MSSQLInteractor interactor = new(new MSSQLQueryExecutor());
+            Assembly dbAssembly = AssemblyLoader.LoadDbAssemblyFromDll(dbAssemblyPath);
+            UpdateDatabase(dbAssembly, connectionString);
+        }
+
+        public void UpdateDatabase(Assembly dbAssembly, string connectionString)
+        {
+            MSSQLDatabaseInfo database = CreateMSSQLDatabaseInfo(dbAssembly);
+            MSSQLDatabaseInfo existingDatabase = GetExistingDatabaseOrCreateEmptyIfNotExists(connectionString);
+
+            if (!MSSQLDbValidator.CanUpdate(database, existingDatabase, _allowDataLoss, out string error))
+                throw new Exception($"Can not update database: {error}");
+
             MSSQLDatabaseDiff databaseDiff = MSSQLDiffCreator.CreateDatabaseDiff(database, existingDatabase);
+            MSSQLInteractor interactor = new(new MSSQLQueryExecutor(connectionString));
             interactor.UpdateDatabase(databaseDiff);
         }
 
-        public string GenerateUpdateScript(Assembly dbAssembly)
+        public string GenerateUpdateScript(string dbAssemblyPath, string connectionString)
         {
-            GetNewAndOldDatabasesInfos(dbAssembly, out MSSQLDatabaseInfo database, out MSSQLDatabaseInfo existingDatabase);
+            Assembly dbAssembly = AssemblyLoader.LoadDbAssemblyFromDll(dbAssemblyPath);
+            return GenerateUpdateScript(dbAssembly, connectionString);
+        }
+
+        public string GenerateUpdateScript(Assembly dbAssembly, string connectionString)
+        {
+            MSSQLDatabaseInfo database = CreateMSSQLDatabaseInfo(dbAssembly);
+
+            MSSQLInteractor interactor = new(new MSSQLQueryExecutor(connectionString));
+            MSSQLDatabaseInfo existingDatabase = interactor.GetExistingDatabase();
+
             return GenerateUpdateScript(database, existingDatabase);
         }
 
@@ -38,14 +63,6 @@ namespace DotNetDBTools.Deploy.MSSQL
             MSSQLDatabaseDiff databaseDiff = MSSQLDiffCreator.CreateDatabaseDiff(database, existingDatabase);
             interactor.UpdateDatabase(databaseDiff);
             return genSqlScriptQueryExecutor.GetFinalScript();
-        }
-
-        private static void GetNewAndOldDatabasesInfos(Assembly dbAssembly, out MSSQLDatabaseInfo database, out MSSQLDatabaseInfo existingDatabase)
-        {
-            database = CreateMSSQLDatabaseInfo(dbAssembly);
-            existingDatabase = GetExistingDatabase();
-            if (!MSSQLDbValidator.CanUpdate(database, existingDatabase, false, out string error))
-                throw new Exception($"Can not update database: {error}");
         }
 
         private static MSSQLDatabaseInfo CreateMSSQLDatabaseInfo(Assembly dbAssembly)
@@ -61,11 +78,34 @@ namespace DotNetDBTools.Deploy.MSSQL
             return database;
         }
 
-        private static MSSQLDatabaseInfo GetExistingDatabase()
+        private MSSQLDatabaseInfo GetExistingDatabaseOrCreateEmptyIfNotExists(string connectionString)
         {
-            MSSQLInteractor interactor = new(new MSSQLQueryExecutor());
-            MSSQLDatabaseInfo existingDatabase = interactor.GetExistingDatabase();
-            return existingDatabase;
+            SqlConnectionStringBuilder sqlConnectionBuilder = new(connectionString);
+            string databaseName = sqlConnectionBuilder.InitialCatalog;
+            sqlConnectionBuilder.InitialCatalog = string.Empty;
+            string connectionStringWithoutDb = sqlConnectionBuilder.ConnectionString;
+
+            MSSQLInteractor interactor = new(new MSSQLQueryExecutor(connectionString));
+            MSSQLInteractor interactorForEmptyChecks = new(new MSSQLQueryExecutor(connectionStringWithoutDb));
+            bool databaseExists = interactorForEmptyChecks.DatabaseExists(databaseName);
+            if (databaseExists)
+            {
+                MSSQLDatabaseInfo existingDatabase = interactor.GetExistingDatabase();
+                return existingDatabase;
+            }
+            else
+            {
+                if (_allowDbCreation)
+                {
+                    interactorForEmptyChecks.CreateDatabase(databaseName);
+                    interactor.CreateSystemTables();
+                    return new MSSQLDatabaseInfo();
+                }
+                else
+                {
+                    throw new Exception($"Database doesn't exist and it's creation is not allowed");
+                }
+            }
         }
     }
 }

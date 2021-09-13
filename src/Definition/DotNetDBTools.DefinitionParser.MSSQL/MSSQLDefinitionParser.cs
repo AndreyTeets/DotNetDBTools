@@ -11,7 +11,8 @@ namespace DotNetDBTools.DefinitionParser.MSSQL
     {
         public static MSSQLDatabaseInfo CreateDatabaseInfo(string dbAssemblyPath)
         {
-            throw new NotImplementedException();
+            Assembly dbAssembly = AssemblyLoader.LoadDbAssemblyFromDll(dbAssemblyPath);
+            return CreateDatabaseInfo(dbAssembly);
         }
 
         public static MSSQLDatabaseInfo CreateDatabaseInfo(Assembly dbAssembly)
@@ -19,23 +20,33 @@ namespace DotNetDBTools.DefinitionParser.MSSQL
             IEnumerable<ITable> tables = dbAssembly.GetTypes()
                 .Where(x => x.GetInterfaces()
                     .Any(y => y == typeof(ITable)))
+                .OrderBy(x => x.Name, StringComparer.Ordinal)
                 .Select(x => (ITable)Activator.CreateInstance(x));
 
             IEnumerable<IView> views = dbAssembly.GetTypes()
                 .Where(x => x.GetInterfaces()
                     .Any(y => y == typeof(IView)))
+                .OrderBy(x => x.Name, StringComparer.Ordinal)
                 .Select(x => (IView)Activator.CreateInstance(x));
 
             IEnumerable<IFunction> functions = dbAssembly.GetTypes()
                 .Where(x => x.GetInterfaces()
                     .Any(y => y == typeof(IFunction)))
+                .OrderBy(x => x.Name, StringComparer.Ordinal)
                 .Select(x => (IFunction)Activator.CreateInstance(x));
+
+            IEnumerable<IUserDefinedType> userDefinedTypes = dbAssembly.GetTypes()
+                .Where(x => x.GetInterfaces()
+                    .Any(y => y == typeof(IUserDefinedType)))
+                .OrderBy(x => x.Name, StringComparer.Ordinal)
+                .Select(x => (IUserDefinedType)Activator.CreateInstance(x));
 
             return new MSSQLDatabaseInfo()
             {
                 Tables = GetTableInfos(tables),
                 Views = GetViewInfos(views),
                 Functions = GetFunctionInfos(functions),
+                UserDefinedTypes = GetUserDefinedTypesInfos(userDefinedTypes),
             };
         }
 
@@ -88,9 +99,25 @@ namespace DotNetDBTools.DefinitionParser.MSSQL
             return functionInfos;
         }
 
+        private static List<MSSQLUserDefinedTypeInfo> GetUserDefinedTypesInfos(IEnumerable<IUserDefinedType> userDefinedTypes)
+        {
+            List<MSSQLUserDefinedTypeInfo> userDefinedTypeInfos = new();
+            foreach (IUserDefinedType userDefinedType in userDefinedTypes)
+            {
+                MSSQLUserDefinedTypeInfo userDefinedTypeInfo = new()
+                {
+                    ID = userDefinedType.ID,
+                    Name = userDefinedType.GetType().Name,
+                };
+                userDefinedTypeInfos.Add(userDefinedTypeInfo);
+            }
+            return userDefinedTypeInfos;
+        }
+
         private static List<MSSQLColumnInfo> GetColumnInfos(ITable table)
             => table.GetType().GetPropertyOrFieldMembers()
                 .Where(x => typeof(Column).IsAssignableFrom(x.GetPropertyOrFieldType()))
+                .OrderBy(x => x.Name, StringComparer.Ordinal)
                 .Select(x =>
                 {
                     Column column = (Column)x.GetPropertyOrFieldValue(table);
@@ -98,7 +125,7 @@ namespace DotNetDBTools.DefinitionParser.MSSQL
                     {
                         ID = column.ID,
                         Name = x.Name,
-                        DataType = column.Type.GetType().Name,
+                        DataType = ColumnTypeMapper.GetSqlType(column.Type),
                         DefaultValue = column.Default,
                     };
                 })
@@ -107,6 +134,7 @@ namespace DotNetDBTools.DefinitionParser.MSSQL
         private static List<MSSQLForeignKeyInfo> GetForeignKeyInfos(ITable table)
             => table.GetType().GetPropertyOrFieldMembers()
                 .Where(x => typeof(ForeignKey).IsAssignableFrom(x.GetPropertyOrFieldType()))
+                .OrderBy(x => x.Name, StringComparer.Ordinal)
                 .Select(x =>
                 {
                     ForeignKey foreignKey = (ForeignKey)x.GetPropertyOrFieldValue(table);

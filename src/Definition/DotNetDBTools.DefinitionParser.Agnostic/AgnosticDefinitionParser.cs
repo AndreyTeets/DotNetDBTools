@@ -20,11 +20,13 @@ namespace DotNetDBTools.DefinitionParser.Agnostic
             IEnumerable<ITable> tables = dbAssembly.GetTypes()
                 .Where(x => x.GetInterfaces()
                     .Any(y => y == typeof(ITable)))
+                .OrderBy(x => x.Name, StringComparer.Ordinal)
                 .Select(x => (ITable)Activator.CreateInstance(x));
 
             IEnumerable<IView> views = dbAssembly.GetTypes()
                 .Where(x => x.GetInterfaces()
                     .Any(y => y == typeof(IView)))
+                .OrderBy(x => x.Name, StringComparer.Ordinal)
                 .Select(x => (IView)Activator.CreateInstance(x));
 
             return new AgnosticDatabaseInfo()
@@ -70,6 +72,7 @@ namespace DotNetDBTools.DefinitionParser.Agnostic
         private static List<AgnosticColumnInfo> GetColumnInfos(ITable table)
             => table.GetType().GetPropertyOrFieldMembers()
                 .Where(x => typeof(Column).IsAssignableFrom(x.GetPropertyOrFieldType()))
+                .OrderBy(x => x.Name, StringComparer.Ordinal)
                 .Select(x =>
                 {
                     Column column = (Column)x.GetPropertyOrFieldValue(table);
@@ -77,7 +80,7 @@ namespace DotNetDBTools.DefinitionParser.Agnostic
                     {
                         ID = column.ID,
                         Name = x.Name,
-                        DataType = column.Type.GetType().Name,
+                        DataType = column.Type,
                         DefaultValue = column.Default,
                     };
                 })
@@ -86,6 +89,7 @@ namespace DotNetDBTools.DefinitionParser.Agnostic
         private static List<AgnosticForeignKeyInfo> GetForeignKeyInfos(ITable table)
             => table.GetType().GetPropertyOrFieldMembers()
                 .Where(x => typeof(ForeignKey).IsAssignableFrom(x.GetPropertyOrFieldType()))
+                .OrderBy(x => x.Name, StringComparer.Ordinal)
                 .Select(x =>
                 {
                     ForeignKey foreignKey = (ForeignKey)x.GetPropertyOrFieldValue(table);

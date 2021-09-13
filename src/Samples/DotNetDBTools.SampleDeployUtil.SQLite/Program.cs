@@ -25,9 +25,10 @@ namespace DotNetDBTools.SampleDeployUtil.SQLite
         private static void RunAgnosticSampleDBExample()
         {
             DropDatabaseIfExists(s_agnosticDbFilePath);
-            Directory.CreateDirectory(Path.GetDirectoryName(s_agnosticDbFilePath));
+
             Console.WriteLine("Creating new AgnosticSampleDB...");
             DeployAgnosticSampleDB();
+
             Console.WriteLine("Updating existing AgnosticSampleDB...");
             DeployAgnosticSampleDB();
         }
@@ -35,9 +36,10 @@ namespace DotNetDBTools.SampleDeployUtil.SQLite
         private static void RunSQLiteSampleDBExample()
         {
             DropDatabaseIfExists(s_sqliteDbFilePath);
-            Directory.CreateDirectory(Path.GetDirectoryName(s_sqliteDbFilePath));
+
             Console.WriteLine("Creating new SQLiteSampleDB...");
             DeploySQLiteSampleDB();
+
             Console.WriteLine("Updating existing SQLiteSampleDB...");
             DeploySQLiteSampleDB();
         }
@@ -58,6 +60,7 @@ namespace DotNetDBTools.SampleDeployUtil.SQLite
         {
             if (File.Exists(dbFilePath))
                 File.Delete(dbFilePath);
+            Directory.CreateDirectory(Path.GetDirectoryName(dbFilePath));
         }
     }
 }

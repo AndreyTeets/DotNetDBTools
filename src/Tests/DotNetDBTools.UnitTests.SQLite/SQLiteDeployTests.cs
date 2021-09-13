@@ -6,6 +6,7 @@ using DotNetDBTools.Deploy.SQLite;
 using DotNetDBTools.Description.Agnostic;
 using DotNetDBTools.Models.Agnostic;
 using DotNetDBTools.Models.SQLite;
+using FluentAssertions;
 using Xunit;
 
 namespace DotNetDBTools.UnitTests.SQLite
@@ -23,7 +24,7 @@ namespace DotNetDBTools.UnitTests.SQLite
                 .Replace("\r\n", "\n").Trim();
             string expectedScript = File.ReadAllText(@"TestData\SQLiteSampleDB_ExpectedUpdateScript.sql")
                 .Replace("\r\n", "\n").Trim();
-            Assert.Equal(expectedScript, actualScript);
+            actualScript.Should().Be(expectedScript);
         }
 
         [Fact]
@@ -35,7 +36,7 @@ namespace DotNetDBTools.UnitTests.SQLite
                 .Replace("\r\n", "\n").Trim();
             string expectedDescriptionCode = File.ReadAllText(@"TestData\AgnosticSampleDB_ExpectedDescriptionCode.cs")
                 .Replace("\r\n", "\n").Trim();
-            Assert.Equal(expectedDescriptionCode, actualDescriptionCode);
+            actualDescriptionCode.Should().Be(expectedDescriptionCode);
         }
     }
 }

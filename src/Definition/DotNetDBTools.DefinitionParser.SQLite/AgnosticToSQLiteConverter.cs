@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using DotNetDBTools.Definition;
 using DotNetDBTools.Models.Agnostic;
 using DotNetDBTools.Models.SQLite;
 
@@ -35,7 +36,7 @@ namespace DotNetDBTools.DefinitionParser.SQLite
            {
                ID = columnInfo.ID,
                Name = columnInfo.Name,
-               DataType = columnInfo.DataType,
+               DataType = ColumnTypeMapper.GetSqlType((IDbType)columnInfo.DataType),
                DefaultValue = columnInfo.DefaultValue,
            };
 

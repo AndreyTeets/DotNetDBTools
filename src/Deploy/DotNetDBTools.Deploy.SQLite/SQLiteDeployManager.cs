@@ -9,7 +9,7 @@ using DotNetDBTools.Models.SQLite;
 
 namespace DotNetDBTools.Deploy.SQLite
 {
-    public class SQLiteDeployManager
+    public class SQLiteDeployManager : IDeployManager
     {
         private readonly bool _allowDbCreation; // TODO DeployOptions
         private readonly bool _allowDataLoss;
@@ -29,15 +29,20 @@ namespace DotNetDBTools.Deploy.SQLite
         public void UpdateDatabase(Assembly dbAssembly, string connectionString)
         {
             SQLiteDatabaseInfo database = CreateSQLiteDatabaseInfo(dbAssembly);
-
-            SQLiteInteractor interactor = new(new SQLiteQueryExecutor(connectionString));
-            SQLiteDatabaseInfo existingDatabase = GetExistingDatabaseOrCreateEmptyIfNotExists(interactor);
+            SQLiteDatabaseInfo existingDatabase = GetExistingDatabaseOrCreateEmptyIfNotExists(connectionString);
 
             if (!SQLiteDbValidator.CanUpdate(database, existingDatabase, _allowDataLoss, out string error))
                 throw new Exception($"Can not update database: {error}");
 
             SQLiteDatabaseDiff databaseDiff = SQLiteDiffCreator.CreateDatabaseDiff(database, existingDatabase);
+            SQLiteInteractor interactor = new(new SQLiteQueryExecutor(connectionString));
             interactor.UpdateDatabase(databaseDiff);
+        }
+
+        public string GenerateUpdateScript(string dbAssemblyPath, string connectionString)
+        {
+            Assembly dbAssembly = AssemblyLoader.LoadDbAssemblyFromDll(dbAssemblyPath);
+            return GenerateUpdateScript(dbAssembly, connectionString);
         }
 
         public string GenerateUpdateScript(Assembly dbAssembly, string connectionString)
@@ -72,8 +77,9 @@ namespace DotNetDBTools.Deploy.SQLite
             return database;
         }
 
-        private SQLiteDatabaseInfo GetExistingDatabaseOrCreateEmptyIfNotExists(SQLiteInteractor interactor)
+        private SQLiteDatabaseInfo GetExistingDatabaseOrCreateEmptyIfNotExists(string connectionString)
         {
+            SQLiteInteractor interactor = new(new SQLiteQueryExecutor(connectionString));
             bool databaseExists = interactor.DatabaseExists();
             if (databaseExists)
             {
@@ -84,7 +90,7 @@ namespace DotNetDBTools.Deploy.SQLite
             {
                 if (_allowDbCreation)
                 {
-                    interactor.CreateEmptyDatabase();
+                    interactor.CreateSystemTables();
                     return new SQLiteDatabaseInfo();
                 }
                 else

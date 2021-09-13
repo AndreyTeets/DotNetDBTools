@@ -3,6 +3,8 @@
     public enum MSSQLDbObjectsTypes
     {
         Table,
+        Function,
         Procedure,
+        UserDefinedType,
     }
 }
