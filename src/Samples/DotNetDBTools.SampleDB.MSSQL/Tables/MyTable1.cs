@@ -1,6 +1,6 @@
-﻿using DotNetDBTools.Definition.MSSQL;
+﻿using System;
+using DotNetDBTools.Definition.MSSQL;
 using DotNetDBTools.Definition.MSSQL.DbTypes;
-using System;
 
 namespace DotNetDBTools.SampleDB.MSSQL.Tables
 {

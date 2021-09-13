@@ -1,6 +1,6 @@
-﻿using DotNetDBTools.Models.MSSQL;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using DotNetDBTools.Models.MSSQL;
 
 namespace DotNetDBTools.DeployInteractor.MSSQL.Queries
 {

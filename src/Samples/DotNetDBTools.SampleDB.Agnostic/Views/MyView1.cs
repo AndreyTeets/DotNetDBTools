@@ -1,5 +1,5 @@
-﻿using DotNetDBTools.Definition.Agnostic;
-using System;
+﻿using System;
+using DotNetDBTools.Definition.Agnostic;
 
 namespace DotNetDBTools.SampleDB.Agnostic.Views
 {

@@ -1,5 +1,5 @@
-﻿using DotNetDBTools.Definition.MSSQL;
-using System;
+﻿using System;
+using DotNetDBTools.Definition.MSSQL;
 
 namespace DotNetDBTools.SampleDB.MSSQL.Functions
 {

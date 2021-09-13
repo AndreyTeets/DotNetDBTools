@@ -1,6 +1,6 @@
-﻿using DotNetDBTools.Definition.SQLite;
+﻿using System;
+using DotNetDBTools.Definition.SQLite;
 using DotNetDBTools.Definition.SQLite.DbTypes;
-using System;
 
 namespace DotNetDBTools.SampleDB.SQLite.Tables
 {

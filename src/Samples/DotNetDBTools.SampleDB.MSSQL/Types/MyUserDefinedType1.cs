@@ -1,7 +1,7 @@
-﻿using DotNetDBTools.Definition;
+﻿using System;
+using DotNetDBTools.Definition;
 using DotNetDBTools.Definition.MSSQL;
 using DotNetDBTools.Definition.MSSQL.DbTypes;
-using System;
 
 namespace DotNetDBTools.SampleDB.MSSQL.Types
 {

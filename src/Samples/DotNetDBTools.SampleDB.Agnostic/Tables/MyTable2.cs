@@ -1,6 +1,6 @@
-﻿using DotNetDBTools.Definition.Agnostic;
+﻿using System;
+using DotNetDBTools.Definition.Agnostic;
 using DotNetDBTools.Definition.Agnostic.DbTypes;
-using System;
 
 namespace DotNetDBTools.SampleDB.Agnostic.Tables
 {

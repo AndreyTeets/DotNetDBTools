@@ -1,9 +1,9 @@
-﻿using DotNetDBTools.Definition.SQLite;
-using DotNetDBTools.Models.SQLite;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using DotNetDBTools.Definition.SQLite;
+using DotNetDBTools.Models.SQLite;
 
 namespace DotNetDBTools.DefinitionParser.SQLite
 {

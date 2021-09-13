@@ -1,5 +1,5 @@
-﻿using DotNetDBTools.Definition.SQLite;
-using System;
+﻿using System;
+using DotNetDBTools.Definition.SQLite;
 
 namespace DotNetDBTools.SampleDB.SQLite.Views
 {
