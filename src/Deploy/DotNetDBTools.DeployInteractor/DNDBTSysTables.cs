@@ -10,6 +10,7 @@
             public readonly string Metadata = nameof(Metadata);
 
             public override string ToString() => nameof(DNDBTDbObjects);
+            public static implicit operator string(DNDBTDbObjectsTableInfo info) => info.ToString();
         }
 
         public static readonly DNDBTDbObjectsTableInfo DNDBTDbObjects = new();

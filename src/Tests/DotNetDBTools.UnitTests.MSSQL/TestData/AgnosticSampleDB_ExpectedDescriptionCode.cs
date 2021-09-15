@@ -8,6 +8,7 @@
             public readonly string MyColumn2 = nameof(MyColumn2);
 
             public override string ToString() => nameof(MyTable1);
+            public static implicit operator string(MyTable1Info info) => info.ToString();
         }
         public class MyTable2Info
         {
@@ -15,6 +16,7 @@
             public readonly string MyColumn2 = nameof(MyColumn2);
 
             public override string ToString() => nameof(MyTable2);
+            public static implicit operator string(MyTable2Info info) => info.ToString();
         }
 
         public static readonly MyTable1Info MyTable1 = new();
