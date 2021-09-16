@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\Definition\DotNetDBTools.Definition.SQLite\DotNetDBTools.Definition.SQLite.csproj" />
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy /q /y /r &quot;$(TargetDir)$(TargetName).dll&quot; &quot;$(ProjectDir)bin\DbAssembly\&quot;" />
+  </Target>
+
+</Project>

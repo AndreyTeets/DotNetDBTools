@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="$(SolutionDir)build\props\UnitTests.props"/>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Utils\DotNetDBTools.TestsUtils\DotNetDBTools.TestsUtils.csproj" />
+    <ProjectReference Include="..\..\..\src\Analysis\DotNetDBTools.Analysis.Agnostic\DotNetDBTools.Analysis.Agnostic.csproj" />
+    <ProjectReference Include="..\..\..\src\Analysis\DotNetDBTools.Analysis.MSSQL\DotNetDBTools.Analysis.MSSQL.csproj" />
+    <ProjectReference Include="..\..\..\src\Deploy\DotNetDBTools.Deploy.SQLite\DotNetDBTools.Deploy.SQLite.csproj" />
+    <ProjectReference Include="..\..\..\src\Description\DotNetDBTools.Description.Agnostic\DotNetDBTools.Description.Agnostic.csproj" />
+    <ProjectReference Include="..\..\..\src\Description\DotNetDBTools.Description.SQLite\DotNetDBTools.Description.SQLite.csproj" />
+    <ProjectReference Include="..\..\..\samples\Databases\DotNetDBTools.SampleDB.Agnostic\DotNetDBTools.SampleDB.Agnostic.csproj" />
+    <ProjectReference Include="..\..\..\samples\Databases\DotNetDBTools.SampleDB.SQLite\DotNetDBTools.SampleDB.SQLite.csproj" />
+  </ItemGroup>
+
+</Project>
