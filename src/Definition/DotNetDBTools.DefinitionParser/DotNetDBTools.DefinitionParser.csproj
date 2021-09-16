@@ -1,8 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-  </PropertyGroup>
+  <Import Project="$(ProjectDir)..\..\..\build\props\Source.props"/>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Models\DotNetDBTools.Models.Agnostic\DotNetDBTools.Models.Agnostic.csproj" />

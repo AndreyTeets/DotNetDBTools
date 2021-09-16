@@ -17,7 +17,7 @@ namespace DotNetDBTools.SampleDB.Agnostic.Tables
 
         public Column MyColumn2 = new("5A0D1926-3270-4EB2-92EB-00BE56C7AF23")
         {
-            Type = new ByteDbType() { Length = 2 },
+            Type = new ByteDbType() { Length = 22 },
             Nullable = true,
             Default = new byte[] { 0 },
         };

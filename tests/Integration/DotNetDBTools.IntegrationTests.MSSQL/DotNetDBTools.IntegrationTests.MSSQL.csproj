@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="$(SolutionDir)build\props\IntegrationTests.props"/>
+  <Import Project="$(ProjectDir)..\..\..\build\props\IntegrationTests.props"/>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Utils\DotNetDBTools.TestsUtils\DotNetDBTools.TestsUtils.csproj" />
-    <ProjectReference Include="..\..\..\src\Deploy\DotNetDBTools.Deploy.MSSQL\DotNetDBTools.Deploy.MSSQL.csproj" />
+    <ProjectReference Include="..\..\..\src\Tools\DotNetDBTools.DbDeployTools\DotNetDBTools.DbDeployTools.csproj" />
   </ItemGroup>
 
 </Project>

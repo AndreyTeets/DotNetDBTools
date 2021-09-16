@@ -1,0 +1,17 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+    <GetTargetPathDependsOn>$(GetTargetPathDependsOn);GetDependencyTargetPaths</GetTargetPathDependsOn>
+  </PropertyGroup>
+
+  <Target Name="GetDependencyTargetPaths" Condition="'$(Configuration)'=='Debug'">
+    <ItemGroup>
+      <TargetPathWithTargetPlatformMoniker Include="..\..\..\src\Tools\$(ProjectName)\bin\AnalyzerDebugRefAssemblies\*.dll" IncludeRuntimeDependency="false" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(Configuration)'=='Debug'">
+    <Exec Command="xcopy /q /y /r &quot;$(TargetDir)*&quot; &quot;$(ProjectDir)bin\AnalyzerDebugRefAssemblies\&quot;&#xD;&#xA;del /q /f &quot;$(ProjectDir)bin\AnalyzerDebugRefAssemblies\$(TargetName).dll&quot;" />
+  </Target>
+
+</Project>

@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="$(SolutionDir)build\props\UnitTests.props"/>
+  <Import Project="$(ProjectDir)..\..\..\build\props\UnitTests.props"/>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Utils\DotNetDBTools.TestsUtils\DotNetDBTools.TestsUtils.csproj" />

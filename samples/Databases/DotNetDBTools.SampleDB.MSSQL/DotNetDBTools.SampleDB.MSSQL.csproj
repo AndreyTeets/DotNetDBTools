@@ -4,8 +4,14 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\src\Definition\DotNetDBTools.Definition.MSSQL\DotNetDBTools.Definition.MSSQL.csproj" />
+  <ItemGroup Condition="'$(Configuration)'=='Release'">
+    <PackageReference Include="DotNetDBTools.DbDefinitionAbstractions" Version="$(Version)" />
+    <PackageReference Include="DotNetDBTools.DbDescriptionGenerator" Version="$(Version)" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(Configuration)'=='Debug'">
+    <ProjectReference Include="..\..\..\src\Tools\DotNetDBTools.DbDefinitionAbstractions\DotNetDBTools.DbDefinitionAbstractions.csproj" />
+    <ProjectReference Include="..\..\..\src\Tools\DotNetDBTools.DbDescriptionGenerator\DotNetDBTools.DbDescriptionGenerator.csproj" OutputItemType="Analyzer" PrivateAssets="all" />
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">

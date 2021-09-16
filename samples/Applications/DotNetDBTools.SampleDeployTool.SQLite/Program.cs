@@ -2,7 +2,7 @@
 using System.IO;
 using DotNetDBTools.Deploy.SQLite;
 
-namespace DotNetDBTools.SampleDeployUtil.SQLite
+namespace DotNetDBTools.SampleDeployTool.SQLite
 {
     public class Program
     {

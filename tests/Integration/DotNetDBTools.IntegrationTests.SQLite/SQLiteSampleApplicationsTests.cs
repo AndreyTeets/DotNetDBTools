@@ -8,17 +8,25 @@ namespace DotNetDBTools.IntegrationTests.SQLite
     [TestClass]
     public class SQLiteSampleApplicationsTests
     {
-        private static readonly string s_deployAssemblyPath = $"{RepoRoot}/samples/DeployUtils/DotNetDBTools.SampleDeployUtil.SQLite/{ProjectsOutDirPath}/DotNetDBTools.SampleDeployUtil.SQLite.exe";
-        private static readonly string s_applicationAssemblyPath = $"{RepoRoot}/samples/Applications/DotNetDBTools.SampleApplication.Agnostic/{ProjectsOutDirPath}/DotNetDBTools.SampleApplication.Agnostic.exe";
+        private static readonly string s_sampleDeployToolAssemblyPath = $"{RepoRoot}/samples/Applications/DotNetDBTools.SampleDeployTool.SQLite/{ProjectsOutDirPath}/DotNetDBTools.SampleDeployTool.SQLite.exe";
+        private static readonly string s_sampleBusinessLogicOnlyAppAssemblyPath = $"{RepoRoot}/samples/Applications/DotNetDBTools.SampleBusinessLogicOnlyApp.SQLite/{ProjectsOutDirPath}/DotNetDBTools.SampleBusinessLogicOnlyApp.SQLite.exe";
+        private static readonly string s_sampleSelfUpdatingAppAssemblyPath = $"{RepoRoot}/samples/Applications/DotNetDBTools.SampleSelfUpdatingApp.SQLite/{ProjectsOutDirPath}/DotNetDBTools.SampleSelfUpdatingApp.SQLite.exe";
 
         [TestMethod]
-        public void SampleSQLiteProjects_Run_WithoutErrors()
+        public void SampleSQLite_DeployToolAndBusinessLogicOnlyApps_Run_WithoutErrors()
         {
-            (int exitCodeDeploy, string outputDeploy) = ProcessHelper.RunProcess(s_deployAssemblyPath);
+            (int exitCodeDeploy, string outputDeploy) = ProcessHelper.RunProcess(s_sampleDeployToolAssemblyPath);
             exitCodeDeploy.Should().Be(0, $"process output: '{outputDeploy}'");
 
-            (int exitCodeAgnosticApplication, string outputAgnosticApplication) = ProcessHelper.RunProcess(s_applicationAssemblyPath);
-            exitCodeAgnosticApplication.Should().Be(0, $"process output: '{outputAgnosticApplication}'");
+            (int exitCodeApplication, string outputApplication) = ProcessHelper.RunProcess(s_sampleBusinessLogicOnlyAppAssemblyPath);
+            exitCodeApplication.Should().Be(0, $"process output: '{outputApplication}'");
+        }
+
+        [TestMethod]
+        public void SampleSQLite_SelfUpdatingApp_Run_WithoutErrors()
+        {
+            (int exitCodeApplication, string outputApplication) = ProcessHelper.RunProcess(s_sampleSelfUpdatingAppAssemblyPath);
+            exitCodeApplication.Should().Be(0, $"process output: '{outputApplication}'");
         }
     }
 }

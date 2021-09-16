@@ -1,0 +1,12 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <IsPackable>true</IsPackable>
+    <IncludeSymbols>true</IncludeSymbols>
+    <IncludeSource>true</IncludeSource>
+    <PackageTags>DotNetDBTools;Database</PackageTags>
+    <PackageOutputPath>$(ProjectDir)..\..\..\artifacts\nuget\$(Configuration)</PackageOutputPath>
+  </PropertyGroup>
+  
+</Project>
