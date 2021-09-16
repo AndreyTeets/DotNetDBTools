@@ -6,11 +6,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Samples\DotNetDBTools.SampleDB.Agnostic\DotNetDBTools.SampleDB.Agnostic.csproj" />
-    <ProjectReference Include="..\..\Samples\DotNetDBTools.SampleDB.SQLite\DotNetDBTools.SampleDB.SQLite.csproj" />
+    <ProjectReference Include="..\DotNetDBTools.CommonTestsUtils\DotNetDBTools.CommonTestsUtils.csproj" />
+    <ProjectReference Include="..\..\Analysis\DotNetDBTools.Analysis.Agnostic\DotNetDBTools.Analysis.Agnostic.csproj" />
+    <ProjectReference Include="..\..\Analysis\DotNetDBTools.Analysis.MSSQL\DotNetDBTools.Analysis.MSSQL.csproj" />
     <ProjectReference Include="..\..\Deploy\DotNetDBTools.Deploy.SQLite\DotNetDBTools.Deploy.SQLite.csproj" />
     <ProjectReference Include="..\..\Description\DotNetDBTools.Description.Agnostic\DotNetDBTools.Description.Agnostic.csproj" />
     <ProjectReference Include="..\..\Description\DotNetDBTools.Description.SQLite\DotNetDBTools.Description.SQLite.csproj" />
+    <ProjectReference Include="..\..\Samples\DotNetDBTools.SampleDB.Agnostic\DotNetDBTools.SampleDB.Agnostic.csproj" />
+    <ProjectReference Include="..\..\Samples\DotNetDBTools.SampleDB.SQLite\DotNetDBTools.SampleDB.SQLite.csproj" />
   </ItemGroup>
 
   <ItemGroup>

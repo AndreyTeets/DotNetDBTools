@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -6,11 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Samples\DotNetDBTools.SampleDB.Agnostic\DotNetDBTools.SampleDB.Agnostic.csproj" />
-    <ProjectReference Include="..\..\Samples\DotNetDBTools.SampleDB.SQLite\DotNetDBTools.SampleDB.SQLite.csproj" />
+    <ProjectReference Include="..\DotNetDBTools.CommonTestsUtils\DotNetDBTools.CommonTestsUtils.csproj" />
     <ProjectReference Include="..\..\Deploy\DotNetDBTools.Deploy.SQLite\DotNetDBTools.Deploy.SQLite.csproj" />
-    <ProjectReference Include="..\..\Description\DotNetDBTools.Description.Agnostic\DotNetDBTools.Description.Agnostic.csproj" />
-    <ProjectReference Include="..\..\Description\DotNetDBTools.Description.SQLite\DotNetDBTools.Description.SQLite.csproj" />
   </ItemGroup>
 
   <ItemGroup>

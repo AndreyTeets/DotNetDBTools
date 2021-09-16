@@ -2,13 +2,11 @@
 using System.IO;
 using System.Text;
 
-namespace DotNetDBTools.IntegrationTests.SQLite
+namespace DotNetDBTools.CommonTestsUtils
 {
-    public class ProcessRunner
+    public static class ProcessHelper
     {
-        private readonly object _outputLock = new();
-
-        public (int, string) RunProcess(string filePath)
+        public static (int, string) RunProcess(string filePath)
         {
             ProcessStartInfo startInfo = new();
             startInfo.FileName = filePath;
@@ -22,8 +20,9 @@ namespace DotNetDBTools.IntegrationTests.SQLite
             process.StartInfo = startInfo;
 
             StringBuilder output = new();
-            process.OutputDataReceived += (sender, eventArgs) => { lock (_outputLock) { output.AppendLine(eventArgs.Data); }; };
-            process.ErrorDataReceived += (sender, eventArgs) => { lock (_outputLock) { output.AppendLine(eventArgs.Data); }; };
+            object outputLock = new();
+            process.OutputDataReceived += (sender, eventArgs) => { lock (outputLock) { output.AppendLine(eventArgs.Data); }; };
+            process.ErrorDataReceived += (sender, eventArgs) => { lock (outputLock) { output.AppendLine(eventArgs.Data); }; };
 
             process.Start();
             process.BeginOutputReadLine();

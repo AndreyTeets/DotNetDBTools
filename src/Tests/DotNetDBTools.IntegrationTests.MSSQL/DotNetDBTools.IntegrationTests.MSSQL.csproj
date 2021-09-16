@@ -6,15 +6,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Samples\DotNetDBTools.SampleDB.Agnostic\DotNetDBTools.SampleDB.Agnostic.csproj" />
-    <ProjectReference Include="..\..\Samples\DotNetDBTools.SampleDB.MSSQL\DotNetDBTools.SampleDB.MSSQL.csproj" />
+    <ProjectReference Include="..\DotNetDBTools.CommonTestsUtils\DotNetDBTools.CommonTestsUtils.csproj" />
     <ProjectReference Include="..\..\Deploy\DotNetDBTools.Deploy.MSSQL\DotNetDBTools.Deploy.MSSQL.csproj" />
-    <ProjectReference Include="..\..\Description\DotNetDBTools.Description.Agnostic\DotNetDBTools.Description.Agnostic.csproj" />
-    <ProjectReference Include="..\..\Description\DotNetDBTools.Description.MSSQL\DotNetDBTools.Description.MSSQL.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Docker.DotNet" Version="3.125.5" />
     <PackageReference Include="FluentAssertions" Version="6.1.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
     <PackageReference Include="MSTest.TestAdapter" Version="2.2.3" />

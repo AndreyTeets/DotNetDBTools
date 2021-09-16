@@ -6,8 +6,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Analysis\DotNetDBTools.Analysis\DotNetDBTools.Analysis.csproj" />
+    <ProjectReference Include="..\DotNetDBTools.CommonTestsUtils\DotNetDBTools.CommonTestsUtils.csproj" />
+    <ProjectReference Include="..\..\Analysis\DotNetDBTools.Analysis.Agnostic\DotNetDBTools.Analysis.Agnostic.csproj" />
+    <ProjectReference Include="..\..\Definition\DotNetDBTools.DefinitionParser.Agnostic\DotNetDBTools.DefinitionParser.Agnostic.csproj" />
+    <ProjectReference Include="..\..\Description\DotNetDBTools.Description.Agnostic\DotNetDBTools.Description.Agnostic.csproj" />
     <ProjectReference Include="..\..\Models\DotNetDBTools.Models.Agnostic\DotNetDBTools.Models.Agnostic.csproj" />
+    <ProjectReference Include="..\..\Samples\DotNetDBTools.SampleDB.Agnostic\DotNetDBTools.SampleDB.Agnostic.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,6 +26,13 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="TestData\**" />
+    <Content Update="TestData\**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>
