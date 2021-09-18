@@ -4,9 +4,9 @@ namespace DotNetDBTools.Description.SQLite
 {
     public static class SQLiteDbDescriptionGenerator
     {
-        public static string GenerateDescription(SQLiteDatabaseInfo databaseInfo)
+        public static string GenerateDescription(SQLiteDatabaseInfo databaseInfo, string dbName)
         {
-            return TablesDescriptionGenerator.GenerateTablesDescription(databaseInfo);
+            return TablesDescriptionGenerator.GenerateTablesDescription(databaseInfo, dbName);
         }
     }
 }

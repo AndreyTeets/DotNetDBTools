@@ -9,6 +9,19 @@ namespace DotNetDBTools.DefinitionParser.Agnostic
 {
     public static class AgnosticDefinitionParser
     {
+        public static bool IsAgnosticDb(Assembly dbAssembly)
+        {
+            return dbAssembly
+               .GetTypes()
+                .Any(x => x.GetInterfaces()
+                    .Any(y => y == typeof(ITable)));
+        }
+
+        public static string GetDbName(Assembly dbAssembly)
+        {
+            return dbAssembly.GetName().Name.Replace(".", "");
+        }
+
         public static AgnosticDatabaseInfo CreateDatabaseInfo(string dbAssemblyPath)
         {
             Assembly dbAssembly = AssemblyLoader.LoadDbAssemblyFromDll(dbAssemblyPath);

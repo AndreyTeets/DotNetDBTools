@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Data.SqlClient;
 using Dapper;
-using static SampleDBDescription.SampleDBTables;
+using static DotNetDBToolsSampleDBMSSQLDescription.DotNetDBToolsSampleDBMSSQLTables;
 
 namespace DotNetDBTools.SampleBusinessLogicOnlyApp.MSSQL
 {

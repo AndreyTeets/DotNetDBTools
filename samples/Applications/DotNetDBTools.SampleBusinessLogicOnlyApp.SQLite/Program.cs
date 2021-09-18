@@ -1,7 +1,7 @@
 ﻿using System;
 using Dapper;
 using Microsoft.Data.Sqlite;
-using static SampleDBDescription.SampleDBTables;
+using static DotNetDBToolsSampleDBSQLiteDescription.DotNetDBToolsSampleDBSQLiteTables;
 
 namespace DotNetDBTools.SampleBusinessLogicOnlyApp.SQLite
 {

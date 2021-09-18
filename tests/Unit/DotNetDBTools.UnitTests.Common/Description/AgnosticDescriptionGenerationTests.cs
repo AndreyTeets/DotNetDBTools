@@ -16,7 +16,8 @@ namespace DotNetDBTools.UnitTests.Common.Description
         {
             Assembly dbAssembly = Assembly.GetAssembly(typeof(SampleDB.Agnostic.Tables.MyTable1));
             AgnosticDatabaseInfo databaseInfo = AgnosticDefinitionParser.CreateDatabaseInfo(dbAssembly);
-            string actualDescriptionCode = AgnosticDbDescriptionGenerator.GenerateDescription(databaseInfo);
+            string dbName = AgnosticDefinitionParser.GetDbName(dbAssembly);
+            string actualDescriptionCode = AgnosticDbDescriptionGenerator.GenerateDescription(databaseInfo, dbName);
             string expectedDescriptionCode = File.ReadAllText(@"TestData\Expected_Description_For_AgnosticSampleDB.cs");
             actualDescriptionCode.NormalizeLineEndings().Should().Be(expectedDescriptionCode.NormalizeLineEndings());
         }

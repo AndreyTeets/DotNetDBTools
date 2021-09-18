@@ -4,9 +4,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DotNetDBTools.Deploy\DotNetDBTools.Deploy.csproj" />
-    <ProjectReference Include="..\..\Definition\DotNetDBTools.DefinitionParser.SQLite\DotNetDBTools.DefinitionParser.SQLite.csproj" />
     <ProjectReference Include="..\..\Analysis\DotNetDBTools.Analysis.Agnostic\DotNetDBTools.Analysis.Agnostic.csproj" />
     <ProjectReference Include="..\..\Analysis\DotNetDBTools.Analysis.SQLite\DotNetDBTools.Analysis.SQLite.csproj" />
+    <ProjectReference Include="..\..\Definition\DotNetDBTools.DefinitionParser.SQLite\DotNetDBTools.DefinitionParser.SQLite.csproj" />
     <ProjectReference Include="..\DotNetDBTools.DeployInteractor.SQLite\DotNetDBTools.DeployInteractor.SQLite.csproj" />
   </ItemGroup>
 

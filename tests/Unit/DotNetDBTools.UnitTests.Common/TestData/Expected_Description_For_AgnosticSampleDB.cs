@@ -1,6 +1,6 @@
-﻿namespace SampleDBDescription
+﻿namespace DotNetDBToolsSampleDBAgnosticDescription
 {
-    public static class SampleDBTables
+    public static class DotNetDBToolsSampleDBAgnosticTables
     {
         public class MyTable1Info
         {

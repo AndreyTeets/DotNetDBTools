@@ -4,9 +4,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DotNetDBTools.Deploy\DotNetDBTools.Deploy.csproj" />
-    <ProjectReference Include="..\..\Definition\DotNetDBTools.DefinitionParser.MSSQL\DotNetDBTools.DefinitionParser.MSSQL.csproj" />
     <ProjectReference Include="..\..\Analysis\DotNetDBTools.Analysis.Agnostic\DotNetDBTools.Analysis.Agnostic.csproj" />
     <ProjectReference Include="..\..\Analysis\DotNetDBTools.Analysis.MSSQL\DotNetDBTools.Analysis.MSSQL.csproj" />
+    <ProjectReference Include="..\..\Definition\DotNetDBTools.DefinitionParser.MSSQL\DotNetDBTools.DefinitionParser.MSSQL.csproj" />
     <ProjectReference Include="..\DotNetDBTools.DeployInteractor.MSSQL\DotNetDBTools.DeployInteractor.MSSQL.csproj" />
   </ItemGroup>
 

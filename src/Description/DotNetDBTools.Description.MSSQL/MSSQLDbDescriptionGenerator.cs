@@ -4,9 +4,9 @@ namespace DotNetDBTools.Description.MSSQL
 {
     public static class MSSQLDbDescriptionGenerator
     {
-        public static string GenerateDescription(MSSQLDatabaseInfo databaseInfo)
+        public static string GenerateDescription(MSSQLDatabaseInfo databaseInfo, string dbName)
         {
-            return TablesDescriptionGenerator.GenerateTablesDescription(databaseInfo);
+            return TablesDescriptionGenerator.GenerateTablesDescription(databaseInfo, dbName);
         }
     }
 }

@@ -5,17 +5,24 @@ namespace DotNetDBTools.Description
 {
     public static class TablesDescriptionGenerator
     {
-        public static string GenerateTablesDescription(IDatabaseInfo<ITableInfo<IColumnInfo>> databaseInfo)
+        public static string GenerateTablesDescription(IDatabaseInfo<ITableInfo<IColumnInfo>> databaseInfo, string dbName)
         {
             List<string> tableInfoDefinitions = new();
             List<string> tableDeclarations = new();
             foreach (ITableInfo<IColumnInfo> table in databaseInfo.Tables)
             {
+                List<string> columnDeclarations = new();
+                foreach (IColumnInfo column in table.Columns)
+                {
+                    string columnDeclaration =
+$@"            public readonly string {column.Name} = nameof({column.Name});";
+                    columnDeclarations.Add(columnDeclaration);
+                }
+
                 string tableInfoDefinition =
 $@"        public class {table.Name}Info
         {{
-            public readonly string MyColumn1 = nameof(MyColumn1);
-            public readonly string MyColumn2 = nameof(MyColumn2);
+{string.Join("\n", columnDeclarations)}
 
             public override string ToString() => nameof({table.Name});
             public static implicit operator string({table.Name}Info info) => info.ToString();
@@ -29,9 +36,9 @@ $@"        public static readonly {table.Name}Info {table.Name} = new();";
             }
 
             string res =
-$@"namespace SampleDBDescription
+$@"namespace {dbName}Description
 {{
-    public static class SampleDBTables
+    public static class {dbName}Tables
     {{
 {string.Join("\n", tableInfoDefinitions)}
 

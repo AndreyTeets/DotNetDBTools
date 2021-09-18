@@ -7,7 +7,7 @@ using Dapper;
 using SqlKata;
 using SqlKata.Compilers;
 using SqlKata.Execution;
-using static SampleDBDescription.SampleDBTables;
+using static DotNetDBToolsSampleDBAgnosticDescription.DotNetDBToolsSampleDBAgnosticTables;
 
 namespace DotNetDBTools.SampleBusinessLogicLib.Agnostic
 {

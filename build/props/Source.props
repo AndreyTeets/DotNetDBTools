@@ -2,9 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Deterministic>true</Deterministic>
     <IsPackable>true</IsPackable>
     <IncludeSymbols>true</IncludeSymbols>
     <IncludeSource>true</IncludeSource>
+    <EmbedAllSources>true</EmbedAllSources>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageTags>DotNetDBTools;Database</PackageTags>
     <PackageOutputPath>$(ProjectDir)..\..\..\artifacts\nuget\$(Configuration)</PackageOutputPath>
   </PropertyGroup>

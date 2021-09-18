@@ -9,6 +9,19 @@ namespace DotNetDBTools.DefinitionParser.SQLite
 {
     public class SQLiteDefinitionParser
     {
+        public static bool IsSQLiteDb(Assembly dbAssembly)
+        {
+            return dbAssembly
+                .GetTypes()
+                .Any(x => x.GetInterfaces()
+                    .Any(y => y == typeof(ITable)));
+        }
+
+        public static string GetDbName(Assembly dbAssembly)
+        {
+            return dbAssembly.GetName().Name.Replace(".", "");
+        }
+
         public static SQLiteDatabaseInfo CreateDatabaseInfo(string dbAssemblyPath)
         {
             Assembly dbAssembly = AssemblyLoader.LoadDbAssemblyFromDll(dbAssemblyPath);

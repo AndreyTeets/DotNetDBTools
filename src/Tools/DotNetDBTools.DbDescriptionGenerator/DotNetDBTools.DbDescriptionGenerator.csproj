@@ -5,6 +5,9 @@
   <PropertyGroup>
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <NoPackageAnalysis>true</NoPackageAnalysis>
+    <IncludeSymbols>false</IncludeSymbols>
+    <IncludeSource>false</IncludeSource>
+    <EmbedAllSources>false</EmbedAllSources>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,12 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Definition\DotNetDBTools.DefinitionParser.Agnostic\DotNetDBTools.DefinitionParser.Agnostic.csproj" PrivateAssets="all" GeneratePathProperty="true" />
-    <ProjectReference Include="..\..\Definition\DotNetDBTools.DefinitionParser.MSSQL\DotNetDBTools.DefinitionParser.MSSQL.csproj" PrivateAssets="all" GeneratePathProperty="true" />
-    <ProjectReference Include="..\..\Definition\DotNetDBTools.DefinitionParser.SQLite\DotNetDBTools.DefinitionParser.SQLite.csproj" PrivateAssets="all" GeneratePathProperty="true" />
-    <ProjectReference Include="..\..\Description\DotNetDBTools.Description.Agnostic\DotNetDBTools.Description.Agnostic.csproj" PrivateAssets="all" GeneratePathProperty="true" />
-    <ProjectReference Include="..\..\Description\DotNetDBTools.Description.MSSQL\DotNetDBTools.Description.MSSQL.csproj" PrivateAssets="all" GeneratePathProperty="true" />
-    <ProjectReference Include="..\..\Description\DotNetDBTools.Description.SQLite\DotNetDBTools.Description.SQLite.csproj" PrivateAssets="all" GeneratePathProperty="true" />
+    <ProjectReference Include="..\..\Description\DotNetDBTools.Description.Generic\DotNetDBTools.Description.Generic.csproj" PrivateAssets="all" GeneratePathProperty="true" />
   </ItemGroup>
 
   <ItemGroup>

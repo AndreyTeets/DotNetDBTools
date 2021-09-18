@@ -67,7 +67,7 @@ namespace DotNetDBTools.Deploy.SQLite
         private static SQLiteDatabaseInfo CreateSQLiteDatabaseInfo(Assembly dbAssembly)
         {
             SQLiteDatabaseInfo database;
-            if (DeployCommonFunctions.IsAgnosticDb(dbAssembly))
+            if (AgnosticDefinitionParser.IsAgnosticDb(dbAssembly))
                 database = AgnosticToSQLiteConverter.ConvertToSQLiteInfo(AgnosticDefinitionParser.CreateDatabaseInfo(dbAssembly));
             else
                 database = SQLiteDefinitionParser.CreateDatabaseInfo(dbAssembly);
