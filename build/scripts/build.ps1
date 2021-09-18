@@ -4,7 +4,8 @@ $repoRoot = "$PSScriptRoot/../.."
 Push-Location $repoRoot
 New-Item -Path "./artifacts/nuget/Debug" -ItemType Directory -Force | Out-Null
 
-dotnet build "./src/Tools/DotNetDBTools.DbDescriptionGenerator" -c Debug
+# Build analyzer-type projects first separately before sample projects
+dotnet build "./src/DotNetDBTools.DescriptionSourceGenerator" -c Debug
 if ($LastExitCode -ne 0) {
     throw
 }

@@ -1,0 +1,9 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="$(ProjectDir)..\..\build\props\IntegrationTests.props" />
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\DotNetDBTools.Deploy\DotNetDBTools.Deploy.csproj" />
+  </ItemGroup>
+
+</Project>

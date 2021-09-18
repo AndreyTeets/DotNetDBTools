@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="$(ProjectDir)..\..\build\props\Source.props" />
+
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.0.90" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="5.0.9" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DotNetDBTools.Analysis\DotNetDBTools.Analysis.csproj" />
+    <ProjectReference Include="..\DotNetDBTools.DefinitionParser\DotNetDBTools.DefinitionParser.csproj" />
+  </ItemGroup>
+
+</Project>

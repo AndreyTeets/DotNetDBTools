@@ -6,7 +6,7 @@
 
   <Target Name="GetDependencyTargetPaths" Condition="'$(Configuration)'=='Debug'">
     <ItemGroup>
-      <TargetPathWithTargetPlatformMoniker Include="..\..\..\src\Tools\$(ProjectName)\bin\AnalyzerDebugRefAssemblies\*.dll" IncludeRuntimeDependency="false" />
+      <TargetPathWithTargetPlatformMoniker Include="..\..\src\$(ProjectName)\bin\AnalyzerDebugRefAssemblies\*.dll" IncludeRuntimeDependency="false" />
     </ItemGroup>
   </Target>
 

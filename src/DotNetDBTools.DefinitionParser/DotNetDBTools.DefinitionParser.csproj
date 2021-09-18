@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="$(ProjectDir)..\..\build\props\Source.props" />
+
+  <ItemGroup>
+    <ProjectReference Include="..\DotNetDBTools.Definition.Agnostic\DotNetDBTools.Definition.Agnostic.csproj" />
+    <ProjectReference Include="..\DotNetDBTools.Definition.MSSQL\DotNetDBTools.Definition.MSSQL.csproj" />
+    <ProjectReference Include="..\DotNetDBTools.Definition.SQLite\DotNetDBTools.Definition.SQLite.csproj" />
+    <ProjectReference Include="..\DotNetDBTools.Models\DotNetDBTools.Models.csproj" />
+  </ItemGroup>
+
+</Project>

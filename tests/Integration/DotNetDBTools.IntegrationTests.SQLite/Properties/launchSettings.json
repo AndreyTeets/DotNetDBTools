@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "DotNetDBTools.IntegrationTests.SQLite": {
-      "commandName": "Project",
-      "nativeDebugging": true
-    }
-  }
-}
