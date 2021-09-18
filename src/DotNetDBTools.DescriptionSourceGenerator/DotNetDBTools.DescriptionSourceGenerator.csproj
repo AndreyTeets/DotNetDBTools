@@ -1,15 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <Import Project="$(ProjectDir)..\..\build\props\Source.props" />
-
-  <PropertyGroup>
-    <DevelopmentDependency>true</DevelopmentDependency>
-    <IncludeBuildOutput>false</IncludeBuildOutput>
-    <NoPackageAnalysis>true</NoPackageAnalysis>
-    <IncludeSymbols>false</IncludeSymbols>
-    <IncludeSource>false</IncludeSource>
-    <EmbedAllSources>false</EmbedAllSources>
-  </PropertyGroup>
+  <Import Project="$(ProjectDir)..\..\build\props\Analyzer.props" />
 
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.8.0" PrivateAssets="all" />
@@ -17,14 +9,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DotNetDBTools.DefinitionParser\DotNetDBTools.DefinitionParser.csproj" PrivateAssets="all" GeneratePathProperty="true" />
     <ProjectReference Include="..\DotNetDBTools.Description\DotNetDBTools.Description.csproj" PrivateAssets="all" GeneratePathProperty="true" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="$(OutputPath)\*.deps.json" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-    <None Include="$(OutputPath)\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-  </ItemGroup>
-
-  <Import Project="$(ProjectDir)..\..\build\targets\Analyzers.Debug.targets" />
+  <Import Project="$(ProjectDir)..\..\build\targets\Analyzer.targets" />
 
 </Project>

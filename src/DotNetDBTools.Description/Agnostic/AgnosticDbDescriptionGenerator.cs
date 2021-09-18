@@ -5,9 +5,9 @@ namespace DotNetDBTools.Description.Agnostic
 {
     public static class AgnosticDescriptionSourceGenerator
     {
-        public static string GenerateDescription(AgnosticDatabaseInfo databaseInfo, string dbName)
+        public static string GenerateDescription(AgnosticDatabaseInfo databaseInfo)
         {
-            return TablesDescriptionGenerator.GenerateTablesDescription(databaseInfo, dbName);
+            return TablesDescriptionGenerator.GenerateTablesDescription(databaseInfo);
         }
     }
 }

@@ -4,12 +4,12 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
-  <ItemGroup Condition="'$(Configuration)'=='Release'">
+  <ItemGroup Condition="'$(UsePackagesInSampleApplications)'=='True'">
     <PackageReference Include="DotNetDBTools.Definition.MSSQL" Version="$(Version)" PrivateAssets="all" />
     <PackageReference Include="DotNetDBTools.DescriptionSourceGenerator" Version="$(Version)" PrivateAssets="all" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(Configuration)'=='Debug'">
+  <ItemGroup Condition="'$(UsePackagesInSampleApplications)'!='True'">
     <ProjectReference Include="..\..\src\DotNetDBTools.Definition.MSSQL\DotNetDBTools.Definition.MSSQL.csproj" PrivateAssets="all" />
     <ProjectReference Include="..\..\src\DotNetDBTools.DescriptionSourceGenerator\DotNetDBTools.DescriptionSourceGenerator.csproj" OutputItemType="Analyzer" PrivateAssets="all" />
   </ItemGroup>

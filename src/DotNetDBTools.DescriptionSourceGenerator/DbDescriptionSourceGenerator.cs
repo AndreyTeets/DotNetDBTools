@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using DotNetDBTools.DefinitionParser;
 using DotNetDBTools.Description;
+using DotNetDBTools.Models.Common;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Emit;
 
@@ -27,7 +29,8 @@ namespace DotNetDBTools.DescriptionSourceGenerator
             try
             {
                 Assembly dbAssembly = CompileInMemoryAnLoad(context.Compilation);
-                string dbDescriptionCode = DbDescriptionGenerator.GenerateDescription(dbAssembly);
+                IDatabaseInfo<ITableInfo<IColumnInfo>> databaseInfo = DbDefinitionParser.CreateDatabaseInfo(dbAssembly);
+                string dbDescriptionCode = DbDescriptionGenerator.GenerateDescription(databaseInfo);
                 context.AddSource("DbDescription", dbDescriptionCode);
             }
             catch (Exception ex)

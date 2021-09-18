@@ -5,11 +5,11 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
-  <ItemGroup Condition="'$(Configuration)'=='Release'">
+  <ItemGroup Condition="'$(UsePackagesInSampleApplications)'=='True'">
     <PackageReference Include="DotNetDBTools.Deploy" Version="$(Version)" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(Configuration)'=='Debug'">
+  <ItemGroup Condition="'$(UsePackagesInSampleApplications)'!='True'">
     <ProjectReference Include="..\..\src\DotNetDBTools.Deploy\DotNetDBTools.Deploy.csproj" />
   </ItemGroup>
 

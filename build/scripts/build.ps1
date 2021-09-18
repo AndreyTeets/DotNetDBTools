@@ -20,7 +20,7 @@ if ($LastExitCode -ne 0) {
     throw
 }
 
-dotnet build DotNetDBTools.sln -c Release
+dotnet build DotNetDBTools.sln -c Release -p:UsePackagesInSampleApplications=True
 if ($LastExitCode -ne 0) {
     throw
 }

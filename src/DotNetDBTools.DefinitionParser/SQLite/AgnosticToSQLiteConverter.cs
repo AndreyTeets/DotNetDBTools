@@ -8,7 +8,7 @@ namespace DotNetDBTools.DefinitionParser.SQLite
     public static class AgnosticToSQLiteConverter
     {
         public static SQLiteDatabaseInfo ConvertToSQLiteInfo(AgnosticDatabaseInfo databaseInfo)
-           => new()
+           => new(databaseInfo.Name)
            {
                Tables = databaseInfo.Tables.Select(x => ConvertToSQLiteInfo((AgnosticTableInfo)x)).ToList(),
                Views = databaseInfo.Views.Select(x => ConvertToSQLiteInfo((AgnosticViewInfo)x)).ToList(),

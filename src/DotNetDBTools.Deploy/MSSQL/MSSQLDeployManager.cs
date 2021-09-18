@@ -5,6 +5,7 @@ using DotNetDBTools.Analysis.MSSQL;
 using DotNetDBTools.DefinitionParser.Agnostic;
 using DotNetDBTools.DefinitionParser.Common;
 using DotNetDBTools.DefinitionParser.MSSQL;
+using DotNetDBTools.Models.Common;
 using DotNetDBTools.Models.MSSQL;
 
 namespace DotNetDBTools.Deploy.MSSQL
@@ -67,7 +68,7 @@ namespace DotNetDBTools.Deploy.MSSQL
         private static MSSQLDatabaseInfo CreateMSSQLDatabaseInfo(Assembly dbAssembly)
         {
             MSSQLDatabaseInfo database;
-            if (AgnosticDefinitionParser.IsAgnosticDb(dbAssembly))
+            if (DbAssemblyInfoHelper.GetDbType(dbAssembly) == DatabaseType.Agnostic)
                 database = AgnosticToMSSQLConverter.ConvertToMSSQLInfo(AgnosticDefinitionParser.CreateDatabaseInfo(dbAssembly));
             else
                 database = MSSQLDefinitionParser.CreateDatabaseInfo(dbAssembly);
@@ -98,7 +99,7 @@ namespace DotNetDBTools.Deploy.MSSQL
                 {
                     interactorForEmptyChecks.CreateDatabase(databaseName);
                     interactor.CreateSystemTables();
-                    return new MSSQLDatabaseInfo();
+                    return new MSSQLDatabaseInfo(null);
                 }
                 else
                 {

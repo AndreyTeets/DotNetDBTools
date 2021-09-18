@@ -4,6 +4,7 @@ using DotNetDBTools.Analysis.SQLite;
 using DotNetDBTools.DefinitionParser.Agnostic;
 using DotNetDBTools.DefinitionParser.Common;
 using DotNetDBTools.DefinitionParser.SQLite;
+using DotNetDBTools.Models.Common;
 using DotNetDBTools.Models.SQLite;
 
 namespace DotNetDBTools.Deploy.SQLite
@@ -66,7 +67,7 @@ namespace DotNetDBTools.Deploy.SQLite
         private static SQLiteDatabaseInfo CreateSQLiteDatabaseInfo(Assembly dbAssembly)
         {
             SQLiteDatabaseInfo database;
-            if (AgnosticDefinitionParser.IsAgnosticDb(dbAssembly))
+            if (DbAssemblyInfoHelper.GetDbType(dbAssembly) == DatabaseType.Agnostic)
                 database = AgnosticToSQLiteConverter.ConvertToSQLiteInfo(AgnosticDefinitionParser.CreateDatabaseInfo(dbAssembly));
             else
                 database = SQLiteDefinitionParser.CreateDatabaseInfo(dbAssembly);
@@ -90,7 +91,7 @@ namespace DotNetDBTools.Deploy.SQLite
                 if (_allowDbCreation)
                 {
                     interactor.CreateSystemTables();
-                    return new SQLiteDatabaseInfo();
+                    return new SQLiteDatabaseInfo(null);
                 }
                 else
                 {

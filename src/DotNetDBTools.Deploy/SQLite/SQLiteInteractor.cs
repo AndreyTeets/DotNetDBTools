@@ -45,7 +45,7 @@ namespace DotNetDBTools.Deploy.SQLite
                 tables.Add(table);
             }
 
-            return new SQLiteDatabaseInfo()
+            return new SQLiteDatabaseInfo(null)
             {
                 Tables = tables,
             };

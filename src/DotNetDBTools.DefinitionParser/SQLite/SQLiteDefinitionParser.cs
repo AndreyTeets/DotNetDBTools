@@ -10,19 +10,6 @@ namespace DotNetDBTools.DefinitionParser.SQLite
 {
     public class SQLiteDefinitionParser
     {
-        public static bool IsSQLiteDb(Assembly dbAssembly)
-        {
-            return dbAssembly
-                .GetTypes()
-                .Any(x => x.GetInterfaces()
-                    .Any(y => y == typeof(ITable)));
-        }
-
-        public static string GetDbName(Assembly dbAssembly)
-        {
-            return dbAssembly.GetName().Name.Replace(".", "");
-        }
-
         public static SQLiteDatabaseInfo CreateDatabaseInfo(string dbAssemblyPath)
         {
             Assembly dbAssembly = AssemblyLoader.LoadDbAssemblyFromDll(dbAssemblyPath);
@@ -43,7 +30,7 @@ namespace DotNetDBTools.DefinitionParser.SQLite
                 .OrderBy(x => x.Name, StringComparer.Ordinal)
                 .Select(x => (IView)Activator.CreateInstance(x));
 
-            return new SQLiteDatabaseInfo()
+            return new SQLiteDatabaseInfo(DbAssemblyInfoHelper.GetDbName(dbAssembly))
             {
                 Tables = GetTableInfos(tables),
                 Views = GetViewInfos(views),

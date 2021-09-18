@@ -79,7 +79,7 @@ namespace DotNetDBTools.Deploy.MSSQL
                 userDefinedTypes.Add(userDefinedType);
             }
 
-            return new MSSQLDatabaseInfo()
+            return new MSSQLDatabaseInfo(null)
             {
                 Tables = tables,
                 UserDefinedTypes = userDefinedTypes,

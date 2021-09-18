@@ -8,7 +8,7 @@ namespace DotNetDBTools.DefinitionParser.MSSQL
     public static class AgnosticToMSSQLConverter
     {
         public static MSSQLDatabaseInfo ConvertToMSSQLInfo(AgnosticDatabaseInfo databaseInfo)
-           => new()
+           => new(databaseInfo.Name)
            {
                Tables = databaseInfo.Tables.Select(x => ConvertToMSSQLInfo((AgnosticTableInfo)x)).ToList(),
                Views = databaseInfo.Views.Select(x => ConvertToMSSQLInfo((AgnosticViewInfo)x)).ToList(),

@@ -10,19 +10,6 @@ namespace DotNetDBTools.DefinitionParser.MSSQL
 {
     public class MSSQLDefinitionParser
     {
-        public static bool IsMSSQLDb(Assembly dbAssembly)
-        {
-            return dbAssembly
-               .GetTypes()
-                .Any(x => x.GetInterfaces()
-                    .Any(y => y == typeof(ITable)));
-        }
-
-        public static string GetDbName(Assembly dbAssembly)
-        {
-            return dbAssembly.GetName().Name.Replace(".", "");
-        }
-
         public static MSSQLDatabaseInfo CreateDatabaseInfo(string dbAssemblyPath)
         {
             Assembly dbAssembly = AssemblyLoader.LoadDbAssemblyFromDll(dbAssemblyPath);
@@ -55,7 +42,7 @@ namespace DotNetDBTools.DefinitionParser.MSSQL
                 .OrderBy(x => x.Name, StringComparer.Ordinal)
                 .Select(x => (IUserDefinedType)Activator.CreateInstance(x));
 
-            return new MSSQLDatabaseInfo()
+            return new MSSQLDatabaseInfo(DbAssemblyInfoHelper.GetDbName(dbAssembly))
             {
                 Tables = GetTableInfos(tables),
                 Views = GetViewInfos(views),

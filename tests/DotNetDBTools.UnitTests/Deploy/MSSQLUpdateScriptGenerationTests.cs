@@ -17,7 +17,7 @@ namespace DotNetDBTools.UnitTests.Deploy
             Assembly dbAssembly = Assembly.GetAssembly(typeof(SampleDB.MSSQL.Tables.MyTable1));
             MSSQLDeployManager deployManager = new(true, false);
             MSSQLDatabaseInfo databaseInfo = MSSQLDefinitionParser.CreateDatabaseInfo(dbAssembly);
-            MSSQLDatabaseInfo existingDatabaseInfo = new();
+            MSSQLDatabaseInfo existingDatabaseInfo = new(null);
             string actualScript = deployManager.GenerateUpdateScript(databaseInfo, existingDatabaseInfo);
             string expectedScript = File.ReadAllText(@"TestData\Expected_MSSQLUpdateScript_For_MSSQLSampleDB_WhenExistingDbIsEmpty.sql");
             actualScript.NormalizeLineEndings().Should().Be(expectedScript.NormalizeLineEndings());
