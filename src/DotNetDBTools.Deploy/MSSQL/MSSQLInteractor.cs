@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using DotNetDBTools.Deploy.Shared;
 using DotNetDBTools.Deploy.MSSQL.Queries;
+using DotNetDBTools.Deploy.Shared;
 using DotNetDBTools.Models.MSSQL;
 
 namespace DotNetDBTools.Deploy.MSSQL
@@ -59,6 +59,11 @@ namespace DotNetDBTools.Deploy.MSSQL
         public void CreateSystemTables()
         {
             _queryExecutor.Execute(new CreateSystemTablesQuery());
+        }
+
+        public void DeleteSystemTables()
+        {
+            _queryExecutor.Execute(new DeleteSystemTablesQuery());
         }
 
         public MSSQLDatabaseInfo GetExistingDatabase()

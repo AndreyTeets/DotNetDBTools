@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Reflection;
 using DotNetDBTools.DefinitionParser.Agnostic;
-using DotNetDBTools.DefinitionParser.Shared;
 using DotNetDBTools.DefinitionParser.MSSQL;
+using DotNetDBTools.DefinitionParser.Shared;
 using DotNetDBTools.DefinitionParser.SQLite;
 using DotNetDBTools.Models.Shared;
 

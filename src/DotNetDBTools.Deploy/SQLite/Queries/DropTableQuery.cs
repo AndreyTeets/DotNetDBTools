@@ -21,8 +21,8 @@ namespace DotNetDBTools.Deploy.SQLite.Queries
             string query =
 $@"DROP TABLE {table.Name};
 
-DELETE FROM {DNDBTSysTables.DNDBTDbObjects}
-WHERE {DNDBTSysTables.DNDBTDbObjects.ID} = '{table.ID}';";
+DELETE FROM {DNDBTSystemTables.DNDBTDbObjects}
+WHERE {DNDBTSystemTables.DNDBTDbObjects.ID} = '{table.ID}';";
 
             return query;
         }

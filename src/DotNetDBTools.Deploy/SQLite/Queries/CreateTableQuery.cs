@@ -26,12 +26,12 @@ namespace DotNetDBTools.Deploy.SQLite.Queries
         private static string GetSql(SQLiteTableInfo table)
         {
             string query =
-$@"INSERT INTO {DNDBTSysTables.DNDBTDbObjects}
+$@"INSERT INTO {DNDBTSystemTables.DNDBTDbObjects}
 (
-    {DNDBTSysTables.DNDBTDbObjects.ID},
-    {DNDBTSysTables.DNDBTDbObjects.Type},
-    {DNDBTSysTables.DNDBTDbObjects.Name},
-    {DNDBTSysTables.DNDBTDbObjects.Metadata}
+    {DNDBTSystemTables.DNDBTDbObjects.ID},
+    {DNDBTSystemTables.DNDBTDbObjects.Type},
+    {DNDBTSystemTables.DNDBTDbObjects.Name},
+    {DNDBTSystemTables.DNDBTDbObjects.Metadata}
 )
 VALUES
 (

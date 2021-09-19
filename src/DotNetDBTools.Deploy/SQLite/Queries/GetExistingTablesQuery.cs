@@ -7,9 +7,9 @@ namespace DotNetDBTools.Deploy.SQLite.Queries
     {
         public string Sql =>
 $@"SELECT
-    {DNDBTSysTables.DNDBTDbObjects.Metadata}
-FROM {DNDBTSysTables.DNDBTDbObjects}
-WHERE {DNDBTSysTables.DNDBTDbObjects.Type} = '{SQLiteDbObjectsTypes.Table}';";
+    {DNDBTSystemTables.DNDBTDbObjects.Metadata}
+FROM {DNDBTSystemTables.DNDBTDbObjects}
+WHERE {DNDBTSystemTables.DNDBTDbObjects.Type} = '{SQLiteDbObjectsTypes.Table}';";
 
         public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
     }

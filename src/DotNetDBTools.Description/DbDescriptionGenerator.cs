@@ -1,16 +1,25 @@
 ﻿using System;
+using System.IO;
 using DotNetDBTools.Description.Agnostic;
 using DotNetDBTools.Description.MSSQL;
 using DotNetDBTools.Description.SQLite;
 using DotNetDBTools.Models.Agnostic;
-using DotNetDBTools.Models.Shared;
 using DotNetDBTools.Models.MSSQL;
+using DotNetDBTools.Models.Shared;
 using DotNetDBTools.Models.SQLite;
 
 namespace DotNetDBTools.Description
 {
     public static class DbDescriptionGenerator
     {
+        public static void GenerateDescription(IDatabaseInfo<ITableInfo<IColumnInfo>> databaseInfo, string outputPath)
+        {
+            string generatedDescription = GenerateDescription(databaseInfo);
+            string fullPath = Path.GetFullPath(outputPath);
+            Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
+            File.WriteAllText(fullPath, generatedDescription);
+        }
+
         public static string GenerateDescription(IDatabaseInfo<ITableInfo<IColumnInfo>> databaseInfo)
         {
             return databaseInfo.Kind switch

@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Data.SqlClient;
+using System.IO;
 using System.Reflection;
 using DotNetDBTools.Analysis.MSSQL;
+using DotNetDBTools.DefinitionGenerator;
 using DotNetDBTools.DefinitionParser.Agnostic;
-using DotNetDBTools.DefinitionParser.Shared;
 using DotNetDBTools.DefinitionParser.MSSQL;
-using DotNetDBTools.Models.Shared;
+using DotNetDBTools.DefinitionParser.Shared;
+using DotNetDBTools.Deploy.MSSQL;
 using DotNetDBTools.Models.MSSQL;
+using DotNetDBTools.Models.Shared;
 
-namespace DotNetDBTools.Deploy.MSSQL
+namespace DotNetDBTools.Deploy
 {
     public class MSSQLDeployManager : IDeployManager
     {
@@ -21,13 +24,13 @@ namespace DotNetDBTools.Deploy.MSSQL
             _allowDataLoss = allowDataLoss;
         }
 
-        public void UpdateDatabase(string dbAssemblyPath, string connectionString)
+        public void PublishDatabase(string dbAssemblyPath, string connectionString)
         {
             Assembly dbAssembly = AssemblyLoader.LoadDbAssemblyFromDll(dbAssemblyPath);
-            UpdateDatabase(dbAssembly, connectionString);
+            PublishDatabase(dbAssembly, connectionString);
         }
 
-        public void UpdateDatabase(Assembly dbAssembly, string connectionString)
+        public void PublishDatabase(Assembly dbAssembly, string connectionString)
         {
             MSSQLDatabaseInfo database = CreateMSSQLDatabaseInfo(dbAssembly);
             MSSQLDatabaseInfo existingDatabase = GetExistingDatabaseOrCreateEmptyIfNotExists(connectionString);
@@ -40,29 +43,62 @@ namespace DotNetDBTools.Deploy.MSSQL
             interactor.UpdateDatabase(databaseDiff);
         }
 
-        public string GenerateUpdateScript(string dbAssemblyPath, string connectionString)
+        public void GeneratePublishScript(string dbAssemblyPath, string connectionString, string outputPath)
         {
             Assembly dbAssembly = AssemblyLoader.LoadDbAssemblyFromDll(dbAssemblyPath);
-            return GenerateUpdateScript(dbAssembly, connectionString);
+            GeneratePublishScript(dbAssembly, connectionString, outputPath);
         }
 
-        public string GenerateUpdateScript(Assembly dbAssembly, string connectionString)
+        public void GeneratePublishScript(Assembly dbAssembly, string connectionString, string outputPath)
         {
             MSSQLDatabaseInfo database = CreateMSSQLDatabaseInfo(dbAssembly);
-
-            MSSQLInteractor interactor = new(new MSSQLQueryExecutor(connectionString));
-            MSSQLDatabaseInfo existingDatabase = interactor.GetExistingDatabase();
-
-            return GenerateUpdateScript(database, existingDatabase);
+            MSSQLDatabaseInfo existingDatabase = GetExistingDatabase(connectionString);
+            GeneratePublishScript(database, existingDatabase, outputPath);
         }
 
-        public string GenerateUpdateScript(MSSQLDatabaseInfo database, MSSQLDatabaseInfo existingDatabase)
+        public void GeneratePublishScript(Assembly newDbAssembly, Assembly oldDbAssembly, string outputPath)
+        {
+            MSSQLDatabaseInfo database = CreateMSSQLDatabaseInfo(newDbAssembly);
+            MSSQLDatabaseInfo existingDatabase = CreateMSSQLDatabaseInfo(oldDbAssembly);
+            GeneratePublishScript(database, existingDatabase, outputPath);
+        }
+
+        public void GenerateDefinition(string connectionString, string outputDirectory)
+        {
+            MSSQLInteractor interactor = new(new MSSQLQueryExecutor(connectionString));
+            MSSQLDatabaseInfo existingDatabase = interactor.GetExistingDatabase();
+            DbDefinitionGenerator.GenerateDefinition(existingDatabase, outputDirectory);
+        }
+
+        public void RegisterAsDNDBT(string connectionString)
+        {
+            return;
+#pragma warning disable CS0162 // Unreachable code detected
+            MSSQLInteractor interactor = new(new MSSQLQueryExecutor(connectionString));
+#pragma warning restore CS0162 // Unreachable code detected
+            interactor.CreateSystemTables();
+        }
+
+        public void UnregisterAsDNDBT(string connectionString)
+        {
+            return;
+#pragma warning disable CS0162 // Unreachable code detected
+            MSSQLInteractor interactor = new(new MSSQLQueryExecutor(connectionString));
+#pragma warning restore CS0162 // Unreachable code detected
+            interactor.DeleteSystemTables();
+        }
+
+        public void GeneratePublishScript(MSSQLDatabaseInfo database, MSSQLDatabaseInfo existingDatabase, string outputPath)
         {
             MSSQLGenSqlScriptQueryExecutor genSqlScriptQueryExecutor = new();
             MSSQLInteractor interactor = new(genSqlScriptQueryExecutor);
             MSSQLDatabaseDiff databaseDiff = MSSQLDiffCreator.CreateDatabaseDiff(database, existingDatabase);
             interactor.UpdateDatabase(databaseDiff);
-            return genSqlScriptQueryExecutor.GetFinalScript();
+            string generatedScript = genSqlScriptQueryExecutor.GetFinalScript();
+
+            string fullPath = Path.GetFullPath(outputPath);
+            Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
+            File.WriteAllText(fullPath, generatedScript);
         }
 
         private static MSSQLDatabaseInfo CreateMSSQLDatabaseInfo(Assembly dbAssembly)
@@ -86,8 +122,8 @@ namespace DotNetDBTools.Deploy.MSSQL
             string connectionStringWithoutDb = sqlConnectionBuilder.ConnectionString;
 
             MSSQLInteractor interactor = new(new MSSQLQueryExecutor(connectionString));
-            MSSQLInteractor interactorForEmptyChecks = new(new MSSQLQueryExecutor(connectionStringWithoutDb));
-            bool databaseExists = interactorForEmptyChecks.DatabaseExists(databaseName);
+            MSSQLInteractor interactorForEmpty = new(new MSSQLQueryExecutor(connectionStringWithoutDb));
+            bool databaseExists = interactorForEmpty.DatabaseExists(databaseName);
             if (databaseExists)
             {
                 MSSQLDatabaseInfo existingDatabase = interactor.GetExistingDatabase();
@@ -97,7 +133,7 @@ namespace DotNetDBTools.Deploy.MSSQL
             {
                 if (_allowDbCreation)
                 {
-                    interactorForEmptyChecks.CreateDatabase(databaseName);
+                    interactorForEmpty.CreateDatabase(databaseName);
                     interactor.CreateSystemTables();
                     return new MSSQLDatabaseInfo(null);
                 }
@@ -106,6 +142,22 @@ namespace DotNetDBTools.Deploy.MSSQL
                     throw new Exception($"Database doesn't exist and it's creation is not allowed");
                 }
             }
+        }
+
+        private static MSSQLDatabaseInfo GetExistingDatabase(string connectionString)
+        {
+            SqlConnectionStringBuilder sqlConnectionBuilder = new(connectionString);
+            string databaseName = sqlConnectionBuilder.InitialCatalog;
+            sqlConnectionBuilder.InitialCatalog = string.Empty;
+            string connectionStringWithoutDb = sqlConnectionBuilder.ConnectionString;
+
+            MSSQLInteractor interactor = new(new MSSQLQueryExecutor(connectionString));
+            MSSQLInteractor interactorForEmpty = new(new MSSQLQueryExecutor(connectionStringWithoutDb));
+            bool databaseExists = interactorForEmpty.DatabaseExists(databaseName);
+            if (databaseExists)
+                return interactor.GetExistingDatabase();
+            else
+                return new MSSQLDatabaseInfo(null);
         }
     }
 }

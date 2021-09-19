@@ -21,8 +21,8 @@ namespace DotNetDBTools.Deploy.MSSQL.Queries
             string query =
 $@"DROP TYPE {userDefinedType.Name};
 
-DELETE FROM {DNDBTSysTables.DNDBTDbObjects}
-WHERE {DNDBTSysTables.DNDBTDbObjects.ID} = '{userDefinedType.ID}';";
+DELETE FROM {DNDBTSystemTables.DNDBTDbObjects}
+WHERE {DNDBTSystemTables.DNDBTDbObjects.ID} = '{userDefinedType.ID}';";
 
             return query;
         }

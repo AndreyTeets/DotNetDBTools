@@ -1,6 +1,6 @@
 ﻿using System.Data.SqlClient;
 using Dapper;
-using DotNetDBTools.Deploy.MSSQL;
+using DotNetDBTools.Deploy;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static DotNetDBTools.IntegrationTests.Constants;
 
@@ -18,21 +18,21 @@ namespace DotNetDBTools.IntegrationTests.MSSQL
         public TestContext TestContext { get; set; }
 
         [TestMethod]
-        public void Update_AgnosticSampleDB_CreatesDbFromZero_And_UpdatesItAgain_WithoutErrors()
+        public void Publish_AgnosticSampleDB_CreatesDbFromZero_And_UpdatesItAgain_WithoutErrors()
         {
             DropDatabaseIfExists(ConnectionString);
             MSSQLDeployManager deployManager = new(true, false);
-            deployManager.UpdateDatabase(s_agnosticSampleDbAssemblyPath, ConnectionString);
-            deployManager.UpdateDatabase(s_agnosticSampleDbAssemblyPath, ConnectionString);
+            deployManager.PublishDatabase(s_agnosticSampleDbAssemblyPath, ConnectionString);
+            deployManager.PublishDatabase(s_agnosticSampleDbAssemblyPath, ConnectionString);
         }
 
         [TestMethod]
-        public void Update_MSSQLSampleDB_CreatesDbFromZero_And_UpdatesItAgain_WithoutErrors()
+        public void Publish_MSSQLSampleDB_CreatesDbFromZero_And_UpdatesItAgain_WithoutErrors()
         {
             DropDatabaseIfExists(ConnectionString);
             MSSQLDeployManager deployManager = new(true, false);
-            deployManager.UpdateDatabase(s_mssqlSampleDbAssemblyPath, ConnectionString);
-            deployManager.UpdateDatabase(s_mssqlSampleDbAssemblyPath, ConnectionString);
+            deployManager.PublishDatabase(s_mssqlSampleDbAssemblyPath, ConnectionString);
+            deployManager.PublishDatabase(s_mssqlSampleDbAssemblyPath, ConnectionString);
         }
 
         private static void DropDatabaseIfExists(string connectionString)

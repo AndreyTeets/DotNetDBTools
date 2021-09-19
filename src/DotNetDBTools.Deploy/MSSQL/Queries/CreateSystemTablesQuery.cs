@@ -6,12 +6,12 @@ namespace DotNetDBTools.Deploy.MSSQL.Queries
     internal class CreateSystemTablesQuery : IQuery
     {
         public string Sql =>
-$@"CREATE TABLE {DNDBTSysTables.DNDBTDbObjects}
+$@"CREATE TABLE {DNDBTSystemTables.DNDBTDbObjects}
 (
-    {DNDBTSysTables.DNDBTDbObjects.ID} UNIQUEIDENTIFIER PRIMARY KEY,
-    {DNDBTSysTables.DNDBTDbObjects.Type} NVARCHAR(64) NOT NULL,
-    {DNDBTSysTables.DNDBTDbObjects.Name} NVARCHAR(256) NOT NULL,
-    {DNDBTSysTables.DNDBTDbObjects.Metadata} NVARCHAR(MAX) NOT NULL
+    {DNDBTSystemTables.DNDBTDbObjects.ID} UNIQUEIDENTIFIER PRIMARY KEY,
+    {DNDBTSystemTables.DNDBTDbObjects.Type} NVARCHAR(64) NOT NULL,
+    {DNDBTSystemTables.DNDBTDbObjects.Name} NVARCHAR(256) NOT NULL,
+    {DNDBTSystemTables.DNDBTDbObjects.Metadata} NVARCHAR(MAX) NOT NULL
 );";
 
         public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();

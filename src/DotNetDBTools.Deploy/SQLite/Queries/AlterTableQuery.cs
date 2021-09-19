@@ -46,10 +46,10 @@ ALTER TABLE {DNDBTTempPrefix}{tableDiff.NewTable.Name} RENAME TO {tableDiff.NewT
 COMMIT TRANSACTION;
 PRAGMA foreign_keys=on;
 
-UPDATE {DNDBTSysTables.DNDBTDbObjects} SET
-    {DNDBTSysTables.DNDBTDbObjects.Name} = '{tableDiff.NewTable.Name}',
-    {DNDBTSysTables.DNDBTDbObjects.Metadata} = {NewTableMetadataParameterName}
-WHERE {DNDBTSysTables.DNDBTDbObjects.ID} = '{tableDiff.NewTable.ID}';";
+UPDATE {DNDBTSystemTables.DNDBTDbObjects} SET
+    {DNDBTSystemTables.DNDBTDbObjects.Name} = '{tableDiff.NewTable.Name}',
+    {DNDBTSystemTables.DNDBTDbObjects.Metadata} = {NewTableMetadataParameterName}
+WHERE {DNDBTSystemTables.DNDBTDbObjects.ID} = '{tableDiff.NewTable.ID}';";
 
             return query;
         }

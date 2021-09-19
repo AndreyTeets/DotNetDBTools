@@ -7,9 +7,9 @@ namespace DotNetDBTools.Deploy.MSSQL.Queries
     {
         public string Sql =>
 $@"SELECT
-    {DNDBTSysTables.DNDBTDbObjects.Metadata}
-FROM {DNDBTSysTables.DNDBTDbObjects}
-WHERE {DNDBTSysTables.DNDBTDbObjects.Type} = '{MSSQLDbObjectsTypes.Table}';";
+    {DNDBTSystemTables.DNDBTDbObjects.Metadata}
+FROM {DNDBTSystemTables.DNDBTDbObjects}
+WHERE {DNDBTSystemTables.DNDBTDbObjects.Type} = '{MSSQLDbObjectsTypes.Table}';";
 
         public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
     }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Data.SqlClient;
 using Dapper;
-using DotNetDBTools.Deploy.MSSQL;
+using DotNetDBTools.Deploy;
 using DotNetDBTools.SampleBusinessLogicLib.Agnostic;
 using SqlKata.Compilers;
 
@@ -35,7 +35,7 @@ namespace DotNetDBTools.SampleSelfUpdatingApp.MSSQL
         private static void DeployAgnosticSampleDB()
         {
             MSSQLDeployManager deployManager = new(true, false);
-            deployManager.UpdateDatabase(s_agnosticDbAssemblyPath, s_agnosticConnectionString);
+            deployManager.PublishDatabase(s_agnosticDbAssemblyPath, s_agnosticConnectionString);
         }
 
         private static void DropDatabaseIfExists(string connectionString)

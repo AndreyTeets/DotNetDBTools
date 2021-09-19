@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using DotNetDBTools.Deploy.SQLite;
+using DotNetDBTools.Deploy;
 using Microsoft.Data.Sqlite;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static DotNetDBTools.IntegrationTests.Constants;
@@ -18,21 +18,21 @@ namespace DotNetDBTools.IntegrationTests.SQLite
         public TestContext TestContext { get; set; }
 
         [TestMethod]
-        public void Update_AgnosticSampleDB_CreatesDbFromZero_And_UpdatesItAgain_WithoutErrors()
+        public void Publish_AgnosticSampleDB_CreatesDbFromZero_And_UpdatesItAgain_WithoutErrors()
         {
             DropDatabaseIfExists(ConnectionString);
             SQLiteDeployManager deployManager = new(true, false);
-            deployManager.UpdateDatabase(s_agnosticSampleDbAssemblyPath, ConnectionString);
-            deployManager.UpdateDatabase(s_agnosticSampleDbAssemblyPath, ConnectionString);
+            deployManager.PublishDatabase(s_agnosticSampleDbAssemblyPath, ConnectionString);
+            deployManager.PublishDatabase(s_agnosticSampleDbAssemblyPath, ConnectionString);
         }
 
         [TestMethod]
-        public void Update_SQLiteSampleDB_CreatesDbFromZero_And_UpdatesItAgain_WithoutErrors()
+        public void Publish_SQLiteSampleDB_CreatesDbFromZero_And_UpdatesItAgain_WithoutErrors()
         {
             DropDatabaseIfExists(ConnectionString);
             SQLiteDeployManager deployManager = new(true, false);
-            deployManager.UpdateDatabase(s_sqliteSampleDbAssemblyPath, ConnectionString);
-            deployManager.UpdateDatabase(s_sqliteSampleDbAssemblyPath, ConnectionString);
+            deployManager.PublishDatabase(s_sqliteSampleDbAssemblyPath, ConnectionString);
+            deployManager.PublishDatabase(s_sqliteSampleDbAssemblyPath, ConnectionString);
         }
 
         private static void DropDatabaseIfExists(string connectionString)

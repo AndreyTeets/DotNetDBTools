@@ -35,6 +35,11 @@ namespace DotNetDBTools.Deploy.SQLite
             _queryExecutor.Execute(new CreateSystemTablesQuery());
         }
 
+        public void DeleteSystemTables()
+        {
+            _queryExecutor.Execute(new DeleteSystemTablesQuery());
+        }
+
         public SQLiteDatabaseInfo GetExistingDatabase()
         {
             List<SQLiteTableInfo> tables = new();

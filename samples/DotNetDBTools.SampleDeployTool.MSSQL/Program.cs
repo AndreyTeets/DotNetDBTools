@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Data.SqlClient;
 using Dapper;
-using DotNetDBTools.Deploy.MSSQL;
+using DotNetDBTools.Deploy;
 
 namespace DotNetDBTools.SampleDeployTool.MSSQL
 {
@@ -12,6 +12,14 @@ namespace DotNetDBTools.SampleDeployTool.MSSQL
         private const string AgnosticDatabaseName = "AgnosticSampleDB";
         private const string MSSQLDatabaseName = "MSSQLSampleDB";
 
+        private const string AgnosticGeneratedPublishToEmptyScriptPath = "./generated/AgnosticGeneratedPublishToEmptyScript.sql";
+        private const string AgnosticGeneratedPublishToExistingScriptPath = "./generated/AgnosticGeneratedPublishToExistingScript.sql";
+        private const string AgnosticGeneratedDefinitionFromUnregisteredDirectory = "./generated/AgnosticGeneratedDefinitionFromUnregisteredDirectory";
+        private const string AgnosticGeneratedDefinitionFromRegisteredDirectory = "./generated/AgnosticGeneratedDefinitionFromRegisteredDirectory";
+        private const string MSSQLGeneratedPublishToEmptyScriptPath = "./generated/MSSQLGeneratedPublishToEmptyScript.sql";
+        private const string MSSQLGeneratedPublishToExistingScriptPath = "./generated/MSSQLGeneratedPublishToExistingScript.sql";
+        private const string MSSQLGeneratedDefinitionFromUnregisteredDirectory = "./generated/MSSQLGeneratedDefinitionFromUnregisteredDirectory";
+        private const string MSSQLGeneratedDefinitionFromRegisteredDirectory = "./generated/MSSQLGeneratedDefinitionFromRegisteredDirectory";
         private const string RepoRoot = "../../../../..";
 
         private static readonly string s_agnosticDbProjectBinDir = $"{RepoRoot}/samples/DotNetDBTools.SampleDB.Agnostic/bin";
@@ -24,42 +32,60 @@ namespace DotNetDBTools.SampleDeployTool.MSSQL
 
         public static void Main()
         {
-            RunAgnosticSampleDBExample();
-            RunMSSQLSampleDBExample();
+            RunAgnosticSampleDBDeployExamples();
+            RunMSSQLSampleDBDeployExamples();
         }
 
-        private static void RunAgnosticSampleDBExample()
+        private static void RunAgnosticSampleDBDeployExamples()
         {
             DropDatabaseIfExists(s_agnosticConnectionString);
+            IDeployManager deployManager = new MSSQLDeployManager(true, false);
 
-            Console.WriteLine("Creating new AgnosticSampleDB...");
-            DeployAgnosticSampleDB();
+            Console.WriteLine("Generating create new AgnosticSampleDB from dbAssembly file...");
+            deployManager.GeneratePublishScript(s_agnosticDbAssemblyPath, s_agnosticConnectionString, AgnosticGeneratedPublishToEmptyScriptPath);
+            Console.WriteLine("Creating new AgnosticSampleDB from dbAssembly file...");
+            deployManager.PublishDatabase(s_agnosticDbAssemblyPath, s_agnosticConnectionString);
 
-            Console.WriteLine("Updating existing AgnosticSampleDB...");
-            DeployAgnosticSampleDB();
+            Console.WriteLine("Generating update(no changes) existing AgnosticSampleDB from dbAssembly file...");
+            deployManager.GeneratePublishScript(s_agnosticDbAssemblyPath, s_agnosticConnectionString, AgnosticGeneratedPublishToExistingScriptPath);
+            Console.WriteLine("Updating(no changes) existing AgnosticSampleDB from dbAssembly file...");
+            deployManager.PublishDatabase(s_agnosticDbAssemblyPath, s_agnosticConnectionString);
+
+            Console.WriteLine("Unregistering(=deleting DNDBT system information from DB) AgnosticSampleDB...");
+            deployManager.UnregisterAsDNDBT(s_agnosticConnectionString);
+            Console.WriteLine("Generating definition from existing unregistered AgnosticSampleDB...");
+            deployManager.GenerateDefinition(s_agnosticConnectionString, AgnosticGeneratedDefinitionFromUnregisteredDirectory);
+
+            Console.WriteLine("Registiring(=generating and adding new DNDBT system information to DB) AgnosticSampleDB...");
+            deployManager.RegisterAsDNDBT(s_agnosticConnectionString);
+            Console.WriteLine("Generating definition from existing registered AgnosticSampleDB...");
+            deployManager.GenerateDefinition(s_agnosticConnectionString, AgnosticGeneratedDefinitionFromRegisteredDirectory);
         }
 
-        private static void RunMSSQLSampleDBExample()
+        private static void RunMSSQLSampleDBDeployExamples()
         {
             DropDatabaseIfExists(s_mssqlConnectionString);
+            IDeployManager deployManager = new MSSQLDeployManager(true, false);
 
-            Console.WriteLine("Creating new MSSQLSampleDB...");
-            DeployMSSQLSampleDB();
+            Console.WriteLine("Generating create new MSSQLSampleDB from dbAssembly file...");
+            deployManager.GeneratePublishScript(s_mssqlDbAssemblyPath, s_mssqlConnectionString, MSSQLGeneratedPublishToEmptyScriptPath);
+            Console.WriteLine("Creating new MSSQLSampleDB from dbAssembly file...");
+            deployManager.PublishDatabase(s_mssqlDbAssemblyPath, s_mssqlConnectionString);
 
-            Console.WriteLine("Updating existing MSSQLSampleDB...");
-            DeployMSSQLSampleDB();
-        }
+            Console.WriteLine("Generating update(no changes) existing MSSQLSampleDB from dbAssembly file...");
+            deployManager.GeneratePublishScript(s_mssqlDbAssemblyPath, s_mssqlConnectionString, MSSQLGeneratedPublishToExistingScriptPath);
+            Console.WriteLine("Updating(no changes) existing MSSQLSampleDB from dbAssembly file...");
+            deployManager.PublishDatabase(s_mssqlDbAssemblyPath, s_mssqlConnectionString);
 
-        private static void DeployAgnosticSampleDB()
-        {
-            MSSQLDeployManager deployManager = new(true, false);
-            deployManager.UpdateDatabase(s_agnosticDbAssemblyPath, s_agnosticConnectionString);
-        }
+            Console.WriteLine("Unregistering(=deleting DNDBT system information from DB) MSSQLSampleDB...");
+            deployManager.UnregisterAsDNDBT(s_mssqlConnectionString);
+            Console.WriteLine("Generating definition from existing unregistered MSSQLSampleDB...");
+            deployManager.GenerateDefinition(s_mssqlConnectionString, MSSQLGeneratedDefinitionFromUnregisteredDirectory);
 
-        private static void DeployMSSQLSampleDB()
-        {
-            MSSQLDeployManager deployManager = new(true, false);
-            deployManager.UpdateDatabase(s_mssqlDbAssemblyPath, s_mssqlConnectionString);
+            Console.WriteLine("Registiring(=generating and adding new DNDBT system information to DB) MSSQLSampleDB...");
+            deployManager.RegisterAsDNDBT(s_mssqlConnectionString);
+            Console.WriteLine("Generating definition from existing registered MSSQLSampleDB...");
+            deployManager.GenerateDefinition(s_mssqlConnectionString, MSSQLGeneratedDefinitionFromRegisteredDirectory);
         }
 
         private static void DropDatabaseIfExists(string connectionString)

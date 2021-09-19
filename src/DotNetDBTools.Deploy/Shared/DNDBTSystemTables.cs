@@ -1,6 +1,6 @@
 ﻿namespace DotNetDBTools.Deploy.Shared
 {
-    public static class DNDBTSysTables
+    public static class DNDBTSystemTables
     {
         public class DNDBTDbObjectsTableInfo
         {

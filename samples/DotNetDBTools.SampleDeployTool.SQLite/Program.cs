@@ -1,11 +1,20 @@
 ﻿using System;
 using System.IO;
-using DotNetDBTools.Deploy.SQLite;
+using DotNetDBTools.Deploy;
+using Microsoft.Data.Sqlite;
 
 namespace DotNetDBTools.SampleDeployTool.SQLite
 {
     public class Program
     {
+        private const string AgnosticGeneratedPublishToEmptyScriptPath = "./generated/AgnosticGeneratedPublishToEmptyScript.sql";
+        private const string AgnosticGeneratedPublishToExistingScriptPath = "./generated/AgnosticGeneratedPublishToExistingScript.sql";
+        private const string AgnosticGeneratedDefinitionFromUnregisteredDirectory = "./generated/AgnosticGeneratedDefinitionFromUnregisteredDirectory";
+        private const string AgnosticGeneratedDefinitionFromRegisteredDirectory = "./generated/AgnosticGeneratedDefinitionFromRegisteredDirectory";
+        private const string SQLiteGeneratedPublishToEmptyScriptPath = "./generated/SQLiteGeneratedPublishToEmptyScript.sql";
+        private const string SQLiteGeneratedPublishToExistingScriptPath = "./generated/SQLiteGeneratedPublishToExistingScript.sql";
+        private const string SQLiteGeneratedDefinitionFromUnregisteredDirectory = "./generated/SQLiteGeneratedDefinitionFromUnregisteredDirectory";
+        private const string SQLiteGeneratedDefinitionFromRegisteredDirectory = "./generated/SQLiteGeneratedDefinitionFromRegisteredDirectory";
         private const string RepoRoot = "../../../../..";
 
         private static readonly string s_agnosticDbProjectBinDir = $"{RepoRoot}/samples/DotNetDBTools.SampleDB.Agnostic/bin";
@@ -20,46 +29,66 @@ namespace DotNetDBTools.SampleDeployTool.SQLite
 
         public static void Main()
         {
-            RunAgnosticSampleDBExample();
-            RunSQLiteSampleDBExample();
+            RunAgnosticSampleDBDeployExamples();
+            RunSQLiteSampleDBDeployExamples();
         }
 
-        private static void RunAgnosticSampleDBExample()
+        private static void RunAgnosticSampleDBDeployExamples()
         {
-            DropDatabaseIfExists(s_agnosticDbFilePath);
+            DropDatabaseIfExists(s_agnosticConnectionString);
+            IDeployManager deployManager = new SQLiteDeployManager(true, false);
 
-            Console.WriteLine("Creating new AgnosticSampleDB...");
-            DeployAgnosticSampleDB();
+            Console.WriteLine("Generating create new AgnosticSampleDB from dbAssembly file...");
+            deployManager.GeneratePublishScript(s_agnosticDbAssemblyPath, s_agnosticConnectionString, AgnosticGeneratedPublishToEmptyScriptPath);
+            Console.WriteLine("Creating new AgnosticSampleDB from dbAssembly file...");
+            deployManager.PublishDatabase(s_agnosticDbAssemblyPath, s_agnosticConnectionString);
 
-            Console.WriteLine("Updating existing AgnosticSampleDB...");
-            DeployAgnosticSampleDB();
+            Console.WriteLine("Generating update(no changes) existing AgnosticSampleDB from dbAssembly file...");
+            deployManager.GeneratePublishScript(s_agnosticDbAssemblyPath, s_agnosticConnectionString, AgnosticGeneratedPublishToExistingScriptPath);
+            Console.WriteLine("Updating(no changes) existing AgnosticSampleDB from dbAssembly file...");
+            deployManager.PublishDatabase(s_agnosticDbAssemblyPath, s_agnosticConnectionString);
+
+            Console.WriteLine("Unregistering(=deleting DNDBT system information from DB) AgnosticSampleDB...");
+            deployManager.UnregisterAsDNDBT(s_agnosticConnectionString);
+            Console.WriteLine("Generating definition from existing unregistered AgnosticSampleDB...");
+            deployManager.GenerateDefinition(s_agnosticConnectionString, AgnosticGeneratedDefinitionFromUnregisteredDirectory);
+
+            Console.WriteLine("Registiring(=generating and adding new DNDBT system information to DB) AgnosticSampleDB...");
+            deployManager.RegisterAsDNDBT(s_agnosticConnectionString);
+            Console.WriteLine("Generating definition from existing registered AgnosticSampleDB...");
+            deployManager.GenerateDefinition(s_agnosticConnectionString, AgnosticGeneratedDefinitionFromRegisteredDirectory);
         }
 
-        private static void RunSQLiteSampleDBExample()
+        private static void RunSQLiteSampleDBDeployExamples()
         {
-            DropDatabaseIfExists(s_sqliteDbFilePath);
+            DropDatabaseIfExists(s_sqliteConnectionString);
+            IDeployManager deployManager = new SQLiteDeployManager(true, false);
 
-            Console.WriteLine("Creating new SQLiteSampleDB...");
-            DeploySQLiteSampleDB();
+            Console.WriteLine("Generating create new SQLiteSampleDB from dbAssembly file...");
+            deployManager.GeneratePublishScript(s_sqliteDbAssemblyPath, s_sqliteConnectionString, SQLiteGeneratedPublishToEmptyScriptPath);
+            Console.WriteLine("Creating new SQLiteSampleDB from dbAssembly file...");
+            deployManager.PublishDatabase(s_sqliteDbAssemblyPath, s_sqliteConnectionString);
 
-            Console.WriteLine("Updating existing SQLiteSampleDB...");
-            DeploySQLiteSampleDB();
+            Console.WriteLine("Generating update(no changes) existing SQLiteSampleDB from dbAssembly file...");
+            deployManager.GeneratePublishScript(s_sqliteDbAssemblyPath, s_sqliteConnectionString, SQLiteGeneratedPublishToExistingScriptPath);
+            Console.WriteLine("Updating(no changes) existing SQLiteSampleDB from dbAssembly file...");
+            deployManager.PublishDatabase(s_sqliteDbAssemblyPath, s_sqliteConnectionString);
+
+            Console.WriteLine("Unregistering(=deleting DNDBT system information from DB) SQLiteSampleDB...");
+            deployManager.UnregisterAsDNDBT(s_sqliteConnectionString);
+            Console.WriteLine("Generating definition from existing unregistered SQLiteSampleDB...");
+            deployManager.GenerateDefinition(s_sqliteConnectionString, SQLiteGeneratedDefinitionFromUnregisteredDirectory);
+
+            Console.WriteLine("Registiring(=generating and adding new DNDBT system information to DB) SQLiteSampleDB...");
+            deployManager.RegisterAsDNDBT(s_sqliteConnectionString);
+            Console.WriteLine("Generating definition from existing registered SQLiteSampleDB...");
+            deployManager.GenerateDefinition(s_sqliteConnectionString, SQLiteGeneratedDefinitionFromRegisteredDirectory);
         }
 
-        private static void DeployAgnosticSampleDB()
+        private static void DropDatabaseIfExists(string connectionString)
         {
-            SQLiteDeployManager deployManager = new(true, false);
-            deployManager.UpdateDatabase(s_agnosticDbAssemblyPath, s_agnosticConnectionString);
-        }
-
-        private static void DeploySQLiteSampleDB()
-        {
-            SQLiteDeployManager deployManager = new(true, false);
-            deployManager.UpdateDatabase(s_sqliteDbAssemblyPath, s_sqliteConnectionString);
-        }
-
-        private static void DropDatabaseIfExists(string dbFilePath)
-        {
+            SqliteConnectionStringBuilder sqlConnectionBuilder = new(connectionString);
+            string dbFilePath = sqlConnectionBuilder.DataSource;
             if (File.Exists(dbFilePath))
                 File.Delete(dbFilePath);
             Directory.CreateDirectory(Path.GetDirectoryName(dbFilePath));

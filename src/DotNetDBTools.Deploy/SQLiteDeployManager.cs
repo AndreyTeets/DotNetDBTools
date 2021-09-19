@@ -1,13 +1,16 @@
 ﻿using System;
+using System.IO;
 using System.Reflection;
 using DotNetDBTools.Analysis.SQLite;
+using DotNetDBTools.DefinitionGenerator;
 using DotNetDBTools.DefinitionParser.Agnostic;
 using DotNetDBTools.DefinitionParser.Shared;
 using DotNetDBTools.DefinitionParser.SQLite;
+using DotNetDBTools.Deploy.SQLite;
 using DotNetDBTools.Models.Shared;
 using DotNetDBTools.Models.SQLite;
 
-namespace DotNetDBTools.Deploy.SQLite
+namespace DotNetDBTools.Deploy
 {
     public class SQLiteDeployManager : IDeployManager
     {
@@ -20,13 +23,13 @@ namespace DotNetDBTools.Deploy.SQLite
             _allowDataLoss = allowDataLoss;
         }
 
-        public void UpdateDatabase(string dbAssemblyPath, string connectionString)
+        public void PublishDatabase(string dbAssemblyPath, string connectionString)
         {
             Assembly dbAssembly = AssemblyLoader.LoadDbAssemblyFromDll(dbAssemblyPath);
-            UpdateDatabase(dbAssembly, connectionString);
+            PublishDatabase(dbAssembly, connectionString);
         }
 
-        public void UpdateDatabase(Assembly dbAssembly, string connectionString)
+        public void PublishDatabase(Assembly dbAssembly, string connectionString)
         {
             SQLiteDatabaseInfo database = CreateSQLiteDatabaseInfo(dbAssembly);
             SQLiteDatabaseInfo existingDatabase = GetExistingDatabaseOrCreateEmptyIfNotExists(connectionString);
@@ -39,29 +42,62 @@ namespace DotNetDBTools.Deploy.SQLite
             interactor.UpdateDatabase(databaseDiff);
         }
 
-        public string GenerateUpdateScript(string dbAssemblyPath, string connectionString)
+        public void GeneratePublishScript(string dbAssemblyPath, string connectionString, string outputPath)
         {
             Assembly dbAssembly = AssemblyLoader.LoadDbAssemblyFromDll(dbAssemblyPath);
-            return GenerateUpdateScript(dbAssembly, connectionString);
+            GeneratePublishScript(dbAssembly, connectionString, outputPath);
         }
 
-        public string GenerateUpdateScript(Assembly dbAssembly, string connectionString)
+        public void GeneratePublishScript(Assembly dbAssembly, string connectionString, string outputPath)
         {
             SQLiteDatabaseInfo database = CreateSQLiteDatabaseInfo(dbAssembly);
-
-            SQLiteInteractor interactor = new(new SQLiteQueryExecutor(connectionString));
-            SQLiteDatabaseInfo existingDatabase = interactor.GetExistingDatabase();
-
-            return GenerateUpdateScript(database, existingDatabase);
+            SQLiteDatabaseInfo existingDatabase = GetExistingDatabase(connectionString);
+            GeneratePublishScript(database, existingDatabase, outputPath);
         }
 
-        public string GenerateUpdateScript(SQLiteDatabaseInfo database, SQLiteDatabaseInfo existingDatabase)
+        public void GeneratePublishScript(Assembly newDbAssembly, Assembly oldDbAssembly, string outputPath)
+        {
+            SQLiteDatabaseInfo database = CreateSQLiteDatabaseInfo(newDbAssembly);
+            SQLiteDatabaseInfo existingDatabase = CreateSQLiteDatabaseInfo(oldDbAssembly);
+            GeneratePublishScript(database, existingDatabase, outputPath);
+        }
+
+        public void GenerateDefinition(string connectionString, string outputDirectory)
+        {
+            SQLiteInteractor interactor = new(new SQLiteQueryExecutor(connectionString));
+            SQLiteDatabaseInfo existingDatabase = interactor.GetExistingDatabase();
+            DbDefinitionGenerator.GenerateDefinition(existingDatabase, outputDirectory);
+        }
+
+        public void RegisterAsDNDBT(string connectionString)
+        {
+            return;
+#pragma warning disable CS0162 // Unreachable code detected
+            SQLiteInteractor interactor = new(new SQLiteQueryExecutor(connectionString));
+#pragma warning restore CS0162 // Unreachable code detected
+            interactor.CreateSystemTables();
+        }
+
+        public void UnregisterAsDNDBT(string connectionString)
+        {
+            return;
+#pragma warning disable CS0162 // Unreachable code detected
+            SQLiteInteractor interactor = new(new SQLiteQueryExecutor(connectionString));
+#pragma warning restore CS0162 // Unreachable code detected
+            interactor.DeleteSystemTables();
+        }
+
+        public void GeneratePublishScript(SQLiteDatabaseInfo database, SQLiteDatabaseInfo existingDatabase, string outputPath)
         {
             SQLiteGenSqlScriptQueryExecutor genSqlScriptQueryExecutor = new();
             SQLiteInteractor interactor = new(genSqlScriptQueryExecutor);
             SQLiteDatabaseDiff databaseDiff = SQLiteDiffCreator.CreateDatabaseDiff(database, existingDatabase);
             interactor.UpdateDatabase(databaseDiff);
-            return genSqlScriptQueryExecutor.GetFinalScript();
+            string generatedScript = genSqlScriptQueryExecutor.GetFinalScript();
+
+            string fullPath = Path.GetFullPath(outputPath);
+            Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
+            File.WriteAllText(fullPath, generatedScript);
         }
 
         private static SQLiteDatabaseInfo CreateSQLiteDatabaseInfo(Assembly dbAssembly)
@@ -98,6 +134,16 @@ namespace DotNetDBTools.Deploy.SQLite
                     throw new Exception($"Database doesn't exist and it's creation is not allowed");
                 }
             }
+        }
+
+        private static SQLiteDatabaseInfo GetExistingDatabase(string connectionString)
+        {
+            SQLiteInteractor interactor = new(new SQLiteQueryExecutor(connectionString));
+            bool databaseExists = interactor.DatabaseExists();
+            if (databaseExists)
+                return interactor.GetExistingDatabase();
+            else
+                return new SQLiteDatabaseInfo(null);
         }
     }
 }

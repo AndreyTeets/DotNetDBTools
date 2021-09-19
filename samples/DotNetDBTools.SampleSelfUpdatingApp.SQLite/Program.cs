@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using DotNetDBTools.Deploy.SQLite;
+using DotNetDBTools.Deploy;
 using DotNetDBTools.SampleBusinessLogicLib.Agnostic;
 using Microsoft.Data.Sqlite;
 using SqlKata.Compilers;
@@ -32,7 +32,7 @@ namespace DotNetDBTools.SampleSelfUpdatingApp.SQLite
         private static void DeployAgnosticSampleDB()
         {
             SQLiteDeployManager deployManager = new(true, false);
-            deployManager.UpdateDatabase(s_agnosticDbAssemblyPath, s_agnosticConnectionString);
+            deployManager.PublishDatabase(s_agnosticDbAssemblyPath, s_agnosticConnectionString);
         }
 
         private static void DropDatabaseIfExists(string dbFilePath)
