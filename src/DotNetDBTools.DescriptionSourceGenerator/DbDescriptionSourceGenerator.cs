@@ -42,14 +42,12 @@ namespace DotNetDBTools.DescriptionSourceGenerator
 
         private static Assembly CompileInMemoryAnLoad(Compilation compilation, IEnumerable<ResourceDescription> resources = null)
         {
-            using MemoryStream pdbStream = new();
             using MemoryStream assemblyStream = new();
-            EmitResult result = compilation.Emit(assemblyStream, pdbStream: pdbStream, manifestResources: resources);
+            EmitResult result = compilation.Emit(assemblyStream, manifestResources: resources);
             if (!result.Success)
                 throw new Exception(GetCompilationErrorString(result));
             byte[] assemblyBytes = assemblyStream.ToArray();
-            byte[] pdbBytes = pdbStream.ToArray();
-            Assembly assembly = Assembly.Load(assemblyBytes, pdbBytes);
+            Assembly assembly = Assembly.Load(assemblyBytes);
             return assembly;
         }
 
