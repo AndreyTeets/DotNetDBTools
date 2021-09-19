@@ -1,4 +1,4 @@
-﻿namespace DotNetDBTools.Deploy.Common
+﻿namespace DotNetDBTools.Deploy.Shared
 {
     public static class DNDBTSysTables
     {

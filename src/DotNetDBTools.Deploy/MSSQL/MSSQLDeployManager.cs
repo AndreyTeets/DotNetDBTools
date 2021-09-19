@@ -3,9 +3,9 @@ using System.Data.SqlClient;
 using System.Reflection;
 using DotNetDBTools.Analysis.MSSQL;
 using DotNetDBTools.DefinitionParser.Agnostic;
-using DotNetDBTools.DefinitionParser.Common;
+using DotNetDBTools.DefinitionParser.Shared;
 using DotNetDBTools.DefinitionParser.MSSQL;
-using DotNetDBTools.Models.Common;
+using DotNetDBTools.Models.Shared;
 using DotNetDBTools.Models.MSSQL;
 
 namespace DotNetDBTools.Deploy.MSSQL

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using DotNetDBTools.Models.Common;
+using DotNetDBTools.Models.Shared;
 
-namespace DotNetDBTools.Description.Common
+namespace DotNetDBTools.Description.Shared
 {
     public static class TablesDescriptionGenerator
     {

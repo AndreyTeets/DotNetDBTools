@@ -1,4 +1,4 @@
-﻿using DotNetDBTools.Models.Common;
+﻿using DotNetDBTools.Models.Shared;
 
 namespace DotNetDBTools.Models.SQLite
 {

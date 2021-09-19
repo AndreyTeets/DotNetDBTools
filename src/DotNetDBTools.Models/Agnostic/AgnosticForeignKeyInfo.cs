@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using DotNetDBTools.Models.Common;
+using DotNetDBTools.Models.Shared;
 
 namespace DotNetDBTools.Models.Agnostic
 {

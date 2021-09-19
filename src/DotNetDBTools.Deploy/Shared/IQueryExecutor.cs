@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace DotNetDBTools.Deploy.Common
+namespace DotNetDBTools.Deploy.Shared
 {
     public interface IQueryExecutor
     {

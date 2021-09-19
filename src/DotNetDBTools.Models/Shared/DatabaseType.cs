@@ -1,4 +1,4 @@
-﻿namespace DotNetDBTools.Models.Common
+﻿namespace DotNetDBTools.Models.Shared
 {
     public enum DatabaseType
     {

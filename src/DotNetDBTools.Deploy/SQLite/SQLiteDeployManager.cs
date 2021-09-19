@@ -2,9 +2,9 @@
 using System.Reflection;
 using DotNetDBTools.Analysis.SQLite;
 using DotNetDBTools.DefinitionParser.Agnostic;
-using DotNetDBTools.DefinitionParser.Common;
+using DotNetDBTools.DefinitionParser.Shared;
 using DotNetDBTools.DefinitionParser.SQLite;
-using DotNetDBTools.Models.Common;
+using DotNetDBTools.Models.Shared;
 using DotNetDBTools.Models.SQLite;
 
 namespace DotNetDBTools.Deploy.SQLite

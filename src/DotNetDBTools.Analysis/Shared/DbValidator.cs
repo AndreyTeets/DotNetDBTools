@@ -1,7 +1,7 @@
 ﻿using System.Linq;
-using DotNetDBTools.Models.Common;
+using DotNetDBTools.Models.Shared;
 
-namespace DotNetDBTools.Analysis.Common
+namespace DotNetDBTools.Analysis.Shared
 {
     public static class DbValidator
     {

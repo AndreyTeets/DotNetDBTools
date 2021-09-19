@@ -29,7 +29,7 @@ namespace DotNetDBTools.SampleSelfUpdatingApp.MSSQL
             Console.WriteLine("Creating new AgnosticSampleDB...");
             DeployAgnosticSampleDB();
 
-            Class1.ReadWriteSomeData(dbConnection, compiler);
+            SampleBusinessLogic.ReadWriteSomeData(dbConnection, compiler);
         }
 
         private static void DeployAgnosticSampleDB()

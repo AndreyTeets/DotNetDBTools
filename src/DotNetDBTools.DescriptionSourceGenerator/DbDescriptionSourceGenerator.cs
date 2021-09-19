@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using DotNetDBTools.DefinitionParser;
 using DotNetDBTools.Description;
-using DotNetDBTools.Models.Common;
+using DotNetDBTools.Models.Shared;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Emit;
 
@@ -16,12 +16,6 @@ namespace DotNetDBTools.DescriptionSourceGenerator
     {
         public void Initialize(GeneratorInitializationContext context)
         {
-#if DEBUG
-            //if (!System.Diagnostics.Debugger.IsAttached)
-            //{
-            //    System.Diagnostics.Debugger.Launch();
-            //}
-#endif
         }
 
         public void Execute(GeneratorExecutionContext context)
@@ -31,18 +25,18 @@ namespace DotNetDBTools.DescriptionSourceGenerator
                 Assembly dbAssembly = CompileInMemoryAnLoad(context.Compilation);
                 IDatabaseInfo<ITableInfo<IColumnInfo>> databaseInfo = DbDefinitionParser.CreateDatabaseInfo(dbAssembly);
                 string dbDescriptionCode = DbDescriptionGenerator.GenerateDescription(databaseInfo);
-                context.AddSource("DbDescription", dbDescriptionCode);
+                context.AddSource($"{databaseInfo.Name}Description", dbDescriptionCode);
             }
             catch (Exception ex)
             {
-                DiagnosticDescriptor generationError = new(
-                    "GN0001",
-                    "Failed to create database descriptions",
-                    $"{ex}",
-                    nameof(DbDescriptionSourceGenerator),
-                    DiagnosticSeverity.Error,
-                    true);
-                context.ReportDiagnostic(Diagnostic.Create(generationError, Location.None));
+                DiagnosticDescriptor diagnosticDescriptor = new(
+                    id: "DNDBT_DSG_01",
+                    title: "Failed to create database description",
+                    messageFormat: $"Failed to create database description: {ex}",
+                    category: "SourceGeneration",
+                    defaultSeverity: DiagnosticSeverity.Error,
+                    isEnabledByDefault: true);
+                context.ReportDiagnostic(Diagnostic.Create(diagnosticDescriptor, Location.None));
             }
         }
 

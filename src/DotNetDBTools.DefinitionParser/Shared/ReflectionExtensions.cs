@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace DotNetDBTools.DefinitionParser.Common
+namespace DotNetDBTools.DefinitionParser.Shared
 {
     public static class ReflectionExtensions
     {

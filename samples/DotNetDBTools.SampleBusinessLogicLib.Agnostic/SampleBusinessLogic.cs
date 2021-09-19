@@ -11,7 +11,7 @@ using static DotNetDBToolsSampleDBAgnosticDescription.DotNetDBToolsSampleDBAgnos
 
 namespace DotNetDBTools.SampleBusinessLogicLib.Agnostic
 {
-    public static class Class1
+    public static class SampleBusinessLogic
     {
         public static void ReadWriteSomeData(DbConnection dbConnection, Compiler compiler)
         {

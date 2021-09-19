@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace DotNetDBTools.Models.Common
+namespace DotNetDBTools.Models.Shared
 {
     public interface IDatabaseInfo<out TableInfo>
         where TableInfo : ITableInfo<IColumnInfo>

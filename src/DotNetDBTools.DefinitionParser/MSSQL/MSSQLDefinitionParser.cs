@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using DotNetDBTools.Definition.MSSQL;
-using DotNetDBTools.DefinitionParser.Common;
+using DotNetDBTools.DefinitionParser.Shared;
 using DotNetDBTools.Models.MSSQL;
 
 namespace DotNetDBTools.DefinitionParser.MSSQL

@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using DotNetDBTools.Analysis.Common;
+using DotNetDBTools.Analysis.Shared;
 using DotNetDBTools.Models.SQLite;
 
 namespace DotNetDBTools.Analysis.SQLite
