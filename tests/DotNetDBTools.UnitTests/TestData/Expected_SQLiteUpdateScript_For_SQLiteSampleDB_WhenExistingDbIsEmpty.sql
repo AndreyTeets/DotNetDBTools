@@ -15,13 +15,21 @@ VALUES
     "$type": "System.Collections.Generic.List`1[[DotNetDBTools.Models.SQLite.SQLiteColumnInfo, DotNetDBTools.Models]], System.Private.CoreLib",
     "$values": [
       {
-        "DataType": "INTEGER",
+        "DataType": {
+          "Name": "Int",
+          "Attributes": {}
+        },
         "DefaultValue": 333,
         "ID": "1db86894-78f0-4bc4-97cf-fc1aa5321e77",
         "Name": "MyColumn1"
       },
       {
-        "DataType": "BLOB",
+        "DataType": {
+          "Name": "Byte",
+          "Attributes": {
+            "Length": "50"
+          }
+        },
         "DefaultValue": {
           "$type": "System.Byte[], System.Private.CoreLib",
           "$value": "AAE="
@@ -64,13 +72,22 @@ VALUES
     "$type": "System.Collections.Generic.List`1[[DotNetDBTools.Models.SQLite.SQLiteColumnInfo, DotNetDBTools.Models]], System.Private.CoreLib",
     "$values": [
       {
-        "DataType": "INTEGER",
+        "DataType": {
+          "Name": "Int",
+          "Attributes": {}
+        },
         "DefaultValue": 15,
         "ID": "0547ca0d-61ab-4f41-8218-dda0c0216bea",
         "Name": "MyColumn1"
       },
       {
-        "DataType": "TEXT",
+        "DataType": {
+          "Name": "String",
+          "Attributes": {
+            "Length": "10",
+            "IsUnicode": "False"
+          }
+        },
         "DefaultValue": "33",
         "ID": "60ff7a1f-b4b8-476f-9db2-56617858be35",
         "Name": "MyColumn2"

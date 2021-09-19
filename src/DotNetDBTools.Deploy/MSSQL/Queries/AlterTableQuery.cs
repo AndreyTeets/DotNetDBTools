@@ -43,7 +43,7 @@ $@"ALTER TABLE {tableDiff.NewTable.Name} DROP COLUMN {column.Name};
             {
                 sb.Append(
 $@"EXEC sp_rename '{tableDiff.NewTable.Name}.{columnDiff.OldColumn.Name}', '{columnDiff.NewColumn.Name}', 'COLUMN';
-ALTER TABLE {tableDiff.NewTable.Name} ALTER COLUMN {columnDiff.NewColumn.Name} {columnDiff.NewColumn.DataType};
+ALTER TABLE {tableDiff.NewTable.Name} ALTER COLUMN {columnDiff.NewColumn.Name} {MSSQLSqlTypeMapper.GetSqlType(columnDiff.NewColumn.DataType)};
 
 ");
             }
@@ -51,7 +51,7 @@ ALTER TABLE {tableDiff.NewTable.Name} ALTER COLUMN {columnDiff.NewColumn.Name} {
             foreach (MSSQLColumnInfo column in tableDiff.AddedColumns)
             {
                 sb.Append(
-$@"ALTER TABLE {tableDiff.NewTable.Name} ADD {column.Name} {column.DataType} UNIQUE;
+$@"ALTER TABLE {tableDiff.NewTable.Name} ADD {column.Name} {MSSQLSqlTypeMapper.GetSqlType(column.DataType)} UNIQUE;
 
 ");
             }

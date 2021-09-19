@@ -73,7 +73,7 @@ WHERE {DNDBTSysTables.DNDBTDbObjects.ID} = '{tableDiff.NewTable.ID}';";
             List<string> tableDefinitions = new();
 
             tableDefinitions.AddRange(table.Columns.Select(column =>
-$@"    {column.Name} {column.DataType} UNIQUE"));
+$@"    {column.Name} {SQLiteSqlTypeMapper.GetSqlType(column.DataType)} UNIQUE"));
 
             tableDefinitions.AddRange(table.ForeignKeys.Select(fk =>
 $@"    CONSTRAINT {fk.Name} FOREIGN KEY ({string.Join(",", fk.ThisColumnNames)}) REFERENCES {fk.ForeignTableName}({string.Join(",", fk.ForeignColumnNames)})"));

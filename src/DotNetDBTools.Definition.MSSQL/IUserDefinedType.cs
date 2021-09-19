@@ -1,8 +1,8 @@
 ﻿namespace DotNetDBTools.Definition.MSSQL
 {
-    public interface IUserDefinedType : IDbObject, IDbType
+    public interface IUserDefinedType : IDbObject, IDataType
     {
-        public IDbType UnderlyingType { get; }
+        public IDataType UnderlyingType { get; }
         public bool Nullable { get; }
     }
 }

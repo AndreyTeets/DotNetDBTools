@@ -1,6 +1,6 @@
 ﻿using System;
 using DotNetDBTools.Definition.Agnostic;
-using DotNetDBTools.Definition.Agnostic.DbTypes;
+using DotNetDBTools.Definition.Agnostic.DataTypes;
 
 namespace DotNetDBTools.SampleDB.Agnostic.Tables
 {
@@ -10,14 +10,14 @@ namespace DotNetDBTools.SampleDB.Agnostic.Tables
 
         public Column MyColumn1 = new("A2F2A4DE-1337-4594-AE41-72ED4D05F317")
         {
-            Type = new IntDbType(),
+            DataType = new IntDataType(),
             Default = 15,
             Unique = true,
         };
 
         public Column MyColumn2 = new("FE68EE3D-09D0-40AC-93F9-5E441FBB4F70")
         {
-            Type = new StringDbType() { Length = 10 },
+            DataType = new StringDataType() { Length = 10 },
             Default = "33",
         };
 

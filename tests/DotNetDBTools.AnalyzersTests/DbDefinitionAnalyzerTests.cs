@@ -12,18 +12,32 @@ namespace DotNetDBTools.AnalyzersTests
         {
             string goodDbCode =
 @"using System;
-using DotNetDBTools.Definition.Agnostic;
-using DotNetDBTools.Definition.Agnostic.DbTypes;
+using DotNetDBTools.Definition;
+using DotNetDBTools.Definition.MSSQL;
+using DotNetDBTools.Definition.MSSQL.DataTypes;
 
 namespace SampleTestCode
 {
+    public class TestUserDefinedType1 : IUserDefinedType
+    {
+        public Guid ID => new(""0CD1E71C-CC9C-440F-AC0B-81A1D6F7DDAA"");
+        public IDataType UnderlyingType => new StringDataType() { Length = 100 };
+        public bool Nullable => true;
+    }
+
     public class TestTable2 : ITable
     {
         public Guid ID => new(""BFB9030C-A8C3-4882-9C42-1C6AD025CF8F"");
 
         public Column TestColumn1 = new(""C480F22F-7C01-4F41-B282-35E9F5CD1FE3"")
         {
-            Type = new IntDbType(),
+            DataType = new IntDataType(),
+            Nullable = false,
+        };
+
+        public Column TestColumn2 = new(""1480F22F-7C01-4F41-B282-35E9F5CD1FE3"")
+        {
+            DataType = new TestUserDefinedType1(),
             Nullable = false,
         };
     }
@@ -32,9 +46,9 @@ namespace SampleTestCode
     {
         public Guid ID => new(""BFB9030C-A8C3-4882-9C42-1C6AD025CF8F"");
 
-        public Column TestColumn1 = new(""C480F22F-7C01-4F41-B282-35E9F5CD1FE3"")
+        public Column TestColumn1 = new(""2480F22F-7C01-4F41-B282-35E9F5CD1FE3"")
         {
-            Type = new IntDbType(),
+            DataType = new IntDataType(),
             Nullable = false,
         };
 

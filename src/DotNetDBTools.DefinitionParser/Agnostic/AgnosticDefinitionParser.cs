@@ -81,7 +81,7 @@ namespace DotNetDBTools.DefinitionParser.Agnostic
                     {
                         ID = column.ID,
                         Name = x.Name,
-                        DataType = column.Type,
+                        DataType = AgnosticDataTypeMapper.GetDataTypeInfo(column.DataType),
                         DefaultValue = column.Default,
                     };
                 })

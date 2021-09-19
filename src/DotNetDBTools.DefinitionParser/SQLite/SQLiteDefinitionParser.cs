@@ -81,7 +81,7 @@ namespace DotNetDBTools.DefinitionParser.SQLite
                     {
                         ID = column.ID,
                         Name = x.Name,
-                        DataType = SQLiteColumnTypeMapper.GetSqlType(column.Type),
+                        DataType = SQLiteDataTypeMapper.GetDataTypeInfo(column.DataType),
                         DefaultValue = column.Default,
                     };
                 })

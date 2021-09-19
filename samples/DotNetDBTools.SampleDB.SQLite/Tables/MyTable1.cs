@@ -1,6 +1,6 @@
 ﻿using System;
 using DotNetDBTools.Definition.SQLite;
-using DotNetDBTools.Definition.SQLite.DbTypes;
+using DotNetDBTools.Definition.SQLite.DataTypes;
 
 namespace DotNetDBTools.SampleDB.SQLite.Tables
 {
@@ -10,14 +10,14 @@ namespace DotNetDBTools.SampleDB.SQLite.Tables
 
         public Column MyColumn1 = new("0547CA0D-61AB-4F41-8218-DDA0C0216BEA")
         {
-            Type = new IntDbType(),
+            DataType = new IntDataType(),
             Default = 15,
             Unique = true,
         };
 
         public Column MyColumn2 = new("60FF7A1F-B4B8-476F-9DB2-56617858BE35")
         {
-            Type = new StringDbType() { Length = 10 },
+            DataType = new StringDataType() { Length = 10 },
             Default = "33",
         };
 

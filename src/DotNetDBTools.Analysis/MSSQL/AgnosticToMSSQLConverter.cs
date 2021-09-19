@@ -1,9 +1,10 @@
-﻿using System.Linq;
-using DotNetDBTools.Definition;
+﻿using System.Collections.Generic;
+using System.Linq;
 using DotNetDBTools.Models.Agnostic;
 using DotNetDBTools.Models.MSSQL;
+using DotNetDBTools.Models.Shared;
 
-namespace DotNetDBTools.DefinitionParser.MSSQL
+namespace DotNetDBTools.Analysis.MSSQL
 {
     public static class AgnosticToMSSQLConverter
     {
@@ -36,7 +37,7 @@ namespace DotNetDBTools.DefinitionParser.MSSQL
            {
                ID = columnInfo.ID,
                Name = columnInfo.Name,
-               DataType = MSSQLColumnTypeMapper.GetSqlType((IDbType)columnInfo.DataType),
+               DataType = ConvertToMSSQLInfo(columnInfo.DataType),
                DefaultValue = columnInfo.DefaultValue,
            };
 
@@ -51,5 +52,21 @@ namespace DotNetDBTools.DefinitionParser.MSSQL
                OnDelete = foreignKeyInfo.OnDelete,
                OnUpdate = foreignKeyInfo.OnUpdate,
            };
+
+        private static DataTypeInfo ConvertToMSSQLInfo(DataTypeInfo dataTypeInfo)
+        {
+            Dictionary<string, string> mssqlAttributes = new();
+            foreach (KeyValuePair<string, string> kv in dataTypeInfo.Attributes)
+                mssqlAttributes.Add(kv.Key, kv.Value);
+
+            if (!mssqlAttributes.ContainsKey(DataTypeAttributes.IsFixedLength))
+                mssqlAttributes.Add(DataTypeAttributes.IsFixedLength, false.ToString());
+
+            return new DataTypeInfo()
+            {
+                Name = dataTypeInfo.Name,
+                Attributes = mssqlAttributes,
+            };
+        }
     }
 }

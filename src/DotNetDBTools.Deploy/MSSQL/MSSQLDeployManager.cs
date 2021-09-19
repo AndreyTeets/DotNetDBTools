@@ -68,7 +68,7 @@ namespace DotNetDBTools.Deploy.MSSQL
         private static MSSQLDatabaseInfo CreateMSSQLDatabaseInfo(Assembly dbAssembly)
         {
             MSSQLDatabaseInfo database;
-            if (DbAssemblyInfoHelper.GetDbType(dbAssembly) == DatabaseType.Agnostic)
+            if (DbAssemblyInfoHelper.GetDbKind(dbAssembly) == DatabaseKind.Agnostic)
                 database = AgnosticToMSSQLConverter.ConvertToMSSQLInfo(AgnosticDefinitionParser.CreateDatabaseInfo(dbAssembly));
             else
                 database = MSSQLDefinitionParser.CreateDatabaseInfo(dbAssembly);

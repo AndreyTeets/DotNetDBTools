@@ -54,7 +54,7 @@ CREATE TABLE {table.Name}
             List<string> tableDefinitions = new();
 
             tableDefinitions.AddRange(table.Columns.Select(column =>
-$@"    {column.Name} {column.DataType} UNIQUE"));
+$@"    {column.Name} {MSSQLSqlTypeMapper.GetSqlType(column.DataType)} UNIQUE"));
 
             tableDefinitions.AddRange(table.ForeignKeys.Select(fk =>
 $@"    CONSTRAINT {fk.Name} FOREIGN KEY ({string.Join(",", fk.ThisColumnNames)}) REFERENCES {fk.ForeignTableName}({string.Join(",", fk.ForeignColumnNames)})"));

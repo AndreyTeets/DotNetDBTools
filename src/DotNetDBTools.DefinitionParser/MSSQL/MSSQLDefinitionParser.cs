@@ -109,6 +109,8 @@ namespace DotNetDBTools.DefinitionParser.MSSQL
                 {
                     ID = userDefinedType.ID,
                     Name = userDefinedType.GetType().Name,
+                    Nullable = userDefinedType.Nullable.ToString(),
+                    UnderlyingType = MSSQLDataTypeMapper.GetDataTypeInfo(userDefinedType.UnderlyingType),
                 };
                 userDefinedTypeInfos.Add(userDefinedTypeInfo);
             }
@@ -126,7 +128,7 @@ namespace DotNetDBTools.DefinitionParser.MSSQL
                     {
                         ID = column.ID,
                         Name = x.Name,
-                        DataType = MSSQLColumnTypeMapper.GetSqlType(column.Type),
+                        DataType = MSSQLDataTypeMapper.GetDataTypeInfo(column.DataType),
                         DefaultValue = column.Default,
                     };
                 })

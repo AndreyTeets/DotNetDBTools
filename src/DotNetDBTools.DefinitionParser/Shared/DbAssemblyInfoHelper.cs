@@ -8,8 +8,8 @@ namespace DotNetDBTools.DefinitionParser.Shared
 {
     public static class DbAssemblyInfoHelper
     {
-        // TODO GetDbInfo (from assembly attributes?) instead of GetDbType+GetDbName
-        public static DatabaseType GetDbType(Assembly dbAssembly)
+        // TODO GetDbInfo (from assembly attributes?) instead of GetDbKind+GetDbName
+        public static DatabaseKind GetDbKind(Assembly dbAssembly)
         {
             bool isAgnosticDb = IsAgnosticDb(dbAssembly);
             bool isMSSQLDb = IsMSSQLDb(dbAssembly);
@@ -18,16 +18,16 @@ namespace DotNetDBTools.DefinitionParser.Shared
             List<bool> assertions = new() { isAgnosticDb, isMSSQLDb, isSQLiteDb };
             int trueAssertionsCount = assertions.Count(x => x);
             if (trueAssertionsCount != 1)
-                throw new InvalidOperationException($"Invalid dbAssembly: failed to uniquely identify db type ({trueAssertionsCount})");
+                throw new InvalidOperationException($"Invalid dbAssembly: failed to uniquely identify db kind ({trueAssertionsCount})");
 
             if (isAgnosticDb)
-                return DatabaseType.Agnostic;
+                return DatabaseKind.Agnostic;
             else if (isMSSQLDb)
-                return DatabaseType.MSSQL;
+                return DatabaseKind.MSSQL;
             else if (isSQLiteDb)
-                return DatabaseType.SQLite;
+                return DatabaseKind.SQLite;
             else
-                throw new InvalidOperationException("Invalid dbAssembly: unknown DatabaseType (this should never happen)");
+                throw new InvalidOperationException("Invalid dbAssembly: unknown DatabaseKind (this should never happen)");
         }
 
         public static string GetDbName(Assembly dbAssembly)

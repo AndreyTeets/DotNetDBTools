@@ -11,7 +11,7 @@ namespace DotNetDBTools.Definition
         }
 
         public Guid ID => _id;
-        public IDbType Type { get; set; }
+        public IDataType DataType { get; set; }
         public bool Nullable { get; set; }
         public bool Unique { get; set; }
         public bool Identity { get; set; }

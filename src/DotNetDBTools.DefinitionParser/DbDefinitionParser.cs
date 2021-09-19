@@ -12,13 +12,13 @@ namespace DotNetDBTools.DefinitionParser
     {
         public static IDatabaseInfo<ITableInfo<IColumnInfo>> CreateDatabaseInfo(Assembly dbAssembly)
         {
-            DatabaseType dbType = DbAssemblyInfoHelper.GetDbType(dbAssembly);
-            return dbType switch
+            DatabaseKind dbKind = DbAssemblyInfoHelper.GetDbKind(dbAssembly);
+            return dbKind switch
             {
-                DatabaseType.Agnostic => AgnosticDefinitionParser.CreateDatabaseInfo(dbAssembly),
-                DatabaseType.MSSQL => MSSQLDefinitionParser.CreateDatabaseInfo(dbAssembly),
-                DatabaseType.SQLite => SQLiteDefinitionParser.CreateDatabaseInfo(dbAssembly),
-                _ => throw new InvalidOperationException($"Invalid dbType: {dbType}"),
+                DatabaseKind.Agnostic => AgnosticDefinitionParser.CreateDatabaseInfo(dbAssembly),
+                DatabaseKind.MSSQL => MSSQLDefinitionParser.CreateDatabaseInfo(dbAssembly),
+                DatabaseKind.SQLite => SQLiteDefinitionParser.CreateDatabaseInfo(dbAssembly),
+                _ => throw new InvalidOperationException($"Invalid dbKind: {dbKind}"),
             };
         }
     }

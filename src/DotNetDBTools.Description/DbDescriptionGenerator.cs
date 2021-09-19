@@ -9,16 +9,16 @@ using DotNetDBTools.Models.SQLite;
 
 namespace DotNetDBTools.Description
 {
-    public class DbDescriptionGenerator
+    public static class DbDescriptionGenerator
     {
         public static string GenerateDescription(IDatabaseInfo<ITableInfo<IColumnInfo>> databaseInfo)
         {
-            return databaseInfo.Type switch
+            return databaseInfo.Kind switch
             {
-                DatabaseType.Agnostic => AgnosticDescriptionSourceGenerator.GenerateDescription((AgnosticDatabaseInfo)databaseInfo),
-                DatabaseType.MSSQL => MSSQLDescriptionSourceGenerator.GenerateDescription((MSSQLDatabaseInfo)databaseInfo),
-                DatabaseType.SQLite => SQLiteDescriptionSourceGenerator.GenerateDescription((SQLiteDatabaseInfo)databaseInfo),
-                _ => throw new InvalidOperationException($"Invalid dbType: {databaseInfo.Type}"),
+                DatabaseKind.Agnostic => AgnosticDescriptionSourceGenerator.GenerateDescription((AgnosticDatabaseInfo)databaseInfo),
+                DatabaseKind.MSSQL => MSSQLDescriptionSourceGenerator.GenerateDescription((MSSQLDatabaseInfo)databaseInfo),
+                DatabaseKind.SQLite => SQLiteDescriptionSourceGenerator.GenerateDescription((SQLiteDatabaseInfo)databaseInfo),
+                _ => throw new InvalidOperationException($"Invalid dbKind: {databaseInfo.Kind}"),
             };
         }
     }

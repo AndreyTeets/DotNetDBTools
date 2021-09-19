@@ -1,6 +1,6 @@
 ﻿namespace DotNetDBTools.Models.Shared
 {
-    public enum DatabaseType
+    public enum DatabaseKind
     {
         Agnostic,
         MSSQL,

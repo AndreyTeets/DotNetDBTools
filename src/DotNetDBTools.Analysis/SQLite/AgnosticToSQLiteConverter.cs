@@ -1,9 +1,10 @@
-﻿using System.Linq;
-using DotNetDBTools.Definition;
+﻿using System.Collections.Generic;
+using System.Linq;
 using DotNetDBTools.Models.Agnostic;
+using DotNetDBTools.Models.Shared;
 using DotNetDBTools.Models.SQLite;
 
-namespace DotNetDBTools.DefinitionParser.SQLite
+namespace DotNetDBTools.Analysis.SQLite
 {
     public static class AgnosticToSQLiteConverter
     {
@@ -36,7 +37,7 @@ namespace DotNetDBTools.DefinitionParser.SQLite
            {
                ID = columnInfo.ID,
                Name = columnInfo.Name,
-               DataType = SQLiteColumnTypeMapper.GetSqlType((IDbType)columnInfo.DataType),
+               DataType = ConvertToMSSQLInfo(columnInfo.DataType),
                DefaultValue = columnInfo.DefaultValue,
            };
 
@@ -51,5 +52,18 @@ namespace DotNetDBTools.DefinitionParser.SQLite
                OnDelete = foreignKeyInfo.OnDelete,
                OnUpdate = foreignKeyInfo.OnUpdate,
            };
+
+        private static DataTypeInfo ConvertToMSSQLInfo(DataTypeInfo dataTypeInfo)
+        {
+            Dictionary<string, string> sqliteAttributes = new();
+            foreach (KeyValuePair<string, string> kv in dataTypeInfo.Attributes)
+                sqliteAttributes.Add(kv.Key, kv.Value);
+
+            return new DataTypeInfo()
+            {
+                Name = dataTypeInfo.Name,
+                Attributes = sqliteAttributes,
+            };
+        }
     }
 }

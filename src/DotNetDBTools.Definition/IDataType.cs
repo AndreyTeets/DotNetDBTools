@@ -1,6 +1,6 @@
 ﻿namespace DotNetDBTools.Definition
 {
-    public interface IDbType
+    public interface IDataType
     {
     }
 }

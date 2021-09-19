@@ -1,6 +1,6 @@
 ﻿using System;
 using DotNetDBTools.Definition.MSSQL;
-using DotNetDBTools.Definition.MSSQL.DbTypes;
+using DotNetDBTools.Definition.MSSQL.DataTypes;
 
 namespace DotNetDBTools.SampleDB.MSSQL.TableTypes
 {
@@ -10,7 +10,7 @@ namespace DotNetDBTools.SampleDB.MSSQL.TableTypes
 
         public Column MyColumn1 = new("280FB390-63B7-44A5-8E3B-9961761F20A9")
         {
-            Type = new IntDbType(),
+            DataType = new IntDataType(),
             Nullable = true,
             Unique = false,
             Identity = false,
