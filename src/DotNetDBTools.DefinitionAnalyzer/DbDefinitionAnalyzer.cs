@@ -41,7 +41,7 @@ namespace DotNetDBTools.DefinitionAnalyzer
             {
                 Assembly dbAssembly = CompileInMemoryAnLoad(context.Compilation);
                 IDatabaseInfo<ITableInfo<IColumnInfo>> databaseInfo = DbDefinitionParser.CreateDatabaseInfo(dbAssembly);
-                if (!DbValidator.HasNoBadTables(databaseInfo, out IDbError dbError))
+                if (!DbValidator.ForeignKeyReferencesAreValid(databaseInfo, out DbError dbError))
                 {
                     Location location = InvalidDbObjectsFinder.GetInvalidDbObjectLocation(context.Compilation, dbError);
                     context.ReportDiagnostic(Diagnostic.Create(s_diagnosticDescriptor, location, dbError.ErrorMessage));

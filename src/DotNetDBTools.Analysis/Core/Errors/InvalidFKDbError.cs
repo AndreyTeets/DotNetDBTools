@@ -1,8 +1,7 @@
 ﻿namespace DotNetDBTools.Analysis.Core.Errors
 {
-    public class InvalidFKDbError : IDbError
+    public class InvalidFKDbError : DbError
     {
-        public string ErrorMessage { get; private set; }
         public string TableName { get; private set; }
         public string ForeignKeyName { get; private set; }
         public string ReferencedTableName { get; private set; }

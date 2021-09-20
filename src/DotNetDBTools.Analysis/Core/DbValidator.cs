@@ -6,7 +6,14 @@ namespace DotNetDBTools.Analysis.Core
 {
     public static class DbValidator
     {
-        public static bool HasNoBadTables(IDatabaseInfo<ITableInfo<IColumnInfo>> database, out IDbError dbError)
+        public static bool HasNoBadTables(IDatabaseInfo<ITableInfo<IColumnInfo>> database, out DbError dbError)
+        {
+            if (!ForeignKeyReferencesAreValid(database, out dbError))
+                return false;
+            return true;
+        }
+
+        public static bool ForeignKeyReferencesAreValid(IDatabaseInfo<ITableInfo<IColumnInfo>> database, out DbError dbError)
         {
             dbError = null;
             foreach (ITableInfo<IColumnInfo> table in database.Tables)
@@ -28,19 +35,6 @@ $"Couldn't find table '{fki.ForeignTableName}' referenced by foreign key '{fki.N
                     }
                 }
             }
-            return true;
-        }
-
-        public static bool ForeignKeyReferencesAreValid(IDatabaseInfo<ITableInfo<IColumnInfo>> database, out string error)
-        {
-            error = "";
-            IForeignKeyInfo fki = database.Tables.First().ForeignKeys.FirstOrDefault();
-            if (fki is not null && !database.Tables.Any(x => x.Name == fki.ForeignTableName))
-            {
-                error += $"Failed to find table {fki.ForeignTableName} referenced by foreign key";
-                return false;
-            }
-
             return true;
         }
     }

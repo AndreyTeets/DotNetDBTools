@@ -11,8 +11,8 @@ namespace DotNetDBTools.IntegrationTests.MSSQL
     {
         private static readonly string s_connectionStringWithoutDb = MSSQLContainerAssemblyFixture.MsSqlContainerConnectionString;
 
-        private static readonly string s_agnosticSampleDbAssemblyPath = $"{RepoRoot}/samples/DotNetDBTools.SampleDB.Agnostic/bin/DbAssembly/DotNetDBTools.SampleDB.Agnostic.dll";
-        private static readonly string s_mssqlSampleDbAssemblyPath = $"{RepoRoot}/samples/DotNetDBTools.SampleDB.MSSQL/bin/DbAssembly/DotNetDBTools.SampleDB.MSSQL.dll";
+        private static readonly string s_agnosticSampleDbAssemblyPath = $"{SamplesOutputDir}/DotNetDBTools.SampleDB.Agnostic.dll";
+        private static readonly string s_mssqlSampleDbAssemblyPath = $"{SamplesOutputDir}/DotNetDBTools.SampleDB.MSSQL.dll";
 
         private string ConnectionString => CreateConnectionString(s_connectionStringWithoutDb, TestContext.TestName);
         public TestContext TestContext { get; set; }

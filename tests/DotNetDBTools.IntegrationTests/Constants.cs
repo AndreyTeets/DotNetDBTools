@@ -3,6 +3,7 @@
     public static class Constants
     {
         public const string RepoRoot = "../../../../..";
+        public static readonly string SamplesOutputDir = $"{RepoRoot}/SamplesOutput";
 #if DEBUG
         public const string Configuration = "Debug";
 #else

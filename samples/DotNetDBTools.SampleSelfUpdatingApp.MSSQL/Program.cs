@@ -14,21 +14,20 @@ namespace DotNetDBTools.SampleSelfUpdatingApp.MSSQL
         private const string AgnosticDatabaseName = "AgnosticSampleDB_SelfUpdatingApp";
 
         private const string RepoRoot = "../../../../..";
+        private static readonly string s_samplesOutputDir = $"{RepoRoot}/SamplesOutput";
 
-        private static readonly string s_agnosticDbProjectBinDir = $"{RepoRoot}/samples/DotNetDBTools.SampleDB.Agnostic/bin";
-        private static readonly string s_agnosticDbAssemblyPath = $"{s_agnosticDbProjectBinDir}/DbAssembly/DotNetDBTools.SampleDB.Agnostic.dll";
+        private static readonly string s_agnosticDbAssemblyPath = $"{s_samplesOutputDir}/DotNetDBTools.SampleDB.Agnostic.dll";
         private static readonly string s_agnosticConnectionString = $"Data Source=localhost,{MsSqlServerHostPort};Initial Catalog={AgnosticDatabaseName};Integrated Security=False;User ID=SA;Password={MsSqlServerPassword}";
 
         public static void Main()
         {
-            SqlConnection dbConnection = new(s_agnosticConnectionString);
-            SqlServerCompiler compiler = new();
-
             DropDatabaseIfExists(s_agnosticConnectionString);
 
-            Console.WriteLine("Creating new AgnosticSampleDB...");
+            Console.WriteLine("Creating new AgnosticSampleDB_SelfUpdatingApp...");
             DeployAgnosticSampleDB();
 
+            SqlConnection dbConnection = new(s_agnosticConnectionString);
+            SqlServerCompiler compiler = new();
             SampleBusinessLogic.ReadWriteSomeData(dbConnection, compiler);
         }
 

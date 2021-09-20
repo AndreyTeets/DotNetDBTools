@@ -11,8 +11,8 @@ namespace DotNetDBTools.IntegrationTests.SQLite
     {
         private const string DbFilesFolder = @".\tmp";
 
-        private static readonly string s_agnosticSampleDbAssemblyPath = $"{RepoRoot}/samples/DotNetDBTools.SampleDB.Agnostic/bin/DbAssembly/DotNetDBTools.SampleDB.Agnostic.dll";
-        private static readonly string s_sqliteSampleDbAssemblyPath = $"{RepoRoot}/samples/DotNetDBTools.SampleDB.SQLite/bin/DbAssembly/DotNetDBTools.SampleDB.SQLite.dll";
+        private static readonly string s_agnosticSampleDbAssemblyPath = $"{SamplesOutputDir}/DotNetDBTools.SampleDB.Agnostic.dll";
+        private static readonly string s_sqliteSampleDbAssemblyPath = $"{SamplesOutputDir}/DotNetDBTools.SampleDB.SQLite.dll";
 
         private string ConnectionString => $@"DataSource={DbFilesFolder}\{TestContext.TestName}.db;Mode=ReadWriteCreate;";
         public TestContext TestContext { get; set; }

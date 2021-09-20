@@ -10,22 +10,20 @@ namespace DotNetDBTools.SampleSelfUpdatingApp.SQLite
     public static class Program
     {
         private const string RepoRoot = "../../../../..";
+        private static readonly string s_samplesOutputDir = $"{RepoRoot}/SamplesOutput";
 
-        private static readonly string s_agnosticDbProjectBinDir = $"{RepoRoot}/samples/DotNetDBTools.SampleDB.Agnostic/bin";
-        private static readonly string s_agnosticDbAssemblyPath = $"{s_agnosticDbProjectBinDir}/DbAssembly/DotNetDBTools.SampleDB.Agnostic.dll";
-        private static readonly string s_agnosticDbFilePath = $"./tmp/AgnosticSampleDB_SelfUpdatingApp.db";
-        private static readonly string s_agnosticConnectionString = $"DataSource={s_agnosticDbFilePath};Mode=ReadWriteCreate;";
+        private static readonly string s_agnosticDbAssemblyPath = $"{s_samplesOutputDir}/DotNetDBTools.SampleDB.Agnostic.dll";
+        private static readonly string s_agnosticConnectionString = $"DataSource={s_samplesOutputDir}/sqlite_databases/AgnosticSampleDB_SelfUpdatingApp.db;Mode=ReadWriteCreate;";
 
         public static void Main()
         {
-            SqliteConnection dbConnection = new(s_agnosticConnectionString);
-            SqliteCompiler compiler = new();
+            DropDatabaseIfExists(s_agnosticConnectionString);
 
-            DropDatabaseIfExists(s_agnosticDbFilePath);
-
-            Console.WriteLine("Creating new AgnosticSampleDB...");
+            Console.WriteLine("Creating new AgnosticSampleDB_SelfUpdatingApp...");
             DeployAgnosticSampleDB();
 
+            SqliteConnection dbConnection = new(s_agnosticConnectionString);
+            SqliteCompiler compiler = new();
             SampleBusinessLogic.ReadWriteSomeData(dbConnection, compiler);
         }
 
@@ -35,8 +33,10 @@ namespace DotNetDBTools.SampleSelfUpdatingApp.SQLite
             deployManager.PublishDatabase(s_agnosticDbAssemblyPath, s_agnosticConnectionString);
         }
 
-        private static void DropDatabaseIfExists(string dbFilePath)
+        private static void DropDatabaseIfExists(string connectionString)
         {
+            SqliteConnectionStringBuilder sqlConnectionBuilder = new(connectionString);
+            string dbFilePath = sqlConnectionBuilder.DataSource;
             if (File.Exists(dbFilePath))
                 File.Delete(dbFilePath);
             Directory.CreateDirectory(Path.GetDirectoryName(dbFilePath));

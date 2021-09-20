@@ -2,6 +2,7 @@
 using System.Data.SqlClient;
 using System.IO;
 using System.Reflection;
+using DotNetDBTools.Analysis.Core.Errors;
 using DotNetDBTools.Analysis.MSSQL;
 using DotNetDBTools.DefinitionGenerator;
 using DotNetDBTools.DefinitionParser.Agnostic;
@@ -109,7 +110,7 @@ namespace DotNetDBTools.Deploy
             else
                 database = MSSQLDefinitionParser.CreateDatabaseInfo(dbAssembly);
 
-            if (!MSSQLDbValidator.DbIsValid(database, out string error))
+            if (!MSSQLDbValidator.DbIsValid(database, out DbError error))
                 throw new Exception($"Db is invalid: {error}");
             return database;
         }

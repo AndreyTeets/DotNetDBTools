@@ -10,7 +10,7 @@ namespace DotNetDBTools.DefinitionAnalyzer
 {
     public static class InvalidDbObjectsFinder
     {
-        public static Location GetInvalidDbObjectLocation(Compilation compilation, IDbError dbError)
+        public static Location GetInvalidDbObjectLocation(Compilation compilation, DbError dbError)
         {
             if (dbError is InvalidFKDbError invalidFKDbError)
                 return GetInvalidFKLocation(compilation, invalidFKDbError);

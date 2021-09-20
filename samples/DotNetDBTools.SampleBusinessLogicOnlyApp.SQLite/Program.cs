@@ -8,9 +8,9 @@ namespace DotNetDBTools.SampleBusinessLogicOnlyApp.SQLite
     public static class Program
     {
         private const string RepoRoot = "../../../../..";
+        private static readonly string s_samplesOutputDir = $"{RepoRoot}/SamplesOutput";
 
-        private static readonly string s_agnosticSampleDbFilePath = $"{RepoRoot}/samples/DotNetDBTools.SampleDB.Agnostic/bin/DbFile/AgnosticSampleDB.db";
-        private static readonly string s_connectionString = $"DataSource={s_agnosticSampleDbFilePath};Mode=ReadWriteCreate;";
+        private static readonly string s_connectionString = $"DataSource={s_samplesOutputDir}/sqlite_databases/AgnosticSampleDB.db;Mode=ReadWriteCreate;";
 
         public static void Main()
         {

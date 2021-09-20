@@ -1,20 +1,16 @@
 ﻿using System.Linq;
 using DotNetDBTools.Analysis.Core;
+using DotNetDBTools.Analysis.Core.Errors;
 using DotNetDBTools.Models.SQLite;
 
 namespace DotNetDBTools.Analysis.SQLite
 {
     public static class SQLiteDbValidator
     {
-        public static bool DbIsValid(SQLiteDatabaseInfo database, out string error)
+        public static bool DbIsValid(SQLiteDatabaseInfo database, out DbError dbError)
         {
-            error = "";
-            if (!DbValidator.ForeignKeyReferencesAreValid(database, out string fkError))
-            {
-                error += fkError;
+            if (!DbValidator.HasNoBadTables(database, out dbError))
                 return false;
-            }
-
             return true;
         }
 

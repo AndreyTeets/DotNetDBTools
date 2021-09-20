@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using DotNetDBTools.Analysis.Core.Errors;
 using DotNetDBTools.Analysis.SQLite;
 using DotNetDBTools.DefinitionGenerator;
 using DotNetDBTools.DefinitionParser.Agnostic;
@@ -108,7 +109,7 @@ namespace DotNetDBTools.Deploy
             else
                 database = SQLiteDefinitionParser.CreateDatabaseInfo(dbAssembly);
 
-            if (!SQLiteDbValidator.DbIsValid(database, out string error))
+            if (!SQLiteDbValidator.DbIsValid(database, out DbError error))
                 throw new Exception($"Db is invalid: {error}");
             return database;
         }
