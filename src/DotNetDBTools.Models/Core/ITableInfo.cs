@@ -2,10 +2,9 @@
 
 namespace DotNetDBTools.Models.Core
 {
-    public interface ITableInfo<out ColumnInfo> : IDBObjectInfo
-        where ColumnInfo : IColumnInfo
+    public interface ITableInfo : IDBObjectInfo
     {
-        public IEnumerable<IColumnInfo> Columns { get; set; }
+        public IEnumerable<ColumnInfo> Columns { get; set; }
         public IEnumerable<IForeignKeyInfo> ForeignKeys { get; set; }
     }
 }

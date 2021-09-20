@@ -3,9 +3,9 @@ using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.Models.MSSQL
 {
-    public class MSSQLTableInfo : BaseDBObjectInfo, ITableInfo<MSSQLColumnInfo>
+    public class MSSQLTableInfo : BaseDBObjectInfo, ITableInfo
     {
-        public IEnumerable<IColumnInfo> Columns { get; set; }
+        public IEnumerable<ColumnInfo> Columns { get; set; }
         public IEnumerable<IForeignKeyInfo> ForeignKeys { get; set; }
     }
 }

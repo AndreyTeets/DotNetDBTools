@@ -1,11 +1,12 @@
 ﻿using System;
 using DotNetDBTools.Definition.Agnostic.DataTypes;
 using DotNetDBTools.Definition.Core;
+using DotNetDBTools.DefinitionParser.Core;
 using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.DefinitionParser.Agnostic
 {
-    public static class AgnosticDataTypeMapper
+    internal static class AgnosticDataTypeMapper
     {
         public static DataTypeInfo GetDataTypeInfo(IDataType dataType)
         {
@@ -23,11 +24,8 @@ namespace DotNetDBTools.DefinitionParser.Agnostic
             return new DataTypeInfo()
             {
                 Name = DataTypeNames.String,
-                Attributes = new()
-                {
-                    { DataTypeAttributes.Length, stringDataType.Length.ToString() },
-                    { DataTypeAttributes.IsUnicode, stringDataType.IsUnicode.ToString() },
-                },
+                Length = stringDataType.Length.ToString(),
+                IsUnicode = stringDataType.IsUnicode.ToString(),
             };
         }
 
@@ -36,7 +34,6 @@ namespace DotNetDBTools.DefinitionParser.Agnostic
             return new DataTypeInfo()
             {
                 Name = DataTypeNames.Int,
-                Attributes = new(),
             };
         }
 
@@ -45,10 +42,7 @@ namespace DotNetDBTools.DefinitionParser.Agnostic
             return new DataTypeInfo()
             {
                 Name = DataTypeNames.Byte,
-                Attributes = new()
-                {
-                    { DataTypeAttributes.Length, byteDataType.Length.ToString() },
-                },
+                Length = byteDataType.Length.ToString(),
             };
         }
     }

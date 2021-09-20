@@ -3,9 +3,9 @@ using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.Models.Agnostic
 {
-    public class AgnosticTableInfo : BaseDBObjectInfo, ITableInfo<AgnosticColumnInfo>
+    public class AgnosticTableInfo : BaseDBObjectInfo, ITableInfo
     {
-        public IEnumerable<IColumnInfo> Columns { get; set; }
+        public IEnumerable<ColumnInfo> Columns { get; set; }
         public IEnumerable<IForeignKeyInfo> ForeignKeys { get; set; }
     }
 }

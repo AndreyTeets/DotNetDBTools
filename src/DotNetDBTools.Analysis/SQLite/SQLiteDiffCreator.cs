@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DotNetDBTools.Analysis.Core;
+using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.SQLite;
 
 namespace DotNetDBTools.Analysis.SQLite
@@ -45,21 +46,19 @@ namespace DotNetDBTools.Analysis.SQLite
 
         private static SQLiteTableDiff CreateTableDiff(SQLiteTableInfo newDbTable, SQLiteTableInfo oldDbTable)
         {
-            IEnumerable<SQLiteColumnInfo> addedColumns = newDbTable.Columns
-                .Where(newDbTableColumn => !oldDbTable.Columns.Any(oldDbTableColum => oldDbTableColum.ID == newDbTableColumn.ID))
-                .Select(x => (SQLiteColumnInfo)x);
+            IEnumerable<ColumnInfo> addedColumns = newDbTable.Columns
+                .Where(newDbTableColumn => !oldDbTable.Columns.Any(oldDbTableColum => oldDbTableColum.ID == newDbTableColumn.ID));
 
-            IEnumerable<SQLiteColumnInfo> removedColumns = oldDbTable.Columns
-                .Where(oldDbTableColumn => !newDbTable.Columns.Any(newDbTableColumn => newDbTableColumn.ID == oldDbTableColumn.ID))
-                .Select(x => (SQLiteColumnInfo)x);
+            IEnumerable<ColumnInfo> removedColumns = oldDbTable.Columns
+                .Where(oldDbTableColumn => !newDbTable.Columns.Any(newDbTableColumn => newDbTableColumn.ID == oldDbTableColumn.ID));
 
-            List<SQLiteColumnDiff> changedColumns = new();
-            foreach (SQLiteColumnInfo newDbTableColumn in newDbTable.Columns)
+            List<ColumnDiff> changedColumns = new();
+            foreach (ColumnInfo newDbTableColumn in newDbTable.Columns)
             {
-                SQLiteColumnInfo oldDbTableColumn = (SQLiteColumnInfo)oldDbTable.Columns.FirstOrDefault(x => x.ID == newDbTableColumn.ID);
+                ColumnInfo oldDbTableColumn = oldDbTable.Columns.FirstOrDefault(x => x.ID == newDbTableColumn.ID);
                 if (oldDbTableColumn is not null)
                 {
-                    SQLiteColumnDiff tableDiff = CreateColumnDiff(newDbTableColumn, oldDbTableColumn);
+                    ColumnDiff tableDiff = CreateColumnDiff(newDbTableColumn, oldDbTableColumn);
                     changedColumns.Add(tableDiff);
                 }
             }
@@ -77,9 +76,9 @@ namespace DotNetDBTools.Analysis.SQLite
             };
         }
 
-        private static SQLiteColumnDiff CreateColumnDiff(SQLiteColumnInfo newDbTableColumn, SQLiteColumnInfo oldDbTableColumn)
+        private static ColumnDiff CreateColumnDiff(ColumnInfo newDbTableColumn, ColumnInfo oldDbTableColumn)
         {
-            return new SQLiteColumnDiff
+            return new ColumnDiff
             {
                 NewColumn = newDbTableColumn,
                 OldColumn = oldDbTableColumn,

@@ -6,17 +6,17 @@ namespace DotNetDBTools.Analysis.Core
 {
     public static class DbValidator
     {
-        public static bool HasNoBadTables(IDatabaseInfo<ITableInfo<IColumnInfo>> database, out DbError dbError)
+        public static bool HasNoBadTables(IDatabaseInfo<ITableInfo> database, out DbError dbError)
         {
             if (!ForeignKeyReferencesAreValid(database, out dbError))
                 return false;
             return true;
         }
 
-        public static bool ForeignKeyReferencesAreValid(IDatabaseInfo<ITableInfo<IColumnInfo>> database, out DbError dbError)
+        public static bool ForeignKeyReferencesAreValid(IDatabaseInfo<ITableInfo> database, out DbError dbError)
         {
             dbError = null;
-            foreach (ITableInfo<IColumnInfo> table in database.Tables)
+            foreach (ITableInfo table in database.Tables)
             {
                 foreach (IForeignKeyInfo fki in table.ForeignKeys)
                 {

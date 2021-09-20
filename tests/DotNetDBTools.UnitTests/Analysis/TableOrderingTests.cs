@@ -14,7 +14,7 @@ namespace DotNetDBTools.UnitTests.Analysis
         [Fact]
         public void TableOrderingExtensions_ProduceCorrectResultOnValidNonEmptyInput()
         {
-            IEnumerable<ITableInfo<IColumnInfo>> tables = new List<AgnosticTableInfo>()
+            IEnumerable<ITableInfo> tables = new List<AgnosticTableInfo>()
             {
                 CreateTableInfo("T01", new string[] { }),
                 CreateTableInfo("T02", new string[] { }),
@@ -56,7 +56,7 @@ namespace DotNetDBTools.UnitTests.Analysis
         [Fact]
         public void TableOrderingExtensions_ProduceCorrectResultOnEmptyInput()
         {
-            IEnumerable<ITableInfo<IColumnInfo>> tables = new List<AgnosticTableInfo>();
+            IEnumerable<ITableInfo> tables = new List<AgnosticTableInfo>();
 
             string[] expectedReferencedFirstOrder = new string[] { };
             string[] expectedReferencedLastOrder = new string[] { };
@@ -71,7 +71,7 @@ namespace DotNetDBTools.UnitTests.Analysis
         [Fact]
         public void TableOrderingExtensions_ThrowOnInvalidInput()
         {
-            IEnumerable<ITableInfo<IColumnInfo>> tables = new List<AgnosticTableInfo>()
+            IEnumerable<ITableInfo> tables = new List<AgnosticTableInfo>()
             {
                 CreateTableInfo("T01", new string[] { "T02" }),
                 CreateTableInfo("T02", new string[] { "T03" }),

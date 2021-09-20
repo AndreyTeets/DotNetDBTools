@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DotNetDBTools.Analysis.Core;
+using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.MSSQL;
 
 namespace DotNetDBTools.Analysis.MSSQL
@@ -57,21 +58,19 @@ namespace DotNetDBTools.Analysis.MSSQL
 
         private static MSSQLTableDiff CreateTableDiff(MSSQLTableInfo newDbTable, MSSQLTableInfo oldDbTable)
         {
-            IEnumerable<MSSQLColumnInfo> addedColumns = newDbTable.Columns
-                .Where(newDbTableColumn => !oldDbTable.Columns.Any(oldDbTableColum => oldDbTableColum.ID == newDbTableColumn.ID))
-                .Select(x => (MSSQLColumnInfo)x);
+            IEnumerable<ColumnInfo> addedColumns = newDbTable.Columns
+                .Where(newDbTableColumn => !oldDbTable.Columns.Any(oldDbTableColum => oldDbTableColum.ID == newDbTableColumn.ID));
 
-            IEnumerable<MSSQLColumnInfo> removedColumns = oldDbTable.Columns
-                .Where(oldDbTableColumn => !newDbTable.Columns.Any(newDbTableColumn => newDbTableColumn.ID == oldDbTableColumn.ID))
-                .Select(x => (MSSQLColumnInfo)x);
+            IEnumerable<ColumnInfo> removedColumns = oldDbTable.Columns
+                .Where(oldDbTableColumn => !newDbTable.Columns.Any(newDbTableColumn => newDbTableColumn.ID == oldDbTableColumn.ID));
 
-            List<MSSQLColumnDiff> changedColumns = new();
-            foreach (MSSQLColumnInfo newDbTableColumn in newDbTable.Columns)
+            List<ColumnDiff> changedColumns = new();
+            foreach (ColumnInfo newDbTableColumn in newDbTable.Columns)
             {
-                MSSQLColumnInfo oldDbTableColumn = (MSSQLColumnInfo)oldDbTable.Columns.FirstOrDefault(x => x.ID == newDbTableColumn.ID);
+                ColumnInfo oldDbTableColumn = oldDbTable.Columns.FirstOrDefault(x => x.ID == newDbTableColumn.ID);
                 if (oldDbTableColumn is not null)
                 {
-                    MSSQLColumnDiff tableDiff = CreateColumnDiff(newDbTableColumn, oldDbTableColumn);
+                    ColumnDiff tableDiff = CreateColumnDiff(newDbTableColumn, oldDbTableColumn);
                     changedColumns.Add(tableDiff);
                 }
             }
@@ -89,9 +88,9 @@ namespace DotNetDBTools.Analysis.MSSQL
             };
         }
 
-        private static MSSQLColumnDiff CreateColumnDiff(MSSQLColumnInfo newDbTableColumn, MSSQLColumnInfo oldDbTableColumn)
+        private static ColumnDiff CreateColumnDiff(ColumnInfo newDbTableColumn, ColumnInfo oldDbTableColumn)
         {
-            return new MSSQLColumnDiff
+            return new ColumnDiff
             {
                 NewColumn = newDbTableColumn,
                 OldColumn = oldDbTableColumn,

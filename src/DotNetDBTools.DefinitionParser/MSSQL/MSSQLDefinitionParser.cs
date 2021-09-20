@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using DotNetDBTools.Definition.MSSQL;
 using DotNetDBTools.DefinitionParser.Core;
+using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.MSSQL;
 
 namespace DotNetDBTools.DefinitionParser.MSSQL
@@ -105,31 +106,36 @@ namespace DotNetDBTools.DefinitionParser.MSSQL
             List<MSSQLUserDefinedTypeInfo> userDefinedTypeInfos = new();
             foreach (IUserDefinedType userDefinedType in userDefinedTypes)
             {
+                DataTypeInfo dataTypeInfo = MSSQLDataTypeMapper.GetDataTypeInfo(userDefinedType.UnderlyingType);
                 MSSQLUserDefinedTypeInfo userDefinedTypeInfo = new()
                 {
                     ID = userDefinedType.ID,
                     Name = userDefinedType.GetType().Name,
                     Nullable = userDefinedType.Nullable.ToString(),
-                    UnderlyingType = MSSQLDataTypeMapper.GetDataTypeInfo(userDefinedType.UnderlyingType),
+                    UnderlyingDataTypeName = dataTypeInfo.Name,
                 };
                 userDefinedTypeInfos.Add(userDefinedTypeInfo);
             }
             return userDefinedTypeInfos;
         }
 
-        private static List<MSSQLColumnInfo> GetColumnInfos(ITable table)
+        private static List<ColumnInfo> GetColumnInfos(ITable table)
             => table.GetType().GetPropertyOrFieldMembers()
                 .Where(x => typeof(Column).IsAssignableFrom(x.GetPropertyOrFieldType()))
                 .OrderBy(x => x.Name, StringComparer.Ordinal)
                 .Select(x =>
                 {
                     Column column = (Column)x.GetPropertyOrFieldValue(table);
-                    return new MSSQLColumnInfo()
+                    DataTypeInfo dataTypeInfo = MSSQLDataTypeMapper.GetDataTypeInfo(column.DataType);
+                    return new ColumnInfo()
                     {
                         ID = column.ID,
                         Name = x.Name,
-                        DataType = MSSQLDataTypeMapper.GetDataTypeInfo(column.DataType),
+                        DataTypeName = dataTypeInfo.Name,
                         DefaultValue = column.Default,
+                        Length = dataTypeInfo.Length,
+                        IsUnicode = dataTypeInfo.IsUnicode,
+                        IsFixedLength = dataTypeInfo.IsFixedLength,
                     };
                 })
                 .ToList();

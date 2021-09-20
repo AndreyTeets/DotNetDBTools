@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using DotNetDBTools.Definition.SQLite;
 using DotNetDBTools.DefinitionParser.Core;
+using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.SQLite;
 
 namespace DotNetDBTools.DefinitionParser.SQLite
@@ -70,19 +71,23 @@ namespace DotNetDBTools.DefinitionParser.SQLite
             return viewInfos;
         }
 
-        private static List<SQLiteColumnInfo> GetColumnInfos(ITable table)
+        private static List<ColumnInfo> GetColumnInfos(ITable table)
             => table.GetType().GetPropertyOrFieldMembers()
                 .Where(x => typeof(Column).IsAssignableFrom(x.GetPropertyOrFieldType()))
                 .OrderBy(x => x.Name, StringComparer.Ordinal)
                 .Select(x =>
                 {
                     Column column = (Column)x.GetPropertyOrFieldValue(table);
-                    return new SQLiteColumnInfo()
+                    DataTypeInfo dataTypeInfo = SQLiteDataTypeMapper.GetDataTypeInfo(column.DataType);
+                    return new ColumnInfo()
                     {
                         ID = column.ID,
                         Name = x.Name,
-                        DataType = SQLiteDataTypeMapper.GetDataTypeInfo(column.DataType),
+                        DataTypeName = dataTypeInfo.Name,
                         DefaultValue = column.Default,
+                        Length = dataTypeInfo.Length,
+                        IsUnicode = dataTypeInfo.IsUnicode,
+                        IsFixedLength = dataTypeInfo.IsFixedLength,
                     };
                 })
                 .ToList();

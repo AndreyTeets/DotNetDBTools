@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 using DotNetDBTools.Deploy.Core;
+using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.MSSQL;
 
 namespace DotNetDBTools.Deploy.MSSQL.Queries
@@ -27,7 +28,7 @@ $@"EXEC sp_rename '{tableDiff.OldTable.Name}', '{tableDiff.NewTable.Name}';
 
 ");
 
-            foreach (MSSQLColumnInfo column in tableDiff.RemovedColumns)
+            foreach (ColumnInfo column in tableDiff.RemovedColumns)
             {
                 sb.Append(
 $@"ALTER TABLE {tableDiff.NewTable.Name} DROP COLUMN {column.Name};
@@ -35,19 +36,19 @@ $@"ALTER TABLE {tableDiff.NewTable.Name} DROP COLUMN {column.Name};
 ");
             }
 
-            foreach (MSSQLColumnDiff columnDiff in tableDiff.ChangedColumns)
+            foreach (ColumnDiff columnDiff in tableDiff.ChangedColumns)
             {
                 sb.Append(
 $@"EXEC sp_rename '{tableDiff.NewTable.Name}.{columnDiff.OldColumn.Name}', '{columnDiff.NewColumn.Name}', 'COLUMN';
-ALTER TABLE {tableDiff.NewTable.Name} ALTER COLUMN {columnDiff.NewColumn.Name} {MSSQLSqlTypeMapper.GetSqlType(columnDiff.NewColumn.DataType)};
+ALTER TABLE {tableDiff.NewTable.Name} ALTER COLUMN {columnDiff.NewColumn.Name} {MSSQLSqlTypeMapper.GetSqlType(columnDiff.NewColumn)};
 
 ");
             }
 
-            foreach (MSSQLColumnInfo column in tableDiff.AddedColumns)
+            foreach (ColumnInfo column in tableDiff.AddedColumns)
             {
                 sb.Append(
-$@"ALTER TABLE {tableDiff.NewTable.Name} ADD {column.Name} {MSSQLSqlTypeMapper.GetSqlType(column.DataType)} UNIQUE;
+$@"ALTER TABLE {tableDiff.NewTable.Name} ADD {column.Name} {MSSQLSqlTypeMapper.GetSqlType(column)} UNIQUE;
 
 ");
             }

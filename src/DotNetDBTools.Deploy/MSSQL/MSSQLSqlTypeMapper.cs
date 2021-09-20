@@ -5,30 +5,30 @@ namespace DotNetDBTools.Deploy.MSSQL
 {
     public static class MSSQLSqlTypeMapper
     {
-        public static string GetSqlType(DataTypeInfo dataTypeInfo)
+        public static string GetSqlType(ColumnInfo columnInfo)
         {
-            return dataTypeInfo.Name switch
+            return columnInfo.DataTypeName switch
             {
-                DataTypeNames.String => GetStringSqlType(dataTypeInfo),
-                DataTypeNames.Int => GetIntSqlType(dataTypeInfo),
-                DataTypeNames.Byte => GetByteSqlType(dataTypeInfo),
-                _ => GetUserDefinedSqlType(dataTypeInfo)
+                DataTypeNames.String => GetStringSqlType(columnInfo),
+                DataTypeNames.Int => GetIntSqlType(columnInfo),
+                DataTypeNames.Byte => GetByteSqlType(columnInfo),
+                _ => GetUserDefinedSqlType(columnInfo)
             };
         }
 
-        private static string GetStringSqlType(DataTypeInfo dataTypeInfo)
+        private static string GetStringSqlType(ColumnInfo columnInfo)
         {
-            bool isUnicode = dataTypeInfo.Attributes[DataTypeAttributes.IsUnicode] == true.ToString();
+            bool isUnicode = columnInfo.IsUnicode == true.ToString();
             string stringTypeName = isUnicode ? "NVARCHAR" : "VARCHAR";
 
             bool isFixedLength = false;
-            if (dataTypeInfo.Attributes[DataTypeAttributes.IsFixedLength] == true.ToString())
+            if (columnInfo.IsFixedLength == true.ToString())
             {
                 isFixedLength = true;
                 stringTypeName = isUnicode ? "NCHAR" : "CHAR";
             }
 
-            int length = int.Parse(dataTypeInfo.Attributes[DataTypeAttributes.Length]);
+            int length = int.Parse(columnInfo.Length);
             string lengthStr = length.ToString();
             if (isUnicode && length > 4000 ||
                 !isUnicode && length > 8000)
@@ -41,23 +41,23 @@ namespace DotNetDBTools.Deploy.MSSQL
             return $"{stringTypeName}({lengthStr})";
         }
 
-        private static string GetIntSqlType(DataTypeInfo _)
+        private static string GetIntSqlType(ColumnInfo _)
         {
             return "INT";
         }
 
-        private static string GetByteSqlType(DataTypeInfo dataTypeInfo)
+        private static string GetByteSqlType(ColumnInfo columnInfo)
         {
-            int length = int.Parse(dataTypeInfo.Attributes[DataTypeAttributes.Length]);
+            int length = int.Parse(columnInfo.Length);
             string lengthStr = length.ToString();
             if (length > 8000)
                 lengthStr = "MAX";
             return $"VARBINARY({lengthStr})";
         }
 
-        private static string GetUserDefinedSqlType(DataTypeInfo dataTypeInfo)
+        private static string GetUserDefinedSqlType(ColumnInfo columnInfo)
         {
-            return dataTypeInfo.Name;
+            return columnInfo.DataTypeName;
         }
     }
 }

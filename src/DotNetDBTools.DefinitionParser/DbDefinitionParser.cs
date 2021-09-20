@@ -10,7 +10,7 @@ namespace DotNetDBTools.DefinitionParser
 {
     public static class DbDefinitionParser
     {
-        public static IDatabaseInfo<ITableInfo<IColumnInfo>> CreateDatabaseInfo(Assembly dbAssembly)
+        public static IDatabaseInfo<ITableInfo> CreateDatabaseInfo(Assembly dbAssembly)
         {
             DatabaseKind dbKind = DbAssemblyInfoHelper.GetDbKind(dbAssembly);
             return dbKind switch

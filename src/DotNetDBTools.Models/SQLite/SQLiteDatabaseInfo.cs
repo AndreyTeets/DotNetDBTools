@@ -13,7 +13,7 @@ namespace DotNetDBTools.Models.SQLite
 
         public DatabaseKind Kind { get; private set; }
         public string Name { get; private set; }
-        public IEnumerable<ITableInfo<IColumnInfo>> Tables { get; set; } = new List<SQLiteTableInfo>();
+        public IEnumerable<ITableInfo> Tables { get; set; } = new List<SQLiteTableInfo>();
         public IEnumerable<IViewInfo> Views { get; set; } = new List<SQLiteViewInfo>();
     }
 }

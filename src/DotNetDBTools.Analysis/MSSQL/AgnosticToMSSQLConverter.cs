@@ -1,7 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using DotNetDBTools.Models.Agnostic;
-using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.MSSQL;
 
 namespace DotNetDBTools.Analysis.MSSQL
@@ -20,7 +18,7 @@ namespace DotNetDBTools.Analysis.MSSQL
             {
                 ID = tableInfo.ID,
                 Name = tableInfo.Name,
-                Columns = tableInfo.Columns.Select(x => ConvertToMSSQLInfo((AgnosticColumnInfo)x)).ToList(),
+                Columns = tableInfo.Columns,
                 ForeignKeys = tableInfo.ForeignKeys.Select(x => ConvertToMSSQLInfo((AgnosticForeignKeyInfo)x)).ToList(),
             };
 
@@ -31,15 +29,6 @@ namespace DotNetDBTools.Analysis.MSSQL
                 Name = viewInfo.Name,
                 Code = viewInfo.Code,
             };
-
-        private static MSSQLColumnInfo ConvertToMSSQLInfo(AgnosticColumnInfo columnInfo)
-           => new()
-           {
-               ID = columnInfo.ID,
-               Name = columnInfo.Name,
-               DataType = ConvertToMSSQLInfo(columnInfo.DataType),
-               DefaultValue = columnInfo.DefaultValue,
-           };
 
         private static MSSQLForeignKeyInfo ConvertToMSSQLInfo(AgnosticForeignKeyInfo foreignKeyInfo)
            => new()
@@ -52,21 +41,5 @@ namespace DotNetDBTools.Analysis.MSSQL
                OnDelete = foreignKeyInfo.OnDelete,
                OnUpdate = foreignKeyInfo.OnUpdate,
            };
-
-        private static DataTypeInfo ConvertToMSSQLInfo(DataTypeInfo dataTypeInfo)
-        {
-            Dictionary<string, string> mssqlAttributes = new();
-            foreach (KeyValuePair<string, string> kv in dataTypeInfo.Attributes)
-                mssqlAttributes.Add(kv.Key, kv.Value);
-
-            if (!mssqlAttributes.ContainsKey(DataTypeAttributes.IsFixedLength))
-                mssqlAttributes.Add(DataTypeAttributes.IsFixedLength, false.ToString());
-
-            return new DataTypeInfo()
-            {
-                Name = dataTypeInfo.Name,
-                Attributes = mssqlAttributes,
-            };
-        }
     }
 }

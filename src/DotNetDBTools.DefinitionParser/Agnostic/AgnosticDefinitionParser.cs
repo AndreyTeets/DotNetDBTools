@@ -5,6 +5,7 @@ using System.Reflection;
 using DotNetDBTools.Definition.Agnostic;
 using DotNetDBTools.DefinitionParser.Core;
 using DotNetDBTools.Models.Agnostic;
+using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.DefinitionParser.Agnostic
 {
@@ -70,19 +71,23 @@ namespace DotNetDBTools.DefinitionParser.Agnostic
             return viewInfos;
         }
 
-        private static List<AgnosticColumnInfo> GetColumnInfos(ITable table)
+        private static List<ColumnInfo> GetColumnInfos(ITable table)
             => table.GetType().GetPropertyOrFieldMembers()
                 .Where(x => typeof(Column).IsAssignableFrom(x.GetPropertyOrFieldType()))
                 .OrderBy(x => x.Name, StringComparer.Ordinal)
                 .Select(x =>
                 {
                     Column column = (Column)x.GetPropertyOrFieldValue(table);
-                    return new AgnosticColumnInfo()
+                    DataTypeInfo dataTypeInfo = AgnosticDataTypeMapper.GetDataTypeInfo(column.DataType);
+                    return new ColumnInfo()
                     {
                         ID = column.ID,
                         Name = x.Name,
-                        DataType = AgnosticDataTypeMapper.GetDataTypeInfo(column.DataType),
+                        DataTypeName = dataTypeInfo.Name,
                         DefaultValue = column.Default,
+                        Length = dataTypeInfo.Length,
+                        IsUnicode = dataTypeInfo.IsUnicode,
+                        IsFixedLength = dataTypeInfo.IsFixedLength,
                     };
                 })
                 .ToList();

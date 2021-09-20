@@ -2,11 +2,12 @@
 using DotNetDBTools.Definition.Core;
 using DotNetDBTools.Definition.MSSQL;
 using DotNetDBTools.Definition.MSSQL.DataTypes;
+using DotNetDBTools.DefinitionParser.Core;
 using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.DefinitionParser.MSSQL
 {
-    public static class MSSQLDataTypeMapper
+    internal static class MSSQLDataTypeMapper
     {
         public static DataTypeInfo GetDataTypeInfo(IDataType dataType)
         {
@@ -25,12 +26,9 @@ namespace DotNetDBTools.DefinitionParser.MSSQL
             return new DataTypeInfo()
             {
                 Name = DataTypeNames.String,
-                Attributes = new()
-                {
-                    { DataTypeAttributes.Length, stringDataType.Length.ToString() },
-                    { DataTypeAttributes.IsUnicode, stringDataType.IsUnicode.ToString() },
-                    { DataTypeAttributes.IsFixedLength, stringDataType.IsFixedLength.ToString() },
-                },
+                Length = stringDataType.Length.ToString(),
+                IsUnicode = stringDataType.IsUnicode.ToString(),
+                IsFixedLength = stringDataType.IsFixedLength.ToString(),
             };
         }
 
@@ -39,7 +37,6 @@ namespace DotNetDBTools.DefinitionParser.MSSQL
             return new DataTypeInfo()
             {
                 Name = DataTypeNames.Int,
-                Attributes = new(),
             };
         }
 
@@ -48,10 +45,7 @@ namespace DotNetDBTools.DefinitionParser.MSSQL
             return new DataTypeInfo()
             {
                 Name = DataTypeNames.Byte,
-                Attributes = new()
-                {
-                    { DataTypeAttributes.Length, byteDataType.Length.ToString() },
-                },
+                Length = byteDataType.Length.ToString(),
             };
         }
 
@@ -60,7 +54,6 @@ namespace DotNetDBTools.DefinitionParser.MSSQL
             return new DataTypeInfo()
             {
                 Name = userDefinedType.GetType().Name,
-                Attributes = new(),
             };
         }
     }

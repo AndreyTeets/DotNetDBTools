@@ -7,32 +7,32 @@ namespace DotNetDBTools.Analysis.Core
 {
     public static class TableOrderingExtensions
     {
-        public static IEnumerable<ITableInfo<IColumnInfo>> PutReferencedLast(this IEnumerable<ITableInfo<IColumnInfo>> tables)
+        public static IEnumerable<ITableInfo> PutReferencedLast(this IEnumerable<ITableInfo> tables)
         {
             if (!tables.Any())
                 return tables;
-            List<ITableInfo<IColumnInfo>> orderedTables = new();
-            IEnumerable<IEnumerable<ITableInfo<IColumnInfo>>> orderedGroups = GetOrderedGroups(tables);
-            foreach (IEnumerable<ITableInfo<IColumnInfo>> group in orderedGroups)
+            List<ITableInfo> orderedTables = new();
+            IEnumerable<IEnumerable<ITableInfo>> orderedGroups = GetOrderedGroups(tables);
+            foreach (IEnumerable<ITableInfo> group in orderedGroups)
                 orderedTables.AddRange(group);
             return orderedTables;
         }
 
-        public static IEnumerable<ITableInfo<IColumnInfo>> PutReferencedFirst(this IEnumerable<ITableInfo<IColumnInfo>> tables)
+        public static IEnumerable<ITableInfo> PutReferencedFirst(this IEnumerable<ITableInfo> tables)
         {
             if (!tables.Any())
                 return tables;
-            List<ITableInfo<IColumnInfo>> orderedTables = new();
-            IEnumerable<IEnumerable<ITableInfo<IColumnInfo>>> orderedGroups = GetOrderedGroups(tables);
-            foreach (IEnumerable<ITableInfo<IColumnInfo>> group in orderedGroups.Reverse())
+            List<ITableInfo> orderedTables = new();
+            IEnumerable<IEnumerable<ITableInfo>> orderedGroups = GetOrderedGroups(tables);
+            foreach (IEnumerable<ITableInfo> group in orderedGroups.Reverse())
                 orderedTables.AddRange(group);
             return orderedTables;
         }
 
-        private static IEnumerable<IEnumerable<ITableInfo<IColumnInfo>>> GetOrderedGroups(IEnumerable<ITableInfo<IColumnInfo>> tables)
+        private static IEnumerable<IEnumerable<ITableInfo>> GetOrderedGroups(IEnumerable<ITableInfo> tables)
         {
-            List<IEnumerable<ITableInfo<IColumnInfo>>> orderedGroups = new();
-            HashSet<ITableInfo<IColumnInfo>> uprocessedTables = new(tables);
+            List<IEnumerable<ITableInfo>> orderedGroups = new();
+            HashSet<ITableInfo> uprocessedTables = new(tables);
             HashSet<string> processedTables = new();
             Dictionary<string, HashSet<string>> referencedByMap = CreateReferencedByMap(tables);
             AddTablesUnreferencedByAnyOtherUnprocessedTable(orderedGroups, uprocessedTables, processedTables, referencedByMap);
@@ -40,12 +40,12 @@ namespace DotNetDBTools.Analysis.Core
         }
 
         private static void AddTablesUnreferencedByAnyOtherUnprocessedTable(
-            List<IEnumerable<ITableInfo<IColumnInfo>>> orderedGroups,
-            HashSet<ITableInfo<IColumnInfo>> uprocessedTables,
+            List<IEnumerable<ITableInfo>> orderedGroups,
+            HashSet<ITableInfo> uprocessedTables,
             HashSet<string> processedTables,
             Dictionary<string, HashSet<string>> referencedByMap)
         {
-            IEnumerable<ITableInfo<IColumnInfo>> tablesUnreferencedByAnyOtherUnprocessedTable = uprocessedTables.Where(table =>
+            IEnumerable<ITableInfo> tablesUnreferencedByAnyOtherUnprocessedTable = uprocessedTables.Where(table =>
             {
                 bool tableIsReferencedByAnotherUnprocessedTable;
                 if (referencedByMap.TryGetValue(table.Name, out HashSet<string> referencingTables))
@@ -60,7 +60,7 @@ namespace DotNetDBTools.Analysis.Core
                 return !tableIsReferencedByAnotherUnprocessedTable;
             });
 
-            IEnumerable<ITableInfo<IColumnInfo>> newProcessedGroup = tablesUnreferencedByAnyOtherUnprocessedTable
+            IEnumerable<ITableInfo> newProcessedGroup = tablesUnreferencedByAnyOtherUnprocessedTable
                 .OrderBy(table => table.Name, StringComparer.Ordinal)
                 .ToList();
 
@@ -78,10 +78,10 @@ namespace DotNetDBTools.Analysis.Core
         }
 
         private static Dictionary<string, HashSet<string>> CreateReferencedByMap(
-            IEnumerable<ITableInfo<IColumnInfo>> tables)
+            IEnumerable<ITableInfo> tables)
         {
             Dictionary<string, HashSet<string>> referencedByMap = new();
-            foreach (ITableInfo<IColumnInfo> table in tables)
+            foreach (ITableInfo table in tables)
             {
                 IEnumerable<string> referencedTablesNames = table.ForeignKeys.Select(x => x.ForeignTableName);
                 foreach (string referencedTableName in referencedTablesNames)

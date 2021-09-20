@@ -11,34 +11,29 @@ VALUES
     'Table',
     'MyTable2',
     '{
-  "Columns": {
-    "$type": "System.Collections.Generic.List`1[[DotNetDBTools.Models.SQLite.SQLiteColumnInfo, DotNetDBTools.Models]], System.Private.CoreLib",
-    "$values": [
-      {
-        "DataType": {
-          "Name": "Int",
-          "Attributes": {}
-        },
-        "DefaultValue": 333,
-        "ID": "1db86894-78f0-4bc4-97cf-fc1aa5321e77",
-        "Name": "MyColumn1"
+  "Columns": [
+    {
+      "ID": "1db86894-78f0-4bc4-97cf-fc1aa5321e77",
+      "Name": "MyColumn1",
+      "DataTypeName": "Int",
+      "DefaultValue": 333,
+      "Length": null,
+      "IsUnicode": null,
+      "IsFixedLength": null
+    },
+    {
+      "ID": "28c62b20-40e5-463c-973d-a40f25353e63",
+      "Name": "MyColumn2",
+      "DataTypeName": "Byte",
+      "DefaultValue": {
+        "$type": "System.Byte[], System.Private.CoreLib",
+        "$value": "AAE="
       },
-      {
-        "DataType": {
-          "Name": "Byte",
-          "Attributes": {
-            "Length": "50"
-          }
-        },
-        "DefaultValue": {
-          "$type": "System.Byte[], System.Private.CoreLib",
-          "$value": "AAE="
-        },
-        "ID": "28c62b20-40e5-463c-973d-a40f25353e63",
-        "Name": "MyColumn2"
-      }
-    ]
-  },
+      "Length": "50",
+      "IsUnicode": null,
+      "IsFixedLength": null
+    }
+  ],
   "ForeignKeys": {
     "$type": "System.Collections.Generic.List`1[[DotNetDBTools.Models.SQLite.SQLiteForeignKeyInfo, DotNetDBTools.Models]], System.Private.CoreLib",
     "$values": []
@@ -68,32 +63,26 @@ VALUES
     'Table',
     'MyTable1',
     '{
-  "Columns": {
-    "$type": "System.Collections.Generic.List`1[[DotNetDBTools.Models.SQLite.SQLiteColumnInfo, DotNetDBTools.Models]], System.Private.CoreLib",
-    "$values": [
-      {
-        "DataType": {
-          "Name": "Int",
-          "Attributes": {}
-        },
-        "DefaultValue": 15,
-        "ID": "0547ca0d-61ab-4f41-8218-dda0c0216bea",
-        "Name": "MyColumn1"
-      },
-      {
-        "DataType": {
-          "Name": "String",
-          "Attributes": {
-            "Length": "10",
-            "IsUnicode": "False"
-          }
-        },
-        "DefaultValue": "33",
-        "ID": "60ff7a1f-b4b8-476f-9db2-56617858be35",
-        "Name": "MyColumn2"
-      }
-    ]
-  },
+  "Columns": [
+    {
+      "ID": "0547ca0d-61ab-4f41-8218-dda0c0216bea",
+      "Name": "MyColumn1",
+      "DataTypeName": "Int",
+      "DefaultValue": 15,
+      "Length": null,
+      "IsUnicode": null,
+      "IsFixedLength": null
+    },
+    {
+      "ID": "60ff7a1f-b4b8-476f-9db2-56617858be35",
+      "Name": "MyColumn2",
+      "DataTypeName": "String",
+      "DefaultValue": "33",
+      "Length": "10",
+      "IsUnicode": "False",
+      "IsFixedLength": null
+    }
+  ],
   "ForeignKeys": {
     "$type": "System.Collections.Generic.List`1[[DotNetDBTools.Models.SQLite.SQLiteForeignKeyInfo, DotNetDBTools.Models]], System.Private.CoreLib",
     "$values": [

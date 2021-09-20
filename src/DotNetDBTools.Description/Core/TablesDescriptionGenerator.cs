@@ -6,17 +6,17 @@ namespace DotNetDBTools.Description.Core
 {
     public static class TablesDescriptionGenerator
     {
-        public static string GenerateTablesDescription(IDatabaseInfo<ITableInfo<IColumnInfo>> databaseInfo)
+        public static string GenerateTablesDescription(IDatabaseInfo<ITableInfo> databaseInfo)
         {
             if (string.IsNullOrEmpty(databaseInfo.Name))
                 throw new InvalidOperationException("Database name is not set when generating description");
 
             List<string> tableInfoDefinitions = new();
             List<string> tableDeclarations = new();
-            foreach (ITableInfo<IColumnInfo> table in databaseInfo.Tables)
+            foreach (ITableInfo table in databaseInfo.Tables)
             {
                 List<string> columnDeclarations = new();
-                foreach (IColumnInfo column in table.Columns)
+                foreach (ColumnInfo column in table.Columns)
                 {
                     string columnDeclaration =
 $@"            public readonly string {column.Name} = nameof({column.Name});";
