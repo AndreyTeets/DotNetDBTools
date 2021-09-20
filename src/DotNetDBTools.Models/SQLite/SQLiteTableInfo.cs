@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using DotNetDBTools.Models.Shared;
+using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.Models.SQLite
 {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Dapper;
-using DotNetDBTools.Deploy.Shared;
+using DotNetDBTools.Deploy.Core;
 using Microsoft.Data.Sqlite;
 
 namespace DotNetDBTools.Deploy.SQLite

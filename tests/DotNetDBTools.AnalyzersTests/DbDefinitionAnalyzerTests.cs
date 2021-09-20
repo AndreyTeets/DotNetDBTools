@@ -12,7 +12,7 @@ namespace DotNetDBTools.AnalyzersTests
         {
             string goodDbCode =
 @"using System;
-using DotNetDBTools.Definition;
+using DotNetDBTools.Definition.Core;
 using DotNetDBTools.Definition.MSSQL;
 using DotNetDBTools.Definition.MSSQL.DataTypes;
 

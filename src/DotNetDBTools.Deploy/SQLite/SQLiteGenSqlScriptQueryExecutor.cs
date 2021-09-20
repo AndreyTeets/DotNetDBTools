@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using DotNetDBTools.Deploy.Shared;
+using DotNetDBTools.Deploy.Core;
 
 namespace DotNetDBTools.Deploy.SQLite
 {

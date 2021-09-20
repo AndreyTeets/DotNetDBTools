@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using DotNetDBTools.Deploy.Shared;
+using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Models.SQLite;
 
 namespace DotNetDBTools.Deploy.SQLite.Queries

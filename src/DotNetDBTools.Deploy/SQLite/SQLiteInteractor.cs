@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using DotNetDBTools.Deploy.Shared;
+using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.SQLite.Queries;
 using DotNetDBTools.Models.SQLite;
 

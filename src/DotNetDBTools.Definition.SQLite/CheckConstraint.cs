@@ -1,4 +1,6 @@
-﻿namespace DotNetDBTools.Definition.SQLite
+﻿using DotNetDBTools.Definition.Core;
+
+namespace DotNetDBTools.Definition.SQLite
 {
     public class CheckConstraint : BaseCheckConstraint
     {

@@ -1,4 +1,4 @@
-﻿using DotNetDBTools.Analysis.Shared;
+﻿using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.Models.Agnostic;
 
 namespace DotNetDBTools.Analysis.MSSQL

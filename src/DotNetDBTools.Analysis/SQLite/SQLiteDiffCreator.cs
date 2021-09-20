@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using DotNetDBTools.Analysis.Shared;
+using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.Models.SQLite;
 
 namespace DotNetDBTools.Analysis.SQLite

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using DotNetDBTools.Definition.SQLite;
-using DotNetDBTools.DefinitionParser.Shared;
+using DotNetDBTools.DefinitionParser.Core;
 using DotNetDBTools.Models.SQLite;
 
 namespace DotNetDBTools.DefinitionParser.SQLite

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Data.SqlClient;
 using Dapper;
-using DotNetDBTools.Deploy.Shared;
+using DotNetDBTools.Deploy.Core;
 
 namespace DotNetDBTools.Deploy.MSSQL
 {

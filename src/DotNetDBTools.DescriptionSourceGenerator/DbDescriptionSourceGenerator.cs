@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using DotNetDBTools.DefinitionParser;
 using DotNetDBTools.Description;
-using DotNetDBTools.Models.Shared;
+using DotNetDBTools.Models.Core;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Emit;
 

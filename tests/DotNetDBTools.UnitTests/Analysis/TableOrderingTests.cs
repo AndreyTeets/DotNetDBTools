@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DotNetDBTools.Analysis.Shared;
+using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.Models.Agnostic;
-using DotNetDBTools.Models.Shared;
+using DotNetDBTools.Models.Core;
 using FluentAssertions;
 using Xunit;
 

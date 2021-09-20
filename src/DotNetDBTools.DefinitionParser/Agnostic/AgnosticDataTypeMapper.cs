@@ -1,7 +1,7 @@
 ﻿using System;
-using DotNetDBTools.Definition;
 using DotNetDBTools.Definition.Agnostic.DataTypes;
-using DotNetDBTools.Models.Shared;
+using DotNetDBTools.Definition.Core;
+using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.DefinitionParser.Agnostic
 {

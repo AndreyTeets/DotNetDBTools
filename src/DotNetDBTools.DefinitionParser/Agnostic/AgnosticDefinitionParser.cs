@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using DotNetDBTools.Definition.Agnostic;
-using DotNetDBTools.DefinitionParser.Shared;
+using DotNetDBTools.DefinitionParser.Core;
 using DotNetDBTools.Models.Agnostic;
 
 namespace DotNetDBTools.DefinitionParser.Agnostic

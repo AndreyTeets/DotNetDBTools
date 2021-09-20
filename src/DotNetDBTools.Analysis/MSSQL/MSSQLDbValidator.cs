@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using DotNetDBTools.Analysis.Shared;
+using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.Models.MSSQL;
 
 namespace DotNetDBTools.Analysis.MSSQL

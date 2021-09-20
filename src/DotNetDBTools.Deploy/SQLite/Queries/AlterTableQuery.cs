@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using DotNetDBTools.Deploy.Shared;
+using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Models.SQLite;
 
 namespace DotNetDBTools.Deploy.SQLite.Queries
@@ -56,14 +56,12 @@ WHERE {DNDBTSystemTables.DNDBTDbObjects.ID} = '{tableDiff.NewTable.ID}';";
 
         private static string GetChangedColumnsNewNamesText(SQLiteTableDiff tableDiff)
         {
-            List<string> commonColumnsNames = new();
             IEnumerable<string> columnsNames = tableDiff.ChangedColumns.Select(columnDiff => columnDiff.NewColumn.Name);
             return string.Join(", ", columnsNames);
         }
 
         private static string GetChangedColumnsOldNamesText(SQLiteTableDiff tableDiff)
         {
-            List<string> commonColumnsNames = new();
             IEnumerable<string> columnsNames = tableDiff.ChangedColumns.Select(columnDiff => columnDiff.OldColumn.Name);
             return string.Join(", ", columnsNames);
         }

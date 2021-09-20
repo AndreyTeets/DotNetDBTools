@@ -4,10 +4,10 @@ using System.Reflection;
 using DotNetDBTools.Analysis.SQLite;
 using DotNetDBTools.DefinitionGenerator;
 using DotNetDBTools.DefinitionParser.Agnostic;
-using DotNetDBTools.DefinitionParser.Shared;
+using DotNetDBTools.DefinitionParser.Core;
 using DotNetDBTools.DefinitionParser.SQLite;
 using DotNetDBTools.Deploy.SQLite;
-using DotNetDBTools.Models.Shared;
+using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.SQLite;
 
 namespace DotNetDBTools.Deploy

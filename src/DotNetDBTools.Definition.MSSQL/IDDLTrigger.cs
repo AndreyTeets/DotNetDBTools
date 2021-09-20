@@ -1,4 +1,6 @@
-﻿namespace DotNetDBTools.Definition.MSSQL
+﻿using DotNetDBTools.Definition.Core;
+
+namespace DotNetDBTools.Definition.MSSQL
 {
     public interface IDDLTrigger : IDbObject
     {

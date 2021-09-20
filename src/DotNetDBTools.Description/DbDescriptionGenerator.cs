@@ -4,8 +4,8 @@ using DotNetDBTools.Description.Agnostic;
 using DotNetDBTools.Description.MSSQL;
 using DotNetDBTools.Description.SQLite;
 using DotNetDBTools.Models.Agnostic;
+using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.MSSQL;
-using DotNetDBTools.Models.Shared;
 using DotNetDBTools.Models.SQLite;
 
 namespace DotNetDBTools.Description

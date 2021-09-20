@@ -1,8 +1,8 @@
 ﻿using System;
-using DotNetDBTools.Definition;
+using DotNetDBTools.Definition.Core;
 using DotNetDBTools.Definition.MSSQL;
 using DotNetDBTools.Definition.MSSQL.DataTypes;
-using DotNetDBTools.Models.Shared;
+using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.DefinitionParser.MSSQL
 {

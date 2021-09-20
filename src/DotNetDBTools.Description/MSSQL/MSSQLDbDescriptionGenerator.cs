@@ -1,4 +1,4 @@
-﻿using DotNetDBTools.Description.Shared;
+﻿using DotNetDBTools.Description.Core;
 using DotNetDBTools.Models.MSSQL;
 
 namespace DotNetDBTools.Description.MSSQL

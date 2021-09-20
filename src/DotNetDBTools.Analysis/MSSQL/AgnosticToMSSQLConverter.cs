@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DotNetDBTools.Models.Agnostic;
+using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.MSSQL;
-using DotNetDBTools.Models.Shared;
 
 namespace DotNetDBTools.Analysis.MSSQL
 {

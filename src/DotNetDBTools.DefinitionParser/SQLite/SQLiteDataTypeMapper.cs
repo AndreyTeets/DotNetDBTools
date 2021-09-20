@@ -1,7 +1,7 @@
 ﻿using System;
-using DotNetDBTools.Definition;
+using DotNetDBTools.Definition.Core;
 using DotNetDBTools.Definition.SQLite.DataTypes;
-using DotNetDBTools.Models.Shared;
+using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.DefinitionParser.SQLite
 {

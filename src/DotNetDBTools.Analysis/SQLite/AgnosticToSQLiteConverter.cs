@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DotNetDBTools.Models.Agnostic;
-using DotNetDBTools.Models.Shared;
+using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.SQLite;
 
 namespace DotNetDBTools.Analysis.SQLite

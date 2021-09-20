@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using DotNetDBTools.DefinitionGenerator.Agnostic;
+using DotNetDBTools.DefinitionGenerator.Core;
 using DotNetDBTools.DefinitionGenerator.MSSQL;
-using DotNetDBTools.DefinitionGenerator.Shared;
 using DotNetDBTools.DefinitionGenerator.SQLite;
 using DotNetDBTools.Models.Agnostic;
+using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.MSSQL;
-using DotNetDBTools.Models.Shared;
 using DotNetDBTools.Models.SQLite;
 
 namespace DotNetDBTools.DefinitionGenerator

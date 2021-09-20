@@ -1,5 +1,5 @@
 ﻿using System;
-using DotNetDBTools.Models.Shared;
+using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.Deploy.MSSQL
 {

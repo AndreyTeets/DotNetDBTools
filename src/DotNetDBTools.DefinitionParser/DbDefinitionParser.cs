@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Reflection;
 using DotNetDBTools.DefinitionParser.Agnostic;
+using DotNetDBTools.DefinitionParser.Core;
 using DotNetDBTools.DefinitionParser.MSSQL;
-using DotNetDBTools.DefinitionParser.Shared;
 using DotNetDBTools.DefinitionParser.SQLite;
-using DotNetDBTools.Models.Shared;
+using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.DefinitionParser
 {

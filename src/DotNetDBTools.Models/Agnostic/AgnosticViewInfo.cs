@@ -1,4 +1,4 @@
-﻿using DotNetDBTools.Models.Shared;
+﻿using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.Models.Agnostic
 {

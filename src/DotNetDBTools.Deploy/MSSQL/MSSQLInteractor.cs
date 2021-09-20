@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
+using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.MSSQL.Queries;
-using DotNetDBTools.Deploy.Shared;
 using DotNetDBTools.Models.MSSQL;
 
 namespace DotNetDBTools.Deploy.MSSQL

@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using DotNetDBTools.DefinitionGenerator.Shared;
+using DotNetDBTools.DefinitionGenerator.Core;
 using DotNetDBTools.Models.MSSQL;
 
 namespace DotNetDBTools.DefinitionGenerator.MSSQL

@@ -1,4 +1,4 @@
-﻿using DotNetDBTools.Definition.BaseDataTypes;
+﻿using DotNetDBTools.Definition.Core.BaseDataTypes;
 
 namespace DotNetDBTools.Definition.MSSQL.DataTypes
 {
