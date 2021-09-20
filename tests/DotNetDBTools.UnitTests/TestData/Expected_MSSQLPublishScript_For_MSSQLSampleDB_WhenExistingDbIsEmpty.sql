@@ -1,3 +1,8 @@
+
+
+CREATE TYPE MyUserDefinedType1 FROM NVARCHAR(11);
+
+
 DECLARE @Metadata NVARCHAR(MAX) = '{
   "Nullable": "True",
   "UnderlyingType": {
@@ -27,7 +32,14 @@ VALUES
     @Metadata
 );
 
-CREATE TYPE MyUserDefinedType1 FROM NVARCHAR(11);
+
+
+
+CREATE TABLE MyTable2
+(
+    MyColumn1 INT UNIQUE,
+    MyColumn2 MyUserDefinedType1 UNIQUE
+);
 
 
 DECLARE @Metadata NVARCHAR(MAX) = '{
@@ -77,10 +89,14 @@ VALUES
     @Metadata
 );
 
-CREATE TABLE MyTable2
+
+
+
+CREATE TABLE MyTable1
 (
     MyColumn1 INT UNIQUE,
-    MyColumn2 MyUserDefinedType1 UNIQUE
+    MyColumn2 VARCHAR(10) UNIQUE,
+    CONSTRAINT FK_MyTable1_MyColumn1_MyTable2_MyColumn1 FOREIGN KEY (MyColumn1) REFERENCES MyTable2(MyColumn1)
 );
 
 
@@ -147,11 +163,4 @@ VALUES
     'Table',
     'MyTable1',
     @Metadata
-);
-
-CREATE TABLE MyTable1
-(
-    MyColumn1 INT UNIQUE,
-    MyColumn2 VARCHAR(10) UNIQUE,
-    CONSTRAINT FK_MyTable1_MyColumn1_MyTable2_MyColumn1 FOREIGN KEY (MyColumn1) REFERENCES MyTable2(MyColumn1)
 );

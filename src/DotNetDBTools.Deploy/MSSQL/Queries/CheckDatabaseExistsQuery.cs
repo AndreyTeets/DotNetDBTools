@@ -3,11 +3,11 @@ using DotNetDBTools.Deploy.Core;
 
 namespace DotNetDBTools.Deploy.MSSQL.Queries
 {
-    internal class DatabaseExistsQuery : IQuery
+    internal class CheckDatabaseExistsQuery : IQuery
     {
         private readonly string _databaseName;
 
-        public DatabaseExistsQuery(string databaseName)
+        public CheckDatabaseExistsQuery(string databaseName)
         {
             _databaseName = databaseName;
         }

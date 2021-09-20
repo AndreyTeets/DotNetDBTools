@@ -3,13 +3,13 @@ using DotNetDBTools.Deploy.Core;
 
 namespace DotNetDBTools.Deploy.MSSQL.Queries
 {
-    internal class GetExistingTypesQuery : IQuery
+    internal class GetTypesFromMSSQLSysInfoQuery : IQuery
     {
         public string Sql =>
 $@"SELECT
-    {DNDBTSystemTables.DNDBTDbObjects.Metadata}
-FROM {DNDBTSystemTables.DNDBTDbObjects}
-WHERE {DNDBTSystemTables.DNDBTDbObjects.Type} = '{MSSQLDbObjectsTypes.UserDefinedType}';";
+    {DNDBTSysTables.DNDBTDbObjects.Metadata}
+FROM {DNDBTSysTables.DNDBTDbObjects}
+WHERE {DNDBTSysTables.DNDBTDbObjects.Type} = '{MSSQLDbObjectsTypes.UserDefinedType}';";
 
         public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
     }

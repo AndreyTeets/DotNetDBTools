@@ -19,10 +19,7 @@ namespace DotNetDBTools.Deploy.MSSQL.Queries
         private static string GetSql(MSSQLTableInfo table)
         {
             string query =
-$@"DROP TABLE {table.Name};
-
-DELETE FROM {DNDBTSystemTables.DNDBTDbObjects}
-WHERE {DNDBTSystemTables.DNDBTDbObjects.ID} = '{table.ID}';";
+$@"DROP TABLE {table.Name};";
 
             return query;
         }

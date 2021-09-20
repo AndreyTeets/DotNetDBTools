@@ -19,10 +19,7 @@ namespace DotNetDBTools.Deploy.MSSQL.Queries
         private static string GetSql(MSSQLUserDefinedTypeInfo userDefinedType)
         {
             string query =
-$@"DROP TYPE {userDefinedType.Name};
-
-DELETE FROM {DNDBTSystemTables.DNDBTDbObjects}
-WHERE {DNDBTSystemTables.DNDBTDbObjects.ID} = '{userDefinedType.ID}';";
+$@"DROP TYPE {userDefinedType.Name};";
 
             return query;
         }

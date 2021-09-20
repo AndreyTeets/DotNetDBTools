@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using DotNetDBTools.Deploy.Core;
-using DotNetDBTools.Models.MSSQL;
 
 namespace DotNetDBTools.Deploy.MSSQL.Queries
 {
-    internal class CreateTypeQuery : IQuery
+    internal class DeleteDNDBTSysInfoQuery : IQuery
     {
         private readonly string _sql;
         private readonly List<QueryParameter> _parameters;
@@ -12,16 +12,17 @@ namespace DotNetDBTools.Deploy.MSSQL.Queries
         public string Sql => _sql;
         public IEnumerable<QueryParameter> Parameters => _parameters;
 
-        public CreateTypeQuery(MSSQLUserDefinedTypeInfo userDefinedType)
+        public DeleteDNDBTSysInfoQuery(Guid objectID)
         {
-            _sql = GetSql(userDefinedType);
+            _sql = GetSql(objectID);
             _parameters = new List<QueryParameter>();
         }
 
-        private static string GetSql(MSSQLUserDefinedTypeInfo userDefinedType)
+        private static string GetSql(Guid objectID)
         {
             string query =
-$@"CREATE TYPE {userDefinedType.Name} FROM NVARCHAR(11);";
+$@"DELETE FROM {DNDBTSysTables.DNDBTDbObjects}
+WHERE {DNDBTSysTables.DNDBTDbObjects.ID} = '{objectID}';";
 
             return query;
         }

@@ -41,7 +41,7 @@ namespace DotNetDBTools.Deploy
 
             MSSQLDatabaseDiff databaseDiff = MSSQLDiffCreator.CreateDatabaseDiff(database, existingDatabase);
             MSSQLInteractor interactor = new(new MSSQLQueryExecutor(connectionString));
-            interactor.UpdateDatabase(databaseDiff);
+            interactor.AlterDatabase(databaseDiff);
         }
 
         public void GeneratePublishScript(string dbAssemblyPath, string connectionString, string outputPath)
@@ -77,7 +77,11 @@ namespace DotNetDBTools.Deploy
 #pragma warning disable CS0162 // Unreachable code detected
             MSSQLInteractor interactor = new(new MSSQLQueryExecutor(connectionString));
 #pragma warning restore CS0162 // Unreachable code detected
+            if ("registered" == "registered")
+                throw new InvalidOperationException("Database is already registered");
+            MSSQLDatabaseInfo existingDatabase = interactor.GetExistingDatabase();
             interactor.CreateSystemTables();
+            interactor.PopulateSystemTables(existingDatabase);
         }
 
         public void UnregisterAsDNDBT(string connectionString)
@@ -86,7 +90,7 @@ namespace DotNetDBTools.Deploy
 #pragma warning disable CS0162 // Unreachable code detected
             MSSQLInteractor interactor = new(new MSSQLQueryExecutor(connectionString));
 #pragma warning restore CS0162 // Unreachable code detected
-            interactor.DeleteSystemTables();
+            interactor.DropSystemTables();
         }
 
         public void GeneratePublishScript(MSSQLDatabaseInfo database, MSSQLDatabaseInfo existingDatabase, string outputPath)
@@ -94,7 +98,7 @@ namespace DotNetDBTools.Deploy
             MSSQLGenSqlScriptQueryExecutor genSqlScriptQueryExecutor = new();
             MSSQLInteractor interactor = new(genSqlScriptQueryExecutor);
             MSSQLDatabaseDiff databaseDiff = MSSQLDiffCreator.CreateDatabaseDiff(database, existingDatabase);
-            interactor.UpdateDatabase(databaseDiff);
+            interactor.AlterDatabase(databaseDiff);
             string generatedScript = genSqlScriptQueryExecutor.GetFinalScript();
 
             string fullPath = Path.GetFullPath(outputPath);

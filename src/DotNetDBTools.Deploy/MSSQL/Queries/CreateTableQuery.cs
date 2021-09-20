@@ -7,41 +7,22 @@ namespace DotNetDBTools.Deploy.MSSQL.Queries
 {
     internal class CreateTableQuery : IQuery
     {
-        private const string MetadataParameterName = "@Metadata";
         private readonly string _sql;
         private readonly List<QueryParameter> _parameters;
 
         public string Sql => _sql;
         public IEnumerable<QueryParameter> Parameters => _parameters;
 
-        public CreateTableQuery(MSSQLTableInfo table, string metadataParameterValue)
+        public CreateTableQuery(MSSQLTableInfo table)
         {
             _sql = GetSql(table);
-            _parameters = new List<QueryParameter>
-            {
-                new QueryParameter(MetadataParameterName, metadataParameterValue),
-            };
+            _parameters = new List<QueryParameter>();
         }
 
         private static string GetSql(MSSQLTableInfo table)
         {
             string query =
-$@"INSERT INTO {DNDBTSystemTables.DNDBTDbObjects}
-(
-    {DNDBTSystemTables.DNDBTDbObjects.ID},
-    {DNDBTSystemTables.DNDBTDbObjects.Type},
-    {DNDBTSystemTables.DNDBTDbObjects.Name},
-    {DNDBTSystemTables.DNDBTDbObjects.Metadata}
-)
-VALUES
-(
-    '{table.ID}',
-    '{MSSQLDbObjectsTypes.Table}',
-    '{table.Name}',
-    {MetadataParameterName}
-);
-
-CREATE TABLE {table.Name}
+$@"CREATE TABLE {table.Name}
 (
 {GetTableDefinitionsText(table)}
 );";

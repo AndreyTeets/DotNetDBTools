@@ -1,6 +1,6 @@
 ﻿namespace DotNetDBTools.Deploy.Core
 {
-    public static class DNDBTSystemTables
+    public static class DNDBTSysTables
     {
         public class DNDBTDbObjectsTableInfo
         {

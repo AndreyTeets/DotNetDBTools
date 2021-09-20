@@ -7,20 +7,16 @@ namespace DotNetDBTools.Deploy.MSSQL.Queries
 {
     internal class AlterTableQuery : IQuery
     {
-        private const string NewTableMetadataParameterName = "@NewTableMetadata";
         private readonly string _sql;
         private readonly List<QueryParameter> _parameters;
 
         public string Sql => _sql;
         public IEnumerable<QueryParameter> Parameters => _parameters;
 
-        public AlterTableQuery(MSSQLTableDiff tableDiff, string newTableMetadataParameterValue)
+        public AlterTableQuery(MSSQLTableDiff tableDiff)
         {
             _sql = GetSql(tableDiff);
-            _parameters = new List<QueryParameter>
-            {
-                new QueryParameter(NewTableMetadataParameterName, newTableMetadataParameterValue),
-            };
+            _parameters = new List<QueryParameter>();
         }
 
         private static string GetSql(MSSQLTableDiff tableDiff)
@@ -55,12 +51,6 @@ $@"ALTER TABLE {tableDiff.NewTable.Name} ADD {column.Name} {MSSQLSqlTypeMapper.G
 
 ");
             }
-
-            sb.Append(
-$@"UPDATE {DNDBTSystemTables.DNDBTDbObjects} SET
-    {DNDBTSystemTables.DNDBTDbObjects.Name} = '{tableDiff.NewTable.Name}',
-    {DNDBTSystemTables.DNDBTDbObjects.Metadata} = {NewTableMetadataParameterName}
-WHERE {DNDBTSystemTables.DNDBTDbObjects.ID} = '{tableDiff.NewTable.ID}';");
 
             return sb.ToString();
         }

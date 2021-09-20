@@ -3,13 +3,10 @@ using DotNetDBTools.Deploy.Core;
 
 namespace DotNetDBTools.Deploy.MSSQL.Queries
 {
-    internal class GetExistingTablesQuery : IQuery
+    internal class DropDNDBTSysTablesQuery : IQuery
     {
         public string Sql =>
-$@"SELECT
-    {DNDBTSystemTables.DNDBTDbObjects.Metadata}
-FROM {DNDBTSystemTables.DNDBTDbObjects}
-WHERE {DNDBTSystemTables.DNDBTDbObjects.Type} = '{MSSQLDbObjectsTypes.Table}';";
+$@"DROP TABLE {DNDBTSysTables.DNDBTDbObjects};";
 
         public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
     }

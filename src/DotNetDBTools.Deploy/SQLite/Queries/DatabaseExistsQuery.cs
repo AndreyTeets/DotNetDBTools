@@ -9,7 +9,7 @@ namespace DotNetDBTools.Deploy.SQLite.Queries
 $@"SELECT
     true
 FROM sqlite_master
-WHERE type = 'table' AND name = '{DNDBTSystemTables.DNDBTDbObjects}';";
+WHERE type = 'table' AND name = '{DNDBTSysTables.DNDBTDbObjects}';";
 
         public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
     }
