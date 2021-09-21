@@ -51,9 +51,13 @@ namespace DotNetDBTools.DefinitionParser.MSSQL
 
         private static DataTypeInfo GetUserDefinedTypeInfo(IUserDefinedType userDefinedType)
         {
+            DataTypeInfo dataTypeInfo = GetDataTypeInfo(userDefinedType.UnderlyingType);
             return new DataTypeInfo()
             {
                 Name = userDefinedType.GetType().Name,
+                Length = dataTypeInfo.Length.ToString(),
+                IsUnicode = dataTypeInfo.IsUnicode.ToString(),
+                IsFixedLength = dataTypeInfo.IsFixedLength.ToString(),
             };
         }
     }

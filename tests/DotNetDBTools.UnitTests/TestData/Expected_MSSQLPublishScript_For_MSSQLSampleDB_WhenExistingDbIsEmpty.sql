@@ -1,15 +1,17 @@
-
-
+--QUERY START: CreateTypeQuery
 CREATE TYPE MyUserDefinedType1 FROM NVARCHAR(11);
+--QUERY END: CreateTypeQuery
 
-
+--QUERY START: InsertDNDBTSysInfoQuery
 DECLARE @Metadata NVARCHAR(MAX) = '{
   "Nullable": "True",
   "UnderlyingDataTypeName": "String",
+  "UnderlyingDataTypeLength": "100",
+  "UnderlyingDataTypeIsUnicode": "False",
+  "UnderlyingDataTypeIsFixedLength": "False",
   "ID": "0cd1e71c-cc9c-440f-ac0b-81a1d6f7ddaa",
   "Name": "MyUserDefinedType1"
 }';
-
 INSERT INTO DNDBTDbObjects
 (
     ID,
@@ -24,17 +26,17 @@ VALUES
     'MyUserDefinedType1',
     @Metadata
 );
+--QUERY END: InsertDNDBTSysInfoQuery
 
-
-
-
+--QUERY START: CreateTableQuery
 CREATE TABLE MyTable2
 (
     MyColumn1 INT UNIQUE,
     MyColumn2 MyUserDefinedType1 UNIQUE
 );
+--QUERY END: CreateTableQuery
 
-
+--QUERY START: InsertDNDBTSysInfoQuery
 DECLARE @Metadata NVARCHAR(MAX) = '{
   "Columns": [
     {
@@ -51,9 +53,9 @@ DECLARE @Metadata NVARCHAR(MAX) = '{
       "Name": "MyColumn2",
       "DataTypeName": "MyUserDefinedType1",
       "DefaultValue": "cc",
-      "Length": null,
-      "IsUnicode": null,
-      "IsFixedLength": null
+      "Length": "100",
+      "IsUnicode": "False",
+      "IsFixedLength": "False"
     }
   ],
   "ForeignKeys": {
@@ -63,7 +65,6 @@ DECLARE @Metadata NVARCHAR(MAX) = '{
   "ID": "562ec55b-6c11-4dde-b445-f062b12ca4ac",
   "Name": "MyTable2"
 }';
-
 INSERT INTO DNDBTDbObjects
 (
     ID,
@@ -78,18 +79,18 @@ VALUES
     'MyTable2',
     @Metadata
 );
+--QUERY END: InsertDNDBTSysInfoQuery
 
-
-
-
+--QUERY START: CreateTableQuery
 CREATE TABLE MyTable1
 (
     MyColumn1 INT UNIQUE,
     MyColumn2 VARCHAR(10) UNIQUE,
     CONSTRAINT FK_MyTable1_MyColumn1_MyTable2_MyColumn1 FOREIGN KEY (MyColumn1) REFERENCES MyTable2(MyColumn1)
 );
+--QUERY END: CreateTableQuery
 
-
+--QUERY START: InsertDNDBTSysInfoQuery
 DECLARE @Metadata NVARCHAR(MAX) = '{
   "Columns": [
     {
@@ -132,7 +133,6 @@ DECLARE @Metadata NVARCHAR(MAX) = '{
   "ID": "299675e6-4faa-4d0f-a36a-224306ba5bcb",
   "Name": "MyTable1"
 }';
-
 INSERT INTO DNDBTDbObjects
 (
     ID,
@@ -147,3 +147,4 @@ VALUES
     'MyTable1',
     @Metadata
 );
+--QUERY END: InsertDNDBTSysInfoQuery

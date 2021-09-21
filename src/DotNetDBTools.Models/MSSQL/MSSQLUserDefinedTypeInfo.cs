@@ -6,5 +6,8 @@ namespace DotNetDBTools.Models.MSSQL
     {
         public string Nullable { get; set; }
         public string UnderlyingDataTypeName { get; set; }
+        public string UnderlyingDataTypeLength { get; set; }
+        public string UnderlyingDataTypeIsUnicode { get; set; }
+        public string UnderlyingDataTypeIsFixedLength { get; set; }
     }
 }

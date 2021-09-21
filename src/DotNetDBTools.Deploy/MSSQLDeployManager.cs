@@ -41,7 +41,7 @@ namespace DotNetDBTools.Deploy
 
             MSSQLDatabaseDiff databaseDiff = MSSQLDiffCreator.CreateDatabaseDiff(database, existingDatabase);
             MSSQLInteractor interactor = new(new MSSQLQueryExecutor(connectionString));
-            interactor.AlterDatabase(databaseDiff);
+            interactor.ApplyDatabaseDiff(databaseDiff);
         }
 
         public void GeneratePublishScript(string dbAssemblyPath, string connectionString, string outputPath)
@@ -67,29 +67,27 @@ namespace DotNetDBTools.Deploy
         public void GenerateDefinition(string connectionString, string outputDirectory)
         {
             MSSQLInteractor interactor = new(new MSSQLQueryExecutor(connectionString));
-            MSSQLDatabaseInfo existingDatabase = interactor.GetExistingDatabase();
+            MSSQLDatabaseInfo existingDatabase;
+            if (interactor.SystemTablesExist())
+                existingDatabase = interactor.GetExistingDatabase();
+            else
+                existingDatabase = interactor.GenerateExistingDatabaseSystemInfo();
             DbDefinitionGenerator.GenerateDefinition(existingDatabase, outputDirectory);
         }
 
         public void RegisterAsDNDBT(string connectionString)
         {
-            return;
-#pragma warning disable CS0162 // Unreachable code detected
             MSSQLInteractor interactor = new(new MSSQLQueryExecutor(connectionString));
-#pragma warning restore CS0162 // Unreachable code detected
-            if ("registered" == "registered")
+            if (interactor.SystemTablesExist())
                 throw new InvalidOperationException("Database is already registered");
-            MSSQLDatabaseInfo existingDatabase = interactor.GetExistingDatabase();
+            MSSQLDatabaseInfo existingDatabase = interactor.GenerateExistingDatabaseSystemInfo();
             interactor.CreateSystemTables();
             interactor.PopulateSystemTables(existingDatabase);
         }
 
         public void UnregisterAsDNDBT(string connectionString)
         {
-            return;
-#pragma warning disable CS0162 // Unreachable code detected
             MSSQLInteractor interactor = new(new MSSQLQueryExecutor(connectionString));
-#pragma warning restore CS0162 // Unreachable code detected
             interactor.DropSystemTables();
         }
 
@@ -98,7 +96,7 @@ namespace DotNetDBTools.Deploy
             MSSQLGenSqlScriptQueryExecutor genSqlScriptQueryExecutor = new();
             MSSQLInteractor interactor = new(genSqlScriptQueryExecutor);
             MSSQLDatabaseDiff databaseDiff = MSSQLDiffCreator.CreateDatabaseDiff(database, existingDatabase);
-            interactor.AlterDatabase(databaseDiff);
+            interactor.ApplyDatabaseDiff(databaseDiff);
             string generatedScript = genSqlScriptQueryExecutor.GetFinalScript();
 
             string fullPath = Path.GetFullPath(outputPath);

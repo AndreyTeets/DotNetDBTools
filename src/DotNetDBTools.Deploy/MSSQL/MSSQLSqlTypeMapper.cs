@@ -16,16 +16,65 @@ namespace DotNetDBTools.Deploy.MSSQL
             };
         }
 
+        public static string GetModelType(string sqlType)
+        {
+            switch (sqlType.ToUpper())
+            {
+                case SqlNames.NVARCHAR:
+                case SqlNames.VARCHAR:
+                case SqlNames.NCHAR:
+                case SqlNames.CHAR:
+                    return DataTypeNames.String;
+                case SqlNames.INT:
+                    return DataTypeNames.Int;
+                case SqlNames.VARBINARY:
+                    return DataTypeNames.Byte;
+                default:
+                    return sqlType;
+            }
+        }
+
+        public static string IsUnicode(string sqlType)
+        {
+            switch (sqlType.ToUpper())
+            {
+                case SqlNames.NVARCHAR:
+                case SqlNames.NCHAR:
+                    return true.ToString();
+                case SqlNames.VARCHAR:
+                case SqlNames.CHAR:
+                    return false.ToString();
+                default:
+                    return null;
+            }
+        }
+
+        public static string IsFixedLength(string sqlType)
+        {
+            switch (sqlType.ToUpper())
+            {
+                case SqlNames.NCHAR:
+                case SqlNames.CHAR:
+                    return true.ToString();
+                case SqlNames.NVARCHAR:
+                case SqlNames.VARCHAR:
+                case SqlNames.VARBINARY:
+                    return false.ToString();
+                default:
+                    return null;
+            }
+        }
+
         private static string GetStringSqlType(ColumnInfo columnInfo)
         {
             bool isUnicode = columnInfo.IsUnicode == true.ToString();
-            string stringTypeName = isUnicode ? "NVARCHAR" : "VARCHAR";
+            string stringTypeName = isUnicode ? SqlNames.NVARCHAR : SqlNames.VARCHAR;
 
             bool isFixedLength = false;
             if (columnInfo.IsFixedLength == true.ToString())
             {
                 isFixedLength = true;
-                stringTypeName = isUnicode ? "NCHAR" : "CHAR";
+                stringTypeName = isUnicode ? SqlNames.NCHAR : SqlNames.CHAR;
             }
 
             int length = int.Parse(columnInfo.Length);
@@ -43,7 +92,7 @@ namespace DotNetDBTools.Deploy.MSSQL
 
         private static string GetIntSqlType(ColumnInfo _)
         {
-            return "INT";
+            return SqlNames.INT;
         }
 
         private static string GetByteSqlType(ColumnInfo columnInfo)
@@ -52,12 +101,22 @@ namespace DotNetDBTools.Deploy.MSSQL
             string lengthStr = length.ToString();
             if (length > 8000)
                 lengthStr = "MAX";
-            return $"VARBINARY({lengthStr})";
+            return $"{SqlNames.VARBINARY}({lengthStr})";
         }
 
         private static string GetUserDefinedSqlType(ColumnInfo columnInfo)
         {
             return columnInfo.DataTypeName;
+        }
+
+        private static class SqlNames
+        {
+            public const string NVARCHAR = nameof(NVARCHAR);
+            public const string VARCHAR = nameof(VARCHAR);
+            public const string NCHAR = nameof(NCHAR);
+            public const string CHAR = nameof(CHAR);
+            public const string INT = nameof(INT);
+            public const string VARBINARY = nameof(VARBINARY);
         }
     }
 }

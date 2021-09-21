@@ -24,33 +24,31 @@ namespace DotNetDBTools.Deploy.MSSQL.Queries
         {
             StringBuilder sb = new();
             sb.Append(
-$@"EXEC sp_rename '{tableDiff.OldTable.Name}', '{tableDiff.NewTable.Name}';
-
-");
+$@"EXEC sp_rename '{tableDiff.OldTable.Name}', '{tableDiff.NewTable.Name}';");
 
             foreach (ColumnInfo column in tableDiff.RemovedColumns)
             {
                 sb.Append(
-$@"ALTER TABLE {tableDiff.NewTable.Name} DROP COLUMN {column.Name};
+$@"
 
-");
+ALTER TABLE {tableDiff.NewTable.Name} DROP COLUMN {column.Name};");
             }
 
             foreach (ColumnDiff columnDiff in tableDiff.ChangedColumns)
             {
                 sb.Append(
-$@"EXEC sp_rename '{tableDiff.NewTable.Name}.{columnDiff.OldColumn.Name}', '{columnDiff.NewColumn.Name}', 'COLUMN';
-ALTER TABLE {tableDiff.NewTable.Name} ALTER COLUMN {columnDiff.NewColumn.Name} {MSSQLSqlTypeMapper.GetSqlType(columnDiff.NewColumn)};
+$@"
 
-");
+EXEC sp_rename '{tableDiff.NewTable.Name}.{columnDiff.OldColumn.Name}', '{columnDiff.NewColumn.Name}', 'COLUMN';
+ALTER TABLE {tableDiff.NewTable.Name} ALTER COLUMN {columnDiff.NewColumn.Name} {MSSQLSqlTypeMapper.GetSqlType(columnDiff.NewColumn)};");
             }
 
             foreach (ColumnInfo column in tableDiff.AddedColumns)
             {
                 sb.Append(
-$@"ALTER TABLE {tableDiff.NewTable.Name} ADD {column.Name} {MSSQLSqlTypeMapper.GetSqlType(column)} UNIQUE;
+$@"
 
-");
+ALTER TABLE {tableDiff.NewTable.Name} ADD {column.Name} {MSSQLSqlTypeMapper.GetSqlType(column)} UNIQUE;");
             }
 
             return sb.ToString();

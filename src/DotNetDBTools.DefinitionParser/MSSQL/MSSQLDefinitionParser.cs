@@ -113,6 +113,9 @@ namespace DotNetDBTools.DefinitionParser.MSSQL
                     Name = userDefinedType.GetType().Name,
                     Nullable = userDefinedType.Nullable.ToString(),
                     UnderlyingDataTypeName = dataTypeInfo.Name,
+                    UnderlyingDataTypeLength = dataTypeInfo.Length,
+                    UnderlyingDataTypeIsUnicode = dataTypeInfo.IsUnicode,
+                    UnderlyingDataTypeIsFixedLength = dataTypeInfo.IsFixedLength,
                 };
                 userDefinedTypeInfos.Add(userDefinedTypeInfo);
             }

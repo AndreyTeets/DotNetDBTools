@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using DotNetDBTools.Deploy.Core;
 
-namespace DotNetDBTools.Deploy.MSSQL.Queries
+namespace DotNetDBTools.Deploy.MSSQL.Queries.DNDBTSysInfo
 {
     internal class InsertDNDBTSysInfoQuery : IQuery
     {

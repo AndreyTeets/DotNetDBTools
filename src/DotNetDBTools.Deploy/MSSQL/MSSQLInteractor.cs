@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.MSSQL.Queries;
+using DotNetDBTools.Deploy.MSSQL.Queries.DNDBTSysInfo;
+using DotNetDBTools.Deploy.MSSQL.Queries.MSSQLSysInfo;
 using DotNetDBTools.Models.MSSQL;
 
 namespace DotNetDBTools.Deploy.MSSQL
@@ -47,25 +50,19 @@ namespace DotNetDBTools.Deploy.MSSQL
 
         public MSSQLDatabaseInfo GenerateExistingDatabaseSystemInfo()
         {
-            List<MSSQLTableInfo> tables = new();
-            IEnumerable<string> tablesMetadatas = _queryExecutor.Query<string>(new GetTablesFromMSSQLSysInfoQuery());
-            foreach (string tableMetadata in tablesMetadatas)
-            {
-                MSSQLTableInfo table = MSSQLDbObjectsSerializer.TableFromJson(tableMetadata);
-                tables.Add(table);
-            }
+            Dictionary<string, MSSQLTableInfo> tables = GetColumnsFromMSSQLSysInfoQuery.ResultsInterpreter.BuildTablesListWithColumns(
+                _queryExecutor.Query<GetColumnsFromMSSQLSysInfoQuery.ColumnRecord>(new GetColumnsFromMSSQLSysInfoQuery()));
 
-            List<MSSQLUserDefinedTypeInfo> userDefinedTypes = new();
-            IEnumerable<string> userDefinedTypesMetadatas = _queryExecutor.Query<string>(new GetTypesFromMSSQLSysInfoQuery());
-            foreach (string userDefinedTypeMetadata in userDefinedTypesMetadatas)
-            {
-                MSSQLUserDefinedTypeInfo userDefinedType = MSSQLDbObjectsSerializer.UserDefinedTypeFromJson(userDefinedTypeMetadata);
-                userDefinedTypes.Add(userDefinedType);
-            }
+            GetForeignKeysFromMSSQLSysInfoQuery.ResultsInterpreter.BuildTablesForeignKeys(
+                tables,
+                _queryExecutor.Query<GetForeignKeysFromMSSQLSysInfoQuery.ForeignKeyRecord>(new GetForeignKeysFromMSSQLSysInfoQuery()));
+
+            List<MSSQLUserDefinedTypeInfo> userDefinedTypes = GetTypesFromMSSQLSysInfoQuery.ResultsInterpreter.BuildUserDefinedTypesList(
+                _queryExecutor.Query<GetTypesFromMSSQLSysInfoQuery.UserDefinedTypeRecord>(new GetTypesFromMSSQLSysInfoQuery()));
 
             return new MSSQLDatabaseInfo(null)
             {
-                Tables = tables,
+                Tables = tables.Select(x => x.Value),
                 UserDefinedTypes = userDefinedTypes,
             };
         }
@@ -75,35 +72,41 @@ namespace DotNetDBTools.Deploy.MSSQL
             _queryExecutor.Execute(new CreateDatabaseQuery(databaseName));
         }
 
-        public void AlterDatabase(MSSQLDatabaseDiff databaseDiff)
+        public void ApplyDatabaseDiff(MSSQLDatabaseDiff dbDiff)
         {
-            foreach (MSSQLUserDefinedTypeInfo userDefinedType in databaseDiff.RemovedUserDefinedTypes)
-                DropUserDefinedType(userDefinedType);
-            foreach (MSSQLUserDefinedTypeDiff userDefinedTypeDiff in databaseDiff.ChangedUserDefinedTypes)
-                AlterUserDefinedType(userDefinedTypeDiff);
-            foreach (MSSQLUserDefinedTypeInfo userDefinedType in databaseDiff.AddedUserDefinedTypes)
-                CreateUserDefinedType(userDefinedType);
-
-            foreach (MSSQLTableInfo table in databaseDiff.RemovedTables)
-                DropTable(table);
-            foreach (MSSQLTableDiff tableDiff in databaseDiff.ChangedTables)
-                AlterTable(tableDiff);
-            foreach (MSSQLTableInfo table in databaseDiff.AddedTables)
-                CreateTable(table);
-
-            foreach (MSSQLViewInfo view in databaseDiff.RemovedViews)
-                DropView(view);
-            foreach (MSSQLViewDiff viewDiff in databaseDiff.ChangedViews)
-                AlterView(viewDiff);
-            foreach (MSSQLViewInfo view in databaseDiff.AddedViews)
-                CreateView(view);
-
-            foreach (MSSQLFunctionInfo function in databaseDiff.RemovedFunctions)
+            // TODO DropProcedures
+            // TODO reference-ordering for functions+views together since either can depend on one another
+            foreach (MSSQLFunctionInfo function in dbDiff.RemovedFunctions.Concat(dbDiff.ChangedFunctions.Select(x => x.OldFunction)))
                 DropFunction(function);
-            foreach (MSSQLFunctionDiff functionDiff in databaseDiff.ChangedFunctions)
-                AlterFunction(functionDiff);
-            foreach (MSSQLFunctionInfo function in databaseDiff.AddedFunctions)
+            foreach (MSSQLViewInfo view in dbDiff.RemovedViews.Concat(dbDiff.ChangedViews.Select(x => x.OldView)))
+                DropView(view);
+            foreach (MSSQLTableInfo table in dbDiff.RemovedTables)
+                DropTable(table);
+
+            foreach (MSSQLUserDefinedTypeInfo userDefinedType in dbDiff.RemovedUserDefinedTypes.Concat(dbDiff.ChangedUserDefinedTypes.Select(x => x.OldUserDefinedType)))
+                RenameUserDefinedTypeToTempInDbAndInDbDiff(userDefinedType);
+            foreach (MSSQLUserDefinedTypeInfo userDefinedType in dbDiff.AddedUserDefinedTypes.Concat(dbDiff.ChangedUserDefinedTypes.Select(x => x.NewUserDefinedType)))
+                CreateUserDefinedType(userDefinedType);
+            foreach (MSSQLUserDefinedTypeDiff userDefinedTypeDiff in dbDiff.ChangedUserDefinedTypes)
+                UseNewUDTInAllTables(userDefinedTypeDiff);
+            foreach (MSSQLTableDiff tableDiff in dbDiff.ChangedTables)
+                AlterTable(tableDiff);
+            foreach (MSSQLUserDefinedTypeInfo userDefinedType in dbDiff.RemovedUserDefinedTypes.Concat(dbDiff.ChangedUserDefinedTypes.Select(x => x.OldUserDefinedType)))
+                DropUserDefinedType(userDefinedType);
+
+            foreach (MSSQLTableInfo table in dbDiff.AddedTables)
+                CreateTable(table);
+            foreach (MSSQLViewInfo view in dbDiff.AddedViews.Concat(dbDiff.ChangedViews.Select(x => x.NewView)))
+                CreateView(view);
+            foreach (MSSQLFunctionInfo function in dbDiff.AddedFunctions.Concat(dbDiff.ChangedFunctions.Select(x => x.NewFunction)))
                 CreateFunction(function);
+            // TODO CreateProcedures
+        }
+
+        public bool SystemTablesExist()
+        {
+            bool systemTablesExist = _queryExecutor.QuerySingleOrDefault<bool>(new CheckDNDBTSysTablesExistQuery());
+            return systemTablesExist;
         }
 
         public void CreateSystemTables()
@@ -116,24 +119,24 @@ namespace DotNetDBTools.Deploy.MSSQL
             _queryExecutor.Execute(new DropDNDBTSysTablesQuery());
         }
 
-        public void PopulateSystemTables(MSSQLDatabaseInfo existingDatabase)
+        public void PopulateSystemTables(MSSQLDatabaseInfo database)
         {
-            foreach (MSSQLTableInfo table in existingDatabase.Tables)
+            foreach (MSSQLTableInfo table in database.Tables)
             {
                 string tableMetadata = MSSQLDbObjectsSerializer.TableToJson(table);
                 _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(table.ID, MSSQLDbObjectsTypes.Table, table.Name, tableMetadata));
             }
-            foreach (MSSQLViewInfo view in existingDatabase.Views)
+            foreach (MSSQLViewInfo view in database.Views)
             {
                 string tableMetadata = "MSSQLDbObjectsSerializer.ViewToJson(view)";
                 _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(view.ID, MSSQLDbObjectsTypes.View, view.Name, tableMetadata));
             }
-            foreach (MSSQLFunctionInfo function in existingDatabase.Functions)
+            foreach (MSSQLFunctionInfo function in database.Functions)
             {
                 string tableMetadata = "MSSQLDbObjectsSerializer.FunctionToJson(function)";
                 _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(function.ID, MSSQLDbObjectsTypes.Function, function.Name, tableMetadata));
             }
-            foreach (MSSQLUserDefinedTypeInfo userDefinedType in existingDatabase.UserDefinedTypes)
+            foreach (MSSQLUserDefinedTypeInfo userDefinedType in database.UserDefinedTypes)
             {
                 string userDefinedTypeMetadata = MSSQLDbObjectsSerializer.UserDefinedTypeToJson(userDefinedType);
                 _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(userDefinedType.ID, MSSQLDbObjectsTypes.UserDefinedType, userDefinedType.Name, userDefinedTypeMetadata));
@@ -170,12 +173,6 @@ namespace DotNetDBTools.Deploy.MSSQL
             _queryExecutor.Execute(new GenericQuery($"drop view {view.Name};"));
         }
 
-        private void AlterView(MSSQLViewDiff viewDiff)
-        {
-            DropView(viewDiff.OldView);
-            CreateView(viewDiff.NewView);
-        }
-
         private void CreateFunction(MSSQLFunctionInfo function)
         {
             _queryExecutor.Execute(new GenericQuery($"create function {function.Name} {function.Code};"));
@@ -184,12 +181,6 @@ namespace DotNetDBTools.Deploy.MSSQL
         private void DropFunction(MSSQLFunctionInfo function)
         {
             _queryExecutor.Execute(new GenericQuery($"drop function {function.Name};"));
-        }
-
-        private void AlterFunction(MSSQLFunctionDiff functionDiff)
-        {
-            DropFunction(functionDiff.OldFunction);
-            CreateFunction(functionDiff.NewFunction);
         }
 
         private void CreateUserDefinedType(MSSQLUserDefinedTypeInfo userDefinedType)
@@ -205,10 +196,15 @@ namespace DotNetDBTools.Deploy.MSSQL
             _queryExecutor.Execute(new DeleteDNDBTSysInfoQuery(userDefinedType.ID));
         }
 
-        private void AlterUserDefinedType(MSSQLUserDefinedTypeDiff userDefinedTypeDiff)
+        private void RenameUserDefinedTypeToTempInDbAndInDbDiff(MSSQLUserDefinedTypeInfo userDefinedType)
         {
-            DropUserDefinedType(userDefinedTypeDiff.OldUserDefinedType);
-            CreateUserDefinedType(userDefinedTypeDiff.NewUserDefinedType);
+            _queryExecutor.Execute(new RenameUserDefinedDataTypeQuery(userDefinedType));
+            userDefinedType.Name = $"_DNDBTTemp_{userDefinedType.Name}";
+        }
+
+        private void UseNewUDTInAllTables(MSSQLUserDefinedTypeDiff userDefinedTypeDiff)
+        {
+            _queryExecutor.Execute(new UseNewUDTInAllTablesQuery(userDefinedTypeDiff));
         }
     }
 }

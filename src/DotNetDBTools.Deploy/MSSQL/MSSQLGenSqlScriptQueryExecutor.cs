@@ -10,8 +10,9 @@ namespace DotNetDBTools.Deploy.MSSQL
 
         public int Execute(IQuery query)
         {
-            string paremetersDeclaration = string.Join("\n", query.Parameters.Select(x => $"DECLARE {x.Name} NVARCHAR(MAX) = '{x.Value}';"));
-            string queryWithParametersDeclaration = $"{paremetersDeclaration}\n\n{query.Sql}";
+            string queryName = query.GetType().Name;
+            string paremetersDeclaration = string.Join("", query.Parameters.Select(x => $"DECLARE {x.Name} NVARCHAR(MAX) = '{x.Value}';\n"));
+            string queryWithParametersDeclaration = $"--QUERY START: {queryName}\n{paremetersDeclaration}{query.Sql}\n--QUERY END: {queryName}";
             _queries.Add(queryWithParametersDeclaration);
             return 0;
         }
@@ -28,7 +29,7 @@ namespace DotNetDBTools.Deploy.MSSQL
 
         public string GetFinalScript()
         {
-            return string.Join("\n\n\n", _queries);
+            return string.Join("\n\n", _queries);
         }
     }
 }

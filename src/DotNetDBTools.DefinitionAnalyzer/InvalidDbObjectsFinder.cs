@@ -15,7 +15,7 @@ namespace DotNetDBTools.DefinitionAnalyzer
             if (dbError is InvalidFKDbError invalidFKDbError)
                 return GetInvalidFKLocation(compilation, invalidFKDbError);
             else
-                throw new InvalidOperationException($"Unknown dbError type: '{dbError.GetType()}'");
+                throw new InvalidOperationException($"Invalid dbError type: '{dbError.GetType()}'");
         }
 
         private static Location GetInvalidFKLocation(Compilation compilation, InvalidFKDbError invalidFKDbError)

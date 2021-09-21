@@ -39,12 +39,12 @@ namespace DotNetDBTools.SampleDeployTool.SQLite
             DropDatabaseIfExists(s_agnosticConnectionString);
             IDeployManager deployManager = new SQLiteDeployManager(true, false);
 
-            Console.WriteLine("Generating create new AgnosticSampleDB from dbAssembly file...");
+            Console.WriteLine("Generating script to create new AgnosticSampleDB from dbAssembly file...");
             deployManager.GeneratePublishScript(s_agnosticDbAssemblyPath, s_agnosticConnectionString, s_agnosticGeneratedPublishToEmptyScriptPath);
             Console.WriteLine("Creating new AgnosticSampleDB from dbAssembly file...");
             deployManager.PublishDatabase(s_agnosticDbAssemblyPath, s_agnosticConnectionString);
 
-            Console.WriteLine("Generating update(no changes) existing AgnosticSampleDB from dbAssembly file...");
+            Console.WriteLine("Generating script to update(no changes) existing AgnosticSampleDB from dbAssembly file...");
             deployManager.GeneratePublishScript(s_agnosticDbAssemblyPath, s_agnosticConnectionString, s_agnosticGeneratedPublishToExistingScriptPath);
             Console.WriteLine("Updating(no changes) existing AgnosticSampleDB from dbAssembly file...");
             deployManager.PublishDatabase(s_agnosticDbAssemblyPath, s_agnosticConnectionString);
@@ -61,7 +61,7 @@ namespace DotNetDBTools.SampleDeployTool.SQLite
 
             IDeployManager dmDataLoss = new SQLiteDeployManager(false, true);
             Console.WriteLine("Newly created DNDBT system information (by registration) has different IDs for all objects");
-            Console.WriteLine("Generating update(recreate all objects) existing AgnosticSampleDB from dbAssembly file...");
+            Console.WriteLine("Generating script to update(recreate all objects) existing AgnosticSampleDB from dbAssembly file...");
             dmDataLoss.GeneratePublishScript(s_agnosticDbAssemblyPath, s_agnosticConnectionString, s_agnosticGeneratedPublishRecreateScriptPath);
             Console.WriteLine("Updating(recreate all objects) existing AgnosticSampleDB from dbAssembly file...");
             dmDataLoss.PublishDatabase(s_agnosticDbAssemblyPath, s_agnosticConnectionString);
@@ -72,12 +72,12 @@ namespace DotNetDBTools.SampleDeployTool.SQLite
             DropDatabaseIfExists(s_sqliteConnectionString);
             IDeployManager deployManager = new SQLiteDeployManager(true, false);
 
-            Console.WriteLine("Generating create new SQLiteSampleDB from dbAssembly file...");
+            Console.WriteLine("Generating script to create new SQLiteSampleDB from dbAssembly file...");
             deployManager.GeneratePublishScript(s_sqliteDbAssemblyPath, s_sqliteConnectionString, s_sqliteGeneratedPublishToEmptyScriptPath);
             Console.WriteLine("Creating new SQLiteSampleDB from dbAssembly file...");
             deployManager.PublishDatabase(s_sqliteDbAssemblyPath, s_sqliteConnectionString);
 
-            Console.WriteLine("Generating update(no changes) existing SQLiteSampleDB from dbAssembly file...");
+            Console.WriteLine("Generating script to update(no changes) existing SQLiteSampleDB from dbAssembly file...");
             deployManager.GeneratePublishScript(s_sqliteDbAssemblyPath, s_sqliteConnectionString, s_sqliteGeneratedPublishToExistingScriptPath);
             Console.WriteLine("Updating(no changes) existing SQLiteSampleDB from dbAssembly file...");
             deployManager.PublishDatabase(s_sqliteDbAssemblyPath, s_sqliteConnectionString);
@@ -94,7 +94,7 @@ namespace DotNetDBTools.SampleDeployTool.SQLite
 
             IDeployManager dmDataLoss = new SQLiteDeployManager(false, true);
             Console.WriteLine("Newly created DNDBT system information (by registration) has different IDs for all objects");
-            Console.WriteLine("Generating update(recreate all objects) existing AgnosticSampleDB from dbAssembly file...");
+            Console.WriteLine("Generating script to update(recreate all objects) existing AgnosticSampleDB from dbAssembly file...");
             dmDataLoss.GeneratePublishScript(s_sqliteDbAssemblyPath, s_sqliteConnectionString, s_sqliteGeneratedPublishRecreateScriptPath);
             Console.WriteLine("Updating(recreate all objects) existing AgnosticSampleDB from dbAssembly file...");
             dmDataLoss.PublishDatabase(s_sqliteDbAssemblyPath, s_sqliteConnectionString);
