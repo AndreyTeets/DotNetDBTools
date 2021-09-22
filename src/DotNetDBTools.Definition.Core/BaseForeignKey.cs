@@ -5,7 +5,13 @@ namespace DotNetDBTools.Definition.Core
 {
     public abstract class BaseForeignKey : IDbObject
     {
-        public Guid ID => throw new NotImplementedException();
+        private readonly Guid _id;
+        protected BaseForeignKey(string id)
+        {
+            _id = new Guid(id);
+        }
+
+        public Guid ID => _id;
         public IEnumerable<string> ThisColumns { get; set; }
         public string ForeignTable { get; set; }
         public IEnumerable<string> ForeignColumns { get; set; }

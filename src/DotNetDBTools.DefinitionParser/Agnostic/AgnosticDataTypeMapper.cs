@@ -1,7 +1,6 @@
 ﻿using System;
 using DotNetDBTools.Definition.Agnostic.DataTypes;
 using DotNetDBTools.Definition.Core;
-using DotNetDBTools.DefinitionParser.Core;
 using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.DefinitionParser.Agnostic
@@ -24,8 +23,8 @@ namespace DotNetDBTools.DefinitionParser.Agnostic
             return new DataTypeInfo()
             {
                 Name = DataTypeNames.String,
-                Length = stringDataType.Length.ToString(),
-                IsUnicode = stringDataType.IsUnicode.ToString(),
+                Length = stringDataType.Length,
+                IsUnicode = stringDataType.IsUnicode,
             };
         }
 
@@ -42,7 +41,7 @@ namespace DotNetDBTools.DefinitionParser.Agnostic
             return new DataTypeInfo()
             {
                 Name = DataTypeNames.Byte,
-                Length = byteDataType.Length.ToString(),
+                Length = byteDataType.Length,
             };
         }
     }

@@ -6,10 +6,10 @@ namespace DotNetDBTools.Models.Core
     {
         public Guid ID { get; set; }
         public string Name { get; set; }
-        public string DataTypeName { get; set; }
-        public object DefaultValue { get; set; }
-        public string Length { get; set; }
-        public string IsUnicode { get; set; }
-        public string IsFixedLength { get; set; }
+        public DataTypeInfo DataType { get; set; }
+        public bool Nullable { get; set; }
+        public bool Unique { get; set; }
+        public bool Identity { get; set; }
+        public object Default { get; set; }
     }
 }

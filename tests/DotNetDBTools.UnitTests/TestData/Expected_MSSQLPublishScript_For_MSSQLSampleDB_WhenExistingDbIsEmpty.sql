@@ -1,14 +1,17 @@
 --QUERY START: CreateTypeQuery
-CREATE TYPE MyUserDefinedType1 FROM NVARCHAR(11);
+CREATE TYPE MyUserDefinedType1 FROM VARCHAR(100);
 --QUERY END: CreateTypeQuery
 
 --QUERY START: InsertDNDBTSysInfoQuery
 DECLARE @Metadata NVARCHAR(MAX) = '{
-  "Nullable": "True",
-  "UnderlyingDataTypeName": "String",
-  "UnderlyingDataTypeLength": "100",
-  "UnderlyingDataTypeIsUnicode": "False",
-  "UnderlyingDataTypeIsFixedLength": "False",
+  "Nullable": true,
+  "UnderlyingDataType": {
+    "Name": "String",
+    "IsUserDefined": false,
+    "Length": 100,
+    "IsUnicode": false,
+    "IsFixedLength": false
+  },
   "ID": "0cd1e71c-cc9c-440f-ac0b-81a1d6f7ddaa",
   "Name": "MyUserDefinedType1"
 }';
@@ -31,8 +34,9 @@ VALUES
 --QUERY START: CreateTableQuery
 CREATE TABLE MyTable2
 (
-    MyColumn1 INT UNIQUE,
-    MyColumn2 MyUserDefinedType1 UNIQUE
+    MyColumn1 INT NOT NULL DEFAULT 333,
+    MyColumn2 MyUserDefinedType1 NULL DEFAULT 'cc',
+    CONSTRAINT UQ_MyTable2_MyColumn1 UNIQUE (MyColumn1)
 );
 --QUERY END: CreateTableQuery
 
@@ -40,29 +44,41 @@ CREATE TABLE MyTable2
 DECLARE @Metadata NVARCHAR(MAX) = '{
   "Columns": [
     {
-      "ID": "1db86894-78f0-4bc4-97cf-fc1aa5321e77",
+      "ID": "68e584a5-c69f-4b57-bb5f-4a899fcc1a74",
       "Name": "MyColumn1",
-      "DataTypeName": "Int",
-      "DefaultValue": 333,
-      "Length": null,
-      "IsUnicode": null,
-      "IsFixedLength": null
+      "DataType": {
+        "Name": "Int",
+        "IsUserDefined": false,
+        "Length": 0,
+        "IsUnicode": false,
+        "IsFixedLength": false
+      },
+      "Nullable": false,
+      "Unique": true,
+      "Identity": false,
+      "Default": 333
     },
     {
-      "ID": "28c62b20-40e5-463c-973d-a40f25353e63",
+      "ID": "8fb7f9e7-b460-478e-aa13-6017bca47b25",
       "Name": "MyColumn2",
-      "DataTypeName": "MyUserDefinedType1",
-      "DefaultValue": "cc",
-      "Length": "100",
-      "IsUnicode": "False",
-      "IsFixedLength": "False"
+      "DataType": {
+        "Name": "MyUserDefinedType1",
+        "IsUserDefined": true,
+        "Length": 100,
+        "IsUnicode": false,
+        "IsFixedLength": false
+      },
+      "Nullable": true,
+      "Unique": false,
+      "Identity": false,
+      "Default": "cc"
     }
   ],
   "ForeignKeys": {
     "$type": "System.Collections.Generic.List`1[[DotNetDBTools.Models.MSSQL.MSSQLForeignKeyInfo, DotNetDBTools.Models]], System.Private.CoreLib",
     "$values": []
   },
-  "ID": "562ec55b-6c11-4dde-b445-f062b12ca4ac",
+  "ID": "5db28241-adab-4ade-87b8-75cc6cb86c60",
   "Name": "MyTable2"
 }';
 INSERT INTO DNDBTDbObjects
@@ -74,7 +90,7 @@ INSERT INTO DNDBTDbObjects
 )
 VALUES
 (
-    '562ec55b-6c11-4dde-b445-f062b12ca4ac',
+    '5db28241-adab-4ade-87b8-75cc6cb86c60',
     'Table',
     'MyTable2',
     @Metadata
@@ -84,9 +100,12 @@ VALUES
 --QUERY START: CreateTableQuery
 CREATE TABLE MyTable1
 (
-    MyColumn1 INT UNIQUE,
-    MyColumn2 VARCHAR(10) UNIQUE,
-    CONSTRAINT FK_MyTable1_MyColumn1_MyTable2_MyColumn1 FOREIGN KEY (MyColumn1) REFERENCES MyTable2(MyColumn1)
+    MyColumn1 INT NOT NULL DEFAULT ABS(-15),
+    MyColumn2 VARCHAR(10) NOT NULL DEFAULT '33',
+    CONSTRAINT UQ_MyTable1_MyColumn1 UNIQUE (MyColumn1),
+    CONSTRAINT FK_MyTable1_MyColumn1_MyTable2_MyColumn1 FOREIGN KEY (MyColumn1)
+        REFERENCES MyTable2(MyColumn1)
+        ON UPDATE NO ACTION ON DELETE CASCADE
 );
 --QUERY END: CreateTableQuery
 
@@ -94,22 +113,37 @@ CREATE TABLE MyTable1
 DECLARE @Metadata NVARCHAR(MAX) = '{
   "Columns": [
     {
-      "ID": "0547ca0d-61ab-4f41-8218-dda0c0216bea",
+      "ID": "cacc163c-6fdf-4030-ae11-33eba5086e9e",
       "Name": "MyColumn1",
-      "DataTypeName": "Int",
-      "DefaultValue": 15,
-      "Length": null,
-      "IsUnicode": null,
-      "IsFixedLength": null
+      "DataType": {
+        "Name": "Int",
+        "IsUserDefined": false,
+        "Length": 0,
+        "IsUnicode": false,
+        "IsFixedLength": false
+      },
+      "Nullable": false,
+      "Unique": true,
+      "Identity": false,
+      "Default": {
+        "$type": "DotNetDBTools.Models.MSSQL.MSSQLDefaultValueAsFunction, DotNetDBTools.Models",
+        "FunctionText": "ABS(-15)"
+      }
     },
     {
-      "ID": "60ff7a1f-b4b8-476f-9db2-56617858be35",
+      "ID": "a9408a3c-d58e-463d-84b7-b99c53c65460",
       "Name": "MyColumn2",
-      "DataTypeName": "String",
-      "DefaultValue": "33",
-      "Length": "10",
-      "IsUnicode": "False",
-      "IsFixedLength": "False"
+      "DataType": {
+        "Name": "String",
+        "IsUserDefined": false,
+        "Length": 10,
+        "IsUnicode": false,
+        "IsFixedLength": false
+      },
+      "Nullable": false,
+      "Unique": false,
+      "Identity": false,
+      "Default": "33"
     }
   ],
   "ForeignKeys": {
@@ -125,12 +159,12 @@ DECLARE @Metadata NVARCHAR(MAX) = '{
         ],
         "OnUpdate": "NoAction",
         "OnDelete": "Cascade",
-        "ID": "00000000-0000-0000-0000-000000000000",
+        "ID": "99fa848e-d911-46e7-b406-bbd554d1c969",
         "Name": "FK_MyTable1_MyColumn1_MyTable2_MyColumn1"
       }
     ]
   },
-  "ID": "299675e6-4faa-4d0f-a36a-224306ba5bcb",
+  "ID": "de2d4a1e-954f-4d24-80cf-d3dc75f18862",
   "Name": "MyTable1"
 }';
 INSERT INTO DNDBTDbObjects
@@ -142,7 +176,7 @@ INSERT INTO DNDBTDbObjects
 )
 VALUES
 (
-    '299675e6-4faa-4d0f-a36a-224306ba5bcb',
+    'de2d4a1e-954f-4d24-80cf-d3dc75f18862',
     'Table',
     'MyTable1',
     @Metadata

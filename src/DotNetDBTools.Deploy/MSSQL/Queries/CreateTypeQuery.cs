@@ -21,7 +21,7 @@ namespace DotNetDBTools.Deploy.MSSQL.Queries
         private static string GetSql(MSSQLUserDefinedTypeInfo userDefinedType)
         {
             string query =
-$@"CREATE TYPE {userDefinedType.Name} FROM NVARCHAR(11);";
+$@"CREATE TYPE {userDefinedType.Name} FROM {MSSQLSqlTypeMapper.GetSqlType(userDefinedType.UnderlyingDataType)};";
 
             return query;
         }

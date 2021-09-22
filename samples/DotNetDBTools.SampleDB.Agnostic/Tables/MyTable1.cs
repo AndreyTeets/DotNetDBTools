@@ -21,12 +21,12 @@ namespace DotNetDBTools.SampleDB.Agnostic.Tables
             Default = "33",
         };
 
-        public PrimaryKey PK_MyTable1 = new()
+        public PrimaryKey PK_MyTable1 = new("37A45DEF-F4A0-4BE7-8BFB-8FBED4A7D705")
         {
             Columns = new string[] { nameof(MyColumn1) },
         };
 
-        public ForeignKey FK_MyTable1_MyColumn1_MyTable2_MyColumn1 = new()
+        public ForeignKey FK_MyTable1_MyColumn1_MyTable2_MyColumn1 = new("D11B2A53-32DB-432F-BB6B-F91788844BA9")
         {
             ThisColumns = new string[] { nameof(MyColumn1) },
             ForeignTable = nameof(MyTable2),
@@ -35,7 +35,7 @@ namespace DotNetDBTools.SampleDB.Agnostic.Tables
             OnDelete = ForeignKeyActions.Cascade,
         };
 
-        public CheckConstraint CK_MyTable1_MyColumn1 = new()
+        public CheckConstraint CK_MyTable1_MyColumn1 = new("EB9C59B5-BC7E-49D7-ADAA-F5600B6A19A2")
         {
             Code = $"{nameof(MyColumn1)} >= 0",
         };

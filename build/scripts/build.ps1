@@ -23,6 +23,7 @@ if ($LastExitCode -ne 0) {
     throw
 }
 
+dotnet nuget locals --clear global-packages
 dotnet build DotNetDBTools.sln -c Release -p:UsePackagesInSampleApplications=True
 if ($LastExitCode -ne 0) {
     throw

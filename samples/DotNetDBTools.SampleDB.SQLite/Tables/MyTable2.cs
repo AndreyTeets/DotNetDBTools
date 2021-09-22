@@ -12,6 +12,7 @@ namespace DotNetDBTools.SampleDB.SQLite.Tables
         {
             DataType = new IntDataType(),
             Nullable = false,
+            Unique = true,
             Default = 333,
         };
 
@@ -22,17 +23,17 @@ namespace DotNetDBTools.SampleDB.SQLite.Tables
             Default = new byte[] { 0, 1 },
         };
 
-        public PrimaryKey PK_MyTable2 = new()
+        public PrimaryKey PK_MyTable2 = new("FFC24537-7C46-4978-B699-CE11A5224A4A")
         {
             Columns = new string[] { nameof(MyColumn1) },
         };
 
-        public Trigger TR_MyTable2_Name1 = new()
+        public Trigger TR_MyTable2_Name1 = new("0BDB03BD-EE40-4162-B7BE-817CAE0A54E1")
         {
             Code = "GetFromResurceSqlFile",
         };
 
-        public Index IDX_MyTable2_MyIndex1 = new()
+        public Index IDX_MyTable2_MyIndex1 = new("274D5A74-F228-423B-8FB0-2384BCAF795D")
         {
             Columns = new string[] { nameof(MyColumn1), nameof(MyColumn2) },
             IncludeColumns = null,

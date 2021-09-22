@@ -4,7 +4,13 @@ namespace DotNetDBTools.Definition.Core
 {
     public abstract class BaseTrigger : IDbObject
     {
-        public Guid ID => throw new NotImplementedException();
+        private readonly Guid _id;
+        protected BaseTrigger(string id)
+        {
+            _id = new Guid(id);
+        }
+
+        public Guid ID => _id;
         public string Code { get; set; }
     }
 }

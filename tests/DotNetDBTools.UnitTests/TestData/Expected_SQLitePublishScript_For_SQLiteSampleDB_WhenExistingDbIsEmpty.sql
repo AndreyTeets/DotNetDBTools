@@ -15,23 +15,35 @@ VALUES
     {
       "ID": "1db86894-78f0-4bc4-97cf-fc1aa5321e77",
       "Name": "MyColumn1",
-      "DataTypeName": "Int",
-      "DefaultValue": 333,
-      "Length": null,
-      "IsUnicode": null,
-      "IsFixedLength": null
+      "DataType": {
+        "Name": "Int",
+        "IsUserDefined": false,
+        "Length": 0,
+        "IsUnicode": false,
+        "IsFixedLength": false
+      },
+      "Nullable": false,
+      "Unique": true,
+      "Identity": false,
+      "Default": 333
     },
     {
       "ID": "28c62b20-40e5-463c-973d-a40f25353e63",
       "Name": "MyColumn2",
-      "DataTypeName": "Byte",
-      "DefaultValue": {
+      "DataType": {
+        "Name": "Byte",
+        "IsUserDefined": false,
+        "Length": 50,
+        "IsUnicode": false,
+        "IsFixedLength": false
+      },
+      "Nullable": true,
+      "Unique": false,
+      "Identity": false,
+      "Default": {
         "$type": "System.Byte[], System.Private.CoreLib",
         "$value": "AAE="
-      },
-      "Length": "50",
-      "IsUnicode": null,
-      "IsFixedLength": null
+      }
     }
   ],
   "ForeignKeys": {
@@ -59,7 +71,7 @@ INSERT INTO DNDBTDbObjects
 )
 VALUES
 (
-    '299675e6-4faa-4d0f-a36a-224306ba5bcb',
+    'bffc40d7-6825-48f9-8442-9712c6993ef9',
     'Table',
     'MyTable1',
     '{
@@ -67,20 +79,32 @@ VALUES
     {
       "ID": "0547ca0d-61ab-4f41-8218-dda0c0216bea",
       "Name": "MyColumn1",
-      "DataTypeName": "Int",
-      "DefaultValue": 15,
-      "Length": null,
-      "IsUnicode": null,
-      "IsFixedLength": null
+      "DataType": {
+        "Name": "Int",
+        "IsUserDefined": false,
+        "Length": 0,
+        "IsUnicode": false,
+        "IsFixedLength": false
+      },
+      "Nullable": false,
+      "Unique": true,
+      "Identity": false,
+      "Default": 15
     },
     {
       "ID": "60ff7a1f-b4b8-476f-9db2-56617858be35",
       "Name": "MyColumn2",
-      "DataTypeName": "String",
-      "DefaultValue": "33",
-      "Length": "10",
-      "IsUnicode": "False",
-      "IsFixedLength": null
+      "DataType": {
+        "Name": "String",
+        "IsUserDefined": false,
+        "Length": 10,
+        "IsUnicode": false,
+        "IsFixedLength": false
+      },
+      "Nullable": false,
+      "Unique": false,
+      "Identity": false,
+      "Default": "33"
     }
   ],
   "ForeignKeys": {
@@ -96,12 +120,12 @@ VALUES
         ],
         "OnUpdate": "NoAction",
         "OnDelete": "Cascade",
-        "ID": "00000000-0000-0000-0000-000000000000",
+        "ID": "51c1cc5e-306b-447f-804e-0943de7b730d",
         "Name": "FK_MyTable1_MyColumn1_MyTable2_MyColumn1"
       }
     ]
   },
-  "ID": "299675e6-4faa-4d0f-a36a-224306ba5bcb",
+  "ID": "bffc40d7-6825-48f9-8442-9712c6993ef9",
   "Name": "MyTable1"
 }'
 );

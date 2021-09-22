@@ -2,7 +2,6 @@
 using DotNetDBTools.Definition.Core;
 using DotNetDBTools.Definition.MSSQL;
 using DotNetDBTools.Definition.MSSQL.DataTypes;
-using DotNetDBTools.DefinitionParser.Core;
 using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.DefinitionParser.MSSQL
@@ -26,9 +25,9 @@ namespace DotNetDBTools.DefinitionParser.MSSQL
             return new DataTypeInfo()
             {
                 Name = DataTypeNames.String,
-                Length = stringDataType.Length.ToString(),
-                IsUnicode = stringDataType.IsUnicode.ToString(),
-                IsFixedLength = stringDataType.IsFixedLength.ToString(),
+                Length = stringDataType.Length,
+                IsUnicode = stringDataType.IsUnicode,
+                IsFixedLength = stringDataType.IsFixedLength,
             };
         }
 
@@ -45,20 +44,16 @@ namespace DotNetDBTools.DefinitionParser.MSSQL
             return new DataTypeInfo()
             {
                 Name = DataTypeNames.Byte,
-                Length = byteDataType.Length.ToString(),
+                Length = byteDataType.Length,
             };
         }
 
         private static DataTypeInfo GetUserDefinedTypeInfo(IUserDefinedType userDefinedType)
         {
             DataTypeInfo dataTypeInfo = GetDataTypeInfo(userDefinedType.UnderlyingType);
-            return new DataTypeInfo()
-            {
-                Name = userDefinedType.GetType().Name,
-                Length = dataTypeInfo.Length.ToString(),
-                IsUnicode = dataTypeInfo.IsUnicode.ToString(),
-                IsFixedLength = dataTypeInfo.IsFixedLength.ToString(),
-            };
+            dataTypeInfo.Name = userDefinedType.GetType().Name;
+            dataTypeInfo.IsUserDefined = true;
+            return dataTypeInfo;
         }
     }
 }

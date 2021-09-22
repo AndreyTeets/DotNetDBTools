@@ -20,22 +20,22 @@ namespace SampleTestCode
 {
     public class TestUserDefinedType1 : IUserDefinedType
     {
-        public Guid ID => new(""0CD1E71C-CC9C-440F-AC0B-81A1D6F7DDAA"");
+        public Guid ID => new(""AF622311-F791-4DC3-995D-D03C75236A1F"");
         public IDataType UnderlyingType => new StringDataType() { Length = 100 };
         public bool Nullable => true;
     }
 
     public class TestTable2 : ITable
     {
-        public Guid ID => new(""BFB9030C-A8C3-4882-9C42-1C6AD025CF8F"");
+        public Guid ID => new(""31347B68-6BE3-4F2B-BCD1-0CC82ECB97FA"");
 
-        public Column TestColumn1 = new(""C480F22F-7C01-4F41-B282-35E9F5CD1FE3"")
+        public Column TestColumn1 = new(""032611EB-AA7C-4FEA-8B3C-BB8609E140F6"")
         {
             DataType = new IntDataType(),
             Nullable = false,
         };
 
-        public Column TestColumn2 = new(""1480F22F-7C01-4F41-B282-35E9F5CD1FE3"")
+        public Column TestColumn2 = new(""2FD848D5-A689-419F-9214-AFCF9F742564"")
         {
             DataType = new TestUserDefinedType1(),
             Nullable = false,
@@ -44,15 +44,15 @@ namespace SampleTestCode
 
     public class TestTable1 : ITable
     {
-        public Guid ID => new(""BFB9030C-A8C3-4882-9C42-1C6AD025CF8F"");
+        public Guid ID => new(""250542BA-31D6-49C5-9178-F86319343109"");
 
-        public Column TestColumn1 = new(""2480F22F-7C01-4F41-B282-35E9F5CD1FE3"")
+        public Column TestColumn1 = new(""0C322A6A-7D5F-418C-BC5E-DF120D16CF4C"")
         {
             DataType = new IntDataType(),
             Nullable = false,
         };
 
-        public ForeignKey {|#0:FK_TestName1|} = new()
+        public ForeignKey {|#0:FK_TestName1|} = new(""1955F440-4333-4F33-9755-1C618816C9FB"")
         {
             ThisColumns = new string[] { nameof(TestColumn1) },
             ForeignTable = nameof(TestTable2),

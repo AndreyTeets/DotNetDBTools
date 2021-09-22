@@ -111,11 +111,8 @@ namespace DotNetDBTools.DefinitionParser.MSSQL
                 {
                     ID = userDefinedType.ID,
                     Name = userDefinedType.GetType().Name,
-                    Nullable = userDefinedType.Nullable.ToString(),
-                    UnderlyingDataTypeName = dataTypeInfo.Name,
-                    UnderlyingDataTypeLength = dataTypeInfo.Length,
-                    UnderlyingDataTypeIsUnicode = dataTypeInfo.IsUnicode,
-                    UnderlyingDataTypeIsFixedLength = dataTypeInfo.IsFixedLength,
+                    Nullable = userDefinedType.Nullable,
+                    UnderlyingDataType = dataTypeInfo,
                 };
                 userDefinedTypeInfos.Add(userDefinedTypeInfo);
             }
@@ -134,11 +131,11 @@ namespace DotNetDBTools.DefinitionParser.MSSQL
                     {
                         ID = column.ID,
                         Name = x.Name,
-                        DataTypeName = dataTypeInfo.Name,
-                        DefaultValue = column.Default,
-                        Length = dataTypeInfo.Length,
-                        IsUnicode = dataTypeInfo.IsUnicode,
-                        IsFixedLength = dataTypeInfo.IsFixedLength,
+                        DataType = dataTypeInfo,
+                        Nullable = column.Nullable,
+                        Unique = column.Unique,
+                        Identity = column.Identity,
+                        Default = MSSQLDefaultValueMapper.MapDefaultValue(column),
                     };
                 })
                 .ToList();
@@ -152,7 +149,7 @@ namespace DotNetDBTools.DefinitionParser.MSSQL
                     ForeignKey foreignKey = (ForeignKey)x.GetPropertyOrFieldValue(table);
                     return new MSSQLForeignKeyInfo()
                     {
-                        //ID = foreignKey.ID,
+                        ID = foreignKey.ID,
                         Name = x.Name,
                         ThisColumnNames = foreignKey.ThisColumns.ToList(),
                         ForeignTableName = foreignKey.ForeignTable,

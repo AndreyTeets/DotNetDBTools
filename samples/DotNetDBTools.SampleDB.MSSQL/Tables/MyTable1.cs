@@ -6,27 +6,28 @@ namespace DotNetDBTools.SampleDB.MSSQL.Tables
 {
     public class MyTable1 : ITable
     {
-        public Guid ID => new("299675E6-4FAA-4D0F-A36A-224306BA5BCB");
+        public Guid ID => new("DE2D4A1E-954F-4D24-80CF-D3DC75F18862");
 
-        public Column MyColumn1 = new("0547CA0D-61AB-4F41-8218-DDA0C0216BEA")
+        public Column MyColumn1 = new("CACC163C-6FDF-4030-AE11-33EBA5086E9E")
         {
             DataType = new IntDataType(),
-            Default = 15,
+            Default = "ABS(-15)",
+            DefaultIsFunction = true,
             Unique = true,
         };
 
-        public Column MyColumn2 = new("60FF7A1F-B4B8-476F-9DB2-56617858BE35")
+        public Column MyColumn2 = new("A9408A3C-D58E-463D-84B7-B99C53C65460")
         {
             DataType = new StringDataType() { Length = 10 },
             Default = "33",
         };
 
-        public PrimaryKey PK_MyTable1 = new()
+        public PrimaryKey PK_MyTable1 = new("1AFD9763-BEF9-489F-B0AF-B2C79D0AFD78")
         {
             Columns = new string[] { nameof(MyColumn1) },
         };
 
-        public ForeignKey FK_MyTable1_MyColumn1_MyTable2_MyColumn1 = new()
+        public ForeignKey FK_MyTable1_MyColumn1_MyTable2_MyColumn1 = new("99FA848E-D911-46E7-B406-BBD554D1C969")
         {
             ThisColumns = new string[] { nameof(MyColumn1) },
             ForeignTable = nameof(MyTable2),
@@ -35,7 +36,7 @@ namespace DotNetDBTools.SampleDB.MSSQL.Tables
             OnDelete = ForeignKeyActions.Cascade,
         };
 
-        public CheckConstraint CK_MyTable1_MyColumn1 = new()
+        public CheckConstraint CK_MyTable1_MyColumn1 = new("0A9E1C5D-A788-4F9D-B79B-65EE749957B7")
         {
             Code = $"{nameof(MyColumn1)} >= 0",
         };

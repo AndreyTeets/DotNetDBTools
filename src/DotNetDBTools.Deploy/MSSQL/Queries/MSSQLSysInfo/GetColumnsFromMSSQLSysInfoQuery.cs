@@ -12,9 +12,21 @@ namespace DotNetDBTools.Deploy.MSSQL.Queries.MSSQLSysInfo
 $@"SELECT
     t.TABLE_NAME AS {nameof(ColumnRecord.TableName)},
     c.COLUMN_NAME AS {nameof(ColumnRecord.ColumnName)},
-    CASE WHEN c.DOMAIN_NAME IS NOT NULL THEN c.DOMAIN_NAME ELSE c.DATA_TYPE END AS {nameof(ColumnRecord.DataTypeName)},
-    CASE WHEN c.IS_NULLABLE='YES' THEN '{true}' ELSE '{false}' END AS {nameof(ColumnRecord.IsNullable)},
-    c.COLUMN_DEFAULT AS {nameof(ColumnRecord.DefaultValue)},
+    c.DATA_TYPE AS {nameof(ColumnRecord.DataType)},
+    c.DOMAIN_NAME AS {nameof(ColumnRecord.UserDefinedDataType)},
+    CASE WHEN c.IS_NULLABLE='YES' THEN 1 ELSE 0 END AS {nameof(ColumnRecord.Nullable)},
+    COLUMNPROPERTY(object_id(c.TABLE_NAME), c.COLUMN_NAME, 'IsIdentity') AS [{nameof(ColumnRecord.Identity)}],
+    (
+        SELECT
+            TOP 1 1
+        FROM INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE ccu
+        INNER JOIN INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc
+            ON tc.CONSTRAINT_NAME = ccu.CONSTRAINT_NAME
+        WHERE ccu.TABLE_NAME = c.TABLE_NAME
+            AND ccu.COLUMN_NAME = c.COLUMN_NAME
+            AND tc.CONSTRAINT_TYPE IN ('PRIMARY KEY', 'UNIQUE')
+    ) AS [{nameof(ColumnRecord.Unique)}],
+    c.COLUMN_DEFAULT AS [{nameof(ColumnRecord.Default)}],
     c.CHARACTER_OCTET_LENGTH AS {nameof(ColumnRecord.Length)}
 FROM INFORMATION_SCHEMA.TABLES t
 INNER JOIN INFORMATION_SCHEMA.COLUMNS c
@@ -27,9 +39,12 @@ WHERE t.TABLE_TYPE='BASE TABLE';";
         {
             public string TableName { get; set; }
             public string ColumnName { get; set; }
-            public string DataTypeName { get; set; }
-            public string IsNullable { get; set; }
-            public string DefaultValue { get; set; }
+            public string DataType { get; set; }
+            public string UserDefinedDataType { get; set; }
+            public bool Nullable { get; set; }
+            public bool Unique { get; set; }
+            public bool Identity { get; set; }
+            public string Default { get; set; }
             public string Length { get; set; }
         }
 
@@ -59,16 +74,57 @@ WHERE t.TABLE_TYPE='BASE TABLE';";
 
             private static ColumnInfo MapToColumnInfo(ColumnRecord columnRecord)
             {
+                DataTypeInfo dataTypeInfo = MSSQLSqlTypeMapper.GetModelType(columnRecord.DataType, columnRecord.Length);
+                if (columnRecord.UserDefinedDataType is not null)
+                {
+                    dataTypeInfo.Name = columnRecord.UserDefinedDataType;
+                    dataTypeInfo.IsUserDefined = true;
+                }
+
                 return new ColumnInfo()
                 {
                     ID = Guid.NewGuid(),
                     Name = columnRecord.ColumnName,
-                    DataTypeName = MSSQLSqlTypeMapper.GetModelType(columnRecord.DataTypeName),
-                    DefaultValue = columnRecord.DefaultValue,
-                    IsUnicode = MSSQLSqlTypeMapper.IsUnicode(columnRecord.DataTypeName),
-                    Length = columnRecord.Length,
-                    IsFixedLength = MSSQLSqlTypeMapper.IsFixedLength(columnRecord.DataTypeName),
+                    DataType = dataTypeInfo,
+                    Nullable = columnRecord.Nullable,
+                    Unique = columnRecord.Unique,
+                    Identity = columnRecord.Identity,
+                    Default = ParseDefault(columnRecord.Default),
                 };
+            }
+
+            private static object ParseDefault(string valueFromMSSQLSysTable)
+            {
+                if (valueFromMSSQLSysTable is null)
+                    return null;
+                string value = TrimOuterParantheses(valueFromMSSQLSysTable);
+
+                if (IsNumber(value))
+                    return int.Parse(TrimOuterParantheses(value));
+                if (IsByte(value))
+                    return ToByteArray(value);
+                if (IsString(value))
+                    return TrimOuterQuotes(value);
+                if (IsFunction(value))
+                    return new MSSQLDefaultValueAsFunction() { FunctionText = value };
+
+                throw new ArgumentException($"Invalid parameter value '{valueFromMSSQLSysTable}'", nameof(valueFromMSSQLSysTable));
+
+                static bool IsNumber(string val) => val.StartsWith("(", StringComparison.Ordinal);
+                static bool IsByte(string val) => val.StartsWith("0x", StringComparison.Ordinal);
+                static bool IsString(string val) => val.StartsWith("'", StringComparison.Ordinal);
+                static bool IsFunction(string val) => !long.TryParse(val, out _);
+                static string TrimOuterParantheses(string val) => val.Substring(1, val.Length - 2);
+                static string TrimOuterQuotes(string val) => val.Substring(1, val.Length - 2);
+                static byte[] ToByteArray(string val)
+                {
+                    string hex = val.Substring(2, val.Length - 2);
+                    int numChars = hex.Length;
+                    byte[] bytes = new byte[numChars / 2];
+                    for (int i = 0; i < numChars; i += 2)
+                        bytes[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
+                    return bytes;
+                }
             }
         }
     }

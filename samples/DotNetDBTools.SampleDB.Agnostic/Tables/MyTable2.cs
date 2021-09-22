@@ -12,6 +12,7 @@ namespace DotNetDBTools.SampleDB.Agnostic.Tables
         {
             DataType = new IntDataType(),
             Nullable = false,
+            Unique = true,
             Default = 333,
         };
 
@@ -22,17 +23,17 @@ namespace DotNetDBTools.SampleDB.Agnostic.Tables
             Default = new byte[] { 0 },
         };
 
-        public PrimaryKey PK_MyTable2 = new()
+        public PrimaryKey PK_MyTable2 = new("3A43615B-40B3-4A13-99E7-93AF7C56E8CE")
         {
             Columns = new string[] { nameof(MyColumn1) },
         };
 
-        public Trigger TR_MyTable2_Name1 = new()
+        public Trigger TR_MyTable2_Name1 = new("EE64FFC3-5536-4624-BEAF-BC3A61D06A1A")
         {
             Code = "GetFromResurceSqlFile",
         };
 
-        public Index IDX_MyTable2_MyIndex1 = new()
+        public Index IDX_MyTable2_MyIndex1 = new("74390B3C-BC39-4860-A42E-12BAA400F927")
         {
             Columns = new string[] { nameof(MyColumn1), nameof(MyColumn2) },
             IncludeColumns = null,

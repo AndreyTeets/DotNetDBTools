@@ -83,11 +83,11 @@ namespace DotNetDBTools.DefinitionParser.Agnostic
                     {
                         ID = column.ID,
                         Name = x.Name,
-                        DataTypeName = dataTypeInfo.Name,
-                        DefaultValue = column.Default,
-                        Length = dataTypeInfo.Length,
-                        IsUnicode = dataTypeInfo.IsUnicode,
-                        IsFixedLength = dataTypeInfo.IsFixedLength,
+                        DataType = dataTypeInfo,
+                        Nullable = column.Nullable,
+                        Unique = column.Unique,
+                        Identity = column.Identity,
+                        Default = AgnosticDefaultValueMapper.MapDefaultValue(column),
                     };
                 })
                 .ToList();
@@ -101,7 +101,7 @@ namespace DotNetDBTools.DefinitionParser.Agnostic
                     ForeignKey foreignKey = (ForeignKey)x.GetPropertyOrFieldValue(table);
                     return new AgnosticForeignKeyInfo()
                     {
-                        //ID = foreignKey.ID,
+                        ID = foreignKey.ID,
                         Name = x.Name,
                         ThisColumnNames = foreignKey.ThisColumns.ToList(),
                         ForeignTableName = foreignKey.ForeignTable,

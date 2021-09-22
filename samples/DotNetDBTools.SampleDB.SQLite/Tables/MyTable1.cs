@@ -6,7 +6,7 @@ namespace DotNetDBTools.SampleDB.SQLite.Tables
 {
     public class MyTable1 : ITable
     {
-        public Guid ID => new("299675E6-4FAA-4D0F-A36A-224306BA5BCB");
+        public Guid ID => new("BFFC40D7-6825-48F9-8442-9712C6993EF9");
 
         public Column MyColumn1 = new("0547CA0D-61AB-4F41-8218-DDA0C0216BEA")
         {
@@ -21,12 +21,12 @@ namespace DotNetDBTools.SampleDB.SQLite.Tables
             Default = "33",
         };
 
-        public PrimaryKey PK_MyTable1 = new()
+        public PrimaryKey PK_MyTable1 = new("F8BD93B0-26EE-4564-9185-1214290622D3")
         {
             Columns = new string[] { nameof(MyColumn1) },
         };
 
-        public ForeignKey FK_MyTable1_MyColumn1_MyTable2_MyColumn1 = new()
+        public ForeignKey FK_MyTable1_MyColumn1_MyTable2_MyColumn1 = new("51C1CC5E-306B-447F-804E-0943DE7B730D")
         {
             ThisColumns = new string[] { nameof(MyColumn1) },
             ForeignTable = nameof(MyTable2),
@@ -35,7 +35,7 @@ namespace DotNetDBTools.SampleDB.SQLite.Tables
             OnDelete = ForeignKeyActions.Cascade,
         };
 
-        public CheckConstraint CK_MyTable1_MyColumn1 = new()
+        public CheckConstraint CK_MyTable1_MyColumn1 = new("4A2270DE-CF8B-4179-868D-0B169DBDD371")
         {
             Code = $"{nameof(MyColumn1)} >= 0",
         };

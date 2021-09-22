@@ -10,7 +10,7 @@ namespace DotNetDBTools.Deploy.MSSQL.Queries.MSSQLSysInfo
         public string Sql =>
 $@"SELECT
     t.name AS {nameof(UserDefinedTypeRecord.Name)},
-    CASE WHEN t.is_nullable=1 THEN '{true}' ELSE '{false}' END AS {nameof(UserDefinedTypeRecord.Nullable)},
+    t.is_nullable AS {nameof(UserDefinedTypeRecord.Nullable)},
     st.name AS {nameof(UserDefinedTypeRecord.UnderlyingDataTypeName)},
     t.max_length AS {nameof(UserDefinedTypeRecord.UnderlyingDataTypeLength)}
 FROM sys.types t
@@ -24,7 +24,7 @@ WHERE t.is_user_defined = 1
         internal class UserDefinedTypeRecord
         {
             public string Name { get; set; }
-            public string Nullable { get; set; }
+            public bool Nullable { get; set; }
             public string UnderlyingDataTypeName { get; set; }
             public string UnderlyingDataTypeLength { get; set; }
         }
@@ -51,10 +51,9 @@ WHERE t.is_user_defined = 1
                 ID = Guid.NewGuid(),
                 Name = userDefinedTypeRecord.Name,
                 Nullable = userDefinedTypeRecord.Nullable,
-                UnderlyingDataTypeName = MSSQLSqlTypeMapper.GetModelType(userDefinedTypeRecord.UnderlyingDataTypeName),
-                UnderlyingDataTypeIsUnicode = MSSQLSqlTypeMapper.IsUnicode(userDefinedTypeRecord.UnderlyingDataTypeName),
-                UnderlyingDataTypeLength = userDefinedTypeRecord.UnderlyingDataTypeLength,
-                UnderlyingDataTypeIsFixedLength = MSSQLSqlTypeMapper.IsFixedLength(userDefinedTypeRecord.UnderlyingDataTypeName),
+                UnderlyingDataType = MSSQLSqlTypeMapper.GetModelType(
+                    userDefinedTypeRecord.UnderlyingDataTypeName,
+                    userDefinedTypeRecord.UnderlyingDataTypeLength),
             };
         }
     }
