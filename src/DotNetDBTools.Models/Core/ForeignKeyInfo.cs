@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
-using DotNetDBTools.Models.Core;
 
-namespace DotNetDBTools.Models.Agnostic
+namespace DotNetDBTools.Models.Core
 {
-    public class AgnosticForeignKeyInfo : BaseDBObjectInfo, IForeignKeyInfo
+    public class ForeignKeyInfo : DBObjectInfo
     {
+        public string ThisTableName { get; set; }
         public IEnumerable<string> ThisColumnNames { get; set; }
         public string ForeignTableName { get; set; }
         public IEnumerable<string> ForeignColumnNames { get; set; }

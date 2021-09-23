@@ -13,7 +13,6 @@ namespace DotNetDBTools.SampleDB.MSSQL.Tables
             DataType = new IntDataType(),
             Default = "ABS(-15)",
             DefaultIsFunction = true,
-            Unique = true,
         };
 
         public Column MyColumn2 = new("A9408A3C-D58E-463D-84B7-B99C53C65460")
@@ -25,6 +24,11 @@ namespace DotNetDBTools.SampleDB.MSSQL.Tables
         public PrimaryKey PK_MyTable1 = new("1AFD9763-BEF9-489F-B0AF-B2C79D0AFD78")
         {
             Columns = new string[] { nameof(MyColumn1) },
+        };
+
+        public UniqueConstraint UQ_MyTable1_MyColumn2 = new("7C2E6997-AA1C-49A7-8D2A-DEC4389EBC26")
+        {
+            Columns = new string[] { nameof(MyColumn2) },
         };
 
         public ForeignKey FK_MyTable1_MyColumn1_MyTable2_MyColumn1 = new("99FA848E-D911-46E7-B406-BBD554D1C969")

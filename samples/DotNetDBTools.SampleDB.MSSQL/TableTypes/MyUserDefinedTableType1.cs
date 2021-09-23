@@ -12,10 +12,7 @@ namespace DotNetDBTools.SampleDB.MSSQL.TableTypes
         {
             DataType = new IntDataType(),
             Nullable = true,
-            Unique = false,
-            Identity = false,
             Default = 666,
-            ComputeCode = null,
         };
 
         public CheckConstraint CK_MyUserDefinedTableType1_MyColumn1 = new("74670124-20AD-43D0-B132-AEB8B04A7FEC")

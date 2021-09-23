@@ -12,8 +12,7 @@ namespace DotNetDBTools.Models.SQLite
         public IEnumerable<ColumnInfo> RemovedColumns { get; set; }
         public IEnumerable<ColumnDiff> ChangedColumns { get; set; }
 
-        public IEnumerable<SQLiteForeignKeyInfo> AddedForeignKeys { get; set; }
-        public IEnumerable<SQLiteForeignKeyInfo> RemovedForeignKeys { get; set; }
-        public IEnumerable<SQLiteForeignKeyDiff> ChangedForeignKeys { get; set; }
+        public IEnumerable<ForeignKeyInfo> AddedForeignKeys { get; set; }
+        public IEnumerable<ForeignKeyInfo> RemovedForeignKeys { get; set; }
     }
 }

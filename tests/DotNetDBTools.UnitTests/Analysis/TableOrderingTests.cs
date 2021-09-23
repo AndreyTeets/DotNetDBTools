@@ -14,7 +14,7 @@ namespace DotNetDBTools.UnitTests.Analysis
         [Fact]
         public void TableOrderingExtensions_ProduceCorrectResultOnValidNonEmptyInput()
         {
-            IEnumerable<ITableInfo> tables = new List<AgnosticTableInfo>()
+            IEnumerable<TableInfo> tables = new List<AgnosticTableInfo>()
             {
                 CreateTableInfo("T01", new string[] { }),
                 CreateTableInfo("T02", new string[] { }),
@@ -56,7 +56,7 @@ namespace DotNetDBTools.UnitTests.Analysis
         [Fact]
         public void TableOrderingExtensions_ProduceCorrectResultOnEmptyInput()
         {
-            IEnumerable<ITableInfo> tables = new List<AgnosticTableInfo>();
+            IEnumerable<TableInfo> tables = new List<AgnosticTableInfo>();
 
             string[] expectedReferencedFirstOrder = new string[] { };
             string[] expectedReferencedLastOrder = new string[] { };
@@ -71,7 +71,7 @@ namespace DotNetDBTools.UnitTests.Analysis
         [Fact]
         public void TableOrderingExtensions_ThrowOnInvalidInput()
         {
-            IEnumerable<ITableInfo> tables = new List<AgnosticTableInfo>()
+            IEnumerable<TableInfo> tables = new List<AgnosticTableInfo>()
             {
                 CreateTableInfo("T01", new string[] { "T02" }),
                 CreateTableInfo("T02", new string[] { "T03" }),
@@ -85,10 +85,10 @@ namespace DotNetDBTools.UnitTests.Analysis
 
         private static AgnosticTableInfo CreateTableInfo(string tableName, string[] referencedTableNames)
         {
-            List<AgnosticForeignKeyInfo> foreignKeys = new();
+            List<ForeignKeyInfo> foreignKeys = new();
             foreach (string referencedTableName in referencedTableNames)
             {
-                AgnosticForeignKeyInfo foreignKeyInfo = new()
+                ForeignKeyInfo foreignKeyInfo = new()
                 {
                     ForeignTableName = referencedTableName,
                 };

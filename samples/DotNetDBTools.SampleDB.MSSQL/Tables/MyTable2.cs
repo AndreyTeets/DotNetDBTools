@@ -13,11 +13,17 @@ namespace DotNetDBTools.SampleDB.MSSQL.Tables
         {
             DataType = new IntDataType(),
             Nullable = false,
-            Unique = true,
             Default = 333,
         };
 
-        public Column MyColumn2 = new("8FB7F9E7-B460-478E-AA13-6017BCA47B25")
+        public Column MyColumn2 = new("D9E8009E-514A-4756-9493-12CBB9070CA0")
+        {
+            DataType = new ByteDataType() { Length = 22 },
+            Nullable = true,
+            Default = new byte[] { 0, 1, 2 },
+        };
+
+        public Column MyColumn3 = new("8FB7F9E7-B460-478E-AA13-6017BCA47B25")
         {
             DataType = new MyUserDefinedType1(),
             Nullable = true,

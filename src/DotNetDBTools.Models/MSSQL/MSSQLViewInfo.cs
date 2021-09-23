@@ -2,8 +2,7 @@
 
 namespace DotNetDBTools.Models.MSSQL
 {
-    public class MSSQLViewInfo : BaseDBObjectInfo, IViewInfo
+    public class MSSQLViewInfo : ViewInfo
     {
-        public string Code { get; set; }
     }
 }

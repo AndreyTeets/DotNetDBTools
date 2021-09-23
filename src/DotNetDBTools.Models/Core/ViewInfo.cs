@@ -1,6 +1,6 @@
 ﻿namespace DotNetDBTools.Models.Core
 {
-    public interface IViewInfo : IDBObjectInfo
+    public abstract class ViewInfo : DBObjectInfo
     {
         public string Code { get; set; }
     }

@@ -12,15 +12,14 @@ namespace DotNetDBTools.SampleDB.SQLite.Tables
         {
             DataType = new IntDataType(),
             Nullable = false,
-            Unique = true,
             Default = 333,
         };
 
         public Column MyColumn2 = new("28C62B20-40E5-463C-973D-A40F25353E63")
         {
-            DataType = new ByteDataType(),
+            DataType = new ByteDataType() { Length = 22 },
             Nullable = true,
-            Default = new byte[] { 0, 1 },
+            Default = new byte[] { 0, 1, 2 },
         };
 
         public PrimaryKey PK_MyTable2 = new("FFC24537-7C46-4978-B699-CE11A5224A4A")

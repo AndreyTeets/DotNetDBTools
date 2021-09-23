@@ -62,6 +62,8 @@ namespace DotNetDBTools.DefinitionParser.MSSQL
                     ID = table.ID,
                     Name = table.GetType().Name,
                     Columns = GetColumnInfos(table),
+                    PrimaryKey = GetPrimaryKeyInfo(table),
+                    UniqueConstraints = GetUniqueConstraintsInfos(table),
                     ForeignKeys = GetForeignKeyInfos(table),
                 };
                 tableInfos.Add(tableInfo);
@@ -133,24 +135,56 @@ namespace DotNetDBTools.DefinitionParser.MSSQL
                         Name = x.Name,
                         DataType = dataTypeInfo,
                         Nullable = column.Nullable,
-                        Unique = column.Unique,
                         Identity = column.Identity,
                         Default = MSSQLDefaultValueMapper.MapDefaultValue(column),
                     };
                 })
                 .ToList();
 
-        private static List<MSSQLForeignKeyInfo> GetForeignKeyInfos(ITable table)
+        private static PrimaryKeyInfo GetPrimaryKeyInfo(ITable table)
+            => table.GetType().GetPropertyOrFieldMembers()
+                .Where(x => typeof(PrimaryKey).IsAssignableFrom(x.GetPropertyOrFieldType()))
+                .OrderBy(x => x.Name, StringComparer.Ordinal)
+                .Select(x =>
+                {
+                    PrimaryKey primaryKey = (PrimaryKey)x.GetPropertyOrFieldValue(table);
+                    return new PrimaryKeyInfo()
+                    {
+                        ID = primaryKey.ID,
+                        Name = x.Name,
+                        Columns = primaryKey.Columns.ToList(),
+                    };
+                })
+                .SingleOrDefault();
+
+        private static List<UniqueConstraintInfo> GetUniqueConstraintsInfos(ITable table)
+            => table.GetType().GetPropertyOrFieldMembers()
+                .Where(x => typeof(UniqueConstraint).IsAssignableFrom(x.GetPropertyOrFieldType()))
+                .OrderBy(x => x.Name, StringComparer.Ordinal)
+                .Select(x =>
+                {
+                    UniqueConstraint uniqueConstraint = (UniqueConstraint)x.GetPropertyOrFieldValue(table);
+                    return new UniqueConstraintInfo()
+                    {
+                        ID = uniqueConstraint.ID,
+                        Name = x.Name,
+                        Columns = uniqueConstraint.Columns.ToList(),
+                    };
+                })
+                .ToList();
+
+        private static List<ForeignKeyInfo> GetForeignKeyInfos(ITable table)
             => table.GetType().GetPropertyOrFieldMembers()
                 .Where(x => typeof(ForeignKey).IsAssignableFrom(x.GetPropertyOrFieldType()))
                 .OrderBy(x => x.Name, StringComparer.Ordinal)
                 .Select(x =>
                 {
                     ForeignKey foreignKey = (ForeignKey)x.GetPropertyOrFieldValue(table);
-                    return new MSSQLForeignKeyInfo()
+                    return new ForeignKeyInfo()
                     {
                         ID = foreignKey.ID,
                         Name = x.Name,
+                        ThisTableName = table.GetType().Name,
                         ThisColumnNames = foreignKey.ThisColumns.ToList(),
                         ForeignTableName = foreignKey.ForeignTable,
                         ForeignColumnNames = foreignKey.ForeignColumns.ToList(),

@@ -40,7 +40,7 @@ namespace DotNetDBTools.DefinitionAnalyzer
             try
             {
                 Assembly dbAssembly = CompileInMemoryAnLoad(context.Compilation);
-                IDatabaseInfo<ITableInfo> databaseInfo = DbDefinitionParser.CreateDatabaseInfo(dbAssembly);
+                DatabaseInfo databaseInfo = DbDefinitionParser.CreateDatabaseInfo(dbAssembly);
                 if (!DbValidator.ForeignKeyReferencesAreValid(databaseInfo, out DbError dbError))
                 {
                     Location location = InvalidDbObjectsFinder.GetInvalidDbObjectLocation(context.Compilation, dbError);

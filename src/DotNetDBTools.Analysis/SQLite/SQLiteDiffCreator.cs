@@ -70,9 +70,8 @@ namespace DotNetDBTools.Analysis.SQLite
                 AddedColumns = addedColumns,
                 RemovedColumns = removedColumns,
                 ChangedColumns = changedColumns,
-                AddedForeignKeys = new List<SQLiteForeignKeyInfo>(),
-                RemovedForeignKeys = new List<SQLiteForeignKeyInfo>(),
-                ChangedForeignKeys = new List<SQLiteForeignKeyDiff>(),
+                AddedForeignKeys = new List<ForeignKeyInfo>(),
+                RemovedForeignKeys = new List<ForeignKeyInfo>(),
             };
         }
 

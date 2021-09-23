@@ -12,7 +12,6 @@ namespace DotNetDBTools.SampleDB.SQLite.Tables
         {
             DataType = new IntDataType(),
             Default = 15,
-            Unique = true,
         };
 
         public Column MyColumn2 = new("60FF7A1F-B4B8-476F-9DB2-56617858BE35")
@@ -24,6 +23,11 @@ namespace DotNetDBTools.SampleDB.SQLite.Tables
         public PrimaryKey PK_MyTable1 = new("F8BD93B0-26EE-4564-9185-1214290622D3")
         {
             Columns = new string[] { nameof(MyColumn1) },
+        };
+
+        public UniqueConstraint UQ_MyTable1_MyColumn2 = new("08845CE3-DE5C-4B23-9DD0-91118E772A4D")
+        {
+            Columns = new string[] { nameof(MyColumn2) },
         };
 
         public ForeignKey FK_MyTable1_MyColumn1_MyTable2_MyColumn1 = new("51C1CC5E-306B-447F-804E-0943DE7B730D")

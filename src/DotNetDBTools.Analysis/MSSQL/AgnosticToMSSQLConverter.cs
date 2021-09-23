@@ -19,7 +19,9 @@ namespace DotNetDBTools.Analysis.MSSQL
                 ID = tableInfo.ID,
                 Name = tableInfo.Name,
                 Columns = tableInfo.Columns,
-                ForeignKeys = tableInfo.ForeignKeys.Select(x => ConvertToMSSQLInfo((AgnosticForeignKeyInfo)x)).ToList(),
+                PrimaryKey = tableInfo.PrimaryKey,
+                UniqueConstraints = tableInfo.UniqueConstraints,
+                ForeignKeys = tableInfo.ForeignKeys,
             };
 
         private static MSSQLViewInfo ConvertToMSSQLInfo(AgnosticViewInfo viewInfo)
@@ -29,17 +31,5 @@ namespace DotNetDBTools.Analysis.MSSQL
                 Name = viewInfo.Name,
                 Code = viewInfo.Code,
             };
-
-        private static MSSQLForeignKeyInfo ConvertToMSSQLInfo(AgnosticForeignKeyInfo foreignKeyInfo)
-           => new()
-           {
-               ID = foreignKeyInfo.ID,
-               Name = foreignKeyInfo.Name,
-               ThisColumnNames = foreignKeyInfo.ThisColumnNames,
-               ForeignTableName = foreignKeyInfo.ForeignTableName,
-               ForeignColumnNames = foreignKeyInfo.ForeignColumnNames,
-               OnDelete = foreignKeyInfo.OnDelete,
-               OnUpdate = foreignKeyInfo.OnUpdate,
-           };
     }
 }

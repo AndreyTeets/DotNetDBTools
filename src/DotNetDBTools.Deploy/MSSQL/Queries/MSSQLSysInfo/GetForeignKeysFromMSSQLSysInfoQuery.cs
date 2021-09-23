@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DotNetDBTools.Deploy.Core;
+using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.MSSQL;
 
 namespace DotNetDBTools.Deploy.MSSQL.Queries.MSSQLSysInfo
@@ -60,13 +61,13 @@ INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE referencedKey
                     foreignColumnNames[foreignKeyRecord.ForeignKeyName].Add(
                         foreignKeyRecord.ForeignColumnPosition, foreignKeyRecord.ForeignColumnName);
 
-                    MSSQLForeignKeyInfo foreignKeyInfo = MapExceptColumnsToForeignKeyInfo(foreignKeyRecord);
-                    ((List<MSSQLForeignKeyInfo>)tables[foreignKeyRecord.TableName].ForeignKeys).Add(foreignKeyInfo);
+                    ForeignKeyInfo foreignKeyInfo = MapExceptColumnsToForeignKeyInfo(foreignKeyRecord);
+                    ((List<ForeignKeyInfo>)tables[foreignKeyRecord.TableName].ForeignKeys).Add(foreignKeyInfo);
                 }
 
                 foreach (MSSQLTableInfo table in tables.Values)
                 {
-                    foreach (MSSQLForeignKeyInfo foreignKeyInfo in table.ForeignKeys)
+                    foreach (ForeignKeyInfo foreignKeyInfo in table.ForeignKeys)
                     {
                         foreignKeyInfo.ThisColumnNames = thisColumnNames[foreignKeyInfo.Name].Select(x => x.Value).ToList();
                         foreignKeyInfo.ForeignColumnNames = foreignColumnNames[foreignKeyInfo.Name].Select(x => x.Value).ToList();
@@ -74,12 +75,13 @@ INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE referencedKey
                 }
             }
 
-            private static MSSQLForeignKeyInfo MapExceptColumnsToForeignKeyInfo(ForeignKeyRecord foreignKeyRecord)
+            private static ForeignKeyInfo MapExceptColumnsToForeignKeyInfo(ForeignKeyRecord foreignKeyRecord)
             {
-                return new MSSQLForeignKeyInfo()
+                return new ForeignKeyInfo()
                 {
                     ID = Guid.NewGuid(),
                     Name = foreignKeyRecord.ForeignKeyName,
+                    ThisTableName = foreignKeyRecord.TableName,
                     ForeignTableName = foreignKeyRecord.ForeignTableName,
                     OnUpdate = MapUpdateActionName(foreignKeyRecord.OnUpdate),
                     OnDelete = MapUpdateActionName(foreignKeyRecord.OnDelete),

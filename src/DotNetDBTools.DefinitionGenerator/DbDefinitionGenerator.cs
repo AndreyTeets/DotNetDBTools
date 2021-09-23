@@ -12,7 +12,7 @@ namespace DotNetDBTools.DefinitionGenerator
 {
     public static class DbDefinitionGenerator
     {
-        public static void GenerateDefinition(IDatabaseInfo<ITableInfo> databaseInfo, string outputDirectory)
+        public static void GenerateDefinition(DatabaseInfo databaseInfo, string outputDirectory)
         {
             IEnumerable<DefinitionSourceFile> definitionSourceFiles = GenerateDefinition(databaseInfo);
             foreach (DefinitionSourceFile file in definitionSourceFiles)
@@ -23,7 +23,7 @@ namespace DotNetDBTools.DefinitionGenerator
             }
         }
 
-        public static IEnumerable<DefinitionSourceFile> GenerateDefinition(IDatabaseInfo<ITableInfo> databaseInfo)
+        public static IEnumerable<DefinitionSourceFile> GenerateDefinition(DatabaseInfo databaseInfo)
         {
             IEnumerable<DefinitionSourceFile> definitionSourceFiles = databaseInfo.Kind switch
             {

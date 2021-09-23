@@ -56,13 +56,12 @@ $@"DECLARE @SqlText NVARCHAR(MAX) =
                         AND ccu.TABLE_NAME = c.TABLE_NAME
                 INNER JOIN INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc
                     ON tc.CONSTRAINT_NAME = ccu.CONSTRAINT_NAME
-                WHERE DOMAIN_NAME = '{userDefinedTypeDiff.OldUserDefinedType.Name}'
+                WHERE c.DOMAIN_NAME = '{userDefinedTypeDiff.OldUserDefinedType.Name}'
                     AND tc.CONSTRAINT_TYPE IN ('UNIQUE', 'PRIMARY KEY')
             ) cci
         ) t FOR XML PATH('')), 1, 2, '')
 );
-
-PRINT (@SqlText);";
+EXEC (@SqlText);";
 
             return query;
         }

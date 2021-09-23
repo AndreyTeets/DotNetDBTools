@@ -23,7 +23,7 @@ namespace DotNetDBTools.DescriptionSourceGenerator
             try
             {
                 Assembly dbAssembly = CompileInMemoryAnLoad(context.Compilation);
-                IDatabaseInfo<ITableInfo> databaseInfo = DbDefinitionParser.CreateDatabaseInfo(dbAssembly);
+                DatabaseInfo databaseInfo = DbDefinitionParser.CreateDatabaseInfo(dbAssembly);
                 string dbDescriptionCode = DbDescriptionGenerator.GenerateDescription(databaseInfo);
                 context.AddSource($"{databaseInfo.Name}Description", dbDescriptionCode);
             }

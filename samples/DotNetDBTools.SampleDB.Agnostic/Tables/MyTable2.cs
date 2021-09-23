@@ -12,7 +12,6 @@ namespace DotNetDBTools.SampleDB.Agnostic.Tables
         {
             DataType = new IntDataType(),
             Nullable = false,
-            Unique = true,
             Default = 333,
         };
 
@@ -20,7 +19,7 @@ namespace DotNetDBTools.SampleDB.Agnostic.Tables
         {
             DataType = new ByteDataType() { Length = 22 },
             Nullable = true,
-            Default = new byte[] { 0 },
+            Default = new byte[] { 0, 1, 2 },
         };
 
         public PrimaryKey PK_MyTable2 = new("3A43615B-40B3-4A13-99E7-93AF7C56E8CE")

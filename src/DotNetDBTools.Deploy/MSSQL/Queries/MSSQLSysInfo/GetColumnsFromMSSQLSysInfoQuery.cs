@@ -16,16 +16,6 @@ $@"SELECT
     c.DOMAIN_NAME AS {nameof(ColumnRecord.UserDefinedDataType)},
     CASE WHEN c.IS_NULLABLE='YES' THEN 1 ELSE 0 END AS {nameof(ColumnRecord.Nullable)},
     COLUMNPROPERTY(object_id(c.TABLE_NAME), c.COLUMN_NAME, 'IsIdentity') AS [{nameof(ColumnRecord.Identity)}],
-    (
-        SELECT
-            TOP 1 1
-        FROM INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE ccu
-        INNER JOIN INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc
-            ON tc.CONSTRAINT_NAME = ccu.CONSTRAINT_NAME
-        WHERE ccu.TABLE_NAME = c.TABLE_NAME
-            AND ccu.COLUMN_NAME = c.COLUMN_NAME
-            AND tc.CONSTRAINT_TYPE IN ('PRIMARY KEY', 'UNIQUE')
-    ) AS [{nameof(ColumnRecord.Unique)}],
     c.COLUMN_DEFAULT AS [{nameof(ColumnRecord.Default)}],
     c.CHARACTER_OCTET_LENGTH AS {nameof(ColumnRecord.Length)}
 FROM INFORMATION_SCHEMA.TABLES t
@@ -42,7 +32,6 @@ WHERE t.TABLE_TYPE='BASE TABLE';";
             public string DataType { get; set; }
             public string UserDefinedDataType { get; set; }
             public bool Nullable { get; set; }
-            public bool Unique { get; set; }
             public bool Identity { get; set; }
             public string Default { get; set; }
             public string Length { get; set; }
@@ -62,7 +51,8 @@ WHERE t.TABLE_TYPE='BASE TABLE';";
                             ID = Guid.NewGuid(),
                             Name = columnRecord.TableName,
                             Columns = new List<ColumnInfo>(),
-                            ForeignKeys = new List<MSSQLForeignKeyInfo>(),
+                            UniqueConstraints = new List<UniqueConstraintInfo>(),
+                            ForeignKeys = new List<ForeignKeyInfo>(),
                         };
                         tables.Add(columnRecord.TableName, table);
                     }
@@ -87,7 +77,6 @@ WHERE t.TABLE_TYPE='BASE TABLE';";
                     Name = columnRecord.ColumnName,
                     DataType = dataTypeInfo,
                     Nullable = columnRecord.Nullable,
-                    Unique = columnRecord.Unique,
                     Identity = columnRecord.Identity,
                     Default = ParseDefault(columnRecord.Default),
                 };

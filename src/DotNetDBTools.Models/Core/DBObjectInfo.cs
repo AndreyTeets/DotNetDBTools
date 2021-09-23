@@ -2,7 +2,7 @@
 
 namespace DotNetDBTools.Models.Core
 {
-    public interface IDBObjectInfo
+    public abstract class DBObjectInfo
     {
         public Guid ID { get; set; }
         public string Name { get; set; }

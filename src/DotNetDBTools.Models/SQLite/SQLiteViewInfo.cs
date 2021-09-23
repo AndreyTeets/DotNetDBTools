@@ -2,8 +2,7 @@
 
 namespace DotNetDBTools.Models.SQLite
 {
-    public class SQLiteViewInfo : BaseDBObjectInfo, IViewInfo
+    public class SQLiteViewInfo : ViewInfo
     {
-        public string Code { get; set; }
     }
 }

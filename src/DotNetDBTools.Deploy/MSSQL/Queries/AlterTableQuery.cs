@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Text;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.MSSQL;
+using static DotNetDBTools.Deploy.MSSQL.MSSQLSqlTypeMapper;
+using static DotNetDBTools.Deploy.MSSQL.MSSQLQueriesHelper;
 
 namespace DotNetDBTools.Deploy.MSSQL.Queries
 {
@@ -25,14 +25,23 @@ namespace DotNetDBTools.Deploy.MSSQL.Queries
         private static string GetSql(MSSQLTableDiff tableDiff)
         {
             StringBuilder sb = new();
-            sb.Append(
-$@"EXEC sp_rename '{tableDiff.OldTable.Name}', '{tableDiff.NewTable.Name}';");
+
+            sb.Append(Queries.RenameTable(tableDiff.OldTable.Name, tableDiff.NewTable.Name));
+            sb.AppendLine();
+
+            foreach (UniqueConstraintInfo uc in tableDiff.RemovedUniqueConstraints)
+                sb.Append(Queries.DropUniqueConstraint(tableDiff.NewTable.Name, uc.Name));
+            if (tableDiff.RemovedPrimaryKey is not null)
+                sb.Append(Queries.DropPrimaryKey(tableDiff.NewTable.Name, tableDiff.RemovedPrimaryKey.Name));
             sb.AppendLine();
 
             AppendColumnsAlters(sb, tableDiff);
             sb.AppendLine();
 
-            AppendForeignKeysAlters(sb, tableDiff);
+            if (tableDiff.AddedPrimaryKey is not null)
+                sb.Append(Queries.AddPrimaryKey(tableDiff.NewTable.Name, tableDiff.AddedPrimaryKey));
+            foreach (UniqueConstraintInfo uc in tableDiff.AddedUniqueConstraints)
+                sb.Append(Queries.AddUniqueConstraint(tableDiff.NewTable.Name, uc));
             sb.AppendLine();
 
             return sb.ToString();
@@ -41,74 +50,86 @@ $@"EXEC sp_rename '{tableDiff.OldTable.Name}', '{tableDiff.NewTable.Name}';");
         private static void AppendColumnsAlters(StringBuilder sb, MSSQLTableDiff tableDiff)
         {
             foreach (ColumnInfo column in tableDiff.RemovedColumns)
-            {
-                sb.Append(
-$@"
-ALTER TABLE {tableDiff.NewTable.Name} DROP COLUMN {column.Name};");
-            }
+                sb.Append(Queries.DropColumn(tableDiff.NewTable.Name, column.Name));
 
             foreach (ColumnDiff columnDiff in tableDiff.ChangedColumns)
             {
-                sb.Append(
-$@"
-EXEC sp_rename '{tableDiff.NewTable.Name}.{columnDiff.OldColumn.Name}', '{columnDiff.NewColumn.Name}', 'COLUMN';
-ALTER TABLE {tableDiff.NewTable.Name} ALTER COLUMN {columnDiff.NewColumn.Name} {MSSQLSqlTypeMapper.GetSqlType(columnDiff.NewColumn.DataType)} {GetNullability(columnDiff.NewColumn)};");
+                if (columnDiff.OldColumn.Default is not null)
+                    sb.Append(Queries.DropDefaultConstraint(tableDiff.NewTable.Name, columnDiff.OldColumn.Name));
 
-                if (columnDiff.NewColumn.Unique && !columnDiff.OldColumn.Unique)
-                {
-                    sb.Append(
-$@"
-ALTER TABLE {tableDiff.NewTable.Name} ADD CONSTRAINT UQ_{tableDiff.NewTable.Name}_{columnDiff.NewColumn.Name} UNIQUE ({columnDiff.NewColumn.Name});");
-                }
+                sb.Append(Queries.RenameColumn(tableDiff.NewTable.Name, columnDiff.OldColumn.Name, columnDiff.NewColumn.Name));
+                sb.Append(Queries.AlterColumnTypeAndNullability(tableDiff.NewTable.Name, columnDiff.NewColumn));
+
+                if (columnDiff.NewColumn.Default is not null)
+                    sb.Append(Queries.AddDefaultConstraint(tableDiff.NewTable.Name, columnDiff.NewColumn));
             }
 
             foreach (ColumnInfo column in tableDiff.AddedColumns)
-            {
-                sb.Append(
-$@"
-ALTER TABLE {tableDiff.NewTable.Name} ADD {column.Name} {MSSQLSqlTypeMapper.GetSqlType(column.DataType)} {GetNullability(column)};");
-
-                if (column.Unique)
-                {
-                    sb.Append(
-$@"
-ALTER TABLE {tableDiff.NewTable.Name} ADD CONSTRAINT UQ_{tableDiff.NewTable.Name}_{column.Name} UNIQUE ({column.Name});");
-                }
-            }
+                sb.Append(Queries.AddColumn(tableDiff.NewTable.Name, column));
         }
 
-        private static void AppendForeignKeysAlters(StringBuilder sb, MSSQLTableDiff tableDiff)
+        private static class Queries
         {
-            foreach (MSSQLForeignKeyInfo fk in tableDiff.RemovedForeignKeys.Concat(tableDiff.ChangedForeignKeys.Select(x => x.OldForeignKey)))
-            {
-                sb.Append(
+            public static string RenameTable(string oldTableName, string newTableName) =>
+$@"EXEC sp_rename '{oldTableName}', '{newTableName}';"
+                ;
+            public static string RenameColumn(string tableName, string oldColumnName, string newColumnName) =>
 $@"
-ALTER TABLE {tableDiff.NewTable.Name} DROP CONSTRAINT {fk.Name};");
-            }
+EXEC sp_rename '{tableName}.{oldColumnName}', '{newColumnName}', 'COLUMN';"
+                ;
 
-            foreach (MSSQLForeignKeyInfo fk in tableDiff.AddedForeignKeys.Concat(tableDiff.ChangedForeignKeys.Select(x => x.NewForeignKey)))
-            {
-                sb.Append(
+            public static string AddColumn(string tableName, ColumnInfo column) =>
 $@"
-ALTER TABLE {tableDiff.NewTable.Name} ADD CONSTRAINT {fk.Name} FOREIGN KEY ({string.Join(",", fk.ThisColumnNames)}
-    REFERENCES {fk.ForeignTableName}({string.Join(",", fk.ForeignColumnNames)})
-    ON UPDATE {MapActionName(fk.OnUpdate)} ON DELETE {MapActionName(fk.OnDelete)};");
-            }
+ALTER TABLE {tableName} ADD {column.Name} {GetSqlType(column.DataType)} {GetNullabilityStatement(column)};"
+                ;
+            public static string DropColumn(string tableName, string columnName) =>
+$@"
+ALTER TABLE {tableName} DROP COLUMN {columnName};"
+                ;
+            public static string AlterColumnTypeAndNullability(string tableName, ColumnInfo column) =>
+$@"
+ALTER TABLE {tableName} ALTER COLUMN {column.Name} {GetSqlType(column.DataType)} {GetNullabilityStatement(column)};"
+                ;
+
+            public static string AddPrimaryKey(string tableName, PrimaryKeyInfo pk) =>
+$@"
+ALTER TABLE {tableName} ADD CONSTRAINT {pk.Name} PRIMARY KEY ({string.Join(", ", pk.Columns)});"
+                ;
+            public static string DropPrimaryKey(string tableName, string pkName) =>
+$@"
+ALTER TABLE {tableName} DROP CONSTRAINT {pkName};"
+                ;
+
+            public static string AddUniqueConstraint(string tableName, UniqueConstraintInfo uc) =>
+$@"
+ALTER TABLE {tableName} ADD CONSTRAINT {uc.Name} UNIQUE ({string.Join(", ", uc.Columns)});"
+                ;
+            public static string DropUniqueConstraint(string tableName, string ucName) =>
+$@"
+ALTER TABLE {tableName} DROP CONSTRAINT {ucName};"
+                ;
+
+            public static string AddDefaultConstraint(string tableName, ColumnInfo column) =>
+$@"
+ALTER TABLE {tableName} ADD CONSTRAINT DF_{tableName}_{column.Name} DEFAULT {QuoteDefaultValue(column.Default)} FOR {column.Name};"
+                ;
+            public static string DropDefaultConstraint(string tableName, string columnName) =>
+$@"
+DECLARE @DropDefaultConstraint_{tableName}_{columnName}_SqlText NVARCHAR(MAX) =
+(
+    SELECT
+        'ALTER TABLE [{tableName}] DROP CONSTRAINT [' + dc.name + '];'
+    FROM sys.tables t
+    INNER JOIN sys.columns c
+        ON c.object_id = t.object_id
+    INNER JOIN sys.default_constraints dc
+        ON dc.object_id = c.default_object_id
+    WHERE t.name = '{tableName}'
+        AND c.name = '{columnName}'
+);
+EXEC (@DropDefaultConstraint_{tableName}_{columnName}_SqlText);
+--ALTER TABLE [{tableName}] DROP CONSTRAINT [DF_{tableName}_{columnName}];" // TODO DefaultConstraintName in columns
+                ;
         }
-
-        private static string GetNullability(ColumnInfo column) =>
-            column.Nullable switch
-            {
-                true => "NULL",
-                false => "NOT NULL",
-            };
-
-        private static string MapActionName(string modelActionName) =>
-            modelActionName switch
-            {
-                "NoAction" => "NO ACTION",
-                "Cascade" => "CASCADE",
-                _ => throw new InvalidOperationException($"Invalid modelActionName: '{modelActionName}'")
-            };
     }
 }

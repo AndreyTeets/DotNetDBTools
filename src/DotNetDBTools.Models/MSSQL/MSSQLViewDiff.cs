@@ -1,8 +1,8 @@
-﻿namespace DotNetDBTools.Models.MSSQL
+﻿using DotNetDBTools.Models.Core;
+
+namespace DotNetDBTools.Models.MSSQL
 {
-    public class MSSQLViewDiff
+    public class MSSQLViewDiff : ViewDiff
     {
-        public MSSQLViewInfo NewView { get; set; }
-        public MSSQLViewInfo OldView { get; set; }
     }
 }

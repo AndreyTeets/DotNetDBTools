@@ -12,7 +12,7 @@ namespace DotNetDBTools.Description
 {
     public static class DbDescriptionGenerator
     {
-        public static void GenerateDescription(IDatabaseInfo<ITableInfo> databaseInfo, string outputPath)
+        public static void GenerateDescription(DatabaseInfo databaseInfo, string outputPath)
         {
             string generatedDescription = GenerateDescription(databaseInfo);
             string fullPath = Path.GetFullPath(outputPath);
@@ -20,7 +20,7 @@ namespace DotNetDBTools.Description
             File.WriteAllText(fullPath, generatedDescription);
         }
 
-        public static string GenerateDescription(IDatabaseInfo<ITableInfo> databaseInfo)
+        public static string GenerateDescription(DatabaseInfo databaseInfo)
         {
             return databaseInfo.Kind switch
             {

@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.MSSQL.Queries;
 using DotNetDBTools.Deploy.MSSQL.Queries.DNDBTSysInfo;
 using DotNetDBTools.Deploy.MSSQL.Queries.MSSQLSysInfo;
+using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.MSSQL;
 
 namespace DotNetDBTools.Deploy.MSSQL
@@ -53,6 +55,14 @@ namespace DotNetDBTools.Deploy.MSSQL
             Dictionary<string, MSSQLTableInfo> tables = GetColumnsFromMSSQLSysInfoQuery.ResultsInterpreter.BuildTablesListWithColumns(
                 _queryExecutor.Query<GetColumnsFromMSSQLSysInfoQuery.ColumnRecord>(new GetColumnsFromMSSQLSysInfoQuery()));
 
+            GetPrimaryKeysFromMSSQLSysInfoQuery.ResultsInterpreter.BuildTablesPrimaryKeys(
+                tables,
+                _queryExecutor.Query<GetPrimaryKeysFromMSSQLSysInfoQuery.PrimaryKeyRecord>(new GetPrimaryKeysFromMSSQLSysInfoQuery()));
+
+            GetUniqueConstraintsFromMSSQLSysInfoQuery.ResultsInterpreter.BuildTablesUniqueConstraints(
+                tables,
+                _queryExecutor.Query<GetUniqueConstraintsFromMSSQLSysInfoQuery.UniqueConstraintRecord>(new GetUniqueConstraintsFromMSSQLSysInfoQuery()));
+
             GetForeignKeysFromMSSQLSysInfoQuery.ResultsInterpreter.BuildTablesForeignKeys(
                 tables,
                 _queryExecutor.Query<GetForeignKeysFromMSSQLSysInfoQuery.ForeignKeyRecord>(new GetForeignKeysFromMSSQLSysInfoQuery()));
@@ -80,6 +90,8 @@ namespace DotNetDBTools.Deploy.MSSQL
                 DropFunction(function);
             foreach (MSSQLViewInfo view in dbDiff.RemovedViews.Concat(dbDiff.ChangedViews.Select(x => x.OldView)))
                 DropView(view);
+            foreach (ForeignKeyInfo fk in dbDiff.AllForeignKeysToDrop)
+                DropForeignKey(fk);
             foreach (MSSQLTableInfo table in dbDiff.RemovedTables)
                 DropTable(table);
 
@@ -96,6 +108,8 @@ namespace DotNetDBTools.Deploy.MSSQL
 
             foreach (MSSQLTableInfo table in dbDiff.AddedTables)
                 CreateTable(table);
+            foreach (ForeignKeyInfo fk in dbDiff.AllForeignKeysToAdd)
+                CreateForeignKey(fk);
             foreach (MSSQLViewInfo view in dbDiff.AddedViews.Concat(dbDiff.ChangedViews.Select(x => x.NewView)))
                 CreateView(view);
             foreach (MSSQLFunctionInfo function in dbDiff.AddedFunctions.Concat(dbDiff.ChangedFunctions.Select(x => x.NewFunction)))
@@ -158,7 +172,7 @@ namespace DotNetDBTools.Deploy.MSSQL
 
         private void AlterTable(MSSQLTableDiff tableDiff)
         {
-            string newTableMetadata = MSSQLDbObjectsSerializer.TableToJson(tableDiff.NewTable);
+            string newTableMetadata = MSSQLDbObjectsSerializer.TableToJson((MSSQLTableInfo)tableDiff.NewTable);
             _queryExecutor.Execute(new AlterTableQuery(tableDiff));
             _queryExecutor.Execute(new UpdateDNDBTSysInfoQuery(tableDiff.NewTable.ID, tableDiff.NewTable.Name, newTableMetadata));
         }
@@ -166,6 +180,16 @@ namespace DotNetDBTools.Deploy.MSSQL
         private void CreateView(MSSQLViewInfo view)
         {
             _queryExecutor.Execute(new GenericQuery($"create view {view.Name} {view.Code};"));
+        }
+
+        private void CreateForeignKey(ForeignKeyInfo fk)
+        {
+            _queryExecutor.Execute(new CreateForeignKeyQuery(fk));
+        }
+
+        private void DropForeignKey(ForeignKeyInfo fk)
+        {
+            _queryExecutor.Execute(new DropForeignKeyQuery(fk));
         }
 
         private void DropView(MSSQLViewInfo view)
@@ -193,13 +217,13 @@ namespace DotNetDBTools.Deploy.MSSQL
         private void DropUserDefinedType(MSSQLUserDefinedTypeInfo userDefinedType)
         {
             _queryExecutor.Execute(new DropTypeQuery(userDefinedType));
-            _queryExecutor.Execute(new DeleteDNDBTSysInfoQuery(userDefinedType.ID));
         }
 
         private void RenameUserDefinedTypeToTempInDbAndInDbDiff(MSSQLUserDefinedTypeInfo userDefinedType)
         {
             _queryExecutor.Execute(new RenameUserDefinedDataTypeQuery(userDefinedType));
             userDefinedType.Name = $"_DNDBTTemp_{userDefinedType.Name}";
+            _queryExecutor.Execute(new DeleteDNDBTSysInfoQuery(userDefinedType.ID));
         }
 
         private void UseNewUDTInAllTables(MSSQLUserDefinedTypeDiff userDefinedTypeDiff)

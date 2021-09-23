@@ -2,8 +2,7 @@
 
 namespace DotNetDBTools.Models.Agnostic
 {
-    public class AgnosticViewInfo : BaseDBObjectInfo, IViewInfo
+    public class AgnosticViewInfo : ViewInfo
     {
-        public string Code { get; set; }
     }
 }
