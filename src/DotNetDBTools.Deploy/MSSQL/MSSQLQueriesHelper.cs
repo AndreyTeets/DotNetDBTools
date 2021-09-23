@@ -32,6 +32,8 @@ namespace DotNetDBTools.Deploy.MSSQL
             {
                 "NoAction" => "NO ACTION",
                 "Cascade" => "CASCADE",
+                "SetDefault" => "SET DEFAULT",
+                "SetNull" => "SET NULL",
                 _ => throw new InvalidOperationException($"Invalid modelActionName: '{modelActionName}'")
             };
     }

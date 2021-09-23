@@ -16,19 +16,25 @@ namespace DotNetDBTools.SampleDeployTool.MSSQL
         private static readonly string s_samplesOutputDir = $"{RepoRoot}/SamplesOutput";
 
         private static readonly string s_agnosticDbAssemblyPath = $"{s_samplesOutputDir}/DotNetDBTools.SampleDB.Agnostic.dll";
+        private static readonly string s_agnosticDbV2AssemblyPath = $"{s_samplesOutputDir}/DotNetDBTools.SampleDBv2.Agnostic.dll";
         private static readonly string s_agnosticConnectionString = $"Data Source=localhost,{MsSqlServerHostPort};Initial Catalog={AgnosticDatabaseName};Integrated Security=False;User ID=SA;Password={MsSqlServerPassword}";
 
         private static readonly string s_mssqlDbAssemblyPath = $"{s_samplesOutputDir}/DotNetDBTools.SampleDB.MSSQL.dll";
+        private static readonly string s_mssqlDbV2AssemblyPath = $"{s_samplesOutputDir}/DotNetDBTools.SampleDBv2.MSSQL.dll";
         private static readonly string s_mssqlConnectionString = $"Data Source=localhost,{MsSqlServerHostPort};Initial Catalog={MSSQLDatabaseName};Integrated Security=False;User ID=SA;Password={MsSqlServerPassword}";
 
         private static readonly string s_agnosticGeneratedPublishToEmptyScriptPath = $"{s_samplesOutputDir}/mssql_generated/AgnosticGeneratedPublishToEmptyScript.sql";
         private static readonly string s_agnosticGeneratedPublishToExistingScriptPath = $"{s_samplesOutputDir}/mssql_generated/AgnosticGeneratedPublishToExistingScript.sql";
+        private static readonly string s_agnosticGeneratedPublishFromV1ToV2ScriptPath = $"{s_samplesOutputDir}/mssql_generated/AgnosticGeneratedPublishFromV1ToV2Script.sql";
+        private static readonly string s_agnosticGeneratedPublishFromV2ToV1ScriptPath = $"{s_samplesOutputDir}/mssql_generated/AgnosticGeneratedPublishFromV2ToV1Script.sql";
         private static readonly string s_agnosticGeneratedDefinitionFromUnregisteredDir = $"{s_samplesOutputDir}/mssql_generated/AgnosticGeneratedDefinitionFromUnregistered";
         private static readonly string s_agnosticGeneratedDefinitionFromRegisteredDir = $"{s_samplesOutputDir}/mssql_generated/AgnosticGeneratedDefinitionFromRegistered";
         private static readonly string s_agnosticGeneratedPublishRecreateScriptPath = $"{s_samplesOutputDir}/mssql_generated/AgnosticGeneratedPublishRecreateScript.sql";
 
         private static readonly string s_mssqlGeneratedPublishToEmptyScriptPath = $"{s_samplesOutputDir}/mssql_generated/MSSQLGeneratedPublishToEmptyScript.sql";
         private static readonly string s_mssqlGeneratedPublishToExistingScriptPath = $"{s_samplesOutputDir}/mssql_generated/MSSQLGeneratedPublishToExistingScript.sql";
+        private static readonly string s_mssqlGeneratedPublishFromV1ToV2ScriptPath = $"{s_samplesOutputDir}/mssql_generated/MSSQLGeneratedPublishFromV1ToV2Script.sql";
+        private static readonly string s_mssqlGeneratedPublishFromV2ToV1ScriptPath = $"{s_samplesOutputDir}/mssql_generated/MSSQLGeneratedPublishFromV2ToV1Script.sql";
         private static readonly string s_mssqlGeneratedDefinitionFromUnregisteredDir = $"{s_samplesOutputDir}/mssql_generated/MSSQLGeneratedDefinitionFromUnregistered";
         private static readonly string s_mssqlGeneratedDefinitionFromRegisteredDir = $"{s_samplesOutputDir}/mssql_generated/MSSQLGeneratedDefinitionFromRegistered";
         private static readonly string s_mssqlGeneratedPublishRecreateScriptPath = $"{s_samplesOutputDir}/mssql_generated/MSSQLGeneratedPublishRecreateScript.sql";
@@ -43,6 +49,7 @@ namespace DotNetDBTools.SampleDeployTool.MSSQL
         {
             DropDatabaseIfExists(s_agnosticConnectionString);
             IDeployManager deployManager = new MSSQLDeployManager(true, false);
+            IDeployManager dmDataLoss = new MSSQLDeployManager(false, true);
 
             Console.WriteLine("Generating script to create new AgnosticSampleDB from dbAssembly file...");
             deployManager.GeneratePublishScript(s_agnosticDbAssemblyPath, s_agnosticConnectionString, s_agnosticGeneratedPublishToEmptyScriptPath);
@@ -54,6 +61,16 @@ namespace DotNetDBTools.SampleDeployTool.MSSQL
             Console.WriteLine("Updating(no changes) existing AgnosticSampleDB from dbAssembly file...");
             deployManager.PublishDatabase(s_agnosticDbAssemblyPath, s_agnosticConnectionString);
 
+            Console.WriteLine("Generating script to update(from v1 to v2) existing AgnosticSampleDB from dbAssembly v2 file...");
+            deployManager.GeneratePublishScript(s_agnosticDbV2AssemblyPath, s_agnosticConnectionString, s_agnosticGeneratedPublishFromV1ToV2ScriptPath);
+            Console.WriteLine("Updating(from v1 to v2) existing AgnosticSampleDB from dbAssembly v2 file...");
+            deployManager.PublishDatabase(s_agnosticDbV2AssemblyPath, s_agnosticConnectionString);
+
+            Console.WriteLine("Generating script to update(rollback from v2 to v1) existing AgnosticSampleDB from dbAssembly file...");
+            dmDataLoss.GeneratePublishScript(s_agnosticDbAssemblyPath, s_agnosticConnectionString, s_agnosticGeneratedPublishFromV2ToV1ScriptPath);
+            Console.WriteLine("Updating(rollback from v2 to v1) existing AgnosticSampleDB from dbAssembly file...");
+            dmDataLoss.PublishDatabase(s_agnosticDbAssemblyPath, s_agnosticConnectionString);
+
             Console.WriteLine("Unregistering(=deleting DNDBT system information from DB) AgnosticSampleDB...");
             deployManager.UnregisterAsDNDBT(s_agnosticConnectionString);
             Console.WriteLine("Generating definition from existing unregistered AgnosticSampleDB...");
@@ -64,8 +81,7 @@ namespace DotNetDBTools.SampleDeployTool.MSSQL
             Console.WriteLine("Generating definition from existing registered AgnosticSampleDB...");
             deployManager.GenerateDefinition(s_agnosticConnectionString, s_agnosticGeneratedDefinitionFromRegisteredDir);
 
-            IDeployManager dmDataLoss = new MSSQLDeployManager(false, true);
-            Console.WriteLine("Newly created DNDBT system information (by registration) has different IDs for all objects");
+            Console.WriteLine("Newly created DNDBT system information(by registration) has different IDs for all objects");
             Console.WriteLine("Generating script to update(recreate all objects) existing AgnosticSampleDB from dbAssembly file...");
             dmDataLoss.GeneratePublishScript(s_agnosticDbAssemblyPath, s_agnosticConnectionString, s_agnosticGeneratedPublishRecreateScriptPath);
             Console.WriteLine("Updating(recreate all objects) existing AgnosticSampleDB from dbAssembly file...");
@@ -76,6 +92,7 @@ namespace DotNetDBTools.SampleDeployTool.MSSQL
         {
             DropDatabaseIfExists(s_mssqlConnectionString);
             IDeployManager deployManager = new MSSQLDeployManager(true, false);
+            IDeployManager dmDataLoss = new MSSQLDeployManager(false, true);
 
             Console.WriteLine("Generating script to create new MSSQLSampleDB from dbAssembly file...");
             deployManager.GeneratePublishScript(s_mssqlDbAssemblyPath, s_mssqlConnectionString, s_mssqlGeneratedPublishToEmptyScriptPath);
@@ -87,6 +104,16 @@ namespace DotNetDBTools.SampleDeployTool.MSSQL
             Console.WriteLine("Updating(no changes) existing MSSQLSampleDB from dbAssembly file...");
             deployManager.PublishDatabase(s_mssqlDbAssemblyPath, s_mssqlConnectionString);
 
+            Console.WriteLine("Generating script to update(from v1 to v2) existing MSSQLSampleDB from dbAssembly v2 file...");
+            deployManager.GeneratePublishScript(s_mssqlDbV2AssemblyPath, s_mssqlConnectionString, s_mssqlGeneratedPublishFromV1ToV2ScriptPath);
+            Console.WriteLine("Updating(from v1 to v2) existing MSSQLSampleDB from dbAssembly v2 file...");
+            deployManager.PublishDatabase(s_mssqlDbV2AssemblyPath, s_mssqlConnectionString);
+
+            Console.WriteLine("Generating script to update(rollback from v2 to v1) existing MSSQLSampleDB from dbAssembly file...");
+            dmDataLoss.GeneratePublishScript(s_mssqlDbAssemblyPath, s_mssqlConnectionString, s_mssqlGeneratedPublishFromV2ToV1ScriptPath);
+            Console.WriteLine("Updating(rollback from v2 to v1) existing MSSQLSampleDB from dbAssembly file...");
+            dmDataLoss.PublishDatabase(s_mssqlDbAssemblyPath, s_mssqlConnectionString);
+
             Console.WriteLine("Unregistering(=deleting DNDBT system information from DB) MSSQLSampleDB...");
             deployManager.UnregisterAsDNDBT(s_mssqlConnectionString);
             Console.WriteLine("Generating definition from existing unregistered MSSQLSampleDB...");
@@ -97,8 +124,7 @@ namespace DotNetDBTools.SampleDeployTool.MSSQL
             Console.WriteLine("Generating definition from existing registered MSSQLSampleDB...");
             deployManager.GenerateDefinition(s_mssqlConnectionString, s_mssqlGeneratedDefinitionFromRegisteredDir);
 
-            IDeployManager dmDataLoss = new MSSQLDeployManager(false, true);
-            Console.WriteLine("Newly created DNDBT system information (by registration) has different IDs for all objects");
+            Console.WriteLine("Newly created DNDBT system information(by registration) has different IDs for all objects");
             Console.WriteLine("Generating script to update(recreate all objects) existing AgnosticSampleDB from dbAssembly file...");
             dmDataLoss.GeneratePublishScript(s_mssqlDbAssemblyPath, s_mssqlConnectionString, s_mssqlGeneratedPublishRecreateScriptPath);
             Console.WriteLine("Updating(recreate all objects) existing AgnosticSampleDB from dbAssembly file...");

@@ -6,8 +6,10 @@ using DotNetDBTools.Models.MSSQL;
 
 namespace DotNetDBTools.Analysis.MSSQL
 {
-    public static class MSSQLDiffCreator
+    public static partial class MSSQLDiffCreator
     {
+        private static readonly DbObjectsEqualityComparer s_dbObjectsEqualityComparer = new();
+
         public static MSSQLDatabaseDiff CreateDatabaseDiff(MSSQLDatabaseInfo newDatabase, MSSQLDatabaseInfo oldDatabase)
         {
             List<MSSQLTableInfo> addedTables = newDatabase.Tables
@@ -24,7 +26,8 @@ namespace DotNetDBTools.Analysis.MSSQL
             foreach (MSSQLTableInfo newDbTable in newDatabase.Tables.PutReferencedFirst())
             {
                 MSSQLTableInfo oldDbTable = (MSSQLTableInfo)oldDatabase.Tables.FirstOrDefault(x => x.ID == newDbTable.ID);
-                if (oldDbTable is not null)
+                if (oldDbTable is not null &&
+                    !s_dbObjectsEqualityComparer.Equals(newDbTable, oldDbTable))
                 {
                     MSSQLTableDiff tableDiff = CreateTableDiff(newDbTable, oldDbTable);
                     changedTables.Add(tableDiff);
@@ -41,7 +44,8 @@ namespace DotNetDBTools.Analysis.MSSQL
             foreach (MSSQLUserDefinedTypeInfo newType in newDatabase.UserDefinedTypes)
             {
                 MSSQLUserDefinedTypeInfo oldType = oldDatabase.UserDefinedTypes.FirstOrDefault(x => x.ID == newType.ID);
-                if (oldType is not null)
+                if (oldType is not null &&
+                    !s_dbObjectsEqualityComparer.Equals(newType, oldType))
                 {
                     MSSQLUserDefinedTypeDiff udtDiff = new()
                     {
@@ -86,9 +90,10 @@ namespace DotNetDBTools.Analysis.MSSQL
             foreach (ColumnInfo newDbTableColumn in newDbTable.Columns)
             {
                 ColumnInfo oldDbTableColumn = oldDbTable.Columns.SingleOrDefault(x => x.ID == newDbTableColumn.ID);
-                if (oldDbTableColumn is not null)
+                if (oldDbTableColumn is not null &&
+                    !s_dbObjectsEqualityComparer.Equals(newDbTableColumn, oldDbTableColumn))
                 {
-                    ColumnDiff columnDiff = new ColumnDiff
+                    ColumnDiff columnDiff = new()
                     {
                         NewColumn = newDbTableColumn,
                         OldColumn = oldDbTableColumn,

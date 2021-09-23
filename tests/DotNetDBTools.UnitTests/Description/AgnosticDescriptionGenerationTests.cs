@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Linq;
 using System.Reflection;
 using DotNetDBTools.DefinitionParser.Agnostic;
 using DotNetDBTools.Description.Agnostic;
@@ -14,7 +16,8 @@ namespace DotNetDBTools.UnitTests.Description
         [Fact]
         public void Generate_Description_For_AgnosticSampleDB_CreatesCorrectDescription()
         {
-            Assembly dbAssembly = Assembly.GetAssembly(typeof(SampleDB.Agnostic.Tables.MyTable1));
+            Assembly dbAssembly = AppDomain.CurrentDomain.GetAssemblies()
+                .Single(x => x.GetName().Name == "DotNetDBTools.SampleDB.Agnostic");
             AgnosticDatabaseInfo databaseInfo = AgnosticDefinitionParser.CreateDatabaseInfo(dbAssembly);
             string actualDescriptionCode = AgnosticDescriptionSourceGenerator.GenerateDescription(databaseInfo);
             string expectedDescriptionCode = File.ReadAllText(@"TestData\Expected_Description_For_AgnosticSampleDB.cs");

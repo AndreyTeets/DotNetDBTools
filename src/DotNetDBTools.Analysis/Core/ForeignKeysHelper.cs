@@ -54,6 +54,7 @@ namespace DotNetDBTools.Analysis.Core
             HashSet<ForeignKeyInfo> allForeignKeysToDrop = new(allRemovedForeignKeys);
             foreach (Guid columnID in columnsChangedOrReferencedByChangedObjects)
                 allForeignKeysToDrop.UnionWith(columnsReferencedByMap[columnID]);
+
             return allForeignKeysToDrop;
         }
 
@@ -62,12 +63,14 @@ namespace DotNetDBTools.Analysis.Core
             HashSet<Guid> columnsChangedOrReferencedByChangedObjects = new();
             foreach (IEnumerable<ColumnInfo> removedTableColumns in databaseDiff.RemovedTables.Select(t => t.Columns))
                 columnsChangedOrReferencedByChangedObjects.UnionWith(removedTableColumns.Select(c => c.ID));
+
             foreach (TableDiff tableDiff in databaseDiff.ChangedTables)
             {
                 columnsChangedOrReferencedByChangedObjects.UnionWith(tableDiff.RemovedColumns.Select(c => c.ID));
                 columnsChangedOrReferencedByChangedObjects.UnionWith(tableDiff.ChangedColumns.Select(cd => cd.OldColumn.ID));
                 Dictionary<string, Guid> oldTableColumnIDs = tableDiff.OldTable.Columns.ToDictionary(c => c.Name, c => c.ID);
-                columnsChangedOrReferencedByChangedObjects.UnionWith(tableDiff.RemovedPrimaryKey.Columns.Select(cn => oldTableColumnIDs[cn]));
+                if (tableDiff.RemovedPrimaryKey is not null)
+                    columnsChangedOrReferencedByChangedObjects.UnionWith(tableDiff.RemovedPrimaryKey.Columns.Select(cn => oldTableColumnIDs[cn]));
                 foreach (UniqueConstraintInfo uc in tableDiff.RemovedUniqueConstraints)
                     columnsChangedOrReferencedByChangedObjects.UnionWith(uc.Columns.Select(cn => oldTableColumnIDs[cn]));
             }
@@ -81,9 +84,10 @@ namespace DotNetDBTools.Analysis.Core
             Dictionary<Guid, HashSet<ForeignKeyInfo>> columnsReferencedByMap = new();
             foreach (TableInfo table in tables)
             {
-                Dictionary<string, Guid> tableColumnIDs = table.Columns.ToDictionary(c => c.Name, c => c.ID);
                 foreach (ForeignKeyInfo fk in table.ForeignKeys)
                 {
+                    Dictionary<string, Guid> tableColumnIDs = tables
+                        .Single(t => t.Name == fk.ForeignTableName).Columns.ToDictionary(c => c.Name, c => c.ID);
                     foreach (string cn in fk.ForeignColumnNames)
                     {
                         Guid columnID = tableColumnIDs[cn];

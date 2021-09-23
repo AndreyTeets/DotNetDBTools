@@ -92,6 +92,8 @@ INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE referencedKey
                     {
                         "NO ACTION" => "NoAction",
                         "CASCADE" => "Cascade",
+                        "SET DEFAULT" => "SetDefault",
+                        "NOT NULL" => "SetNull",
                         _ => throw new InvalidOperationException($"Invalid sqlActionName: '{sqlActionName}'")
                     };
             }

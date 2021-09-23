@@ -1,7 +1,7 @@
 ﻿using System;
-using DotNetDBTools.Definition.SQLite;
+using DotNetDBTools.Definition.Agnostic;
 
-namespace DotNetDBTools.SampleDB.SQLite.Views
+namespace DotNetDBTools.SampleDB.Agnostic.Views
 {
     public class MyView1 : IView
     {

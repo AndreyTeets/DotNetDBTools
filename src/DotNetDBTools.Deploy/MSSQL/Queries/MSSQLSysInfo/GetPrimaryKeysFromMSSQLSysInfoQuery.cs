@@ -57,6 +57,8 @@ WHERE i.is_primary_key = 1;";
 
                 foreach (MSSQLTableInfo table in tables.Values)
                 {
+                    if (table.PrimaryKey is null)
+                        continue;
                     table.PrimaryKey.Columns = columnNames[table.PrimaryKey.Name].Select(x => x.Value).ToList();
                 }
             }

@@ -20,8 +20,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\samples\DotNetDBTools.SampleDB.Agnostic\DotNetDBTools.SampleDB.Agnostic.csproj" />
+    <ProjectReference Include="..\..\samples\DotNetDBTools.SampleDBv2.Agnostic\DotNetDBTools.SampleDBv2.Agnostic.csproj" />
     <ProjectReference Include="..\..\samples\DotNetDBTools.SampleDB.MSSQL\DotNetDBTools.SampleDB.MSSQL.csproj" />
+    <ProjectReference Include="..\..\samples\DotNetDBTools.SampleDBv2.MSSQL\DotNetDBTools.SampleDBv2.MSSQL.csproj" />
     <ProjectReference Include="..\..\samples\DotNetDBTools.SampleDB.SQLite\DotNetDBTools.SampleDB.SQLite.csproj" />
+    <ProjectReference Include="..\..\samples\DotNetDBTools.SampleDBv2.SQLite\DotNetDBTools.SampleDBv2.SQLite.csproj" />
     <ProjectReference Include="..\..\src\DotNetDBTools.Deploy\DotNetDBTools.Deploy.csproj" />
     <ProjectReference Include="..\..\src\DotNetDBTools.Description\DotNetDBTools.Description.csproj" />
   </ItemGroup>

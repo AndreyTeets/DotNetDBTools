@@ -50,7 +50,11 @@ namespace DotNetDBTools.Deploy.MSSQL.Queries
         private static void AppendColumnsAlters(StringBuilder sb, MSSQLTableDiff tableDiff)
         {
             foreach (ColumnInfo column in tableDiff.RemovedColumns)
+            {
+                if (column.Default is not null)
+                    sb.Append(Queries.DropDefaultConstraint(tableDiff.NewTable.Name, column.Name));
                 sb.Append(Queries.DropColumn(tableDiff.NewTable.Name, column.Name));
+            }
 
             foreach (ColumnDiff columnDiff in tableDiff.ChangedColumns)
             {
@@ -65,7 +69,11 @@ namespace DotNetDBTools.Deploy.MSSQL.Queries
             }
 
             foreach (ColumnInfo column in tableDiff.AddedColumns)
+            {
                 sb.Append(Queries.AddColumn(tableDiff.NewTable.Name, column));
+                if (column.Default is not null)
+                    sb.Append(Queries.AddDefaultConstraint(tableDiff.NewTable.Name, column));
+            }
         }
 
         private static class Queries
