@@ -102,8 +102,13 @@ namespace DotNetDBTools.Analysis.MSSQL
                 }
             }
 
-            PrimaryKeyInfo addedPrimaryKey = newDbTable.PrimaryKey;
-            PrimaryKeyInfo removedPrimaryKey = oldDbTable.PrimaryKey;
+            PrimaryKeyInfo addedPrimaryKey = null;
+            PrimaryKeyInfo removedPrimaryKey = null;
+            if (!s_dbObjectsEqualityComparer.Equals(newDbTable.PrimaryKey, oldDbTable.PrimaryKey))
+            {
+                addedPrimaryKey = newDbTable.PrimaryKey;
+                removedPrimaryKey = oldDbTable.PrimaryKey;
+            }
 
             List<UniqueConstraintInfo> addedUniqueConstraints = newDbTable.UniqueConstraints
                 .Where(newDbTableUC => !oldDbTable.UniqueConstraints.Any(oldDbTableUC => oldDbTableUC.ID == newDbTableUC.ID))
@@ -114,7 +119,8 @@ namespace DotNetDBTools.Analysis.MSSQL
             foreach (UniqueConstraintInfo newDbTableUC in newDbTable.UniqueConstraints)
             {
                 UniqueConstraintInfo oldDbTableUC = oldDbTable.UniqueConstraints.SingleOrDefault(x => x.ID == newDbTableUC.ID);
-                if (oldDbTableUC is not null)
+                if (oldDbTableUC is not null &&
+                    !s_dbObjectsEqualityComparer.Equals(newDbTableUC, oldDbTableUC))
                 {
                     addedUniqueConstraints.Add(newDbTableUC);
                     removedUniqueConstraints.Add(oldDbTableUC);
@@ -130,7 +136,8 @@ namespace DotNetDBTools.Analysis.MSSQL
             foreach (ForeignKeyInfo newDbTableFK in newDbTable.ForeignKeys)
             {
                 ForeignKeyInfo oldDbTableFK = oldDbTable.ForeignKeys.SingleOrDefault(x => x.ID == newDbTableFK.ID);
-                if (oldDbTableFK is not null)
+                if (oldDbTableFK is not null &&
+                    !s_dbObjectsEqualityComparer.Equals(newDbTableFK, oldDbTableFK))
                 {
                     addedForeignKeys.Add(newDbTableFK);
                     removedForeignKeys.Add(oldDbTableFK);

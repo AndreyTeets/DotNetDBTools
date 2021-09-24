@@ -3,8 +3,9 @@ BEGIN TRANSACTION;
 
 CREATE TABLE DNDBT_MyTable2
 (
-    MyColumn1NewName INTEGER UNIQUE,
-    MyColumn2 BLOB UNIQUE,
+    MyColumn1NewName INTEGER NOT NULL CONSTRAINT DF_MyTable2_MyColumn1NewName DEFAULT 333,
+    MyColumn2 BLOB NULL CONSTRAINT DF_MyTable2_MyColumn2 DEFAULT 0x000102,
+    CONSTRAINT PK_MyTable2 PRIMARY KEY (MyColumn1NewName),
     CONSTRAINT FK_MyTable2_MyColumn12_MyTable3_MyColumn12 FOREIGN KEY (MyColumn1NewName,MyColumn2) REFERENCES MyTable3(MyColumn1,MyColumn2)
 );
 
@@ -92,7 +93,7 @@ BEGIN TRANSACTION;
 
 CREATE TABLE DNDBT_MyTable1NewName
 (
-    MyColumn1 INTEGER UNIQUE,
+    MyColumn1 INTEGER NULL CONSTRAINT DF_MyTable1NewName_MyColumn1 DEFAULT 15,
     CONSTRAINT FK_MyTable1_MyColumn1_MyTable2_MyColumn1 FOREIGN KEY (MyColumn1) REFERENCES MyTable2(MyColumn1NewName)
 );
 
@@ -212,6 +213,7 @@ VALUES
 
 CREATE TABLE MyTable3
 (
-    MyColumn1 INTEGER UNIQUE,
-    MyColumn2 BLOB UNIQUE
+    MyColumn1 INTEGER NOT NULL CONSTRAINT DF_MyTable3_MyColumn1 DEFAULT 333,
+    MyColumn2 BLOB NOT NULL ,
+    CONSTRAINT UQ_MyTable3_MyColumn2 UNIQUE (MyColumn1, MyColumn2)
 );

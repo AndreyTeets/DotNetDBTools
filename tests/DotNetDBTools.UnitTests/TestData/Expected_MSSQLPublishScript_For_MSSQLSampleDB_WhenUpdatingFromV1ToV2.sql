@@ -299,6 +299,78 @@ UPDATE DNDBTDbObjects SET
 WHERE ID = '299675e6-4faa-4d0f-a36a-224306ba5bcb';
 --QUERY END: UpdateDNDBTSysInfoQuery
 
+--QUERY START: AlterTableQuery
+EXEC sp_rename 'MyTable5', 'MyTable5';
+
+
+DECLARE @DropDefaultConstraint_MyTable5_MyColumn2_SqlText NVARCHAR(MAX) =
+(
+    SELECT
+        'ALTER TABLE [MyTable5] DROP CONSTRAINT [' + dc.name + '];'
+    FROM sys.tables t
+    INNER JOIN sys.columns c
+        ON c.object_id = t.object_id
+    INNER JOIN sys.default_constraints dc
+        ON dc.object_id = c.default_object_id
+    WHERE t.name = 'MyTable5'
+        AND c.name = 'MyColumn2'
+);
+EXEC (@DropDefaultConstraint_MyTable5_MyColumn2_SqlText);
+--ALTER TABLE [MyTable5] DROP CONSTRAINT [DF_MyTable5_MyColumn2];
+EXEC sp_rename 'MyTable5.MyColumn2', 'MyColumn2', 'COLUMN';
+ALTER TABLE MyTable5 ALTER COLUMN MyColumn2 MyUserDefinedType1 NULL;
+ALTER TABLE MyTable5 ADD CONSTRAINT DF_MyTable5_MyColumn2 DEFAULT 'cc' FOR MyColumn2;
+
+
+--QUERY END: AlterTableQuery
+
+--QUERY START: UpdateDNDBTSysInfoQuery
+DECLARE @Metadata NVARCHAR(MAX) = '{
+  "Columns": [
+    {
+      "DataType": {
+        "Name": "Int",
+        "IsUserDefined": false,
+        "Length": 0,
+        "IsUnicode": false,
+        "IsFixedLength": false
+      },
+      "Nullable": false,
+      "Identity": false,
+      "Default": {
+        "$type": "DotNetDBTools.Models.MSSQL.MSSQLDefaultValueAsFunction, DotNetDBTools.Models",
+        "FunctionText": "ABS(-15)"
+      },
+      "ID": "5309d66f-2030-402e-912e-5547babaa072",
+      "Name": "MyColumn1"
+    },
+    {
+      "DataType": {
+        "Name": "MyUserDefinedType1",
+        "IsUserDefined": true,
+        "Length": 110,
+        "IsUnicode": false,
+        "IsFixedLength": false
+      },
+      "Nullable": true,
+      "Identity": false,
+      "Default": "cc",
+      "ID": "15ae6061-426d-4485-85e6-ecd3e0f98882",
+      "Name": "MyColumn2"
+    }
+  ],
+  "PrimaryKey": null,
+  "UniqueConstraints": [],
+  "ForeignKeys": [],
+  "ID": "6ca51f29-c1bc-4349-b9c1-6f1ea170f162",
+  "Name": "MyTable5"
+}';
+UPDATE DNDBTDbObjects SET
+    Name = 'MyTable5',
+    Metadata = @Metadata
+WHERE ID = '6ca51f29-c1bc-4349-b9c1-6f1ea170f162';
+--QUERY END: UpdateDNDBTSysInfoQuery
+
 --QUERY START: DropTypeQuery
 DROP TYPE _DNDBTTemp_MyUserDefinedType1;
 --QUERY END: DropTypeQuery

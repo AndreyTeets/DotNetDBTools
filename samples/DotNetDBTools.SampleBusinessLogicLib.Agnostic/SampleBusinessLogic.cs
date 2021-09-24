@@ -7,7 +7,7 @@ using Dapper;
 using SqlKata;
 using SqlKata.Compilers;
 using SqlKata.Execution;
-using static DotNetDBToolsSampleDBAgnosticDescription.DotNetDBToolsSampleDBAgnosticTables;
+using static DotNetDBToolsSampleDBv2AgnosticDescription.DotNetDBToolsSampleDBv2AgnosticTables;
 
 namespace DotNetDBTools.SampleBusinessLogicLib.Agnostic
 {
@@ -21,9 +21,9 @@ namespace DotNetDBTools.SampleBusinessLogicLib.Agnostic
 
         private static void InsertSomeData(DbConnection dbConnection, Compiler compiler)
         {
-            Query query = new Query(MyTable2)
+            Query query = new Query(MyTable3)
                 .AsInsert(
-                    new[] { MyTable2.MyColumn1, MyTable2.MyColumn2 },
+                    new[] { MyTable3.MyColumn1, MyTable3.MyColumn2 },
                     new[]
                     {
                         new object[] { 3, Encoding.UTF8.GetBytes("value3") },
@@ -41,10 +41,10 @@ namespace DotNetDBTools.SampleBusinessLogicLib.Agnostic
         {
             QueryFactory db = new(dbConnection, compiler);
 
-            List<byte[]> queryResults = db.Query(MyTable2)
-                .Select(new[] { MyTable2.MyColumn2 })
-                .WhereIn(MyTable2.MyColumn1, new[] { 3, 4 })
-                .OrderBy(new[] { MyTable2.MyColumn1 })
+            List<byte[]> queryResults = db.Query(MyTable3)
+                .Select(new[] { MyTable3.MyColumn2 })
+                .WhereIn(MyTable3.MyColumn1, new[] { 3, 4 })
+                .OrderBy(new[] { MyTable3.MyColumn1 })
                 .Get<byte[]>()
                 .ToList();
 
@@ -52,7 +52,7 @@ namespace DotNetDBTools.SampleBusinessLogicLib.Agnostic
                 Encoding.UTF8.GetString(queryResults[0]) != "value3" ||
                 Encoding.UTF8.GetString(queryResults[1]) != "value4")
             {
-                throw new Exception($"Wrong data in '{MyTable2}' table");
+                throw new Exception($"Wrong data in '{MyTable3}' table");
             }
         }
     }

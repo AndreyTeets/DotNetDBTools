@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DotNetDBTools.SampleDB.Agnostic\DotNetDBTools.SampleDB.Agnostic.csproj" />
+    <ProjectReference Include="..\DotNetDBTools.SampleDBv2.Agnostic\DotNetDBTools.SampleDBv2.Agnostic.csproj" />
   </ItemGroup>
 
 </Project>

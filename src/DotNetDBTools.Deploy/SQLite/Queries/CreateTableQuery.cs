@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Models.SQLite;
+using static DotNetDBTools.Deploy.SQLite.SQLiteQueriesHelper;
 
 namespace DotNetDBTools.Deploy.SQLite.Queries
 {
@@ -47,19 +47,6 @@ CREATE TABLE {table.Name}
 );";
 
             return query;
-        }
-
-        private static string GetTableDefinitionsText(SQLiteTableInfo table)
-        {
-            List<string> tableDefinitions = new();
-
-            tableDefinitions.AddRange(table.Columns.Select(column =>
-$@"    {column.Name} {SQLiteSqlTypeMapper.GetSqlType(column.DataType)} UNIQUE"));
-
-            tableDefinitions.AddRange(table.ForeignKeys.Select(fk =>
-$@"    CONSTRAINT {fk.Name} FOREIGN KEY ({string.Join(",", fk.ThisColumnNames)}) REFERENCES {fk.ForeignTableName}({string.Join(",", fk.ForeignColumnNames)})"));
-
-            return string.Join(",\n", tableDefinitions);
         }
     }
 }

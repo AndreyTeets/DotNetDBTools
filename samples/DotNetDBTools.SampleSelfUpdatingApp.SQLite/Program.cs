@@ -12,14 +12,14 @@ namespace DotNetDBTools.SampleSelfUpdatingApp.SQLite
         private const string RepoRoot = "../../../../..";
         private static readonly string s_samplesOutputDir = $"{RepoRoot}/SamplesOutput";
 
-        private static readonly string s_agnosticDbAssemblyPath = $"{s_samplesOutputDir}/DotNetDBTools.SampleDB.Agnostic.dll";
+        private static readonly string s_agnosticDbAssemblyPath = $"{s_samplesOutputDir}/DotNetDBTools.SampleDBv2.Agnostic.dll";
         private static readonly string s_agnosticConnectionString = $"DataSource={s_samplesOutputDir}/sqlite_databases/AgnosticSampleDB_SelfUpdatingApp.db;Mode=ReadWriteCreate;";
 
         public static void Main()
         {
             DropDatabaseIfExists(s_agnosticConnectionString);
 
-            Console.WriteLine("Creating new AgnosticSampleDB_SelfUpdatingApp...");
+            Console.WriteLine("Creating new AgnosticSampleDB_SelfUpdatingApp v2 from dbAssembly file...");
             DeployAgnosticSampleDB();
 
             SqliteConnection dbConnection = new(s_agnosticConnectionString);
