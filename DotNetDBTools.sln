@@ -51,49 +51,49 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{9763
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Applications", "Applications", "{FB42EE55-D632-413B-8FBC-9EE6F37C5125}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.SampleBusinessLogicLib.Agnostic", "samples\DotNetDBTools.SampleBusinessLogicLib.Agnostic\DotNetDBTools.SampleBusinessLogicLib.Agnostic.csproj", "{9B808F21-B972-4BEA-881A-2EFA81C35B44}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.SampleBusinessLogicLib.Agnostic", "samples\Applications\DotNetDBTools.SampleBusinessLogicLib.Agnostic\DotNetDBTools.SampleBusinessLogicLib.Agnostic.csproj", "{9B808F21-B972-4BEA-881A-2EFA81C35B44}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.SampleBusinessLogicOnlyApp.MSSQL", "samples\DotNetDBTools.SampleBusinessLogicOnlyApp.MSSQL\DotNetDBTools.SampleBusinessLogicOnlyApp.MSSQL.csproj", "{A99B9156-4E59-434E-A500-FBC46A658309}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.SampleBusinessLogicOnlyApp.MSSQL", "samples\Applications\DotNetDBTools.SampleBusinessLogicOnlyApp.MSSQL\DotNetDBTools.SampleBusinessLogicOnlyApp.MSSQL.csproj", "{A99B9156-4E59-434E-A500-FBC46A658309}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.SampleBusinessLogicOnlyApp.MySQL", "samples\DotNetDBTools.SampleBusinessLogicOnlyApp.MySQL\DotNetDBTools.SampleBusinessLogicOnlyApp.MySQL.csproj", "{40BE360F-D79F-47F8-89B4-468EE2196F9E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.SampleBusinessLogicOnlyApp.MySQL", "samples\Applications\DotNetDBTools.SampleBusinessLogicOnlyApp.MySQL\DotNetDBTools.SampleBusinessLogicOnlyApp.MySQL.csproj", "{40BE360F-D79F-47F8-89B4-468EE2196F9E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.SampleBusinessLogicOnlyApp.Postgres", "samples\DotNetDBTools.SampleBusinessLogicOnlyApp.Postgres\DotNetDBTools.SampleBusinessLogicOnlyApp.Postgres.csproj", "{D36A481C-44C5-4B46-9985-E00F8C0AF5AD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.SampleBusinessLogicOnlyApp.Postgres", "samples\Applications\DotNetDBTools.SampleBusinessLogicOnlyApp.Postgres\DotNetDBTools.SampleBusinessLogicOnlyApp.Postgres.csproj", "{D36A481C-44C5-4B46-9985-E00F8C0AF5AD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.SampleBusinessLogicOnlyApp.SQLite", "samples\DotNetDBTools.SampleBusinessLogicOnlyApp.SQLite\DotNetDBTools.SampleBusinessLogicOnlyApp.SQLite.csproj", "{02D1A7C2-6B62-47D8-8433-E5433A5B0244}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.SampleBusinessLogicOnlyApp.SQLite", "samples\Applications\DotNetDBTools.SampleBusinessLogicOnlyApp.SQLite\DotNetDBTools.SampleBusinessLogicOnlyApp.SQLite.csproj", "{02D1A7C2-6B62-47D8-8433-E5433A5B0244}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.SampleSelfUpdatingApp.MSSQL", "samples\DotNetDBTools.SampleSelfUpdatingApp.MSSQL\DotNetDBTools.SampleSelfUpdatingApp.MSSQL.csproj", "{4D1EB939-A0A9-4023-9732-23479FE7F186}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.SampleSelfUpdatingApp.MSSQL", "samples\Applications\DotNetDBTools.SampleSelfUpdatingApp.MSSQL\DotNetDBTools.SampleSelfUpdatingApp.MSSQL.csproj", "{4D1EB939-A0A9-4023-9732-23479FE7F186}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.SampleSelfUpdatingApp.MySQL", "samples\DotNetDBTools.SampleSelfUpdatingApp.MySQL\DotNetDBTools.SampleSelfUpdatingApp.MySQL.csproj", "{A5722C3B-0FB2-4426-8E32-C6CB4FE3D50E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.SampleSelfUpdatingApp.MySQL", "samples\Applications\DotNetDBTools.SampleSelfUpdatingApp.MySQL\DotNetDBTools.SampleSelfUpdatingApp.MySQL.csproj", "{A5722C3B-0FB2-4426-8E32-C6CB4FE3D50E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.SampleSelfUpdatingApp.Postgres", "samples\DotNetDBTools.SampleSelfUpdatingApp.Postgres\DotNetDBTools.SampleSelfUpdatingApp.Postgres.csproj", "{C347EC54-B6E4-433A-95A8-7C5530FB8C3A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.SampleSelfUpdatingApp.Postgres", "samples\Applications\DotNetDBTools.SampleSelfUpdatingApp.Postgres\DotNetDBTools.SampleSelfUpdatingApp.Postgres.csproj", "{C347EC54-B6E4-433A-95A8-7C5530FB8C3A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.SampleSelfUpdatingApp.SQLite", "samples\DotNetDBTools.SampleSelfUpdatingApp.SQLite\DotNetDBTools.SampleSelfUpdatingApp.SQLite.csproj", "{D3A2D253-7B2D-4D27-AE47-CF8310E36CD6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.SampleSelfUpdatingApp.SQLite", "samples\Applications\DotNetDBTools.SampleSelfUpdatingApp.SQLite\DotNetDBTools.SampleSelfUpdatingApp.SQLite.csproj", "{D3A2D253-7B2D-4D27-AE47-CF8310E36CD6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Databases", "Databases", "{80C1202A-276C-493E-821E-9DB63164F2BE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.SampleDB.Agnostic", "samples\DotNetDBTools.SampleDB.Agnostic\DotNetDBTools.SampleDB.Agnostic.csproj", "{51A89E8B-3C98-4D47-B48D-4CA665AEF833}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.SampleDB.Agnostic", "samples\Databases\DotNetDBTools.SampleDB.Agnostic\DotNetDBTools.SampleDB.Agnostic.csproj", "{51A89E8B-3C98-4D47-B48D-4CA665AEF833}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.SampleDB.MSSQL", "samples\DotNetDBTools.SampleDB.MSSQL\DotNetDBTools.SampleDB.MSSQL.csproj", "{EF0D661D-028A-4B49-8821-233DA76F41F6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.SampleDB.MSSQL", "samples\Databases\DotNetDBTools.SampleDB.MSSQL\DotNetDBTools.SampleDB.MSSQL.csproj", "{EF0D661D-028A-4B49-8821-233DA76F41F6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.SampleDB.MySQL", "samples\DotNetDBTools.SampleDB.MySQL\DotNetDBTools.SampleDB.MySQL.csproj", "{3500E605-2B09-43C0-B840-20F4361DDF3D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.SampleDB.MySQL", "samples\Databases\DotNetDBTools.SampleDB.MySQL\DotNetDBTools.SampleDB.MySQL.csproj", "{3500E605-2B09-43C0-B840-20F4361DDF3D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.SampleDB.Postgres", "samples\DotNetDBTools.SampleDB.Postgres\DotNetDBTools.SampleDB.Postgres.csproj", "{1C04981D-8E3F-4B2C-B9E2-8F4AEBFD379F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.SampleDB.Postgres", "samples\Databases\DotNetDBTools.SampleDB.Postgres\DotNetDBTools.SampleDB.Postgres.csproj", "{1C04981D-8E3F-4B2C-B9E2-8F4AEBFD379F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.SampleDB.SQLite", "samples\DotNetDBTools.SampleDB.SQLite\DotNetDBTools.SampleDB.SQLite.csproj", "{B258DC47-A46F-4C53-99DF-A8DEDE81F7D5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.SampleDB.SQLite", "samples\Databases\DotNetDBTools.SampleDB.SQLite\DotNetDBTools.SampleDB.SQLite.csproj", "{B258DC47-A46F-4C53-99DF-A8DEDE81F7D5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.SampleDBv2.Agnostic", "samples\DotNetDBTools.SampleDBv2.Agnostic\DotNetDBTools.SampleDBv2.Agnostic.csproj", "{B0268B65-50BB-47BF-B798-0B04DCCF6A64}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.SampleDBv2.Agnostic", "samples\Databases\DotNetDBTools.SampleDBv2.Agnostic\DotNetDBTools.SampleDBv2.Agnostic.csproj", "{B0268B65-50BB-47BF-B798-0B04DCCF6A64}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.SampleDBv2.MSSQL", "samples\DotNetDBTools.SampleDBv2.MSSQL\DotNetDBTools.SampleDBv2.MSSQL.csproj", "{96549CFF-BE53-4C80-A0E1-CBA086C2D497}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.SampleDBv2.MSSQL", "samples\Databases\DotNetDBTools.SampleDBv2.MSSQL\DotNetDBTools.SampleDBv2.MSSQL.csproj", "{96549CFF-BE53-4C80-A0E1-CBA086C2D497}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.SampleDBv2.MySQL", "samples\DotNetDBTools.SampleDBv2.MySQL\DotNetDBTools.SampleDBv2.MySQL.csproj", "{A59BF064-A8DF-41D1-88F0-F254EB352834}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.SampleDBv2.MySQL", "samples\Databases\DotNetDBTools.SampleDBv2.MySQL\DotNetDBTools.SampleDBv2.MySQL.csproj", "{A59BF064-A8DF-41D1-88F0-F254EB352834}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.SampleDBv2.Postgres", "samples\DotNetDBTools.SampleDBv2.Postgres\DotNetDBTools.SampleDBv2.Postgres.csproj", "{718ACBE7-4611-45E1-97ED-BE6CC3F7A7AC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.SampleDBv2.Postgres", "samples\Databases\DotNetDBTools.SampleDBv2.Postgres\DotNetDBTools.SampleDBv2.Postgres.csproj", "{718ACBE7-4611-45E1-97ED-BE6CC3F7A7AC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.SampleDBv2.SQLite", "samples\DotNetDBTools.SampleDBv2.SQLite\DotNetDBTools.SampleDBv2.SQLite.csproj", "{8E1B4198-955B-4E3C-ABC1-4D841B332B77}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.SampleDBv2.SQLite", "samples\Databases\DotNetDBTools.SampleDBv2.SQLite\DotNetDBTools.SampleDBv2.SQLite.csproj", "{8E1B4198-955B-4E3C-ABC1-4D841B332B77}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DeployTools", "DeployTools", "{87929773-9D37-4086-8F1E-6CD507EB2AED}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.SampleDeployTool.MSSQL", "samples\DotNetDBTools.SampleDeployTool.MSSQL\DotNetDBTools.SampleDeployTool.MSSQL.csproj", "{7D467CA3-E65D-42A4-8149-A2247C7CCF34}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.SampleDeployTool.MSSQL", "samples\DeployTools\DotNetDBTools.SampleDeployTool.MSSQL\DotNetDBTools.SampleDeployTool.MSSQL.csproj", "{7D467CA3-E65D-42A4-8149-A2247C7CCF34}"
 	ProjectSection(ProjectDependencies) = postProject
 		{EF0D661D-028A-4B49-8821-233DA76F41F6} = {EF0D661D-028A-4B49-8821-233DA76F41F6}
 		{B0268B65-50BB-47BF-B798-0B04DCCF6A64} = {B0268B65-50BB-47BF-B798-0B04DCCF6A64}
@@ -101,7 +101,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.SampleDeployT
 		{96549CFF-BE53-4C80-A0E1-CBA086C2D497} = {96549CFF-BE53-4C80-A0E1-CBA086C2D497}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.SampleDeployTool.MySQL", "samples\DotNetDBTools.SampleDeployTool.MySQL\DotNetDBTools.SampleDeployTool.MySQL.csproj", "{4446C6A5-51FD-4B45-A08B-498176CB71F0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.SampleDeployTool.MySQL", "samples\DeployTools\DotNetDBTools.SampleDeployTool.MySQL\DotNetDBTools.SampleDeployTool.MySQL.csproj", "{4446C6A5-51FD-4B45-A08B-498176CB71F0}"
 	ProjectSection(ProjectDependencies) = postProject
 		{3500E605-2B09-43C0-B840-20F4361DDF3D} = {3500E605-2B09-43C0-B840-20F4361DDF3D}
 		{A59BF064-A8DF-41D1-88F0-F254EB352834} = {A59BF064-A8DF-41D1-88F0-F254EB352834}
@@ -109,7 +109,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.SampleDeployT
 		{51A89E8B-3C98-4D47-B48D-4CA665AEF833} = {51A89E8B-3C98-4D47-B48D-4CA665AEF833}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.SampleDeployTool.Postgres", "samples\DotNetDBTools.SampleDeployTool.Postgres\DotNetDBTools.SampleDeployTool.Postgres.csproj", "{9A07C740-5CB3-49A4-9422-EDE3BB2A7D22}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.SampleDeployTool.Postgres", "samples\DeployTools\DotNetDBTools.SampleDeployTool.Postgres\DotNetDBTools.SampleDeployTool.Postgres.csproj", "{9A07C740-5CB3-49A4-9422-EDE3BB2A7D22}"
 	ProjectSection(ProjectDependencies) = postProject
 		{1C04981D-8E3F-4B2C-B9E2-8F4AEBFD379F} = {1C04981D-8E3F-4B2C-B9E2-8F4AEBFD379F}
 		{B0268B65-50BB-47BF-B798-0B04DCCF6A64} = {B0268B65-50BB-47BF-B798-0B04DCCF6A64}
@@ -117,7 +117,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.SampleDeployT
 		{718ACBE7-4611-45E1-97ED-BE6CC3F7A7AC} = {718ACBE7-4611-45E1-97ED-BE6CC3F7A7AC}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.SampleDeployTool.SQLite", "samples\DotNetDBTools.SampleDeployTool.SQLite\DotNetDBTools.SampleDeployTool.SQLite.csproj", "{0EDFDEAF-4DC4-441E-B3B9-8DC20495105C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.SampleDeployTool.SQLite", "samples\DeployTools\DotNetDBTools.SampleDeployTool.SQLite\DotNetDBTools.SampleDeployTool.SQLite.csproj", "{0EDFDEAF-4DC4-441E-B3B9-8DC20495105C}"
 	ProjectSection(ProjectDependencies) = postProject
 		{B258DC47-A46F-4C53-99DF-A8DEDE81F7D5} = {B258DC47-A46F-4C53-99DF-A8DEDE81F7D5}
 		{B0268B65-50BB-47BF-B798-0B04DCCF6A64} = {B0268B65-50BB-47BF-B798-0B04DCCF6A64}

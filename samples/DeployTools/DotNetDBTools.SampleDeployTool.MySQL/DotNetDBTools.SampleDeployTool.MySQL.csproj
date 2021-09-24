@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(UsePackagesInSampleApplications)'=='True'">
+    <PackageReference Include="DotNetDBTools.Deploy" Version="$(Version)" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(UsePackagesInSampleApplications)'!='True'">
+    <ProjectReference Include="..\..\..\src\DotNetDBTools.Deploy\DotNetDBTools.Deploy.csproj" />
+  </ItemGroup>
+
+</Project>
