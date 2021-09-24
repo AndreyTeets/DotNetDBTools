@@ -9,12 +9,12 @@ namespace DotNetDBTools.IntegrationTests.SQLite
     [TestClass]
     public class SQLiteDeployTests
     {
-        private const string DbFilesFolder = @".\tmp";
+        private const string DbFilesFolder = @"./tmp";
 
         private static readonly string s_agnosticSampleDbAssemblyPath = $"{SamplesOutputDir}/DotNetDBTools.SampleDB.Agnostic.dll";
         private static readonly string s_sqliteSampleDbAssemblyPath = $"{SamplesOutputDir}/DotNetDBTools.SampleDB.SQLite.dll";
 
-        private string ConnectionString => $@"DataSource={DbFilesFolder}\{TestContext.TestName}.db;Mode=ReadWriteCreate;";
+        private string ConnectionString => $@"DataSource={DbFilesFolder}/{TestContext.TestName}.db;Mode=ReadWriteCreate;";
         public TestContext TestContext { get; set; }
 
         [TestMethod]

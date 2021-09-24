@@ -16,7 +16,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_SolutionItems", "_Solution
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
 		_build.bat = _build.bat
+		_build.sh = _build.sh
 		_test.bat = _test.bat
+		_test.sh = _test.sh
 		Directory.Build.props = Directory.Build.props
 		NuGet.Config = NuGet.Config
 	EndProjectSection

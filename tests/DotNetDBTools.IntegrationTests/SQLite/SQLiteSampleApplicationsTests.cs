@@ -8,9 +8,9 @@ namespace DotNetDBTools.IntegrationTests.SQLite
     [TestClass]
     public class SQLiteSampleApplicationsTests
     {
-        private static readonly string s_sampleDeployToolAssemblyPath = $"{RepoRoot}/samples/DotNetDBTools.SampleDeployTool.SQLite/{ProjectsOutDirPath}/DotNetDBTools.SampleDeployTool.SQLite.exe";
-        private static readonly string s_sampleBusinessLogicOnlyAppAssemblyPath = $"{RepoRoot}/samples/DotNetDBTools.SampleBusinessLogicOnlyApp.SQLite/{ProjectsOutDirPath}/DotNetDBTools.SampleBusinessLogicOnlyApp.SQLite.exe";
-        private static readonly string s_sampleSelfUpdatingAppAssemblyPath = $"{RepoRoot}/samples/DotNetDBTools.SampleSelfUpdatingApp.SQLite/{ProjectsOutDirPath}/DotNetDBTools.SampleSelfUpdatingApp.SQLite.exe";
+        private static readonly string s_sampleDeployToolAssemblyPath = $"{RepoRoot}/samples/DotNetDBTools.SampleDeployTool.SQLite/{ProjectsOutDirPath}/DotNetDBTools.SampleDeployTool.SQLite.dll";
+        private static readonly string s_sampleBusinessLogicOnlyAppAssemblyPath = $"{RepoRoot}/samples/DotNetDBTools.SampleBusinessLogicOnlyApp.SQLite/{ProjectsOutDirPath}/DotNetDBTools.SampleBusinessLogicOnlyApp.SQLite.dll";
+        private static readonly string s_sampleSelfUpdatingAppAssemblyPath = $"{RepoRoot}/samples/DotNetDBTools.SampleSelfUpdatingApp.SQLite/{ProjectsOutDirPath}/DotNetDBTools.SampleSelfUpdatingApp.SQLite.dll";
 
         [TestMethod]
         public void SampleSQLite_DeployToolAndBusinessLogicOnlyApps_Run_WithoutErrors()

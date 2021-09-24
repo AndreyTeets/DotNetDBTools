@@ -11,8 +11,9 @@ namespace DotNetDBTools.IntegrationTests.TestHelpers
             string fullFilePath = Path.GetFullPath(filePath);
 
             ProcessStartInfo startInfo = new();
-            startInfo.FileName = fullFilePath;
+            startInfo.FileName = "dotnet";
             startInfo.WorkingDirectory = Path.GetDirectoryName(fullFilePath);
+            startInfo.Arguments = fullFilePath;
             startInfo.RedirectStandardOutput = true;
             startInfo.RedirectStandardError = true;
             startInfo.RedirectStandardInput = true;

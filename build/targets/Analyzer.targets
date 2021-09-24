@@ -10,8 +10,21 @@
     </ItemGroup>
   </Target>
 
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(UsePackagesInSampleApplications)'!='True'">
-    <Exec Command="xcopy /q /y /r &quot;$(TargetDir)*&quot; &quot;$(ProjectDir)bin\AnalyzerDebugRefAssemblies\&quot;&#xD;&#xA;del /q /f &quot;$(ProjectDir)bin\AnalyzerDebugRefAssemblies\$(TargetName).dll&quot;" />
+  <Target Name="CopyAllOutputToRefAssemblies" AfterTargets="PostBuildEvent" Condition="'$(UsePackagesInSampleApplications)'!='True'">
+    <ItemGroup>
+      <FilesToCopy Include="$(TargetDir)*" />
+    </ItemGroup>
+    <Copy
+      SourceFiles="@(FilesToCopy)"
+      DestinationFolder="$(ProjectDir)bin\AnalyzerDebugRefAssemblies\"
+      SkipUnchangedFiles="true" />
+  </Target>
+
+  <Target Name="DeleteMainAssemblyDllFromCopied" AfterTargets="CopyAllOutputToRefAssemblies" Condition="'$(UsePackagesInSampleApplications)'!='True'">
+    <ItemGroup>
+      <FilesToDelete Include="$(ProjectDir)bin\AnalyzerDebugRefAssemblies\$(TargetName).dll"/>
+    </ItemGroup>
+    <Delete Files="@(FilesToDelete)" />
   </Target>
 
 </Project>

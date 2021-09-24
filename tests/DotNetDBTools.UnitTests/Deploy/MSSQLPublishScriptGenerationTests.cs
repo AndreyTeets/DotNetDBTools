@@ -24,7 +24,7 @@ namespace DotNetDBTools.UnitTests.Deploy
             deployManager.GeneratePublishScript(dbAssemblyV2, dbAssembly, outputPath);
 
             string actualScript = File.ReadAllText(outputPath);
-            string expectedScript = File.ReadAllText(@"TestData\Expected_MSSQLPublishScript_For_MSSQLSampleDB_WhenUpdatingFromV1ToV2.sql");
+            string expectedScript = File.ReadAllText(@"TestData/Expected_MSSQLPublishScript_For_MSSQLSampleDB_WhenUpdatingFromV1ToV2.sql");
             actualScript.NormalizeLineEndings().Should().Be(expectedScript.NormalizeLineEndings());
         }
     }

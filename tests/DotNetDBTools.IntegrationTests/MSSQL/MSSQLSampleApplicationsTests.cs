@@ -8,9 +8,9 @@ namespace DotNetDBTools.IntegrationTests.MSSQL
     [TestClass]
     public class MSSQLSampleApplicationsTests
     {
-        private static readonly string s_sampleDeployToolAssemblyPath = $"{RepoRoot}/samples/DotNetDBTools.SampleDeployTool.MSSQL/{ProjectsOutDirPath}/DotNetDBTools.SampleDeployTool.MSSQL.exe";
-        private static readonly string s_sampleBusinessLogicOnlyAppAssemblyPath = $"{RepoRoot}/samples/DotNetDBTools.SampleBusinessLogicOnlyApp.MSSQL/{ProjectsOutDirPath}/DotNetDBTools.SampleBusinessLogicOnlyApp.MSSQL.exe";
-        private static readonly string s_sampleSelfUpdatingAppAssemblyPath = $"{RepoRoot}/samples/DotNetDBTools.SampleSelfUpdatingApp.MSSQL/{ProjectsOutDirPath}/DotNetDBTools.SampleSelfUpdatingApp.MSSQL.exe";
+        private static readonly string s_sampleDeployToolAssemblyPath = $"{RepoRoot}/samples/DotNetDBTools.SampleDeployTool.MSSQL/{ProjectsOutDirPath}/DotNetDBTools.SampleDeployTool.MSSQL.dll";
+        private static readonly string s_sampleBusinessLogicOnlyAppAssemblyPath = $"{RepoRoot}/samples/DotNetDBTools.SampleBusinessLogicOnlyApp.MSSQL/{ProjectsOutDirPath}/DotNetDBTools.SampleBusinessLogicOnlyApp.MSSQL.dll";
+        private static readonly string s_sampleSelfUpdatingAppAssemblyPath = $"{RepoRoot}/samples/DotNetDBTools.SampleSelfUpdatingApp.MSSQL/{ProjectsOutDirPath}/DotNetDBTools.SampleSelfUpdatingApp.MSSQL.dll";
 
         [TestMethod]
         public void SampleMSSQL_DeployToolAndBusinessLogicOnlyApps_Run_WithoutErrors()

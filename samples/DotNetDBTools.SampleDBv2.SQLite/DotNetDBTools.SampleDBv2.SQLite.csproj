@@ -18,8 +18,14 @@
     <ProjectReference Include="..\..\src\DotNetDBTools.DescriptionSourceGenerator\DotNetDBTools.DescriptionSourceGenerator.csproj" OutputItemType="Analyzer" PrivateAssets="all" />
   </ItemGroup>
 
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="xcopy /q /y /r &quot;$(TargetDir)$(TargetName).dll&quot; &quot;$(ProjectDir)..\..\SamplesOutput\&quot;" />
+  <Target Name="CopyDbDllToSamplesOutput" AfterTargets="PostBuildEvent">
+    <ItemGroup>
+      <FilesToCopy Include="$(TargetDir)$(TargetName).dll" />
+    </ItemGroup>
+    <Copy
+      SourceFiles="@(FilesToCopy)"
+      DestinationFolder="$(ProjectDir)..\..\SamplesOutput\"
+      SkipUnchangedFiles="true" />
   </Target>
 
 </Project>

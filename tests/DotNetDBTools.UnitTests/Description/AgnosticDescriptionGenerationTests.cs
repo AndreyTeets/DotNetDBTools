@@ -20,7 +20,7 @@ namespace DotNetDBTools.UnitTests.Description
                 .Single(x => x.GetName().Name == "DotNetDBTools.SampleDB.Agnostic");
             AgnosticDatabaseInfo databaseInfo = AgnosticDefinitionParser.CreateDatabaseInfo(dbAssembly);
             string actualDescriptionCode = AgnosticDescriptionSourceGenerator.GenerateDescription(databaseInfo);
-            string expectedDescriptionCode = File.ReadAllText(@"TestData\Expected_Description_For_AgnosticSampleDB.cs");
+            string expectedDescriptionCode = File.ReadAllText(@"TestData/Expected_Description_For_AgnosticSampleDB.cs");
             actualDescriptionCode.NormalizeLineEndings().Should().Be(expectedDescriptionCode.NormalizeLineEndings());
         }
     }

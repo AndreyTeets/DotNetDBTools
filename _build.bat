@@ -1,5 +1,6 @@
 @echo off
 setlocal
+cd /d %~dp0
 
 powershell -NoProfile -ExecutionPolicy Bypass -Command "./build/scripts/build.ps1"
 
