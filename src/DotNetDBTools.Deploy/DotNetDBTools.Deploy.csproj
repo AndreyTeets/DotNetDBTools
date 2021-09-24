@@ -3,9 +3,11 @@
   <Import Project="$(ProjectDir)..\..\build\props\Source.props" />
 
   <ItemGroup>
-    <PackageReference Include="Dapper" Version="2.0.90" />
     <PackageReference Include="Microsoft.Data.Sqlite" Version="5.0.9" />
+    <PackageReference Include="MySqlConnector" Version="1.3.12" />
+    <PackageReference Include="Npgsql" Version="5.0.10" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
+    <PackageReference Include="Dapper" Version="2.0.90" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
 
