@@ -14,7 +14,7 @@ namespace DotNetDBTools.Deploy.SQLite
             List<string> tableDefinitions = new();
 
             tableDefinitions.AddRange(table.Columns.Select(c =>
-$@"    {c.Name} {GetSqlType(c.DataType)}{GetPrimaryKeyStatement(c, table.PrimaryKey)} {GetNullabilityStatement(c)} {GetDefaultValStatement(table.Name, c)}"));
+$@"    {c.Name} {GetSqlType(c.DataType)}{GetPrimaryKeyStatement(c, table.PrimaryKey)} {GetNullabilityStatement(c)}{GetDefaultValStatement(c)}"));
 
             if (table.PrimaryKey is not null && table.PrimaryKey.Columns.Count() > 1)
             {
@@ -52,11 +52,11 @@ $@"    CONSTRAINT {fk.Name} FOREIGN KEY ({string.Join(", ", fk.ThisColumnNames)}
                 false => "NOT NULL",
             };
 
-        private static string GetDefaultValStatement(string tableName, ColumnInfo column)
+        private static string GetDefaultValStatement(ColumnInfo column)
         {
             if (column.Default is not null)
             {
-                return $"CONSTRAINT DF_{tableName}_{column.Name} DEFAULT {QuoteDefaultValue(column.Default)}";
+                return $" CONSTRAINT {column.DefaultConstraintName} DEFAULT {QuoteDefaultValue(column.Default)}";
             }
             return "";
         }

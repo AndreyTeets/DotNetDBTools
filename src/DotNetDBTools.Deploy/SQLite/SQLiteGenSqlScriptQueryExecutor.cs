@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text.RegularExpressions;
 using DotNetDBTools.Deploy.Core;
@@ -19,12 +21,12 @@ namespace DotNetDBTools.Deploy.SQLite
 
         public IEnumerable<TOut> Query<TOut>(IQuery query)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public TOut QuerySingleOrDefault<TOut>(IQuery query)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public string GetFinalScript()
@@ -44,8 +46,13 @@ namespace DotNetDBTools.Deploy.SQLite
 
         private string Quote(QueryParameter queryParameter)
         {
-            // TODO quote depending on type
-            return $"'{queryParameter.Value}'";
+            if (queryParameter.Value is null)
+                return "NULL";
+            return queryParameter.Type switch
+            {
+                DbType.String => $"'{queryParameter.Value}'",
+                _ => throw new InvalidOperationException($"Invalid query parameter type: '{queryParameter.Type}'")
+            };
         }
     }
 }

@@ -9,20 +9,16 @@ namespace DotNetDBTools.Deploy.SQLite.Queries
     internal class AlterTableQuery : IQuery
     {
         private const string DNDBTTempPrefix = "DNDBT_";
-        private const string NewTableMetadataParameterName = "@NewTableMetadata";
         private readonly string _sql;
         private readonly List<QueryParameter> _parameters;
 
         public string Sql => _sql;
         public IEnumerable<QueryParameter> Parameters => _parameters;
 
-        public AlterTableQuery(SQLiteTableDiff tableDiff, string newTableMetadataParameterValue)
+        public AlterTableQuery(SQLiteTableDiff tableDiff)
         {
             _sql = GetSql(tableDiff);
-            _parameters = new List<QueryParameter>
-            {
-                new QueryParameter(NewTableMetadataParameterName, newTableMetadataParameterValue),
-            };
+            _parameters = new List<QueryParameter>();
         }
 
         private static string GetSql(SQLiteTableDiff tableDiff)

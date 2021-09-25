@@ -9,9 +9,9 @@ namespace DotNetDBTools.Deploy.MSSQL.Queries.DNDBTSysInfo
 $@"CREATE TABLE {DNDBTSysTables.DNDBTDbObjects}
 (
     {DNDBTSysTables.DNDBTDbObjects.ID} UNIQUEIDENTIFIER PRIMARY KEY,
-    {DNDBTSysTables.DNDBTDbObjects.Type} NVARCHAR(64) NOT NULL,
-    {DNDBTSysTables.DNDBTDbObjects.Name} NVARCHAR(256) NOT NULL,
-    {DNDBTSysTables.DNDBTDbObjects.Metadata} NVARCHAR(MAX) NOT NULL
+    {DNDBTSysTables.DNDBTDbObjects.ParentID} UNIQUEIDENTIFIER NULL,
+    {DNDBTSysTables.DNDBTDbObjects.Type} NVARCHAR(256) NOT NULL,
+    {DNDBTSysTables.DNDBTDbObjects.Name} NVARCHAR(MAX) NOT NULL
 );";
 
         public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();

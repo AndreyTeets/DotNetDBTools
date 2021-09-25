@@ -16,7 +16,8 @@ $@"SELECT
     sm.sql AS {nameof(TableRecord.TableDefinition)}
 FROM sqlite_master sm
 WHERE sm.type = 'table'
-    AND sm.name!='sqlite_sequence';";
+    AND sm.name != 'sqlite_sequence'
+    AND sm.name != '{DNDBTSysTables.DNDBTDbObjects}';";
 
         public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
 
@@ -34,6 +35,8 @@ WHERE sm.type = 'table'
             {
                 foreach (TableRecord tableRecord in tableRecords)
                 {
+                    foreach (ColumnInfo c in tables[tableRecord.TableName].Columns)
+                        c.DefaultConstraintName = GetDefaultConstraintName(tableRecord.TableDefinition, c) ?? c.DefaultConstraintName;
                     foreach (UniqueConstraintInfo uc in tables[tableRecord.TableName].UniqueConstraints)
                         uc.Name = GetUniqueConstraintName(tableRecord.TableDefinition, uc.Columns) ?? uc.Name;
                     foreach (ForeignKeyInfo fk in tables[tableRecord.TableName].ForeignKeys)
@@ -55,6 +58,17 @@ WHERE sm.type = 'table'
                             column.Identity = false;
                     }
                 }
+            }
+
+            private static string GetDefaultConstraintName(string tableDefinition, ColumnInfo column)
+            {
+                if (column.Default is null)
+                    return null;
+                string pattern = @$" {column.Name} [\s|\w|\d|_]+ NULL CONSTRAINT (?<constraintName>[\w|\d|_]+) DEFAULT ";
+                Match match = Regex.Match(tableDefinition, pattern);
+                if (match.Groups["constraintName"].Success)
+                    return match.Groups["constraintName"].Value;
+                return null;
             }
 
             private static string GetUniqueConstraintName(string tableDefinition, IEnumerable<string> columns)

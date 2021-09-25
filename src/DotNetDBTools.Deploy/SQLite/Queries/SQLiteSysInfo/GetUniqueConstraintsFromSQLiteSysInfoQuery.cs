@@ -19,8 +19,9 @@ FROM sqlite_master sm
 INNER JOIN pragma_index_list(sm.name) il
 INNER JOIN pragma_index_info(il.name) ii
 WHERE sm.type = 'table'
-    AND sm.name!='sqlite_sequence'
-    AND il.origin='u';";
+    AND sm.name != 'sqlite_sequence'
+    AND sm.name != '{DNDBTSysTables.DNDBTDbObjects}'
+    AND il.origin = 'u';";
 
         public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
 

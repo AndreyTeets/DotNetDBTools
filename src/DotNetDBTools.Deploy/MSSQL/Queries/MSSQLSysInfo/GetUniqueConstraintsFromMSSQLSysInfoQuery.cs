@@ -24,7 +24,8 @@ INNER JOIN sys.index_columns ic
     ON ic.object_id = t.object_id
         AND ic.index_id = i.index_id
         AND ic.column_id = c.column_id
-WHERE i.is_unique_constraint = 1;";
+WHERE i.is_unique_constraint = 1
+    AND t.name != '{DNDBTSysTables.DNDBTDbObjects}';";
 
         public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
 

@@ -13,13 +13,14 @@ $@"SELECT
     sm.name AS {nameof(ColumnRecord.TableName)},
     ti.name AS {nameof(ColumnRecord.ColumnName)},
     ti.type AS {nameof(ColumnRecord.DataType)},
-    CASE WHEN ti.[notnull]=1 THEN 0 ELSE 1 END AS {nameof(ColumnRecord.Nullable)},
-    CASE WHEN ti.pk=1 AND lower(ti.type)='integer' THEN 1 ELSE 0 END AS {nameof(ColumnRecord.IsIdentityCandidate)},
+    CASE WHEN ti.[notnull] = 1 THEN 0 ELSE 1 END AS {nameof(ColumnRecord.Nullable)},
+    CASE WHEN ti.pk = 1 AND lower(ti.type) = 'integer' THEN 1 ELSE 0 END AS {nameof(ColumnRecord.IsIdentityCandidate)},
     ti.dflt_value AS [{nameof(ColumnRecord.Default)}]
 FROM sqlite_master sm
 INNER JOIN pragma_table_info(sm.name) ti
 WHERE sm.type = 'table'
-    AND sm.name!='sqlite_sequence';";
+    AND sm.name != 'sqlite_sequence'
+    AND sm.name != '{DNDBTSysTables.DNDBTDbObjects}';";
 
         public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
 
@@ -69,6 +70,9 @@ WHERE sm.type = 'table'
                     Nullable = columnRecord.Nullable,
                     Identity = columnRecord.IsIdentityCandidate,
                     Default = ParseDefault(columnRecord.Default),
+                    DefaultConstraintName = columnRecord.Default is not null
+                        ? $"DF_{columnRecord.TableName}_{columnRecord.ColumnName}"
+                        : null,
                 };
             }
 

@@ -12,16 +12,16 @@ namespace DotNetDBTools.Deploy.MSSQL.Queries
         public string Sql => _sql;
         public IEnumerable<QueryParameter> Parameters => _parameters;
 
-        public DropForeignKeyQuery(ForeignKeyInfo fk)
+        public DropForeignKeyQuery(ForeignKeyInfo fk, string tableName)
         {
-            _sql = GetSql(fk);
+            _sql = GetSql(fk, tableName);
             _parameters = new List<QueryParameter>();
         }
 
-        private static string GetSql(ForeignKeyInfo fk)
+        private static string GetSql(ForeignKeyInfo fk, string tableName)
         {
             string query =
-$@"ALTER TABLE {fk.ThisTableName} DROP CONSTRAINT {fk.Name};";
+$@"ALTER TABLE {tableName} DROP CONSTRAINT {fk.Name};";
 
             return query;
         }

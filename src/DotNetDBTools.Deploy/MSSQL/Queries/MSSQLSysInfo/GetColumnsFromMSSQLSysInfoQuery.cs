@@ -10,18 +10,21 @@ namespace DotNetDBTools.Deploy.MSSQL.Queries.MSSQLSysInfo
     {
         public string Sql =>
 $@"SELECT
-    t.TABLE_NAME AS {nameof(ColumnRecord.TableName)},
-    c.COLUMN_NAME AS {nameof(ColumnRecord.ColumnName)},
-    c.DATA_TYPE AS {nameof(ColumnRecord.DataType)},
-    c.DOMAIN_NAME AS {nameof(ColumnRecord.UserDefinedDataType)},
-    CASE WHEN c.IS_NULLABLE='YES' THEN 1 ELSE 0 END AS {nameof(ColumnRecord.Nullable)},
-    COLUMNPROPERTY(object_id(c.TABLE_NAME), c.COLUMN_NAME, 'IsIdentity') AS [{nameof(ColumnRecord.Identity)}],
-    c.COLUMN_DEFAULT AS [{nameof(ColumnRecord.Default)}],
-    c.CHARACTER_OCTET_LENGTH AS {nameof(ColumnRecord.Length)}
-FROM INFORMATION_SCHEMA.TABLES t
-INNER JOIN INFORMATION_SCHEMA.COLUMNS c
-    ON c.TABLE_NAME = t.TABLE_NAME
-WHERE t.TABLE_TYPE='BASE TABLE';";
+    t.name AS {nameof(ColumnRecord.TableName)},
+    c.name AS {nameof(ColumnRecord.ColumnName)},
+    (SELECT tp.name FROM sys.types tp WHERE tp.user_type_id = c.system_type_id) AS {nameof(ColumnRecord.DataType)},
+    (SELECT tp.name FROM sys.types tp WHERE tp.user_type_id = c.user_type_id AND tp.is_user_defined = 1) AS {nameof(ColumnRecord.UserDefinedDataType)},
+    c.is_nullable AS {nameof(ColumnRecord.Nullable)},
+    c.is_identity AS [{nameof(ColumnRecord.Identity)}],
+    dc.definition AS [{nameof(ColumnRecord.Default)}],
+    dc.name AS {nameof(ColumnRecord.DefaultConstraintName)},
+    c.max_length AS {nameof(ColumnRecord.Length)}
+FROM sys.tables t
+INNER JOIN sys.columns c
+    ON c.object_id = t.object_id
+LEFT JOIN sys.default_constraints dc
+    ON dc.object_id = c.default_object_id
+WHERE t.name != '{DNDBTSysTables.DNDBTDbObjects}';";
 
         public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
 
@@ -34,6 +37,7 @@ WHERE t.TABLE_TYPE='BASE TABLE';";
             public bool Nullable { get; set; }
             public bool Identity { get; set; }
             public string Default { get; set; }
+            public string DefaultConstraintName { get; set; }
             public string Length { get; set; }
         }
 
@@ -79,6 +83,7 @@ WHERE t.TABLE_TYPE='BASE TABLE';";
                     Nullable = columnRecord.Nullable,
                     Identity = columnRecord.Identity,
                     Default = ParseDefault(columnRecord.Default),
+                    DefaultConstraintName = columnRecord.DefaultConstraintName,
                 };
             }
 

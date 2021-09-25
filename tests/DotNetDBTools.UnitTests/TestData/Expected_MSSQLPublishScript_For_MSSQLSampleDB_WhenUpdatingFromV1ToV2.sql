@@ -2,6 +2,11 @@
 ALTER TABLE MyTable1 DROP CONSTRAINT FK_MyTable1_MyColumn1_MyTable2_MyColumn1;
 --QUERY END: DropForeignKeyQuery
 
+--QUERY START: DeleteDNDBTSysInfoQuery
+DELETE FROM DNDBTDbObjects
+WHERE ID = 'd11b2a53-32db-432f-bb6b-f91788844ba9';
+--QUERY END: DeleteDNDBTSysInfoQuery
+
 --QUERY START: RenameUserDefinedDataTypeQuery
 EXEC sp_rename 'MyUserDefinedType1', '_DNDBTTemp_MyUserDefinedType1', 'USERDATATYPE';
 --QUERY END: RenameUserDefinedDataTypeQuery
@@ -16,31 +21,22 @@ CREATE TYPE MyUserDefinedType1 FROM VARCHAR(110);
 --QUERY END: CreateTypeQuery
 
 --QUERY START: InsertDNDBTSysInfoQuery
-DECLARE @Metadata NVARCHAR(MAX) = '{
-  "Nullable": true,
-  "UnderlyingDataType": {
-    "Name": "String",
-    "IsUserDefined": false,
-    "Length": 110,
-    "IsUnicode": false,
-    "IsFixedLength": false
-  },
-  "ID": "0cd1e71c-cc9c-440f-ac0b-81a1d6f7ddaa",
-  "Name": "MyUserDefinedType1"
-}';
+DECLARE @ID UNIQUEIDENTIFIER = '0cd1e71c-cc9c-440f-ac0b-81a1d6f7ddaa';
+DECLARE @ParentID UNIQUEIDENTIFIER = NULL;
+DECLARE @Name NVARCHAR(MAX) = 'MyUserDefinedType1';
 INSERT INTO DNDBTDbObjects
 (
     ID,
+    ParentID,
     Type,
-    Name,
-    Metadata
+    Name
 )
 VALUES
 (
-    '0cd1e71c-cc9c-440f-ac0b-81a1d6f7ddaa',
+    @ID,
+    @ParentID,
     'UserDefinedType',
-    'MyUserDefinedType1',
-    @Metadata
+    @Name
 );
 --QUERY END: InsertDNDBTSysInfoQuery
 
@@ -100,276 +96,143 @@ EXEC (@SqlText);
 
 --QUERY START: AlterTableQuery
 EXEC sp_rename 'MyTable2', 'MyTable2';
-
 ALTER TABLE MyTable2 DROP CONSTRAINT PK_MyTable2;
-
-DECLARE @DropDefaultConstraint_MyTable2_MyColumn2_SqlText NVARCHAR(MAX) =
-(
-    SELECT
-        'ALTER TABLE [MyTable2] DROP CONSTRAINT [' + dc.name + '];'
-    FROM sys.tables t
-    INNER JOIN sys.columns c
-        ON c.object_id = t.object_id
-    INNER JOIN sys.default_constraints dc
-        ON dc.object_id = c.default_object_id
-    WHERE t.name = 'MyTable2'
-        AND c.name = 'MyColumn2'
-);
-EXEC (@DropDefaultConstraint_MyTable2_MyColumn2_SqlText);
---ALTER TABLE [MyTable2] DROP CONSTRAINT [DF_MyTable2_MyColumn2];
+ALTER TABLE [MyTable2] DROP CONSTRAINT DF_MyTable2_MyColumn2;
 ALTER TABLE MyTable2 DROP COLUMN MyColumn2;
-DECLARE @DropDefaultConstraint_MyTable2_MyColumn1_SqlText NVARCHAR(MAX) =
-(
-    SELECT
-        'ALTER TABLE [MyTable2] DROP CONSTRAINT [' + dc.name + '];'
-    FROM sys.tables t
-    INNER JOIN sys.columns c
-        ON c.object_id = t.object_id
-    INNER JOIN sys.default_constraints dc
-        ON dc.object_id = c.default_object_id
-    WHERE t.name = 'MyTable2'
-        AND c.name = 'MyColumn1'
-);
-EXEC (@DropDefaultConstraint_MyTable2_MyColumn1_SqlText);
---ALTER TABLE [MyTable2] DROP CONSTRAINT [DF_MyTable2_MyColumn1];
+ALTER TABLE [MyTable2] DROP CONSTRAINT DF_MyTable2_MyColumn1;
 EXEC sp_rename 'MyTable2.MyColumn1', 'MyColumn1NewName', 'COLUMN';
 ALTER TABLE MyTable2 ALTER COLUMN MyColumn1NewName INT NOT NULL;
 ALTER TABLE MyTable2 ADD CONSTRAINT DF_MyTable2_MyColumn1NewName DEFAULT 333 FOR MyColumn1NewName;
 ALTER TABLE MyTable2 ADD MyColumn2 VARBINARY(22) NULL;
 ALTER TABLE MyTable2 ADD CONSTRAINT DF_MyTable2_MyColumn2 DEFAULT 0x000102 FOR MyColumn2;
-
 ALTER TABLE MyTable2 ADD CONSTRAINT PK_MyTable2 PRIMARY KEY (MyColumn1NewName);
-
 --QUERY END: AlterTableQuery
 
+--QUERY START: DeleteDNDBTSysInfoQuery
+DELETE FROM DNDBTDbObjects
+WHERE ID = '3a43615b-40b3-4a13-99e7-93af7c56e8ce';
+--QUERY END: DeleteDNDBTSysInfoQuery
+
+--QUERY START: DeleteDNDBTSysInfoQuery
+DELETE FROM DNDBTDbObjects
+WHERE ID = '5a0d1926-3270-4eb2-92eb-00be56c7af23';
+--QUERY END: DeleteDNDBTSysInfoQuery
+
 --QUERY START: UpdateDNDBTSysInfoQuery
-DECLARE @Metadata NVARCHAR(MAX) = '{
-  "Columns": [
-    {
-      "DataType": {
-        "Name": "Int",
-        "IsUserDefined": false,
-        "Length": 0,
-        "IsUnicode": false,
-        "IsFixedLength": false
-      },
-      "Nullable": false,
-      "Identity": false,
-      "Default": 333,
-      "ID": "c480f22f-7c01-4f41-b282-35e9f5cd1fe3",
-      "Name": "MyColumn1NewName"
-    },
-    {
-      "DataType": {
-        "Name": "Byte",
-        "IsUserDefined": false,
-        "Length": 22,
-        "IsUnicode": false,
-        "IsFixedLength": false
-      },
-      "Nullable": true,
-      "Identity": false,
-      "Default": {
-        "$type": "System.Byte[], System.Private.CoreLib",
-        "$value": "AAEC"
-      },
-      "ID": "c2df19c2-e029-4014-8a5b-4ab42fecb6b8",
-      "Name": "MyColumn2"
-    }
-  ],
-  "PrimaryKey": {
-    "Columns": [
-      "MyColumn1NewName"
-    ],
-    "ID": "3a43615b-40b3-4a13-99e7-93af7c56e8ce",
-    "Name": "PK_MyTable2"
-  },
-  "UniqueConstraints": [],
-  "ForeignKeys": [
-    {
-      "ThisTableName": "MyTable2",
-      "ThisColumnNames": [
-        "MyColumn1NewName",
-        "MyColumn2"
-      ],
-      "ReferencedTableName": "MyTable3",
-      "ReferencedTableColumnNames": [
-        "MyColumn1",
-        "MyColumn2"
-      ],
-      "OnUpdate": "NoAction",
-      "OnDelete": "SetDefault",
-      "ID": "480f3508-9d51-4190-88aa-45bc20e49119",
-      "Name": "FK_MyTable2_MyColumns12_MyTable3_MyColumns12"
-    }
-  ],
-  "ID": "bfb9030c-a8c3-4882-9c42-1c6ad025cf8f",
-  "Name": "MyTable2"
-}';
 UPDATE DNDBTDbObjects SET
-    Name = 'MyTable2',
-    Metadata = @Metadata
+    Name = 'MyTable2'
 WHERE ID = 'bfb9030c-a8c3-4882-9c42-1c6ad025cf8f';
 --QUERY END: UpdateDNDBTSysInfoQuery
 
+--QUERY START: UpdateDNDBTSysInfoQuery
+UPDATE DNDBTDbObjects SET
+    Name = 'MyColumn1NewName'
+WHERE ID = 'c480f22f-7c01-4f41-b282-35e9f5cd1fe3';
+--QUERY END: UpdateDNDBTSysInfoQuery
+
+--QUERY START: InsertDNDBTSysInfoQuery
+DECLARE @ID UNIQUEIDENTIFIER = 'c2df19c2-e029-4014-8a5b-4ab42fecb6b8';
+DECLARE @ParentID UNIQUEIDENTIFIER = 'bfb9030c-a8c3-4882-9c42-1c6ad025cf8f';
+DECLARE @Name NVARCHAR(MAX) = 'MyColumn2';
+INSERT INTO DNDBTDbObjects
+(
+    ID,
+    ParentID,
+    Type,
+    Name
+)
+VALUES
+(
+    @ID,
+    @ParentID,
+    'Column',
+    @Name
+);
+--QUERY END: InsertDNDBTSysInfoQuery
+
+--QUERY START: InsertDNDBTSysInfoQuery
+DECLARE @ID UNIQUEIDENTIFIER = '3a43615b-40b3-4a13-99e7-93af7c56e8ce';
+DECLARE @ParentID UNIQUEIDENTIFIER = 'bfb9030c-a8c3-4882-9c42-1c6ad025cf8f';
+DECLARE @Name NVARCHAR(MAX) = 'PK_MyTable2';
+INSERT INTO DNDBTDbObjects
+(
+    ID,
+    ParentID,
+    Type,
+    Name
+)
+VALUES
+(
+    @ID,
+    @ParentID,
+    'PrimaryKey',
+    @Name
+);
+--QUERY END: InsertDNDBTSysInfoQuery
+
 --QUERY START: AlterTableQuery
 EXEC sp_rename 'MyTable1', 'MyTable1NewName';
-
 ALTER TABLE MyTable1NewName DROP CONSTRAINT UQ_MyTable1_MyColumn2;
 ALTER TABLE MyTable1NewName DROP CONSTRAINT PK_MyTable1;
-
-DECLARE @DropDefaultConstraint_MyTable1NewName_MyColumn2_SqlText NVARCHAR(MAX) =
-(
-    SELECT
-        'ALTER TABLE [MyTable1NewName] DROP CONSTRAINT [' + dc.name + '];'
-    FROM sys.tables t
-    INNER JOIN sys.columns c
-        ON c.object_id = t.object_id
-    INNER JOIN sys.default_constraints dc
-        ON dc.object_id = c.default_object_id
-    WHERE t.name = 'MyTable1NewName'
-        AND c.name = 'MyColumn2'
-);
-EXEC (@DropDefaultConstraint_MyTable1NewName_MyColumn2_SqlText);
---ALTER TABLE [MyTable1NewName] DROP CONSTRAINT [DF_MyTable1NewName_MyColumn2];
+ALTER TABLE [MyTable1NewName] DROP CONSTRAINT DF_MyTable1_MyColumn2;
 ALTER TABLE MyTable1NewName DROP COLUMN MyColumn2;
 ALTER TABLE MyTable1NewName DROP COLUMN MyColumn3;
-DECLARE @DropDefaultConstraint_MyTable1NewName_MyColumn1_SqlText NVARCHAR(MAX) =
-(
-    SELECT
-        'ALTER TABLE [MyTable1NewName] DROP CONSTRAINT [' + dc.name + '];'
-    FROM sys.tables t
-    INNER JOIN sys.columns c
-        ON c.object_id = t.object_id
-    INNER JOIN sys.default_constraints dc
-        ON dc.object_id = c.default_object_id
-    WHERE t.name = 'MyTable1NewName'
-        AND c.name = 'MyColumn1'
-);
-EXEC (@DropDefaultConstraint_MyTable1NewName_MyColumn1_SqlText);
---ALTER TABLE [MyTable1NewName] DROP CONSTRAINT [DF_MyTable1NewName_MyColumn1];
+ALTER TABLE [MyTable1NewName] DROP CONSTRAINT DF_MyTable1_MyColumn1;
 EXEC sp_rename 'MyTable1NewName.MyColumn1', 'MyColumn1', 'COLUMN';
 ALTER TABLE MyTable1NewName ALTER COLUMN MyColumn1 INT NULL;
 ALTER TABLE MyTable1NewName ADD CONSTRAINT DF_MyTable1NewName_MyColumn1 DEFAULT 15 FOR MyColumn1;
-
-
 --QUERY END: AlterTableQuery
 
+--QUERY START: DeleteDNDBTSysInfoQuery
+DELETE FROM DNDBTDbObjects
+WHERE ID = 'f3f08522-26ee-4950-9135-22edf2e4e0cf';
+--QUERY END: DeleteDNDBTSysInfoQuery
+
+--QUERY START: DeleteDNDBTSysInfoQuery
+DELETE FROM DNDBTDbObjects
+WHERE ID = '37a45def-f4a0-4be7-8bfb-8fbed4a7d705';
+--QUERY END: DeleteDNDBTSysInfoQuery
+
+--QUERY START: DeleteDNDBTSysInfoQuery
+DELETE FROM DNDBTDbObjects
+WHERE ID = 'fe68ee3d-09d0-40ac-93f9-5e441fbb4f70';
+--QUERY END: DeleteDNDBTSysInfoQuery
+
+--QUERY START: DeleteDNDBTSysInfoQuery
+DELETE FROM DNDBTDbObjects
+WHERE ID = '6e95de30-e01a-4fb4-b8b7-8f0c40bb682c';
+--QUERY END: DeleteDNDBTSysInfoQuery
+
 --QUERY START: UpdateDNDBTSysInfoQuery
-DECLARE @Metadata NVARCHAR(MAX) = '{
-  "Columns": [
-    {
-      "DataType": {
-        "Name": "Int",
-        "IsUserDefined": false,
-        "Length": 0,
-        "IsUnicode": false,
-        "IsFixedLength": false
-      },
-      "Nullable": true,
-      "Identity": false,
-      "Default": 15,
-      "ID": "a2f2a4de-1337-4594-ae41-72ed4d05f317",
-      "Name": "MyColumn1"
-    }
-  ],
-  "PrimaryKey": null,
-  "UniqueConstraints": [],
-  "ForeignKeys": [
-    {
-      "ThisTableName": "MyTable1NewName",
-      "ThisColumnNames": [
-        "MyColumn1"
-      ],
-      "ReferencedTableName": "MyTable2",
-      "ReferencedTableColumnNames": [
-        "MyColumn1NewName"
-      ],
-      "OnUpdate": "NoAction",
-      "OnDelete": "SetNull",
-      "ID": "d11b2a53-32db-432f-bb6b-f91788844ba9",
-      "Name": "FK_MyTable1_MyColumn1_MyTable2_MyColumn1"
-    }
-  ],
-  "ID": "299675e6-4faa-4d0f-a36a-224306ba5bcb",
-  "Name": "MyTable1NewName"
-}';
 UPDATE DNDBTDbObjects SET
-    Name = 'MyTable1NewName',
-    Metadata = @Metadata
+    Name = 'MyTable1NewName'
 WHERE ID = '299675e6-4faa-4d0f-a36a-224306ba5bcb';
+--QUERY END: UpdateDNDBTSysInfoQuery
+
+--QUERY START: UpdateDNDBTSysInfoQuery
+UPDATE DNDBTDbObjects SET
+    Name = 'MyColumn1'
+WHERE ID = 'a2f2a4de-1337-4594-ae41-72ed4d05f317';
 --QUERY END: UpdateDNDBTSysInfoQuery
 
 --QUERY START: AlterTableQuery
 EXEC sp_rename 'MyTable5', 'MyTable5';
-
-
-DECLARE @DropDefaultConstraint_MyTable5_MyColumn2_SqlText NVARCHAR(MAX) =
-(
-    SELECT
-        'ALTER TABLE [MyTable5] DROP CONSTRAINT [' + dc.name + '];'
-    FROM sys.tables t
-    INNER JOIN sys.columns c
-        ON c.object_id = t.object_id
-    INNER JOIN sys.default_constraints dc
-        ON dc.object_id = c.default_object_id
-    WHERE t.name = 'MyTable5'
-        AND c.name = 'MyColumn2'
-);
-EXEC (@DropDefaultConstraint_MyTable5_MyColumn2_SqlText);
---ALTER TABLE [MyTable5] DROP CONSTRAINT [DF_MyTable5_MyColumn2];
+ALTER TABLE [MyTable5] DROP CONSTRAINT DF_MyTable5_MyColumn2;
 EXEC sp_rename 'MyTable5.MyColumn2', 'MyColumn2', 'COLUMN';
 ALTER TABLE MyTable5 ALTER COLUMN MyColumn2 MyUserDefinedType1 NULL;
 ALTER TABLE MyTable5 ADD CONSTRAINT DF_MyTable5_MyColumn2 DEFAULT 'cc' FOR MyColumn2;
-
-
 --QUERY END: AlterTableQuery
 
 --QUERY START: UpdateDNDBTSysInfoQuery
-DECLARE @Metadata NVARCHAR(MAX) = '{
-  "Columns": [
-    {
-      "DataType": {
-        "Name": "Int",
-        "IsUserDefined": false,
-        "Length": 0,
-        "IsUnicode": false,
-        "IsFixedLength": false
-      },
-      "Nullable": false,
-      "Identity": false,
-      "Default": {
-        "$type": "DotNetDBTools.Models.MSSQL.MSSQLDefaultValueAsFunction, DotNetDBTools.Models",
-        "FunctionText": "ABS(-15)"
-      },
-      "ID": "5309d66f-2030-402e-912e-5547babaa072",
-      "Name": "MyColumn1"
-    },
-    {
-      "DataType": {
-        "Name": "MyUserDefinedType1",
-        "IsUserDefined": true,
-        "Length": 110,
-        "IsUnicode": false,
-        "IsFixedLength": false
-      },
-      "Nullable": true,
-      "Identity": false,
-      "Default": "cc",
-      "ID": "15ae6061-426d-4485-85e6-ecd3e0f98882",
-      "Name": "MyColumn2"
-    }
-  ],
-  "PrimaryKey": null,
-  "UniqueConstraints": [],
-  "ForeignKeys": [],
-  "ID": "6ca51f29-c1bc-4349-b9c1-6f1ea170f162",
-  "Name": "MyTable5"
-}';
 UPDATE DNDBTDbObjects SET
-    Name = 'MyTable5',
-    Metadata = @Metadata
+    Name = 'MyTable5'
 WHERE ID = '6ca51f29-c1bc-4349-b9c1-6f1ea170f162';
+--QUERY END: UpdateDNDBTSysInfoQuery
+
+--QUERY START: UpdateDNDBTSysInfoQuery
+UPDATE DNDBTDbObjects SET
+    Name = 'MyColumn2'
+WHERE ID = '15ae6061-426d-4485-85e6-ecd3e0f98882';
 --QUERY END: UpdateDNDBTSysInfoQuery
 
 --QUERY START: DropTypeQuery
@@ -380,71 +243,88 @@ DROP TYPE _DNDBTTemp_MyUserDefinedType1;
 CREATE TABLE MyTable3
 (
     MyColumn1 INT NOT NULL CONSTRAINT DF_MyTable3_MyColumn1 DEFAULT 333,
-    MyColumn2 VARBINARY(22) NOT NULL ,
+    MyColumn2 VARBINARY(22) NOT NULL,
     CONSTRAINT UQ_MyTable3_MyColumns12 UNIQUE (MyColumn1, MyColumn2)
 );
 --QUERY END: CreateTableQuery
 
 --QUERY START: InsertDNDBTSysInfoQuery
-DECLARE @Metadata NVARCHAR(MAX) = '{
-  "Columns": [
-    {
-      "DataType": {
-        "Name": "Int",
-        "IsUserDefined": false,
-        "Length": 0,
-        "IsUnicode": false,
-        "IsFixedLength": false
-      },
-      "Nullable": false,
-      "Identity": false,
-      "Default": 333,
-      "ID": "726f503a-d944-46ee-a0ff-6a2c2faab46e",
-      "Name": "MyColumn1"
-    },
-    {
-      "DataType": {
-        "Name": "Byte",
-        "IsUserDefined": false,
-        "Length": 22,
-        "IsUnicode": false,
-        "IsFixedLength": false
-      },
-      "Nullable": false,
-      "Identity": false,
-      "Default": null,
-      "ID": "169824e1-8b74-4b60-af17-99656d6dbbee",
-      "Name": "MyColumn2"
-    }
-  ],
-  "PrimaryKey": null,
-  "UniqueConstraints": [
-    {
-      "Columns": [
-        "MyColumn1",
-        "MyColumn2"
-      ],
-      "ID": "fd288e38-35ba-4bb1-ace3-597c99ef26c7",
-      "Name": "UQ_MyTable3_MyColumns12"
-    }
-  ],
-  "ForeignKeys": [],
-  "ID": "474cd761-2522-4529-9d20-2b94115f9626",
-  "Name": "MyTable3"
-}';
+DECLARE @ID UNIQUEIDENTIFIER = '474cd761-2522-4529-9d20-2b94115f9626';
+DECLARE @ParentID UNIQUEIDENTIFIER = NULL;
+DECLARE @Name NVARCHAR(MAX) = 'MyTable3';
 INSERT INTO DNDBTDbObjects
 (
     ID,
+    ParentID,
     Type,
-    Name,
-    Metadata
+    Name
 )
 VALUES
 (
-    '474cd761-2522-4529-9d20-2b94115f9626',
+    @ID,
+    @ParentID,
     'Table',
-    'MyTable3',
-    @Metadata
+    @Name
+);
+--QUERY END: InsertDNDBTSysInfoQuery
+
+--QUERY START: InsertDNDBTSysInfoQuery
+DECLARE @ID UNIQUEIDENTIFIER = '726f503a-d944-46ee-a0ff-6a2c2faab46e';
+DECLARE @ParentID UNIQUEIDENTIFIER = '474cd761-2522-4529-9d20-2b94115f9626';
+DECLARE @Name NVARCHAR(MAX) = 'MyColumn1';
+INSERT INTO DNDBTDbObjects
+(
+    ID,
+    ParentID,
+    Type,
+    Name
+)
+VALUES
+(
+    @ID,
+    @ParentID,
+    'Column',
+    @Name
+);
+--QUERY END: InsertDNDBTSysInfoQuery
+
+--QUERY START: InsertDNDBTSysInfoQuery
+DECLARE @ID UNIQUEIDENTIFIER = '169824e1-8b74-4b60-af17-99656d6dbbee';
+DECLARE @ParentID UNIQUEIDENTIFIER = '474cd761-2522-4529-9d20-2b94115f9626';
+DECLARE @Name NVARCHAR(MAX) = 'MyColumn2';
+INSERT INTO DNDBTDbObjects
+(
+    ID,
+    ParentID,
+    Type,
+    Name
+)
+VALUES
+(
+    @ID,
+    @ParentID,
+    'Column',
+    @Name
+);
+--QUERY END: InsertDNDBTSysInfoQuery
+
+--QUERY START: InsertDNDBTSysInfoQuery
+DECLARE @ID UNIQUEIDENTIFIER = 'fd288e38-35ba-4bb1-ace3-597c99ef26c7';
+DECLARE @ParentID UNIQUEIDENTIFIER = '474cd761-2522-4529-9d20-2b94115f9626';
+DECLARE @Name NVARCHAR(MAX) = 'UQ_MyTable3_MyColumns12';
+INSERT INTO DNDBTDbObjects
+(
+    ID,
+    ParentID,
+    Type,
+    Name
+)
+VALUES
+(
+    @ID,
+    @ParentID,
+    'UniqueConstraint',
+    @Name
 );
 --QUERY END: InsertDNDBTSysInfoQuery
 
@@ -454,8 +334,48 @@ ALTER TABLE MyTable2 ADD CONSTRAINT FK_MyTable2_MyColumns12_MyTable3_MyColumns12
     ON UPDATE NO ACTION ON DELETE SET DEFAULT;
 --QUERY END: CreateForeignKeyQuery
 
+--QUERY START: InsertDNDBTSysInfoQuery
+DECLARE @ID UNIQUEIDENTIFIER = '480f3508-9d51-4190-88aa-45bc20e49119';
+DECLARE @ParentID UNIQUEIDENTIFIER = 'bfb9030c-a8c3-4882-9c42-1c6ad025cf8f';
+DECLARE @Name NVARCHAR(MAX) = 'FK_MyTable2_MyColumns12_MyTable3_MyColumns12';
+INSERT INTO DNDBTDbObjects
+(
+    ID,
+    ParentID,
+    Type,
+    Name
+)
+VALUES
+(
+    @ID,
+    @ParentID,
+    'ForeignKey',
+    @Name
+);
+--QUERY END: InsertDNDBTSysInfoQuery
+
 --QUERY START: CreateForeignKeyQuery
 ALTER TABLE MyTable1NewName ADD CONSTRAINT FK_MyTable1_MyColumn1_MyTable2_MyColumn1 FOREIGN KEY (MyColumn1)
     REFERENCES MyTable2 (MyColumn1NewName)
     ON UPDATE NO ACTION ON DELETE SET NULL;
 --QUERY END: CreateForeignKeyQuery
+
+--QUERY START: InsertDNDBTSysInfoQuery
+DECLARE @ID UNIQUEIDENTIFIER = 'd11b2a53-32db-432f-bb6b-f91788844ba9';
+DECLARE @ParentID UNIQUEIDENTIFIER = '299675e6-4faa-4d0f-a36a-224306ba5bcb';
+DECLARE @Name NVARCHAR(MAX) = 'FK_MyTable1_MyColumn1_MyTable2_MyColumn1';
+INSERT INTO DNDBTDbObjects
+(
+    ID,
+    ParentID,
+    Type,
+    Name
+)
+VALUES
+(
+    @ID,
+    @ParentID,
+    'ForeignKey',
+    @Name
+);
+--QUERY END: InsertDNDBTSysInfoQuery

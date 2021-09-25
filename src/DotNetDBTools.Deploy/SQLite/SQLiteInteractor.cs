@@ -4,6 +4,7 @@ using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.SQLite.Queries;
 using DotNetDBTools.Deploy.SQLite.Queries.DNDBTSysInfo;
 using DotNetDBTools.Deploy.SQLite.Queries.SQLiteSysInfo;
+using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.SQLite;
 
 namespace DotNetDBTools.Deploy.SQLite
@@ -19,18 +20,14 @@ namespace DotNetDBTools.Deploy.SQLite
 
         public SQLiteDatabaseInfo GetDatabaseModelFromDNDBTSysInfo()
         {
-            List<SQLiteTableInfo> tables = new();
-            IEnumerable<string> tablesMetadatas = _queryExecutor.Query<string>(new GetTablesFromDNDBTSysInfoQuery());
-            foreach (string tableMetadata in tablesMetadatas)
-            {
-                SQLiteTableInfo table = SQLiteDbObjectsSerializer.TableFromJson(tableMetadata);
-                tables.Add(table);
-            }
+            SQLiteDatabaseInfo databaseInfo = GenerateDatabaseModelFromSQLiteSysInfo();
 
-            return new SQLiteDatabaseInfo(null)
-            {
-                Tables = tables,
-            };
+            GetAllDbObjectsFromDNDBTSysInfoQuery.ResultsInterpreter.ReplaceDbModelObjectsIDsWithRecordOnes(
+                databaseInfo,
+                _queryExecutor.Query<GetAllDbObjectsFromDNDBTSysInfoQuery.DNDBTDbObjectRecord>(
+                    new GetAllDbObjectsFromDNDBTSysInfoQuery()));
+
+            return databaseInfo;
         }
 
         public SQLiteDatabaseInfo GenerateDatabaseModelFromSQLiteSysInfo()
@@ -69,13 +66,13 @@ namespace DotNetDBTools.Deploy.SQLite
             };
         }
 
-        public void ApplyDatabaseDiff(SQLiteDatabaseDiff databaseDiff)
+        public void ApplyDatabaseDiff(SQLiteDatabaseDiff dbDiff)
         {
-            foreach (SQLiteTableInfo table in databaseDiff.RemovedTables)
+            foreach (SQLiteTableInfo table in dbDiff.RemovedTables)
                 DropTable(table);
-            foreach (SQLiteTableDiff tableDiff in databaseDiff.ChangedTables)
+            foreach (SQLiteTableDiff tableDiff in dbDiff.ChangedTables)
                 AlterTable(tableDiff);
-            foreach (SQLiteTableInfo table in databaseDiff.AddedTables)
+            foreach (SQLiteTableInfo table in dbDiff.AddedTables)
                 CreateTable(table);
         }
 
@@ -99,29 +96,86 @@ namespace DotNetDBTools.Deploy.SQLite
         {
             foreach (SQLiteTableInfo table in database.Tables)
             {
-                string tableMetadata = SQLiteDbObjectsSerializer.TableToJson(table);
-                _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(table.ID, SQLiteDbObjectsTypes.Table, table.Name, tableMetadata));
+                _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(table.ID, null, SQLiteDbObjectsTypes.Table, table.Name));
+                foreach (ColumnInfo column in table.Columns)
+                    _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(column.ID, table.ID, SQLiteDbObjectsTypes.Column, column.Name));
+
+                PrimaryKeyInfo pk = table.PrimaryKey;
+                if (pk is not null)
+                    _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(pk.ID, table.ID, SQLiteDbObjectsTypes.PrimaryKey, pk.Name));
+
+                foreach (UniqueConstraintInfo uc in table.UniqueConstraints)
+                    _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(uc.ID, table.ID, SQLiteDbObjectsTypes.UniqueConstraint, uc.Name));
+
+                foreach (ForeignKeyInfo fk in table.ForeignKeys)
+                    _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(fk.ID, table.ID, SQLiteDbObjectsTypes.ForeignKey, fk.Name));
             }
         }
 
         private void CreateTable(SQLiteTableInfo table)
         {
-            string tableMetadata = SQLiteDbObjectsSerializer.TableToJson(table);
-            _queryExecutor.Execute(new CreateTableQuery(table, tableMetadata));
-            _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(table.ID, SQLiteDbObjectsTypes.Table, table.Name, tableMetadata));
+            _queryExecutor.Execute(new CreateTableQuery(table));
+            _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(table.ID, null, SQLiteDbObjectsTypes.Table, table.Name));
+            foreach (ColumnInfo column in table.Columns)
+                _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(column.ID, table.ID, SQLiteDbObjectsTypes.Column, column.Name));
+
+            PrimaryKeyInfo pk = table.PrimaryKey;
+            if (pk is not null)
+                _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(pk.ID, table.ID, SQLiteDbObjectsTypes.PrimaryKey, pk.Name));
+
+            foreach (UniqueConstraintInfo uc in table.UniqueConstraints)
+                _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(uc.ID, table.ID, SQLiteDbObjectsTypes.UniqueConstraint, uc.Name));
+
+            foreach (ForeignKeyInfo fk in table.ForeignKeys)
+                _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(fk.ID, table.ID, SQLiteDbObjectsTypes.ForeignKey, fk.Name));
         }
 
         private void DropTable(SQLiteTableInfo table)
         {
             _queryExecutor.Execute(new DropTableQuery(table));
             _queryExecutor.Execute(new DeleteDNDBTSysInfoQuery(table.ID));
+            foreach (ColumnInfo column in table.Columns)
+                _queryExecutor.Execute(new DeleteDNDBTSysInfoQuery(column.ID));
+
+            PrimaryKeyInfo pk = table.PrimaryKey;
+            if (pk is not null)
+                _queryExecutor.Execute(new DeleteDNDBTSysInfoQuery(pk.ID));
+
+            foreach (UniqueConstraintInfo uc in table.UniqueConstraints)
+                _queryExecutor.Execute(new DeleteDNDBTSysInfoQuery(uc.ID));
+
+            foreach (ForeignKeyInfo fk in table.ForeignKeys)
+                _queryExecutor.Execute(new DeleteDNDBTSysInfoQuery(fk.ID));
         }
 
         private void AlterTable(SQLiteTableDiff tableDiff)
         {
-            string newTableMetadata = SQLiteDbObjectsSerializer.TableToJson((SQLiteTableInfo)tableDiff.NewTable);
-            _queryExecutor.Execute(new AlterTableQuery(tableDiff, newTableMetadata));
-            _queryExecutor.Execute(new UpdateDNDBTSysInfoQuery(tableDiff.NewTable.ID, tableDiff.NewTable.Name, newTableMetadata));
+            _queryExecutor.Execute(new AlterTableQuery(tableDiff));
+
+            foreach (ForeignKeyInfo fk in tableDiff.RemovedForeignKeys)
+                _queryExecutor.Execute(new DeleteDNDBTSysInfoQuery(fk.ID));
+            foreach (UniqueConstraintInfo uc in tableDiff.RemovedUniqueConstraints)
+                _queryExecutor.Execute(new DeleteDNDBTSysInfoQuery(uc.ID));
+            if (tableDiff.RemovedPrimaryKey is not null)
+                _queryExecutor.Execute(new DeleteDNDBTSysInfoQuery(tableDiff.RemovedPrimaryKey.ID));
+            foreach (ColumnInfo column in tableDiff.RemovedColumns)
+                _queryExecutor.Execute(new DeleteDNDBTSysInfoQuery(column.ID));
+
+            _queryExecutor.Execute(new UpdateDNDBTSysInfoQuery(tableDiff.NewTable.ID, tableDiff.NewTable.Name));
+            foreach (ColumnDiff columnDiff in tableDiff.ChangedColumns)
+                _queryExecutor.Execute(new UpdateDNDBTSysInfoQuery(columnDiff.NewColumn.ID, columnDiff.NewColumn.Name));
+
+            foreach (ColumnInfo column in tableDiff.AddedColumns)
+                _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(column.ID, tableDiff.NewTable.ID, SQLiteDbObjectsTypes.Column, column.Name));
+            if (tableDiff.AddedPrimaryKey is not null)
+            {
+                _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(
+                    tableDiff.AddedPrimaryKey.ID, tableDiff.NewTable.ID, SQLiteDbObjectsTypes.PrimaryKey, tableDiff.AddedPrimaryKey.Name));
+            }
+            foreach (UniqueConstraintInfo uc in tableDiff.AddedUniqueConstraints)
+                _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(uc.ID, tableDiff.NewTable.ID, SQLiteDbObjectsTypes.UniqueConstraint, uc.Name));
+            foreach (ForeignKeyInfo fk in tableDiff.AddedForeignKeys)
+                _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(fk.ID, tableDiff.NewTable.ID, SQLiteDbObjectsTypes.ForeignKey, fk.Name));
         }
     }
 }

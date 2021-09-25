@@ -31,27 +31,14 @@ namespace DotNetDBTools.Deploy.MSSQL
 
         public MSSQLDatabaseInfo GetDatabaseModelFromDNDBTSysInfo()
         {
-            List<MSSQLTableInfo> tables = new();
-            IEnumerable<string> tablesMetadatas = _queryExecutor.Query<string>(new GetTablesFromDNDBTSysInfoQuery());
-            foreach (string tableMetadata in tablesMetadatas)
-            {
-                MSSQLTableInfo table = MSSQLDbObjectsSerializer.TableFromJson(tableMetadata);
-                tables.Add(table);
-            }
+            MSSQLDatabaseInfo databaseInfo = GenerateDatabaseModelFromMSSQLSysInfo();
 
-            List<MSSQLUserDefinedTypeInfo> userDefinedTypes = new();
-            IEnumerable<string> userDefinedTypesMetadatas = _queryExecutor.Query<string>(new GetTypesFromDNDBTSysInfoQuery());
-            foreach (string userDefinedTypeMetadata in userDefinedTypesMetadatas)
-            {
-                MSSQLUserDefinedTypeInfo userDefinedType = MSSQLDbObjectsSerializer.UserDefinedTypeFromJson(userDefinedTypeMetadata);
-                userDefinedTypes.Add(userDefinedType);
-            }
+            GetAllDbObjectsFromDNDBTSysInfoQuery.ResultsInterpreter.ReplaceDbModelObjectsIDsWithRecordOnes(
+                databaseInfo,
+                _queryExecutor.Query<GetAllDbObjectsFromDNDBTSysInfoQuery.DNDBTDbObjectRecord>(
+                    new GetAllDbObjectsFromDNDBTSysInfoQuery()));
 
-            return new MSSQLDatabaseInfo(null)
-            {
-                Tables = tables,
-                UserDefinedTypes = userDefinedTypes,
-            };
+            return databaseInfo;
         }
 
         public MSSQLDatabaseInfo GenerateDatabaseModelFromMSSQLSysInfo()
@@ -97,7 +84,7 @@ namespace DotNetDBTools.Deploy.MSSQL
             foreach (MSSQLViewInfo view in dbDiff.RemovedViews.Concat(dbDiff.ChangedViews.Select(x => x.OldView)))
                 DropView(view);
             foreach (ForeignKeyInfo fk in dbDiff.AllForeignKeysToDrop)
-                DropForeignKey(fk);
+                DropForeignKey(fk, dbDiff.OldDatabase);
             foreach (MSSQLTableInfo table in dbDiff.RemovedTables)
                 DropTable(table);
 
@@ -115,7 +102,7 @@ namespace DotNetDBTools.Deploy.MSSQL
             foreach (MSSQLTableInfo table in dbDiff.AddedTables)
                 CreateTable(table);
             foreach (ForeignKeyInfo fk in dbDiff.AllForeignKeysToAdd)
-                CreateForeignKey(fk);
+                CreateForeignKey(fk, dbDiff.NewDatabase);
             foreach (MSSQLViewInfo view in dbDiff.AddedViews.Concat(dbDiff.ChangedViews.Select(x => x.NewView)))
                 CreateView(view);
             foreach (MSSQLFunctionInfo function in dbDiff.AddedFunctions.Concat(dbDiff.ChangedFunctions.Select(x => x.NewFunction)))
@@ -143,59 +130,101 @@ namespace DotNetDBTools.Deploy.MSSQL
         {
             foreach (MSSQLTableInfo table in database.Tables)
             {
-                string tableMetadata = MSSQLDbObjectsSerializer.TableToJson(table);
-                _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(table.ID, MSSQLDbObjectsTypes.Table, table.Name, tableMetadata));
+                _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(table.ID, null, MSSQLDbObjectsTypes.Table, table.Name));
+                foreach (ColumnInfo column in table.Columns)
+                    _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(column.ID, table.ID, MSSQLDbObjectsTypes.Column, column.Name));
+
+                PrimaryKeyInfo pk = table.PrimaryKey;
+                if (pk is not null)
+                    _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(pk.ID, table.ID, MSSQLDbObjectsTypes.PrimaryKey, pk.Name));
+
+                foreach (UniqueConstraintInfo uc in table.UniqueConstraints)
+                    _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(uc.ID, table.ID, MSSQLDbObjectsTypes.UniqueConstraint, uc.Name));
+
+                foreach (ForeignKeyInfo fk in table.ForeignKeys)
+                    _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(fk.ID, table.ID, MSSQLDbObjectsTypes.ForeignKey, fk.Name));
             }
             foreach (MSSQLViewInfo view in database.Views)
-            {
-                string tableMetadata = "MSSQLDbObjectsSerializer.ViewToJson(view)";
-                _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(view.ID, MSSQLDbObjectsTypes.View, view.Name, tableMetadata));
-            }
+                _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(view.ID, null, MSSQLDbObjectsTypes.View, view.Name));
             foreach (MSSQLFunctionInfo function in database.Functions)
-            {
-                string tableMetadata = "MSSQLDbObjectsSerializer.FunctionToJson(function)";
-                _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(function.ID, MSSQLDbObjectsTypes.Function, function.Name, tableMetadata));
-            }
-            foreach (MSSQLUserDefinedTypeInfo userDefinedType in database.UserDefinedTypes)
-            {
-                string userDefinedTypeMetadata = MSSQLDbObjectsSerializer.UserDefinedTypeToJson(userDefinedType);
-                _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(userDefinedType.ID, MSSQLDbObjectsTypes.UserDefinedType, userDefinedType.Name, userDefinedTypeMetadata));
-            }
+                _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(function.ID, null, MSSQLDbObjectsTypes.Function, function.Name));
+            foreach (MSSQLUserDefinedTypeInfo udt in database.UserDefinedTypes)
+                _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(udt.ID, null, MSSQLDbObjectsTypes.UserDefinedType, udt.Name));
         }
 
         private void CreateTable(MSSQLTableInfo table)
         {
-            string tableMetadata = MSSQLDbObjectsSerializer.TableToJson(table);
             _queryExecutor.Execute(new CreateTableQuery(table));
-            _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(table.ID, MSSQLDbObjectsTypes.Table, table.Name, tableMetadata));
+            _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(table.ID, null, MSSQLDbObjectsTypes.Table, table.Name));
+            foreach (ColumnInfo column in table.Columns)
+                _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(column.ID, table.ID, MSSQLDbObjectsTypes.Column, column.Name));
+
+            PrimaryKeyInfo pk = table.PrimaryKey;
+            if (pk is not null)
+                _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(pk.ID, table.ID, MSSQLDbObjectsTypes.PrimaryKey, pk.Name));
+
+            foreach (UniqueConstraintInfo uc in table.UniqueConstraints)
+                _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(uc.ID, table.ID, MSSQLDbObjectsTypes.UniqueConstraint, uc.Name));
         }
 
         private void DropTable(MSSQLTableInfo table)
         {
             _queryExecutor.Execute(new DropTableQuery(table));
             _queryExecutor.Execute(new DeleteDNDBTSysInfoQuery(table.ID));
+            foreach (ColumnInfo column in table.Columns)
+                _queryExecutor.Execute(new DeleteDNDBTSysInfoQuery(column.ID));
+
+            PrimaryKeyInfo pk = table.PrimaryKey;
+            if (pk is not null)
+                _queryExecutor.Execute(new DeleteDNDBTSysInfoQuery(pk.ID));
+
+            foreach (UniqueConstraintInfo uc in table.UniqueConstraints)
+                _queryExecutor.Execute(new DeleteDNDBTSysInfoQuery(uc.ID));
         }
 
         private void AlterTable(MSSQLTableDiff tableDiff)
         {
-            string newTableMetadata = MSSQLDbObjectsSerializer.TableToJson((MSSQLTableInfo)tableDiff.NewTable);
             _queryExecutor.Execute(new AlterTableQuery(tableDiff));
-            _queryExecutor.Execute(new UpdateDNDBTSysInfoQuery(tableDiff.NewTable.ID, tableDiff.NewTable.Name, newTableMetadata));
+
+            foreach (UniqueConstraintInfo uc in tableDiff.RemovedUniqueConstraints)
+                _queryExecutor.Execute(new DeleteDNDBTSysInfoQuery(uc.ID));
+            if (tableDiff.RemovedPrimaryKey is not null)
+                _queryExecutor.Execute(new DeleteDNDBTSysInfoQuery(tableDiff.RemovedPrimaryKey.ID));
+            foreach (ColumnInfo column in tableDiff.RemovedColumns)
+                _queryExecutor.Execute(new DeleteDNDBTSysInfoQuery(column.ID));
+
+            _queryExecutor.Execute(new UpdateDNDBTSysInfoQuery(tableDiff.NewTable.ID, tableDiff.NewTable.Name));
+            foreach (ColumnDiff columnDiff in tableDiff.ChangedColumns)
+                _queryExecutor.Execute(new UpdateDNDBTSysInfoQuery(columnDiff.NewColumn.ID, columnDiff.NewColumn.Name));
+
+            foreach (ColumnInfo column in tableDiff.AddedColumns)
+                _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(column.ID, tableDiff.NewTable.ID, MSSQLDbObjectsTypes.Column, column.Name));
+            if (tableDiff.AddedPrimaryKey is not null)
+            {
+                _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(
+                    tableDiff.AddedPrimaryKey.ID, tableDiff.NewTable.ID, MSSQLDbObjectsTypes.PrimaryKey, tableDiff.AddedPrimaryKey.Name));
+            }
+            foreach (UniqueConstraintInfo uc in tableDiff.AddedUniqueConstraints)
+                _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(uc.ID, tableDiff.NewTable.ID, MSSQLDbObjectsTypes.UniqueConstraint, uc.Name));
+        }
+
+        private void CreateForeignKey(ForeignKeyInfo fk, DatabaseInfo database)
+        {
+            TableInfo table = database.Tables.Single(x => x.ForeignKeys.Any(y => y.Name == fk.Name));
+            _queryExecutor.Execute(new CreateForeignKeyQuery(fk, table.Name));
+            _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(fk.ID, table.ID, MSSQLDbObjectsTypes.ForeignKey, fk.Name));
+        }
+
+        private void DropForeignKey(ForeignKeyInfo fk, DatabaseInfo database)
+        {
+            TableInfo table = database.Tables.Single(x => x.ForeignKeys.Any(y => y.Name == fk.Name));
+            _queryExecutor.Execute(new DropForeignKeyQuery(fk, table.Name));
+            _queryExecutor.Execute(new DeleteDNDBTSysInfoQuery(fk.ID));
         }
 
         private void CreateView(MSSQLViewInfo view)
         {
             _queryExecutor.Execute(new GenericQuery($"create view {view.Name} {view.Code};"));
-        }
-
-        private void CreateForeignKey(ForeignKeyInfo fk)
-        {
-            _queryExecutor.Execute(new CreateForeignKeyQuery(fk));
-        }
-
-        private void DropForeignKey(ForeignKeyInfo fk)
-        {
-            _queryExecutor.Execute(new DropForeignKeyQuery(fk));
         }
 
         private void DropView(MSSQLViewInfo view)
@@ -213,23 +242,22 @@ namespace DotNetDBTools.Deploy.MSSQL
             _queryExecutor.Execute(new GenericQuery($"drop function {function.Name};"));
         }
 
-        private void CreateUserDefinedType(MSSQLUserDefinedTypeInfo userDefinedType)
-        {
-            string userDefinedTypeMetadata = MSSQLDbObjectsSerializer.UserDefinedTypeToJson(userDefinedType);
-            _queryExecutor.Execute(new CreateTypeQuery(userDefinedType));
-            _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(userDefinedType.ID, MSSQLDbObjectsTypes.UserDefinedType, userDefinedType.Name, userDefinedTypeMetadata));
-        }
-
-        private void DropUserDefinedType(MSSQLUserDefinedTypeInfo userDefinedType)
-        {
-            _queryExecutor.Execute(new DropTypeQuery(userDefinedType));
-        }
-
         private void RenameUserDefinedTypeToTempInDbAndInDbDiff(MSSQLUserDefinedTypeInfo userDefinedType)
         {
             _queryExecutor.Execute(new RenameUserDefinedDataTypeQuery(userDefinedType));
             userDefinedType.Name = $"_DNDBTTemp_{userDefinedType.Name}";
             _queryExecutor.Execute(new DeleteDNDBTSysInfoQuery(userDefinedType.ID));
+        }
+
+        private void CreateUserDefinedType(MSSQLUserDefinedTypeInfo udt)
+        {
+            _queryExecutor.Execute(new CreateTypeQuery(udt));
+            _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(udt.ID, null, MSSQLDbObjectsTypes.UserDefinedType, udt.Name));
+        }
+
+        private void DropUserDefinedType(MSSQLUserDefinedTypeInfo userDefinedType)
+        {
+            _queryExecutor.Execute(new DropTypeQuery(userDefinedType));
         }
 
         private void UseNewUDTInAllTables(MSSQLUserDefinedTypeDiff userDefinedTypeDiff)

@@ -27,22 +27,18 @@ namespace DotNetDBTools.Deploy.MSSQL.Queries
             StringBuilder sb = new();
 
             sb.Append(Queries.RenameTable(tableDiff.OldTable.Name, tableDiff.NewTable.Name));
-            sb.AppendLine();
 
             foreach (UniqueConstraintInfo uc in tableDiff.RemovedUniqueConstraints)
                 sb.Append(Queries.DropUniqueConstraint(tableDiff.NewTable.Name, uc.Name));
             if (tableDiff.RemovedPrimaryKey is not null)
                 sb.Append(Queries.DropPrimaryKey(tableDiff.NewTable.Name, tableDiff.RemovedPrimaryKey.Name));
-            sb.AppendLine();
 
             AppendColumnsAlters(sb, tableDiff);
-            sb.AppendLine();
 
             if (tableDiff.AddedPrimaryKey is not null)
                 sb.Append(Queries.AddPrimaryKey(tableDiff.NewTable.Name, tableDiff.AddedPrimaryKey));
             foreach (UniqueConstraintInfo uc in tableDiff.AddedUniqueConstraints)
                 sb.Append(Queries.AddUniqueConstraint(tableDiff.NewTable.Name, uc));
-            sb.AppendLine();
 
             return sb.ToString();
         }
@@ -52,14 +48,14 @@ namespace DotNetDBTools.Deploy.MSSQL.Queries
             foreach (ColumnInfo column in tableDiff.RemovedColumns)
             {
                 if (column.Default is not null)
-                    sb.Append(Queries.DropDefaultConstraint(tableDiff.NewTable.Name, column.Name));
+                    sb.Append(Queries.DropDefaultConstraint(tableDiff.NewTable.Name, column));
                 sb.Append(Queries.DropColumn(tableDiff.NewTable.Name, column.Name));
             }
 
             foreach (ColumnDiff columnDiff in tableDiff.ChangedColumns)
             {
                 if (columnDiff.OldColumn.Default is not null)
-                    sb.Append(Queries.DropDefaultConstraint(tableDiff.NewTable.Name, columnDiff.OldColumn.Name));
+                    sb.Append(Queries.DropDefaultConstraint(tableDiff.NewTable.Name, columnDiff.OldColumn));
 
                 sb.Append(Queries.RenameColumn(tableDiff.NewTable.Name, columnDiff.OldColumn.Name, columnDiff.NewColumn.Name));
                 sb.Append(Queries.AlterColumnTypeAndNullability(tableDiff.NewTable.Name, columnDiff.NewColumn));
@@ -119,24 +115,11 @@ ALTER TABLE {tableName} DROP CONSTRAINT {ucName};"
 
             public static string AddDefaultConstraint(string tableName, ColumnInfo c) =>
 $@"
-ALTER TABLE {tableName} ADD CONSTRAINT DF_{tableName}_{c.Name} DEFAULT {QuoteDefaultValue(c.Default)} FOR {c.Name};"
+ALTER TABLE {tableName} ADD CONSTRAINT {c.DefaultConstraintName} DEFAULT {QuoteDefaultValue(c.Default)} FOR {c.Name};"
                 ;
-            public static string DropDefaultConstraint(string tableName, string columnName) =>
+            public static string DropDefaultConstraint(string tableName, ColumnInfo c) =>
 $@"
-DECLARE @DropDefaultConstraint_{tableName}_{columnName}_SqlText NVARCHAR(MAX) =
-(
-    SELECT
-        'ALTER TABLE [{tableName}] DROP CONSTRAINT [' + dc.name + '];'
-    FROM sys.tables t
-    INNER JOIN sys.columns c
-        ON c.object_id = t.object_id
-    INNER JOIN sys.default_constraints dc
-        ON dc.object_id = c.default_object_id
-    WHERE t.name = '{tableName}'
-        AND c.name = '{columnName}'
-);
-EXEC (@DropDefaultConstraint_{tableName}_{columnName}_SqlText);
---ALTER TABLE [{tableName}] DROP CONSTRAINT [DF_{tableName}_{columnName}];" // TODO DefaultConstraintName in columns
+ALTER TABLE [{tableName}] DROP CONSTRAINT {c.DefaultConstraintName};"
                 ;
         }
     }

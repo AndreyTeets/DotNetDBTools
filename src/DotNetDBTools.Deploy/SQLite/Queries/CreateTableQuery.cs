@@ -7,20 +7,16 @@ namespace DotNetDBTools.Deploy.SQLite.Queries
 {
     internal class CreateTableQuery : IQuery
     {
-        private const string MetadataParameterName = "@Metadata";
         private readonly string _sql;
         private readonly List<QueryParameter> _parameters;
 
         public string Sql => _sql;
         public IEnumerable<QueryParameter> Parameters => _parameters;
 
-        public CreateTableQuery(SQLiteTableInfo table, string metadataParameterValue)
+        public CreateTableQuery(SQLiteTableInfo table)
         {
             _sql = GetSql(table);
-            _parameters = new List<QueryParameter>
-            {
-                new QueryParameter(MetadataParameterName, metadataParameterValue),
-            };
+            _parameters = new List<QueryParameter>();
         }
 
         private static string GetSql(SQLiteTableInfo table)

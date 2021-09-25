@@ -11,20 +11,29 @@ namespace DotNetDBTools.Deploy.MSSQL.Queries.MSSQLSysInfo
     {
         public string Sql =>
 $@"SELECT
-    thisKey.TABLE_NAME AS {nameof(ForeignKeyRecord.ThisTableName)},
-    thisKey.CONSTRAINT_NAME AS {nameof(ForeignKeyRecord.ForeignKeyName)},
-    thisKey.COLUMN_NAME AS {nameof(ForeignKeyRecord.ThisColumnName)},
-    thisKey.ORDINAL_POSITION AS {nameof(ForeignKeyRecord.ThisColumnPosition)},
-    referencedKey.TABLE_NAME AS {nameof(ForeignKeyRecord.ReferencedTableName)},
-    referencedKey.COLUMN_NAME AS {nameof(ForeignKeyRecord.ReferencedColumnName)},
-    referencedKey.ORDINAL_POSITION AS {nameof(ForeignKeyRecord.ReferencedColumnPosition)},
-    keyMap.UPDATE_RULE AS {nameof(ForeignKeyRecord.OnUpdate)},
-    keyMap.DELETE_RULE AS {nameof(ForeignKeyRecord.OnDelete)}
-FROM INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS keyMap
-INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE thisKey
-    ON thisKey.CONSTRAINT_NAME = keyMap.CONSTRAINT_NAME
-INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE referencedKey
-    ON referencedKey.CONSTRAINT_NAME = keyMap.UNIQUE_CONSTRAINT_NAME;";
+    thisTable.name AS {nameof(ForeignKeyRecord.ThisTableName)},
+    foreignKey.name AS {nameof(ForeignKeyRecord.ForeignKeyName)},
+    thisColumns.name AS {nameof(ForeignKeyRecord.ThisColumnName)},
+    fkColumnsMap.constraint_column_id AS {nameof(ForeignKeyRecord.ThisColumnPosition)},
+    referencedTable.name AS {nameof(ForeignKeyRecord.ReferencedTableName)},
+    referencedColumns.name AS {nameof(ForeignKeyRecord.ReferencedColumnName)},
+    fkColumnsMap.constraint_column_id AS  {nameof(ForeignKeyRecord.ReferencedColumnPosition)},
+    foreignKey.update_referential_action_desc AS {nameof(ForeignKeyRecord.OnUpdate)},
+    foreignKey.delete_referential_action_desc AS {nameof(ForeignKeyRecord.OnDelete)}
+FROM sys.tables thisTable
+INNER JOIN sys.foreign_keys foreignKey
+    ON foreignKey.parent_object_id = thisTable.object_id
+INNER JOIN sys.tables referencedTable
+    ON referencedTable.object_id = foreignKey.referenced_object_id
+INNER JOIN sys.foreign_key_columns fkColumnsMap
+    ON fkColumnsMap.constraint_object_id = foreignKey.object_id
+INNER JOIN sys.columns thisColumns
+    ON thisColumns.object_id = foreignKey.parent_object_id
+        AND thisColumns.column_id = fkColumnsMap.parent_column_id
+INNER JOIN sys.columns referencedColumns
+    ON referencedColumns.object_id = foreignKey.referenced_object_id
+        AND referencedColumns.column_id = fkColumnsMap.referenced_column_id
+WHERE thisTable.name != '{DNDBTSysTables.DNDBTDbObjects}';";
 
         public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
 
@@ -49,20 +58,28 @@ INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE referencedKey
             {
                 Dictionary<string, SortedDictionary<int, string>> thisColumnNames = new();
                 Dictionary<string, SortedDictionary<int, string>> referencedColumnNames = new();
-                foreach (ForeignKeyRecord foreignKeyRecord in foreignKeyRecords)
+                Dictionary<string, HashSet<string>> addedForeignKeysForTable = new();
+                foreach (ForeignKeyRecord fkr in foreignKeyRecords)
                 {
-                    if (!thisColumnNames.ContainsKey(foreignKeyRecord.ForeignKeyName))
-                        thisColumnNames.Add(foreignKeyRecord.ForeignKeyName, new SortedDictionary<int, string>());
-                    if (!referencedColumnNames.ContainsKey(foreignKeyRecord.ForeignKeyName))
-                        referencedColumnNames.Add(foreignKeyRecord.ForeignKeyName, new SortedDictionary<int, string>());
+                    if (!addedForeignKeysForTable.ContainsKey(fkr.ThisTableName))
+                        addedForeignKeysForTable.Add(fkr.ThisTableName, new HashSet<string>());
 
-                    thisColumnNames[foreignKeyRecord.ForeignKeyName].Add(
-                        foreignKeyRecord.ThisColumnPosition, foreignKeyRecord.ThisColumnName);
-                    referencedColumnNames[foreignKeyRecord.ForeignKeyName].Add(
-                        foreignKeyRecord.ReferencedColumnPosition, foreignKeyRecord.ReferencedColumnName);
+                    if (!thisColumnNames.ContainsKey(fkr.ForeignKeyName))
+                        thisColumnNames.Add(fkr.ForeignKeyName, new SortedDictionary<int, string>());
+                    if (!referencedColumnNames.ContainsKey(fkr.ForeignKeyName))
+                        referencedColumnNames.Add(fkr.ForeignKeyName, new SortedDictionary<int, string>());
 
-                    ForeignKeyInfo foreignKeyInfo = MapExceptColumnsToForeignKeyInfo(foreignKeyRecord);
-                    ((List<ForeignKeyInfo>)tables[foreignKeyRecord.ThisTableName].ForeignKeys).Add(foreignKeyInfo);
+                    thisColumnNames[fkr.ForeignKeyName].Add(
+                        fkr.ThisColumnPosition, fkr.ThisColumnName);
+                    referencedColumnNames[fkr.ForeignKeyName].Add(
+                        fkr.ReferencedColumnPosition, fkr.ReferencedColumnName);
+
+                    if (!addedForeignKeysForTable[fkr.ThisTableName].Contains(fkr.ForeignKeyName))
+                    {
+                        ForeignKeyInfo foreignKeyInfo = MapExceptColumnsToForeignKeyInfo(fkr);
+                        ((List<ForeignKeyInfo>)tables[fkr.ThisTableName].ForeignKeys).Add(foreignKeyInfo);
+                        addedForeignKeysForTable[fkr.ThisTableName].Add(fkr.ForeignKeyName);
+                    }
                 }
 
                 foreach (MSSQLTableInfo table in tables.Values)
@@ -81,7 +98,6 @@ INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE referencedKey
                 {
                     ID = Guid.NewGuid(),
                     Name = foreignKeyRecord.ForeignKeyName,
-                    ThisTableName = foreignKeyRecord.ThisTableName,
                     ReferencedTableName = foreignKeyRecord.ReferencedTableName,
                     OnUpdate = MapUpdateActionName(foreignKeyRecord.OnUpdate),
                     OnDelete = MapUpdateActionName(foreignKeyRecord.OnDelete),
@@ -90,10 +106,10 @@ INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE referencedKey
                 static string MapUpdateActionName(string sqlActionName) =>
                     sqlActionName switch
                     {
-                        "NO ACTION" => "NoAction",
+                        "NO_ACTION" => "NoAction",
                         "CASCADE" => "Cascade",
-                        "SET DEFAULT" => "SetDefault",
-                        "NOT NULL" => "SetNull",
+                        "SET_DEFAULT" => "SetDefault",
+                        "SET_NULL" => "SetNull",
                         _ => throw new InvalidOperationException($"Invalid sqlActionName: '{sqlActionName}'")
                     };
             }

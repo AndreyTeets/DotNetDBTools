@@ -94,7 +94,8 @@ namespace DotNetDBTools.IntegrationTests.MSSQL
             dbInfoFromDNDBTSysInfo.Should().BeEquivalentTo(dbInfoFromDbAssembly, options => options
                 .Excluding(dbInfo => dbInfo.Name)
                 .Excluding(dbInfo => dbInfo.Functions)
-                .Excluding(dbInfo => dbInfo.Views));
+                .Excluding(dbInfo => dbInfo.Views)
+                .Using(new MSSQLDefaultValueAsFunctionComparer()));
         }
 
         [TestMethod]

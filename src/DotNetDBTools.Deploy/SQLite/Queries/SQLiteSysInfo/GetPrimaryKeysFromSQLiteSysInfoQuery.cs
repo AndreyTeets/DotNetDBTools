@@ -19,7 +19,9 @@ FROM sqlite_master sm
 INNER JOIN pragma_index_list(sm.name) il
 INNER JOIN pragma_index_info(il.name) ii
 WHERE sm.type = 'table'
-    AND il.origin='pk'
+    AND sm.name != 'sqlite_sequence'
+    AND sm.name != '{DNDBTSysTables.DNDBTDbObjects}'
+    AND il.origin = 'pk'
 UNION
 SELECT
     sm.name AS {nameof(PrimaryKeyRecord.TableName)},
@@ -29,9 +31,10 @@ SELECT
 FROM sqlite_master sm
 INNER JOIN pragma_table_info(sm.name) ti
 WHERE sm.type = 'table'
-    AND sm.name!='sqlite_sequence'
-    AND ti.pk=1
-    AND lower(ti.type)='integer';";
+    AND sm.name != 'sqlite_sequence'
+    AND sm.name != '{DNDBTSysTables.DNDBTDbObjects}'
+    AND ti.pk = 1
+    AND lower(ti.type) = 'integer';";
 
         public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
 

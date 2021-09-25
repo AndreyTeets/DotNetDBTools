@@ -3,6 +3,10 @@
     public enum SQLiteDbObjectsTypes
     {
         Table,
+        Column,
+        PrimaryKey,
+        UniqueConstraint,
+        ForeignKey,
         View,
     }
 }

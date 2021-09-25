@@ -23,7 +23,8 @@ $@"SELECT
 FROM sqlite_master sm
 INNER JOIN pragma_foreign_key_list(sm.name) fkl
 WHERE sm.type = 'table'
-    AND sm.name!='sqlite_sequence';";
+    AND sm.name != 'sqlite_sequence'
+    AND sm.name != '{DNDBTSysTables.DNDBTDbObjects}';";
 
         public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
 
@@ -48,20 +49,28 @@ WHERE sm.type = 'table'
             {
                 Dictionary<string, SortedDictionary<int, string>> thisColumnNames = new();
                 Dictionary<string, SortedDictionary<int, string>> referencedColumnNames = new();
-                foreach (ForeignKeyRecord foreignKeyRecord in foreignKeyRecords)
+                Dictionary<string, HashSet<string>> addedForeignKeysForTable = new();
+                foreach (ForeignKeyRecord fkr in foreignKeyRecords)
                 {
-                    if (!thisColumnNames.ContainsKey(foreignKeyRecord.ForeignKeyName))
-                        thisColumnNames.Add(foreignKeyRecord.ForeignKeyName, new SortedDictionary<int, string>());
-                    if (!referencedColumnNames.ContainsKey(foreignKeyRecord.ForeignKeyName))
-                        referencedColumnNames.Add(foreignKeyRecord.ForeignKeyName, new SortedDictionary<int, string>());
+                    if (!addedForeignKeysForTable.ContainsKey(fkr.ThisTableName))
+                        addedForeignKeysForTable.Add(fkr.ThisTableName, new HashSet<string>());
 
-                    thisColumnNames[foreignKeyRecord.ForeignKeyName].Add(
-                        foreignKeyRecord.ThisColumnPosition, foreignKeyRecord.ThisColumnName);
-                    referencedColumnNames[foreignKeyRecord.ForeignKeyName].Add(
-                        foreignKeyRecord.ReferencedColumnPosition, foreignKeyRecord.ReferencedColumnName);
+                    if (!thisColumnNames.ContainsKey(fkr.ForeignKeyName))
+                        thisColumnNames.Add(fkr.ForeignKeyName, new SortedDictionary<int, string>());
+                    if (!referencedColumnNames.ContainsKey(fkr.ForeignKeyName))
+                        referencedColumnNames.Add(fkr.ForeignKeyName, new SortedDictionary<int, string>());
 
-                    ForeignKeyInfo foreignKeyInfo = MapExceptColumnsToForeignKeyInfo(foreignKeyRecord);
-                    ((List<ForeignKeyInfo>)tables[foreignKeyRecord.ThisTableName].ForeignKeys).Add(foreignKeyInfo);
+                    thisColumnNames[fkr.ForeignKeyName].Add(
+                        fkr.ThisColumnPosition, fkr.ThisColumnName);
+                    referencedColumnNames[fkr.ForeignKeyName].Add(
+                        fkr.ReferencedColumnPosition, fkr.ReferencedColumnName);
+
+                    if (!addedForeignKeysForTable[fkr.ThisTableName].Contains(fkr.ForeignKeyName))
+                    {
+                        ForeignKeyInfo foreignKeyInfo = MapExceptColumnsToForeignKeyInfo(fkr);
+                        ((List<ForeignKeyInfo>)tables[fkr.ThisTableName].ForeignKeys).Add(foreignKeyInfo);
+                        addedForeignKeysForTable[fkr.ThisTableName].Add(fkr.ForeignKeyName);
+                    }
                 }
 
                 foreach (SQLiteTableInfo table in tables.Values)
@@ -80,7 +89,6 @@ WHERE sm.type = 'table'
                 {
                     ID = Guid.NewGuid(),
                     Name = foreignKeyRecord.ForeignKeyName,
-                    ThisTableName = foreignKeyRecord.ThisTableName,
                     ReferencedTableName = foreignKeyRecord.ReferencedTableName,
                     OnUpdate = MapUpdateActionName(foreignKeyRecord.OnUpdate),
                     OnDelete = MapUpdateActionName(foreignKeyRecord.OnDelete),
@@ -92,7 +100,7 @@ WHERE sm.type = 'table'
                         "NO ACTION" => "NoAction",
                         "CASCADE" => "Cascade",
                         "SET DEFAULT" => "SetDefault",
-                        "NOT NULL" => "SetNull",
+                        "SET NULL" => "SetNull",
                         _ => throw new InvalidOperationException($"Invalid sqlActionName: '{sqlActionName}'")
                     };
             }

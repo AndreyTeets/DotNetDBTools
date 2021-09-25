@@ -89,6 +89,9 @@ namespace DotNetDBTools.DefinitionParser.Agnostic
                         Nullable = column.Nullable,
                         Identity = column.Identity,
                         Default = AgnosticDefaultValueMapper.MapDefaultValue(column),
+                        DefaultConstraintName = column.Default is not null
+                            ? column.DefaultConstraintName ?? $"DF_{table.GetType().Name}_{x.Name}"
+                            : null,
                     };
                 })
                 .ToList();
@@ -136,7 +139,6 @@ namespace DotNetDBTools.DefinitionParser.Agnostic
                     {
                         ID = foreignKey.ID,
                         Name = x.Name,
-                        ThisTableName = table.GetType().Name,
                         ThisColumnNames = foreignKey.ThisColumns.ToList(),
                         ReferencedTableName = foreignKey.ReferencedTable,
                         ReferencedTableColumnNames = foreignKey.ReferencedTableColumns.ToList(),

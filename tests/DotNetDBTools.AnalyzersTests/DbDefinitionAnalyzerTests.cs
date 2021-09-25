@@ -34,6 +34,7 @@ namespace SampleTestCode
             DataType = new IntDataType(),
             Nullable = false,
             Default = 145,
+            DefaultConstraintName = ""DF_TestTable2_TestColumn1"",
         };
 
         public Column TestColumn2 = new(""2FD848D5-A689-419F-9214-AFCF9F742564"")

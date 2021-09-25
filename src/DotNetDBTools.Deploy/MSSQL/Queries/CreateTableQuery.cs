@@ -38,7 +38,7 @@ $@"CREATE TABLE {table.Name}
             List<string> tableDefinitions = new();
 
             tableDefinitions.AddRange(table.Columns.Select(c =>
-$@"    {c.Name} {GetSqlType(c.DataType)}{GetIdentityStatement(c)} {GetNullabilityStatement(c)} {GetDefaultValStatement(table.Name, c)}"));
+$@"    {c.Name} {GetSqlType(c.DataType)}{GetIdentityStatement(c)} {GetNullabilityStatement(c)}{GetDefaultValStatement(c)}"));
 
             if (table.PrimaryKey is not null)
             {
@@ -52,11 +52,11 @@ $@"    CONSTRAINT {uc.Name} UNIQUE ({string.Join(", ", uc.Columns)})"));
             return string.Join(",\n", tableDefinitions);
         }
 
-        private static string GetDefaultValStatement(string tableName, ColumnInfo column)
+        private static string GetDefaultValStatement(ColumnInfo column)
         {
             if (column.Default is not null)
             {
-                return $"CONSTRAINT DF_{tableName}_{column.Name} DEFAULT {QuoteDefaultValue(column.Default)}";
+                return $" CONSTRAINT {column.DefaultConstraintName} DEFAULT {QuoteDefaultValue(column.Default)}";
             }
             return "";
         }

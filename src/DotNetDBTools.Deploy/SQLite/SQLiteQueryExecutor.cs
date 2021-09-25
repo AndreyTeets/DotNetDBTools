@@ -42,7 +42,7 @@ namespace DotNetDBTools.Deploy.SQLite
         {
             DynamicParameters dapperParameters = new();
             foreach (QueryParameter parameter in parameters)
-                dapperParameters.Add(parameter.Name, parameter.Value);
+                dapperParameters.Add(parameter.Name, parameter.Value, parameter.Type);
             return dapperParameters;
         }
     }

@@ -125,7 +125,6 @@ namespace DotNetDBTools.UnitTests.Analysis
                     {
                         ID = new Guid("D23109D4-CB94-40B2-BDB2-BC6292F4A5FA"),
                         Name = "PK1",
-                        ThisTableName = "T1",
                         ThisColumnNames = new string[] { "C1", "C2" },
                         ReferencedTableName = "T2",
                         ReferencedTableColumnNames = new string[] { "C1", "C2" },

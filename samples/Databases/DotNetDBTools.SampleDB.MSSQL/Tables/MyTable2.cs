@@ -13,6 +13,7 @@ namespace DotNetDBTools.SampleDB.MSSQL.Tables
             DataType = new IntDataType(),
             Nullable = false,
             Default = 333,
+            DefaultConstraintName = "DF_MyTable2_MyColumn1",
         };
 
         public Column MyColumn2 = new("5A0D1926-3270-4EB2-92EB-00BE56C7AF23")
