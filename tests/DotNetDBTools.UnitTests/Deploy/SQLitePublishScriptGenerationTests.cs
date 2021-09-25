@@ -2,7 +2,9 @@
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using DotNetDBTools.DefinitionParser.SQLite;
 using DotNetDBTools.Deploy;
+using DotNetDBTools.Models.SQLite;
 using DotNetDBTools.UnitTests.TestHelpers;
 using FluentAssertions;
 using Xunit;
@@ -11,6 +13,24 @@ namespace DotNetDBTools.UnitTests.Deploy
 {
     public class SQLitePublishScriptGenerationTests
     {
+        [Fact]
+        public void Generate_SQLitePublishScript_For_SQLiteSampleDB_CreatesCorrectScript_WhenCreatingV1()
+        {
+            SQLiteDeployManager deployManager = new(true, false);
+
+            Assembly dbAssembly = AppDomain.CurrentDomain.GetAssemblies()
+                .Single(x => x.GetName().Name == "DotNetDBTools.SampleDB.SQLite");
+            SQLiteDatabaseInfo database = SQLiteDefinitionParser.CreateDatabaseInfo(dbAssembly);
+            SQLiteDatabaseInfo existingDatabase = new(null);
+
+            string outputPath = @"./generated/Actual_SQLitePublishScript_For_SQLiteSampleDB_WhenCreatingV1.sql";
+            deployManager.GeneratePublishScript(database, existingDatabase, outputPath);
+
+            string actualScript = File.ReadAllText(outputPath);
+            string expectedScript = File.ReadAllText(@"TestData/Expected_SQLitePublishScript_For_SQLiteSampleDB_WhenCreatingV1.sql");
+            actualScript.NormalizeLineEndings().Should().Be(expectedScript.NormalizeLineEndings());
+        }
+
         [Fact]
         public void Generate_SQLitePublishScript_For_SQLiteSampleDB_CreatesCorrectScript_WhenUpdatingFromV1ToV2()
         {

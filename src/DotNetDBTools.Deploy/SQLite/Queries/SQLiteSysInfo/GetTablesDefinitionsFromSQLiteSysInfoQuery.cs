@@ -15,7 +15,8 @@ $@"SELECT
     sm.name AS {nameof(TableRecord.TableName)},
     sm.sql AS {nameof(TableRecord.TableDefinition)}
 FROM sqlite_master sm
-WHERE sm.type = 'table';";
+WHERE sm.type = 'table'
+    AND sm.name!='sqlite_sequence';";
 
         public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
 

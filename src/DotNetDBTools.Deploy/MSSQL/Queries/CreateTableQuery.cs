@@ -37,8 +37,8 @@ $@"CREATE TABLE {table.Name}
         {
             List<string> tableDefinitions = new();
 
-            tableDefinitions.AddRange(table.Columns.Select(column =>
-$@"    {column.Name} {GetSqlType(column.DataType)} {GetNullabilityStatement(column)} {GetDefaultValStatement(table.Name, column)}"));
+            tableDefinitions.AddRange(table.Columns.Select(c =>
+$@"    {c.Name} {GetSqlType(c.DataType)}{GetIdentityStatement(c)} {GetNullabilityStatement(c)} {GetDefaultValStatement(table.Name, c)}"));
 
             if (table.PrimaryKey is not null)
             {

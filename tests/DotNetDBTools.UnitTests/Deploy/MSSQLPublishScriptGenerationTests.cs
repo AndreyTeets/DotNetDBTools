@@ -2,7 +2,9 @@
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using DotNetDBTools.DefinitionParser.MSSQL;
 using DotNetDBTools.Deploy;
+using DotNetDBTools.Models.MSSQL;
 using DotNetDBTools.UnitTests.TestHelpers;
 using FluentAssertions;
 using Xunit;
@@ -11,6 +13,24 @@ namespace DotNetDBTools.UnitTests.Deploy
 {
     public class MSSQLPublishScriptGenerationTests
     {
+        [Fact]
+        public void Generate_MSSQLPublishScript_For_MSSQLSampleDB_CreatesCorrectScript_WhenCreatingV1()
+        {
+            MSSQLDeployManager deployManager = new(true, false);
+
+            Assembly dbAssembly = AppDomain.CurrentDomain.GetAssemblies()
+                .Single(x => x.GetName().Name == "DotNetDBTools.SampleDB.MSSQL");
+            MSSQLDatabaseInfo database = MSSQLDefinitionParser.CreateDatabaseInfo(dbAssembly);
+            MSSQLDatabaseInfo existingDatabase = new(null);
+
+            string outputPath = @"./generated/Actual_MSSQLPublishScript_For_MSSQLSampleDB_WhenCreatingV1.sql";
+            deployManager.GeneratePublishScript(database, existingDatabase, outputPath);
+
+            string actualScript = File.ReadAllText(outputPath);
+            string expectedScript = File.ReadAllText(@"TestData/Expected_MSSQLPublishScript_For_MSSQLSampleDB_WhenCreatingV1.sql");
+            actualScript.NormalizeLineEndings().Should().Be(expectedScript.NormalizeLineEndings());
+        }
+
         [Fact]
         public void Generate_MSSQLPublishScript_For_MSSQLSampleDB_CreatesCorrectScript_WhenUpdatingFromV1ToV2()
         {

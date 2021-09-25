@@ -20,9 +20,15 @@ namespace DotNetDBTools.SampleDB.MSSQL.Tables
             Default = "33",
         };
 
+        public Column MyColumn3 = new("6E95DE30-E01A-4FB4-B8B7-8F0C40BB682C")
+        {
+            DataType = new IntDataType(),
+            Identity = true,
+        };
+
         public PrimaryKey PK_MyTable1 = new("37A45DEF-F4A0-4BE7-8BFB-8FBED4A7D705")
         {
-            Columns = new string[] { nameof(MyColumn1) },
+            Columns = new string[] { nameof(MyColumn3) },
         };
 
         public UniqueConstraint UQ_MyTable1_MyColumn2 = new("F3F08522-26EE-4950-9135-22EDF2E4E0CF")

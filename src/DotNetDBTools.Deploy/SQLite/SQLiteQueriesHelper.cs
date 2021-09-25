@@ -13,10 +13,10 @@ namespace DotNetDBTools.Deploy.SQLite
         {
             List<string> tableDefinitions = new();
 
-            tableDefinitions.AddRange(table.Columns.Select(column =>
-$@"    {column.Name} {GetSqlType(column.DataType)} {GetNullabilityStatement(column)} {GetDefaultValStatement(table.Name, column)}"));
+            tableDefinitions.AddRange(table.Columns.Select(c =>
+$@"    {c.Name} {GetSqlType(c.DataType)}{GetPrimaryKeyStatement(c, table.PrimaryKey)} {GetNullabilityStatement(c)} {GetDefaultValStatement(table.Name, c)}"));
 
-            if (table.PrimaryKey is not null)
+            if (table.PrimaryKey is not null && table.PrimaryKey.Columns.Count() > 1)
             {
                 tableDefinitions.Add(
 $@"    CONSTRAINT {table.PrimaryKey.Name} PRIMARY KEY ({string.Join(", ", table.PrimaryKey.Columns)})");
@@ -33,11 +33,14 @@ $@"    CONSTRAINT {fk.Name} FOREIGN KEY ({string.Join(", ", fk.ThisColumnNames)}
             return string.Join(",\n", tableDefinitions);
         }
 
-        private static string GetDefaultValStatement(string tableName, ColumnInfo column)
+        private static string GetPrimaryKeyStatement(ColumnInfo column, PrimaryKeyInfo pk)
         {
-            if (column.Default is not null)
+            string identityStatement = column.Identity ? " AUTOINCREMENT" : "";
+            if (pk is not null &&
+                pk.Columns.Count() == 1 &&
+                pk.Columns.Single() == column.Name)
             {
-                return $"CONSTRAINT DF_{tableName}_{column.Name} DEFAULT {QuoteDefaultValue(column.Default)}";
+                return $" PRIMARY KEY{identityStatement}";
             }
             return "";
         }
@@ -48,6 +51,15 @@ $@"    CONSTRAINT {fk.Name} FOREIGN KEY ({string.Join(", ", fk.ThisColumnNames)}
                 true => "NULL",
                 false => "NOT NULL",
             };
+
+        private static string GetDefaultValStatement(string tableName, ColumnInfo column)
+        {
+            if (column.Default is not null)
+            {
+                return $"CONSTRAINT DF_{tableName}_{column.Name} DEFAULT {QuoteDefaultValue(column.Default)}";
+            }
+            return "";
+        }
 
         private static string QuoteDefaultValue(object value)
         {

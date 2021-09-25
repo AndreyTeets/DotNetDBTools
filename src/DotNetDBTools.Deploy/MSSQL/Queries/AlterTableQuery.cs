@@ -86,17 +86,17 @@ $@"
 EXEC sp_rename '{tableName}.{oldColumnName}', '{newColumnName}', 'COLUMN';"
                 ;
 
-            public static string AddColumn(string tableName, ColumnInfo column) =>
+            public static string AddColumn(string tableName, ColumnInfo c) =>
 $@"
-ALTER TABLE {tableName} ADD {column.Name} {GetSqlType(column.DataType)} {GetNullabilityStatement(column)};"
+ALTER TABLE {tableName} ADD {c.Name} {GetSqlType(c.DataType)}{GetIdentityStatement(c)} {GetNullabilityStatement(c)};"
                 ;
             public static string DropColumn(string tableName, string columnName) =>
 $@"
 ALTER TABLE {tableName} DROP COLUMN {columnName};"
                 ;
-            public static string AlterColumnTypeAndNullability(string tableName, ColumnInfo column) =>
+            public static string AlterColumnTypeAndNullability(string tableName, ColumnInfo c) =>
 $@"
-ALTER TABLE {tableName} ALTER COLUMN {column.Name} {GetSqlType(column.DataType)} {GetNullabilityStatement(column)};"
+ALTER TABLE {tableName} ALTER COLUMN {c.Name} {GetSqlType(c.DataType)} {GetNullabilityStatement(c)};"
                 ;
 
             public static string AddPrimaryKey(string tableName, PrimaryKeyInfo pk) =>
@@ -117,9 +117,9 @@ $@"
 ALTER TABLE {tableName} DROP CONSTRAINT {ucName};"
                 ;
 
-            public static string AddDefaultConstraint(string tableName, ColumnInfo column) =>
+            public static string AddDefaultConstraint(string tableName, ColumnInfo c) =>
 $@"
-ALTER TABLE {tableName} ADD CONSTRAINT DF_{tableName}_{column.Name} DEFAULT {QuoteDefaultValue(column.Default)} FOR {column.Name};"
+ALTER TABLE {tableName} ADD CONSTRAINT DF_{tableName}_{c.Name} DEFAULT {QuoteDefaultValue(c.Default)} FOR {c.Name};"
                 ;
             public static string DropDefaultConstraint(string tableName, string columnName) =>
 $@"

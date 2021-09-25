@@ -22,7 +22,8 @@ $@"SELECT
     fkl.on_delete AS {nameof(ForeignKeyRecord.OnDelete)}
 FROM sqlite_master sm
 INNER JOIN pragma_foreign_key_list(sm.name) fkl
-WHERE sm.type = 'table';";
+WHERE sm.type = 'table'
+    AND sm.name!='sqlite_sequence';";
 
         public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
 

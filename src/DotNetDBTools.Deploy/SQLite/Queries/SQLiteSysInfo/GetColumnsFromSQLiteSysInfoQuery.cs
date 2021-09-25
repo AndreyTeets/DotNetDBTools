@@ -18,7 +18,8 @@ $@"SELECT
     ti.dflt_value AS [{nameof(ColumnRecord.Default)}]
 FROM sqlite_master sm
 INNER JOIN pragma_table_info(sm.name) ti
-WHERE sm.type = 'table';";
+WHERE sm.type = 'table'
+    AND sm.name!='sqlite_sequence';";
 
         public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
 

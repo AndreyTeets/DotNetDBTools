@@ -29,6 +29,7 @@ SELECT
 FROM sqlite_master sm
 INNER JOIN pragma_table_info(sm.name) ti
 WHERE sm.type = 'table'
+    AND sm.name!='sqlite_sequence'
     AND ti.pk=1
     AND lower(ti.type)='integer';";
 

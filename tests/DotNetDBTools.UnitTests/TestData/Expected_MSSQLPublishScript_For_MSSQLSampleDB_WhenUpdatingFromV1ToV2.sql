@@ -233,6 +233,7 @@ DECLARE @DropDefaultConstraint_MyTable1NewName_MyColumn2_SqlText NVARCHAR(MAX) =
 EXEC (@DropDefaultConstraint_MyTable1NewName_MyColumn2_SqlText);
 --ALTER TABLE [MyTable1NewName] DROP CONSTRAINT [DF_MyTable1NewName_MyColumn2];
 ALTER TABLE MyTable1NewName DROP COLUMN MyColumn2;
+ALTER TABLE MyTable1NewName DROP COLUMN MyColumn3;
 DECLARE @DropDefaultConstraint_MyTable1NewName_MyColumn1_SqlText NVARCHAR(MAX) =
 (
     SELECT

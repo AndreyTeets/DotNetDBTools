@@ -6,6 +6,7 @@
         {
             public readonly string MyColumn1 = nameof(MyColumn1);
             public readonly string MyColumn2 = nameof(MyColumn2);
+            public readonly string MyColumn3 = nameof(MyColumn3);
 
             public override string ToString() => nameof(MyTable1);
             public static implicit operator string(MyTable1Info info) => info.ToString();

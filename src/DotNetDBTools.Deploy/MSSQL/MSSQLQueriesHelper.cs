@@ -6,6 +6,11 @@ namespace DotNetDBTools.Deploy.MSSQL
 {
     public static class MSSQLQueriesHelper
     {
+        public static string GetIdentityStatement(ColumnInfo column)
+        {
+            return column.Identity ? " IDENTITY" : "";
+        }
+
         public static string GetNullabilityStatement(ColumnInfo column) =>
             column.Nullable switch
             {
