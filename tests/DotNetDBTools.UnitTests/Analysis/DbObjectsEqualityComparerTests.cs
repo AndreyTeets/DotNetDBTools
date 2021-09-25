@@ -127,8 +127,8 @@ namespace DotNetDBTools.UnitTests.Analysis
                         Name = "PK1",
                         ThisTableName = "T1",
                         ThisColumnNames = new string[] { "C1", "C2" },
-                        ForeignTableName = "T2",
-                        ForeignColumnNames = new string[] { "C1", "C2" },
+                        ReferencedTableName = "T2",
+                        ReferencedTableColumnNames = new string[] { "C1", "C2" },
                         OnUpdate = "NoAction",
                         OnDelete = "SetNull",
                     }

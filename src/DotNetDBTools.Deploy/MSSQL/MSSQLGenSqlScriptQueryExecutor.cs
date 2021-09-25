@@ -12,8 +12,8 @@ namespace DotNetDBTools.Deploy.MSSQL
         {
             string queryName = query.GetType().Name;
             string paremetersDeclaration = string.Join("", query.Parameters.Select(x => $"DECLARE {x.Name} NVARCHAR(MAX) = '{x.Value}';\n"));
-            string queryWithParametersDeclaration = $"--QUERY START: {queryName}\n{paremetersDeclaration}{query.Sql}\n--QUERY END: {queryName}";
-            _queries.Add(queryWithParametersDeclaration);
+            string queryWithParametersDeclaration = $"{paremetersDeclaration}{query.Sql}";
+            _queries.Add($"--QUERY START: {queryName}\n{queryWithParametersDeclaration}\n--QUERY END: {queryName}");
             return 0;
         }
 

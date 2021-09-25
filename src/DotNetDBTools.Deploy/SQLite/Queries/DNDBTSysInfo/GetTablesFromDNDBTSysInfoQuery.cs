@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using DotNetDBTools.Deploy.Core;
 
-namespace DotNetDBTools.Deploy.SQLite.Queries
+namespace DotNetDBTools.Deploy.SQLite.Queries.DNDBTSysInfo
 {
-    internal class GetExistingTablesQuery : IQuery
+    internal class GetTablesFromDNDBTSysInfoQuery : IQuery
     {
         public string Sql =>
 $@"SELECT

@@ -83,7 +83,7 @@ namespace DotNetDBTools.Analysis.Core
             Dictionary<string, HashSet<string>> referencedByMap = new();
             foreach (TableInfo table in tables)
             {
-                IEnumerable<string> referencedTablesNames = table.ForeignKeys.Select(x => x.ForeignTableName);
+                IEnumerable<string> referencedTablesNames = table.ForeignKeys.Select(x => x.ReferencedTableName);
                 foreach (string referencedTableName in referencedTablesNames)
                 {
                     if (referencedByMap.ContainsKey(referencedTableName))

@@ -13,7 +13,7 @@ namespace DotNetDBTools.Definition.Core
 
         public Guid ID => _id;
         public IEnumerable<string> ThisColumns { get; set; }
-        public string ForeignTable { get; set; }
-        public IEnumerable<string> ForeignColumns { get; set; }
+        public string ReferencedTable { get; set; }
+        public IEnumerable<string> ReferencedTableColumns { get; set; }
     }
 }

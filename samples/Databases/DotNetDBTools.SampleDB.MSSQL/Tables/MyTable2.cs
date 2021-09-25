@@ -27,7 +27,7 @@ namespace DotNetDBTools.SampleDB.MSSQL.Tables
             Columns = new string[] { nameof(MyColumn1) },
         };
 
-        public Trigger TR_MyTable2_Name1 = new("EE64FFC3-5536-4624-BEAF-BC3A61D06A1A")
+        public Trigger TR_MyTable2_MyTrigger1 = new("EE64FFC3-5536-4624-BEAF-BC3A61D06A1A")
         {
             Code = "GetFromResurceSqlFile",
         };

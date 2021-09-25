@@ -1,3 +1,4 @@
+--QUERY START: AlterTableQuery
 PRAGMA foreign_keys=off;
 BEGIN TRANSACTION;
 
@@ -6,7 +7,9 @@ CREATE TABLE DNDBT_MyTable2
     MyColumn1NewName INTEGER NOT NULL CONSTRAINT DF_MyTable2_MyColumn1NewName DEFAULT 333,
     MyColumn2 BLOB NULL CONSTRAINT DF_MyTable2_MyColumn2 DEFAULT 0x000102,
     CONSTRAINT PK_MyTable2 PRIMARY KEY (MyColumn1NewName),
-    CONSTRAINT FK_MyTable2_MyColumn12_MyTable3_MyColumn12 FOREIGN KEY (MyColumn1NewName,MyColumn2) REFERENCES MyTable3(MyColumn1,MyColumn2)
+    CONSTRAINT FK_MyTable2_MyColumns12_MyTable3_MyColumns12 FOREIGN KEY (MyColumn1NewName, MyColumn2)
+        REFERENCES MyTable3(MyColumn1, MyColumn2)
+        ON UPDATE NO ACTION ON DELETE SET DEFAULT
 );
 
 INSERT INTO  DNDBT_MyTable2(MyColumn1NewName)
@@ -19,7 +22,9 @@ ALTER TABLE DNDBT_MyTable2 RENAME TO MyTable2;
 
 COMMIT TRANSACTION;
 PRAGMA foreign_keys=on;
+--QUERY END: AlterTableQuery
 
+--QUERY START: UpdateDNDBTSysInfoQuery
 UPDATE DNDBTDbObjects SET
     Name = 'MyTable2',
     Metadata = '{
@@ -42,7 +47,7 @@ UPDATE DNDBTDbObjects SET
       "DataType": {
         "Name": "Byte",
         "IsUserDefined": false,
-        "Length": 22,
+        "Length": 0,
         "IsUnicode": false,
         "IsFixedLength": false
       },
@@ -71,30 +76,33 @@ UPDATE DNDBTDbObjects SET
         "MyColumn1NewName",
         "MyColumn2"
       ],
-      "ForeignTableName": "MyTable3",
-      "ForeignColumnNames": [
+      "ReferencedTableName": "MyTable3",
+      "ReferencedTableColumnNames": [
         "MyColumn1",
         "MyColumn2"
       ],
       "OnUpdate": "NoAction",
       "OnDelete": "SetDefault",
       "ID": "480f3508-9d51-4190-88aa-45bc20e49119",
-      "Name": "FK_MyTable2_MyColumn12_MyTable3_MyColumn12"
+      "Name": "FK_MyTable2_MyColumns12_MyTable3_MyColumns12"
     }
   ],
   "ID": "bfb9030c-a8c3-4882-9c42-1c6ad025cf8f",
   "Name": "MyTable2"
 }'
 WHERE ID = 'bfb9030c-a8c3-4882-9c42-1c6ad025cf8f';
+--QUERY END: UpdateDNDBTSysInfoQuery
 
-
+--QUERY START: AlterTableQuery
 PRAGMA foreign_keys=off;
 BEGIN TRANSACTION;
 
 CREATE TABLE DNDBT_MyTable1NewName
 (
     MyColumn1 INTEGER NULL CONSTRAINT DF_MyTable1NewName_MyColumn1 DEFAULT 15,
-    CONSTRAINT FK_MyTable1_MyColumn1_MyTable2_MyColumn1 FOREIGN KEY (MyColumn1) REFERENCES MyTable2(MyColumn1NewName)
+    CONSTRAINT FK_MyTable1_MyColumn1_MyTable2_MyColumn1 FOREIGN KEY (MyColumn1)
+        REFERENCES MyTable2(MyColumn1NewName)
+        ON UPDATE NO ACTION ON DELETE SET NULL
 );
 
 INSERT INTO  DNDBT_MyTable1NewName(MyColumn1)
@@ -107,7 +115,9 @@ ALTER TABLE DNDBT_MyTable1NewName RENAME TO MyTable1NewName;
 
 COMMIT TRANSACTION;
 PRAGMA foreign_keys=on;
+--QUERY END: AlterTableQuery
 
+--QUERY START: UpdateDNDBTSysInfoQuery
 UPDATE DNDBTDbObjects SET
     Name = 'MyTable1NewName',
     Metadata = '{
@@ -135,8 +145,8 @@ UPDATE DNDBTDbObjects SET
       "ThisColumnNames": [
         "MyColumn1"
       ],
-      "ForeignTableName": "MyTable2",
-      "ForeignColumnNames": [
+      "ReferencedTableName": "MyTable2",
+      "ReferencedTableColumnNames": [
         "MyColumn1NewName"
       ],
       "OnUpdate": "NoAction",
@@ -149,8 +159,18 @@ UPDATE DNDBTDbObjects SET
   "Name": "MyTable1NewName"
 }'
 WHERE ID = '299675e6-4faa-4d0f-a36a-224306ba5bcb';
+--QUERY END: UpdateDNDBTSysInfoQuery
 
+--QUERY START: CreateTableQuery
+CREATE TABLE MyTable3
+(
+    MyColumn1 INTEGER NOT NULL CONSTRAINT DF_MyTable3_MyColumn1 DEFAULT 333,
+    MyColumn2 BLOB NOT NULL ,
+    CONSTRAINT UQ_MyTable3_MyColumns12 UNIQUE (MyColumn1, MyColumn2)
+);
+--QUERY END: CreateTableQuery
 
+--QUERY START: InsertDNDBTSysInfoQuery
 INSERT INTO DNDBTDbObjects
 (
     ID,
@@ -183,7 +203,7 @@ VALUES
       "DataType": {
         "Name": "Byte",
         "IsUserDefined": false,
-        "Length": 22,
+        "Length": 0,
         "IsUnicode": false,
         "IsFixedLength": false
       },
@@ -202,7 +222,7 @@ VALUES
         "MyColumn2"
       ],
       "ID": "fd288e38-35ba-4bb1-ace3-597c99ef26c7",
-      "Name": "UQ_MyTable3_MyColumn2"
+      "Name": "UQ_MyTable3_MyColumns12"
     }
   ],
   "ForeignKeys": [],
@@ -210,10 +230,4 @@ VALUES
   "Name": "MyTable3"
 }'
 );
-
-CREATE TABLE MyTable3
-(
-    MyColumn1 INTEGER NOT NULL CONSTRAINT DF_MyTable3_MyColumn1 DEFAULT 333,
-    MyColumn2 BLOB NOT NULL ,
-    CONSTRAINT UQ_MyTable3_MyColumn2 UNIQUE (MyColumn1, MyColumn2)
-);
+--QUERY END: InsertDNDBTSysInfoQuery

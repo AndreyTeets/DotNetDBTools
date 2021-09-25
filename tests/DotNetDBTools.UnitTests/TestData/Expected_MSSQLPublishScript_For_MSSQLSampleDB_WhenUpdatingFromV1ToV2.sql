@@ -192,15 +192,15 @@ DECLARE @Metadata NVARCHAR(MAX) = '{
         "MyColumn1NewName",
         "MyColumn2"
       ],
-      "ForeignTableName": "MyTable3",
-      "ForeignColumnNames": [
+      "ReferencedTableName": "MyTable3",
+      "ReferencedTableColumnNames": [
         "MyColumn1",
         "MyColumn2"
       ],
       "OnUpdate": "NoAction",
       "OnDelete": "SetDefault",
       "ID": "480f3508-9d51-4190-88aa-45bc20e49119",
-      "Name": "FK_MyTable2_MyColumn12_MyTable3_MyColumn12"
+      "Name": "FK_MyTable2_MyColumns12_MyTable3_MyColumns12"
     }
   ],
   "ID": "bfb9030c-a8c3-4882-9c42-1c6ad025cf8f",
@@ -280,8 +280,8 @@ DECLARE @Metadata NVARCHAR(MAX) = '{
       "ThisColumnNames": [
         "MyColumn1"
       ],
-      "ForeignTableName": "MyTable2",
-      "ForeignColumnNames": [
+      "ReferencedTableName": "MyTable2",
+      "ReferencedTableColumnNames": [
         "MyColumn1NewName"
       ],
       "OnUpdate": "NoAction",
@@ -380,7 +380,7 @@ CREATE TABLE MyTable3
 (
     MyColumn1 INT NOT NULL CONSTRAINT DF_MyTable3_MyColumn1 DEFAULT 333,
     MyColumn2 VARBINARY(22) NOT NULL ,
-    CONSTRAINT UQ_MyTable3_MyColumn2 UNIQUE (MyColumn1, MyColumn2)
+    CONSTRAINT UQ_MyTable3_MyColumns12 UNIQUE (MyColumn1, MyColumn2)
 );
 --QUERY END: CreateTableQuery
 
@@ -424,7 +424,7 @@ DECLARE @Metadata NVARCHAR(MAX) = '{
         "MyColumn2"
       ],
       "ID": "fd288e38-35ba-4bb1-ace3-597c99ef26c7",
-      "Name": "UQ_MyTable3_MyColumn2"
+      "Name": "UQ_MyTable3_MyColumns12"
     }
   ],
   "ForeignKeys": [],
@@ -448,8 +448,8 @@ VALUES
 --QUERY END: InsertDNDBTSysInfoQuery
 
 --QUERY START: CreateForeignKeyQuery
-ALTER TABLE MyTable2 ADD CONSTRAINT FK_MyTable2_MyColumn12_MyTable3_MyColumn12 FOREIGN KEY (MyColumn1NewName,MyColumn2)
-    REFERENCES MyTable3 (MyColumn1,MyColumn2)
+ALTER TABLE MyTable2 ADD CONSTRAINT FK_MyTable2_MyColumns12_MyTable3_MyColumns12 FOREIGN KEY (MyColumn1NewName, MyColumn2)
+    REFERENCES MyTable3 (MyColumn1, MyColumn2)
     ON UPDATE NO ACTION ON DELETE SET DEFAULT;
 --QUERY END: CreateForeignKeyQuery
 

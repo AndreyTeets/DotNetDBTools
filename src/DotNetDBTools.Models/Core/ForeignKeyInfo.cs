@@ -6,8 +6,8 @@ namespace DotNetDBTools.Models.Core
     {
         public string ThisTableName { get; set; }
         public IEnumerable<string> ThisColumnNames { get; set; }
-        public string ForeignTableName { get; set; }
-        public IEnumerable<string> ForeignColumnNames { get; set; }
+        public string ReferencedTableName { get; set; }
+        public IEnumerable<string> ReferencedTableColumnNames { get; set; }
         public string OnUpdate { get; set; }
         public string OnDelete { get; set; }
     }

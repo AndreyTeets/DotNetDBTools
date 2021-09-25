@@ -19,7 +19,7 @@ namespace DotNetDBTools.Deploy.MSSQL
             {
                 MSSQLDefaultValueAsFunction => $"{((MSSQLDefaultValueAsFunction)value).FunctionText}",
                 string => $"'{value}'",
-                int => $"{value}",
+                long => $"{value}",
                 byte[] => $"{ToHex((byte[])value)}",
                 _ => throw new InvalidOperationException($"Invalid value type: '{value.GetType()}'")
             };

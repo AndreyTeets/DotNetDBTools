@@ -1,8 +1,8 @@
-﻿namespace DotNetDBTools.Models.SQLite
+﻿using DotNetDBTools.Models.Core;
+
+namespace DotNetDBTools.Models.SQLite
 {
-    public class SQLiteViewDiff
+    public class SQLiteViewDiff : ViewDiff
     {
-        public SQLiteViewInfo NewView { get; set; }
-        public SQLiteViewInfo OldView { get; set; }
     }
 }

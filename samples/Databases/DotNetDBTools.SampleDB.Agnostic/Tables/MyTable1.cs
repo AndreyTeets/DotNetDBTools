@@ -33,13 +33,13 @@ namespace DotNetDBTools.SampleDB.Agnostic.Tables
         public ForeignKey FK_MyTable1_MyColumn1_MyTable2_MyColumn1 = new("D11B2A53-32DB-432F-BB6B-F91788844BA9")
         {
             ThisColumns = new string[] { nameof(MyColumn1) },
-            ForeignTable = nameof(MyTable2),
-            ForeignColumns = new string[] { nameof(MyTable2.MyColumn1) },
+            ReferencedTable = nameof(MyTable2),
+            ReferencedTableColumns = new string[] { nameof(MyTable2.MyColumn1) },
             OnUpdate = ForeignKeyActions.NoAction,
             OnDelete = ForeignKeyActions.Cascade,
         };
 
-        public CheckConstraint CK_MyTable1_MyColumn1 = new("EB9C59B5-BC7E-49D7-ADAA-F5600B6A19A2")
+        public CheckConstraint CK_MyTable1_MyCheck1 = new("EB9C59B5-BC7E-49D7-ADAA-F5600B6A19A2")
         {
             Code = $"{nameof(MyColumn1)} >= 0",
         };

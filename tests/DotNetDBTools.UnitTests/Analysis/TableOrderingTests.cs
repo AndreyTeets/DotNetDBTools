@@ -90,7 +90,7 @@ namespace DotNetDBTools.UnitTests.Analysis
             {
                 ForeignKeyInfo foreignKeyInfo = new()
                 {
-                    ForeignTableName = referencedTableName,
+                    ReferencedTableName = referencedTableName,
                 };
                 foreignKeys.Add(foreignKeyInfo);
             }

@@ -27,16 +27,16 @@ namespace DotNetDBTools.SampleDB.Agnostic.Tables
             Columns = new string[] { nameof(MyColumn1NewName) },
         };
 
-        public ForeignKey FK_MyTable2_MyColumn12_MyTable3_MyColumn12 = new("480F3508-9D51-4190-88AA-45BC20E49119")
+        public ForeignKey FK_MyTable2_MyColumns12_MyTable3_MyColumns12 = new("480F3508-9D51-4190-88AA-45BC20E49119")
         {
             ThisColumns = new string[] { nameof(MyColumn1NewName), nameof(MyColumn2) },
-            ForeignTable = nameof(MyTable3),
-            ForeignColumns = new string[] { nameof(MyTable3.MyColumn1), nameof(MyTable3.MyColumn2) },
+            ReferencedTable = nameof(MyTable3),
+            ReferencedTableColumns = new string[] { nameof(MyTable3.MyColumn1), nameof(MyTable3.MyColumn2) },
             OnUpdate = ForeignKeyActions.NoAction,
             OnDelete = ForeignKeyActions.SetDefault,
         };
 
-        public Trigger TR_MyTable2_Name1 = new("EE64FFC3-5536-4624-BEAF-BC3A61D06A1A")
+        public Trigger TR_MyTable2_MyTrigger1 = new("EE64FFC3-5536-4624-BEAF-BC3A61D06A1A")
         {
             Code = "GetFromResurceSqlFile",
         };

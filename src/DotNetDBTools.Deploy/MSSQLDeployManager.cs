@@ -33,8 +33,8 @@ namespace DotNetDBTools.Deploy
 
         public void PublishDatabase(Assembly dbAssembly, string connectionString)
         {
-            MSSQLDatabaseInfo database = CreateMSSQLDatabaseInfo(dbAssembly);
-            MSSQLDatabaseInfo existingDatabase = GetExistingDatabaseOrCreateEmptyIfNotExists(connectionString);
+            MSSQLDatabaseInfo database = CreateMSSQLDatabaseModelFromDbAssembly(dbAssembly);
+            MSSQLDatabaseInfo existingDatabase = GetDatabaseModelIfDbExistsOrCreateEmptyDbAndModel(connectionString);
 
             if (!MSSQLDbValidator.CanUpdate(database, existingDatabase, _allowDataLoss, out string error))
                 throw new Exception($"Can not update database: {error}");
@@ -52,15 +52,15 @@ namespace DotNetDBTools.Deploy
 
         public void GeneratePublishScript(Assembly dbAssembly, string connectionString, string outputPath)
         {
-            MSSQLDatabaseInfo database = CreateMSSQLDatabaseInfo(dbAssembly);
-            MSSQLDatabaseInfo existingDatabase = GetExistingDatabase(connectionString);
+            MSSQLDatabaseInfo database = CreateMSSQLDatabaseModelFromDbAssembly(dbAssembly);
+            MSSQLDatabaseInfo existingDatabase = GetDatabaseModelIfDbExistsAndRegisteredOrCreateEmptyModel(connectionString);
             GeneratePublishScript(database, existingDatabase, outputPath);
         }
 
         public void GeneratePublishScript(Assembly newDbAssembly, Assembly oldDbAssembly, string outputPath)
         {
-            MSSQLDatabaseInfo database = CreateMSSQLDatabaseInfo(newDbAssembly);
-            MSSQLDatabaseInfo existingDatabase = CreateMSSQLDatabaseInfo(oldDbAssembly);
+            MSSQLDatabaseInfo database = CreateMSSQLDatabaseModelFromDbAssembly(newDbAssembly);
+            MSSQLDatabaseInfo existingDatabase = CreateMSSQLDatabaseModelFromDbAssembly(oldDbAssembly);
             GeneratePublishScript(database, existingDatabase, outputPath);
         }
 
@@ -68,27 +68,27 @@ namespace DotNetDBTools.Deploy
         {
             MSSQLInteractor interactor = new(new MSSQLQueryExecutor(connectionString));
             MSSQLDatabaseInfo existingDatabase;
-            if (interactor.SystemTablesExist())
-                existingDatabase = interactor.GetExistingDatabase();
+            if (interactor.DNDBTSysTablesExist())
+                existingDatabase = interactor.GetDatabaseModelFromDNDBTSysInfo();
             else
-                existingDatabase = interactor.GenerateExistingDatabaseSystemInfo();
+                existingDatabase = interactor.GenerateDatabaseModelFromMSSQLSysInfo();
             DbDefinitionGenerator.GenerateDefinition(existingDatabase, outputDirectory);
         }
 
         public void RegisterAsDNDBT(string connectionString)
         {
             MSSQLInteractor interactor = new(new MSSQLQueryExecutor(connectionString));
-            if (interactor.SystemTablesExist())
+            if (interactor.DNDBTSysTablesExist())
                 throw new InvalidOperationException("Database is already registered");
-            MSSQLDatabaseInfo existingDatabase = interactor.GenerateExistingDatabaseSystemInfo();
-            interactor.CreateSystemTables();
-            interactor.PopulateSystemTables(existingDatabase);
+            MSSQLDatabaseInfo existingDatabase = interactor.GenerateDatabaseModelFromMSSQLSysInfo();
+            interactor.CreateDNDBTSysTables();
+            interactor.PopulateDNDBTSysTables(existingDatabase);
         }
 
         public void UnregisterAsDNDBT(string connectionString)
         {
             MSSQLInteractor interactor = new(new MSSQLQueryExecutor(connectionString));
-            interactor.DropSystemTables();
+            interactor.DropDNDBTSysTables();
         }
 
         public void GeneratePublishScript(MSSQLDatabaseInfo database, MSSQLDatabaseInfo existingDatabase, string outputPath)
@@ -104,7 +104,7 @@ namespace DotNetDBTools.Deploy
             File.WriteAllText(fullPath, generatedScript);
         }
 
-        private static MSSQLDatabaseInfo CreateMSSQLDatabaseInfo(Assembly dbAssembly)
+        private static MSSQLDatabaseInfo CreateMSSQLDatabaseModelFromDbAssembly(Assembly dbAssembly)
         {
             MSSQLDatabaseInfo database;
             if (DbAssemblyInfoHelper.GetDbKind(dbAssembly) == DatabaseKind.Agnostic)
@@ -117,7 +117,7 @@ namespace DotNetDBTools.Deploy
             return database;
         }
 
-        private MSSQLDatabaseInfo GetExistingDatabaseOrCreateEmptyIfNotExists(string connectionString)
+        private MSSQLDatabaseInfo GetDatabaseModelIfDbExistsOrCreateEmptyDbAndModel(string connectionString)
         {
             SqlConnectionStringBuilder sqlConnectionBuilder = new(connectionString);
             string databaseName = sqlConnectionBuilder.InitialCatalog;
@@ -129,7 +129,7 @@ namespace DotNetDBTools.Deploy
             bool databaseExists = interactorForEmpty.DatabaseExists(databaseName);
             if (databaseExists)
             {
-                MSSQLDatabaseInfo existingDatabase = interactor.GetExistingDatabase();
+                MSSQLDatabaseInfo existingDatabase = interactor.GetDatabaseModelFromDNDBTSysInfo();
                 return existingDatabase;
             }
             else
@@ -137,7 +137,7 @@ namespace DotNetDBTools.Deploy
                 if (_allowDbCreation)
                 {
                     interactorForEmpty.CreateDatabase(databaseName);
-                    interactor.CreateSystemTables();
+                    interactor.CreateDNDBTSysTables();
                     return new MSSQLDatabaseInfo(null);
                 }
                 else
@@ -147,7 +147,7 @@ namespace DotNetDBTools.Deploy
             }
         }
 
-        private static MSSQLDatabaseInfo GetExistingDatabase(string connectionString)
+        private static MSSQLDatabaseInfo GetDatabaseModelIfDbExistsAndRegisteredOrCreateEmptyModel(string connectionString)
         {
             SqlConnectionStringBuilder sqlConnectionBuilder = new(connectionString);
             string databaseName = sqlConnectionBuilder.InitialCatalog;
@@ -156,11 +156,9 @@ namespace DotNetDBTools.Deploy
 
             MSSQLInteractor interactor = new(new MSSQLQueryExecutor(connectionString));
             MSSQLInteractor interactorForEmpty = new(new MSSQLQueryExecutor(connectionStringWithoutDb));
-            bool databaseExists = interactorForEmpty.DatabaseExists(databaseName);
-            if (databaseExists)
-                return interactor.GetExistingDatabase();
-            else
-                return new MSSQLDatabaseInfo(null);
+            if (interactorForEmpty.DatabaseExists(databaseName) && interactor.DNDBTSysTablesExist())
+                return interactor.GetDatabaseModelFromDNDBTSysInfo();
+            return new MSSQLDatabaseInfo(null);
         }
     }
 }

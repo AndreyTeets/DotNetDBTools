@@ -26,7 +26,9 @@ $@"    CONSTRAINT {table.PrimaryKey.Name} PRIMARY KEY ({string.Join(", ", table.
 $@"    CONSTRAINT {uc.Name} UNIQUE ({string.Join(", ", uc.Columns)})"));
 
             tableDefinitions.AddRange(table.ForeignKeys.Select(fk =>
-$@"    CONSTRAINT {fk.Name} FOREIGN KEY ({string.Join(",", fk.ThisColumnNames)}) REFERENCES {fk.ForeignTableName}({string.Join(",", fk.ForeignColumnNames)})"));
+$@"    CONSTRAINT {fk.Name} FOREIGN KEY ({string.Join(", ", fk.ThisColumnNames)})
+        REFERENCES {fk.ReferencedTableName}({string.Join(", ", fk.ReferencedTableColumnNames)})
+        ON UPDATE {MapActionName(fk.OnUpdate)} ON DELETE {MapActionName(fk.OnDelete)}"));
 
             return string.Join(",\n", tableDefinitions);
         }
@@ -52,12 +54,22 @@ $@"    CONSTRAINT {fk.Name} FOREIGN KEY ({string.Join(",", fk.ThisColumnNames)})
             return value switch
             {
                 string => $"'{value}'",
-                int => $"{value}",
+                long => $"{value}",
                 byte[] => $"{ToHex((byte[])value)}",
                 _ => throw new InvalidOperationException($"Invalid value type: '{value.GetType()}'")
             };
 
             static string ToHex(byte[] val) => "0x" + BitConverter.ToString(val).Replace("-", "");
         }
+
+        public static string MapActionName(string modelActionName) =>
+            modelActionName switch
+            {
+                "NoAction" => "NO ACTION",
+                "Cascade" => "CASCADE",
+                "SetDefault" => "SET DEFAULT",
+                "SetNull" => "SET NULL",
+                _ => throw new InvalidOperationException($"Invalid modelActionName: '{modelActionName}'")
+            };
     }
 }

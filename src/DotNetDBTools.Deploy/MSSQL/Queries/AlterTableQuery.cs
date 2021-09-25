@@ -3,8 +3,8 @@ using System.Text;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.MSSQL;
-using static DotNetDBTools.Deploy.MSSQL.MSSQLSqlTypeMapper;
 using static DotNetDBTools.Deploy.MSSQL.MSSQLQueriesHelper;
+using static DotNetDBTools.Deploy.MSSQL.MSSQLSqlTypeMapper;
 
 namespace DotNetDBTools.Deploy.MSSQL.Queries
 {

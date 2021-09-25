@@ -3,28 +3,26 @@ using System.Collections.Generic;
 using System.Linq;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Models.Core;
-using DotNetDBTools.Models.MSSQL;
+using DotNetDBTools.Models.SQLite;
 
-namespace DotNetDBTools.Deploy.MSSQL.Queries.MSSQLSysInfo
+namespace DotNetDBTools.Deploy.SQLite.Queries.SQLiteSysInfo
 {
-    internal class GetForeignKeysFromMSSQLSysInfoQuery : IQuery
+    internal class GetForeignKeysFromSQLiteSysInfoQuery : IQuery
     {
         public string Sql =>
 $@"SELECT
-    thisKey.TABLE_NAME AS {nameof(ForeignKeyRecord.ThisTableName)},
-    thisKey.CONSTRAINT_NAME AS {nameof(ForeignKeyRecord.ForeignKeyName)},
-    thisKey.COLUMN_NAME AS {nameof(ForeignKeyRecord.ThisColumnName)},
-    thisKey.ORDINAL_POSITION AS {nameof(ForeignKeyRecord.ThisColumnPosition)},
-    referencedKey.TABLE_NAME AS {nameof(ForeignKeyRecord.ReferencedTableName)},
-    referencedKey.COLUMN_NAME AS {nameof(ForeignKeyRecord.ReferencedColumnName)},
-    referencedKey.ORDINAL_POSITION AS {nameof(ForeignKeyRecord.ReferencedColumnPosition)},
-    keyMap.UPDATE_RULE AS {nameof(ForeignKeyRecord.OnUpdate)},
-    keyMap.DELETE_RULE AS {nameof(ForeignKeyRecord.OnDelete)}
-FROM INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS keyMap
-INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE thisKey
-    ON thisKey.CONSTRAINT_NAME = keyMap.CONSTRAINT_NAME
-INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE referencedKey
-    ON referencedKey.CONSTRAINT_NAME = keyMap.UNIQUE_CONSTRAINT_NAME;";
+    sm.name AS {nameof(ForeignKeyRecord.ThisTableName)},
+    'FK_' || sm.name || '_' || fkl.[table] || '_' || fkl.id AS {nameof(ForeignKeyRecord.ForeignKeyName)},
+    fkl.[from] AS {nameof(ForeignKeyRecord.ThisColumnName)},
+    fkl.seq AS {nameof(ForeignKeyRecord.ThisColumnPosition)},
+    fkl.[table] AS {nameof(ForeignKeyRecord.ReferencedTableName)},
+    fkl.[to] AS {nameof(ForeignKeyRecord.ReferencedColumnName)},
+    fkl.seq AS {nameof(ForeignKeyRecord.ReferencedColumnPosition)},
+    fkl.on_update AS {nameof(ForeignKeyRecord.OnUpdate)},
+    fkl.on_delete AS {nameof(ForeignKeyRecord.OnDelete)}
+FROM sqlite_master sm
+INNER JOIN pragma_foreign_key_list(sm.name) fkl
+WHERE sm.type = 'table';";
 
         public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
 
@@ -44,7 +42,7 @@ INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE referencedKey
         internal static class ResultsInterpreter
         {
             public static void BuildTablesForeignKeys(
-                Dictionary<string, MSSQLTableInfo> tables,
+                Dictionary<string, SQLiteTableInfo> tables,
                 IEnumerable<ForeignKeyRecord> foreignKeyRecords)
             {
                 Dictionary<string, SortedDictionary<int, string>> thisColumnNames = new();
@@ -65,7 +63,7 @@ INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE referencedKey
                     ((List<ForeignKeyInfo>)tables[foreignKeyRecord.ThisTableName].ForeignKeys).Add(foreignKeyInfo);
                 }
 
-                foreach (MSSQLTableInfo table in tables.Values)
+                foreach (SQLiteTableInfo table in tables.Values)
                 {
                     foreach (ForeignKeyInfo foreignKeyInfo in table.ForeignKeys)
                     {

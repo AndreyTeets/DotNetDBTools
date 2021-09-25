@@ -45,7 +45,7 @@ namespace DotNetDBTools.IntegrationTests.MSSQL
 
             MSSQLDatabaseInfo dbInfoFromDbAssembly = AgnosticToMSSQLConverter.ConvertToMSSQLInfo(
                 AgnosticDefinitionParser.CreateDatabaseInfo(s_agnosticSampleDbAssemblyPath));
-            MSSQLDatabaseInfo dbInfoFromDNDBTSysInfo = interactor.GetExistingDatabase();
+            MSSQLDatabaseInfo dbInfoFromDNDBTSysInfo = interactor.GetDatabaseModelFromDNDBTSysInfo();
 
             dbInfoFromDNDBTSysInfo.Should().BeEquivalentTo(dbInfoFromDbAssembly, options => options
                 .Excluding(dbInfo => dbInfo.Name)
@@ -63,7 +63,7 @@ namespace DotNetDBTools.IntegrationTests.MSSQL
 
             MSSQLDatabaseInfo dbInfoFromDbAssembly = AgnosticToMSSQLConverter.ConvertToMSSQLInfo(
                 AgnosticDefinitionParser.CreateDatabaseInfo(s_agnosticSampleDbAssemblyPath));
-            MSSQLDatabaseInfo dbInfoFromMSSQLSysInfo = interactor.GenerateExistingDatabaseSystemInfo();
+            MSSQLDatabaseInfo dbInfoFromMSSQLSysInfo = interactor.GenerateDatabaseModelFromMSSQLSysInfo();
 
             dbInfoFromMSSQLSysInfo.Should().BeEquivalentTo(dbInfoFromDbAssembly, options => options
                 .Excluding(dbInfo => dbInfo.Name)
@@ -89,7 +89,7 @@ namespace DotNetDBTools.IntegrationTests.MSSQL
             deployManager.PublishDatabase(s_mssqlSampleDbAssemblyPath, ConnectionString);
 
             MSSQLDatabaseInfo dbInfoFromDbAssembly = MSSQLDefinitionParser.CreateDatabaseInfo(s_mssqlSampleDbAssemblyPath);
-            MSSQLDatabaseInfo dbInfoFromDNDBTSysInfo = interactor.GetExistingDatabase();
+            MSSQLDatabaseInfo dbInfoFromDNDBTSysInfo = interactor.GetDatabaseModelFromDNDBTSysInfo();
 
             dbInfoFromDNDBTSysInfo.Should().BeEquivalentTo(dbInfoFromDbAssembly, options => options
                 .Excluding(dbInfo => dbInfo.Name)
@@ -107,7 +107,7 @@ namespace DotNetDBTools.IntegrationTests.MSSQL
             deployManager.UnregisterAsDNDBT(ConnectionString);
 
             MSSQLDatabaseInfo dbInfoFromDbAssembly = MSSQLDefinitionParser.CreateDatabaseInfo(s_mssqlSampleDbAssemblyPath);
-            MSSQLDatabaseInfo dbInfoFromMSSQLSysInfo = interactor.GenerateExistingDatabaseSystemInfo();
+            MSSQLDatabaseInfo dbInfoFromMSSQLSysInfo = interactor.GenerateDatabaseModelFromMSSQLSysInfo();
 
             dbInfoFromMSSQLSysInfo.Should().BeEquivalentTo(dbInfoFromDbAssembly, options => options
                 .Excluding(dbInfo => dbInfo.Name)

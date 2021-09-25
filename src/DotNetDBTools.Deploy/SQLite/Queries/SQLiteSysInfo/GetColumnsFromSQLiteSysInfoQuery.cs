@@ -2,26 +2,23 @@
 using System.Collections.Generic;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Models.Core;
-using DotNetDBTools.Models.MSSQL;
+using DotNetDBTools.Models.SQLite;
 
-namespace DotNetDBTools.Deploy.MSSQL.Queries.MSSQLSysInfo
+namespace DotNetDBTools.Deploy.SQLite.Queries.SQLiteSysInfo
 {
-    internal class GetColumnsFromMSSQLSysInfoQuery : IQuery
+    internal class GetColumnsFromSQLiteSysInfoQuery : IQuery
     {
         public string Sql =>
 $@"SELECT
-    t.TABLE_NAME AS {nameof(ColumnRecord.TableName)},
-    c.COLUMN_NAME AS {nameof(ColumnRecord.ColumnName)},
-    c.DATA_TYPE AS {nameof(ColumnRecord.DataType)},
-    c.DOMAIN_NAME AS {nameof(ColumnRecord.UserDefinedDataType)},
-    CASE WHEN c.IS_NULLABLE='YES' THEN 1 ELSE 0 END AS {nameof(ColumnRecord.Nullable)},
-    COLUMNPROPERTY(object_id(c.TABLE_NAME), c.COLUMN_NAME, 'IsIdentity') AS [{nameof(ColumnRecord.Identity)}],
-    c.COLUMN_DEFAULT AS [{nameof(ColumnRecord.Default)}],
-    c.CHARACTER_OCTET_LENGTH AS {nameof(ColumnRecord.Length)}
-FROM INFORMATION_SCHEMA.TABLES t
-INNER JOIN INFORMATION_SCHEMA.COLUMNS c
-    ON c.TABLE_NAME = t.TABLE_NAME
-WHERE t.TABLE_TYPE='BASE TABLE';";
+    sm.name AS {nameof(ColumnRecord.TableName)},
+    ti.name AS {nameof(ColumnRecord.ColumnName)},
+    ti.type AS {nameof(ColumnRecord.DataType)},
+    CASE WHEN ti.[notnull]=1 THEN 0 ELSE 1 END AS {nameof(ColumnRecord.Nullable)},
+    CASE WHEN ti.pk=1 AND lower(ti.type)='integer' THEN 1 ELSE 0 END AS {nameof(ColumnRecord.IsIdentityCandidate)},
+    ti.dflt_value AS [{nameof(ColumnRecord.Default)}]
+FROM sqlite_master sm
+INNER JOIN pragma_table_info(sm.name) ti
+WHERE sm.type = 'table';";
 
         public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
 
@@ -30,23 +27,21 @@ WHERE t.TABLE_TYPE='BASE TABLE';";
             public string TableName { get; set; }
             public string ColumnName { get; set; }
             public string DataType { get; set; }
-            public string UserDefinedDataType { get; set; }
             public bool Nullable { get; set; }
-            public bool Identity { get; set; }
+            public bool IsIdentityCandidate { get; set; }
             public string Default { get; set; }
-            public string Length { get; set; }
         }
 
         internal static class ResultsInterpreter
         {
-            public static Dictionary<string, MSSQLTableInfo> BuildTablesListWithColumns(IEnumerable<ColumnRecord> columnRecords)
+            public static Dictionary<string, SQLiteTableInfo> BuildTablesListWithColumns(IEnumerable<ColumnRecord> columnRecords)
             {
-                Dictionary<string, MSSQLTableInfo> tables = new();
+                Dictionary<string, SQLiteTableInfo> tables = new();
                 foreach (ColumnRecord columnRecord in columnRecords)
                 {
                     if (!tables.ContainsKey(columnRecord.TableName))
                     {
-                        MSSQLTableInfo table = new()
+                        SQLiteTableInfo table = new()
                         {
                             ID = Guid.NewGuid(),
                             Name = columnRecord.TableName,
@@ -64,46 +59,34 @@ WHERE t.TABLE_TYPE='BASE TABLE';";
 
             private static ColumnInfo MapToColumnInfo(ColumnRecord columnRecord)
             {
-                DataTypeInfo dataTypeInfo = MSSQLSqlTypeMapper.GetModelType(columnRecord.DataType, columnRecord.Length);
-                if (columnRecord.UserDefinedDataType is not null)
-                {
-                    dataTypeInfo.Name = columnRecord.UserDefinedDataType;
-                    dataTypeInfo.IsUserDefined = true;
-                }
-
+                DataTypeInfo dataTypeInfo = SQLiteSqlTypeMapper.GetModelType(columnRecord.DataType);
                 return new ColumnInfo()
                 {
                     ID = Guid.NewGuid(),
                     Name = columnRecord.ColumnName,
                     DataType = dataTypeInfo,
                     Nullable = columnRecord.Nullable,
-                    Identity = columnRecord.Identity,
+                    Identity = columnRecord.IsIdentityCandidate,
                     Default = ParseDefault(columnRecord.Default),
                 };
             }
 
-            private static object ParseDefault(string valueFromMSSQLSysTable)
+            private static object ParseDefault(string value)
             {
-                if (valueFromMSSQLSysTable is null)
+                if (value is null)
                     return null;
-                string value = TrimOuterParantheses(valueFromMSSQLSysTable);
 
-                if (IsNumber(value))
-                    return long.Parse(TrimOuterParantheses(value));
                 if (IsByte(value))
                     return ToByteArray(value);
                 if (IsString(value))
                     return TrimOuterQuotes(value);
                 if (IsFunction(value))
-                    return new MSSQLDefaultValueAsFunction() { FunctionText = value };
+                    return new SQLiteDefaultValueAsFunction() { FunctionText = value };
+                return long.Parse(value);
 
-                throw new ArgumentException($"Invalid parameter value '{valueFromMSSQLSysTable}'", nameof(valueFromMSSQLSysTable));
-
-                static bool IsNumber(string val) => val.StartsWith("(", StringComparison.Ordinal);
                 static bool IsByte(string val) => val.StartsWith("0x", StringComparison.Ordinal);
                 static bool IsString(string val) => val.StartsWith("'", StringComparison.Ordinal);
                 static bool IsFunction(string val) => !long.TryParse(val, out _);
-                static string TrimOuterParantheses(string val) => val.Substring(1, val.Length - 2);
                 static string TrimOuterQuotes(string val) => val.Substring(1, val.Length - 2);
                 static byte[] ToByteArray(string val)
                 {

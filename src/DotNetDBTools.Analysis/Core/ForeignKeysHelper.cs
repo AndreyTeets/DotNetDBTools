@@ -87,8 +87,8 @@ namespace DotNetDBTools.Analysis.Core
                 foreach (ForeignKeyInfo fk in table.ForeignKeys)
                 {
                     Dictionary<string, Guid> tableColumnIDs = tables
-                        .Single(t => t.Name == fk.ForeignTableName).Columns.ToDictionary(c => c.Name, c => c.ID);
-                    foreach (string cn in fk.ForeignColumnNames)
+                        .Single(t => t.Name == fk.ReferencedTableName).Columns.ToDictionary(c => c.Name, c => c.ID);
+                    foreach (string cn in fk.ReferencedTableColumnNames)
                     {
                         Guid columnID = tableColumnIDs[cn];
                         if (columnsReferencedByMap.ContainsKey(columnID))

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.MSSQL.Queries;
@@ -25,7 +24,12 @@ namespace DotNetDBTools.Deploy.MSSQL
             return databaseExists;
         }
 
-        public MSSQLDatabaseInfo GetExistingDatabase()
+        public void CreateDatabase(string databaseName)
+        {
+            _queryExecutor.Execute(new CreateDatabaseQuery(databaseName));
+        }
+
+        public MSSQLDatabaseInfo GetDatabaseModelFromDNDBTSysInfo()
         {
             List<MSSQLTableInfo> tables = new();
             IEnumerable<string> tablesMetadatas = _queryExecutor.Query<string>(new GetTablesFromDNDBTSysInfoQuery());
@@ -50,36 +54,38 @@ namespace DotNetDBTools.Deploy.MSSQL
             };
         }
 
-        public MSSQLDatabaseInfo GenerateExistingDatabaseSystemInfo()
+        public MSSQLDatabaseInfo GenerateDatabaseModelFromMSSQLSysInfo()
         {
-            Dictionary<string, MSSQLTableInfo> tables = GetColumnsFromMSSQLSysInfoQuery.ResultsInterpreter.BuildTablesListWithColumns(
-                _queryExecutor.Query<GetColumnsFromMSSQLSysInfoQuery.ColumnRecord>(new GetColumnsFromMSSQLSysInfoQuery()));
+            Dictionary<string, MSSQLTableInfo> tables =
+                GetColumnsFromMSSQLSysInfoQuery.ResultsInterpreter.BuildTablesListWithColumns(
+                    _queryExecutor.Query<GetColumnsFromMSSQLSysInfoQuery.ColumnRecord>(
+                        new GetColumnsFromMSSQLSysInfoQuery()));
 
             GetPrimaryKeysFromMSSQLSysInfoQuery.ResultsInterpreter.BuildTablesPrimaryKeys(
                 tables,
-                _queryExecutor.Query<GetPrimaryKeysFromMSSQLSysInfoQuery.PrimaryKeyRecord>(new GetPrimaryKeysFromMSSQLSysInfoQuery()));
+                _queryExecutor.Query<GetPrimaryKeysFromMSSQLSysInfoQuery.PrimaryKeyRecord>(
+                    new GetPrimaryKeysFromMSSQLSysInfoQuery()));
 
             GetUniqueConstraintsFromMSSQLSysInfoQuery.ResultsInterpreter.BuildTablesUniqueConstraints(
                 tables,
-                _queryExecutor.Query<GetUniqueConstraintsFromMSSQLSysInfoQuery.UniqueConstraintRecord>(new GetUniqueConstraintsFromMSSQLSysInfoQuery()));
+                _queryExecutor.Query<GetUniqueConstraintsFromMSSQLSysInfoQuery.UniqueConstraintRecord>(
+                    new GetUniqueConstraintsFromMSSQLSysInfoQuery()));
 
             GetForeignKeysFromMSSQLSysInfoQuery.ResultsInterpreter.BuildTablesForeignKeys(
                 tables,
-                _queryExecutor.Query<GetForeignKeysFromMSSQLSysInfoQuery.ForeignKeyRecord>(new GetForeignKeysFromMSSQLSysInfoQuery()));
+                _queryExecutor.Query<GetForeignKeysFromMSSQLSysInfoQuery.ForeignKeyRecord>(
+                    new GetForeignKeysFromMSSQLSysInfoQuery()));
 
-            List<MSSQLUserDefinedTypeInfo> userDefinedTypes = GetTypesFromMSSQLSysInfoQuery.ResultsInterpreter.BuildUserDefinedTypesList(
-                _queryExecutor.Query<GetTypesFromMSSQLSysInfoQuery.UserDefinedTypeRecord>(new GetTypesFromMSSQLSysInfoQuery()));
+            List<MSSQLUserDefinedTypeInfo> userDefinedTypes =
+                GetTypesFromMSSQLSysInfoQuery.ResultsInterpreter.BuildUserDefinedTypesList(
+                    _queryExecutor.Query<GetTypesFromMSSQLSysInfoQuery.UserDefinedTypeRecord>(
+                        new GetTypesFromMSSQLSysInfoQuery()));
 
             return new MSSQLDatabaseInfo(null)
             {
                 Tables = tables.Select(x => x.Value),
                 UserDefinedTypes = userDefinedTypes,
             };
-        }
-
-        public void CreateDatabase(string databaseName)
-        {
-            _queryExecutor.Execute(new CreateDatabaseQuery(databaseName));
         }
 
         public void ApplyDatabaseDiff(MSSQLDatabaseDiff dbDiff)
@@ -117,23 +123,23 @@ namespace DotNetDBTools.Deploy.MSSQL
             // TODO CreateProcedures
         }
 
-        public bool SystemTablesExist()
+        public bool DNDBTSysTablesExist()
         {
             bool systemTablesExist = _queryExecutor.QuerySingleOrDefault<bool>(new CheckDNDBTSysTablesExistQuery());
             return systemTablesExist;
         }
 
-        public void CreateSystemTables()
+        public void CreateDNDBTSysTables()
         {
             _queryExecutor.Execute(new CreateDNDBTSysTablesQuery());
         }
 
-        public void DropSystemTables()
+        public void DropDNDBTSysTables()
         {
             _queryExecutor.Execute(new DropDNDBTSysTablesQuery());
         }
 
-        public void PopulateSystemTables(MSSQLDatabaseInfo database)
+        public void PopulateDNDBTSysTables(MSSQLDatabaseInfo database)
         {
             foreach (MSSQLTableInfo table in database.Tables)
             {

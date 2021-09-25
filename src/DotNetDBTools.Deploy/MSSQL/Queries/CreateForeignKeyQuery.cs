@@ -22,8 +22,8 @@ namespace DotNetDBTools.Deploy.MSSQL.Queries
         private static string GetSql(ForeignKeyInfo fk)
         {
             string query =
-$@"ALTER TABLE {fk.ThisTableName} ADD CONSTRAINT {fk.Name} FOREIGN KEY ({string.Join(",", fk.ThisColumnNames)})
-    REFERENCES {fk.ForeignTableName} ({string.Join(",", fk.ForeignColumnNames)})
+$@"ALTER TABLE {fk.ThisTableName} ADD CONSTRAINT {fk.Name} FOREIGN KEY ({string.Join(", ", fk.ThisColumnNames)})
+    REFERENCES {fk.ReferencedTableName} ({string.Join(", ", fk.ReferencedTableColumnNames)})
     ON UPDATE {MapActionName(fk.OnUpdate)} ON DELETE {MapActionName(fk.OnDelete)};";
 
             return query;

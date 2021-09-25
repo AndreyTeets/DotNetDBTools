@@ -186,8 +186,8 @@ namespace DotNetDBTools.DefinitionParser.MSSQL
                         Name = x.Name,
                         ThisTableName = table.GetType().Name,
                         ThisColumnNames = foreignKey.ThisColumns.ToList(),
-                        ForeignTableName = foreignKey.ForeignTable,
-                        ForeignColumnNames = foreignKey.ForeignColumns.ToList(),
+                        ReferencedTableName = foreignKey.ReferencedTable,
+                        ReferencedTableColumnNames = foreignKey.ReferencedTableColumns.ToList(),
                         OnDelete = foreignKey.OnDelete.ToString(),
                         OnUpdate = foreignKey.OnUpdate.ToString(),
                     };

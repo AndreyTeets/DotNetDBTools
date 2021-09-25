@@ -1,15 +1,12 @@
 ﻿using System.Collections.Generic;
 using DotNetDBTools.Deploy.Core;
 
-namespace DotNetDBTools.Deploy.SQLite.Queries
+namespace DotNetDBTools.Deploy.SQLite.Queries.DNDBTSysInfo
 {
-    internal class DatabaseExistsQuery : IQuery
+    internal class DropDNDBTSysTablesQuery : IQuery
     {
         public string Sql =>
-$@"SELECT
-    true
-FROM sqlite_master
-WHERE type = 'table' AND name = '{DNDBTSysTables.DNDBTDbObjects}';";
+$@"DROP TABLE {DNDBTSysTables.DNDBTDbObjects};";
 
         public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
     }

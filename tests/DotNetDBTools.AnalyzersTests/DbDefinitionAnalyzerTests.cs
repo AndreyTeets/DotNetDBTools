@@ -33,6 +33,7 @@ namespace SampleTestCode
         {
             DataType = new IntDataType(),
             Nullable = false,
+            Default = 145,
         };
 
         public Column TestColumn2 = new(""2FD848D5-A689-419F-9214-AFCF9F742564"")
@@ -55,8 +56,8 @@ namespace SampleTestCode
         public ForeignKey {|#0:FK_TestName1|} = new(""1955F440-4333-4F33-9755-1C618816C9FB"")
         {
             ThisColumns = new string[] { nameof(TestColumn1) },
-            ForeignTable = nameof(TestTable2),
-            ForeignColumns = new string[] { nameof(TestTable2.TestColumn1) },
+            ReferencedTable = nameof(TestTable2),
+            ReferencedTableColumns = new string[] { nameof(TestTable2.TestColumn1) },
             OnUpdate = ForeignKeyActions.NoAction,
             OnDelete = ForeignKeyActions.Cascade,
         };
@@ -67,8 +68,8 @@ namespace SampleTestCode
             await Verify.VerifyAnalyzerAsync(goodDbCode);
 
             string badDbCode = goodDbCode.Replace(
-                "ForeignTable = nameof(TestTable2),",
-                "ForeignTable = \"NonExistentTableName\",");
+                "ReferencedTable = nameof(TestTable2),",
+                "ReferencedTable = \"NonExistentTableName\",");
 
             string expectedErrorMessage =
 "Couldn't find table 'NonExistentTableName' referenced by foreign key 'FK_TestName1' in table 'TestTable1'";

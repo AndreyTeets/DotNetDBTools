@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using DotNetDBTools.Deploy.Core;
 
-namespace DotNetDBTools.Deploy.SQLite.Queries
+namespace DotNetDBTools.Deploy.SQLite.Queries.DNDBTSysInfo
 {
-    internal class CreateSystemTablesQuery : IQuery
+    internal class CreateDNDBTSysTablesQuery : IQuery
     {
         public string Sql =>
 $@"CREATE TABLE {DNDBTSysTables.DNDBTDbObjects}

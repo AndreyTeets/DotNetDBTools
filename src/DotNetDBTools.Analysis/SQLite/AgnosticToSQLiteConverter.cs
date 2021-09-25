@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using DotNetDBTools.Models.Agnostic;
+using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.SQLite;
 
 namespace DotNetDBTools.Analysis.SQLite
@@ -14,7 +16,8 @@ namespace DotNetDBTools.Analysis.SQLite
            };
 
         private static SQLiteTableInfo ConvertToSQLiteInfo(AgnosticTableInfo tableInfo)
-            => new()
+        {
+            SQLiteTableInfo sqliteTableInfo = new()
             {
                 ID = tableInfo.ID,
                 Name = tableInfo.Name,
@@ -23,6 +26,9 @@ namespace DotNetDBTools.Analysis.SQLite
                 UniqueConstraints = tableInfo.UniqueConstraints,
                 ForeignKeys = tableInfo.ForeignKeys,
             };
+            StripRedundantDataTypeAttributes(sqliteTableInfo.Columns);
+            return sqliteTableInfo;
+        }
 
         private static SQLiteViewInfo ConvertToSQLiteInfo(AgnosticViewInfo viewInfo)
             => new()
@@ -31,5 +37,16 @@ namespace DotNetDBTools.Analysis.SQLite
                 Name = viewInfo.Name,
                 Code = viewInfo.Code,
             };
+
+        private static void StripRedundantDataTypeAttributes(IEnumerable<ColumnInfo> columns)
+        {
+            foreach (ColumnInfo column in columns)
+            {
+                column.DataType = new DataTypeInfo()
+                {
+                    Name = column.DataType.Name,
+                };
+            }
+        }
     }
 }

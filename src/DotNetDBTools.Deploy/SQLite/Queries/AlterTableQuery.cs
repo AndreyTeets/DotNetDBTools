@@ -33,7 +33,7 @@ BEGIN TRANSACTION;
 
 CREATE TABLE {DNDBTTempPrefix}{tableDiff.NewTable.Name}
 (
-{GetTableDefinitionsText(tableDiff.NewTable)}
+{GetTableDefinitionsText((SQLiteTableInfo)tableDiff.NewTable)}
 );
 
 INSERT INTO  {DNDBTTempPrefix}{tableDiff.NewTable.Name}({GetChangedColumnsNewNamesText(tableDiff)})
@@ -45,12 +45,7 @@ DROP TABLE {tableDiff.OldTable.Name};
 ALTER TABLE {DNDBTTempPrefix}{tableDiff.NewTable.Name} RENAME TO {tableDiff.NewTable.Name};
 
 COMMIT TRANSACTION;
-PRAGMA foreign_keys=on;
-
-UPDATE {DNDBTSysTables.DNDBTDbObjects} SET
-    {DNDBTSysTables.DNDBTDbObjects.Name} = '{tableDiff.NewTable.Name}',
-    {DNDBTSysTables.DNDBTDbObjects.Metadata} = {NewTableMetadataParameterName}
-WHERE {DNDBTSysTables.DNDBTDbObjects.ID} = '{tableDiff.NewTable.ID}';";
+PRAGMA foreign_keys=on;";
 
             return query;
         }

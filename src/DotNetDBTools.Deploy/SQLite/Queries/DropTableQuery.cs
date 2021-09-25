@@ -19,10 +19,7 @@ namespace DotNetDBTools.Deploy.SQLite.Queries
         private static string GetSql(SQLiteTableInfo table)
         {
             string query =
-$@"DROP TABLE {table.Name};
-
-DELETE FROM {DNDBTSysTables.DNDBTDbObjects}
-WHERE {DNDBTSysTables.DNDBTDbObjects.ID} = '{table.ID}';";
+$@"DROP TABLE {table.Name};";
 
             return query;
         }

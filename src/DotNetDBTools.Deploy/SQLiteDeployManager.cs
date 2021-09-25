@@ -32,15 +32,15 @@ namespace DotNetDBTools.Deploy
 
         public void PublishDatabase(Assembly dbAssembly, string connectionString)
         {
-            SQLiteDatabaseInfo database = CreateSQLiteDatabaseInfo(dbAssembly);
-            SQLiteDatabaseInfo existingDatabase = GetExistingDatabaseOrCreateEmptyIfNotExists(connectionString);
+            SQLiteDatabaseInfo database = CreateSQLiteDatabaseModelFromDbAssembly(dbAssembly);
+            SQLiteDatabaseInfo existingDatabase = GetDatabaseModelIfDbExistsOrCreateEmptyDbAndModel(connectionString);
 
             if (!SQLiteDbValidator.CanUpdate(database, existingDatabase, _allowDataLoss, out string error))
                 throw new Exception($"Can not update database: {error}");
 
             SQLiteDatabaseDiff databaseDiff = SQLiteDiffCreator.CreateDatabaseDiff(database, existingDatabase);
             SQLiteInteractor interactor = new(new SQLiteQueryExecutor(connectionString));
-            interactor.UpdateDatabase(databaseDiff);
+            interactor.ApplyDatabaseDiff(databaseDiff);
         }
 
         public void GeneratePublishScript(string dbAssemblyPath, string connectionString, string outputPath)
@@ -51,41 +51,43 @@ namespace DotNetDBTools.Deploy
 
         public void GeneratePublishScript(Assembly dbAssembly, string connectionString, string outputPath)
         {
-            SQLiteDatabaseInfo database = CreateSQLiteDatabaseInfo(dbAssembly);
-            SQLiteDatabaseInfo existingDatabase = GetExistingDatabase(connectionString);
+            SQLiteDatabaseInfo database = CreateSQLiteDatabaseModelFromDbAssembly(dbAssembly);
+            SQLiteDatabaseInfo existingDatabase = GetDatabaseModelIfDbExistsAndRegisteredOrCreateEmptyModel(connectionString);
             GeneratePublishScript(database, existingDatabase, outputPath);
         }
 
         public void GeneratePublishScript(Assembly newDbAssembly, Assembly oldDbAssembly, string outputPath)
         {
-            SQLiteDatabaseInfo database = CreateSQLiteDatabaseInfo(newDbAssembly);
-            SQLiteDatabaseInfo existingDatabase = CreateSQLiteDatabaseInfo(oldDbAssembly);
+            SQLiteDatabaseInfo database = CreateSQLiteDatabaseModelFromDbAssembly(newDbAssembly);
+            SQLiteDatabaseInfo existingDatabase = CreateSQLiteDatabaseModelFromDbAssembly(oldDbAssembly);
             GeneratePublishScript(database, existingDatabase, outputPath);
         }
 
         public void GenerateDefinition(string connectionString, string outputDirectory)
         {
             SQLiteInteractor interactor = new(new SQLiteQueryExecutor(connectionString));
-            SQLiteDatabaseInfo existingDatabase = interactor.GetExistingDatabase();
+            SQLiteDatabaseInfo existingDatabase;
+            if (interactor.DNDBTSysTablesExist())
+                existingDatabase = interactor.GetDatabaseModelFromDNDBTSysInfo();
+            else
+                existingDatabase = interactor.GenerateDatabaseModelFromSQLiteSysInfo();
             DbDefinitionGenerator.GenerateDefinition(existingDatabase, outputDirectory);
         }
 
         public void RegisterAsDNDBT(string connectionString)
         {
-            return;
-#pragma warning disable CS0162 // Unreachable code detected
             SQLiteInteractor interactor = new(new SQLiteQueryExecutor(connectionString));
-#pragma warning restore CS0162 // Unreachable code detected
-            interactor.CreateSystemTables();
+            if (interactor.DNDBTSysTablesExist())
+                throw new InvalidOperationException("Database is already registered");
+            SQLiteDatabaseInfo existingDatabase = interactor.GenerateDatabaseModelFromSQLiteSysInfo();
+            interactor.CreateDNDBTSysTables();
+            interactor.PopulateDNDBTSysTables(existingDatabase);
         }
 
         public void UnregisterAsDNDBT(string connectionString)
         {
-            return;
-#pragma warning disable CS0162 // Unreachable code detected
             SQLiteInteractor interactor = new(new SQLiteQueryExecutor(connectionString));
-#pragma warning restore CS0162 // Unreachable code detected
-            interactor.DeleteSystemTables();
+            interactor.DropDNDBTSysTables();
         }
 
         public void GeneratePublishScript(SQLiteDatabaseInfo database, SQLiteDatabaseInfo existingDatabase, string outputPath)
@@ -93,7 +95,7 @@ namespace DotNetDBTools.Deploy
             SQLiteGenSqlScriptQueryExecutor genSqlScriptQueryExecutor = new();
             SQLiteInteractor interactor = new(genSqlScriptQueryExecutor);
             SQLiteDatabaseDiff databaseDiff = SQLiteDiffCreator.CreateDatabaseDiff(database, existingDatabase);
-            interactor.UpdateDatabase(databaseDiff);
+            interactor.ApplyDatabaseDiff(databaseDiff);
             string generatedScript = genSqlScriptQueryExecutor.GetFinalScript();
 
             string fullPath = Path.GetFullPath(outputPath);
@@ -101,7 +103,7 @@ namespace DotNetDBTools.Deploy
             File.WriteAllText(fullPath, generatedScript);
         }
 
-        private static SQLiteDatabaseInfo CreateSQLiteDatabaseInfo(Assembly dbAssembly)
+        private static SQLiteDatabaseInfo CreateSQLiteDatabaseModelFromDbAssembly(Assembly dbAssembly)
         {
             SQLiteDatabaseInfo database;
             if (DbAssemblyInfoHelper.GetDbKind(dbAssembly) == DatabaseKind.Agnostic)
@@ -114,20 +116,20 @@ namespace DotNetDBTools.Deploy
             return database;
         }
 
-        private SQLiteDatabaseInfo GetExistingDatabaseOrCreateEmptyIfNotExists(string connectionString)
+        private SQLiteDatabaseInfo GetDatabaseModelIfDbExistsOrCreateEmptyDbAndModel(string connectionString)
         {
             SQLiteInteractor interactor = new(new SQLiteQueryExecutor(connectionString));
-            bool databaseExists = interactor.DatabaseExists();
+            bool databaseExists = interactor.DNDBTSysTablesExist();
             if (databaseExists)
             {
-                SQLiteDatabaseInfo existingDatabase = interactor.GetExistingDatabase();
+                SQLiteDatabaseInfo existingDatabase = interactor.GetDatabaseModelFromDNDBTSysInfo();
                 return existingDatabase;
             }
             else
             {
                 if (_allowDbCreation)
                 {
-                    interactor.CreateSystemTables();
+                    interactor.CreateDNDBTSysTables();
                     return new SQLiteDatabaseInfo(null);
                 }
                 else
@@ -137,14 +139,12 @@ namespace DotNetDBTools.Deploy
             }
         }
 
-        private static SQLiteDatabaseInfo GetExistingDatabase(string connectionString)
+        private static SQLiteDatabaseInfo GetDatabaseModelIfDbExistsAndRegisteredOrCreateEmptyModel(string connectionString)
         {
             SQLiteInteractor interactor = new(new SQLiteQueryExecutor(connectionString));
-            bool databaseExists = interactor.DatabaseExists();
-            if (databaseExists)
-                return interactor.GetExistingDatabase();
-            else
-                return new SQLiteDatabaseInfo(null);
+            if (interactor.DNDBTSysTablesExist())
+                return interactor.GetDatabaseModelFromDNDBTSysInfo();
+            return new SQLiteDatabaseInfo(null);
         }
     }
 }

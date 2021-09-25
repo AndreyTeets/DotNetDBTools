@@ -11,8 +11,9 @@ namespace DotNetDBTools.Deploy.SQLite
 
         public int Execute(IQuery query)
         {
+            string queryName = query.GetType().Name;
             string queryWithParametersReplacedWithValues = ReplaceParameters(query);
-            _queries.Add(queryWithParametersReplacedWithValues);
+            _queries.Add($"--QUERY START: {queryName}\n{queryWithParametersReplacedWithValues}\n--QUERY END: {queryName}");
             return 0;
         }
 
@@ -28,7 +29,7 @@ namespace DotNetDBTools.Deploy.SQLite
 
         public string GetFinalScript()
         {
-            return string.Join("\n\n\n", _queries);
+            return string.Join("\n\n", _queries);
         }
 
         private string ReplaceParameters(IQuery query)

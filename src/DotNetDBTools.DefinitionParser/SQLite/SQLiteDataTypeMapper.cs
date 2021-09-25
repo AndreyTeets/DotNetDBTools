@@ -18,13 +18,11 @@ namespace DotNetDBTools.DefinitionParser.SQLite
             };
         }
 
-        private static DataTypeInfo GetStringDataTypeInfo(StringDataType stringDataType)
+        private static DataTypeInfo GetStringDataTypeInfo(StringDataType _)
         {
             return new DataTypeInfo()
             {
                 Name = DataTypeNames.String,
-                Length = stringDataType.Length,
-                IsUnicode = stringDataType.IsUnicode,
             };
         }
 
@@ -36,12 +34,11 @@ namespace DotNetDBTools.DefinitionParser.SQLite
             };
         }
 
-        private static DataTypeInfo GetByteDataTypeInfo(ByteDataType byteDataType)
+        private static DataTypeInfo GetByteDataTypeInfo(ByteDataType _)
         {
             return new DataTypeInfo()
             {
                 Name = DataTypeNames.Byte,
-                Length = byteDataType.Length,
             };
         }
     }

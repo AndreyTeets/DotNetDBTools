@@ -1,5 +1,12 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using DotNetDBTools.Analysis.SQLite;
+using DotNetDBTools.DefinitionParser.Agnostic;
+using DotNetDBTools.DefinitionParser.SQLite;
 using DotNetDBTools.Deploy;
+using DotNetDBTools.Deploy.SQLite;
+using DotNetDBTools.Models.SQLite;
+using FluentAssertions;
 using Microsoft.Data.Sqlite;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static DotNetDBTools.IntegrationTests.Constants;
@@ -27,12 +34,82 @@ namespace DotNetDBTools.IntegrationTests.SQLite
         }
 
         [TestMethod]
+        public void AgnosticSampleDB_DbInfoFromDNDBTSysInfo_IsEquivalentTo_DbInfoFromDbAssembly()
+        {
+            DropDatabaseIfExists(ConnectionString);
+            SQLiteInteractor interactor = new(new SQLiteQueryExecutor(ConnectionString));
+            SQLiteDeployManager deployManager = new(true, false);
+            deployManager.PublishDatabase(s_agnosticSampleDbAssemblyPath, ConnectionString);
+
+            SQLiteDatabaseInfo dbInfoFromDbAssembly = AgnosticToSQLiteConverter.ConvertToSQLiteInfo(
+                AgnosticDefinitionParser.CreateDatabaseInfo(s_agnosticSampleDbAssemblyPath));
+            SQLiteDatabaseInfo dbInfoFromDNDBTSysInfo = interactor.GetDatabaseModelFromDNDBTSysInfo();
+
+            dbInfoFromDNDBTSysInfo.Should().BeEquivalentTo(dbInfoFromDbAssembly, options => options
+                .Excluding(dbInfo => dbInfo.Name)
+                .Excluding(dbInfo => dbInfo.Views));
+        }
+
+        [TestMethod]
+        public void AgnosticSampleDB_DbInfoFromSQLiteSysInfo_IsEquivalentTo_DbInfoFromDbAssembly()
+        {
+            DropDatabaseIfExists(ConnectionString);
+            SQLiteInteractor interactor = new(new SQLiteQueryExecutor(ConnectionString));
+            SQLiteDeployManager deployManager = new(true, false);
+            deployManager.PublishDatabase(s_agnosticSampleDbAssemblyPath, ConnectionString);
+            deployManager.UnregisterAsDNDBT(ConnectionString);
+
+            SQLiteDatabaseInfo dbInfoFromDbAssembly = AgnosticToSQLiteConverter.ConvertToSQLiteInfo(
+                AgnosticDefinitionParser.CreateDatabaseInfo(s_agnosticSampleDbAssemblyPath));
+            SQLiteDatabaseInfo dbInfoFromSQLiteSysInfo = interactor.GenerateDatabaseModelFromSQLiteSysInfo();
+
+            dbInfoFromSQLiteSysInfo.Should().BeEquivalentTo(dbInfoFromDbAssembly, options => options
+                .Excluding(dbInfo => dbInfo.Name)
+                .Excluding(dbInfo => dbInfo.Views)
+                .Excluding(dbInfo => dbInfo.Path.EndsWith(".ID", StringComparison.Ordinal)));
+        }
+
+        [TestMethod]
         public void Publish_SQLiteSampleDB_CreatesDbFromZero_And_UpdatesItAgain_WithoutErrors()
         {
             DropDatabaseIfExists(ConnectionString);
             SQLiteDeployManager deployManager = new(true, false);
             deployManager.PublishDatabase(s_sqliteSampleDbAssemblyPath, ConnectionString);
             deployManager.PublishDatabase(s_sqliteSampleDbAssemblyPath, ConnectionString);
+        }
+
+        [TestMethod]
+        public void SQLiteSampleDB_DbInfoFromDNDBTSysInfo_IsEquivalentTo_DbInfoFromDbAssembly()
+        {
+            DropDatabaseIfExists(ConnectionString);
+            SQLiteInteractor interactor = new(new SQLiteQueryExecutor(ConnectionString));
+            SQLiteDeployManager deployManager = new(true, false);
+            deployManager.PublishDatabase(s_sqliteSampleDbAssemblyPath, ConnectionString);
+
+            SQLiteDatabaseInfo dbInfoFromDbAssembly = SQLiteDefinitionParser.CreateDatabaseInfo(s_sqliteSampleDbAssemblyPath);
+            SQLiteDatabaseInfo dbInfoFromDNDBTSysInfo = interactor.GetDatabaseModelFromDNDBTSysInfo();
+
+            dbInfoFromDNDBTSysInfo.Should().BeEquivalentTo(dbInfoFromDbAssembly, options => options
+                .Excluding(dbInfo => dbInfo.Name)
+                .Excluding(dbInfo => dbInfo.Views));
+        }
+
+        [TestMethod]
+        public void SQLiteSampleDB_DbInfoFromSQLiteSysInfo_IsEquivalentTo_DbInfoFromDbAssembly()
+        {
+            DropDatabaseIfExists(ConnectionString);
+            SQLiteInteractor interactor = new(new SQLiteQueryExecutor(ConnectionString));
+            SQLiteDeployManager deployManager = new(true, false);
+            deployManager.PublishDatabase(s_sqliteSampleDbAssemblyPath, ConnectionString);
+            deployManager.UnregisterAsDNDBT(ConnectionString);
+
+            SQLiteDatabaseInfo dbInfoFromDbAssembly = SQLiteDefinitionParser.CreateDatabaseInfo(s_sqliteSampleDbAssemblyPath);
+            SQLiteDatabaseInfo dbInfoFromSQLiteSysInfo = interactor.GenerateDatabaseModelFromSQLiteSysInfo();
+
+            dbInfoFromSQLiteSysInfo.Should().BeEquivalentTo(dbInfoFromDbAssembly, options => options
+                .Excluding(dbInfo => dbInfo.Name)
+                .Excluding(dbInfo => dbInfo.Views)
+                .Excluding(dbInfo => dbInfo.Path.EndsWith(".ID", StringComparison.Ordinal)));
         }
 
         private static void DropDatabaseIfExists(string connectionString)
