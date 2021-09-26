@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.MSSQL.Queries;
 using DotNetDBTools.Deploy.MSSQL.Queries.DNDBTSysInfo;
@@ -81,6 +82,9 @@ namespace DotNetDBTools.Deploy.MSSQL
             _queryExecutor.BeginTransaction();
             try
             {
+                Dictionary<Guid, TableInfo> newDbFKToTableMap = ForeignKeysHelper.CreateFKToTableMap(dbDiff.NewDatabase.Tables);
+                Dictionary<Guid, TableInfo> oldDbFKToTableMap = ForeignKeysHelper.CreateFKToTableMap(dbDiff.OldDatabase.Tables);
+
                 // TODO DropProcedures
                 // TODO reference-ordering for functions+views together since either can depend on one another
                 foreach (MSSQLFunctionInfo function in dbDiff.RemovedFunctions.Concat(dbDiff.ChangedFunctions.Select(x => x.OldFunction)))
@@ -88,7 +92,7 @@ namespace DotNetDBTools.Deploy.MSSQL
                 foreach (MSSQLViewInfo view in dbDiff.RemovedViews.Concat(dbDiff.ChangedViews.Select(x => x.OldView)))
                     DropView(view);
                 foreach (ForeignKeyInfo fk in dbDiff.AllForeignKeysToDrop)
-                    DropForeignKey(fk, dbDiff.OldDatabase);
+                    DropForeignKey(fk, oldDbFKToTableMap);
                 foreach (MSSQLTableInfo table in dbDiff.RemovedTables)
                     DropTable(table);
 
@@ -106,7 +110,7 @@ namespace DotNetDBTools.Deploy.MSSQL
                 foreach (MSSQLTableInfo table in dbDiff.AddedTables)
                     CreateTable(table);
                 foreach (ForeignKeyInfo fk in dbDiff.AllForeignKeysToAdd)
-                    CreateForeignKey(fk, dbDiff.NewDatabase);
+                    CreateForeignKey(fk, newDbFKToTableMap);
                 foreach (MSSQLViewInfo view in dbDiff.AddedViews.Concat(dbDiff.ChangedViews.Select(x => x.NewView)))
                     CreateView(view);
                 foreach (MSSQLFunctionInfo function in dbDiff.AddedFunctions.Concat(dbDiff.ChangedFunctions.Select(x => x.NewFunction)))
@@ -219,17 +223,15 @@ namespace DotNetDBTools.Deploy.MSSQL
                 _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(uc.ID, tableDiff.NewTable.ID, MSSQLDbObjectsTypes.UniqueConstraint, uc.Name));
         }
 
-        private void CreateForeignKey(ForeignKeyInfo fk, DatabaseInfo database)
+        private void CreateForeignKey(ForeignKeyInfo fk, Dictionary<Guid, TableInfo> fkToTableMap)
         {
-            TableInfo table = database.Tables.Single(x => x.ForeignKeys.Any(y => y.Name == fk.Name));
-            _queryExecutor.Execute(new CreateForeignKeyQuery(fk, table.Name));
-            _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(fk.ID, table.ID, MSSQLDbObjectsTypes.ForeignKey, fk.Name));
+            _queryExecutor.Execute(new CreateForeignKeyQuery(fk, fkToTableMap[fk.ID].Name));
+            _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(fk.ID, fkToTableMap[fk.ID].ID, MSSQLDbObjectsTypes.ForeignKey, fk.Name));
         }
 
-        private void DropForeignKey(ForeignKeyInfo fk, DatabaseInfo database)
+        private void DropForeignKey(ForeignKeyInfo fk, Dictionary<Guid, TableInfo> fkToTableMap)
         {
-            TableInfo table = database.Tables.Single(x => x.ForeignKeys.Any(y => y.Name == fk.Name));
-            _queryExecutor.Execute(new DropForeignKeyQuery(fk, table.Name));
+            _queryExecutor.Execute(new DropForeignKeyQuery(fk, fkToTableMap[fk.ID].Name));
             _queryExecutor.Execute(new DeleteDNDBTSysInfoQuery(fk.ID));
         }
 

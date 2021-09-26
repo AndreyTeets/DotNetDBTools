@@ -7,6 +7,17 @@ namespace DotNetDBTools.Analysis.Core
 {
     public static class ForeignKeysHelper
     {
+        public static Dictionary<Guid, TableInfo> CreateFKToTableMap(IEnumerable<TableInfo> tables)
+        {
+            Dictionary<Guid, TableInfo> fkToTableMap = new();
+            foreach (TableInfo table in tables)
+            {
+                foreach (ForeignKeyInfo fk in table.ForeignKeys)
+                    fkToTableMap.Add(fk.ID, table);
+            }
+            return fkToTableMap;
+        }
+
         public static void BuildAllForeignKeysToBeDroppedAndAdded(DatabaseDiff databaseDiff)
         {
             HashSet<ForeignKeyInfo> allAddedForeignKeys = GetAllAddedForeignKeys(databaseDiff);
@@ -49,11 +60,11 @@ namespace DotNetDBTools.Analysis.Core
             HashSet<ForeignKeyInfo> allRemovedForeignKeys)
         {
             HashSet<Guid> columnsChangedOrReferencedByChangedObjects = GetColumnsChangedOrReferencedByChangedObjects(databaseDiff);
-            Dictionary<Guid, HashSet<ForeignKeyInfo>> columnsReferencedByMap = CreateColumnsReferencedByMap(databaseDiff.OldDatabase.Tables);
+            Dictionary<Guid, HashSet<ForeignKeyInfo>> colIDToReferencingFKMap = CreateColIDToReferencingFKMap(databaseDiff.OldDatabase.Tables);
 
             HashSet<ForeignKeyInfo> allForeignKeysToDrop = new(allRemovedForeignKeys);
             foreach (Guid columnID in columnsChangedOrReferencedByChangedObjects)
-                allForeignKeysToDrop.UnionWith(columnsReferencedByMap[columnID]);
+                allForeignKeysToDrop.UnionWith(colIDToReferencingFKMap[columnID]);
 
             return allForeignKeysToDrop;
         }
@@ -78,23 +89,27 @@ namespace DotNetDBTools.Analysis.Core
             return columnsChangedOrReferencedByChangedObjects;
         }
 
-        private static Dictionary<Guid, HashSet<ForeignKeyInfo>> CreateColumnsReferencedByMap(
+        private static Dictionary<Guid, HashSet<ForeignKeyInfo>> CreateColIDToReferencingFKMap(
             IEnumerable<TableInfo> tables)
         {
-            Dictionary<Guid, HashSet<ForeignKeyInfo>> columnsReferencedByMap = new();
+            Dictionary<string, TableInfo> tableNameToTableMap = new();
+            foreach (TableInfo table in tables)
+                tableNameToTableMap.Add(table.Name, table);
+
+            Dictionary<Guid, HashSet<ForeignKeyInfo>> colIDToReferencingFKMap = new();
             foreach (TableInfo table in tables)
             {
                 foreach (ForeignKeyInfo fk in table.ForeignKeys)
                 {
-                    Dictionary<string, Guid> tableColumnIDs = tables
-                        .Single(t => t.Name == fk.ReferencedTableName).Columns.ToDictionary(c => c.Name, c => c.ID);
+                    Dictionary<string, Guid> tableColNameToColIDMap = tableNameToTableMap[fk.ReferencedTableName].Columns
+                        .ToDictionary(c => c.Name, c => c.ID);
                     foreach (string cn in fk.ReferencedTableColumnNames)
                     {
-                        Guid columnID = tableColumnIDs[cn];
-                        if (columnsReferencedByMap.ContainsKey(columnID))
-                            columnsReferencedByMap[columnID].Add(fk);
+                        Guid columnID = tableColNameToColIDMap[cn];
+                        if (colIDToReferencingFKMap.ContainsKey(columnID))
+                            colIDToReferencingFKMap[columnID].Add(fk);
                         else
-                            columnsReferencedByMap.Add(columnID, new HashSet<ForeignKeyInfo>() { fk });
+                            colIDToReferencingFKMap.Add(columnID, new HashSet<ForeignKeyInfo>() { fk });
                     }
                 }
             }
@@ -103,11 +118,11 @@ namespace DotNetDBTools.Analysis.Core
             {
                 foreach (ColumnInfo column in table.Columns)
                 {
-                    if (!columnsReferencedByMap.ContainsKey(column.ID))
-                        columnsReferencedByMap.Add(column.ID, new HashSet<ForeignKeyInfo>());
+                    if (!colIDToReferencingFKMap.ContainsKey(column.ID))
+                        colIDToReferencingFKMap.Add(column.ID, new HashSet<ForeignKeyInfo>());
                 }
             }
-            return columnsReferencedByMap;
+            return colIDToReferencingFKMap;
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.SQLite;
@@ -33,43 +32,21 @@ FROM {DNDBTSysTables.DNDBTDbObjects};";
                 SQLiteDatabaseInfo databaseInfo,
                 IEnumerable<DNDBTDbObjectRecord> dbObjectRecords)
             {
+                Dictionary<string, Guid> dbObjectIDsMap = new();
+                foreach (DNDBTDbObjectRecord dbObjRec in dbObjectRecords)
+                    dbObjectIDsMap.Add($"{dbObjRec.Type}_{dbObjRec.Name}_{dbObjRec.ParentID}", new Guid(dbObjRec.ID));
+
                 foreach (TableInfo table in databaseInfo.Tables)
                 {
-                    table.ID = new Guid(dbObjectRecords.Single(x =>
-                        x.Name == table.Name &&
-                        x.Type == $"{SQLiteDbObjectsTypes.Table}").ID);
-
+                    table.ID = dbObjectIDsMap[$"{SQLiteDbObjectsTypes.Table}_{table.Name}_{null}"];
                     foreach (ColumnInfo column in table.Columns)
-                    {
-                        column.ID = new Guid(dbObjectRecords.Single(x =>
-                            x.ParentID == table.ID.ToString() &&
-                            x.Name == column.Name &&
-                            x.Type == $"{SQLiteDbObjectsTypes.Column}").ID);
-                    }
-
+                        column.ID = dbObjectIDsMap[$"{SQLiteDbObjectsTypes.Column}_{column.Name}_{table.ID}"];
                     if (table.PrimaryKey is not null)
-                    {
-                        table.PrimaryKey.ID = new Guid(dbObjectRecords.Single(x =>
-                            x.ParentID == table.ID.ToString() &&
-                            x.Name == table.PrimaryKey.Name &&
-                            x.Type == $"{SQLiteDbObjectsTypes.PrimaryKey}").ID);
-                    }
-
-                    foreach (UniqueConstraintInfo uniqueConstraint in table.UniqueConstraints)
-                    {
-                        uniqueConstraint.ID = new Guid(dbObjectRecords.Single(x =>
-                            x.ParentID == table.ID.ToString() &&
-                            x.Name == uniqueConstraint.Name &&
-                            x.Type == $"{SQLiteDbObjectsTypes.UniqueConstraint}").ID);
-                    }
-
-                    foreach (ForeignKeyInfo foreignKey in table.ForeignKeys)
-                    {
-                        foreignKey.ID = new Guid(dbObjectRecords.Single(x =>
-                            x.ParentID == table.ID.ToString() &&
-                            x.Name == foreignKey.Name &&
-                            x.Type == $"{SQLiteDbObjectsTypes.ForeignKey}").ID);
-                    }
+                        table.PrimaryKey.ID = dbObjectIDsMap[$"{SQLiteDbObjectsTypes.PrimaryKey}_{table.PrimaryKey.Name}_{table.ID}"];
+                    foreach (UniqueConstraintInfo uc in table.UniqueConstraints)
+                        uc.ID = dbObjectIDsMap[$"{SQLiteDbObjectsTypes.UniqueConstraint}_{uc.Name}_{table.ID}"];
+                    foreach (ForeignKeyInfo fk in table.ForeignKeys)
+                        fk.ID = dbObjectIDsMap[$"{SQLiteDbObjectsTypes.ForeignKey}_{fk.Name}_{table.ID}"];
                 }
             }
         }

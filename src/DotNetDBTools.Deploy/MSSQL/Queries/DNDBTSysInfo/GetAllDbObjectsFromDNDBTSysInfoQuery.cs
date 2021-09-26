@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.MSSQL;
@@ -22,7 +21,7 @@ FROM {DNDBTSysTables.DNDBTDbObjects};";
         internal class DNDBTDbObjectRecord
         {
             public Guid ID { get; set; }
-            public Guid ParentID { get; set; }
+            public Guid? ParentID { get; set; }
             public string Type { get; set; }
             public string Name { get; set; }
         }
@@ -33,51 +32,25 @@ FROM {DNDBTSysTables.DNDBTDbObjects};";
                 MSSQLDatabaseInfo databaseInfo,
                 IEnumerable<DNDBTDbObjectRecord> dbObjectRecords)
             {
+                Dictionary<string, Guid> dbObjectIDsMap = new();
+                foreach (DNDBTDbObjectRecord dbObjRec in dbObjectRecords)
+                    dbObjectIDsMap.Add($"{dbObjRec.Type}_{dbObjRec.Name}_{dbObjRec.ParentID}", dbObjRec.ID);
+
                 foreach (TableInfo table in databaseInfo.Tables)
                 {
-                    table.ID = dbObjectRecords.Single(x =>
-                        x.Name == table.Name &&
-                        x.Type == $"{MSSQLDbObjectsTypes.Table}").ID;
-
+                    table.ID = dbObjectIDsMap[$"{MSSQLDbObjectsTypes.Table}_{table.Name}_{null}"];
                     foreach (ColumnInfo column in table.Columns)
-                    {
-                        column.ID = dbObjectRecords.Single(x =>
-                            x.ParentID == table.ID &&
-                            x.Name == column.Name &&
-                            x.Type == $"{MSSQLDbObjectsTypes.Column}").ID;
-                    }
-
+                        column.ID = dbObjectIDsMap[$"{MSSQLDbObjectsTypes.Column}_{column.Name}_{table.ID}"];
                     if (table.PrimaryKey is not null)
-                    {
-                        table.PrimaryKey.ID = dbObjectRecords.Single(x =>
-                            x.ParentID == table.ID &&
-                            x.Name == table.PrimaryKey.Name &&
-                            x.Type == $"{MSSQLDbObjectsTypes.PrimaryKey}").ID;
-                    }
-
-                    foreach (UniqueConstraintInfo uniqueConstraint in table.UniqueConstraints)
-                    {
-                        uniqueConstraint.ID = dbObjectRecords.Single(x =>
-                            x.ParentID == table.ID &&
-                            x.Name == uniqueConstraint.Name &&
-                            x.Type == $"{MSSQLDbObjectsTypes.UniqueConstraint}").ID;
-                    }
-
-                    foreach (ForeignKeyInfo foreignKey in table.ForeignKeys)
-                    {
-                        foreignKey.ID = dbObjectRecords.Single(x =>
-                            x.ParentID == table.ID &&
-                            x.Name == foreignKey.Name &&
-                            x.Type == $"{MSSQLDbObjectsTypes.ForeignKey}").ID;
-                    }
+                        table.PrimaryKey.ID = dbObjectIDsMap[$"{MSSQLDbObjectsTypes.PrimaryKey}_{table.PrimaryKey.Name}_{table.ID}"];
+                    foreach (UniqueConstraintInfo uc in table.UniqueConstraints)
+                        uc.ID = dbObjectIDsMap[$"{MSSQLDbObjectsTypes.UniqueConstraint}_{uc.Name}_{table.ID}"];
+                    foreach (ForeignKeyInfo fk in table.ForeignKeys)
+                        fk.ID = dbObjectIDsMap[$"{MSSQLDbObjectsTypes.ForeignKey}_{fk.Name}_{table.ID}"];
                 }
 
-                foreach (MSSQLUserDefinedTypeInfo userDefinedType in databaseInfo.UserDefinedTypes)
-                {
-                    userDefinedType.ID = dbObjectRecords.Single(x =>
-                        x.Name == userDefinedType.Name &&
-                        x.Type == $"{MSSQLDbObjectsTypes.UserDefinedType}").ID;
-                }
+                foreach (MSSQLUserDefinedTypeInfo udt in databaseInfo.UserDefinedTypes)
+                    udt.ID = dbObjectIDsMap[$"{MSSQLDbObjectsTypes.UserDefinedType}_{udt.Name}_{null}"];
             }
         }
     }
