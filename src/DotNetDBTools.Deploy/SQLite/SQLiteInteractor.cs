@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.SQLite.Queries;
@@ -68,12 +69,22 @@ namespace DotNetDBTools.Deploy.SQLite
 
         public void ApplyDatabaseDiff(SQLiteDatabaseDiff dbDiff)
         {
-            foreach (SQLiteTableInfo table in dbDiff.RemovedTables)
-                DropTable(table);
-            foreach (SQLiteTableDiff tableDiff in dbDiff.ChangedTables)
-                AlterTable(tableDiff);
-            foreach (SQLiteTableInfo table in dbDiff.AddedTables)
-                CreateTable(table);
+            _queryExecutor.BeginTransaction();
+            try
+            {
+                foreach (SQLiteTableInfo table in dbDiff.RemovedTables)
+                    DropTable(table);
+                foreach (SQLiteTableDiff tableDiff in dbDiff.ChangedTables)
+                    AlterTable(tableDiff);
+                foreach (SQLiteTableInfo table in dbDiff.AddedTables)
+                    CreateTable(table);
+            }
+            catch (Exception)
+            {
+                _queryExecutor.RollbackTransaction();
+                throw;
+            }
+            _queryExecutor.CommitTransaction();
         }
 
         public bool DNDBTSysTablesExist()

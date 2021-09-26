@@ -24,10 +24,7 @@ namespace DotNetDBTools.Deploy.SQLite.Queries
         private static string GetSql(SQLiteTableDiff tableDiff)
         {
             string query =
-$@"PRAGMA foreign_keys=off;
-BEGIN TRANSACTION;
-
-CREATE TABLE {DNDBTTempPrefix}{tableDiff.NewTable.Name}
+$@"CREATE TABLE {DNDBTTempPrefix}{tableDiff.NewTable.Name}
 (
 {GetTableDefinitionsText((SQLiteTableInfo)tableDiff.NewTable)}
 );
@@ -38,10 +35,7 @@ FROM {tableDiff.OldTable.Name};
 
 DROP TABLE {tableDiff.OldTable.Name};
 
-ALTER TABLE {DNDBTTempPrefix}{tableDiff.NewTable.Name} RENAME TO {tableDiff.NewTable.Name};
-
-COMMIT TRANSACTION;
-PRAGMA foreign_keys=on;";
+ALTER TABLE {DNDBTTempPrefix}{tableDiff.NewTable.Name} RENAME TO {tableDiff.NewTable.Name};";
 
             return query;
         }

@@ -14,16 +14,14 @@ namespace DotNetDBTools.Analysis.MSSQL
         {
             List<MSSQLTableInfo> addedTables = newDatabase.Tables
                 .Where(newDbTable => !oldDatabase.Tables.Any(oldDbTable => oldDbTable.ID == newDbTable.ID))
-                .PutReferencedFirst()
                 .Select(x => (MSSQLTableInfo)x)
                 .ToList();
             List<MSSQLTableInfo> removedTables = oldDatabase.Tables
                 .Where(oldDbTable => !newDatabase.Tables.Any(newDbTable => newDbTable.ID == oldDbTable.ID))
-                .PutReferencedLast()
                 .Select(x => (MSSQLTableInfo)x)
                 .ToList();
             List<MSSQLTableDiff> changedTables = new();
-            foreach (MSSQLTableInfo newDbTable in newDatabase.Tables.PutReferencedFirst())
+            foreach (MSSQLTableInfo newDbTable in newDatabase.Tables)
             {
                 MSSQLTableInfo oldDbTable = (MSSQLTableInfo)oldDatabase.Tables.FirstOrDefault(x => x.ID == newDbTable.ID);
                 if (oldDbTable is not null &&

@@ -8,6 +8,7 @@ namespace DotNetDBTools.Deploy.MSSQL
 {
     public class MSSQLGenSqlScriptQueryExecutor : IQueryExecutor
     {
+        private int _executeQueriesCount = 0;
         private readonly List<string> _queries = new();
 
         public int Execute(IQuery query)
@@ -15,8 +16,37 @@ namespace DotNetDBTools.Deploy.MSSQL
             string queryName = query.GetType().Name;
             string paremeterDeclarations = GetParameterDeclarations(query);
             string queryWithParameterDeclarations = $"{paremeterDeclarations}{query.Sql}";
-            _queries.Add($"--QUERY START: {queryName}\n{queryWithParameterDeclarations}\n--QUERY END: {queryName}");
+            string execQueryStatement = $"EXEC sp_executesql N'{queryWithParameterDeclarations.Replace("'", "''")}';";
+            _queries.Add($"--QUERY START: {queryName}\n{execQueryStatement}\n--QUERY END: {queryName}");
+            _executeQueriesCount++;
             return 0;
+        }
+
+        public void BeginTransaction()
+        {
+            _queries.Add(
+@"SET NOCOUNT ON;
+SET XACT_ABORT ON;
+BEGIN TRY;
+    BEGIN TRANSACTION;");
+        }
+
+        public void CommitTransaction()
+        {
+            _queries.Add(
+@"    COMMIT TRANSACTION;
+END TRY
+BEGIN CATCH;
+    ROLLBACK TRANSACTION;
+
+    DECLARE @ErrorMessage NVARCHAR(MAX), @ErrorSeverity INT, @ErrorState INT;
+    SELECT @ErrorMessage = ERROR_MESSAGE() + ' Line ' + CAST(ERROR_LINE() AS NVARCHAR(5)), @ErrorSeverity = ERROR_SEVERITY(), @ErrorState = ERROR_STATE();
+    RAISERROR(@ErrorMessage, @ErrorSeverity, @ErrorState);
+END CATCH;");
+        }
+
+        public void RollbackTransaction()
+        {
         }
 
         public IEnumerable<TOut> Query<TOut>(IQuery query)
@@ -31,6 +61,8 @@ namespace DotNetDBTools.Deploy.MSSQL
 
         public string GetFinalScript()
         {
+            if (_executeQueriesCount == 0)
+                return "";
             return string.Join("\n\n", _queries);
         }
 

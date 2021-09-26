@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.MSSQL.Queries;
@@ -77,37 +78,47 @@ namespace DotNetDBTools.Deploy.MSSQL
 
         public void ApplyDatabaseDiff(MSSQLDatabaseDiff dbDiff)
         {
-            // TODO DropProcedures
-            // TODO reference-ordering for functions+views together since either can depend on one another
-            foreach (MSSQLFunctionInfo function in dbDiff.RemovedFunctions.Concat(dbDiff.ChangedFunctions.Select(x => x.OldFunction)))
-                DropFunction(function);
-            foreach (MSSQLViewInfo view in dbDiff.RemovedViews.Concat(dbDiff.ChangedViews.Select(x => x.OldView)))
-                DropView(view);
-            foreach (ForeignKeyInfo fk in dbDiff.AllForeignKeysToDrop)
-                DropForeignKey(fk, dbDiff.OldDatabase);
-            foreach (MSSQLTableInfo table in dbDiff.RemovedTables)
-                DropTable(table);
+            _queryExecutor.BeginTransaction();
+            try
+            {
+                // TODO DropProcedures
+                // TODO reference-ordering for functions+views together since either can depend on one another
+                foreach (MSSQLFunctionInfo function in dbDiff.RemovedFunctions.Concat(dbDiff.ChangedFunctions.Select(x => x.OldFunction)))
+                    DropFunction(function);
+                foreach (MSSQLViewInfo view in dbDiff.RemovedViews.Concat(dbDiff.ChangedViews.Select(x => x.OldView)))
+                    DropView(view);
+                foreach (ForeignKeyInfo fk in dbDiff.AllForeignKeysToDrop)
+                    DropForeignKey(fk, dbDiff.OldDatabase);
+                foreach (MSSQLTableInfo table in dbDiff.RemovedTables)
+                    DropTable(table);
 
-            foreach (MSSQLUserDefinedTypeInfo userDefinedType in dbDiff.RemovedUserDefinedTypes.Concat(dbDiff.ChangedUserDefinedTypes.Select(x => x.OldUserDefinedType)))
-                RenameUserDefinedTypeToTempInDbAndInDbDiff(userDefinedType);
-            foreach (MSSQLUserDefinedTypeInfo userDefinedType in dbDiff.AddedUserDefinedTypes.Concat(dbDiff.ChangedUserDefinedTypes.Select(x => x.NewUserDefinedType)))
-                CreateUserDefinedType(userDefinedType);
-            foreach (MSSQLUserDefinedTypeDiff userDefinedTypeDiff in dbDiff.ChangedUserDefinedTypes)
-                UseNewUDTInAllTables(userDefinedTypeDiff);
-            foreach (MSSQLTableDiff tableDiff in dbDiff.ChangedTables)
-                AlterTable(tableDiff);
-            foreach (MSSQLUserDefinedTypeInfo userDefinedType in dbDiff.RemovedUserDefinedTypes.Concat(dbDiff.ChangedUserDefinedTypes.Select(x => x.OldUserDefinedType)))
-                DropUserDefinedType(userDefinedType);
+                foreach (MSSQLUserDefinedTypeInfo userDefinedType in dbDiff.RemovedUserDefinedTypes.Concat(dbDiff.ChangedUserDefinedTypes.Select(x => x.OldUserDefinedType)))
+                    RenameUserDefinedTypeToTempInDbAndInDbDiff(userDefinedType);
+                foreach (MSSQLUserDefinedTypeInfo userDefinedType in dbDiff.AddedUserDefinedTypes.Concat(dbDiff.ChangedUserDefinedTypes.Select(x => x.NewUserDefinedType)))
+                    CreateUserDefinedType(userDefinedType);
+                foreach (MSSQLUserDefinedTypeDiff userDefinedTypeDiff in dbDiff.ChangedUserDefinedTypes)
+                    UseNewUDTInAllTables(userDefinedTypeDiff);
+                foreach (MSSQLTableDiff tableDiff in dbDiff.ChangedTables)
+                    AlterTable(tableDiff);
+                foreach (MSSQLUserDefinedTypeInfo userDefinedType in dbDiff.RemovedUserDefinedTypes.Concat(dbDiff.ChangedUserDefinedTypes.Select(x => x.OldUserDefinedType)))
+                    DropUserDefinedType(userDefinedType);
 
-            foreach (MSSQLTableInfo table in dbDiff.AddedTables)
-                CreateTable(table);
-            foreach (ForeignKeyInfo fk in dbDiff.AllForeignKeysToAdd)
-                CreateForeignKey(fk, dbDiff.NewDatabase);
-            foreach (MSSQLViewInfo view in dbDiff.AddedViews.Concat(dbDiff.ChangedViews.Select(x => x.NewView)))
-                CreateView(view);
-            foreach (MSSQLFunctionInfo function in dbDiff.AddedFunctions.Concat(dbDiff.ChangedFunctions.Select(x => x.NewFunction)))
-                CreateFunction(function);
-            // TODO CreateProcedures
+                foreach (MSSQLTableInfo table in dbDiff.AddedTables)
+                    CreateTable(table);
+                foreach (ForeignKeyInfo fk in dbDiff.AllForeignKeysToAdd)
+                    CreateForeignKey(fk, dbDiff.NewDatabase);
+                foreach (MSSQLViewInfo view in dbDiff.AddedViews.Concat(dbDiff.ChangedViews.Select(x => x.NewView)))
+                    CreateView(view);
+                foreach (MSSQLFunctionInfo function in dbDiff.AddedFunctions.Concat(dbDiff.ChangedFunctions.Select(x => x.NewFunction)))
+                    CreateFunction(function);
+                // TODO CreateProcedures
+            }
+            catch (Exception)
+            {
+                _queryExecutor.RollbackTransaction();
+                throw;
+            }
+            _queryExecutor.CommitTransaction();
         }
 
         public bool DNDBTSysTablesExist()

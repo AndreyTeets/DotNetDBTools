@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Data.SqlClient;
+using System.IO;
+using System.Reflection;
 using Dapper;
 using DotNetDBTools.Deploy;
 
@@ -50,6 +52,7 @@ namespace DotNetDBTools.SampleDeployTool.MSSQL
             DropDatabaseIfExists(s_agnosticConnectionString);
             IDeployManager deployManager = new MSSQLDeployManager(true, false);
             IDeployManager dmDataLoss = new MSSQLDeployManager(false, true);
+            using SqlConnection connection = new(s_agnosticConnectionString);
 
             Console.WriteLine("Generating script to create new AgnosticSampleDB from dbAssembly file...");
             deployManager.GeneratePublishScript(s_agnosticDbAssemblyPath, s_agnosticConnectionString, s_agnosticGeneratedPublishToEmptyScriptPath);
@@ -61,15 +64,17 @@ namespace DotNetDBTools.SampleDeployTool.MSSQL
             Console.WriteLine("Updating(no changes) existing AgnosticSampleDB from dbAssembly file...");
             deployManager.PublishDatabase(s_agnosticDbAssemblyPath, s_agnosticConnectionString);
 
-            Console.WriteLine("Generating script to update(from v1 to v2) existing AgnosticSampleDB from dbAssembly v2 file...");
-            deployManager.GeneratePublishScript(s_agnosticDbV2AssemblyPath, s_agnosticConnectionString, s_agnosticGeneratedPublishFromV1ToV2ScriptPath);
+            Console.WriteLine("Generating script to update(from v1 to v2) AgnosticSampleDB from the corresponding assembly files...");
+            Assembly dbAssembly = Assembly.Load(File.ReadAllBytes(s_agnosticDbAssemblyPath));
+            Assembly dbAssemblyV2 = Assembly.Load(File.ReadAllBytes(s_agnosticDbV2AssemblyPath));
+            deployManager.GeneratePublishScript(dbAssemblyV2, dbAssembly, s_agnosticGeneratedPublishFromV1ToV2ScriptPath);
             Console.WriteLine("Updating(from v1 to v2) existing AgnosticSampleDB from dbAssembly v2 file...");
             deployManager.PublishDatabase(s_agnosticDbV2AssemblyPath, s_agnosticConnectionString);
 
             Console.WriteLine("Generating script to update(rollback from v2 to v1) existing AgnosticSampleDB from dbAssembly file...");
             dmDataLoss.GeneratePublishScript(s_agnosticDbAssemblyPath, s_agnosticConnectionString, s_agnosticGeneratedPublishFromV2ToV1ScriptPath);
-            Console.WriteLine("Updating(rollback from v2 to v1) existing AgnosticSampleDB from dbAssembly file...");
-            dmDataLoss.PublishDatabase(s_agnosticDbAssemblyPath, s_agnosticConnectionString);
+            Console.WriteLine("Updating(rollback from v2 to v1) AgnosticSampleDB using previously generated script...");
+            connection.Execute(File.ReadAllText(s_agnosticGeneratedPublishFromV2ToV1ScriptPath));
 
             Console.WriteLine("Unregistering(=deleting DNDBT system information from DB) AgnosticSampleDB...");
             deployManager.UnregisterAsDNDBT(s_agnosticConnectionString);
@@ -93,6 +98,7 @@ namespace DotNetDBTools.SampleDeployTool.MSSQL
             DropDatabaseIfExists(s_mssqlConnectionString);
             IDeployManager deployManager = new MSSQLDeployManager(true, false);
             IDeployManager dmDataLoss = new MSSQLDeployManager(false, true);
+            using SqlConnection connection = new(s_mssqlConnectionString);
 
             Console.WriteLine("Generating script to create new MSSQLSampleDB from dbAssembly file...");
             deployManager.GeneratePublishScript(s_mssqlDbAssemblyPath, s_mssqlConnectionString, s_mssqlGeneratedPublishToEmptyScriptPath);
@@ -104,15 +110,17 @@ namespace DotNetDBTools.SampleDeployTool.MSSQL
             Console.WriteLine("Updating(no changes) existing MSSQLSampleDB from dbAssembly file...");
             deployManager.PublishDatabase(s_mssqlDbAssemblyPath, s_mssqlConnectionString);
 
-            Console.WriteLine("Generating script to update(from v1 to v2) existing MSSQLSampleDB from dbAssembly v2 file...");
-            deployManager.GeneratePublishScript(s_mssqlDbV2AssemblyPath, s_mssqlConnectionString, s_mssqlGeneratedPublishFromV1ToV2ScriptPath);
+            Console.WriteLine("Generating script to update(from v1 to v2) MSSQLSampleDB from the corresponding assembly files...");
+            Assembly dbAssembly = Assembly.Load(File.ReadAllBytes(s_mssqlDbAssemblyPath));
+            Assembly dbAssemblyV2 = Assembly.Load(File.ReadAllBytes(s_mssqlDbV2AssemblyPath));
+            deployManager.GeneratePublishScript(dbAssemblyV2, dbAssembly, s_mssqlGeneratedPublishFromV1ToV2ScriptPath);
             Console.WriteLine("Updating(from v1 to v2) existing MSSQLSampleDB from dbAssembly v2 file...");
             deployManager.PublishDatabase(s_mssqlDbV2AssemblyPath, s_mssqlConnectionString);
 
             Console.WriteLine("Generating script to update(rollback from v2 to v1) existing MSSQLSampleDB from dbAssembly file...");
             dmDataLoss.GeneratePublishScript(s_mssqlDbAssemblyPath, s_mssqlConnectionString, s_mssqlGeneratedPublishFromV2ToV1ScriptPath);
-            Console.WriteLine("Updating(rollback from v2 to v1) existing MSSQLSampleDB from dbAssembly file...");
-            dmDataLoss.PublishDatabase(s_mssqlDbAssemblyPath, s_mssqlConnectionString);
+            Console.WriteLine("Updating(rollback from v2 to v1) MSSQLSampleDB using previously generated script...");
+            connection.Execute(File.ReadAllText(s_mssqlGeneratedPublishFromV2ToV1ScriptPath));
 
             Console.WriteLine("Unregistering(=deleting DNDBT system information from DB) MSSQLSampleDB...");
             deployManager.UnregisterAsDNDBT(s_mssqlConnectionString);

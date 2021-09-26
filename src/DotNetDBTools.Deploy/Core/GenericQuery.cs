@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using DotNetDBTools.Deploy.Core;
 
-namespace DotNetDBTools.Deploy.MSSQL.Queries
+namespace DotNetDBTools.Deploy.Core
 {
     internal class GenericQuery : IQuery
     {

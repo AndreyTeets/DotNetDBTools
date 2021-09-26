@@ -13,10 +13,6 @@ namespace DotNetDBTools.SampleSelfUpdatingApp.MSSQL
         private const string MsSqlServerHostPort = "5005";
         private const string AgnosticDatabaseName = "AgnosticSampleDB_SelfUpdatingApp";
 
-        private const string RepoRoot = "../../../../../..";
-        private static readonly string s_samplesOutputDir = $"{RepoRoot}/SamplesOutput";
-
-        private static readonly string s_agnosticDbAssemblyPath = $"{s_samplesOutputDir}/DotNetDBTools.SampleDBv2.Agnostic.dll";
         private static readonly string s_agnosticConnectionString = $"Data Source=localhost,{MsSqlServerHostPort};Initial Catalog={AgnosticDatabaseName};Integrated Security=False;User ID=SA;Password={MsSqlServerPassword}";
 
         public static void Main()
@@ -34,7 +30,7 @@ namespace DotNetDBTools.SampleSelfUpdatingApp.MSSQL
         private static void DeployAgnosticSampleDB()
         {
             MSSQLDeployManager deployManager = new(true, false);
-            deployManager.PublishDatabase(s_agnosticDbAssemblyPath, s_agnosticConnectionString);
+            deployManager.PublishDatabase(typeof(SampleDB.Agnostic.Tables.MyTable3).Assembly, s_agnosticConnectionString);
         }
 
         private static void DropDatabaseIfExists(string connectionString)

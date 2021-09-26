@@ -12,7 +12,6 @@ namespace DotNetDBTools.SampleSelfUpdatingApp.SQLite
         private const string RepoRoot = "../../../../../..";
         private static readonly string s_samplesOutputDir = $"{RepoRoot}/SamplesOutput";
 
-        private static readonly string s_agnosticDbAssemblyPath = $"{s_samplesOutputDir}/DotNetDBTools.SampleDBv2.Agnostic.dll";
         private static readonly string s_agnosticConnectionString = $"DataSource={s_samplesOutputDir}/sqlite_databases/AgnosticSampleDB_SelfUpdatingApp.db;Mode=ReadWriteCreate;";
 
         public static void Main()
@@ -30,7 +29,7 @@ namespace DotNetDBTools.SampleSelfUpdatingApp.SQLite
         private static void DeployAgnosticSampleDB()
         {
             SQLiteDeployManager deployManager = new(true, false);
-            deployManager.PublishDatabase(s_agnosticDbAssemblyPath, s_agnosticConnectionString);
+            deployManager.PublishDatabase(typeof(SampleDB.Agnostic.Tables.MyTable3).Assembly, s_agnosticConnectionString);
         }
 
         private static void DropDatabaseIfExists(string connectionString)

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Data.Common;
 using System.Data.SqlClient;
 using Dapper;
 using DotNetDBTools.Deploy.Core;
@@ -8,34 +10,70 @@ namespace DotNetDBTools.Deploy.MSSQL
     public class MSSQLQueryExecutor : IQueryExecutor
     {
         private readonly string _connectionString;
+        private DbTransaction _transaction;
 
         public MSSQLQueryExecutor(string connectionString)
         {
             _connectionString = connectionString;
         }
 
+        public void BeginTransaction()
+        {
+            SqlConnection connection = new(_connectionString);
+            connection.Open();
+            connection.Execute("SET XACT_ABORT ON;");
+            _transaction = connection.BeginTransaction();
+        }
+
+        public void CommitTransaction()
+        {
+            DbConnection connection = _transaction.Connection;
+            _transaction.Commit();
+            _transaction.Dispose();
+            connection.Dispose();
+            _transaction = null;
+        }
+
+        public void RollbackTransaction()
+        {
+            DbConnection connection = _transaction.Connection;
+            try
+            {
+                _transaction.Rollback();
+            }
+            catch (InvalidOperationException)
+            {
+            }
+            _transaction.Dispose();
+            connection?.Dispose();
+            _transaction = null;
+        }
+
         public int Execute(IQuery query)
         {
-            using SqlConnection connection = new(_connectionString);
             DynamicParameters dapperParameters = MapToDapperParameters(query.Parameters);
-            int count = connection.Execute(query.Sql, dapperParameters);
-            return count;
+            if (_transaction is not null)
+                return _transaction.Connection.Execute(query.Sql, dapperParameters, _transaction);
+            using SqlConnection connection = new(_connectionString);
+            return connection.Execute(query.Sql, dapperParameters);
         }
 
         public IEnumerable<TOut> Query<TOut>(IQuery query)
         {
-            using SqlConnection connection = new(_connectionString);
             DynamicParameters dapperParameters = MapToDapperParameters(query.Parameters);
-            IEnumerable<TOut> results = connection.Query<TOut>(query.Sql, dapperParameters);
-            return results;
+            if (_transaction is not null)
+                return _transaction.Connection.Query<TOut>(query.Sql, dapperParameters, _transaction);
+            using SqlConnection connection = new(_connectionString);
+            return connection.Query<TOut>(query.Sql, dapperParameters);
         }
 
         public TOut QuerySingleOrDefault<TOut>(IQuery query)
         {
-            using SqlConnection connection = new(_connectionString);
             DynamicParameters dapperParameters = MapToDapperParameters(query.Parameters);
-            TOut result = connection.QuerySingleOrDefault<TOut>(query.Sql, dapperParameters);
-            return result;
+            if (_transaction is not null)
+                return _transaction.Connection.QuerySingleOrDefault<TOut>(query.Sql, dapperParameters, _transaction);
+            using SqlConnection connection = new(_connectionString);
+            return connection.QuerySingleOrDefault<TOut>(query.Sql, dapperParameters);
         }
 
         private static DynamicParameters MapToDapperParameters(IEnumerable<QueryParameter> parameters)
