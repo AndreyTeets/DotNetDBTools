@@ -11,11 +11,10 @@ namespace DotNetDBTools.Models.Core
         public IEnumerable<TableInfo> RemovedTables { get; set; }
         public IEnumerable<TableDiff> ChangedTables { get; set; }
 
-        public IEnumerable<ViewInfo> AddedViews { get; set; }
-        public IEnumerable<ViewInfo> RemovedViews { get; set; }
-        public IEnumerable<ViewDiff> ChangedViews { get; set; }
+        public IEnumerable<ViewInfo> ViewsToCreate { get; set; }
+        public IEnumerable<ViewInfo> ViewsToDrop { get; set; }
 
-        public IEnumerable<ForeignKeyInfo> AllForeignKeysToAdd { get; set; }
+        public IEnumerable<ForeignKeyInfo> AllForeignKeysToCreate { get; set; }
         public IEnumerable<ForeignKeyInfo> AllForeignKeysToDrop { get; set; }
     }
 }

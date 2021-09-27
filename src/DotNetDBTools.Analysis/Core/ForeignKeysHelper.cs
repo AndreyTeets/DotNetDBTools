@@ -18,7 +18,7 @@ namespace DotNetDBTools.Analysis.Core
             return fkToTableMap;
         }
 
-        public static void BuildAllForeignKeysToBeDroppedAndAdded(DatabaseDiff databaseDiff)
+        public static void BuildAllForeignKeysToBeDroppedAndCreated(DatabaseDiff databaseDiff)
         {
             HashSet<ForeignKeyInfo> allAddedForeignKeys = GetAllAddedForeignKeys(databaseDiff);
             HashSet<ForeignKeyInfo> allRemovedForeignKeys = GetAllRemovedForeignKeys(databaseDiff);
@@ -28,10 +28,10 @@ namespace DotNetDBTools.Analysis.Core
             HashSet<ForeignKeyInfo> unchangedForeignKeysButReferencingChangedObjects = new(allForeignKeysToDrop);
             unchangedForeignKeysButReferencingChangedObjects.ExceptWith(allRemovedForeignKeys);
 
-            HashSet<ForeignKeyInfo> allForeignKeysToAdd = new(allAddedForeignKeys);
-            allForeignKeysToAdd.UnionWith(unchangedForeignKeysButReferencingChangedObjects);
+            HashSet<ForeignKeyInfo> allForeignKeysToCreate = new(allAddedForeignKeys);
+            allForeignKeysToCreate.UnionWith(unchangedForeignKeysButReferencingChangedObjects);
 
-            databaseDiff.AllForeignKeysToAdd = allForeignKeysToAdd;
+            databaseDiff.AllForeignKeysToCreate = allForeignKeysToCreate;
             databaseDiff.AllForeignKeysToDrop = allForeignKeysToDrop;
         }
 
@@ -41,7 +41,7 @@ namespace DotNetDBTools.Analysis.Core
             foreach (IEnumerable<ForeignKeyInfo> addedTableForeignKeys in databaseDiff.AddedTables.Select(t => t.ForeignKeys))
                 allAddedForeignKeys.UnionWith(addedTableForeignKeys);
             foreach (TableDiff tableDiff in databaseDiff.ChangedTables)
-                allAddedForeignKeys.UnionWith(tableDiff.AddedForeignKeys);
+                allAddedForeignKeys.UnionWith(tableDiff.ForeignKeysToCreate);
             return allAddedForeignKeys;
         }
 
@@ -51,7 +51,7 @@ namespace DotNetDBTools.Analysis.Core
             foreach (IEnumerable<ForeignKeyInfo> removedTableForeignKeys in databaseDiff.RemovedTables.Select(t => t.ForeignKeys))
                 allRemovedForeignKeys.UnionWith(removedTableForeignKeys);
             foreach (TableDiff tableDiff in databaseDiff.ChangedTables)
-                allRemovedForeignKeys.UnionWith(tableDiff.RemovedForeignKeys);
+                allRemovedForeignKeys.UnionWith(tableDiff.ForeignKeysToDrop);
             return allRemovedForeignKeys;
         }
 
@@ -80,9 +80,9 @@ namespace DotNetDBTools.Analysis.Core
                 columnsChangedOrReferencedByChangedObjects.UnionWith(tableDiff.RemovedColumns.Select(c => c.ID));
                 columnsChangedOrReferencedByChangedObjects.UnionWith(tableDiff.ChangedColumns.Select(cd => cd.OldColumn.ID));
                 Dictionary<string, Guid> oldTableColumnIDs = tableDiff.OldTable.Columns.ToDictionary(c => c.Name, c => c.ID);
-                if (tableDiff.RemovedPrimaryKey is not null)
-                    columnsChangedOrReferencedByChangedObjects.UnionWith(tableDiff.RemovedPrimaryKey.Columns.Select(cn => oldTableColumnIDs[cn]));
-                foreach (UniqueConstraintInfo uc in tableDiff.RemovedUniqueConstraints)
+                if (tableDiff.PrimaryKeyToDrop is not null)
+                    columnsChangedOrReferencedByChangedObjects.UnionWith(tableDiff.PrimaryKeyToDrop.Columns.Select(cn => oldTableColumnIDs[cn]));
+                foreach (UniqueConstraintInfo uc in tableDiff.UniqueConstraintsToDrop)
                     columnsChangedOrReferencedByChangedObjects.UnionWith(uc.Columns.Select(cn => oldTableColumnIDs[cn]));
             }
 

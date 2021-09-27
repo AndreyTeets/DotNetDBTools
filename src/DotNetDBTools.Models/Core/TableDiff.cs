@@ -11,13 +11,22 @@ namespace DotNetDBTools.Models.Core
         public IEnumerable<ColumnInfo> RemovedColumns { get; set; }
         public IEnumerable<ColumnDiff> ChangedColumns { get; set; }
 
-        public PrimaryKeyInfo AddedPrimaryKey { get; set; }
-        public PrimaryKeyInfo RemovedPrimaryKey { get; set; }
+        public PrimaryKeyInfo PrimaryKeyToCreate { get; set; }
+        public PrimaryKeyInfo PrimaryKeyToDrop { get; set; }
 
-        public IEnumerable<UniqueConstraintInfo> AddedUniqueConstraints { get; set; }
-        public IEnumerable<UniqueConstraintInfo> RemovedUniqueConstraints { get; set; }
+        public IEnumerable<UniqueConstraintInfo> UniqueConstraintsToCreate { get; set; }
+        public IEnumerable<UniqueConstraintInfo> UniqueConstraintsToDrop { get; set; }
 
-        public IEnumerable<ForeignKeyInfo> AddedForeignKeys { get; set; }
-        public IEnumerable<ForeignKeyInfo> RemovedForeignKeys { get; set; }
+        public IEnumerable<CheckConstraintInfo> CheckConstraintsToCreate { get; set; }
+        public IEnumerable<CheckConstraintInfo> CheckConstraintsToDrop { get; set; }
+
+        public IEnumerable<ForeignKeyInfo> ForeignKeysToCreate { get; set; }
+        public IEnumerable<ForeignKeyInfo> ForeignKeysToDrop { get; set; }
+
+        public IEnumerable<IndexInfo> IndexesToCreate { get; set; }
+        public IEnumerable<IndexInfo> IndexesToDrop { get; set; }
+
+        public IEnumerable<TriggerInfo> TriggersToCreate { get; set; }
+        public IEnumerable<TriggerInfo> TriggersToDrop { get; set; }
     }
 }

@@ -28,17 +28,31 @@ namespace DotNetDBTools.Deploy.MSSQL.Queries
 
             sb.Append(Queries.RenameTable(tableDiff.OldTable.Name, tableDiff.NewTable.Name));
 
-            foreach (UniqueConstraintInfo uc in tableDiff.RemovedUniqueConstraints)
+            foreach (TriggerInfo trigger in tableDiff.TriggersToDrop)
+                sb.Append(Queries.DropTrigger(trigger.Name));
+            foreach (IndexInfo index in tableDiff.IndexesToDrop)
+                sb.Append(Queries.DropIndex(index.Name));
+
+            foreach (CheckConstraintInfo cc in tableDiff.CheckConstraintsToDrop)
+                sb.Append(Queries.DropCheckConstraint(tableDiff.NewTable.Name, cc.Name));
+            foreach (UniqueConstraintInfo uc in tableDiff.UniqueConstraintsToDrop)
                 sb.Append(Queries.DropUniqueConstraint(tableDiff.NewTable.Name, uc.Name));
-            if (tableDiff.RemovedPrimaryKey is not null)
-                sb.Append(Queries.DropPrimaryKey(tableDiff.NewTable.Name, tableDiff.RemovedPrimaryKey.Name));
+            if (tableDiff.PrimaryKeyToDrop is not null)
+                sb.Append(Queries.DropPrimaryKey(tableDiff.NewTable.Name, tableDiff.PrimaryKeyToDrop.Name));
 
             AppendColumnsAlters(sb, tableDiff);
 
-            if (tableDiff.AddedPrimaryKey is not null)
-                sb.Append(Queries.AddPrimaryKey(tableDiff.NewTable.Name, tableDiff.AddedPrimaryKey));
-            foreach (UniqueConstraintInfo uc in tableDiff.AddedUniqueConstraints)
+            if (tableDiff.PrimaryKeyToCreate is not null)
+                sb.Append(Queries.AddPrimaryKey(tableDiff.NewTable.Name, tableDiff.PrimaryKeyToCreate));
+            foreach (UniqueConstraintInfo uc in tableDiff.UniqueConstraintsToCreate)
                 sb.Append(Queries.AddUniqueConstraint(tableDiff.NewTable.Name, uc));
+            foreach (CheckConstraintInfo cc in tableDiff.CheckConstraintsToCreate)
+                sb.Append(Queries.AddCheckConstraint(tableDiff.NewTable.Name, cc));
+
+            foreach (IndexInfo index in tableDiff.IndexesToCreate)
+                sb.Append(Queries.CreateIndex(tableDiff.NewTable.Name, index));
+            foreach (TriggerInfo trigger in tableDiff.TriggersToCreate)
+                sb.Append(Queries.CreateTrigger(trigger));
 
             return sb.ToString();
         }
@@ -113,6 +127,15 @@ $@"
 ALTER TABLE {tableName} DROP CONSTRAINT {ucName};"
                 ;
 
+            public static string AddCheckConstraint(string tableName, CheckConstraintInfo cc) =>
+$@"
+ALTER TABLE {tableName} ADD CONSTRAINT {cc.Name} CHECK ({cc.Code});"
+                ;
+            public static string DropCheckConstraint(string tableName, string ccName) =>
+$@"
+ALTER TABLE {tableName} DROP CONSTRAINT {ccName};"
+                ;
+
             public static string AddDefaultConstraint(string tableName, ColumnInfo c) =>
 $@"
 ALTER TABLE {tableName} ADD CONSTRAINT {c.DefaultConstraintName} DEFAULT {QuoteDefaultValue(c.Default)} FOR {c.Name};"
@@ -120,6 +143,25 @@ ALTER TABLE {tableName} ADD CONSTRAINT {c.DefaultConstraintName} DEFAULT {QuoteD
             public static string DropDefaultConstraint(string tableName, ColumnInfo c) =>
 $@"
 ALTER TABLE [{tableName}] DROP CONSTRAINT {c.DefaultConstraintName};"
+                ;
+
+            public static string CreateIndex(string tableName, IndexInfo index) =>
+$@"
+CREATE INDEX {index.Name}
+ON {tableName} ({string.Join(", ", index.Columns)});"
+                ;
+            public static string DropIndex(string indexName) =>
+$@"
+DROP INDEX {indexName};"
+                ;
+
+            public static string CreateTrigger(TriggerInfo trigger) =>
+$@"
+{trigger.Code}"
+                ;
+            public static string DropTrigger(string triggerName) =>
+$@"
+DROP TRIGGER {triggerName};"
                 ;
         }
     }

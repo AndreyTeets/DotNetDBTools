@@ -24,6 +24,9 @@ namespace DotNetDBTools.Analysis.SQLite
                 Columns = tableInfo.Columns,
                 PrimaryKey = tableInfo.PrimaryKey,
                 UniqueConstraints = tableInfo.UniqueConstraints,
+                CheckConstraints = tableInfo.CheckConstraints,
+                Indexes = tableInfo.Indexes,
+                Triggers = tableInfo.Triggers,
                 ForeignKeys = tableInfo.ForeignKeys,
             };
             StripRedundantDataTypeAttributes(sqliteTableInfo.Columns);

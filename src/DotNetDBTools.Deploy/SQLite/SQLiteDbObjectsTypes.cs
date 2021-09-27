@@ -6,6 +6,9 @@
         Column,
         PrimaryKey,
         UniqueConstraint,
+        CheckConstraint,
+        Index,
+        Trigger,
         ForeignKey,
         View,
     }

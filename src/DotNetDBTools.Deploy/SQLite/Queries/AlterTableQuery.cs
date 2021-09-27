@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DotNetDBTools.Deploy.Core;
+using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.SQLite;
 using static DotNetDBTools.Deploy.SQLite.SQLiteQueriesHelper;
 
@@ -8,7 +9,7 @@ namespace DotNetDBTools.Deploy.SQLite.Queries
 {
     internal class AlterTableQuery : IQuery
     {
-        private const string DNDBTTempPrefix = "DNDBT_";
+        private const string DNDBTTempPrefix = "_DNDBTTemp_";
         private readonly string _sql;
         private readonly List<QueryParameter> _parameters;
 
@@ -23,6 +24,18 @@ namespace DotNetDBTools.Deploy.SQLite.Queries
 
         private static string GetSql(SQLiteTableDiff tableDiff)
         {
+            foreach (IndexInfo index in tableDiff.IndexesToDrop)
+            {
+                string _ =
+$@"DROP INDEX {index.Name};";
+            }
+
+            foreach (TriggerInfo trigger in tableDiff.TriggersToDrop)
+            {
+                string _ =
+$@"DROP TRIGGER {trigger.Name};";
+            }
+
             string query =
 $@"CREATE TABLE {DNDBTTempPrefix}{tableDiff.NewTable.Name}
 (
@@ -36,6 +49,19 @@ FROM {tableDiff.OldTable.Name};
 DROP TABLE {tableDiff.OldTable.Name};
 
 ALTER TABLE {DNDBTTempPrefix}{tableDiff.NewTable.Name} RENAME TO {tableDiff.NewTable.Name};";
+
+            foreach (IndexInfo index in tableDiff.IndexesToCreate)
+            {
+                string _ =
+$@"CREATE INDEX {index.Name}
+ON {tableDiff.NewTable.Name} ({string.Join(", ", index.Columns)});";
+            }
+
+            foreach (TriggerInfo trigger in tableDiff.TriggersToCreate)
+            {
+                string _ =
+$@"{trigger.Code}";
+            }
 
             return query;
         }

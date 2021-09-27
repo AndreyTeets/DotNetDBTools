@@ -25,7 +25,7 @@ namespace DotNetDBTools.UnitTests.Analysis
             _tableModel2.PrimaryKey = new PrimaryKeyInfo()
             {
                 ID = new Guid("C51E94AF-3E2D-4D6A-840E-78B8C23C6BE8"),
-                Name = "PK1",
+                Name = "PK_T1",
                 Columns = new List<string> { "C1", "C2" },
             };
             _comparer.Equals(_tableModel1, _tableModel2).Should().BeTrue();
@@ -69,9 +69,13 @@ namespace DotNetDBTools.UnitTests.Analysis
             _tableModel2.PrimaryKey = new PrimaryKeyInfo()
             {
                 ID = new Guid("C51E94AF-3E2D-4D6A-840E-78B8C23C6BE8"),
-                Name = "PK1NewName",
+                Name = "PK_T1NewName",
                 Columns = new string[] { "C1", "C2" },
             };
+            _comparer.Equals(_tableModel1, _tableModel2).Should().BeFalse();
+
+            _tableModel2 = CreateTemplateAgnosticTable();
+            _tableModel2.Indexes.First().IncludeColumns = new string[] { "C2" };
             _comparer.Equals(_tableModel1, _tableModel2).Should().BeFalse();
 
             _tableModel2 = CreateTemplateAgnosticTable();
@@ -115,16 +119,37 @@ namespace DotNetDBTools.UnitTests.Analysis
                 PrimaryKey = new PrimaryKeyInfo()
                 {
                     ID = new Guid("C51E94AF-3E2D-4D6A-840E-78B8C23C6BE8"),
-                    Name = "PK1",
+                    Name = "PK_T1",
                     Columns = new string[] { "C1", "C2" },
                 },
                 UniqueConstraints = new List<UniqueConstraintInfo>(),
+                CheckConstraints = new List<CheckConstraintInfo>()
+                {
+                    new CheckConstraintInfo()
+                    {
+                        ID = new Guid("75D55104-DDF0-4F9D-B0B2-CF8F85A3A0A7"),
+                        Name = "CK_T1_1",
+                        Code = "C2 >= 0",
+                    }
+                },
+                Indexes = new List<IndexInfo>()
+                {
+                    new IndexInfo()
+                    {
+                        ID = new Guid("65C65B34-E769-4826-8F06-B8E83BF7D06A"),
+                        Name = "IDX_T1_1",
+                        Columns = new string[] { "C1" },
+                        IncludeColumns = null,
+                        Unique = true,
+                    }
+                },
+                Triggers = new List<TriggerInfo>(),
                 ForeignKeys = new List<ForeignKeyInfo>()
                 {
                     new ForeignKeyInfo()
                     {
                         ID = new Guid("D23109D4-CB94-40B2-BDB2-BC6292F4A5FA"),
-                        Name = "PK1",
+                        Name = "FK_T1_1",
                         ThisColumnNames = new string[] { "C1", "C2" },
                         ReferencedTableName = "T2",
                         ReferencedTableColumnNames = new string[] { "C1", "C2" },

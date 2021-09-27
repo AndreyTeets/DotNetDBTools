@@ -61,18 +61,20 @@ namespace DotNetDBTools.Analysis.MSSQL
                 AddedTables = addedTables,
                 RemovedTables = removedTables,
                 ChangedTables = changedTables,
-                AddedViews = new List<MSSQLViewInfo>(),
-                RemovedViews = new List<MSSQLViewInfo>(),
-                ChangedViews = new List<MSSQLViewDiff>(),
-                AddedFunctions = new List<MSSQLFunctionInfo>(),
-                RemovedFunctions = new List<MSSQLFunctionInfo>(),
-                ChangedFunctions = new List<MSSQLFunctionDiff>(),
+                ViewsToCreate = new List<MSSQLViewInfo>(),
+                ViewsToDrop = new List<MSSQLViewInfo>(),
                 AddedUserDefinedTypes = addedUserDefinedTypes,
                 RemovedUserDefinedTypes = removedUserDefinedTypes,
                 ChangedUserDefinedTypes = changedUserDefinedTypes,
+                UserDefinedTableTypesToCreate = new List<MSSQLUserDefinedTableTypeInfo>(),
+                UserDefinedTableTypesToDrop = new List<MSSQLUserDefinedTableTypeInfo>(),
+                FunctionsToCreate = new List<MSSQLFunctionInfo>(),
+                FunctionsToDrop = new List<MSSQLFunctionInfo>(),
+                ProceduresToCreate = new List<MSSQLProcedureInfo>(),
+                ProceduresToDrop = new List<MSSQLProcedureInfo>(),
             };
 
-            ForeignKeysHelper.BuildAllForeignKeysToBeDroppedAndAdded(databaseDiff);
+            ForeignKeysHelper.BuildAllForeignKeysToBeDroppedAndCreated(databaseDiff);
             return databaseDiff;
         }
 
@@ -100,18 +102,18 @@ namespace DotNetDBTools.Analysis.MSSQL
                 }
             }
 
-            PrimaryKeyInfo addedPrimaryKey = null;
-            PrimaryKeyInfo removedPrimaryKey = null;
+            PrimaryKeyInfo primaryKeyToCreate = null;
+            PrimaryKeyInfo primaryKeyToDrop = null;
             if (!s_dbObjectsEqualityComparer.Equals(newDbTable.PrimaryKey, oldDbTable.PrimaryKey))
             {
-                addedPrimaryKey = newDbTable.PrimaryKey;
-                removedPrimaryKey = oldDbTable.PrimaryKey;
+                primaryKeyToCreate = newDbTable.PrimaryKey;
+                primaryKeyToDrop = oldDbTable.PrimaryKey;
             }
 
-            List<UniqueConstraintInfo> addedUniqueConstraints = newDbTable.UniqueConstraints
+            List<UniqueConstraintInfo> uniqueConstraintsToCreate = newDbTable.UniqueConstraints
                 .Where(newDbTableUC => !oldDbTable.UniqueConstraints.Any(oldDbTableUC => oldDbTableUC.ID == newDbTableUC.ID))
                 .ToList();
-            List<UniqueConstraintInfo> removedUniqueConstraints = oldDbTable.UniqueConstraints
+            List<UniqueConstraintInfo> uniqueConstraintsToDrop = oldDbTable.UniqueConstraints
                 .Where(oldDbTableUC => !newDbTable.UniqueConstraints.Any(newDbTableUC => newDbTableUC.ID == oldDbTableUC.ID))
                 .ToList();
             foreach (UniqueConstraintInfo newDbTableUC in newDbTable.UniqueConstraints)
@@ -120,15 +122,15 @@ namespace DotNetDBTools.Analysis.MSSQL
                 if (oldDbTableUC is not null &&
                     !s_dbObjectsEqualityComparer.Equals(newDbTableUC, oldDbTableUC))
                 {
-                    addedUniqueConstraints.Add(newDbTableUC);
-                    removedUniqueConstraints.Add(oldDbTableUC);
+                    uniqueConstraintsToCreate.Add(newDbTableUC);
+                    uniqueConstraintsToDrop.Add(oldDbTableUC);
                 }
             }
 
-            List<ForeignKeyInfo> addedForeignKeys = newDbTable.ForeignKeys
+            List<ForeignKeyInfo> foreignKeysToCreate = newDbTable.ForeignKeys
                 .Where(newDbTableFK => !oldDbTable.ForeignKeys.Any(oldDbTableFK => oldDbTableFK.ID == newDbTableFK.ID))
                 .ToList();
-            List<ForeignKeyInfo> removedForeignKeys = oldDbTable.ForeignKeys
+            List<ForeignKeyInfo> foreignKeysToDrop = oldDbTable.ForeignKeys
                 .Where(oldDbTableFK => !newDbTable.ForeignKeys.Any(newDbTableFK => newDbTableFK.ID == oldDbTableFK.ID))
                 .ToList();
             foreach (ForeignKeyInfo newDbTableFK in newDbTable.ForeignKeys)
@@ -137,8 +139,8 @@ namespace DotNetDBTools.Analysis.MSSQL
                 if (oldDbTableFK is not null &&
                     !s_dbObjectsEqualityComparer.Equals(newDbTableFK, oldDbTableFK))
                 {
-                    addedForeignKeys.Add(newDbTableFK);
-                    removedForeignKeys.Add(oldDbTableFK);
+                    foreignKeysToCreate.Add(newDbTableFK);
+                    foreignKeysToDrop.Add(oldDbTableFK);
                 }
             }
 
@@ -149,12 +151,18 @@ namespace DotNetDBTools.Analysis.MSSQL
                 AddedColumns = addedColumns,
                 RemovedColumns = removedColumns,
                 ChangedColumns = changedColumns,
-                AddedPrimaryKey = addedPrimaryKey,
-                RemovedPrimaryKey = removedPrimaryKey,
-                AddedUniqueConstraints = addedUniqueConstraints,
-                RemovedUniqueConstraints = removedUniqueConstraints,
-                AddedForeignKeys = addedForeignKeys,
-                RemovedForeignKeys = removedForeignKeys,
+                PrimaryKeyToCreate = primaryKeyToCreate,
+                PrimaryKeyToDrop = primaryKeyToDrop,
+                UniqueConstraintsToCreate = uniqueConstraintsToCreate,
+                UniqueConstraintsToDrop = uniqueConstraintsToDrop,
+                CheckConstraintsToCreate = new List<CheckConstraintInfo>(),
+                CheckConstraintsToDrop = new List<CheckConstraintInfo>(),
+                ForeignKeysToCreate = foreignKeysToCreate,
+                ForeignKeysToDrop = foreignKeysToDrop,
+                IndexesToCreate = new List<IndexInfo>(),
+                IndexesToDrop = new List<IndexInfo>(),
+                TriggersToCreate = new List<TriggerInfo>(),
+                TriggersToDrop = new List<TriggerInfo>(),
             };
         }
     }

@@ -11,8 +11,14 @@ namespace DotNetDBTools.Models.MSSQL
             Name = name;
             Tables = new List<MSSQLTableInfo>();
             Views = new List<MSSQLViewInfo>();
+            UserDefinedTypes = new List<MSSQLUserDefinedTypeInfo>();
+            UserDefinedTableTypes = new List<MSSQLUserDefinedTableTypeInfo>();
+            Functions = new List<MSSQLFunctionInfo>();
+            Procedures = new List<MSSQLProcedureInfo>();
         }
-        public List<MSSQLFunctionInfo> Functions { get; set; } = new();
-        public List<MSSQLUserDefinedTypeInfo> UserDefinedTypes { get; set; } = new();
+        public IEnumerable<MSSQLUserDefinedTypeInfo> UserDefinedTypes { get; set; }
+        public IEnumerable<MSSQLUserDefinedTableTypeInfo> UserDefinedTableTypes { get; set; }
+        public IEnumerable<MSSQLFunctionInfo> Functions { get; set; }
+        public IEnumerable<MSSQLProcedureInfo> Procedures { get; set; }
     }
 }

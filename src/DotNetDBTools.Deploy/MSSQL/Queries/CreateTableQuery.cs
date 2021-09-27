@@ -30,6 +30,19 @@ $@"CREATE TABLE {table.Name}
 {GetTableDefinitionsText(table)}
 );";
 
+            foreach (IndexInfo index in table.Indexes)
+            {
+                string _ =
+$@"CREATE INDEX {index.Name}
+ON {table.Name} ({string.Join(", ", index.Columns)});";
+            }
+
+            foreach (TriggerInfo trigger in table.Triggers)
+            {
+                string _ =
+$@"{trigger.Code}";
+            }
+
             return query;
         }
 
@@ -48,6 +61,9 @@ $@"    CONSTRAINT {table.PrimaryKey.Name} PRIMARY KEY ({string.Join(", ", table.
 
             tableDefinitions.AddRange(table.UniqueConstraints.Select(uc =>
 $@"    CONSTRAINT {uc.Name} UNIQUE ({string.Join(", ", uc.Columns)})"));
+
+            IEnumerable<string> _ = table.CheckConstraints.Select(cc =>
+$@"    CONSTRAINT {cc.Name} CHECK ({cc.Code})");
 
             return string.Join(",\n", tableDefinitions);
         }

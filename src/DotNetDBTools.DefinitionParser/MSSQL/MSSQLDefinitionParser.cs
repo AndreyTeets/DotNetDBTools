@@ -47,8 +47,10 @@ namespace DotNetDBTools.DefinitionParser.MSSQL
             {
                 Tables = GetTableInfos(tables),
                 Views = GetViewInfos(views),
-                Functions = GetFunctionInfos(functions),
                 UserDefinedTypes = GetUserDefinedTypesInfos(userDefinedTypes),
+                UserDefinedTableTypes = new List<MSSQLUserDefinedTableTypeInfo>(),
+                Functions = GetFunctionInfos(functions),
+                Procedures = new List<MSSQLProcedureInfo>(),
             };
         }
 
@@ -64,6 +66,9 @@ namespace DotNetDBTools.DefinitionParser.MSSQL
                     Columns = GetColumnInfos(table),
                     PrimaryKey = GetPrimaryKeyInfo(table),
                     UniqueConstraints = GetUniqueConstraintsInfos(table),
+                    CheckConstraints = new List<CheckConstraintInfo>(),
+                    Indexes = new List<IndexInfo>(),
+                    Triggers = new List<TriggerInfo>(),
                     ForeignKeys = GetForeignKeyInfos(table),
                 };
                 tableInfos.Add(tableInfo);

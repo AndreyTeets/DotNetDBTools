@@ -50,6 +50,9 @@ namespace DotNetDBTools.DefinitionParser.SQLite
                     Columns = GetColumnInfos(table),
                     PrimaryKey = GetPrimaryKeyInfo(table),
                     UniqueConstraints = GetUniqueConstraintsInfos(table),
+                    CheckConstraints = new List<CheckConstraintInfo>(),
+                    Indexes = new List<IndexInfo>(),
+                    Triggers = new List<TriggerInfo>(),
                     ForeignKeys = GetForeignKeyInfos(table),
                 };
                 tableInfos.Add(tableInfo);

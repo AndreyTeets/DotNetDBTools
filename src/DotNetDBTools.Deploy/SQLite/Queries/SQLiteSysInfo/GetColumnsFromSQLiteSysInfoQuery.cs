@@ -49,6 +49,9 @@ WHERE sm.type = 'table'
                             Name = columnRecord.TableName,
                             Columns = new List<ColumnInfo>(),
                             UniqueConstraints = new List<UniqueConstraintInfo>(),
+                            CheckConstraints = new List<CheckConstraintInfo>(),
+                            Indexes = new List<IndexInfo>(),
+                            Triggers = new List<TriggerInfo>(),
                             ForeignKeys = new List<ForeignKeyInfo>(),
                         };
                         tables.Add(columnRecord.TableName, table);
