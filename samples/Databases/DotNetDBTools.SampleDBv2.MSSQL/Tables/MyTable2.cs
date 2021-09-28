@@ -10,7 +10,7 @@ namespace DotNetDBTools.SampleDB.MSSQL.Tables
 
         public Column MyColumn1NewName = new("C480F22F-7C01-4F41-B282-35E9F5CD1FE3")
         {
-            DataType = new IntDataType(),
+            DataType = new IntDataType() { Size = IntSize.Int64 },
             Nullable = false,
             Default = 333,
             DefaultConstraintName = "DF_MyTable2_MyColumn1NewName",
@@ -18,7 +18,7 @@ namespace DotNetDBTools.SampleDB.MSSQL.Tables
 
         public Column MyColumn2 = new("C2DF19C2-E029-4014-8A5B-4AB42FECB6B8")
         {
-            DataType = new ByteDataType() { Length = 22 },
+            DataType = new BinaryDataType() { Length = 22 },
             Nullable = true,
             Default = new byte[] { 0, 1, 2 },
         };

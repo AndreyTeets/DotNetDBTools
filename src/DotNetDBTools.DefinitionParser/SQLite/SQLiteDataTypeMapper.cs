@@ -13,7 +13,7 @@ namespace DotNetDBTools.DefinitionParser.SQLite
             {
                 StringDataType stringDataType => GetStringDataTypeInfo(stringDataType),
                 IntDataType intDataType => GetIntDataTypeInfo(intDataType),
-                ByteDataType byteDataType => GetByteDataTypeInfo(byteDataType),
+                BinaryDataType binaryDataType => GetBinaryDataTypeInfo(binaryDataType),
                 _ => throw new InvalidOperationException($"Invalid dataType: {dataType}")
             };
         }
@@ -34,11 +34,11 @@ namespace DotNetDBTools.DefinitionParser.SQLite
             };
         }
 
-        private static DataTypeInfo GetByteDataTypeInfo(ByteDataType _)
+        private static DataTypeInfo GetBinaryDataTypeInfo(BinaryDataType _)
         {
             return new DataTypeInfo()
             {
-                Name = DataTypeNames.Byte,
+                Name = DataTypeNames.Binary,
             };
         }
     }

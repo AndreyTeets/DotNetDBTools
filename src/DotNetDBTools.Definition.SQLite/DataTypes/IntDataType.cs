@@ -1,8 +1,11 @@
-﻿using DotNetDBTools.Definition.Core.BaseDataTypes;
+﻿using DotNetDBTools.Definition.Core;
 
 namespace DotNetDBTools.Definition.SQLite.DataTypes
 {
-    public class IntDataType : BaseIntDataType
+    /// <summary>
+    /// Column is declared with 'INTEGER' affinity.
+    /// </summary>
+    public class IntDataType : IDataType
     {
     }
 }

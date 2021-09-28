@@ -31,7 +31,7 @@ VALUES
 EXEC sp_executesql N'CREATE TABLE MyTable1
 (
     MyColumn1 INT NOT NULL CONSTRAINT DF_MyTable1_MyColumn1 DEFAULT 15,
-    MyColumn2 VARCHAR(10) NOT NULL CONSTRAINT DF_MyTable1_MyColumn2 DEFAULT ''33'',
+    MyColumn2 NVARCHAR(10) NOT NULL CONSTRAINT DF_MyTable1_MyColumn2 DEFAULT ''33'',
     MyColumn3 INT IDENTITY NOT NULL,
     CONSTRAINT PK_MyTable1 PRIMARY KEY (MyColumn3),
     CONSTRAINT UQ_MyTable1_MyColumn2 UNIQUE (MyColumn2)
@@ -162,7 +162,7 @@ VALUES
 EXEC sp_executesql N'CREATE TABLE MyTable2
 (
     MyColumn1 INT NOT NULL CONSTRAINT DF_MyTable2_MyColumn1 DEFAULT 333,
-    MyColumn2 VARBINARY(22) NULL CONSTRAINT DF_MyTable2_MyColumn2 DEFAULT 0x000102,
+    MyColumn2 BINARY(22) NULL CONSTRAINT DF_MyTable2_MyColumn2 DEFAULT 0x000102,
     CONSTRAINT PK_MyTable2 PRIMARY KEY (MyColumn1)
 );';
 --QUERY END: CreateTableQuery
@@ -251,7 +251,8 @@ VALUES
 EXEC sp_executesql N'CREATE TABLE MyTable5
 (
     MyColumn1 INT NOT NULL CONSTRAINT DF_MyTable5_MyColumn1 DEFAULT ABS(-15),
-    MyColumn2 MyUserDefinedType1 NULL CONSTRAINT DF_MyTable5_MyColumn2 DEFAULT ''cc''
+    MyColumn2 MyUserDefinedType1 NULL CONSTRAINT DF_MyTable5_MyColumn2 DEFAULT ''cc'',
+    MyColumn3 DATETIMEOFFSET NULL
 );';
 --QUERY END: CreateTableQuery
 
@@ -299,6 +300,26 @@ VALUES
 EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = ''15ae6061-426d-4485-85e6-ecd3e0f98882'';
 DECLARE @ParentID UNIQUEIDENTIFIER = ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'';
 DECLARE @Name NVARCHAR(MAX) = ''MyColumn2'';
+INSERT INTO DNDBTDbObjects
+(
+    ID,
+    ParentID,
+    Type,
+    Name
+)
+VALUES
+(
+    @ID,
+    @ParentID,
+    ''Column'',
+    @Name
+);';
+--QUERY END: InsertDNDBTSysInfoQuery
+
+--QUERY START: InsertDNDBTSysInfoQuery
+EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = ''4dde852d-ec19-4b61-80f9-da428d8ff41a'';
+DECLARE @ParentID UNIQUEIDENTIFIER = ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'';
+DECLARE @Name NVARCHAR(MAX) = ''MyColumn3'';
 INSERT INTO DNDBTDbObjects
 (
     ID,

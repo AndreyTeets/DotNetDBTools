@@ -16,7 +16,7 @@ namespace DotNetDBTools.SampleDB.SQLite.Tables
 
         public Column MyColumn2 = new("FE68EE3D-09D0-40AC-93F9-5E441FBB4F70")
         {
-            DataType = new StringDataType() { Length = 10 },
+            DataType = new StringDataType(),
             Default = "33",
         };
 

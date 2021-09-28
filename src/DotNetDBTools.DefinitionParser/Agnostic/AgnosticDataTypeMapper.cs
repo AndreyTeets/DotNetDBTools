@@ -13,7 +13,8 @@ namespace DotNetDBTools.DefinitionParser.Agnostic
             {
                 StringDataType stringDataType => GetStringDataTypeInfo(stringDataType),
                 IntDataType intDataType => GetIntDataTypeInfo(intDataType),
-                ByteDataType byteDataType => GetByteDataTypeInfo(byteDataType),
+                BinaryDataType binaryDataType => GetBinaryDataTypeInfo(binaryDataType),
+                DateTimeDataType dateTimeDataType => GetDateTimeDataTypeInfo(dateTimeDataType),
                 _ => throw new InvalidOperationException($"Invalid dataType: '{dataType}'")
             };
         }
@@ -24,24 +25,34 @@ namespace DotNetDBTools.DefinitionParser.Agnostic
             {
                 Name = DataTypeNames.String,
                 Length = stringDataType.Length,
-                IsUnicode = stringDataType.IsUnicode,
+                IsFixedLength = stringDataType.IsFixedLength,
             };
         }
 
-        private static DataTypeInfo GetIntDataTypeInfo(IntDataType _)
+        private static DataTypeInfo GetIntDataTypeInfo(IntDataType intDataType)
         {
             return new DataTypeInfo()
             {
                 Name = DataTypeNames.Int,
+                Size = int.Parse($"{intDataType.Size}".Replace("Int", "")),
             };
         }
 
-        private static DataTypeInfo GetByteDataTypeInfo(ByteDataType byteDataType)
+        private static DataTypeInfo GetBinaryDataTypeInfo(BinaryDataType binaryDataType)
         {
             return new DataTypeInfo()
             {
-                Name = DataTypeNames.Byte,
-                Length = byteDataType.Length,
+                Name = DataTypeNames.Binary,
+                Length = binaryDataType.Length,
+                IsFixedLength = binaryDataType.IsFixedLength,
+            };
+        }
+
+        private static DataTypeInfo GetDateTimeDataTypeInfo(DateTimeDataType _)
+        {
+            return new DataTypeInfo()
+            {
+                Name = DataTypeNames.DateTime,
             };
         }
     }

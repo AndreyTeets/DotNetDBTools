@@ -22,7 +22,7 @@
 
   <Target Name="DeleteMainAssemblyDllFromCopied" AfterTargets="CopyAllOutputToRefAssemblies" Condition="'$(UsePackagesInSampleApplications)'!='True'">
     <ItemGroup>
-      <FilesToDelete Include="$(ProjectDir)bin\AnalyzerDebugRefAssemblies\$(TargetName).dll"/>
+      <FilesToDelete Include="$(ProjectDir)bin\AnalyzerDebugRefAssemblies\$(TargetName).dll" />
     </ItemGroup>
     <Delete Files="@(FilesToDelete)" />
   </Target>

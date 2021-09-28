@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using DotNetDBTools.Models.Agnostic;
+using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.MSSQL;
 
 namespace DotNetDBTools.Analysis.MSSQL
@@ -18,7 +20,7 @@ namespace DotNetDBTools.Analysis.MSSQL
             {
                 ID = tableInfo.ID,
                 Name = tableInfo.Name,
-                Columns = tableInfo.Columns,
+                Columns = ConvertToSQLiteInfo(tableInfo.Columns),
                 PrimaryKey = tableInfo.PrimaryKey,
                 UniqueConstraints = tableInfo.UniqueConstraints,
                 CheckConstraints = tableInfo.CheckConstraints,
@@ -34,5 +36,15 @@ namespace DotNetDBTools.Analysis.MSSQL
                 Name = viewInfo.Name,
                 Code = viewInfo.Code,
             };
+
+        private static IEnumerable<ColumnInfo> ConvertToSQLiteInfo(IEnumerable<ColumnInfo> columns)
+        {
+            foreach (ColumnInfo column in columns)
+            {
+                if (column.DataType.Name == DataTypeNames.DateTime)
+                    column.DataType.SqlTypeName = "DATETIME2";
+            }
+            return columns;
+        }
     }
 }

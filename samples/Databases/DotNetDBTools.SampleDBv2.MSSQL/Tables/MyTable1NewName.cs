@@ -10,7 +10,7 @@ namespace DotNetDBTools.SampleDB.MSSQL.Tables
 
         public Column MyColumn1 = new("A2F2A4DE-1337-4594-AE41-72ED4D05F317")
         {
-            DataType = new IntDataType(),
+            DataType = new IntDataType() { Size = IntSize.Int64 },
             Nullable = true,
             Default = 15,
         };

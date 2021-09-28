@@ -10,14 +10,14 @@ namespace DotNetDBTools.SampleDB.Agnostic.Tables
 
         public Column MyColumn1 = new("726F503A-D944-46EE-A0FF-6A2C2FAAB46E")
         {
-            DataType = new IntDataType(),
+            DataType = new IntDataType() { Size = IntSize.Int64 },
             Nullable = false,
             Default = 333,
         };
 
         public Column MyColumn2 = new("169824E1-8B74-4B60-AF17-99656D6DBBEE")
         {
-            DataType = new ByteDataType() { Length = 22 },
+            DataType = new BinaryDataType() { Length = 22 },
         };
 
         public UniqueConstraint UQ_MyTable3_MyColumns12 = new("FD288E38-35BA-4BB1-ACE3-597C99EF26C7")

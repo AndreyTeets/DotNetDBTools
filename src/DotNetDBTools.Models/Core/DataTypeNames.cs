@@ -4,6 +4,7 @@
     {
         public const string String = nameof(String);
         public const string Int = nameof(Int);
-        public const string Byte = nameof(Byte);
+        public const string Binary = nameof(Binary);
+        public const string DateTime = nameof(DateTime);
     }
 }

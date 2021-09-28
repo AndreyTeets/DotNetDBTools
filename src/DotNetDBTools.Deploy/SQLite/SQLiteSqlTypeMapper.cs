@@ -11,7 +11,7 @@ namespace DotNetDBTools.Deploy.SQLite
             {
                 DataTypeNames.String => GetStringSqlType(dataTypeInfo),
                 DataTypeNames.Int => GetIntSqlType(dataTypeInfo),
-                DataTypeNames.Byte => GetByteSqlType(dataTypeInfo),
+                DataTypeNames.Binary => GetBinarySqlType(dataTypeInfo),
                 _ => throw new InvalidOperationException($"Invalid dataTypeInfo.Name: '{dataTypeInfo.Name}'")
             };
         }
@@ -22,7 +22,7 @@ namespace DotNetDBTools.Deploy.SQLite
             {
                 SqlNames.TEXT => GetStringModelType(),
                 SqlNames.INTEGER => GetIntModelType(),
-                SqlNames.BLOB => GetByteModelType(),
+                SqlNames.BLOB => GetBinaryModelType(),
                 _ => throw new InvalidOperationException($"Invalid sqlType: '{sqlType}'")
             };
         }
@@ -53,16 +53,16 @@ namespace DotNetDBTools.Deploy.SQLite
             };
         }
 
-        private static string GetByteSqlType(DataTypeInfo _)
+        private static string GetBinarySqlType(DataTypeInfo _)
         {
             return SqlNames.BLOB;
         }
 
-        private static DataTypeInfo GetByteModelType()
+        private static DataTypeInfo GetBinaryModelType()
         {
             return new DataTypeInfo()
             {
-                Name = DataTypeNames.Byte,
+                Name = DataTypeNames.Binary,
             };
         }
 

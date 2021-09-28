@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DotNetDBTools.Models.Agnostic;
 using DotNetDBTools.Models.Core;
@@ -16,12 +17,11 @@ namespace DotNetDBTools.Analysis.SQLite
            };
 
         private static SQLiteTableInfo ConvertToSQLiteInfo(AgnosticTableInfo tableInfo)
-        {
-            SQLiteTableInfo sqliteTableInfo = new()
+            => new()
             {
                 ID = tableInfo.ID,
                 Name = tableInfo.Name,
-                Columns = tableInfo.Columns,
+                Columns = ConvertToSQLiteInfo(tableInfo.Columns),
                 PrimaryKey = tableInfo.PrimaryKey,
                 UniqueConstraints = tableInfo.UniqueConstraints,
                 CheckConstraints = tableInfo.CheckConstraints,
@@ -29,9 +29,6 @@ namespace DotNetDBTools.Analysis.SQLite
                 Triggers = tableInfo.Triggers,
                 ForeignKeys = tableInfo.ForeignKeys,
             };
-            StripRedundantDataTypeAttributes(sqliteTableInfo.Columns);
-            return sqliteTableInfo;
-        }
 
         private static SQLiteViewInfo ConvertToSQLiteInfo(AgnosticViewInfo viewInfo)
             => new()
@@ -41,15 +38,23 @@ namespace DotNetDBTools.Analysis.SQLite
                 Code = viewInfo.Code,
             };
 
-        private static void StripRedundantDataTypeAttributes(IEnumerable<ColumnInfo> columns)
+        private static IEnumerable<ColumnInfo> ConvertToSQLiteInfo(IEnumerable<ColumnInfo> columns)
         {
             foreach (ColumnInfo column in columns)
             {
+                if (column.DataType.Name == DataTypeNames.DateTime)
+                {
+                    throw new InvalidOperationException(
+                        $"Unable to convert agnostic database to sqlite:" +
+                        $" data type {column.DataType.Name} is not supported by sqlite.");
+                }
+
                 column.DataType = new DataTypeInfo()
                 {
                     Name = column.DataType.Name,
                 };
             }
+            return columns;
         }
     }
 }

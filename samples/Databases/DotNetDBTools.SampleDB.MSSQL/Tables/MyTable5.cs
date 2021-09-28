@@ -22,5 +22,11 @@ namespace DotNetDBTools.SampleDB.MSSQL.Tables
             Nullable = true,
             Default = "cc",
         };
+
+        public Column MyColumn3 = new("4DDE852D-EC19-4B61-80F9-DA428D8FF41A")
+        {
+            DataType = new DateTimeDataType() { MSSQLType = MSSQLDateTimeType.DATETIMEOFFSET },
+            Nullable = true,
+        };
     }
 }

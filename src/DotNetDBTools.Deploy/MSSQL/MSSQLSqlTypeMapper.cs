@@ -11,7 +11,8 @@ namespace DotNetDBTools.Deploy.MSSQL
             {
                 DataTypeNames.String => GetStringSqlType(dataTypeInfo),
                 DataTypeNames.Int => GetIntSqlType(dataTypeInfo),
-                DataTypeNames.Byte => GetByteSqlType(dataTypeInfo),
+                DataTypeNames.Binary => GetBinarySqlType(dataTypeInfo),
+                DataTypeNames.DateTime => GetDateTimeSqlType(dataTypeInfo),
                 _ => dataTypeInfo.IsUserDefined
                     ? dataTypeInfo.Name
                     : throw new InvalidOperationException($"Invalid dataTypeInfo.Name: '{dataTypeInfo.Name}'")
@@ -22,12 +23,20 @@ namespace DotNetDBTools.Deploy.MSSQL
         {
             return sqlType.ToUpper() switch
             {
-                SqlNames.NVARCHAR => GetStringModelType(length, isUnicode: true, isFixedLength: false),
-                SqlNames.VARCHAR => GetStringModelType(length, isUnicode: false, isFixedLength: false),
-                SqlNames.NCHAR => GetStringModelType(length, isUnicode: true, isFixedLength: true),
-                SqlNames.CHAR => GetStringModelType(length, isUnicode: false, isFixedLength: true),
-                SqlNames.INT => GetIntModelType(),
-                SqlNames.VARBINARY => GetByteModelType(length),
+                SqlNames.NVARCHAR => GetStringModelType(length, isFixedLength: false, isUnicode: true),
+                SqlNames.VARCHAR => GetStringModelType(length, isFixedLength: false, isUnicode: false),
+                SqlNames.NCHAR => GetStringModelType(length, isFixedLength: true, isUnicode: true),
+                SqlNames.CHAR => GetStringModelType(length, isFixedLength: true, isUnicode: false),
+                SqlNames.TINYINT => GetIntModelType(8),
+                SqlNames.SMALLINT => GetIntModelType(16),
+                SqlNames.INT => GetIntModelType(32),
+                SqlNames.BIGINT => GetIntModelType(64),
+                SqlNames.VARBINARY => GetBinaryModelType(length, isFixedLength: false),
+                SqlNames.BINARY => GetBinaryModelType(length, isFixedLength: true),
+                SqlNames.SMALLDATETIME => GetDateTimeModelType(sqlType),
+                SqlNames.DATETIME => GetDateTimeModelType(sqlType),
+                SqlNames.DATETIME2 => GetDateTimeModelType(sqlType),
+                SqlNames.DATETIMEOFFSET => GetDateTimeModelType(sqlType),
                 _ => throw new InvalidOperationException($"Invalid sqlType: '{sqlType}'")
             };
         }
@@ -41,7 +50,7 @@ namespace DotNetDBTools.Deploy.MSSQL
             string lengthStr = dataTypeInfo.Length.ToString();
             if (dataTypeInfo.IsUnicode && dataTypeInfo.Length > 4000 ||
                 !dataTypeInfo.IsUnicode && dataTypeInfo.Length > 8000 ||
-                dataTypeInfo.Length == -1)
+                dataTypeInfo.Length < 1)
             {
                 if (dataTypeInfo.IsFixedLength)
                     throw new Exception($"The size ({dataTypeInfo.Length}) given to type {stringTypeName} exceeds maximum allowed length");
@@ -51,44 +60,75 @@ namespace DotNetDBTools.Deploy.MSSQL
             return $"{stringTypeName}({lengthStr})";
         }
 
-        private static DataTypeInfo GetStringModelType(string length, bool isUnicode, bool isFixedLength)
+        private static DataTypeInfo GetStringModelType(string length, bool isFixedLength, bool isUnicode)
         {
             return new DataTypeInfo()
             {
                 Name = DataTypeNames.String,
-                Length = int.Parse(length),
-                IsUnicode = isUnicode,
+                Length = isUnicode ? int.Parse(length) / 2 : int.Parse(length),
                 IsFixedLength = isFixedLength,
+                IsUnicode = isUnicode,
             };
         }
 
-        private static string GetIntSqlType(DataTypeInfo _)
+        private static string GetIntSqlType(DataTypeInfo dataTypeInfo)
         {
-            return SqlNames.INT;
+            return dataTypeInfo.Size switch
+            {
+                8 => SqlNames.TINYINT,
+                16 => SqlNames.SMALLINT,
+                32 => SqlNames.INT,
+                64 => SqlNames.BIGINT,
+                _ => throw new Exception($"Invalid int size: '{dataTypeInfo.Size}' (this should never happen)")
+            };
         }
 
-        private static DataTypeInfo GetIntModelType()
+        private static DataTypeInfo GetIntModelType(int size)
         {
             return new DataTypeInfo()
             {
                 Name = DataTypeNames.Int,
+                Size = size,
             };
         }
 
-        private static string GetByteSqlType(DataTypeInfo dataTypeInfo)
+        private static string GetBinarySqlType(DataTypeInfo dataTypeInfo)
         {
+            string binaryTypeName = dataTypeInfo.IsFixedLength ? SqlNames.BINARY : SqlNames.VARBINARY;
+
             string lengthStr = dataTypeInfo.Length.ToString();
-            if (dataTypeInfo.Length > 8000 || dataTypeInfo.Length == -1)
+            if (dataTypeInfo.Length > 8000 ||
+                dataTypeInfo.Length < 1)
+            {
+                if (dataTypeInfo.IsFixedLength)
+                    throw new Exception($"The size ({dataTypeInfo.Length}) given to type {binaryTypeName} exceeds maximum allowed length");
                 lengthStr = "MAX";
-            return $"{SqlNames.VARBINARY}({lengthStr})";
+            }
+
+            return $"{binaryTypeName}({lengthStr})";
         }
 
-        private static DataTypeInfo GetByteModelType(string length)
+        private static DataTypeInfo GetBinaryModelType(string length, bool isFixedLength)
         {
             return new DataTypeInfo()
             {
-                Name = DataTypeNames.Byte,
+                Name = DataTypeNames.Binary,
                 Length = int.Parse(length),
+                IsFixedLength = isFixedLength,
+            };
+        }
+
+        private static string GetDateTimeSqlType(DataTypeInfo dataTypeInfo)
+        {
+            return dataTypeInfo.SqlTypeName;
+        }
+
+        private static DataTypeInfo GetDateTimeModelType(string sqlType)
+        {
+            return new DataTypeInfo()
+            {
+                Name = DataTypeNames.DateTime,
+                SqlTypeName = sqlType.ToUpper(),
             };
         }
 
@@ -98,8 +138,16 @@ namespace DotNetDBTools.Deploy.MSSQL
             public const string VARCHAR = nameof(VARCHAR);
             public const string NCHAR = nameof(NCHAR);
             public const string CHAR = nameof(CHAR);
+            public const string TINYINT = nameof(TINYINT);
+            public const string SMALLINT = nameof(SMALLINT);
             public const string INT = nameof(INT);
+            public const string BIGINT = nameof(BIGINT);
             public const string VARBINARY = nameof(VARBINARY);
+            public const string BINARY = nameof(BINARY);
+            public const string SMALLDATETIME = nameof(SMALLDATETIME);
+            public const string DATETIME = nameof(DATETIME);
+            public const string DATETIME2 = nameof(DATETIME2);
+            public const string DATETIMEOFFSET = nameof(DATETIMEOFFSET);
         }
     }
 }

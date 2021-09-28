@@ -3,9 +3,9 @@
 namespace DotNetDBTools.Definition.SQLite.DataTypes
 {
     /// <summary>
-    /// Column is declared with 'TEXT' affinity.
+    /// Column is declared with 'BLOB' affinity.
     /// </summary>
-    public class StringDataType : IDataType
+    public class BinaryDataType : IDataType
     {
     }
 }

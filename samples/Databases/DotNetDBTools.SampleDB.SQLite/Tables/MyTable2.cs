@@ -18,7 +18,7 @@ namespace DotNetDBTools.SampleDB.SQLite.Tables
 
         public Column MyColumn2 = new("5A0D1926-3270-4EB2-92EB-00BE56C7AF23")
         {
-            DataType = new ByteDataType() { Length = 22 },
+            DataType = new BinaryDataType(),
             Nullable = true,
             Default = new byte[] { 0, 1, 2 },
         };

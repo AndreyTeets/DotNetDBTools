@@ -17,7 +17,7 @@ namespace DotNetDBTools.SampleDB.SQLite.Tables
 
         public Column MyColumn2 = new("169824E1-8B74-4B60-AF17-99656D6DBBEE")
         {
-            DataType = new ByteDataType() { Length = 22 },
+            DataType = new BinaryDataType(),
         };
 
         public UniqueConstraint UQ_MyTable3_MyColumns12 = new("FD288E38-35BA-4BB1-ACE3-597C99EF26C7")
