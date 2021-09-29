@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace DotNetDBTools.DefinitionParser.Core
 {
-    public static class ReflectionExtensions
+    internal static class ReflectionExtensions
     {
         public static IEnumerable<MemberInfo> GetPropertyOrFieldMembers(this Type type)
         {

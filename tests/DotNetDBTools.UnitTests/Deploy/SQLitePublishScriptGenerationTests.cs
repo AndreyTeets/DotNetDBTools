@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using DotNetDBTools.DefinitionParser.SQLite;
+using DotNetDBTools.DefinitionParser;
 using DotNetDBTools.Deploy;
 using DotNetDBTools.Models.SQLite;
 using DotNetDBTools.UnitTests.TestHelpers;
@@ -20,7 +20,7 @@ namespace DotNetDBTools.UnitTests.Deploy
 
             Assembly dbAssembly = AppDomain.CurrentDomain.GetAssemblies()
                 .Single(x => x.GetName().Name == "DotNetDBTools.SampleDB.SQLite");
-            SQLiteDatabaseInfo database = SQLiteDefinitionParser.CreateDatabaseInfo(dbAssembly);
+            SQLiteDatabaseInfo database = (SQLiteDatabaseInfo)DbDefinitionParser.CreateDatabaseInfo(dbAssembly);
             SQLiteDatabaseInfo existingDatabase = new(null);
 
             string outputPath = @"./generated/Actual_SQLitePublishScript_For_SQLiteSampleDB_WhenCreatingV1.sql";

@@ -4,10 +4,10 @@ using System.Reflection;
 using DotNetDBTools.Analysis.Core.Errors;
 using DotNetDBTools.Analysis.SQLite;
 using DotNetDBTools.DefinitionGenerator;
-using DotNetDBTools.DefinitionParser.Agnostic;
+using DotNetDBTools.DefinitionParser;
 using DotNetDBTools.DefinitionParser.Core;
-using DotNetDBTools.DefinitionParser.SQLite;
 using DotNetDBTools.Deploy.SQLite;
+using DotNetDBTools.Models.Agnostic;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.SQLite;
 
@@ -106,10 +106,11 @@ namespace DotNetDBTools.Deploy
         private static SQLiteDatabaseInfo CreateSQLiteDatabaseModelFromDbAssembly(Assembly dbAssembly)
         {
             SQLiteDatabaseInfo database;
-            if (DbAssemblyInfoHelper.GetDbKind(dbAssembly) == DatabaseKind.Agnostic)
-                database = AgnosticToSQLiteConverter.ConvertToSQLiteInfo(AgnosticDefinitionParser.CreateDatabaseInfo(dbAssembly));
+            DatabaseInfo x = DbDefinitionParser.CreateDatabaseInfo(dbAssembly);
+            if (x.Kind == DatabaseKind.Agnostic)
+                database = AgnosticToSQLiteConverter.ConvertToSQLiteInfo((AgnosticDatabaseInfo)x);
             else
-                database = SQLiteDefinitionParser.CreateDatabaseInfo(dbAssembly);
+                database = (SQLiteDatabaseInfo)DbDefinitionParser.CreateDatabaseInfo(dbAssembly);
 
             if (!SQLiteDbValidator.DbIsValid(database, out DbError error))
                 throw new Exception($"Db is invalid: {error}");

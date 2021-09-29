@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Reflection;
 
-namespace DotNetDBTools.DefinitionParser.Core
+namespace DotNetDBTools.DefinitionParser
 {
     public static class AssemblyLoader
     {

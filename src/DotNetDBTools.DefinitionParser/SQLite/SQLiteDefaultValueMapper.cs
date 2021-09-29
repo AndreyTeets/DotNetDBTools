@@ -2,16 +2,20 @@
 using DotNetDBTools.Definition.Core;
 using DotNetDBTools.Definition.SQLite;
 using DotNetDBTools.Definition.SQLite.DataTypes;
+using DotNetDBTools.DefinitionParser.Core;
+using DotNetDBTools.Models.SQLite;
 
 namespace DotNetDBTools.DefinitionParser.SQLite
 {
-    public static class SQLiteDefaultValueMapper
+    internal class SQLiteDefaultValueMapper : IDefaultValueMapper
     {
-        public static object MapDefaultValue(Column column)
+        public object MapDefaultValue(BaseColumn column)
         {
             object value = column.Default;
             if (value is null)
                 return null;
+            if (((Column)column).DefaultIsFunction)
+                return new SQLiteDefaultValueAsFunction() { FunctionText = (string)value };
             return MapByColumnDataType(column.DataType, value);
         }
 

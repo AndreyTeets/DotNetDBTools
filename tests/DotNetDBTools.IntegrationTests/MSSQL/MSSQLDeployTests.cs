@@ -4,10 +4,10 @@ using System.Data.SqlClient;
 using System.Linq;
 using Dapper;
 using DotNetDBTools.Analysis.MSSQL;
-using DotNetDBTools.DefinitionParser.Agnostic;
-using DotNetDBTools.DefinitionParser.MSSQL;
+using DotNetDBTools.DefinitionParser;
 using DotNetDBTools.Deploy;
 using DotNetDBTools.Deploy.MSSQL;
+using DotNetDBTools.Models.Agnostic;
 using DotNetDBTools.Models.MSSQL;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -44,7 +44,7 @@ namespace DotNetDBTools.IntegrationTests.MSSQL
             deployManager.PublishDatabase(s_agnosticSampleDbAssemblyPath, ConnectionString);
 
             MSSQLDatabaseInfo dbInfoFromDbAssembly = AgnosticToMSSQLConverter.ConvertToMSSQLInfo(
-                AgnosticDefinitionParser.CreateDatabaseInfo(s_agnosticSampleDbAssemblyPath));
+                (AgnosticDatabaseInfo)DbDefinitionParser.CreateDatabaseInfo(s_agnosticSampleDbAssemblyPath));
             MSSQLDatabaseInfo dbInfoFromDNDBTSysInfo = interactor.GetDatabaseModelFromDNDBTSysInfo();
 
             dbInfoFromDNDBTSysInfo.Should().BeEquivalentTo(dbInfoFromDbAssembly, options => options
@@ -62,7 +62,7 @@ namespace DotNetDBTools.IntegrationTests.MSSQL
             deployManager.UnregisterAsDNDBT(ConnectionString);
 
             MSSQLDatabaseInfo dbInfoFromDbAssembly = AgnosticToMSSQLConverter.ConvertToMSSQLInfo(
-                AgnosticDefinitionParser.CreateDatabaseInfo(s_agnosticSampleDbAssemblyPath));
+                (AgnosticDatabaseInfo)DbDefinitionParser.CreateDatabaseInfo(s_agnosticSampleDbAssemblyPath));
             MSSQLDatabaseInfo dbInfoFromMSSQLSysInfo = interactor.GenerateDatabaseModelFromMSSQLSysInfo();
 
             dbInfoFromMSSQLSysInfo.Should().BeEquivalentTo(dbInfoFromDbAssembly, options => options
@@ -88,7 +88,7 @@ namespace DotNetDBTools.IntegrationTests.MSSQL
             MSSQLDeployManager deployManager = new(true, false);
             deployManager.PublishDatabase(s_mssqlSampleDbAssemblyPath, ConnectionString);
 
-            MSSQLDatabaseInfo dbInfoFromDbAssembly = MSSQLDefinitionParser.CreateDatabaseInfo(s_mssqlSampleDbAssemblyPath);
+            MSSQLDatabaseInfo dbInfoFromDbAssembly = (MSSQLDatabaseInfo)DbDefinitionParser.CreateDatabaseInfo(s_mssqlSampleDbAssemblyPath);
             MSSQLDatabaseInfo dbInfoFromDNDBTSysInfo = interactor.GetDatabaseModelFromDNDBTSysInfo();
 
             dbInfoFromDNDBTSysInfo.Should().BeEquivalentTo(dbInfoFromDbAssembly, options => options
@@ -107,7 +107,7 @@ namespace DotNetDBTools.IntegrationTests.MSSQL
             deployManager.PublishDatabase(s_mssqlSampleDbAssemblyPath, ConnectionString);
             deployManager.UnregisterAsDNDBT(ConnectionString);
 
-            MSSQLDatabaseInfo dbInfoFromDbAssembly = MSSQLDefinitionParser.CreateDatabaseInfo(s_mssqlSampleDbAssemblyPath);
+            MSSQLDatabaseInfo dbInfoFromDbAssembly = (MSSQLDatabaseInfo)DbDefinitionParser.CreateDatabaseInfo(s_mssqlSampleDbAssemblyPath);
             MSSQLDatabaseInfo dbInfoFromMSSQLSysInfo = interactor.GenerateDatabaseModelFromMSSQLSysInfo();
 
             dbInfoFromMSSQLSysInfo.Should().BeEquivalentTo(dbInfoFromDbAssembly, options => options

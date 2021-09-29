@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using DotNetDBTools.DefinitionParser.MSSQL;
+using DotNetDBTools.DefinitionParser;
 using DotNetDBTools.Deploy;
 using DotNetDBTools.Models.MSSQL;
 using DotNetDBTools.UnitTests.TestHelpers;
@@ -20,7 +20,7 @@ namespace DotNetDBTools.UnitTests.Deploy
 
             Assembly dbAssembly = AppDomain.CurrentDomain.GetAssemblies()
                 .Single(x => x.GetName().Name == "DotNetDBTools.SampleDB.MSSQL");
-            MSSQLDatabaseInfo database = MSSQLDefinitionParser.CreateDatabaseInfo(dbAssembly);
+            MSSQLDatabaseInfo database = (MSSQLDatabaseInfo)DbDefinitionParser.CreateDatabaseInfo(dbAssembly);
             MSSQLDatabaseInfo existingDatabase = new(null);
 
             string outputPath = @"./generated/Actual_MSSQLPublishScript_For_MSSQLSampleDB_WhenCreatingV1.sql";

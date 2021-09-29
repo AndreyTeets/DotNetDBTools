@@ -5,10 +5,10 @@ using System.Reflection;
 using DotNetDBTools.Analysis.Core.Errors;
 using DotNetDBTools.Analysis.MSSQL;
 using DotNetDBTools.DefinitionGenerator;
-using DotNetDBTools.DefinitionParser.Agnostic;
+using DotNetDBTools.DefinitionParser;
 using DotNetDBTools.DefinitionParser.Core;
-using DotNetDBTools.DefinitionParser.MSSQL;
 using DotNetDBTools.Deploy.MSSQL;
+using DotNetDBTools.Models.Agnostic;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.MSSQL;
 
@@ -107,10 +107,11 @@ namespace DotNetDBTools.Deploy
         private static MSSQLDatabaseInfo CreateMSSQLDatabaseModelFromDbAssembly(Assembly dbAssembly)
         {
             MSSQLDatabaseInfo database;
-            if (DbAssemblyInfoHelper.GetDbKind(dbAssembly) == DatabaseKind.Agnostic)
-                database = AgnosticToMSSQLConverter.ConvertToMSSQLInfo(AgnosticDefinitionParser.CreateDatabaseInfo(dbAssembly));
+            DatabaseInfo x = DbDefinitionParser.CreateDatabaseInfo(dbAssembly);
+            if (x.Kind == DatabaseKind.Agnostic)
+                database = AgnosticToMSSQLConverter.ConvertToMSSQLInfo((AgnosticDatabaseInfo)x);
             else
-                database = MSSQLDefinitionParser.CreateDatabaseInfo(dbAssembly);
+                database = (MSSQLDatabaseInfo)DbDefinitionParser.CreateDatabaseInfo(dbAssembly);
 
             if (!MSSQLDbValidator.DbIsValid(database, out DbError error))
                 throw new Exception($"Db is invalid: {error}");

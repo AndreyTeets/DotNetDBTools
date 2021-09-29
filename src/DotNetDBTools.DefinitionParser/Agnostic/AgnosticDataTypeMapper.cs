@@ -1,13 +1,14 @@
 ﻿using System;
 using DotNetDBTools.Definition.Agnostic.DataTypes;
 using DotNetDBTools.Definition.Core;
+using DotNetDBTools.DefinitionParser.Core;
 using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.DefinitionParser.Agnostic
 {
-    internal static class AgnosticDataTypeMapper
+    internal class AgnosticDataTypeMapper : IDataTypeMapper
     {
-        public static DataTypeInfo GetDataTypeInfo(IDataType dataType)
+        public DataTypeInfo GetDataTypeInfo(IDataType dataType)
         {
             return dataType switch
             {

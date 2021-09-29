@@ -1,10 +1,10 @@
 ﻿using System;
 using System.IO;
 using DotNetDBTools.Analysis.SQLite;
-using DotNetDBTools.DefinitionParser.Agnostic;
-using DotNetDBTools.DefinitionParser.SQLite;
+using DotNetDBTools.DefinitionParser;
 using DotNetDBTools.Deploy;
 using DotNetDBTools.Deploy.SQLite;
+using DotNetDBTools.Models.Agnostic;
 using DotNetDBTools.Models.SQLite;
 using FluentAssertions;
 using Microsoft.Data.Sqlite;
@@ -42,7 +42,7 @@ namespace DotNetDBTools.IntegrationTests.SQLite
             deployManager.PublishDatabase(s_agnosticSampleDbAssemblyPath, ConnectionString);
 
             SQLiteDatabaseInfo dbInfoFromDbAssembly = AgnosticToSQLiteConverter.ConvertToSQLiteInfo(
-                AgnosticDefinitionParser.CreateDatabaseInfo(s_agnosticSampleDbAssemblyPath));
+                (AgnosticDatabaseInfo)DbDefinitionParser.CreateDatabaseInfo(s_agnosticSampleDbAssemblyPath));
             SQLiteDatabaseInfo dbInfoFromDNDBTSysInfo = interactor.GetDatabaseModelFromDNDBTSysInfo();
 
             dbInfoFromDNDBTSysInfo.Should().BeEquivalentTo(dbInfoFromDbAssembly, options => options
@@ -60,7 +60,7 @@ namespace DotNetDBTools.IntegrationTests.SQLite
             deployManager.UnregisterAsDNDBT(ConnectionString);
 
             SQLiteDatabaseInfo dbInfoFromDbAssembly = AgnosticToSQLiteConverter.ConvertToSQLiteInfo(
-                AgnosticDefinitionParser.CreateDatabaseInfo(s_agnosticSampleDbAssemblyPath));
+                (AgnosticDatabaseInfo)DbDefinitionParser.CreateDatabaseInfo(s_agnosticSampleDbAssemblyPath));
             SQLiteDatabaseInfo dbInfoFromSQLiteSysInfo = interactor.GenerateDatabaseModelFromSQLiteSysInfo();
 
             dbInfoFromSQLiteSysInfo.Should().BeEquivalentTo(dbInfoFromDbAssembly, options => options
@@ -86,7 +86,7 @@ namespace DotNetDBTools.IntegrationTests.SQLite
             SQLiteDeployManager deployManager = new(true, false);
             deployManager.PublishDatabase(s_sqliteSampleDbAssemblyPath, ConnectionString);
 
-            SQLiteDatabaseInfo dbInfoFromDbAssembly = SQLiteDefinitionParser.CreateDatabaseInfo(s_sqliteSampleDbAssemblyPath);
+            SQLiteDatabaseInfo dbInfoFromDbAssembly = (SQLiteDatabaseInfo)DbDefinitionParser.CreateDatabaseInfo(s_sqliteSampleDbAssemblyPath);
             SQLiteDatabaseInfo dbInfoFromDNDBTSysInfo = interactor.GetDatabaseModelFromDNDBTSysInfo();
 
             dbInfoFromDNDBTSysInfo.Should().BeEquivalentTo(dbInfoFromDbAssembly, options => options
@@ -103,7 +103,7 @@ namespace DotNetDBTools.IntegrationTests.SQLite
             deployManager.PublishDatabase(s_sqliteSampleDbAssemblyPath, ConnectionString);
             deployManager.UnregisterAsDNDBT(ConnectionString);
 
-            SQLiteDatabaseInfo dbInfoFromDbAssembly = SQLiteDefinitionParser.CreateDatabaseInfo(s_sqliteSampleDbAssemblyPath);
+            SQLiteDatabaseInfo dbInfoFromDbAssembly = (SQLiteDatabaseInfo)DbDefinitionParser.CreateDatabaseInfo(s_sqliteSampleDbAssemblyPath);
             SQLiteDatabaseInfo dbInfoFromSQLiteSysInfo = interactor.GenerateDatabaseModelFromSQLiteSysInfo();
 
             dbInfoFromSQLiteSysInfo.Should().BeEquivalentTo(dbInfoFromDbAssembly, options => options

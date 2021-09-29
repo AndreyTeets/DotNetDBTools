@@ -1,13 +1,14 @@
 ﻿using System;
 using DotNetDBTools.Definition.Core;
 using DotNetDBTools.Definition.SQLite.DataTypes;
+using DotNetDBTools.DefinitionParser.Core;
 using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.DefinitionParser.SQLite
 {
-    internal static class SQLiteDataTypeMapper
+    internal class SQLiteDataTypeMapper : IDataTypeMapper
     {
-        public static DataTypeInfo GetDataTypeInfo(IDataType dataType)
+        public DataTypeInfo GetDataTypeInfo(IDataType dataType)
         {
             return dataType switch
             {

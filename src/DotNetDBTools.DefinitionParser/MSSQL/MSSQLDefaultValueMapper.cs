@@ -2,18 +2,19 @@
 using DotNetDBTools.Definition.Core;
 using DotNetDBTools.Definition.MSSQL;
 using DotNetDBTools.Definition.MSSQL.DataTypes;
+using DotNetDBTools.DefinitionParser.Core;
 using DotNetDBTools.Models.MSSQL;
 
 namespace DotNetDBTools.DefinitionParser.MSSQL
 {
-    public static class MSSQLDefaultValueMapper
+    internal class MSSQLDefaultValueMapper : IDefaultValueMapper
     {
-        public static object MapDefaultValue(Column column)
+        public object MapDefaultValue(BaseColumn column)
         {
             object value = column.Default;
             if (value is null)
                 return null;
-            if (column.DefaultIsFunction)
+            if (((Column)column).DefaultIsFunction)
                 return new MSSQLDefaultValueAsFunction() { FunctionText = (string)value };
             return MapByColumnDataType(column.DataType, value);
         }

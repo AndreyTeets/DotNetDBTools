@@ -2,13 +2,14 @@
 using DotNetDBTools.Definition.Core;
 using DotNetDBTools.Definition.MSSQL;
 using DotNetDBTools.Definition.MSSQL.DataTypes;
+using DotNetDBTools.DefinitionParser.Core;
 using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.DefinitionParser.MSSQL
 {
-    internal static class MSSQLDataTypeMapper
+    internal class MSSQLDataTypeMapper : IDataTypeMapper
     {
-        public static DataTypeInfo GetDataTypeInfo(IDataType dataType)
+        public DataTypeInfo GetDataTypeInfo(IDataType dataType)
         {
             return dataType switch
             {
@@ -60,7 +61,7 @@ namespace DotNetDBTools.DefinitionParser.MSSQL
             };
         }
 
-        private static DataTypeInfo GetUserDefinedTypeInfo(IUserDefinedType userDefinedType)
+        private DataTypeInfo GetUserDefinedTypeInfo(IUserDefinedType userDefinedType)
         {
             DataTypeInfo dataTypeInfo = GetDataTypeInfo(userDefinedType.UnderlyingType);
             dataTypeInfo.Name = userDefinedType.GetType().Name;

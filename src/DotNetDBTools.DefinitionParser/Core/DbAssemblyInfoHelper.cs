@@ -6,7 +6,7 @@ using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.DefinitionParser.Core
 {
-    public static class DbAssemblyInfoHelper
+    internal static class DbAssemblyInfoHelper
     {
         // TODO GetDbInfo (from assembly attributes?) instead of GetDbKind+GetDbName
         public static DatabaseKind GetDbKind(Assembly dbAssembly)

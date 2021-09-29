@@ -1,13 +1,13 @@
 ﻿using System;
-using DotNetDBTools.Definition.Agnostic;
 using DotNetDBTools.Definition.Agnostic.DataTypes;
 using DotNetDBTools.Definition.Core;
+using DotNetDBTools.DefinitionParser.Core;
 
 namespace DotNetDBTools.DefinitionParser.Agnostic
 {
-    public static class AgnosticDefaultValueMapper
+    internal class AgnosticDefaultValueMapper : IDefaultValueMapper
     {
-        public static object MapDefaultValue(Column column)
+        public object MapDefaultValue(BaseColumn column)
         {
             object value = column.Default;
             if (value is null)
