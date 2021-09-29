@@ -4,7 +4,7 @@ using DotNetDBTools.Models.MSSQL;
 
 namespace DotNetDBTools.DefinitionGenerator.MSSQL
 {
-    public static class MSSQLDefinitionGenerator
+    internal static class MSSQLDefinitionGenerator
     {
         public static IEnumerable<DefinitionSourceFile> GenerateDefinition(MSSQLDatabaseInfo databaseInfo)
         {

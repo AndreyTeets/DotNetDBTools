@@ -1,6 +1,6 @@
 ﻿namespace DotNetDBTools.Deploy.MSSQL
 {
-    public enum MSSQLDbObjectsTypes
+    internal enum MSSQLDbObjectsTypes
     {
         Table,
         Column,

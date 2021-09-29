@@ -12,7 +12,7 @@ using Microsoft.CodeAnalysis.Emit;
 namespace DotNetDBTools.DescriptionSourceGenerator
 {
     [Generator]
-    public class DbDescriptionSourceGenerator : ISourceGenerator
+    internal class DbDescriptionSourceGenerator : ISourceGenerator
     {
         public void Initialize(GeneratorInitializationContext context)
         {

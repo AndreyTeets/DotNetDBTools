@@ -4,16 +4,18 @@ using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.Analysis.Core
 {
-    public static class DbValidator
+    internal abstract class DbValidator
     {
-        public static bool HasNoBadTables(DatabaseInfo database, out DbError dbError)
+        public abstract bool DbIsValid(DatabaseInfo database, out DbError dbError);
+
+        protected bool HasNoBadTables(DatabaseInfo database, out DbError dbError)
         {
             if (!ForeignKeyReferencesAreValid(database, out dbError))
                 return false;
             return true;
         }
 
-        public static bool ForeignKeyReferencesAreValid(DatabaseInfo database, out DbError dbError)
+        private bool ForeignKeyReferencesAreValid(DatabaseInfo database, out DbError dbError)
         {
             dbError = null;
             foreach (TableInfo table in database.Tables)

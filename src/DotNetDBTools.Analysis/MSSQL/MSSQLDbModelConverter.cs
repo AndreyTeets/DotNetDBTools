@@ -1,14 +1,20 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.Models.Agnostic;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.MSSQL;
 
 namespace DotNetDBTools.Analysis.MSSQL
 {
-    public static class AgnosticToMSSQLConverter
+    public class MSSQLDbModelConverter : IDbModelConverter
     {
-        public static MSSQLDatabaseInfo ConvertToMSSQLInfo(AgnosticDatabaseInfo databaseInfo)
+        public DatabaseInfo FromAgnostic(DatabaseInfo databaseInfo)
+        {
+            return ConvertToMSSQLInfo((AgnosticDatabaseInfo)databaseInfo);
+        }
+
+        private MSSQLDatabaseInfo ConvertToMSSQLInfo(AgnosticDatabaseInfo databaseInfo)
            => new(databaseInfo.Name)
            {
                Tables = databaseInfo.Tables.Select(x => ConvertToMSSQLInfo((AgnosticTableInfo)x)).ToList(),

@@ -7,7 +7,7 @@ using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.Analysis.Core
 {
-    public class DbObjectsEqualityComparer : IEqualityComparer<DBObjectInfo>
+    internal class DbObjectsEqualityComparer : IEqualityComparer<DBObjectInfo>
     {
         public bool Equals(DBObjectInfo x, DBObjectInfo y)
         {

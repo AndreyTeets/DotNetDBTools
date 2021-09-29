@@ -1,6 +1,6 @@
 ﻿namespace DotNetDBTools.Deploy.SQLite
 {
-    public enum SQLiteDbObjectsTypes
+    internal enum SQLiteDbObjectsTypes
     {
         Table,
         Column,

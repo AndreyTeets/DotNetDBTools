@@ -7,7 +7,7 @@ using static DotNetDBTools.Deploy.SQLite.SQLiteSqlTypeMapper;
 
 namespace DotNetDBTools.Deploy.SQLite
 {
-    public static class SQLiteQueriesHelper
+    internal static class SQLiteQueriesHelper
     {
         public static string GetTableDefinitionsText(SQLiteTableInfo table)
         {

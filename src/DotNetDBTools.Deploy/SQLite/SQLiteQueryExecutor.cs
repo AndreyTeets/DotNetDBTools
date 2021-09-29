@@ -7,7 +7,7 @@ using Microsoft.Data.Sqlite;
 
 namespace DotNetDBTools.Deploy.SQLite
 {
-    public class SQLiteQueryExecutor : IQueryExecutor
+    internal class SQLiteQueryExecutor : IQueryExecutor
     {
         private readonly string _connectionString;
         private DbTransaction _transaction;

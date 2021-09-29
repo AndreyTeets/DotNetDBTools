@@ -4,7 +4,7 @@ using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using DotNetDBTools.Analysis.Core;
+using DotNetDBTools.Analysis;
 using DotNetDBTools.Analysis.Core.Errors;
 using DotNetDBTools.DefinitionParser;
 using DotNetDBTools.Models.Core;
@@ -15,7 +15,7 @@ using Microsoft.CodeAnalysis.Emit;
 namespace DotNetDBTools.DefinitionAnalyzer
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class DbDefinitionAnalyzer : DiagnosticAnalyzer
+    internal class DbDefinitionAnalyzer : DiagnosticAnalyzer
     {
         private static readonly DiagnosticDescriptor s_diagnosticDescriptor = new(
                 id: "DNDBT_DA_01",
@@ -41,7 +41,7 @@ namespace DotNetDBTools.DefinitionAnalyzer
             {
                 Assembly dbAssembly = CompileInMemoryAnLoad(context.Compilation);
                 DatabaseInfo databaseInfo = DbDefinitionParser.CreateDatabaseInfo(dbAssembly);
-                if (!DbValidator.ForeignKeyReferencesAreValid(databaseInfo, out DbError dbError))
+                if (!AnalysisHelper.DbIsValid(databaseInfo, out DbError dbError))
                 {
                     Location location = InvalidDbObjectsFinder.GetInvalidDbObjectLocation(context.Compilation, dbError);
                     context.ReportDiagnostic(Diagnostic.Create(s_diagnosticDescriptor, location, dbError.ErrorMessage));

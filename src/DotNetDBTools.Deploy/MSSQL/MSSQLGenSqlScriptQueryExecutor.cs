@@ -6,7 +6,7 @@ using DotNetDBTools.Deploy.Core;
 
 namespace DotNetDBTools.Deploy.MSSQL
 {
-    public class MSSQLGenSqlScriptQueryExecutor : IQueryExecutor
+    internal class MSSQLGenSqlScriptQueryExecutor : IGenSqlScriptQueryExecutor
     {
         private int _executeQueriesCount = 0;
         private readonly List<string> _queries = new();

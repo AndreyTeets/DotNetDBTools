@@ -4,7 +4,7 @@ using DotNetDBTools.Models.MSSQL;
 
 namespace DotNetDBTools.Deploy.MSSQL
 {
-    public static class MSSQLQueriesHelper
+    internal static class MSSQLQueriesHelper
     {
         public static string GetIdentityStatement(ColumnInfo column)
         {

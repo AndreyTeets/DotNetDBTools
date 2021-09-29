@@ -7,7 +7,7 @@ using DotNetDBTools.Deploy.Core;
 
 namespace DotNetDBTools.Deploy.SQLite
 {
-    public class SQLiteGenSqlScriptQueryExecutor : IQueryExecutor
+    internal class SQLiteGenSqlScriptQueryExecutor : IGenSqlScriptQueryExecutor
     {
         private int _executeQueriesCount = 0;
         private readonly List<string> _queries = new();

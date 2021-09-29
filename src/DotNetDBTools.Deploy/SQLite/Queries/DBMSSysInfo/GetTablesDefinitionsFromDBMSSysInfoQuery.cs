@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Models.Core;
-using DotNetDBTools.Models.SQLite;
 
-namespace DotNetDBTools.Deploy.SQLite.Queries.SQLiteSysInfo
+namespace DotNetDBTools.Deploy.SQLite.Queries.DBMSSysInfo
 {
-    internal class GetTablesDefinitionsFromSQLiteSysInfoQuery : IQuery
+    internal class GetTablesDefinitionsFromDBMSSysInfoQuery : IQuery
     {
         public string Sql =>
 $@"SELECT
@@ -30,7 +29,7 @@ WHERE sm.type = 'table'
         internal static class ResultsInterpreter
         {
             public static void BuildTablesConstraintNames(
-                 Dictionary<string, SQLiteTableInfo> tables,
+                 Dictionary<string, TableInfo> tables,
                 IEnumerable<TableRecord> tableRecords)
             {
                 foreach (TableRecord tableRecord in tableRecords)
@@ -45,7 +44,7 @@ WHERE sm.type = 'table'
             }
 
             public static void ProcessTablesIdentityColumnCandidates(
-                 Dictionary<string, SQLiteTableInfo> tables,
+                 Dictionary<string, TableInfo> tables,
                 IEnumerable<TableRecord> tableRecords)
             {
                 foreach (TableRecord tableRecord in tableRecords)

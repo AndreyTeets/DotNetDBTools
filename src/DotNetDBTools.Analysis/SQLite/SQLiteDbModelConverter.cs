@@ -1,15 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.Models.Agnostic;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.SQLite;
 
 namespace DotNetDBTools.Analysis.SQLite
 {
-    public static class AgnosticToSQLiteConverter
+    public class SQLiteDbModelConverter : IDbModelConverter
     {
-        public static SQLiteDatabaseInfo ConvertToSQLiteInfo(AgnosticDatabaseInfo databaseInfo)
+        public DatabaseInfo FromAgnostic(DatabaseInfo databaseInfo)
+        {
+            return ConvertToSQLiteInfo((AgnosticDatabaseInfo)databaseInfo);
+        }
+
+        private SQLiteDatabaseInfo ConvertToSQLiteInfo(AgnosticDatabaseInfo databaseInfo)
            => new(databaseInfo.Name)
            {
                Tables = databaseInfo.Tables.Select(x => ConvertToSQLiteInfo((AgnosticTableInfo)x)).ToList(),

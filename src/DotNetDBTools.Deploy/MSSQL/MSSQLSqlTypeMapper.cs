@@ -3,7 +3,7 @@ using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.Deploy.MSSQL
 {
-    public static class MSSQLSqlTypeMapper
+    internal static class MSSQLSqlTypeMapper
     {
         public static string GetSqlType(DataTypeInfo dataTypeInfo)
         {

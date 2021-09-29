@@ -7,7 +7,7 @@ using DotNetDBTools.Deploy.Core;
 
 namespace DotNetDBTools.Deploy.MSSQL
 {
-    public class MSSQLQueryExecutor : IQueryExecutor
+    internal class MSSQLQueryExecutor : IQueryExecutor
     {
         private readonly string _connectionString;
         private DbTransaction _transaction;

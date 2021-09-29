@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using DotNetDBTools.Deploy.Core;
+using DotNetDBTools.Deploy.Core.ModelBuilders;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.SQLite;
 
-namespace DotNetDBTools.Deploy.SQLite.Queries.SQLiteSysInfo
+namespace DotNetDBTools.Deploy.SQLite.Queries.DBMSSysInfo
 {
-    internal class GetColumnsFromSQLiteSysInfoQuery : IQuery
+    internal class GetColumnsFromDBMSSysInfoQuery : IQuery
     {
         public string Sql =>
 $@"SELECT
@@ -24,46 +25,21 @@ WHERE sm.type = 'table'
 
         public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
 
-        internal class ColumnRecord
+        internal class ColumnRecord : ColumnsBuilder.ColumnRecord
         {
-            public string TableName { get; set; }
-            public string ColumnName { get; set; }
-            public string DataType { get; set; }
-            public bool Nullable { get; set; }
             public bool IsIdentityCandidate { get; set; }
-            public string Default { get; set; }
         }
 
         internal static class ResultsInterpreter
         {
-            public static Dictionary<string, SQLiteTableInfo> BuildTablesListWithColumns(IEnumerable<ColumnRecord> columnRecords)
+            public static Dictionary<string, TableInfo> BuildTablesListWithColumns(IEnumerable<ColumnRecord> columnRecords)
             {
-                Dictionary<string, SQLiteTableInfo> tables = new();
-                foreach (ColumnRecord columnRecord in columnRecords)
-                {
-                    if (!tables.ContainsKey(columnRecord.TableName))
-                    {
-                        SQLiteTableInfo table = new()
-                        {
-                            ID = Guid.NewGuid(),
-                            Name = columnRecord.TableName,
-                            Columns = new List<ColumnInfo>(),
-                            UniqueConstraints = new List<UniqueConstraintInfo>(),
-                            CheckConstraints = new List<CheckConstraintInfo>(),
-                            Indexes = new List<IndexInfo>(),
-                            Triggers = new List<TriggerInfo>(),
-                            ForeignKeys = new List<ForeignKeyInfo>(),
-                        };
-                        tables.Add(columnRecord.TableName, table);
-                    }
-                    ColumnInfo columnInfo = MapToColumnInfo(columnRecord);
-                    ((List<ColumnInfo>)tables[columnRecord.TableName].Columns).Add(columnInfo);
-                }
-                return tables;
+                return ColumnsBuilder.BuildTablesListWithColumns<SQLiteTableInfo>(columnRecords, MapToColumnInfo);
             }
 
-            private static ColumnInfo MapToColumnInfo(ColumnRecord columnRecord)
+            private static ColumnInfo MapToColumnInfo(ColumnsBuilder.ColumnRecord builderColumnRecord)
             {
+                ColumnRecord columnRecord = (ColumnRecord)builderColumnRecord;
                 DataTypeInfo dataTypeInfo = SQLiteSqlTypeMapper.GetModelType(columnRecord.DataType);
                 return new ColumnInfo()
                 {

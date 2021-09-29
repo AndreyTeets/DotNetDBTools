@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using DotNetDBTools.Deploy.Core;
+using DotNetDBTools.Deploy.Core.ModelBuilders;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.MSSQL;
 
-namespace DotNetDBTools.Deploy.MSSQL.Queries.MSSQLSysInfo
+namespace DotNetDBTools.Deploy.MSSQL.Queries.DBMSSysInfo
 {
-    internal class GetColumnsFromMSSQLSysInfoQuery : IQuery
+    internal class GetColumnsFromDBMSSysInfoQuery : IQuery
     {
         public string Sql =>
 $@"SELECT
@@ -28,49 +29,24 @@ WHERE t.name != '{DNDBTSysTables.DNDBTDbObjects}';";
 
         public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
 
-        internal class ColumnRecord
+        internal class ColumnRecord : ColumnsBuilder.ColumnRecord
         {
-            public string TableName { get; set; }
-            public string ColumnName { get; set; }
-            public string DataType { get; set; }
             public string UserDefinedDataType { get; set; }
-            public bool Nullable { get; set; }
             public bool Identity { get; set; }
-            public string Default { get; set; }
             public string DefaultConstraintName { get; set; }
             public string Length { get; set; }
         }
 
         internal static class ResultsInterpreter
         {
-            public static Dictionary<string, MSSQLTableInfo> BuildTablesListWithColumns(IEnumerable<ColumnRecord> columnRecords)
+            public static Dictionary<string, TableInfo> BuildTablesListWithColumns(IEnumerable<ColumnRecord> columnRecords)
             {
-                Dictionary<string, MSSQLTableInfo> tables = new();
-                foreach (ColumnRecord columnRecord in columnRecords)
-                {
-                    if (!tables.ContainsKey(columnRecord.TableName))
-                    {
-                        MSSQLTableInfo table = new()
-                        {
-                            ID = Guid.NewGuid(),
-                            Name = columnRecord.TableName,
-                            Columns = new List<ColumnInfo>(),
-                            UniqueConstraints = new List<UniqueConstraintInfo>(),
-                            CheckConstraints = new List<CheckConstraintInfo>(),
-                            Indexes = new List<IndexInfo>(),
-                            Triggers = new List<TriggerInfo>(),
-                            ForeignKeys = new List<ForeignKeyInfo>(),
-                        };
-                        tables.Add(columnRecord.TableName, table);
-                    }
-                    ColumnInfo columnInfo = MapToColumnInfo(columnRecord);
-                    ((List<ColumnInfo>)tables[columnRecord.TableName].Columns).Add(columnInfo);
-                }
-                return tables;
+                return ColumnsBuilder.BuildTablesListWithColumns<MSSQLTableInfo>(columnRecords, MapToColumnInfo);
             }
 
-            private static ColumnInfo MapToColumnInfo(ColumnRecord columnRecord)
+            private static ColumnInfo MapToColumnInfo(ColumnsBuilder.ColumnRecord builderColumnRecord)
             {
+                ColumnRecord columnRecord = (ColumnRecord)builderColumnRecord;
                 DataTypeInfo dataTypeInfo = MSSQLSqlTypeMapper.GetModelType(columnRecord.DataType, columnRecord.Length);
                 if (columnRecord.UserDefinedDataType is not null)
                 {
@@ -90,11 +66,11 @@ WHERE t.name != '{DNDBTSysTables.DNDBTDbObjects}';";
                 };
             }
 
-            private static object ParseDefault(string valueFromMSSQLSysTable)
+            private static object ParseDefault(string valueFromDBMSSysTable)
             {
-                if (valueFromMSSQLSysTable is null)
+                if (valueFromDBMSSysTable is null)
                     return null;
-                string value = TrimOuterParantheses(valueFromMSSQLSysTable);
+                string value = TrimOuterParantheses(valueFromDBMSSysTable);
 
                 if (IsNumber(value))
                     return long.Parse(TrimOuterParantheses(value));
@@ -105,7 +81,7 @@ WHERE t.name != '{DNDBTSysTables.DNDBTDbObjects}';";
                 if (IsFunction(value))
                     return new MSSQLDefaultValueAsFunction() { FunctionText = value };
 
-                throw new ArgumentException($"Invalid parameter value '{valueFromMSSQLSysTable}'", nameof(valueFromMSSQLSysTable));
+                throw new ArgumentException($"Invalid parameter value '{valueFromDBMSSysTable}'", nameof(valueFromDBMSSysTable));
 
                 static bool IsNumber(string val) => val.StartsWith("(", StringComparison.Ordinal);
                 static bool IsByte(string val) => val.StartsWith("0x", StringComparison.Ordinal);

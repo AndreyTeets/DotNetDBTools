@@ -3,7 +3,7 @@ using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.Deploy.SQLite
 {
-    public static class SQLiteSqlTypeMapper
+    internal static class SQLiteSqlTypeMapper
     {
         public static string GetSqlType(DataTypeInfo dataTypeInfo)
         {

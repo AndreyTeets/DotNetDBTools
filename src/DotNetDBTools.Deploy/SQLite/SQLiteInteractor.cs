@@ -3,62 +3,63 @@ using System.Collections.Generic;
 using System.Linq;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.SQLite.Queries;
+using DotNetDBTools.Deploy.SQLite.Queries.DBMSSysInfo;
 using DotNetDBTools.Deploy.SQLite.Queries.DNDBTSysInfo;
-using DotNetDBTools.Deploy.SQLite.Queries.SQLiteSysInfo;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.SQLite;
 
 namespace DotNetDBTools.Deploy.SQLite
 {
-    public class SQLiteInteractor
+    internal class SQLiteInteractor : Interactor
     {
-        private readonly IQueryExecutor _queryExecutor;
-
         public SQLiteInteractor(IQueryExecutor queryExecutor)
+            : base(queryExecutor)
         {
-            _queryExecutor = queryExecutor;
         }
 
-        public SQLiteDatabaseInfo GetDatabaseModelFromDNDBTSysInfo()
+        public override bool DatabaseExists(string databaseName) { return true; }
+        public override void CreateDatabase(string databaseName) { }
+
+        public override DatabaseInfo GetDatabaseModelFromDNDBTSysInfo()
         {
-            SQLiteDatabaseInfo databaseInfo = GenerateDatabaseModelFromSQLiteSysInfo();
+            SQLiteDatabaseInfo databaseInfo = (SQLiteDatabaseInfo)GenerateDatabaseModelFromDBMSSysInfo();
 
             GetAllDbObjectsFromDNDBTSysInfoQuery.ResultsInterpreter.ReplaceDbModelObjectsIDsWithRecordOnes(
                 databaseInfo,
-                _queryExecutor.Query<GetAllDbObjectsFromDNDBTSysInfoQuery.DNDBTDbObjectRecord>(
+                QueryExecutor.Query<GetAllDbObjectsFromDNDBTSysInfoQuery.DNDBTDbObjectRecord>(
                     new GetAllDbObjectsFromDNDBTSysInfoQuery()));
 
             return databaseInfo;
         }
 
-        public SQLiteDatabaseInfo GenerateDatabaseModelFromSQLiteSysInfo()
+        public override DatabaseInfo GenerateDatabaseModelFromDBMSSysInfo()
         {
-            Dictionary<string, SQLiteTableInfo> tables =
-                GetColumnsFromSQLiteSysInfoQuery.ResultsInterpreter.BuildTablesListWithColumns(
-                    _queryExecutor.Query<GetColumnsFromSQLiteSysInfoQuery.ColumnRecord>(
-                        new GetColumnsFromSQLiteSysInfoQuery()));
+            Dictionary<string, TableInfo> tables =
+                GetColumnsFromDBMSSysInfoQuery.ResultsInterpreter.BuildTablesListWithColumns(
+                    QueryExecutor.Query<GetColumnsFromDBMSSysInfoQuery.ColumnRecord>(
+                        new GetColumnsFromDBMSSysInfoQuery()));
 
-            GetPrimaryKeysFromSQLiteSysInfoQuery.ResultsInterpreter.BuildTablesPrimaryKeys(
+            GetPrimaryKeysFromDBMSSysInfoQuery.ResultsInterpreter.BuildTablesPrimaryKeys(
                 tables,
-                _queryExecutor.Query<GetPrimaryKeysFromSQLiteSysInfoQuery.PrimaryKeyRecord>(
-                    new GetPrimaryKeysFromSQLiteSysInfoQuery()));
+                QueryExecutor.Query<GetPrimaryKeysFromDBMSSysInfoQuery.PrimaryKeyRecord>(
+                    new GetPrimaryKeysFromDBMSSysInfoQuery()));
 
-            GetUniqueConstraintsFromSQLiteSysInfoQuery.ResultsInterpreter.BuildTablesUniqueConstraints(
+            GetUniqueConstraintsFromDBMSSysInfoQuery.ResultsInterpreter.BuildTablesUniqueConstraints(
                 tables,
-                _queryExecutor.Query<GetUniqueConstraintsFromSQLiteSysInfoQuery.UniqueConstraintRecord>(
-                    new GetUniqueConstraintsFromSQLiteSysInfoQuery()));
+                QueryExecutor.Query<GetUniqueConstraintsFromDBMSSysInfoQuery.UniqueConstraintRecord>(
+                    new GetUniqueConstraintsFromDBMSSysInfoQuery()));
 
-            GetForeignKeysFromSQLiteSysInfoQuery.ResultsInterpreter.BuildTablesForeignKeys(
+            GetForeignKeysFromDBMSSysInfoQuery.ResultsInterpreter.BuildTablesForeignKeys(
                 tables,
-                _queryExecutor.Query<GetForeignKeysFromSQLiteSysInfoQuery.ForeignKeyRecord>(
-                    new GetForeignKeysFromSQLiteSysInfoQuery()));
+                QueryExecutor.Query<GetForeignKeysFromDBMSSysInfoQuery.ForeignKeyRecord>(
+                    new GetForeignKeysFromDBMSSysInfoQuery()));
 
-            IEnumerable<GetTablesDefinitionsFromSQLiteSysInfoQuery.TableRecord> tableRecords =
-                _queryExecutor.Query<GetTablesDefinitionsFromSQLiteSysInfoQuery.TableRecord>(
-                    new GetTablesDefinitionsFromSQLiteSysInfoQuery());
-            GetTablesDefinitionsFromSQLiteSysInfoQuery.ResultsInterpreter.BuildTablesConstraintNames(
+            IEnumerable<GetTablesDefinitionsFromDBMSSysInfoQuery.TableRecord> tableRecords =
+                QueryExecutor.Query<GetTablesDefinitionsFromDBMSSysInfoQuery.TableRecord>(
+                    new GetTablesDefinitionsFromDBMSSysInfoQuery());
+            GetTablesDefinitionsFromDBMSSysInfoQuery.ResultsInterpreter.BuildTablesConstraintNames(
                 tables, tableRecords);
-            GetTablesDefinitionsFromSQLiteSysInfoQuery.ResultsInterpreter.ProcessTablesIdentityColumnCandidates(
+            GetTablesDefinitionsFromDBMSSysInfoQuery.ResultsInterpreter.ProcessTablesIdentityColumnCandidates(
                tables, tableRecords);
 
             return new SQLiteDatabaseInfo(null)
@@ -68,9 +69,10 @@ namespace DotNetDBTools.Deploy.SQLite
             };
         }
 
-        public void ApplyDatabaseDiff(SQLiteDatabaseDiff dbDiff)
+        public override void ApplyDatabaseDiff(DatabaseDiff databaseDiff)
         {
-            _queryExecutor.BeginTransaction();
+            SQLiteDatabaseDiff dbDiff = (SQLiteDatabaseDiff)databaseDiff;
+            QueryExecutor.BeginTransaction();
             try
             {
                 foreach (SQLiteViewInfo view in dbDiff.ViewsToDrop)
@@ -86,145 +88,145 @@ namespace DotNetDBTools.Deploy.SQLite
             }
             catch (Exception)
             {
-                _queryExecutor.RollbackTransaction();
+                QueryExecutor.RollbackTransaction();
                 throw;
             }
-            _queryExecutor.CommitTransaction();
+            QueryExecutor.CommitTransaction();
         }
 
-        public bool DNDBTSysTablesExist()
+        public override bool DNDBTSysTablesExist()
         {
-            bool systemTablesExist = _queryExecutor.QuerySingleOrDefault<bool>(new CheckDNDBTSysTablesExistQuery());
-            return systemTablesExist;
+            return QueryExecutor.QuerySingleOrDefault<bool>(new CheckDNDBTSysTablesExistQuery());
         }
 
-        public void CreateDNDBTSysTables()
+        public override void CreateDNDBTSysTables()
         {
-            _queryExecutor.Execute(new CreateDNDBTSysTablesQuery());
+            QueryExecutor.Execute(new CreateDNDBTSysTablesQuery());
         }
 
-        public void DropDNDBTSysTables()
+        public override void DropDNDBTSysTables()
         {
-            _queryExecutor.Execute(new DropDNDBTSysTablesQuery());
+            QueryExecutor.Execute(new DropDNDBTSysTablesQuery());
         }
 
-        public void PopulateDNDBTSysTables(SQLiteDatabaseInfo database)
+        public override void PopulateDNDBTSysTables(DatabaseInfo database)
         {
-            foreach (SQLiteTableInfo table in database.Tables)
+            SQLiteDatabaseInfo db = (SQLiteDatabaseInfo)database;
+            foreach (SQLiteTableInfo table in db.Tables)
             {
-                _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(table.ID, null, SQLiteDbObjectsTypes.Table, table.Name));
+                QueryExecutor.Execute(new InsertDNDBTSysInfoQuery(table.ID, null, SQLiteDbObjectsTypes.Table, table.Name));
                 foreach (ColumnInfo column in table.Columns)
-                    _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(column.ID, table.ID, SQLiteDbObjectsTypes.Column, column.Name));
+                    QueryExecutor.Execute(new InsertDNDBTSysInfoQuery(column.ID, table.ID, SQLiteDbObjectsTypes.Column, column.Name));
                 PrimaryKeyInfo pk = table.PrimaryKey;
                 if (pk is not null)
-                    _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(pk.ID, table.ID, SQLiteDbObjectsTypes.PrimaryKey, pk.Name));
+                    QueryExecutor.Execute(new InsertDNDBTSysInfoQuery(pk.ID, table.ID, SQLiteDbObjectsTypes.PrimaryKey, pk.Name));
                 foreach (UniqueConstraintInfo uc in table.UniqueConstraints)
-                    _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(uc.ID, table.ID, SQLiteDbObjectsTypes.UniqueConstraint, uc.Name));
+                    QueryExecutor.Execute(new InsertDNDBTSysInfoQuery(uc.ID, table.ID, SQLiteDbObjectsTypes.UniqueConstraint, uc.Name));
                 foreach (CheckConstraintInfo cc in table.CheckConstraints)
-                    _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(cc.ID, table.ID, SQLiteDbObjectsTypes.CheckConstraint, cc.Name));
+                    QueryExecutor.Execute(new InsertDNDBTSysInfoQuery(cc.ID, table.ID, SQLiteDbObjectsTypes.CheckConstraint, cc.Name));
                 foreach (IndexInfo index in table.Indexes)
-                    _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(index.ID, table.ID, SQLiteDbObjectsTypes.Index, index.Name));
+                    QueryExecutor.Execute(new InsertDNDBTSysInfoQuery(index.ID, table.ID, SQLiteDbObjectsTypes.Index, index.Name));
                 foreach (TriggerInfo trigger in table.Triggers)
-                    _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(trigger.ID, table.ID, SQLiteDbObjectsTypes.Trigger, trigger.Name));
+                    QueryExecutor.Execute(new InsertDNDBTSysInfoQuery(trigger.ID, table.ID, SQLiteDbObjectsTypes.Trigger, trigger.Name));
                 foreach (ForeignKeyInfo fk in table.ForeignKeys)
-                    _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(fk.ID, table.ID, SQLiteDbObjectsTypes.ForeignKey, fk.Name));
+                    QueryExecutor.Execute(new InsertDNDBTSysInfoQuery(fk.ID, table.ID, SQLiteDbObjectsTypes.ForeignKey, fk.Name));
             }
-            foreach (SQLiteViewInfo view in database.Views)
-                _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(view.ID, null, SQLiteDbObjectsTypes.View, view.Name));
+            foreach (SQLiteViewInfo view in db.Views)
+                QueryExecutor.Execute(new InsertDNDBTSysInfoQuery(view.ID, null, SQLiteDbObjectsTypes.View, view.Name));
         }
 
         private void CreateTable(SQLiteTableInfo table)
         {
-            _queryExecutor.Execute(new CreateTableQuery(table));
-            _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(table.ID, null, SQLiteDbObjectsTypes.Table, table.Name));
+            QueryExecutor.Execute(new CreateTableQuery(table));
+            QueryExecutor.Execute(new InsertDNDBTSysInfoQuery(table.ID, null, SQLiteDbObjectsTypes.Table, table.Name));
             foreach (ColumnInfo column in table.Columns)
-                _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(column.ID, table.ID, SQLiteDbObjectsTypes.Column, column.Name));
+                QueryExecutor.Execute(new InsertDNDBTSysInfoQuery(column.ID, table.ID, SQLiteDbObjectsTypes.Column, column.Name));
             PrimaryKeyInfo pk = table.PrimaryKey;
             if (pk is not null)
-                _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(pk.ID, table.ID, SQLiteDbObjectsTypes.PrimaryKey, pk.Name));
+                QueryExecutor.Execute(new InsertDNDBTSysInfoQuery(pk.ID, table.ID, SQLiteDbObjectsTypes.PrimaryKey, pk.Name));
             foreach (UniqueConstraintInfo uc in table.UniqueConstraints)
-                _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(uc.ID, table.ID, SQLiteDbObjectsTypes.UniqueConstraint, uc.Name));
+                QueryExecutor.Execute(new InsertDNDBTSysInfoQuery(uc.ID, table.ID, SQLiteDbObjectsTypes.UniqueConstraint, uc.Name));
             foreach (CheckConstraintInfo cc in table.CheckConstraints)
-                _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(cc.ID, table.ID, SQLiteDbObjectsTypes.CheckConstraint, cc.Name));
+                QueryExecutor.Execute(new InsertDNDBTSysInfoQuery(cc.ID, table.ID, SQLiteDbObjectsTypes.CheckConstraint, cc.Name));
             foreach (IndexInfo index in table.Indexes)
-                _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(index.ID, table.ID, SQLiteDbObjectsTypes.Index, index.Name));
+                QueryExecutor.Execute(new InsertDNDBTSysInfoQuery(index.ID, table.ID, SQLiteDbObjectsTypes.Index, index.Name));
             foreach (TriggerInfo trigger in table.Triggers)
-                _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(trigger.ID, table.ID, SQLiteDbObjectsTypes.Trigger, trigger.Name));
+                QueryExecutor.Execute(new InsertDNDBTSysInfoQuery(trigger.ID, table.ID, SQLiteDbObjectsTypes.Trigger, trigger.Name));
             foreach (ForeignKeyInfo fk in table.ForeignKeys)
-                _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(fk.ID, table.ID, SQLiteDbObjectsTypes.ForeignKey, fk.Name));
+                QueryExecutor.Execute(new InsertDNDBTSysInfoQuery(fk.ID, table.ID, SQLiteDbObjectsTypes.ForeignKey, fk.Name));
         }
 
         private void DropTable(SQLiteTableInfo table)
         {
-            _queryExecutor.Execute(new DropTableQuery(table));
+            QueryExecutor.Execute(new DropTableQuery(table));
             foreach (ForeignKeyInfo fk in table.ForeignKeys)
-                _queryExecutor.Execute(new DeleteDNDBTSysInfoQuery(fk.ID));
+                QueryExecutor.Execute(new DeleteDNDBTSysInfoQuery(fk.ID));
             foreach (TriggerInfo trigger in table.Triggers)
-                _queryExecutor.Execute(new DeleteDNDBTSysInfoQuery(trigger.ID));
+                QueryExecutor.Execute(new DeleteDNDBTSysInfoQuery(trigger.ID));
             foreach (IndexInfo index in table.Indexes)
-                _queryExecutor.Execute(new DeleteDNDBTSysInfoQuery(index.ID));
+                QueryExecutor.Execute(new DeleteDNDBTSysInfoQuery(index.ID));
             foreach (CheckConstraintInfo cc in table.CheckConstraints)
-                _queryExecutor.Execute(new DeleteDNDBTSysInfoQuery(cc.ID));
+                QueryExecutor.Execute(new DeleteDNDBTSysInfoQuery(cc.ID));
             foreach (UniqueConstraintInfo uc in table.UniqueConstraints)
-                _queryExecutor.Execute(new DeleteDNDBTSysInfoQuery(uc.ID));
+                QueryExecutor.Execute(new DeleteDNDBTSysInfoQuery(uc.ID));
             PrimaryKeyInfo pk = table.PrimaryKey;
             if (pk is not null)
-                _queryExecutor.Execute(new DeleteDNDBTSysInfoQuery(pk.ID));
+                QueryExecutor.Execute(new DeleteDNDBTSysInfoQuery(pk.ID));
             foreach (ColumnInfo column in table.Columns)
-                _queryExecutor.Execute(new DeleteDNDBTSysInfoQuery(column.ID));
-            _queryExecutor.Execute(new DeleteDNDBTSysInfoQuery(table.ID));
+                QueryExecutor.Execute(new DeleteDNDBTSysInfoQuery(column.ID));
+            QueryExecutor.Execute(new DeleteDNDBTSysInfoQuery(table.ID));
         }
 
         private void AlterTable(SQLiteTableDiff tableDiff)
         {
-            _queryExecutor.Execute(new AlterTableQuery(tableDiff));
+            QueryExecutor.Execute(new AlterTableQuery(tableDiff));
 
             foreach (ForeignKeyInfo fk in tableDiff.ForeignKeysToDrop)
-                _queryExecutor.Execute(new DeleteDNDBTSysInfoQuery(fk.ID));
+                QueryExecutor.Execute(new DeleteDNDBTSysInfoQuery(fk.ID));
             foreach (TriggerInfo trigger in tableDiff.TriggersToDrop)
-                _queryExecutor.Execute(new DeleteDNDBTSysInfoQuery(trigger.ID));
+                QueryExecutor.Execute(new DeleteDNDBTSysInfoQuery(trigger.ID));
             foreach (IndexInfo index in tableDiff.IndexesToDrop)
-                _queryExecutor.Execute(new DeleteDNDBTSysInfoQuery(index.ID));
+                QueryExecutor.Execute(new DeleteDNDBTSysInfoQuery(index.ID));
             foreach (CheckConstraintInfo cc in tableDiff.CheckConstraintsToDrop)
-                _queryExecutor.Execute(new DeleteDNDBTSysInfoQuery(cc.ID));
+                QueryExecutor.Execute(new DeleteDNDBTSysInfoQuery(cc.ID));
             foreach (UniqueConstraintInfo uc in tableDiff.UniqueConstraintsToDrop)
-                _queryExecutor.Execute(new DeleteDNDBTSysInfoQuery(uc.ID));
+                QueryExecutor.Execute(new DeleteDNDBTSysInfoQuery(uc.ID));
             if (tableDiff.PrimaryKeyToDrop is not null)
-                _queryExecutor.Execute(new DeleteDNDBTSysInfoQuery(tableDiff.PrimaryKeyToDrop.ID));
+                QueryExecutor.Execute(new DeleteDNDBTSysInfoQuery(tableDiff.PrimaryKeyToDrop.ID));
             foreach (ColumnInfo column in tableDiff.RemovedColumns)
-                _queryExecutor.Execute(new DeleteDNDBTSysInfoQuery(column.ID));
+                QueryExecutor.Execute(new DeleteDNDBTSysInfoQuery(column.ID));
 
-            _queryExecutor.Execute(new UpdateDNDBTSysInfoQuery(tableDiff.NewTable.ID, tableDiff.NewTable.Name));
+            QueryExecutor.Execute(new UpdateDNDBTSysInfoQuery(tableDiff.NewTable.ID, tableDiff.NewTable.Name));
             foreach (ColumnDiff columnDiff in tableDiff.ChangedColumns)
-                _queryExecutor.Execute(new UpdateDNDBTSysInfoQuery(columnDiff.NewColumn.ID, columnDiff.NewColumn.Name));
+                QueryExecutor.Execute(new UpdateDNDBTSysInfoQuery(columnDiff.NewColumn.ID, columnDiff.NewColumn.Name));
 
             foreach (ColumnInfo column in tableDiff.AddedColumns)
-                _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(column.ID, tableDiff.NewTable.ID, SQLiteDbObjectsTypes.Column, column.Name));
+                QueryExecutor.Execute(new InsertDNDBTSysInfoQuery(column.ID, tableDiff.NewTable.ID, SQLiteDbObjectsTypes.Column, column.Name));
             PrimaryKeyInfo pk = tableDiff.PrimaryKeyToCreate;
             if (pk is not null)
-                _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(pk.ID, tableDiff.NewTable.ID, SQLiteDbObjectsTypes.PrimaryKey, pk.Name));
+                QueryExecutor.Execute(new InsertDNDBTSysInfoQuery(pk.ID, tableDiff.NewTable.ID, SQLiteDbObjectsTypes.PrimaryKey, pk.Name));
             foreach (UniqueConstraintInfo uc in tableDiff.UniqueConstraintsToCreate)
-                _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(uc.ID, tableDiff.NewTable.ID, SQLiteDbObjectsTypes.UniqueConstraint, uc.Name));
+                QueryExecutor.Execute(new InsertDNDBTSysInfoQuery(uc.ID, tableDiff.NewTable.ID, SQLiteDbObjectsTypes.UniqueConstraint, uc.Name));
             foreach (CheckConstraintInfo cc in tableDiff.CheckConstraintsToCreate)
-                _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(cc.ID, tableDiff.NewTable.ID, SQLiteDbObjectsTypes.CheckConstraint, cc.Name));
+                QueryExecutor.Execute(new InsertDNDBTSysInfoQuery(cc.ID, tableDiff.NewTable.ID, SQLiteDbObjectsTypes.CheckConstraint, cc.Name));
             foreach (IndexInfo index in tableDiff.IndexesToCreate)
-                _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(index.ID, tableDiff.NewTable.ID, SQLiteDbObjectsTypes.Index, index.Name));
+                QueryExecutor.Execute(new InsertDNDBTSysInfoQuery(index.ID, tableDiff.NewTable.ID, SQLiteDbObjectsTypes.Index, index.Name));
             foreach (TriggerInfo trigger in tableDiff.TriggersToCreate)
-                _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(trigger.ID, tableDiff.NewTable.ID, SQLiteDbObjectsTypes.Trigger, trigger.Name));
+                QueryExecutor.Execute(new InsertDNDBTSysInfoQuery(trigger.ID, tableDiff.NewTable.ID, SQLiteDbObjectsTypes.Trigger, trigger.Name));
             foreach (ForeignKeyInfo fk in tableDiff.ForeignKeysToCreate)
-                _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(fk.ID, tableDiff.NewTable.ID, SQLiteDbObjectsTypes.ForeignKey, fk.Name));
+                QueryExecutor.Execute(new InsertDNDBTSysInfoQuery(fk.ID, tableDiff.NewTable.ID, SQLiteDbObjectsTypes.ForeignKey, fk.Name));
         }
 
         private void CreateView(SQLiteViewInfo view)
         {
-            _queryExecutor.Execute(new GenericQuery($"{view.Code}"));
-            _queryExecutor.Execute(new InsertDNDBTSysInfoQuery(view.ID, null, SQLiteDbObjectsTypes.View, view.Name));
+            QueryExecutor.Execute(new GenericQuery($"{view.Code}"));
+            QueryExecutor.Execute(new InsertDNDBTSysInfoQuery(view.ID, null, SQLiteDbObjectsTypes.View, view.Name));
         }
 
         private void DropView(SQLiteViewInfo view)
         {
-            _queryExecutor.Execute(new GenericQuery($"DROP VIEW {view.Name};"));
-            _queryExecutor.Execute(new DeleteDNDBTSysInfoQuery(view.ID));
+            QueryExecutor.Execute(new GenericQuery($"DROP VIEW {view.Name};"));
+            QueryExecutor.Execute(new DeleteDNDBTSysInfoQuery(view.ID));
         }
     }
 }

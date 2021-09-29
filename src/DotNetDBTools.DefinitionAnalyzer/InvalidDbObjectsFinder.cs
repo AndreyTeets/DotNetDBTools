@@ -8,7 +8,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace DotNetDBTools.DefinitionAnalyzer
 {
-    public static class InvalidDbObjectsFinder
+    internal static class InvalidDbObjectsFinder
     {
         public static Location GetInvalidDbObjectLocation(Compilation compilation, DbError dbError)
         {

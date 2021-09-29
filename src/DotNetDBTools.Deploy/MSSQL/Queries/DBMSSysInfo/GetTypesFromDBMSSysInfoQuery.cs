@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Models.MSSQL;
 
-namespace DotNetDBTools.Deploy.MSSQL.Queries.MSSQLSysInfo
+namespace DotNetDBTools.Deploy.MSSQL.Queries.DBMSSysInfo
 {
-    internal class GetTypesFromMSSQLSysInfoQuery : IQuery
+    internal class GetTypesFromDBMSSysInfoQuery : IQuery
     {
         public string Sql =>
 $@"SELECT

@@ -4,7 +4,7 @@ using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.Description.Core
 {
-    public static class TablesDescriptionGenerator
+    internal static class TablesDescriptionGenerator
     {
         public static string GenerateTablesDescription(DatabaseInfo databaseInfo)
         {

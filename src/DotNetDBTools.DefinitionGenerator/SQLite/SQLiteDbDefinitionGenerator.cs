@@ -4,7 +4,7 @@ using DotNetDBTools.Models.SQLite;
 
 namespace DotNetDBTools.DefinitionGenerator.SQLite
 {
-    public static class SQLiteDefinitionGenerator
+    internal static class SQLiteDefinitionGenerator
     {
         public static IEnumerable<DefinitionSourceFile> GenerateDefinition(SQLiteDatabaseInfo databaseInfo)
         {

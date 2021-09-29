@@ -12,4 +12,10 @@
     <PackageOutputPath>$(ProjectDir)..\..\artifacts\nuget\$(Configuration)</PackageOutputPath>
   </PropertyGroup>
   
+  <ItemGroup>
+    <InternalsVisibleTo Include="DotNetDBTools.AnalyzersTests" />
+    <InternalsVisibleTo Include="DotNetDBTools.IntegrationTests" />
+    <InternalsVisibleTo Include="DotNetDBTools.UnitTests" />
+  </ItemGroup>
+  
 </Project>

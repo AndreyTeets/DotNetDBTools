@@ -2,9 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using DotNetDBTools.DefinitionParser;
 using DotNetDBTools.Deploy;
-using DotNetDBTools.Models.SQLite;
 using DotNetDBTools.UnitTests.TestHelpers;
 using FluentAssertions;
 using Xunit;
@@ -20,11 +18,9 @@ namespace DotNetDBTools.UnitTests.Deploy
 
             Assembly dbAssembly = AppDomain.CurrentDomain.GetAssemblies()
                 .Single(x => x.GetName().Name == "DotNetDBTools.SampleDB.SQLite");
-            SQLiteDatabaseInfo database = (SQLiteDatabaseInfo)DbDefinitionParser.CreateDatabaseInfo(dbAssembly);
-            SQLiteDatabaseInfo existingDatabase = new(null);
 
             string outputPath = @"./generated/Actual_SQLitePublishScript_For_SQLiteSampleDB_WhenCreatingV1.sql";
-            deployManager.GeneratePublishScript(database, existingDatabase, outputPath);
+            deployManager.GeneratePublishScript(dbAssembly, outputPath);
 
             string actualScript = File.ReadAllText(outputPath);
             string expectedScript = File.ReadAllText(@"TestData/Expected_SQLitePublishScript_For_SQLiteSampleDB_WhenCreatingV1.sql");
