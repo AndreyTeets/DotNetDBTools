@@ -4,7 +4,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using Dapper;
 using DotNetDBTools.Analysis.MSSQL;
-using DotNetDBTools.DefinitionParser;
+using DotNetDBTools.DefinitionParsing;
 using DotNetDBTools.Deploy;
 using DotNetDBTools.Deploy.MSSQL;
 using DotNetDBTools.Models.Agnostic;

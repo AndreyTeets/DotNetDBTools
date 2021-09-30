@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using DotNetDBTools.Analysis.SQLite;
-using DotNetDBTools.DefinitionParser;
+using DotNetDBTools.DefinitionParsing;
 using DotNetDBTools.Deploy;
 using DotNetDBTools.Deploy.SQLite;
 using DotNetDBTools.Models.Agnostic;

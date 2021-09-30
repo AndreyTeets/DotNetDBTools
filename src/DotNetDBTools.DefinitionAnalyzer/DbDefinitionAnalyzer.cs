@@ -6,7 +6,7 @@ using System.Linq;
 using System.Reflection;
 using DotNetDBTools.Analysis;
 using DotNetDBTools.Analysis.Core.Errors;
-using DotNetDBTools.DefinitionParser;
+using DotNetDBTools.DefinitionParsing;
 using DotNetDBTools.Models.Core;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;

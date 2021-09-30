@@ -12,8 +12,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DotNetDBTools.Analysis\DotNetDBTools.Analysis.csproj" />
-    <ProjectReference Include="..\DotNetDBTools.DefinitionGenerator\DotNetDBTools.DefinitionGenerator.csproj" />
-    <ProjectReference Include="..\DotNetDBTools.DefinitionParser\DotNetDBTools.DefinitionParser.csproj" />
+    <ProjectReference Include="..\DotNetDBTools.DefinitionParsing\DotNetDBTools.DefinitionParsing.csproj" />
+    <ProjectReference Include="..\DotNetDBTools.Generation\DotNetDBTools.Generation.csproj" />
   </ItemGroup>
 
 </Project>

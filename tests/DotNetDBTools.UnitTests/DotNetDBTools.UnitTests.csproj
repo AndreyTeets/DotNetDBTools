@@ -26,7 +26,6 @@
     <ProjectReference Include="..\..\samples\Databases\DotNetDBTools.SampleDB.SQLite\DotNetDBTools.SampleDB.SQLite.csproj" />
     <ProjectReference Include="..\..\samples\Databases\DotNetDBTools.SampleDBv2.SQLite\DotNetDBTools.SampleDBv2.SQLite.csproj" />
     <ProjectReference Include="..\..\src\DotNetDBTools.Deploy\DotNetDBTools.Deploy.csproj" />
-    <ProjectReference Include="..\..\src\DotNetDBTools.Description\DotNetDBTools.Description.csproj" />
   </ItemGroup>
 
   <ItemGroup>

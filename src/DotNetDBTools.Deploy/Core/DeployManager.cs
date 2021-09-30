@@ -4,9 +4,9 @@ using System.Reflection;
 using DotNetDBTools.Analysis;
 using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.Analysis.Core.Errors;
-using DotNetDBTools.DefinitionGenerator;
-using DotNetDBTools.DefinitionParser;
+using DotNetDBTools.DefinitionParsing;
 using DotNetDBTools.Deploy.Core.Factories;
+using DotNetDBTools.Generation;
 using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.Deploy.Core

@@ -10,7 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DotNetDBTools.Analysis\DotNetDBTools.Analysis.csproj" />
-    <ProjectReference Include="..\DotNetDBTools.DefinitionParser\DotNetDBTools.DefinitionParser.csproj" />
+    <ProjectReference Include="..\DotNetDBTools.DefinitionParsing\DotNetDBTools.DefinitionParsing.csproj" />
   </ItemGroup>
 
   <Import Project="$(ProjectDir)..\..\build\targets\Analyzer.targets" />

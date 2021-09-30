@@ -2,8 +2,8 @@
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using DotNetDBTools.DefinitionParser;
-using DotNetDBTools.Description.Agnostic;
+using DotNetDBTools.DefinitionParsing;
+using DotNetDBTools.Generation.Agnostic;
 using DotNetDBTools.Models.Agnostic;
 using DotNetDBTools.UnitTests.TestHelpers;
 using FluentAssertions;

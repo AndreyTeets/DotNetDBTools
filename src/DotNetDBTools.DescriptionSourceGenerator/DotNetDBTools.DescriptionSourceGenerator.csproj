@@ -9,8 +9,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DotNetDBTools.DefinitionParser\DotNetDBTools.DefinitionParser.csproj" PrivateAssets="all" GeneratePathProperty="true" />
-    <ProjectReference Include="..\DotNetDBTools.Description\DotNetDBTools.Description.csproj" PrivateAssets="all" GeneratePathProperty="true" />
+    <ProjectReference Include="..\DotNetDBTools.DefinitionParsing\DotNetDBTools.DefinitionParsing.csproj" PrivateAssets="all" GeneratePathProperty="true" />
+    <ProjectReference Include="..\DotNetDBTools.Generation\DotNetDBTools.Generation.csproj" PrivateAssets="all" GeneratePathProperty="true" />
   </ItemGroup>
 
   <Import Project="$(ProjectDir)..\..\build\targets\Analyzer.targets" />

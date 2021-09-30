@@ -1,9 +1,0 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
-  <Import Project="$(ProjectDir)..\..\build\props\Source.props" />
-
-  <ItemGroup>
-    <ProjectReference Include="..\DotNetDBTools.Models\DotNetDBTools.Models.csproj" />
-  </ItemGroup>
-
-</Project>
