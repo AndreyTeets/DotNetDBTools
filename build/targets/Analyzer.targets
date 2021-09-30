@@ -6,7 +6,14 @@
 
   <Target Name="GetDependencyTargetPaths" Condition="'$(UsePackagesInSampleApplications)'!='True'">
     <ItemGroup>
-      <TargetPathWithTargetPlatformMoniker Include="$(MSBuildProjectDirectory)\..\..\src\$(ProjectName)\bin\AnalyzerDebugRefAssemblies\*.dll" IncludeRuntimeDependency="false" />
+      <TargetPathWithTargetPlatformMoniker Include="$(MSBuildProjectDirectory)\..\..\src\$(ProjectName)\bin\AnalyzerDebugRefAssemblies\DotNetDBTools.Models.dll" IncludeRuntimeDependency="false" />
+      <TargetPathWithTargetPlatformMoniker Include="$(MSBuildProjectDirectory)\..\..\src\$(ProjectName)\bin\AnalyzerDebugRefAssemblies\DotNetDBTools.DefinitionParsing.dll" IncludeRuntimeDependency="false" />
+      <TargetPathWithTargetPlatformMoniker Include="$(MSBuildProjectDirectory)\..\..\src\$(ProjectName)\bin\AnalyzerDebugRefAssemblies\DotNetDBTools.Definition.Agnostic.dll" IncludeRuntimeDependency="false" />
+      <TargetPathWithTargetPlatformMoniker Include="$(MSBuildProjectDirectory)\..\..\src\$(ProjectName)\bin\AnalyzerDebugRefAssemblies\DotNetDBTools.Definition.Core.dll" IncludeRuntimeDependency="false" />
+      <TargetPathWithTargetPlatformMoniker Include="$(MSBuildProjectDirectory)\..\..\src\$(ProjectName)\bin\AnalyzerDebugRefAssemblies\DotNetDBTools.Definition.MSSQL.dll" IncludeRuntimeDependency="false" />
+      <TargetPathWithTargetPlatformMoniker Include="$(MSBuildProjectDirectory)\..\..\src\$(ProjectName)\bin\AnalyzerDebugRefAssemblies\DotNetDBTools.Definition.SQLite.dll" IncludeRuntimeDependency="false" />
+      <TargetPathWithTargetPlatformMoniker Condition="'$(AssemblyName)'=='DotNetDBTools.DefinitionAnalyzer'" Include="$(MSBuildProjectDirectory)\..\..\src\$(ProjectName)\bin\AnalyzerDebugRefAssemblies\DotNetDBTools.Analysis.dll" IncludeRuntimeDependency="false" />
+      <TargetPathWithTargetPlatformMoniker Condition="'$(AssemblyName)'=='DotNetDBTools.DescriptionSourceGenerator'" Include="$(MSBuildProjectDirectory)\..\..\src\$(ProjectName)\bin\AnalyzerDebugRefAssemblies\DotNetDBTools.Generation.dll" IncludeRuntimeDependency="false" />
     </ItemGroup>
   </Target>
 
@@ -14,6 +21,7 @@
     <ItemGroup>
       <FilesToCopy Include="$(TargetDir)*" />
     </ItemGroup>
+    <Message Text="Copying analyzer output files to ref assemblies folder: [@(FilesToCopy)]" Importance="high" />
     <Copy
       SourceFiles="@(FilesToCopy)"
       DestinationFolder="$(ProjectDir)bin\AnalyzerDebugRefAssemblies\"
@@ -24,6 +32,7 @@
     <ItemGroup>
       <FilesToDelete Include="$(ProjectDir)bin\AnalyzerDebugRefAssemblies\$(TargetName).dll" />
     </ItemGroup>
+    <Message Text="Deleting main analyzer assembly dll from ref assemblies folder: [@(FilesToDelete)]" Importance="high" />
     <Delete Files="@(FilesToDelete)" />
   </Target>
 

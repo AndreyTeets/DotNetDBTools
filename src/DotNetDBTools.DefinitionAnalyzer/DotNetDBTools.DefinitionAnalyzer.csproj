@@ -3,6 +3,14 @@
   <Import Project="$(ProjectDir)..\..\build\props\Source.props" />
   <Import Project="$(ProjectDir)..\..\build\props\Analyzer.props" />
 
+  <PropertyGroup>
+    <PackageTags>$(PackageTags) Analyzer</PackageTags>
+    <Description>
+$(Description)
+DotNetDBTools.DefinitionAnalyzer is an analyzer for databases defined using DotNetDBTools.Definition.* packages.
+    </Description>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.2" PrivateAssets="all" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.11.0" PrivateAssets="all" />

@@ -2,6 +2,14 @@
 
   <Import Project="$(ProjectDir)..\..\build\props\Source.props" />
 
+  <PropertyGroup>
+    <PackageTags>$(PackageTags) Agnostic</PackageTags>
+    <Description>
+$(Description)
+DotNetDBTools.Definition.Agnostic is a library that provides the means to declaratively describe a database structure in a DBMS-agnostic way which could be then published using DotNetDBTools.Deploy package to selected DBMS.
+    </Description>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\DotNetDBTools.Definition.Core\DotNetDBTools.Definition.Core.csproj" />
   </ItemGroup>

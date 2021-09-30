@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{0D76
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{A3EE6F6D-1B1D-49A4-998A-BDADF7FA8046}"
 	ProjectSection(SolutionItems) = preProject
-		.github\workflows\build-and-test.yml.disabled = .github\workflows\build-and-test.yml.disabled
+		.github\workflows\cicd.yml = .github\workflows\cicd.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_SolutionItems", "_SolutionItems", "{0DB12858-8B23-472E-B636-A70122EA9936}"
@@ -20,7 +20,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_SolutionItems", "_Solution
 		_test.bat = _test.bat
 		_test.sh = _test.sh
 		Directory.Build.props = Directory.Build.props
+		global.json = global.json
 		NuGet.Config = NuGet.Config
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{D2572AC4-083E-4C75-B25D-A969F76B63E2}"
@@ -34,6 +36,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{3ADBBB40-72C8-493A-868C-7096F5C458D2}"
 	ProjectSection(SolutionItems) = preProject
 		build\scripts\build.ps1 = build\scripts\build.ps1
+		build\scripts\publish.ps1 = build\scripts\publish.ps1
 		build\scripts\test.ps1 = build\scripts\test.ps1
 	EndProjectSection
 EndProject

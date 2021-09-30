@@ -2,6 +2,14 @@
 
   <Import Project="$(ProjectDir)..\..\build\props\Source.props" />
 
+  <PropertyGroup>
+    <PackageTags>$(PackageTags) Postgres</PackageTags>
+    <Description>
+$(Description)
+DotNetDBTools.Definition.Postgres is a library that provides the means to declaratively describe Postgres database structure which could be then managed using DotNetDBTools.Deploy package.
+    </Description>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\DotNetDBTools.Definition.Core\DotNetDBTools.Definition.Core.csproj" />
   </ItemGroup>

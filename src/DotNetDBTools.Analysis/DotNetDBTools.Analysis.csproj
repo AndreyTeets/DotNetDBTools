@@ -2,6 +2,13 @@
 
   <Import Project="$(ProjectDir)..\..\build\props\Source.props" />
 
+  <PropertyGroup>
+    <Description>
+$(Description)
+DotNetDBTools.Analysis is a library for internal use by other DotNetDBTools.* packages.
+    </Description>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\DotNetDBTools.Models\DotNetDBTools.Models.csproj" />
   </ItemGroup>

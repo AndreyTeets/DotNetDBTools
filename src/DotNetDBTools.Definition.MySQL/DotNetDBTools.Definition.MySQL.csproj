@@ -2,6 +2,14 @@
 
   <Import Project="$(ProjectDir)..\..\build\props\Source.props" />
 
+  <PropertyGroup>
+    <PackageTags>$(PackageTags) MySQL</PackageTags>
+    <Description>
+$(Description)
+DotNetDBTools.Definition.MySQL is a library that provides the means to declaratively describe MySQL database structure which could be then managed using DotNetDBTools.Deploy package.
+    </Description>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\DotNetDBTools.Definition.Core\DotNetDBTools.Definition.Core.csproj" />
   </ItemGroup>

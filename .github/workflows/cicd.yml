@@ -1,0 +1,39 @@
+name: Build, Test and Publish
+
+on:
+  push:
+    branches: [master]
+    tags:
+      - 'v*'
+  pull_request:
+    branches: [master]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup .NET SDK 3.1
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '3.1.x'
+
+      - name: Setup .NET SDK 5.0
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '5.0.x'
+
+      - name: Build
+        shell: pwsh
+        run: ./build/scripts/build.ps1
+
+      - name: Test
+        shell: pwsh
+        run: ./build/scripts/test.ps1
+
+      - name: Publish
+        if: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v') }}
+        shell: pwsh
+        run: ./build/scripts/publish.ps1 "${{ secrets.NUGET_API_KEY }}"

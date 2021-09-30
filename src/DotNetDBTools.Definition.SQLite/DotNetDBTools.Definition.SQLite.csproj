@@ -2,6 +2,14 @@
 
   <Import Project="$(ProjectDir)..\..\build\props\Source.props" />
 
+  <PropertyGroup>
+    <PackageTags>$(PackageTags) SQLite</PackageTags>
+    <Description>
+$(Description)
+DotNetDBTools.Definition.SQLite is a library that provides the means to declaratively describe SQLite database structure which could be then managed using DotNetDBTools.Deploy package.
+    </Description>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\DotNetDBTools.Definition.Core\DotNetDBTools.Definition.Core.csproj" />
   </ItemGroup>

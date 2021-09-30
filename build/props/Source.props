@@ -8,8 +8,20 @@
     <IncludeSource>true</IncludeSource>
     <EmbedAllSources>true</EmbedAllSources>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <PackageTags>DotNetDBTools;Database</PackageTags>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <RepositoryType>git</RepositoryType>
     <PackageOutputPath>$(ProjectDir)..\..\artifacts\nuget\$(Configuration)</PackageOutputPath>
+    <PackageId>$(AssemblyName)</PackageId>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/AndreyTeets/DotNetDBTools</PackageProjectUrl>
+    <RepositoryUrl>>$(PackageProjectUrl)</RepositoryUrl>
+    <PackageTags>DBMS database sql version control</PackageTags>
+    <Description>
+DotNetDBTools is a set of libraries to define and deploy relational databases. Or in other words - database version control tools.
+It provides the means to conviniently describe database structure for supported DBMS's in c# code, to analyze that structure and the means of publishing it to the selected DBMS with automatic differences calculation between what's being published and what's currently in the DBMS now.
+    </Description>
+    <Authors>AndreyTeets</Authors>
+    <Copyright>Copyright (c) 2021 AndreyTeets</Copyright>
   </PropertyGroup>
   
   <ItemGroup>
