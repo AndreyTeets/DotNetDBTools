@@ -7,7 +7,7 @@
     <PackageTags>$(PackageTags) Analyzer</PackageTags>
     <Description>
 $(Description)
-DotNetDBTools.DefinitionAnalyzer is an analyzer for databases defined using DotNetDBTools.Definition.* packages.
+DotNetDBTools.DefinitionAnalyzer is an analyzer for databases defined using DotNetDBTools.Definition package.
     </Description>
   </PropertyGroup>
 

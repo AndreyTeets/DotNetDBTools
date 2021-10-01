@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="$(ProjectDir)..\..\build\props\Source.props" />
+  <PropertyGroup>
+    <PackageTags>$(PackageTags) Agnostic MSSQL MySQL Postgres SQLite</PackageTags>
+    <Description>
+$(Description)
+DotNetDBTools.Definition is a library that provides the means to declaratively describe database structure which could be then managed using DotNetDBTools.Deploy package.
+    </Description>
+  </PropertyGroup>
+
+</Project>

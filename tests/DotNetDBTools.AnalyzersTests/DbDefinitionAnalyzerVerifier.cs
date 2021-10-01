@@ -31,7 +31,6 @@ namespace DotNetDBTools.AnalyzersTests
             {
                 TestCode = source;
                 ExpectedDiagnostics.AddRange(expected);
-                TestState.AdditionalReferences.Add(typeof(DotNetDBTools.Definition.Core.IBaseTable).Assembly);
                 TestState.AdditionalReferences.Add(typeof(DotNetDBTools.Definition.MSSQL.ITable).Assembly);
             }
         }

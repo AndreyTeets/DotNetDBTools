@@ -7,7 +7,7 @@
     <PackageTags>$(PackageTags) Source Generator</PackageTags>
     <Description>
 $(Description)
-DotNetDBTools.DescriptionSourceGenerator is a source generator of additional database description classes for databases defined using DotNetDBTools.Definition.* packages.
+DotNetDBTools.DescriptionSourceGenerator is a source generator of additional database description classes for databases defined using DotNetDBTools.Definition package.
     </Description>
   </PropertyGroup>
 

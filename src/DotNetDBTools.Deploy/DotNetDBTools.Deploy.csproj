@@ -5,7 +5,7 @@
   <PropertyGroup>
     <Description>
 $(Description)
-DotNetDBTools.Deploy is a library that provides the means to manage databases defined using DotNetDBTools.Definition.* packages.
+DotNetDBTools.Deploy is a library that provides the means to manage databases defined using DotNetDBTools.Definition package.
     </Description>
   </PropertyGroup>
 
