@@ -3,14 +3,14 @@ using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.Models.SQLite
 {
-    public class SQLiteDatabaseInfo : DatabaseInfo
+    public class SQLiteDatabase : Database
     {
-        public SQLiteDatabaseInfo(string name)
+        public SQLiteDatabase(string name)
         {
             Kind = DatabaseKind.SQLite;
             Name = name;
-            Tables = new List<SQLiteTableInfo>();
-            Views = new List<SQLiteViewInfo>();
+            Tables = new List<SQLiteTable>();
+            Views = new List<SQLiteView>();
         }
     }
 }

@@ -21,7 +21,7 @@ namespace DotNetDBTools.Deploy
         {
         }
 
-        protected override DatabaseInfo GetDatabaseModelIfDbExistsOrCreateEmptyDbAndModel(string connectionString)
+        protected override Database GetDatabaseModelIfDbExistsOrCreateEmptyDbAndModel(string connectionString)
         {
             SqlConnectionStringBuilder sqlConnectionBuilder = new(connectionString);
             string databaseName = sqlConnectionBuilder.InitialCatalog;
@@ -50,7 +50,7 @@ namespace DotNetDBTools.Deploy
             }
         }
 
-        protected override DatabaseInfo GetDatabaseModelIfDbExistsAndRegisteredOrCreateEmptyModel(string connectionString)
+        protected override Database GetDatabaseModelIfDbExistsAndRegisteredOrCreateEmptyModel(string connectionString)
         {
             SqlConnectionStringBuilder sqlConnectionBuilder = new(connectionString);
             string databaseName = sqlConnectionBuilder.InitialCatalog;
@@ -64,9 +64,9 @@ namespace DotNetDBTools.Deploy
             return CreateEmptyDatabaseModel();
         }
 
-        protected override DatabaseInfo CreateEmptyDatabaseModel()
+        protected override Database CreateEmptyDatabaseModel()
         {
-            return new MSSQLDatabaseInfo(null);
+            return new MSSQLDatabase(null);
         }
     }
 }

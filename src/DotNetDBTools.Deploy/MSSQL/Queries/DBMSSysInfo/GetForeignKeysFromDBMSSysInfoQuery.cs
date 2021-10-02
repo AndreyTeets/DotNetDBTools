@@ -40,7 +40,7 @@ WHERE thisTable.name != '{DNDBTSysTables.DNDBTDbObjects}';";
         internal static class ResultsInterpreter
         {
             public static void BuildTablesForeignKeys(
-                Dictionary<string, TableInfo> tables,
+                Dictionary<string, Table> tables,
                 IEnumerable<ForeignKeyRecord> foreignKeyRecords)
             {
                 ForeignKeysBuilder.BuildTablesForeignKeys(tables, foreignKeyRecords, MapUpdateActionName);

@@ -29,27 +29,27 @@ FROM {DNDBTSysTables.DNDBTDbObjects};";
         internal static class ResultsInterpreter
         {
             public static void ReplaceDbModelObjectsIDsWithRecordOnes(
-                MSSQLDatabaseInfo databaseInfo,
+                MSSQLDatabase database,
                 IEnumerable<DNDBTDbObjectRecord> dbObjectRecords)
             {
                 Dictionary<string, Guid> dbObjectIDsMap = new();
                 foreach (DNDBTDbObjectRecord dbObjRec in dbObjectRecords)
                     dbObjectIDsMap.Add($"{dbObjRec.Type}_{dbObjRec.Name}_{dbObjRec.ParentID}", dbObjRec.ID);
 
-                foreach (TableInfo table in databaseInfo.Tables)
+                foreach (Table table in database.Tables)
                 {
                     table.ID = dbObjectIDsMap[$"{MSSQLDbObjectsTypes.Table}_{table.Name}_{null}"];
-                    foreach (ColumnInfo column in table.Columns)
+                    foreach (Column column in table.Columns)
                         column.ID = dbObjectIDsMap[$"{MSSQLDbObjectsTypes.Column}_{column.Name}_{table.ID}"];
                     if (table.PrimaryKey is not null)
                         table.PrimaryKey.ID = dbObjectIDsMap[$"{MSSQLDbObjectsTypes.PrimaryKey}_{table.PrimaryKey.Name}_{table.ID}"];
-                    foreach (UniqueConstraintInfo uc in table.UniqueConstraints)
+                    foreach (UniqueConstraint uc in table.UniqueConstraints)
                         uc.ID = dbObjectIDsMap[$"{MSSQLDbObjectsTypes.UniqueConstraint}_{uc.Name}_{table.ID}"];
-                    foreach (ForeignKeyInfo fk in table.ForeignKeys)
+                    foreach (ForeignKey fk in table.ForeignKeys)
                         fk.ID = dbObjectIDsMap[$"{MSSQLDbObjectsTypes.ForeignKey}_{fk.Name}_{table.ID}"];
                 }
 
-                foreach (MSSQLUserDefinedTypeInfo udt in databaseInfo.UserDefinedTypes)
+                foreach (MSSQLUserDefinedType udt in database.UserDefinedTypes)
                     udt.ID = dbObjectIDsMap[$"{MSSQLDbObjectsTypes.UserDefinedType}_{udt.Name}_{null}"];
             }
         }

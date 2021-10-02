@@ -2,7 +2,7 @@
 {
     public class MSSQLUserDefinedTypeDiff
     {
-        public MSSQLUserDefinedTypeInfo NewUserDefinedType { get; set; }
-        public MSSQLUserDefinedTypeInfo OldUserDefinedType { get; set; }
+        public MSSQLUserDefinedType NewUserDefinedType { get; set; }
+        public MSSQLUserDefinedType OldUserDefinedType { get; set; }
     }
 }

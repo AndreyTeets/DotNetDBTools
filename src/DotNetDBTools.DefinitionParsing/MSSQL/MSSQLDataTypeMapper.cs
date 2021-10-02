@@ -9,22 +9,22 @@ namespace DotNetDBTools.DefinitionParsing.MSSQL
 {
     internal class MSSQLDataTypeMapper : IDataTypeMapper
     {
-        public DataTypeInfo GetDataTypeInfo(IDataType dataType)
+        public DataType MapToDataTypeModel(IDataType dataType)
         {
             return dataType switch
             {
-                StringDataType stringDataType => GetStringDataTypeInfo(stringDataType),
-                IntDataType intDataType => GetIntDataTypeInfo(intDataType),
-                BinaryDataType binaryDataType => GetBinaryDataTypeInfo(binaryDataType),
-                DateTimeDataType dateTimeDataType => GetDateTimeDataTypeInfo(dateTimeDataType),
-                IUserDefinedType userDefinedType => GetUserDefinedTypeInfo(userDefinedType),
+                StringDataType stringDataType => MapToDataTypeModel(stringDataType),
+                IntDataType intDataType => MapToDataTypeModel(intDataType),
+                BinaryDataType binaryDataType => MapToDataTypeModel(binaryDataType),
+                DateTimeDataType dateTimeDataType => MapToDataTypeModel(dateTimeDataType),
+                IUserDefinedType userDefinedType => MapToDataTypeModel(userDefinedType),
                 _ => throw new InvalidOperationException($"Invalid dataType: '{dataType}'")
             };
         }
 
-        private static DataTypeInfo GetStringDataTypeInfo(StringDataType stringDataType)
+        private static DataType MapToDataTypeModel(StringDataType stringDataType)
         {
-            return new DataTypeInfo()
+            return new DataType()
             {
                 Name = DataTypeNames.String,
                 Length = stringDataType.Length,
@@ -33,18 +33,18 @@ namespace DotNetDBTools.DefinitionParsing.MSSQL
             };
         }
 
-        private static DataTypeInfo GetIntDataTypeInfo(IntDataType intDataType)
+        private static DataType MapToDataTypeModel(IntDataType intDataType)
         {
-            return new DataTypeInfo()
+            return new DataType()
             {
                 Name = DataTypeNames.Int,
                 Size = int.Parse($"{intDataType.Size}".Replace("Int", "")),
             };
         }
 
-        private static DataTypeInfo GetBinaryDataTypeInfo(BinaryDataType binaryDataType)
+        private static DataType MapToDataTypeModel(BinaryDataType binaryDataType)
         {
-            return new DataTypeInfo()
+            return new DataType()
             {
                 Name = DataTypeNames.Binary,
                 Length = binaryDataType.Length,
@@ -52,21 +52,21 @@ namespace DotNetDBTools.DefinitionParsing.MSSQL
             };
         }
 
-        private static DataTypeInfo GetDateTimeDataTypeInfo(DateTimeDataType dateTimeDataType)
+        private static DataType MapToDataTypeModel(DateTimeDataType dateTimeDataType)
         {
-            return new DataTypeInfo()
+            return new DataType()
             {
                 Name = DataTypeNames.DateTime,
                 SqlTypeName = $"{dateTimeDataType.MSSQLType}",
             };
         }
 
-        private DataTypeInfo GetUserDefinedTypeInfo(IUserDefinedType userDefinedType)
+        private DataType MapToDataTypeModel(IUserDefinedType userDefinedType)
         {
-            DataTypeInfo dataTypeInfo = GetDataTypeInfo(userDefinedType.UnderlyingType);
-            dataTypeInfo.Name = userDefinedType.GetType().Name;
-            dataTypeInfo.IsUserDefined = true;
-            return dataTypeInfo;
+            DataType dataTypeModel = MapToDataTypeModel(userDefinedType.UnderlyingType);
+            dataTypeModel.Name = userDefinedType.GetType().Name;
+            dataTypeModel.IsUserDefined = true;
+            return dataTypeModel;
         }
     }
 }

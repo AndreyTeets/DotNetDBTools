@@ -12,22 +12,22 @@ namespace DotNetDBTools.Generation
 {
     public static class DbDescriptionGenerator
     {
-        public static void GenerateDescription(DatabaseInfo databaseInfo, string outputPath)
+        public static void GenerateDescription(Database database, string outputPath)
         {
-            string generatedDescription = GenerateDescription(databaseInfo);
+            string generatedDescription = GenerateDescription(database);
             string fullPath = Path.GetFullPath(outputPath);
             Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
             File.WriteAllText(fullPath, generatedDescription);
         }
 
-        public static string GenerateDescription(DatabaseInfo databaseInfo)
+        public static string GenerateDescription(Database database)
         {
-            return databaseInfo.Kind switch
+            return database.Kind switch
             {
-                DatabaseKind.Agnostic => AgnosticDescriptionSourceGenerator.GenerateDescription((AgnosticDatabaseInfo)databaseInfo),
-                DatabaseKind.MSSQL => MSSQLDescriptionSourceGenerator.GenerateDescription((MSSQLDatabaseInfo)databaseInfo),
-                DatabaseKind.SQLite => SQLiteDescriptionSourceGenerator.GenerateDescription((SQLiteDatabaseInfo)databaseInfo),
-                _ => throw new InvalidOperationException($"Invalid dbKind: {databaseInfo.Kind}"),
+                DatabaseKind.Agnostic => AgnosticDescriptionGenerator.GenerateDescription((AgnosticDatabase)database),
+                DatabaseKind.MSSQL => MSSQLDescriptionGenerator.GenerateDescription((MSSQLDatabase)database),
+                DatabaseKind.SQLite => SQLiteDescriptionGenerator.GenerateDescription((SQLiteDatabase)database),
+                _ => throw new InvalidOperationException($"Invalid dbKind: {database.Kind}"),
             };
         }
     }

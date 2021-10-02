@@ -44,8 +44,8 @@ namespace DotNetDBTools.Deploy.Core
 
         public void PublishDatabase(Assembly dbAssembly, string connectionString)
         {
-            DatabaseInfo newDatabase = CreateDatabaseModelFromDbAssembly(dbAssembly);
-            DatabaseInfo oldDatabase = GetDatabaseModelIfDbExistsOrCreateEmptyDbAndModel(connectionString);
+            Database newDatabase = CreateDatabaseModelFromDbAssembly(dbAssembly);
+            Database oldDatabase = GetDatabaseModelIfDbExistsOrCreateEmptyDbAndModel(connectionString);
             DatabaseDiff databaseDiff = AnalysisHelper.CreateDatabaseDiff(newDatabase, oldDatabase);
 
             if (!AllowDataLoss && AnalysisHelper.LeadsToDataLoss(databaseDiff))
@@ -63,15 +63,15 @@ namespace DotNetDBTools.Deploy.Core
 
         public void GeneratePublishScript(Assembly newDbAssembly, string oldDbConnectionString, string outputPath)
         {
-            DatabaseInfo newDatabase = CreateDatabaseModelFromDbAssembly(newDbAssembly);
-            DatabaseInfo oldDatabase = GetDatabaseModelIfDbExistsAndRegisteredOrCreateEmptyModel(oldDbConnectionString);
+            Database newDatabase = CreateDatabaseModelFromDbAssembly(newDbAssembly);
+            Database oldDatabase = GetDatabaseModelIfDbExistsAndRegisteredOrCreateEmptyModel(oldDbConnectionString);
             GeneratePublishScript(newDatabase, oldDatabase, outputPath);
         }
 
         public void GeneratePublishScript(Assembly newDbAssembly, Assembly oldDbAssembly, string outputPath)
         {
-            DatabaseInfo newDatabase = CreateDatabaseModelFromDbAssembly(newDbAssembly);
-            DatabaseInfo oldDatabase = CreateDatabaseModelFromDbAssembly(oldDbAssembly);
+            Database newDatabase = CreateDatabaseModelFromDbAssembly(newDbAssembly);
+            Database oldDatabase = CreateDatabaseModelFromDbAssembly(oldDbAssembly);
             GeneratePublishScript(newDatabase, oldDatabase, outputPath);
         }
 
@@ -83,8 +83,8 @@ namespace DotNetDBTools.Deploy.Core
 
         public void GeneratePublishScript(Assembly dbAssembly, string outputPath)
         {
-            DatabaseInfo newDatabase = CreateDatabaseModelFromDbAssembly(dbAssembly);
-            DatabaseInfo oldDatabase = CreateEmptyDatabaseModel();
+            Database newDatabase = CreateDatabaseModelFromDbAssembly(dbAssembly);
+            Database oldDatabase = CreateEmptyDatabaseModel();
             GeneratePublishScript(newDatabase, oldDatabase, outputPath);
         }
 
@@ -93,7 +93,7 @@ namespace DotNetDBTools.Deploy.Core
             Interactor interactor = InteractorFactory.Create(QueryExecutorFactory.Create(connectionString));
             if (interactor.DNDBTSysTablesExist())
                 throw new InvalidOperationException("Database is already registered");
-            DatabaseInfo oldDatabase = interactor.GenerateDatabaseModelFromDBMSSysInfo();
+            Database oldDatabase = interactor.GenerateDatabaseModelFromDBMSSysInfo();
             interactor.CreateDNDBTSysTables();
             interactor.PopulateDNDBTSysTables(oldDatabase);
         }
@@ -107,7 +107,7 @@ namespace DotNetDBTools.Deploy.Core
         public void GenerateDefinition(string connectionString, string outputDirectory)
         {
             Interactor interactor = InteractorFactory.Create(QueryExecutorFactory.Create(connectionString));
-            DatabaseInfo oldDatabase;
+            Database oldDatabase;
             if (interactor.DNDBTSysTablesExist())
                 oldDatabase = interactor.GetDatabaseModelFromDNDBTSysInfo();
             else
@@ -115,11 +115,11 @@ namespace DotNetDBTools.Deploy.Core
             DbDefinitionGenerator.GenerateDefinition(oldDatabase, outputDirectory);
         }
 
-        protected abstract DatabaseInfo GetDatabaseModelIfDbExistsOrCreateEmptyDbAndModel(string connectionString);
-        protected abstract DatabaseInfo GetDatabaseModelIfDbExistsAndRegisteredOrCreateEmptyModel(string connectionString);
-        protected abstract DatabaseInfo CreateEmptyDatabaseModel();
+        protected abstract Database GetDatabaseModelIfDbExistsOrCreateEmptyDbAndModel(string connectionString);
+        protected abstract Database GetDatabaseModelIfDbExistsAndRegisteredOrCreateEmptyModel(string connectionString);
+        protected abstract Database CreateEmptyDatabaseModel();
 
-        private void GeneratePublishScript(DatabaseInfo newDatabase, DatabaseInfo oldDatabase, string outputPath)
+        private void GeneratePublishScript(Database newDatabase, Database oldDatabase, string outputPath)
         {
             IGenSqlScriptQueryExecutor genSqlScriptQueryExecutor = GenSqlScriptQueryExecutorFactory.Create();
             Interactor interactor = InteractorFactory.Create(genSqlScriptQueryExecutor);
@@ -132,9 +132,9 @@ namespace DotNetDBTools.Deploy.Core
             File.WriteAllText(fullPath, generatedScript);
         }
 
-        private DatabaseInfo CreateDatabaseModelFromDbAssembly(Assembly dbAssembly)
+        private Database CreateDatabaseModelFromDbAssembly(Assembly dbAssembly)
         {
-            DatabaseInfo database = DbDefinitionParser.CreateDatabaseInfo(dbAssembly);
+            Database database = DbDefinitionParser.CreateDatabaseModel(dbAssembly);
             if (database.Kind == DatabaseKind.Agnostic)
                 database = DbModelConverter.FromAgnostic(database);
 

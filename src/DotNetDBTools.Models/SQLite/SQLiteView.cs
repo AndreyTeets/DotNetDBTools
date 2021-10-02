@@ -2,7 +2,7 @@
 
 namespace DotNetDBTools.Models.SQLite
 {
-    public class SQLiteViewInfo : ViewInfo
+    public class SQLiteView : View
     {
     }
 }

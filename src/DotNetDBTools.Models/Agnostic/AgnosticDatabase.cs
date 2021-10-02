@@ -3,14 +3,14 @@ using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.Models.Agnostic
 {
-    public class AgnosticDatabaseInfo : DatabaseInfo
+    public class AgnosticDatabase : Database
     {
-        public AgnosticDatabaseInfo(string name)
+        public AgnosticDatabase(string name)
         {
             Kind = DatabaseKind.Agnostic;
             Name = name;
-            Tables = new List<AgnosticTableInfo>();
-            Views = new List<AgnosticViewInfo>();
+            Tables = new List<AgnosticTable>();
+            Views = new List<AgnosticView>();
         }
     }
 }

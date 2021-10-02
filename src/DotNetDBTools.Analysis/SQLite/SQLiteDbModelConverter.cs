@@ -10,43 +10,43 @@ namespace DotNetDBTools.Analysis.SQLite
 {
     public class SQLiteDbModelConverter : IDbModelConverter
     {
-        public DatabaseInfo FromAgnostic(DatabaseInfo databaseInfo)
+        public Database FromAgnostic(Database database)
         {
-            return ConvertToSQLiteInfo((AgnosticDatabaseInfo)databaseInfo);
+            return ConvertToSQLiteModel((AgnosticDatabase)database);
         }
 
-        private SQLiteDatabaseInfo ConvertToSQLiteInfo(AgnosticDatabaseInfo databaseInfo)
-           => new(databaseInfo.Name)
+        private SQLiteDatabase ConvertToSQLiteModel(AgnosticDatabase database)
+           => new(database.Name)
            {
-               Tables = databaseInfo.Tables.Select(x => ConvertToSQLiteInfo((AgnosticTableInfo)x)).ToList(),
-               Views = databaseInfo.Views.Select(x => ConvertToSQLiteInfo((AgnosticViewInfo)x)).ToList(),
+               Tables = database.Tables.Select(x => ConvertToSQLiteModel((AgnosticTable)x)).ToList(),
+               Views = database.Views.Select(x => ConvertToSQLiteModel((AgnosticView)x)).ToList(),
            };
 
-        private static SQLiteTableInfo ConvertToSQLiteInfo(AgnosticTableInfo tableInfo)
+        private static SQLiteTable ConvertToSQLiteModel(AgnosticTable table)
             => new()
             {
-                ID = tableInfo.ID,
-                Name = tableInfo.Name,
-                Columns = ConvertToSQLiteInfo(tableInfo.Columns),
-                PrimaryKey = tableInfo.PrimaryKey,
-                UniqueConstraints = tableInfo.UniqueConstraints,
-                CheckConstraints = tableInfo.CheckConstraints,
-                Indexes = tableInfo.Indexes,
-                Triggers = tableInfo.Triggers,
-                ForeignKeys = tableInfo.ForeignKeys,
+                ID = table.ID,
+                Name = table.Name,
+                Columns = ConvertToSQLiteModel(table.Columns),
+                PrimaryKey = table.PrimaryKey,
+                UniqueConstraints = table.UniqueConstraints,
+                CheckConstraints = table.CheckConstraints,
+                Indexes = table.Indexes,
+                Triggers = table.Triggers,
+                ForeignKeys = table.ForeignKeys,
             };
 
-        private static SQLiteViewInfo ConvertToSQLiteInfo(AgnosticViewInfo viewInfo)
+        private static SQLiteView ConvertToSQLiteModel(AgnosticView view)
             => new()
             {
-                ID = viewInfo.ID,
-                Name = viewInfo.Name,
-                Code = viewInfo.Code,
+                ID = view.ID,
+                Name = view.Name,
+                Code = view.Code,
             };
 
-        private static IEnumerable<ColumnInfo> ConvertToSQLiteInfo(IEnumerable<ColumnInfo> columns)
+        private static IEnumerable<Column> ConvertToSQLiteModel(IEnumerable<Column> columns)
         {
-            foreach (ColumnInfo column in columns)
+            foreach (Column column in columns)
             {
                 if (column.DataType.Name == DataTypeNames.DateTime)
                 {
@@ -55,7 +55,7 @@ namespace DotNetDBTools.Analysis.SQLite
                         $" data type {column.DataType.Name} is not supported by sqlite.");
                 }
 
-                column.DataType = new DataTypeInfo()
+                column.DataType = new DataType()
                 {
                     Name = column.DataType.Name,
                 };

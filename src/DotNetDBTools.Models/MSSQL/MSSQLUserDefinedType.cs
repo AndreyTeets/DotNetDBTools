@@ -2,9 +2,9 @@
 
 namespace DotNetDBTools.Models.MSSQL
 {
-    public class MSSQLUserDefinedTypeInfo : DBObjectInfo
+    public class MSSQLUserDefinedType : DBObject
     {
         public bool Nullable { get; set; }
-        public DataTypeInfo UnderlyingDataType { get; set; }
+        public DataType UnderlyingDataType { get; set; }
     }
 }

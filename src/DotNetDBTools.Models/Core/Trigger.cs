@@ -1,6 +1,6 @@
 ﻿namespace DotNetDBTools.Models.Core
 {
-    public class TriggerInfo : DBObjectInfo
+    public class Trigger : DBObject
     {
         public string Code { get; set; }
     }

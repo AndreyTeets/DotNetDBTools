@@ -11,12 +11,12 @@ namespace DotNetDBTools.Deploy.MSSQL.Queries
         public string Sql => _sql;
         public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
 
-        public DropTypeQuery(MSSQLUserDefinedTypeInfo userDefinedType)
+        public DropTypeQuery(MSSQLUserDefinedType userDefinedType)
         {
             _sql = GetSql(userDefinedType);
         }
 
-        private static string GetSql(MSSQLUserDefinedTypeInfo userDefinedType)
+        private static string GetSql(MSSQLUserDefinedType userDefinedType)
         {
             string query =
 $@"DROP TYPE {userDefinedType.Name};";

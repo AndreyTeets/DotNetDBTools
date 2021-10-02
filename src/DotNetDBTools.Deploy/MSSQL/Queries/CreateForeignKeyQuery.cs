@@ -13,13 +13,13 @@ namespace DotNetDBTools.Deploy.MSSQL.Queries
         public string Sql => _sql;
         public IEnumerable<QueryParameter> Parameters => _parameters;
 
-        public CreateForeignKeyQuery(ForeignKeyInfo fk, string tableName)
+        public CreateForeignKeyQuery(ForeignKey fk, string tableName)
         {
             _sql = GetSql(fk, tableName);
             _parameters = new List<QueryParameter>();
         }
 
-        private static string GetSql(ForeignKeyInfo fk, string tableName)
+        private static string GetSql(ForeignKey fk, string tableName)
         {
             string query =
 $@"ALTER TABLE {tableName} ADD CONSTRAINT {fk.Name} FOREIGN KEY ({string.Join(", ", fk.ThisColumnNames)})

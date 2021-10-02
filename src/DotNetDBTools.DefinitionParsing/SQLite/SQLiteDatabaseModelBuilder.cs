@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using DotNetDBTools.Definition.Core;
-using DotNetDBTools.Definition.SQLite;
 using DotNetDBTools.DefinitionParsing.Core;
 using DotNetDBTools.Models.SQLite;
 
@@ -13,16 +12,16 @@ namespace DotNetDBTools.DefinitionParsing.SQLite
         {
         }
 
-        public SQLiteDatabaseInfo BuildDatabaseModel(Assembly dbAssembly)
+        public SQLiteDatabase BuildDatabaseModel(Assembly dbAssembly)
         {
-            return new SQLiteDatabaseInfo(DbAssemblyInfoHelper.GetDbName(dbAssembly))
+            return new SQLiteDatabase(DbAssemblyInfoHelper.GetDbName(dbAssembly))
             {
-                Tables = BuildTableModels<SQLiteTableInfo>(dbAssembly),
-                Views = BuildViewModels<SQLiteViewInfo>(dbAssembly),
+                Tables = BuildTableModels<SQLiteTable>(dbAssembly),
+                Views = BuildViewModels<SQLiteView>(dbAssembly),
             };
         }
 
-        protected override string GetOnUpdateActionName(BaseForeignKey fk) => ((ForeignKey)fk).OnUpdate.ToString();
-        protected override string GetOnDeleteActionName(BaseForeignKey fk) => ((ForeignKey)fk).OnDelete.ToString();
+        protected override string GetOnUpdateActionName(BaseForeignKey fk) => ((Definition.SQLite.ForeignKey)fk).OnUpdate.ToString();
+        protected override string GetOnDeleteActionName(BaseForeignKey fk) => ((Definition.SQLite.ForeignKey)fk).OnDelete.ToString();
     }
 }

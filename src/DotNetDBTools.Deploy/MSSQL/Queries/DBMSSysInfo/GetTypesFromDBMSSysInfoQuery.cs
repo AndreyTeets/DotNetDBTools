@@ -31,22 +31,22 @@ WHERE t.is_user_defined = 1
 
         internal static class ResultsInterpreter
         {
-            public static List<MSSQLUserDefinedTypeInfo> BuildUserDefinedTypesList(
+            public static List<MSSQLUserDefinedType> BuildUserDefinedTypesList(
                 IEnumerable<UserDefinedTypeRecord> userDefinedTypeRecords)
             {
-                List<MSSQLUserDefinedTypeInfo> userDefinedTypes = new();
+                List<MSSQLUserDefinedType> userDefinedTypes = new();
                 foreach (UserDefinedTypeRecord userDefinedTypeRecord in userDefinedTypeRecords)
                 {
-                    MSSQLUserDefinedTypeInfo userDefinedType = MapToMSSQLUserDefinedTypeInfo(userDefinedTypeRecord);
+                    MSSQLUserDefinedType userDefinedType = MapToMSSQLUserDefinedTypeModel(userDefinedTypeRecord);
                     userDefinedTypes.Add(userDefinedType);
                 }
                 return userDefinedTypes;
             }
         }
 
-        private static MSSQLUserDefinedTypeInfo MapToMSSQLUserDefinedTypeInfo(UserDefinedTypeRecord userDefinedTypeRecord)
+        private static MSSQLUserDefinedType MapToMSSQLUserDefinedTypeModel(UserDefinedTypeRecord userDefinedTypeRecord)
         {
-            return new MSSQLUserDefinedTypeInfo()
+            return new MSSQLUserDefinedType()
             {
                 ID = Guid.NewGuid(),
                 Name = userDefinedTypeRecord.Name,

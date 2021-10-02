@@ -10,13 +10,13 @@ namespace DotNetDBTools.DefinitionParsing
 {
     public static class DbDefinitionParser
     {
-        public static DatabaseInfo CreateDatabaseInfo(string dbAssemblyPath)
+        public static Database CreateDatabaseModel(string dbAssemblyPath)
         {
             Assembly dbAssembly = AssemblyLoader.LoadDbAssemblyFromDll(dbAssemblyPath);
-            return CreateDatabaseInfo(dbAssembly);
+            return CreateDatabaseModel(dbAssembly);
         }
 
-        public static DatabaseInfo CreateDatabaseInfo(Assembly dbAssembly)
+        public static Database CreateDatabaseModel(Assembly dbAssembly)
         {
             DatabaseKind dbKind = DbAssemblyInfoHelper.GetDbKind(dbAssembly);
             return dbKind switch

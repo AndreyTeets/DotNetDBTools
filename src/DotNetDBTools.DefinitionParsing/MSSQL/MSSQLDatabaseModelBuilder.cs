@@ -15,56 +15,56 @@ namespace DotNetDBTools.DefinitionParsing.MSSQL
         {
         }
 
-        public MSSQLDatabaseInfo BuildDatabaseModel(Assembly dbAssembly)
+        public MSSQLDatabase BuildDatabaseModel(Assembly dbAssembly)
         {
-            return new MSSQLDatabaseInfo(DbAssemblyInfoHelper.GetDbName(dbAssembly))
+            return new MSSQLDatabase(DbAssemblyInfoHelper.GetDbName(dbAssembly))
             {
-                Tables = BuildTableModels<MSSQLTableInfo>(dbAssembly),
-                Views = BuildViewModels<MSSQLViewInfo>(dbAssembly),
+                Tables = BuildTableModels<MSSQLTable>(dbAssembly),
+                Views = BuildViewModels<MSSQLView>(dbAssembly),
                 UserDefinedTypes = BuildUserDefinedTypeModels(dbAssembly),
-                UserDefinedTableTypes = new List<MSSQLUserDefinedTableTypeInfo>(),
+                UserDefinedTableTypes = new List<MSSQLUserDefinedTableType>(),
                 Functions = BuildFunctionModels(dbAssembly),
-                Procedures = new List<MSSQLProcedureInfo>(),
+                Procedures = new List<MSSQLProcedure>(),
             };
         }
 
-        protected override string GetOnUpdateActionName(BaseForeignKey fk) => ((ForeignKey)fk).OnUpdate.ToString();
-        protected override string GetOnDeleteActionName(BaseForeignKey fk) => ((ForeignKey)fk).OnDelete.ToString();
+        protected override string GetOnUpdateActionName(BaseForeignKey fk) => ((Definition.MSSQL.ForeignKey)fk).OnUpdate.ToString();
+        protected override string GetOnDeleteActionName(BaseForeignKey fk) => ((Definition.MSSQL.ForeignKey)fk).OnDelete.ToString();
 
-        private List<MSSQLUserDefinedTypeInfo> BuildUserDefinedTypeModels(Assembly dbAssembly)
+        private List<MSSQLUserDefinedType> BuildUserDefinedTypeModels(Assembly dbAssembly)
         {
             IEnumerable<IUserDefinedType> userDefinedTypes = GetInstancesOfAllTypesImplementingInterface<IUserDefinedType>(dbAssembly);
-            List<MSSQLUserDefinedTypeInfo> userDefinedTypeInfos = new();
-            foreach (IUserDefinedType userDefinedType in userDefinedTypes)
+            List<MSSQLUserDefinedType> userDefinedTypeModels = new();
+            foreach (IUserDefinedType udt in userDefinedTypes)
             {
-                DataTypeInfo dataTypeInfo = DataTypeMapper.GetDataTypeInfo(userDefinedType.UnderlyingType);
-                MSSQLUserDefinedTypeInfo userDefinedTypeInfo = new()
+                DataType dataType = DataTypeMapper.MapToDataTypeModel(udt.UnderlyingType);
+                MSSQLUserDefinedType udtModel = new()
                 {
-                    ID = userDefinedType.ID,
-                    Name = userDefinedType.GetType().Name,
-                    Nullable = userDefinedType.Nullable,
-                    UnderlyingDataType = dataTypeInfo,
+                    ID = udt.ID,
+                    Name = udt.GetType().Name,
+                    Nullable = udt.Nullable,
+                    UnderlyingDataType = dataType,
                 };
-                userDefinedTypeInfos.Add(userDefinedTypeInfo);
+                userDefinedTypeModels.Add(udtModel);
             }
-            return userDefinedTypeInfos;
+            return userDefinedTypeModels;
         }
 
-        private List<MSSQLFunctionInfo> BuildFunctionModels(Assembly dbAssembly)
+        private List<MSSQLFunction> BuildFunctionModels(Assembly dbAssembly)
         {
             IEnumerable<IFunction> functions = GetInstancesOfAllTypesImplementingInterface<IFunction>(dbAssembly);
-            List<MSSQLFunctionInfo> functionInfos = new();
+            List<MSSQLFunction> functionModels = new();
             foreach (IFunction function in functions)
             {
-                MSSQLFunctionInfo functionInfo = new()
+                MSSQLFunction functionModel = new()
                 {
                     ID = function.ID,
                     Name = function.GetType().Name,
                     Code = function.Code,
                 };
-                functionInfos.Add(functionInfo);
+                functionModels.Add(functionModel);
             }
-            return functionInfos;
+            return functionModels;
         }
     }
 }

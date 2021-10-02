@@ -2,7 +2,7 @@
 {
     internal static class DNDBTSysTables
     {
-        public class DNDBTDbObjectsTableInfo
+        public class DNDBTDbObjectsTableDescription
         {
             public readonly string ID = nameof(ID);
             public readonly string ParentID = nameof(ParentID);
@@ -10,9 +10,9 @@
             public readonly string Name = nameof(Name);
 
             public override string ToString() => nameof(DNDBTDbObjects);
-            public static implicit operator string(DNDBTDbObjectsTableInfo info) => info.ToString();
+            public static implicit operator string(DNDBTDbObjectsTableDescription description) => description.ToString();
         }
 
-        public static readonly DNDBTDbObjectsTableInfo DNDBTDbObjects = new();
+        public static readonly DNDBTDbObjectsTableDescription DNDBTDbObjects = new();
     }
 }

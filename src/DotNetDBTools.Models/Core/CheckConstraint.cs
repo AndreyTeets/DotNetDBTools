@@ -1,6 +1,6 @@
 ﻿namespace DotNetDBTools.Models.Core
 {
-    public class CheckConstraintInfo : DBObjectInfo
+    public class CheckConstraint : DBObject
     {
         public string Code { get; set; }
     }

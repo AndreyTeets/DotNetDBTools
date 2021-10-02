@@ -9,43 +9,43 @@ namespace DotNetDBTools.Analysis.MSSQL
 {
     public class MSSQLDbModelConverter : IDbModelConverter
     {
-        public DatabaseInfo FromAgnostic(DatabaseInfo databaseInfo)
+        public Database FromAgnostic(Database database)
         {
-            return ConvertToMSSQLInfo((AgnosticDatabaseInfo)databaseInfo);
+            return ConvertToMSSQLModel((AgnosticDatabase)database);
         }
 
-        private MSSQLDatabaseInfo ConvertToMSSQLInfo(AgnosticDatabaseInfo databaseInfo)
-           => new(databaseInfo.Name)
+        private MSSQLDatabase ConvertToMSSQLModel(AgnosticDatabase database)
+           => new(database.Name)
            {
-               Tables = databaseInfo.Tables.Select(x => ConvertToMSSQLInfo((AgnosticTableInfo)x)).ToList(),
-               Views = databaseInfo.Views.Select(x => ConvertToMSSQLInfo((AgnosticViewInfo)x)).ToList(),
+               Tables = database.Tables.Select(x => ConvertToMSSQLModel((AgnosticTable)x)).ToList(),
+               Views = database.Views.Select(x => ConvertToMSSQLModel((AgnosticView)x)).ToList(),
            };
 
-        private static MSSQLTableInfo ConvertToMSSQLInfo(AgnosticTableInfo tableInfo)
+        private static MSSQLTable ConvertToMSSQLModel(AgnosticTable table)
             => new()
             {
-                ID = tableInfo.ID,
-                Name = tableInfo.Name,
-                Columns = ConvertToSQLiteInfo(tableInfo.Columns),
-                PrimaryKey = tableInfo.PrimaryKey,
-                UniqueConstraints = tableInfo.UniqueConstraints,
-                CheckConstraints = tableInfo.CheckConstraints,
-                Indexes = tableInfo.Indexes,
-                Triggers = tableInfo.Triggers,
-                ForeignKeys = tableInfo.ForeignKeys,
+                ID = table.ID,
+                Name = table.Name,
+                Columns = ConvertToSQLiteModel(table.Columns),
+                PrimaryKey = table.PrimaryKey,
+                UniqueConstraints = table.UniqueConstraints,
+                CheckConstraints = table.CheckConstraints,
+                Indexes = table.Indexes,
+                Triggers = table.Triggers,
+                ForeignKeys = table.ForeignKeys,
             };
 
-        private static MSSQLViewInfo ConvertToMSSQLInfo(AgnosticViewInfo viewInfo)
+        private static MSSQLView ConvertToMSSQLModel(AgnosticView view)
             => new()
             {
-                ID = viewInfo.ID,
-                Name = viewInfo.Name,
-                Code = viewInfo.Code,
+                ID = view.ID,
+                Name = view.Name,
+                Code = view.Code,
             };
 
-        private static IEnumerable<ColumnInfo> ConvertToSQLiteInfo(IEnumerable<ColumnInfo> columns)
+        private static IEnumerable<Column> ConvertToSQLiteModel(IEnumerable<Column> columns)
         {
-            foreach (ColumnInfo column in columns)
+            foreach (Column column in columns)
             {
                 if (column.DataType.Name == DataTypeNames.DateTime)
                     column.DataType.SqlTypeName = "DATETIME2";

@@ -2,10 +2,8 @@
 
 namespace DotNetDBTools.Models.Core
 {
-    public class IndexInfo : DBObjectInfo
+    public class UniqueConstraint : DBObject
     {
         public IEnumerable<string> Columns { get; set; }
-        public IEnumerable<string> IncludeColumns { get; set; }
-        public bool Unique { get; set; }
     }
 }

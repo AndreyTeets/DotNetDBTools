@@ -29,27 +29,27 @@ WHERE sm.type = 'table'
         internal static class ResultsInterpreter
         {
             public static void BuildTablesConstraintNames(
-                 Dictionary<string, TableInfo> tables,
+                 Dictionary<string, Table> tables,
                 IEnumerable<TableRecord> tableRecords)
             {
                 foreach (TableRecord tableRecord in tableRecords)
                 {
-                    foreach (ColumnInfo c in tables[tableRecord.TableName].Columns)
+                    foreach (Column c in tables[tableRecord.TableName].Columns)
                         c.DefaultConstraintName = GetDefaultConstraintName(tableRecord.TableDefinition, c) ?? c.DefaultConstraintName;
-                    foreach (UniqueConstraintInfo uc in tables[tableRecord.TableName].UniqueConstraints)
+                    foreach (UniqueConstraint uc in tables[tableRecord.TableName].UniqueConstraints)
                         uc.Name = GetUniqueConstraintName(tableRecord.TableDefinition, uc.Columns) ?? uc.Name;
-                    foreach (ForeignKeyInfo fk in tables[tableRecord.TableName].ForeignKeys)
+                    foreach (ForeignKey fk in tables[tableRecord.TableName].ForeignKeys)
                         fk.Name = GetForeignKeyConstraintName(tableRecord.TableDefinition, fk.ThisColumnNames) ?? fk.Name;
                 }
             }
 
             public static void ProcessTablesIdentityColumnCandidates(
-                 Dictionary<string, TableInfo> tables,
+                 Dictionary<string, Table> tables,
                 IEnumerable<TableRecord> tableRecords)
             {
                 foreach (TableRecord tableRecord in tableRecords)
                 {
-                    foreach (ColumnInfo column in tables[tableRecord.TableName].Columns.Where(c => c.Identity == true))
+                    foreach (Column column in tables[tableRecord.TableName].Columns.Where(c => c.Identity == true))
                     {
                         bool hasAutoincrementKeyWord = tableRecord.TableDefinition
                             .IndexOf("AUTOINCREMENT", StringComparison.OrdinalIgnoreCase) > 0;
@@ -59,7 +59,7 @@ WHERE sm.type = 'table'
                 }
             }
 
-            private static string GetDefaultConstraintName(string tableDefinition, ColumnInfo column)
+            private static string GetDefaultConstraintName(string tableDefinition, Column column)
             {
                 if (column.Default is null)
                     return null;

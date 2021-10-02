@@ -28,14 +28,14 @@ namespace DotNetDBTools.Deploy.MSSQL.Queries
 
             sb.Append(Queries.RenameTable(tableDiff.OldTable.Name, tableDiff.NewTable.Name));
 
-            foreach (TriggerInfo trigger in tableDiff.TriggersToDrop)
+            foreach (Trigger trigger in tableDiff.TriggersToDrop)
                 sb.Append(Queries.DropTrigger(trigger.Name));
-            foreach (IndexInfo index in tableDiff.IndexesToDrop)
+            foreach (Index index in tableDiff.IndexesToDrop)
                 sb.Append(Queries.DropIndex(index.Name));
 
-            foreach (CheckConstraintInfo cc in tableDiff.CheckConstraintsToDrop)
+            foreach (CheckConstraint cc in tableDiff.CheckConstraintsToDrop)
                 sb.Append(Queries.DropCheckConstraint(tableDiff.NewTable.Name, cc.Name));
-            foreach (UniqueConstraintInfo uc in tableDiff.UniqueConstraintsToDrop)
+            foreach (UniqueConstraint uc in tableDiff.UniqueConstraintsToDrop)
                 sb.Append(Queries.DropUniqueConstraint(tableDiff.NewTable.Name, uc.Name));
             if (tableDiff.PrimaryKeyToDrop is not null)
                 sb.Append(Queries.DropPrimaryKey(tableDiff.NewTable.Name, tableDiff.PrimaryKeyToDrop.Name));
@@ -44,14 +44,14 @@ namespace DotNetDBTools.Deploy.MSSQL.Queries
 
             if (tableDiff.PrimaryKeyToCreate is not null)
                 sb.Append(Queries.AddPrimaryKey(tableDiff.NewTable.Name, tableDiff.PrimaryKeyToCreate));
-            foreach (UniqueConstraintInfo uc in tableDiff.UniqueConstraintsToCreate)
+            foreach (UniqueConstraint uc in tableDiff.UniqueConstraintsToCreate)
                 sb.Append(Queries.AddUniqueConstraint(tableDiff.NewTable.Name, uc));
-            foreach (CheckConstraintInfo cc in tableDiff.CheckConstraintsToCreate)
+            foreach (CheckConstraint cc in tableDiff.CheckConstraintsToCreate)
                 sb.Append(Queries.AddCheckConstraint(tableDiff.NewTable.Name, cc));
 
-            foreach (IndexInfo index in tableDiff.IndexesToCreate)
+            foreach (Index index in tableDiff.IndexesToCreate)
                 sb.Append(Queries.CreateIndex(tableDiff.NewTable.Name, index));
-            foreach (TriggerInfo trigger in tableDiff.TriggersToCreate)
+            foreach (Trigger trigger in tableDiff.TriggersToCreate)
                 sb.Append(Queries.CreateTrigger(trigger));
 
             return sb.ToString();
@@ -59,7 +59,7 @@ namespace DotNetDBTools.Deploy.MSSQL.Queries
 
         private static void AppendColumnsAlters(StringBuilder sb, MSSQLTableDiff tableDiff)
         {
-            foreach (ColumnInfo column in tableDiff.RemovedColumns)
+            foreach (Column column in tableDiff.RemovedColumns)
             {
                 if (column.Default is not null)
                     sb.Append(Queries.DropDefaultConstraint(tableDiff.NewTable.Name, column));
@@ -78,7 +78,7 @@ namespace DotNetDBTools.Deploy.MSSQL.Queries
                     sb.Append(Queries.AddDefaultConstraint(tableDiff.NewTable.Name, columnDiff.NewColumn));
             }
 
-            foreach (ColumnInfo column in tableDiff.AddedColumns)
+            foreach (Column column in tableDiff.AddedColumns)
             {
                 sb.Append(Queries.AddColumn(tableDiff.NewTable.Name, column));
                 if (column.Default is not null)
@@ -96,7 +96,7 @@ $@"
 EXEC sp_rename '{tableName}.{oldColumnName}', '{newColumnName}', 'COLUMN';"
                 ;
 
-            public static string AddColumn(string tableName, ColumnInfo c) =>
+            public static string AddColumn(string tableName, Column c) =>
 $@"
 ALTER TABLE {tableName} ADD {c.Name} {GetSqlType(c.DataType)}{GetIdentityStatement(c)} {GetNullabilityStatement(c)};"
                 ;
@@ -104,12 +104,12 @@ ALTER TABLE {tableName} ADD {c.Name} {GetSqlType(c.DataType)}{GetIdentityStateme
 $@"
 ALTER TABLE {tableName} DROP COLUMN {columnName};"
                 ;
-            public static string AlterColumnTypeAndNullability(string tableName, ColumnInfo c) =>
+            public static string AlterColumnTypeAndNullability(string tableName, Column c) =>
 $@"
 ALTER TABLE {tableName} ALTER COLUMN {c.Name} {GetSqlType(c.DataType)} {GetNullabilityStatement(c)};"
                 ;
 
-            public static string AddPrimaryKey(string tableName, PrimaryKeyInfo pk) =>
+            public static string AddPrimaryKey(string tableName, PrimaryKey pk) =>
 $@"
 ALTER TABLE {tableName} ADD CONSTRAINT {pk.Name} PRIMARY KEY ({string.Join(", ", pk.Columns)});"
                 ;
@@ -118,7 +118,7 @@ $@"
 ALTER TABLE {tableName} DROP CONSTRAINT {pkName};"
                 ;
 
-            public static string AddUniqueConstraint(string tableName, UniqueConstraintInfo uc) =>
+            public static string AddUniqueConstraint(string tableName, UniqueConstraint uc) =>
 $@"
 ALTER TABLE {tableName} ADD CONSTRAINT {uc.Name} UNIQUE ({string.Join(", ", uc.Columns)});"
                 ;
@@ -127,7 +127,7 @@ $@"
 ALTER TABLE {tableName} DROP CONSTRAINT {ucName};"
                 ;
 
-            public static string AddCheckConstraint(string tableName, CheckConstraintInfo cc) =>
+            public static string AddCheckConstraint(string tableName, CheckConstraint cc) =>
 $@"
 ALTER TABLE {tableName} ADD CONSTRAINT {cc.Name} CHECK ({cc.Code});"
                 ;
@@ -136,16 +136,16 @@ $@"
 ALTER TABLE {tableName} DROP CONSTRAINT {ccName};"
                 ;
 
-            public static string AddDefaultConstraint(string tableName, ColumnInfo c) =>
+            public static string AddDefaultConstraint(string tableName, Column c) =>
 $@"
 ALTER TABLE {tableName} ADD CONSTRAINT {c.DefaultConstraintName} DEFAULT {QuoteDefaultValue(c.Default)} FOR {c.Name};"
                 ;
-            public static string DropDefaultConstraint(string tableName, ColumnInfo c) =>
+            public static string DropDefaultConstraint(string tableName, Column c) =>
 $@"
 ALTER TABLE [{tableName}] DROP CONSTRAINT {c.DefaultConstraintName};"
                 ;
 
-            public static string CreateIndex(string tableName, IndexInfo index) =>
+            public static string CreateIndex(string tableName, Index index) =>
 $@"
 CREATE INDEX {index.Name}
 ON {tableName} ({string.Join(", ", index.Columns)});"
@@ -155,7 +155,7 @@ $@"
 DROP INDEX {indexName};"
                 ;
 
-            public static string CreateTrigger(TriggerInfo trigger) =>
+            public static string CreateTrigger(Trigger trigger) =>
 $@"
 {trigger.Code}"
                 ;

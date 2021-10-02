@@ -2,7 +2,7 @@
 
 namespace DotNetDBTools.Models.MSSQL
 {
-    public class MSSQLFunctionInfo : DBObjectInfo
+    public class MSSQLFunction : DBObject
     {
         public string Code { get; set; }
     }

@@ -6,14 +6,14 @@ namespace DotNetDBTools.Generation.MSSQL
 {
     internal static class MSSQLDefinitionGenerator
     {
-        public static IEnumerable<DefinitionSourceFile> GenerateDefinition(MSSQLDatabaseInfo databaseInfo)
+        public static IEnumerable<DefinitionSourceFile> GenerateDefinition(MSSQLDatabase database)
         {
             return new List<DefinitionSourceFile>()
             {
                 new DefinitionSourceFile()
                 {
                     RelativePath = "Tables/Table1.cs",
-                    SourceText = databaseInfo.Name,
+                    SourceText = database.Name,
                 }
             };
         }

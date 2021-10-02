@@ -2,7 +2,7 @@
 
 namespace DotNetDBTools.Models.Agnostic
 {
-    public class AgnosticTableInfo : TableInfo
+    public class AgnosticView : View
     {
     }
 }

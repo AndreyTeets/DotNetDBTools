@@ -16,13 +16,13 @@ namespace DotNetDBTools.Deploy.MSSQL.Queries
         public string Sql => _sql;
         public IEnumerable<QueryParameter> Parameters => _parameters;
 
-        public CreateTableQuery(MSSQLTableInfo table)
+        public CreateTableQuery(MSSQLTable table)
         {
             _sql = GetSql(table);
             _parameters = new List<QueryParameter>();
         }
 
-        private static string GetSql(MSSQLTableInfo table)
+        private static string GetSql(MSSQLTable table)
         {
             string query =
 $@"CREATE TABLE {table.Name}
@@ -30,14 +30,14 @@ $@"CREATE TABLE {table.Name}
 {GetTableDefinitionsText(table)}
 );";
 
-            foreach (IndexInfo index in table.Indexes)
+            foreach (Index index in table.Indexes)
             {
                 string _ =
 $@"CREATE INDEX {index.Name}
 ON {table.Name} ({string.Join(", ", index.Columns)});";
             }
 
-            foreach (TriggerInfo trigger in table.Triggers)
+            foreach (Trigger trigger in table.Triggers)
             {
                 string _ =
 $@"{trigger.Code}";
@@ -46,7 +46,7 @@ $@"{trigger.Code}";
             return query;
         }
 
-        private static string GetTableDefinitionsText(MSSQLTableInfo table)
+        private static string GetTableDefinitionsText(MSSQLTable table)
         {
             List<string> tableDefinitions = new();
 
@@ -68,7 +68,7 @@ $@"    CONSTRAINT {cc.Name} CHECK ({cc.Code})");
             return string.Join(",\n", tableDefinitions);
         }
 
-        private static string GetDefaultValStatement(ColumnInfo column)
+        private static string GetDefaultValStatement(Column column)
         {
             if (column.Default is not null)
             {

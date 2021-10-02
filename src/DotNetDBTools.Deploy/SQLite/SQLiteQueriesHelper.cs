@@ -9,7 +9,7 @@ namespace DotNetDBTools.Deploy.SQLite
 {
     internal static class SQLiteQueriesHelper
     {
-        public static string GetTableDefinitionsText(SQLiteTableInfo table)
+        public static string GetTableDefinitionsText(SQLiteTable table)
         {
             List<string> tableDefinitions = new();
 
@@ -33,7 +33,7 @@ $@"    CONSTRAINT {fk.Name} FOREIGN KEY ({string.Join(", ", fk.ThisColumnNames)}
             return string.Join(",\n", tableDefinitions);
         }
 
-        private static string GetPrimaryKeyStatement(ColumnInfo column, PrimaryKeyInfo pk)
+        private static string GetPrimaryKeyStatement(Column column, PrimaryKey pk)
         {
             string identityStatement = column.Identity ? " AUTOINCREMENT" : "";
             if (pk is not null &&
@@ -45,14 +45,14 @@ $@"    CONSTRAINT {fk.Name} FOREIGN KEY ({string.Join(", ", fk.ThisColumnNames)}
             return "";
         }
 
-        private static string GetNullabilityStatement(ColumnInfo column) =>
+        private static string GetNullabilityStatement(Column column) =>
             column.Nullable switch
             {
                 true => "NULL",
                 false => "NOT NULL",
             };
 
-        private static string GetDefaultValStatement(ColumnInfo column)
+        private static string GetDefaultValStatement(Column column)
         {
             if (column.Default is not null)
             {

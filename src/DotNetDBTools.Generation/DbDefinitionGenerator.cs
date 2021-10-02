@@ -12,9 +12,9 @@ namespace DotNetDBTools.Generation
 {
     public static class DbDefinitionGenerator
     {
-        public static void GenerateDefinition(DatabaseInfo databaseInfo, string outputDirectory)
+        public static void GenerateDefinition(Database database, string outputDirectory)
         {
-            IEnumerable<DefinitionSourceFile> definitionSourceFiles = GenerateDefinition(databaseInfo);
+            IEnumerable<DefinitionSourceFile> definitionSourceFiles = GenerateDefinition(database);
             foreach (DefinitionSourceFile file in definitionSourceFiles)
             {
                 string fullPath = Path.GetFullPath(Path.Combine(outputDirectory, file.RelativePath));
@@ -23,13 +23,13 @@ namespace DotNetDBTools.Generation
             }
         }
 
-        public static IEnumerable<DefinitionSourceFile> GenerateDefinition(DatabaseInfo databaseInfo)
+        public static IEnumerable<DefinitionSourceFile> GenerateDefinition(Database database)
         {
-            IEnumerable<DefinitionSourceFile> definitionSourceFiles = databaseInfo.Kind switch
+            IEnumerable<DefinitionSourceFile> definitionSourceFiles = database.Kind switch
             {
-                DatabaseKind.MSSQL => MSSQLDefinitionGenerator.GenerateDefinition((MSSQLDatabaseInfo)databaseInfo),
-                DatabaseKind.SQLite => SQLiteDefinitionGenerator.GenerateDefinition((SQLiteDatabaseInfo)databaseInfo),
-                _ => throw new InvalidOperationException($"Invalid dbKind: {databaseInfo.Kind}"),
+                DatabaseKind.MSSQL => MSSQLDefinitionGenerator.GenerateDefinition((MSSQLDatabase)database),
+                DatabaseKind.SQLite => SQLiteDefinitionGenerator.GenerateDefinition((SQLiteDatabase)database),
+                _ => throw new InvalidOperationException($"Invalid dbKind: {database.Kind}"),
             };
             return definitionSourceFiles;
         }

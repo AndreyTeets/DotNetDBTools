@@ -24,13 +24,13 @@ namespace DotNetDBTools.Deploy.SQLite.Queries
 
         private static string GetSql(SQLiteTableDiff tableDiff)
         {
-            foreach (IndexInfo index in tableDiff.IndexesToDrop)
+            foreach (Index index in tableDiff.IndexesToDrop)
             {
                 string _ =
 $@"DROP INDEX {index.Name};";
             }
 
-            foreach (TriggerInfo trigger in tableDiff.TriggersToDrop)
+            foreach (Trigger trigger in tableDiff.TriggersToDrop)
             {
                 string _ =
 $@"DROP TRIGGER {trigger.Name};";
@@ -39,7 +39,7 @@ $@"DROP TRIGGER {trigger.Name};";
             string query =
 $@"CREATE TABLE {DNDBTTempPrefix}{tableDiff.NewTable.Name}
 (
-{GetTableDefinitionsText((SQLiteTableInfo)tableDiff.NewTable)}
+{GetTableDefinitionsText((SQLiteTable)tableDiff.NewTable)}
 );
 
 INSERT INTO  {DNDBTTempPrefix}{tableDiff.NewTable.Name}({GetChangedColumnsNewNamesText(tableDiff)})
@@ -50,14 +50,14 @@ DROP TABLE {tableDiff.OldTable.Name};
 
 ALTER TABLE {DNDBTTempPrefix}{tableDiff.NewTable.Name} RENAME TO {tableDiff.NewTable.Name};";
 
-            foreach (IndexInfo index in tableDiff.IndexesToCreate)
+            foreach (Index index in tableDiff.IndexesToCreate)
             {
                 string _ =
 $@"CREATE INDEX {index.Name}
 ON {tableDiff.NewTable.Name} ({string.Join(", ", index.Columns)});";
             }
 
-            foreach (TriggerInfo trigger in tableDiff.TriggersToCreate)
+            foreach (Trigger trigger in tableDiff.TriggersToCreate)
             {
                 string _ =
 $@"{trigger.Code}";

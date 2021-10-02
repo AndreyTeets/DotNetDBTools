@@ -6,32 +6,32 @@ namespace DotNetDBTools.Analysis.Core
 {
     internal abstract class DbValidator
     {
-        public abstract bool DbIsValid(DatabaseInfo database, out DbError dbError);
+        public abstract bool DbIsValid(Database database, out DbError dbError);
 
-        protected bool HasNoBadTables(DatabaseInfo database, out DbError dbError)
+        protected bool HasNoBadTables(Database database, out DbError dbError)
         {
             if (!ForeignKeyReferencesAreValid(database, out dbError))
                 return false;
             return true;
         }
 
-        private bool ForeignKeyReferencesAreValid(DatabaseInfo database, out DbError dbError)
+        private bool ForeignKeyReferencesAreValid(Database database, out DbError dbError)
         {
             dbError = null;
-            foreach (TableInfo table in database.Tables)
+            foreach (Table table in database.Tables)
             {
-                foreach (ForeignKeyInfo fki in table.ForeignKeys)
+                foreach (ForeignKey fk in table.ForeignKeys)
                 {
-                    if (fki is not null && !database.Tables.Any(x => x.Name == fki.ReferencedTableName))
+                    if (fk is not null && !database.Tables.Any(x => x.Name == fk.ReferencedTableName))
                     {
                         string errorMessage =
-$"Couldn't find table '{fki.ReferencedTableName}' referenced by foreign key '{fki.Name}' in table '{table.Name}'";
+$"Couldn't find table '{fk.ReferencedTableName}' referenced by foreign key '{fk.Name}' in table '{table.Name}'";
 
                         dbError = new InvalidFKDbError(
                             errorMessage: errorMessage,
                             tableName: table.Name,
-                            foreignKeyName: fki.Name,
-                            referencedTableName: fki.ReferencedTableName);
+                            foreignKeyName: fk.Name,
+                            referencedTableName: fk.ReferencedTableName);
 
                         return false;
                     }

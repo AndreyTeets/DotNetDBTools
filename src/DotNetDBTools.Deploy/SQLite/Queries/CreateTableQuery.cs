@@ -14,13 +14,13 @@ namespace DotNetDBTools.Deploy.SQLite.Queries
         public string Sql => _sql;
         public IEnumerable<QueryParameter> Parameters => _parameters;
 
-        public CreateTableQuery(SQLiteTableInfo table)
+        public CreateTableQuery(SQLiteTable table)
         {
             _sql = GetSql(table);
             _parameters = new List<QueryParameter>();
         }
 
-        private static string GetSql(SQLiteTableInfo table)
+        private static string GetSql(SQLiteTable table)
         {
             string query =
 $@"CREATE TABLE {table.Name}
@@ -28,14 +28,14 @@ $@"CREATE TABLE {table.Name}
 {GetTableDefinitionsText(table)}
 );";
 
-            foreach (IndexInfo index in table.Indexes)
+            foreach (Index index in table.Indexes)
             {
                 string _ =
 $@"CREATE INDEX {index.Name}
 ON {table.Name} ({string.Join(", ", index.Columns)});";
             }
 
-            foreach (TriggerInfo trigger in table.Triggers)
+            foreach (Trigger trigger in table.Triggers)
             {
                 string _ =
 $@"{trigger.Code}";

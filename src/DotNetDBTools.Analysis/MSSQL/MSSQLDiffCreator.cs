@@ -7,33 +7,33 @@ namespace DotNetDBTools.Analysis.MSSQL
 {
     internal class MSSQLDiffCreator : DiffCreator
     {
-        public override DatabaseDiff CreateDatabaseDiff(DatabaseInfo newDatabase, DatabaseInfo oldDatabase)
+        public override DatabaseDiff CreateDatabaseDiff(Database newDatabase, Database oldDatabase)
         {
             MSSQLDatabaseDiff databaseDiff = new()
             {
                 NewDatabase = newDatabase,
                 OldDatabase = oldDatabase,
-                ViewsToCreate = new List<MSSQLViewInfo>(),
-                ViewsToDrop = new List<MSSQLViewInfo>(),
-                UserDefinedTableTypesToCreate = new List<MSSQLUserDefinedTableTypeInfo>(),
-                UserDefinedTableTypesToDrop = new List<MSSQLUserDefinedTableTypeInfo>(),
-                FunctionsToCreate = new List<MSSQLFunctionInfo>(),
-                FunctionsToDrop = new List<MSSQLFunctionInfo>(),
-                ProceduresToCreate = new List<MSSQLProcedureInfo>(),
-                ProceduresToDrop = new List<MSSQLProcedureInfo>(),
+                ViewsToCreate = new List<MSSQLView>(),
+                ViewsToDrop = new List<MSSQLView>(),
+                UserDefinedTableTypesToCreate = new List<MSSQLUserDefinedTableType>(),
+                UserDefinedTableTypesToDrop = new List<MSSQLUserDefinedTableType>(),
+                FunctionsToCreate = new List<MSSQLFunction>(),
+                FunctionsToDrop = new List<MSSQLFunction>(),
+                ProceduresToCreate = new List<MSSQLProcedure>(),
+                ProceduresToDrop = new List<MSSQLProcedure>(),
             };
 
             BuildTablesDiff<MSSQLTableDiff>(databaseDiff, newDatabase, oldDatabase);
-            BuildUserDefinedTypesDiff(databaseDiff, (MSSQLDatabaseInfo)newDatabase, (MSSQLDatabaseInfo)oldDatabase);
+            BuildUserDefinedTypesDiff(databaseDiff, (MSSQLDatabase)newDatabase, (MSSQLDatabase)oldDatabase);
             ForeignKeysHelper.BuildAllForeignKeysToBeDroppedAndCreated(databaseDiff);
             return databaseDiff;
         }
 
         private void BuildUserDefinedTypesDiff(
-            MSSQLDatabaseDiff databaseDiff, MSSQLDatabaseInfo newDatabase, MSSQLDatabaseInfo oldDatabase)
+            MSSQLDatabaseDiff databaseDiff, MSSQLDatabase newDatabase, MSSQLDatabase oldDatabase)
         {
-            List<MSSQLUserDefinedTypeInfo> addedUserDefinedTypes = null;
-            List<MSSQLUserDefinedTypeInfo> removedUserDefinedTypes = null;
+            List<MSSQLUserDefinedType> addedUserDefinedTypes = null;
+            List<MSSQLUserDefinedType> removedUserDefinedTypes = null;
             List<MSSQLUserDefinedTypeDiff> changedUserDefinedTypes = new();
             FillAddedAndRemovedItemsAndApplyActionToChangedItems(
                 newDatabase.UserDefinedTypes, oldDatabase.UserDefinedTypes,

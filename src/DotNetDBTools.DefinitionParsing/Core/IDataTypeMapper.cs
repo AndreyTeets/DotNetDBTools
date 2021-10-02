@@ -5,6 +5,6 @@ namespace DotNetDBTools.DefinitionParsing.Core
 {
     internal interface IDataTypeMapper
     {
-        public DataTypeInfo GetDataTypeInfo(IDataType dataType);
+        public DataType MapToDataTypeModel(IDataType dataType);
     }
 }

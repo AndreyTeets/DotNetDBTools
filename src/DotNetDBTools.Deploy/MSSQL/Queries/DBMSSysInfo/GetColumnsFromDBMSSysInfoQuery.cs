@@ -39,26 +39,26 @@ WHERE t.name != '{DNDBTSysTables.DNDBTDbObjects}';";
 
         internal static class ResultsInterpreter
         {
-            public static Dictionary<string, TableInfo> BuildTablesListWithColumns(IEnumerable<ColumnRecord> columnRecords)
+            public static Dictionary<string, Table> BuildTablesListWithColumns(IEnumerable<ColumnRecord> columnRecords)
             {
-                return ColumnsBuilder.BuildTablesListWithColumns<MSSQLTableInfo>(columnRecords, MapToColumnInfo);
+                return ColumnsBuilder.BuildTablesListWithColumns<MSSQLTable>(columnRecords, MapToColumnModel);
             }
 
-            private static ColumnInfo MapToColumnInfo(ColumnsBuilder.ColumnRecord builderColumnRecord)
+            private static Column MapToColumnModel(ColumnsBuilder.ColumnRecord builderColumnRecord)
             {
                 ColumnRecord columnRecord = (ColumnRecord)builderColumnRecord;
-                DataTypeInfo dataTypeInfo = MSSQLSqlTypeMapper.GetModelType(columnRecord.DataType, columnRecord.Length);
+                DataType dataType = MSSQLSqlTypeMapper.GetModelType(columnRecord.DataType, columnRecord.Length);
                 if (columnRecord.UserDefinedDataType is not null)
                 {
-                    dataTypeInfo.Name = columnRecord.UserDefinedDataType;
-                    dataTypeInfo.IsUserDefined = true;
+                    dataType.Name = columnRecord.UserDefinedDataType;
+                    dataType.IsUserDefined = true;
                 }
 
-                return new ColumnInfo()
+                return new Column()
                 {
                     ID = Guid.NewGuid(),
                     Name = columnRecord.ColumnName,
-                    DataType = dataTypeInfo,
+                    DataType = dataType,
                     Nullable = columnRecord.Nullable,
                     Identity = columnRecord.Identity,
                     Default = ParseDefault(columnRecord.Default),

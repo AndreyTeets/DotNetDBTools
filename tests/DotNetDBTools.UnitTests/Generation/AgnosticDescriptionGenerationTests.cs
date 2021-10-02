@@ -18,8 +18,8 @@ namespace DotNetDBTools.UnitTests.Description
         {
             Assembly dbAssembly = AppDomain.CurrentDomain.GetAssemblies()
                 .Single(x => x.GetName().Name == "DotNetDBTools.SampleDB.Agnostic");
-            AgnosticDatabaseInfo databaseInfo = (AgnosticDatabaseInfo)DbDefinitionParser.CreateDatabaseInfo(dbAssembly);
-            string actualDescriptionCode = AgnosticDescriptionSourceGenerator.GenerateDescription(databaseInfo);
+            AgnosticDatabase database = (AgnosticDatabase)DbDefinitionParser.CreateDatabaseModel(dbAssembly);
+            string actualDescriptionCode = AgnosticDescriptionGenerator.GenerateDescription(database);
             string expectedDescriptionCode = File.ReadAllText(@"TestData/Expected_Description_For_AgnosticSampleDB.cs");
             actualDescriptionCode.NormalizeLineEndings().Should().Be(expectedDescriptionCode.NormalizeLineEndings());
         }

@@ -11,12 +11,12 @@ namespace DotNetDBTools.Deploy.MSSQL.Queries
         public string Sql => _sql;
         public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
 
-        public DropTableQuery(MSSQLTableInfo table)
+        public DropTableQuery(MSSQLTable table)
         {
             _sql = GetSql(table);
         }
 
-        private static string GetSql(MSSQLTableInfo table)
+        private static string GetSql(MSSQLTable table)
         {
             string query =
 $@"DROP TABLE {table.Name};";

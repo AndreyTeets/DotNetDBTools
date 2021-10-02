@@ -6,7 +6,7 @@ namespace DotNetDBTools.Analysis.MSSQL
 {
     internal class MSSQLDbValidator : DbValidator
     {
-        public override bool DbIsValid(DatabaseInfo database, out DbError dbError)
+        public override bool DbIsValid(Database database, out DbError dbError)
         {
             if (!HasNoBadTables(database, out dbError))
                 return false;
@@ -15,12 +15,12 @@ namespace DotNetDBTools.Analysis.MSSQL
             return true;
         }
 
-        private bool TriggersCodeIsValid(DatabaseInfo database, out DbError dbError)
+        private bool TriggersCodeIsValid(Database database, out DbError dbError)
         {
             dbError = null;
-            foreach (TableInfo table in database.Tables)
+            foreach (Table table in database.Tables)
             {
-                foreach (TriggerInfo trigger in table.Triggers)
+                foreach (Trigger trigger in table.Triggers)
                 {
                     if (!trigger.Code.Contains($"CREATE TRIGGER {trigger.Name} "))
                     {

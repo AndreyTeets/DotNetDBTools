@@ -40,8 +40,8 @@ namespace DotNetDBTools.DefinitionAnalyzer
             try
             {
                 Assembly dbAssembly = CompileInMemoryAnLoad(context.Compilation);
-                DatabaseInfo databaseInfo = DbDefinitionParser.CreateDatabaseInfo(dbAssembly);
-                if (!AnalysisHelper.DbIsValid(databaseInfo, out DbError dbError))
+                Database database = DbDefinitionParser.CreateDatabaseModel(dbAssembly);
+                if (!AnalysisHelper.DbIsValid(database, out DbError dbError))
                 {
                     Location location = InvalidDbObjectsFinder.GetInvalidDbObjectLocation(context.Compilation, dbError);
                     context.ReportDiagnostic(Diagnostic.Create(s_diagnosticDescriptor, location, dbError.ErrorMessage));

@@ -31,7 +31,7 @@ WHERE i.is_primary_key = 1
         internal static class ResultsInterpreter
         {
             public static void BuildTablesPrimaryKeys(
-                Dictionary<string, TableInfo> tables,
+                Dictionary<string, Table> tables,
                 IEnumerable<PrimaryKeyRecord> primaryKeyRecords)
             {
                 PrimaryKeysBuilder.BuildTablesPrimaryKeys(tables, primaryKeyRecords);

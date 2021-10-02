@@ -32,20 +32,20 @@ WHERE sm.type = 'table'
 
         internal static class ResultsInterpreter
         {
-            public static Dictionary<string, TableInfo> BuildTablesListWithColumns(IEnumerable<ColumnRecord> columnRecords)
+            public static Dictionary<string, Table> BuildTablesListWithColumns(IEnumerable<ColumnRecord> columnRecords)
             {
-                return ColumnsBuilder.BuildTablesListWithColumns<SQLiteTableInfo>(columnRecords, MapToColumnInfo);
+                return ColumnsBuilder.BuildTablesListWithColumns<SQLiteTable>(columnRecords, MapToColumnModel);
             }
 
-            private static ColumnInfo MapToColumnInfo(ColumnsBuilder.ColumnRecord builderColumnRecord)
+            private static Column MapToColumnModel(ColumnsBuilder.ColumnRecord builderColumnRecord)
             {
                 ColumnRecord columnRecord = (ColumnRecord)builderColumnRecord;
-                DataTypeInfo dataTypeInfo = SQLiteSqlTypeMapper.GetModelType(columnRecord.DataType);
-                return new ColumnInfo()
+                DataType dataType = SQLiteSqlTypeMapper.GetModelType(columnRecord.DataType);
+                return new Column()
                 {
                     ID = Guid.NewGuid(),
                     Name = columnRecord.ColumnName,
-                    DataType = dataTypeInfo,
+                    DataType = dataType,
                     Nullable = columnRecord.Nullable,
                     Identity = columnRecord.IsIdentityCandidate,
                     Default = ParseDefault(columnRecord.Default),

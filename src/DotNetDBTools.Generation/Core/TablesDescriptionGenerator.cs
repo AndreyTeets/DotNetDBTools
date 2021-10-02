@@ -6,45 +6,45 @@ namespace DotNetDBTools.Generation.Core
 {
     internal static class TablesDescriptionGenerator
     {
-        public static string GenerateTablesDescription(DatabaseInfo databaseInfo)
+        public static string GenerateTablesDescription(Database database)
         {
-            if (string.IsNullOrEmpty(databaseInfo.Name))
+            if (string.IsNullOrEmpty(database.Name))
                 throw new InvalidOperationException("Database name is not set when generating description");
 
-            List<string> tableInfoDefinitions = new();
+            List<string> tableDescriptionDefinitions = new();
             List<string> tableDeclarations = new();
-            foreach (TableInfo table in databaseInfo.Tables)
+            foreach (Table table in database.Tables)
             {
                 List<string> columnDeclarations = new();
-                foreach (ColumnInfo column in table.Columns)
+                foreach (Column column in table.Columns)
                 {
                     string columnDeclaration =
 $@"            public readonly string {column.Name} = nameof({column.Name});";
                     columnDeclarations.Add(columnDeclaration);
                 }
 
-                string tableInfoDefinition =
-$@"        public class {table.Name}Info
+                string tableDescriptionDefinition =
+$@"        public class {table.Name}Description
         {{
 {string.Join("\n", columnDeclarations)}
 
             public override string ToString() => nameof({table.Name});
-            public static implicit operator string({table.Name}Info info) => info.ToString();
+            public static implicit operator string({table.Name}Description description) => description.ToString();
         }}";
 
                 string tableDeclaration =
-$@"        public static readonly {table.Name}Info {table.Name} = new();";
+$@"        public static readonly {table.Name}Description {table.Name} = new();";
 
-                tableInfoDefinitions.Add(tableInfoDefinition);
+                tableDescriptionDefinitions.Add(tableDescriptionDefinition);
                 tableDeclarations.Add(tableDeclaration);
             }
 
             string res =
-$@"namespace {databaseInfo.Name}Description
+$@"namespace {database.Name}Description
 {{
-    public static class {databaseInfo.Name}Tables
+    public static class {database.Name}Tables
     {{
-{string.Join("\n", tableInfoDefinitions)}
+{string.Join("\n", tableDescriptionDefinitions)}
 
 {string.Join("\n", tableDeclarations)}
     }}

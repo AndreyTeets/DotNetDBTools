@@ -7,12 +7,12 @@ namespace DotNetDBTools.Analysis.Core
 {
     public static class ForeignKeysHelper
     {
-        public static Dictionary<Guid, TableInfo> CreateFKToTableMap(IEnumerable<TableInfo> tables)
+        public static Dictionary<Guid, Table> CreateFKToTableMap(IEnumerable<Table> tables)
         {
-            Dictionary<Guid, TableInfo> fkToTableMap = new();
-            foreach (TableInfo table in tables)
+            Dictionary<Guid, Table> fkToTableMap = new();
+            foreach (Table table in tables)
             {
-                foreach (ForeignKeyInfo fk in table.ForeignKeys)
+                foreach (ForeignKey fk in table.ForeignKeys)
                     fkToTableMap.Add(fk.ID, table);
             }
             return fkToTableMap;
@@ -20,49 +20,49 @@ namespace DotNetDBTools.Analysis.Core
 
         public static void BuildAllForeignKeysToBeDroppedAndCreated(DatabaseDiff databaseDiff)
         {
-            HashSet<ForeignKeyInfo> allAddedForeignKeys = GetAllAddedForeignKeys(databaseDiff);
-            HashSet<ForeignKeyInfo> allRemovedForeignKeys = GetAllRemovedForeignKeys(databaseDiff);
+            HashSet<ForeignKey> allAddedForeignKeys = GetAllAddedForeignKeys(databaseDiff);
+            HashSet<ForeignKey> allRemovedForeignKeys = GetAllRemovedForeignKeys(databaseDiff);
 
-            HashSet<ForeignKeyInfo> allForeignKeysToDrop = GetAllForeignKeysToDrop(databaseDiff, allRemovedForeignKeys);
+            HashSet<ForeignKey> allForeignKeysToDrop = GetAllForeignKeysToDrop(databaseDiff, allRemovedForeignKeys);
 
-            HashSet<ForeignKeyInfo> unchangedForeignKeysButReferencingChangedObjects = new(allForeignKeysToDrop);
+            HashSet<ForeignKey> unchangedForeignKeysButReferencingChangedObjects = new(allForeignKeysToDrop);
             unchangedForeignKeysButReferencingChangedObjects.ExceptWith(allRemovedForeignKeys);
 
-            HashSet<ForeignKeyInfo> allForeignKeysToCreate = new(allAddedForeignKeys);
+            HashSet<ForeignKey> allForeignKeysToCreate = new(allAddedForeignKeys);
             allForeignKeysToCreate.UnionWith(unchangedForeignKeysButReferencingChangedObjects);
 
             databaseDiff.AllForeignKeysToCreate = allForeignKeysToCreate;
             databaseDiff.AllForeignKeysToDrop = allForeignKeysToDrop;
         }
 
-        private static HashSet<ForeignKeyInfo> GetAllAddedForeignKeys(DatabaseDiff databaseDiff)
+        private static HashSet<ForeignKey> GetAllAddedForeignKeys(DatabaseDiff databaseDiff)
         {
-            HashSet<ForeignKeyInfo> allAddedForeignKeys = new();
-            foreach (IEnumerable<ForeignKeyInfo> addedTableForeignKeys in databaseDiff.AddedTables.Select(t => t.ForeignKeys))
+            HashSet<ForeignKey> allAddedForeignKeys = new();
+            foreach (IEnumerable<ForeignKey> addedTableForeignKeys in databaseDiff.AddedTables.Select(t => t.ForeignKeys))
                 allAddedForeignKeys.UnionWith(addedTableForeignKeys);
             foreach (TableDiff tableDiff in databaseDiff.ChangedTables)
                 allAddedForeignKeys.UnionWith(tableDiff.ForeignKeysToCreate);
             return allAddedForeignKeys;
         }
 
-        private static HashSet<ForeignKeyInfo> GetAllRemovedForeignKeys(DatabaseDiff databaseDiff)
+        private static HashSet<ForeignKey> GetAllRemovedForeignKeys(DatabaseDiff databaseDiff)
         {
-            HashSet<ForeignKeyInfo> allRemovedForeignKeys = new();
-            foreach (IEnumerable<ForeignKeyInfo> removedTableForeignKeys in databaseDiff.RemovedTables.Select(t => t.ForeignKeys))
+            HashSet<ForeignKey> allRemovedForeignKeys = new();
+            foreach (IEnumerable<ForeignKey> removedTableForeignKeys in databaseDiff.RemovedTables.Select(t => t.ForeignKeys))
                 allRemovedForeignKeys.UnionWith(removedTableForeignKeys);
             foreach (TableDiff tableDiff in databaseDiff.ChangedTables)
                 allRemovedForeignKeys.UnionWith(tableDiff.ForeignKeysToDrop);
             return allRemovedForeignKeys;
         }
 
-        private static HashSet<ForeignKeyInfo> GetAllForeignKeysToDrop(
+        private static HashSet<ForeignKey> GetAllForeignKeysToDrop(
             DatabaseDiff databaseDiff,
-            HashSet<ForeignKeyInfo> allRemovedForeignKeys)
+            HashSet<ForeignKey> allRemovedForeignKeys)
         {
             HashSet<Guid> columnsChangedOrReferencedByChangedObjects = GetColumnsChangedOrReferencedByChangedObjects(databaseDiff);
-            Dictionary<Guid, HashSet<ForeignKeyInfo>> colIDToReferencingFKMap = CreateColIDToReferencingFKMap(databaseDiff.OldDatabase.Tables);
+            Dictionary<Guid, HashSet<ForeignKey>> colIDToReferencingFKMap = CreateColIDToReferencingFKMap(databaseDiff.OldDatabase.Tables);
 
-            HashSet<ForeignKeyInfo> allForeignKeysToDrop = new(allRemovedForeignKeys);
+            HashSet<ForeignKey> allForeignKeysToDrop = new(allRemovedForeignKeys);
             foreach (Guid columnID in columnsChangedOrReferencedByChangedObjects)
                 allForeignKeysToDrop.UnionWith(colIDToReferencingFKMap[columnID]);
 
@@ -72,7 +72,7 @@ namespace DotNetDBTools.Analysis.Core
         private static HashSet<Guid> GetColumnsChangedOrReferencedByChangedObjects(DatabaseDiff databaseDiff)
         {
             HashSet<Guid> columnsChangedOrReferencedByChangedObjects = new();
-            foreach (IEnumerable<ColumnInfo> removedTableColumns in databaseDiff.RemovedTables.Select(t => t.Columns))
+            foreach (IEnumerable<Column> removedTableColumns in databaseDiff.RemovedTables.Select(t => t.Columns))
                 columnsChangedOrReferencedByChangedObjects.UnionWith(removedTableColumns.Select(c => c.ID));
 
             foreach (TableDiff tableDiff in databaseDiff.ChangedTables)
@@ -82,24 +82,24 @@ namespace DotNetDBTools.Analysis.Core
                 Dictionary<string, Guid> oldTableColumnIDs = tableDiff.OldTable.Columns.ToDictionary(c => c.Name, c => c.ID);
                 if (tableDiff.PrimaryKeyToDrop is not null)
                     columnsChangedOrReferencedByChangedObjects.UnionWith(tableDiff.PrimaryKeyToDrop.Columns.Select(cn => oldTableColumnIDs[cn]));
-                foreach (UniqueConstraintInfo uc in tableDiff.UniqueConstraintsToDrop)
+                foreach (UniqueConstraint uc in tableDiff.UniqueConstraintsToDrop)
                     columnsChangedOrReferencedByChangedObjects.UnionWith(uc.Columns.Select(cn => oldTableColumnIDs[cn]));
             }
 
             return columnsChangedOrReferencedByChangedObjects;
         }
 
-        private static Dictionary<Guid, HashSet<ForeignKeyInfo>> CreateColIDToReferencingFKMap(
-            IEnumerable<TableInfo> tables)
+        private static Dictionary<Guid, HashSet<ForeignKey>> CreateColIDToReferencingFKMap(
+            IEnumerable<Table> tables)
         {
-            Dictionary<string, TableInfo> tableNameToTableMap = new();
-            foreach (TableInfo table in tables)
+            Dictionary<string, Table> tableNameToTableMap = new();
+            foreach (Table table in tables)
                 tableNameToTableMap.Add(table.Name, table);
 
-            Dictionary<Guid, HashSet<ForeignKeyInfo>> colIDToReferencingFKMap = new();
-            foreach (TableInfo table in tables)
+            Dictionary<Guid, HashSet<ForeignKey>> colIDToReferencingFKMap = new();
+            foreach (Table table in tables)
             {
-                foreach (ForeignKeyInfo fk in table.ForeignKeys)
+                foreach (ForeignKey fk in table.ForeignKeys)
                 {
                     Dictionary<string, Guid> tableColNameToColIDMap = tableNameToTableMap[fk.ReferencedTableName].Columns
                         .ToDictionary(c => c.Name, c => c.ID);
@@ -109,17 +109,17 @@ namespace DotNetDBTools.Analysis.Core
                         if (colIDToReferencingFKMap.ContainsKey(columnID))
                             colIDToReferencingFKMap[columnID].Add(fk);
                         else
-                            colIDToReferencingFKMap.Add(columnID, new HashSet<ForeignKeyInfo>() { fk });
+                            colIDToReferencingFKMap.Add(columnID, new HashSet<ForeignKey>() { fk });
                     }
                 }
             }
 
-            foreach (TableInfo table in tables)
+            foreach (Table table in tables)
             {
-                foreach (ColumnInfo column in table.Columns)
+                foreach (Column column in table.Columns)
                 {
                     if (!colIDToReferencingFKMap.ContainsKey(column.ID))
-                        colIDToReferencingFKMap.Add(column.ID, new HashSet<ForeignKeyInfo>());
+                        colIDToReferencingFKMap.Add(column.ID, new HashSet<ForeignKey>());
                 }
             }
             return colIDToReferencingFKMap;

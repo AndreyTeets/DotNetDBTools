@@ -6,7 +6,7 @@ namespace DotNetDBTools.Analysis.Agnostic
 {
     internal class AgnosticDbValidator : DbValidator
     {
-        public override bool DbIsValid(DatabaseInfo database, out DbError dbError)
+        public override bool DbIsValid(Database database, out DbError dbError)
         {
             if (!HasNoBadTables(database, out dbError))
                 return false;

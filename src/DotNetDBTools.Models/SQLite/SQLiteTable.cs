@@ -2,7 +2,7 @@
 
 namespace DotNetDBTools.Models.SQLite
 {
-    public class SQLiteTableInfo : TableInfo
+    public class SQLiteTable : Table
     {
     }
 }

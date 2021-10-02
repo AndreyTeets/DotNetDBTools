@@ -13,12 +13,12 @@ namespace DotNetDBTools.Deploy.Core
 
         public abstract bool DatabaseExists(string databaseName);
         public abstract void CreateDatabase(string databaseName);
-        public abstract DatabaseInfo GetDatabaseModelFromDNDBTSysInfo();
-        public abstract DatabaseInfo GenerateDatabaseModelFromDBMSSysInfo();
+        public abstract Database GetDatabaseModelFromDNDBTSysInfo();
+        public abstract Database GenerateDatabaseModelFromDBMSSysInfo();
         public abstract void ApplyDatabaseDiff(DatabaseDiff databaseDiff);
         public abstract bool DNDBTSysTablesExist();
         public abstract void CreateDNDBTSysTables();
         public abstract void DropDNDBTSysTables();
-        public abstract void PopulateDNDBTSysTables(DatabaseInfo database);
+        public abstract void PopulateDNDBTSysTables(Database database);
     }
 }

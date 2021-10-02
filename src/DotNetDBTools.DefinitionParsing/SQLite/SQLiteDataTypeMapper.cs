@@ -8,36 +8,36 @@ namespace DotNetDBTools.DefinitionParsing.SQLite
 {
     internal class SQLiteDataTypeMapper : IDataTypeMapper
     {
-        public DataTypeInfo GetDataTypeInfo(IDataType dataType)
+        public DataType MapToDataTypeModel(IDataType dataType)
         {
             return dataType switch
             {
-                StringDataType stringDataType => GetStringDataTypeInfo(stringDataType),
-                IntDataType intDataType => GetIntDataTypeInfo(intDataType),
-                BinaryDataType binaryDataType => GetBinaryDataTypeInfo(binaryDataType),
+                StringDataType stringDataType => MapToDataTypeModel(stringDataType),
+                IntDataType intDataType => MapToDataTypeModel(intDataType),
+                BinaryDataType binaryDataType => MapToDataTypeModel(binaryDataType),
                 _ => throw new InvalidOperationException($"Invalid dataType: {dataType}")
             };
         }
 
-        private static DataTypeInfo GetStringDataTypeInfo(StringDataType _)
+        private static DataType MapToDataTypeModel(StringDataType _)
         {
-            return new DataTypeInfo()
+            return new DataType()
             {
                 Name = DataTypeNames.String,
             };
         }
 
-        private static DataTypeInfo GetIntDataTypeInfo(IntDataType _)
+        private static DataType MapToDataTypeModel(IntDataType _)
         {
-            return new DataTypeInfo()
+            return new DataType()
             {
                 Name = DataTypeNames.Int,
             };
         }
 
-        private static DataTypeInfo GetBinaryDataTypeInfo(BinaryDataType _)
+        private static DataType MapToDataTypeModel(BinaryDataType _)
         {
-            return new DataTypeInfo()
+            return new DataType()
             {
                 Name = DataTypeNames.Binary,
             };

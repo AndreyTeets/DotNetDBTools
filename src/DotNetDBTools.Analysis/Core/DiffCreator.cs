@@ -9,13 +9,13 @@ namespace DotNetDBTools.Analysis.Core
     {
         protected readonly DbObjectsEqualityComparer DbObjectsEqualityComparer = new();
 
-        public abstract DatabaseDiff CreateDatabaseDiff(DatabaseInfo newDatabase, DatabaseInfo oldDatabase);
+        public abstract DatabaseDiff CreateDatabaseDiff(Database newDatabase, Database oldDatabase);
 
-        protected void BuildTablesDiff<TTableDiff>(DatabaseDiff databaseDiff, DatabaseInfo newDatabase, DatabaseInfo oldDatabase)
+        protected void BuildTablesDiff<TTableDiff>(DatabaseDiff databaseDiff, Database newDatabase, Database oldDatabase)
             where TTableDiff : TableDiff, new()
         {
-            List<TableInfo> addedTables = null;
-            List<TableInfo> removedTables = null;
+            List<Table> addedTables = null;
+            List<Table> removedTables = null;
             List<TableDiff> changedTables = new();
             FillAddedAndRemovedItemsAndApplyActionToChangedItems(
                 newDatabase.Tables, oldDatabase.Tables,
@@ -31,19 +31,19 @@ namespace DotNetDBTools.Analysis.Core
             databaseDiff.ChangedTables = changedTables;
         }
 
-        private TTableDiff CreateTableDiff<TTableDiff>(TableInfo newDbTable, TableInfo oldDbTable)
+        private TTableDiff CreateTableDiff<TTableDiff>(Table newDbTable, Table oldDbTable)
             where TTableDiff : TableDiff, new()
         {
             TTableDiff tableDiff = new()
             {
                 NewTable = newDbTable,
                 OldTable = oldDbTable,
-                CheckConstraintsToCreate = new List<CheckConstraintInfo>(),
-                CheckConstraintsToDrop = new List<CheckConstraintInfo>(),
-                IndexesToCreate = new List<IndexInfo>(),
-                IndexesToDrop = new List<IndexInfo>(),
-                TriggersToCreate = new List<TriggerInfo>(),
-                TriggersToDrop = new List<TriggerInfo>(),
+                CheckConstraintsToCreate = new List<CheckConstraint>(),
+                CheckConstraintsToDrop = new List<CheckConstraint>(),
+                IndexesToCreate = new List<Index>(),
+                IndexesToDrop = new List<Index>(),
+                TriggersToCreate = new List<Trigger>(),
+                TriggersToDrop = new List<Trigger>(),
             };
 
             BuildColumnsDiff(tableDiff, newDbTable, oldDbTable);
@@ -53,11 +53,11 @@ namespace DotNetDBTools.Analysis.Core
             return tableDiff;
         }
 
-        private void BuildColumnsDiff<TTableDiff>(TTableDiff tableDiff, TableInfo newDbTable, TableInfo oldDbTable)
+        private void BuildColumnsDiff<TTableDiff>(TTableDiff tableDiff, Table newDbTable, Table oldDbTable)
             where TTableDiff : TableDiff, new()
         {
-            List<ColumnInfo> addedColumns = null;
-            List<ColumnInfo> removedColumns = null;
+            List<Column> addedColumns = null;
+            List<Column> removedColumns = null;
             List<ColumnDiff> changedColumns = new();
             FillAddedAndRemovedItemsAndApplyActionToChangedItems(
                 newDbTable.Columns, oldDbTable.Columns,
@@ -77,11 +77,11 @@ namespace DotNetDBTools.Analysis.Core
             tableDiff.ChangedColumns = changedColumns;
         }
 
-        private void BuildPrimaryKeyDiff<TTableDiff>(TTableDiff tableDiff, TableInfo newDbTable, TableInfo oldDbTable)
+        private void BuildPrimaryKeyDiff<TTableDiff>(TTableDiff tableDiff, Table newDbTable, Table oldDbTable)
             where TTableDiff : TableDiff, new()
         {
-            PrimaryKeyInfo primaryKeyToCreate = null;
-            PrimaryKeyInfo primaryKeyToDrop = null;
+            PrimaryKey primaryKeyToCreate = null;
+            PrimaryKey primaryKeyToDrop = null;
             if (!DbObjectsEqualityComparer.Equals(newDbTable.PrimaryKey, oldDbTable.PrimaryKey))
             {
                 primaryKeyToCreate = newDbTable.PrimaryKey;
@@ -92,11 +92,11 @@ namespace DotNetDBTools.Analysis.Core
             tableDiff.PrimaryKeyToDrop = primaryKeyToDrop;
         }
 
-        private void BuildUniqueConstraintsDiff<TTableDiff>(TTableDiff tableDiff, TableInfo newDbTable, TableInfo oldDbTable)
+        private void BuildUniqueConstraintsDiff<TTableDiff>(TTableDiff tableDiff, Table newDbTable, Table oldDbTable)
             where TTableDiff : TableDiff, new()
         {
-            List<UniqueConstraintInfo> uniqueConstraintsToCreate = null;
-            List<UniqueConstraintInfo> uniqueConstraintsToDrop = null;
+            List<UniqueConstraint> uniqueConstraintsToCreate = null;
+            List<UniqueConstraint> uniqueConstraintsToDrop = null;
             FillAddedAndRemovedItemsAndApplyActionToChangedItems(
                 newDbTable.UniqueConstraints, oldDbTable.UniqueConstraints,
                 ref uniqueConstraintsToCreate, ref uniqueConstraintsToDrop,
@@ -110,11 +110,11 @@ namespace DotNetDBTools.Analysis.Core
             tableDiff.UniqueConstraintsToDrop = uniqueConstraintsToDrop;
         }
 
-        private void BuildForeignKeysDiff<TTableDiff>(TTableDiff tableDiff, TableInfo newDbTable, TableInfo oldDbTable)
+        private void BuildForeignKeysDiff<TTableDiff>(TTableDiff tableDiff, Table newDbTable, Table oldDbTable)
             where TTableDiff : TableDiff, new()
         {
-            List<ForeignKeyInfo> foreignKeysToCreate = null;
-            List<ForeignKeyInfo> foreignKeysToDrop = null;
+            List<ForeignKey> foreignKeysToCreate = null;
+            List<ForeignKey> foreignKeysToDrop = null;
             FillAddedAndRemovedItemsAndApplyActionToChangedItems(
                 newDbTable.ForeignKeys, oldDbTable.ForeignKeys,
                 ref foreignKeysToCreate, ref foreignKeysToDrop,
@@ -135,7 +135,7 @@ namespace DotNetDBTools.Analysis.Core
             ref List<TItem> removedItems,
             Action<TItem, TItem> changedItemFoundAction)
             where TCollection : IEnumerable<TItem>
-            where TItem : DBObjectInfo
+            where TItem : DBObject
         {
             HashSet<Guid> newCollectionItemIDs = new(newCollection.Select(x => x.ID));
             Dictionary<Guid, TItem> oldCollectionItemIDToItemMap = oldCollection.ToDictionary(x => x.ID, x => x);

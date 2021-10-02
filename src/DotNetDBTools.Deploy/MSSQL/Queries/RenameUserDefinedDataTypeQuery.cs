@@ -11,12 +11,12 @@ namespace DotNetDBTools.Deploy.MSSQL.Queries
         public string Sql => _sql;
         public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
 
-        public RenameUserDefinedDataTypeQuery(MSSQLUserDefinedTypeInfo userDefinedType)
+        public RenameUserDefinedDataTypeQuery(MSSQLUserDefinedType userDefinedType)
         {
             _sql = GetSql(userDefinedType);
         }
 
-        private static string GetSql(MSSQLUserDefinedTypeInfo userDefinedType)
+        private static string GetSql(MSSQLUserDefinedType userDefinedType)
         {
             string query =
 $@"EXEC sp_rename '{userDefinedType.Name}', '_DNDBTTemp_{userDefinedType.Name}', 'USERDATATYPE';";

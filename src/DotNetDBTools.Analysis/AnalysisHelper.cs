@@ -10,7 +10,7 @@ namespace DotNetDBTools.Analysis
 {
     public static class AnalysisHelper
     {
-        public static bool DbIsValid(DatabaseInfo database, out DbError dbError)
+        public static bool DbIsValid(Database database, out DbError dbError)
         {
             return database.Kind switch
             {
@@ -21,7 +21,7 @@ namespace DotNetDBTools.Analysis
             };
         }
 
-        public static DatabaseDiff CreateDatabaseDiff(DatabaseInfo newDatabase, DatabaseInfo oldDatabase)
+        public static DatabaseDiff CreateDatabaseDiff(Database newDatabase, Database oldDatabase)
         {
             return newDatabase.Kind switch
             {

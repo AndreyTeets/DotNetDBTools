@@ -11,12 +11,12 @@ namespace DotNetDBTools.Deploy.SQLite.Queries
         public string Sql => _sql;
         public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
 
-        public DropTableQuery(SQLiteTableInfo table)
+        public DropTableQuery(SQLiteTable table)
         {
             _sql = GetSql(table);
         }
 
-        private static string GetSql(SQLiteTableInfo table)
+        private static string GetSql(SQLiteTable table)
         {
             string query =
 $@"DROP TABLE {table.Name};";

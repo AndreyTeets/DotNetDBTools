@@ -8,7 +8,7 @@ namespace DotNetDBTools.Deploy.Core.ModelBuilders
     internal static class PrimaryKeysBuilder
     {
         public static void BuildTablesPrimaryKeys(
-            Dictionary<string, TableInfo> tables,
+            Dictionary<string, Table> tables,
             IEnumerable<PrimaryKeyRecord> primaryKeyRecords)
         {
             Dictionary<string, SortedDictionary<int, string>> columnNames = new();
@@ -20,11 +20,11 @@ namespace DotNetDBTools.Deploy.Core.ModelBuilders
                 columnNames[pkr.ConstraintName].Add(
                     pkr.ColumnPosition, pkr.ColumnName);
 
-                PrimaryKeyInfo pk = MapExceptColumnsToPrimaryKeyInfo(pkr);
-                tables[pkr.TableName].PrimaryKey = MapExceptColumnsToPrimaryKeyInfo(pkr);
+                PrimaryKey pk = MapExceptColumnsToPrimaryKeyModel(pkr);
+                tables[pkr.TableName].PrimaryKey = MapExceptColumnsToPrimaryKeyModel(pkr);
             }
 
-            foreach (TableInfo table in tables.Values)
+            foreach (Table table in tables.Values)
             {
                 if (table.PrimaryKey is null)
                     continue;
@@ -32,9 +32,9 @@ namespace DotNetDBTools.Deploy.Core.ModelBuilders
             }
         }
 
-        private static PrimaryKeyInfo MapExceptColumnsToPrimaryKeyInfo(PrimaryKeyRecord pkr)
+        private static PrimaryKey MapExceptColumnsToPrimaryKeyModel(PrimaryKeyRecord pkr)
         {
-            return new PrimaryKeyInfo()
+            return new PrimaryKey()
             {
                 ID = Guid.NewGuid(),
                 Name = pkr.ConstraintName,

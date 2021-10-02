@@ -4,6 +4,6 @@ namespace DotNetDBTools.Analysis.Core
 {
     public interface IDbModelConverter
     {
-        DatabaseInfo FromAgnostic(DatabaseInfo databaseInfo);
+        Database FromAgnostic(Database database);
     }
 }

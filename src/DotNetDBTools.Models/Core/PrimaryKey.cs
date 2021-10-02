@@ -2,7 +2,7 @@
 
 namespace DotNetDBTools.Models.Core
 {
-    public class UniqueConstraintInfo : DBObjectInfo
+    public class PrimaryKey : DBObject
     {
         public IEnumerable<string> Columns { get; set; }
     }

@@ -8,21 +8,21 @@ namespace DotNetDBTools.DefinitionParsing.Agnostic
 {
     internal class AgnosticDataTypeMapper : IDataTypeMapper
     {
-        public DataTypeInfo GetDataTypeInfo(IDataType dataType)
+        public DataType MapToDataTypeModel(IDataType dataType)
         {
             return dataType switch
             {
-                StringDataType stringDataType => GetStringDataTypeInfo(stringDataType),
-                IntDataType intDataType => GetIntDataTypeInfo(intDataType),
-                BinaryDataType binaryDataType => GetBinaryDataTypeInfo(binaryDataType),
-                DateTimeDataType dateTimeDataType => GetDateTimeDataTypeInfo(dateTimeDataType),
+                StringDataType stringDataType => MapToDataTypeModel(stringDataType),
+                IntDataType intDataType => MapToDataTypeModel(intDataType),
+                BinaryDataType binaryDataType => MapToDataTypeModel(binaryDataType),
+                DateTimeDataType dateTimeDataType => MapToDataTypeModel(dateTimeDataType),
                 _ => throw new InvalidOperationException($"Invalid dataType: '{dataType}'")
             };
         }
 
-        private static DataTypeInfo GetStringDataTypeInfo(StringDataType stringDataType)
+        private static DataType MapToDataTypeModel(StringDataType stringDataType)
         {
-            return new DataTypeInfo()
+            return new DataType()
             {
                 Name = DataTypeNames.String,
                 Length = stringDataType.Length,
@@ -30,18 +30,18 @@ namespace DotNetDBTools.DefinitionParsing.Agnostic
             };
         }
 
-        private static DataTypeInfo GetIntDataTypeInfo(IntDataType intDataType)
+        private static DataType MapToDataTypeModel(IntDataType intDataType)
         {
-            return new DataTypeInfo()
+            return new DataType()
             {
                 Name = DataTypeNames.Int,
                 Size = int.Parse($"{intDataType.Size}".Replace("Int", "")),
             };
         }
 
-        private static DataTypeInfo GetBinaryDataTypeInfo(BinaryDataType binaryDataType)
+        private static DataType MapToDataTypeModel(BinaryDataType binaryDataType)
         {
-            return new DataTypeInfo()
+            return new DataType()
             {
                 Name = DataTypeNames.Binary,
                 Length = binaryDataType.Length,
@@ -49,9 +49,9 @@ namespace DotNetDBTools.DefinitionParsing.Agnostic
             };
         }
 
-        private static DataTypeInfo GetDateTimeDataTypeInfo(DateTimeDataType _)
+        private static DataType MapToDataTypeModel(DateTimeDataType _)
         {
-            return new DataTypeInfo()
+            return new DataType()
             {
                 Name = DataTypeNames.DateTime,
             };

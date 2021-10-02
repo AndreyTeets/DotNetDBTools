@@ -20,7 +20,7 @@ namespace DotNetDBTools.Deploy
         {
         }
 
-        protected override DatabaseInfo GetDatabaseModelIfDbExistsOrCreateEmptyDbAndModel(string connectionString)
+        protected override Database GetDatabaseModelIfDbExistsOrCreateEmptyDbAndModel(string connectionString)
         {
             SQLiteInteractor interactor = new(new SQLiteQueryExecutor(connectionString));
             bool databaseExists = interactor.DNDBTSysTablesExist();
@@ -42,7 +42,7 @@ namespace DotNetDBTools.Deploy
             }
         }
 
-        protected override DatabaseInfo GetDatabaseModelIfDbExistsAndRegisteredOrCreateEmptyModel(string connectionString)
+        protected override Database GetDatabaseModelIfDbExistsAndRegisteredOrCreateEmptyModel(string connectionString)
         {
             SQLiteInteractor interactor = new(new SQLiteQueryExecutor(connectionString));
             if (interactor.DNDBTSysTablesExist())
@@ -50,9 +50,9 @@ namespace DotNetDBTools.Deploy
             return CreateEmptyDatabaseModel();
         }
 
-        protected override DatabaseInfo CreateEmptyDatabaseModel()
+        protected override Database CreateEmptyDatabaseModel()
         {
-            return new SQLiteDatabaseInfo(null);
+            return new SQLiteDatabase(null);
         }
     }
 }

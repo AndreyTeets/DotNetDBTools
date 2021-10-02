@@ -8,7 +8,7 @@ namespace DotNetDBTools.Deploy.Core.ModelBuilders
     internal static class UniqueConstraintsBuilder
     {
         public static void BuildTablesUniqueConstraints(
-            Dictionary<string, TableInfo> tables,
+            Dictionary<string, Table> tables,
             IEnumerable<UniqueConstraintRecord> uniqueConstraintRecords)
         {
             Dictionary<string, SortedDictionary<int, string>> columnNames = new();
@@ -20,22 +20,22 @@ namespace DotNetDBTools.Deploy.Core.ModelBuilders
                 columnNames[ucr.ConstraintName].Add(
                     ucr.ColumnPosition, ucr.ColumnName);
 
-                UniqueConstraintInfo uc = MapExceptColumnsToUniqueConstraintInfo(ucr);
-                ((List<UniqueConstraintInfo>)tables[ucr.TableName].UniqueConstraints).Add(uc);
+                UniqueConstraint uc = MapExceptColumnsToUniqueConstraintModel(ucr);
+                ((List<UniqueConstraint>)tables[ucr.TableName].UniqueConstraints).Add(uc);
             }
 
-            foreach (TableInfo table in tables.Values)
+            foreach (Table table in tables.Values)
             {
-                foreach (UniqueConstraintInfo uc in table.UniqueConstraints)
+                foreach (UniqueConstraint uc in table.UniqueConstraints)
                 {
                     uc.Columns = columnNames[uc.Name].Select(x => x.Value).ToList();
                 }
             }
         }
 
-        private static UniqueConstraintInfo MapExceptColumnsToUniqueConstraintInfo(UniqueConstraintRecord ucr)
+        private static UniqueConstraint MapExceptColumnsToUniqueConstraintModel(UniqueConstraintRecord ucr)
         {
-            return new UniqueConstraintInfo()
+            return new UniqueConstraint()
             {
                 ID = Guid.NewGuid(),
                 Name = ucr.ConstraintName,

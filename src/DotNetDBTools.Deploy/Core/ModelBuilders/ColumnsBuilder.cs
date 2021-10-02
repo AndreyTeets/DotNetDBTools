@@ -6,12 +6,12 @@ namespace DotNetDBTools.Deploy.Core.ModelBuilders
 {
     internal static class ColumnsBuilder
     {
-        public static Dictionary<string, TableInfo> BuildTablesListWithColumns<TTable>(
+        public static Dictionary<string, Table> BuildTablesListWithColumns<TTable>(
             IEnumerable<ColumnRecord> columnRecords,
-            Func<ColumnRecord, ColumnInfo> mapToColumnInfo)
-            where TTable : TableInfo, new()
+            Func<ColumnRecord, Column> mapToColumnModel)
+            where TTable : Table, new()
         {
-            Dictionary<string, TableInfo> tables = new();
+            Dictionary<string, Table> tables = new();
             foreach (ColumnRecord columnRecord in columnRecords)
             {
                 if (!tables.ContainsKey(columnRecord.TableName))
@@ -20,17 +20,17 @@ namespace DotNetDBTools.Deploy.Core.ModelBuilders
                     {
                         ID = Guid.NewGuid(),
                         Name = columnRecord.TableName,
-                        Columns = new List<ColumnInfo>(),
-                        UniqueConstraints = new List<UniqueConstraintInfo>(),
-                        CheckConstraints = new List<CheckConstraintInfo>(),
-                        Indexes = new List<IndexInfo>(),
-                        Triggers = new List<TriggerInfo>(),
-                        ForeignKeys = new List<ForeignKeyInfo>(),
+                        Columns = new List<Column>(),
+                        UniqueConstraints = new List<UniqueConstraint>(),
+                        CheckConstraints = new List<CheckConstraint>(),
+                        Indexes = new List<Index>(),
+                        Triggers = new List<Trigger>(),
+                        ForeignKeys = new List<ForeignKey>(),
                     };
                     tables.Add(columnRecord.TableName, table);
                 }
-                ColumnInfo columnInfo = mapToColumnInfo(columnRecord);
-                ((List<ColumnInfo>)tables[columnRecord.TableName].Columns).Add(columnInfo);
+                Column column = mapToColumnModel(columnRecord);
+                ((List<Column>)tables[columnRecord.TableName].Columns).Add(column);
             }
             return tables;
         }

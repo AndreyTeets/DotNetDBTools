@@ -12,13 +12,13 @@ namespace DotNetDBTools.Deploy.MSSQL.Queries.DNDBTSysInfo
         public string Sql => _sql;
         public IEnumerable<QueryParameter> Parameters => _parameters;
 
-        public UseNewUDTInAllTablesQuery(MSSQLUserDefinedTypeDiff userDefinedTypeDiff)
+        public UseNewUDTInAllTablesQuery(MSSQLUserDefinedTypeDiff udtDiff)
         {
-            _sql = GetSql(userDefinedTypeDiff);
+            _sql = GetSql(udtDiff);
             _parameters = new List<QueryParameter>();
         }
 
-        private static string GetSql(MSSQLUserDefinedTypeDiff userDefinedTypeDiff)
+        private static string GetSql(MSSQLUserDefinedTypeDiff udtDiff)
         {
             string query =
 $@"DECLARE @SqlText NVARCHAR(MAX) =
@@ -30,7 +30,7 @@ $@"DECLARE @SqlText NVARCHAR(MAX) =
         (
             SELECT
                 cci.DropConstraintStatement + CHAR(10) +
-                N'ALTER TABLE ' + QUOTENAME(cci.TABLE_NAME) + ' ALTER COLUMN ' + QUOTENAME(cci.COLUMN_NAME) + ' ' + '[{userDefinedTypeDiff.NewUserDefinedType.Name}]' + ';' + CHAR(10) +
+                N'ALTER TABLE ' + QUOTENAME(cci.TABLE_NAME) + ' ALTER COLUMN ' + QUOTENAME(cci.COLUMN_NAME) + ' ' + '[{udtDiff.NewUserDefinedType.Name}]' + ';' + CHAR(10) +
                 cci.AddConstraintStatement AS AlterStatement
             FROM
             (
@@ -67,7 +67,7 @@ $@"DECLARE @SqlText NVARCHAR(MAX) =
                 LEFT JOIN INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc
                     ON tc.CONSTRAINT_NAME = ccu.CONSTRAINT_NAME
                         AND tc.CONSTRAINT_TYPE IN ('UNIQUE', 'PRIMARY KEY')
-                WHERE c.DOMAIN_NAME = '{userDefinedTypeDiff.OldUserDefinedType.Name}'
+                WHERE c.DOMAIN_NAME = '{udtDiff.OldUserDefinedType.Name}'
             ) cci
         ) t FOR XML PATH('')), 1, 2, '')
 );

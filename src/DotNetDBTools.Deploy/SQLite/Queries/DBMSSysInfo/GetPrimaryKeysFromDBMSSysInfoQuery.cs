@@ -40,7 +40,7 @@ WHERE sm.type = 'table'
         internal static class ResultsInterpreter
         {
             public static void BuildTablesPrimaryKeys(
-                Dictionary<string, TableInfo> tables,
+                Dictionary<string, Table> tables,
                 IEnumerable<PrimaryKeyRecord> primaryKeyRecords)
             {
                 PrimaryKeysBuilder.BuildTablesPrimaryKeys(tables, primaryKeyRecords);

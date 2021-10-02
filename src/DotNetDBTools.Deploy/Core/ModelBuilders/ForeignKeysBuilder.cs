@@ -8,7 +8,7 @@ namespace DotNetDBTools.Deploy.Core.ModelBuilders
     internal static class ForeignKeysBuilder
     {
         public static void BuildTablesForeignKeys(
-            Dictionary<string, TableInfo> tables,
+            Dictionary<string, Table> tables,
             IEnumerable<ForeignKeyRecord> foreignKeyRecords,
             Func<string, string> mapUpdateActionName)
         {
@@ -32,25 +32,25 @@ namespace DotNetDBTools.Deploy.Core.ModelBuilders
 
                 if (!addedForeignKeysForTable[fkr.ThisTableName].Contains(fkr.ForeignKeyName))
                 {
-                    ForeignKeyInfo foreignKeyInfo = MapExceptColumnsToForeignKeyInfo(fkr, mapUpdateActionName);
-                    ((List<ForeignKeyInfo>)tables[fkr.ThisTableName].ForeignKeys).Add(foreignKeyInfo);
+                    ForeignKey fk = MapExceptColumnsToForeignKeyModel(fkr, mapUpdateActionName);
+                    ((List<ForeignKey>)tables[fkr.ThisTableName].ForeignKeys).Add(fk);
                     addedForeignKeysForTable[fkr.ThisTableName].Add(fkr.ForeignKeyName);
                 }
             }
 
-            foreach (TableInfo table in tables.Values)
+            foreach (Table table in tables.Values)
             {
-                foreach (ForeignKeyInfo foreignKeyInfo in table.ForeignKeys)
+                foreach (ForeignKey fk in table.ForeignKeys)
                 {
-                    foreignKeyInfo.ThisColumnNames = thisColumnNames[foreignKeyInfo.Name].Select(x => x.Value).ToList();
-                    foreignKeyInfo.ReferencedTableColumnNames = referencedColumnNames[foreignKeyInfo.Name].Select(x => x.Value).ToList();
+                    fk.ThisColumnNames = thisColumnNames[fk.Name].Select(x => x.Value).ToList();
+                    fk.ReferencedTableColumnNames = referencedColumnNames[fk.Name].Select(x => x.Value).ToList();
                 }
             }
         }
 
-        private static ForeignKeyInfo MapExceptColumnsToForeignKeyInfo(ForeignKeyRecord fkr, Func<string, string> mapUpdateActionName)
+        private static ForeignKey MapExceptColumnsToForeignKeyModel(ForeignKeyRecord fkr, Func<string, string> mapUpdateActionName)
         {
-            return new ForeignKeyInfo()
+            return new ForeignKey()
             {
                 ID = Guid.NewGuid(),
                 Name = fkr.ForeignKeyName,

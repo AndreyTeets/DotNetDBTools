@@ -5,18 +5,18 @@ namespace DotNetDBTools.Deploy.SQLite
 {
     internal static class SQLiteSqlTypeMapper
     {
-        public static string GetSqlType(DataTypeInfo dataTypeInfo)
+        public static string GetSqlType(DataType dataType)
         {
-            return dataTypeInfo.Name switch
+            return dataType.Name switch
             {
-                DataTypeNames.String => GetStringSqlType(dataTypeInfo),
-                DataTypeNames.Int => GetIntSqlType(dataTypeInfo),
-                DataTypeNames.Binary => GetBinarySqlType(dataTypeInfo),
-                _ => throw new InvalidOperationException($"Invalid dataTypeInfo.Name: '{dataTypeInfo.Name}'")
+                DataTypeNames.String => GetStringSqlType(dataType),
+                DataTypeNames.Int => GetIntSqlType(dataType),
+                DataTypeNames.Binary => GetBinarySqlType(dataType),
+                _ => throw new InvalidOperationException($"Invalid dataTypeInfo.Name: '{dataType.Name}'")
             };
         }
 
-        public static DataTypeInfo GetModelType(string sqlType)
+        public static DataType GetModelType(string sqlType)
         {
             return sqlType.ToUpper() switch
             {
@@ -27,40 +27,40 @@ namespace DotNetDBTools.Deploy.SQLite
             };
         }
 
-        private static string GetStringSqlType(DataTypeInfo _)
+        private static string GetStringSqlType(DataType _)
         {
             return SqlNames.TEXT;
         }
 
-        private static DataTypeInfo GetStringModelType()
+        private static DataType GetStringModelType()
         {
-            return new DataTypeInfo()
+            return new DataType()
             {
                 Name = DataTypeNames.String,
             };
         }
 
-        private static string GetIntSqlType(DataTypeInfo _)
+        private static string GetIntSqlType(DataType _)
         {
             return SqlNames.INTEGER;
         }
 
-        private static DataTypeInfo GetIntModelType()
+        private static DataType GetIntModelType()
         {
-            return new DataTypeInfo()
+            return new DataType()
             {
                 Name = DataTypeNames.Int,
             };
         }
 
-        private static string GetBinarySqlType(DataTypeInfo _)
+        private static string GetBinarySqlType(DataType _)
         {
             return SqlNames.BLOB;
         }
 
-        private static DataTypeInfo GetBinaryModelType()
+        private static DataType GetBinaryModelType()
         {
-            return new DataTypeInfo()
+            return new DataType()
             {
                 Name = DataTypeNames.Binary,
             };

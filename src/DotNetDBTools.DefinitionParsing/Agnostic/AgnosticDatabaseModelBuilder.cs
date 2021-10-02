@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using DotNetDBTools.Definition.Agnostic;
 using DotNetDBTools.Definition.Core;
 using DotNetDBTools.DefinitionParsing.Core;
 using DotNetDBTools.Models.Agnostic;
@@ -13,16 +12,16 @@ namespace DotNetDBTools.DefinitionParsing.Agnostic
         {
         }
 
-        public AgnosticDatabaseInfo BuildDatabaseModel(Assembly dbAssembly)
+        public AgnosticDatabase BuildDatabaseModel(Assembly dbAssembly)
         {
-            return new AgnosticDatabaseInfo(DbAssemblyInfoHelper.GetDbName(dbAssembly))
+            return new AgnosticDatabase(DbAssemblyInfoHelper.GetDbName(dbAssembly))
             {
-                Tables = BuildTableModels<AgnosticTableInfo>(dbAssembly),
-                Views = BuildViewModels<AgnosticViewInfo>(dbAssembly),
+                Tables = BuildTableModels<AgnosticTable>(dbAssembly),
+                Views = BuildViewModels<AgnosticView>(dbAssembly),
             };
         }
 
-        protected override string GetOnUpdateActionName(BaseForeignKey fk) => ((ForeignKey)fk).OnUpdate.ToString();
-        protected override string GetOnDeleteActionName(BaseForeignKey fk) => ((ForeignKey)fk).OnDelete.ToString();
+        protected override string GetOnUpdateActionName(BaseForeignKey fk) => ((Definition.Agnostic.ForeignKey)fk).OnUpdate.ToString();
+        protected override string GetOnDeleteActionName(BaseForeignKey fk) => ((Definition.Agnostic.ForeignKey)fk).OnDelete.ToString();
     }
 }

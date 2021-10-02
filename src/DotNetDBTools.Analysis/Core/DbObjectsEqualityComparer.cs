@@ -7,9 +7,9 @@ using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.Analysis.Core
 {
-    internal class DbObjectsEqualityComparer : IEqualityComparer<DBObjectInfo>
+    internal class DbObjectsEqualityComparer : IEqualityComparer<DBObject>
     {
-        public bool Equals(DBObjectInfo x, DBObjectInfo y)
+        public bool Equals(DBObject x, DBObject y)
         {
             if (x is null && y is null)
                 return true;
@@ -19,7 +19,7 @@ namespace DotNetDBTools.Analysis.Core
             return HaveEqualPropertiesRecursive(x, y);
         }
 
-        public int GetHashCode(DBObjectInfo obj)
+        public int GetHashCode(DBObject obj)
         {
             return obj.GetHashCode();
         }
@@ -31,7 +31,7 @@ namespace DotNetDBTools.Analysis.Core
             IEnumerable properties = parentType
                 .GetProperties(BindingFlags.Public | BindingFlags.Instance)
                 .Where(x => x.CanRead && x.Name != "SyncRoot" && x.GetIndexParameters().Length == 0 &&
-                    x.Module.Assembly.FullName == typeof(DatabaseInfo).Assembly.FullName);
+                    x.Module.Assembly.FullName == typeof(Database).Assembly.FullName);
 
             foreach (PropertyInfo property in properties)
             {
@@ -151,7 +151,7 @@ namespace DotNetDBTools.Analysis.Core
 
                 if (IsSimpleObject(xType))
                     return SimpleObjectsAreEqual(x, y);
-                else if (typeof(DBObjectInfo).IsAssignableFrom(xType))
+                else if (typeof(DBObject).IsAssignableFrom(xType))
                     return HaveEqualPropertiesRecursive(x, y);
                 else
                     throw new InvalidOperationException($"Invalid item type '{xType}' in collection");
@@ -162,8 +162,8 @@ namespace DotNetDBTools.Analysis.Core
                 Type type = obj.GetType();
                 if (IsSimpleObject(type))
                     return obj.GetHashCode();
-                else if (typeof(DBObjectInfo).IsAssignableFrom(type))
-                    return ((DBObjectInfo)obj).ID.GetHashCode();
+                else if (typeof(DBObject).IsAssignableFrom(type))
+                    return ((DBObject)obj).ID.GetHashCode();
                 else
                     throw new InvalidOperationException($"Invalid item type '{type}' in collection");
             }

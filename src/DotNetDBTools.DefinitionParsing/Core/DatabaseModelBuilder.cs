@@ -21,72 +21,72 @@ namespace DotNetDBTools.DefinitionParsing.Core
         }
 
         protected List<T> BuildTableModels<T>(Assembly dbAssembly)
-            where T : TableInfo, new()
+            where T : Table, new()
         {
             IEnumerable<IBaseTable> tables = GetInstancesOfAllTypesImplementingInterface<IBaseTable>(dbAssembly);
-            List<T> tableInfos = new();
+            List<T> tableModels = new();
             foreach (IBaseTable table in tables)
             {
-                T tableInfo = new()
+                T tableModel = new()
                 {
                     ID = table.ID,
                     Name = table.GetType().Name,
                     Columns = BuildColumnModels(table),
                     PrimaryKey = BuildPrimaryKeyModels(table),
                     UniqueConstraints = BuildUniqueConstraintModels(table),
-                    CheckConstraints = new List<CheckConstraintInfo>(),
-                    Indexes = new List<IndexInfo>(),
-                    Triggers = new List<TriggerInfo>(),
+                    CheckConstraints = new List<CheckConstraint>(),
+                    Indexes = new List<Index>(),
+                    Triggers = new List<Trigger>(),
                     ForeignKeys = BuildForeignKeyModels(table),
                 };
-                BuildAdditionalTableModelProperties(tableInfo, table);
-                tableInfos.Add(tableInfo);
+                BuildAdditionalTableModelProperties(tableModel, table);
+                tableModels.Add(tableModel);
             }
-            return tableInfos;
+            return tableModels;
         }
 
-        protected virtual void BuildAdditionalTableModelProperties<T>(T tableInfo, IBaseTable table)
-            where T : TableInfo, new()
+        protected virtual void BuildAdditionalTableModelProperties<T>(T tableModel, IBaseTable table)
+            where T : Table, new()
         {
         }
 
         protected List<T> BuildViewModels<T>(Assembly dbAssembly)
-            where T : ViewInfo, new()
+            where T : View, new()
         {
             IEnumerable<IBaseView> views = GetInstancesOfAllTypesImplementingInterface<IBaseView>(dbAssembly);
-            List<T> viewInfos = new();
+            List<T> viewModels = new();
             foreach (IBaseView view in views)
             {
-                T viewInfo = new()
+                T viewModel = new()
                 {
                     ID = view.ID,
                     Name = view.GetType().Name,
                     Code = view.Code,
                 };
-                BuildAdditionalViewModelProperties(viewInfo, view);
-                viewInfos.Add(viewInfo);
+                BuildAdditionalViewModelProperties(viewModel, view);
+                viewModels.Add(viewModel);
             }
-            return viewInfos;
+            return viewModels;
         }
 
-        protected virtual void BuildAdditionalViewModelProperties<T>(T viewInfo, IBaseView view)
-            where T : ViewInfo, new()
+        protected virtual void BuildAdditionalViewModelProperties<T>(T viewModel, IBaseView view)
+            where T : View, new()
         {
         }
 
-        private List<ColumnInfo> BuildColumnModels(IBaseTable table)
+        private List<Column> BuildColumnModels(IBaseTable table)
             => table.GetType().GetPropertyOrFieldMembers()
                 .Where(x => typeof(BaseColumn).IsAssignableFrom(x.GetPropertyOrFieldType()))
                 .OrderBy(x => x.Name, StringComparer.Ordinal)
                 .Select(x =>
                 {
                     BaseColumn column = (BaseColumn)x.GetPropertyOrFieldValue(table);
-                    DataTypeInfo dataTypeInfo = DataTypeMapper.GetDataTypeInfo(column.DataType);
-                    ColumnInfo columnInfo = new()
+                    DataType dataTypeModel = DataTypeMapper.MapToDataTypeModel(column.DataType);
+                    Column columnModel = new()
                     {
                         ID = column.ID,
                         Name = x.Name,
-                        DataType = dataTypeInfo,
+                        DataType = dataTypeModel,
                         Nullable = column.Nullable,
                         Identity = column.Identity,
                         Default = DefaultValueMapper.MapDefaultValue(column),
@@ -94,67 +94,67 @@ namespace DotNetDBTools.DefinitionParsing.Core
                             ? column.DefaultConstraintName ?? $"DF_{table.GetType().Name}_{x.Name}"
                             : null,
                     };
-                    BuildAdditionalColumnModelProperties(columnInfo, column);
-                    return columnInfo;
+                    BuildAdditionalColumnModelProperties(columnModel, column);
+                    return columnModel;
                 })
                 .ToList();
 
-        protected virtual void BuildAdditionalColumnModelProperties(ColumnInfo columnInfo, BaseColumn column)
+        protected virtual void BuildAdditionalColumnModelProperties(Column columnModel, BaseColumn column)
         {
         }
 
-        private PrimaryKeyInfo BuildPrimaryKeyModels(IBaseTable table)
+        private PrimaryKey BuildPrimaryKeyModels(IBaseTable table)
             => table.GetType().GetPropertyOrFieldMembers()
                 .Where(x => typeof(BasePrimaryKey).IsAssignableFrom(x.GetPropertyOrFieldType()))
                 .OrderBy(x => x.Name, StringComparer.Ordinal)
                 .Select(x =>
                 {
                     BasePrimaryKey pk = (BasePrimaryKey)x.GetPropertyOrFieldValue(table);
-                    PrimaryKeyInfo pkInfo = new()
+                    PrimaryKey pkModel = new()
                     {
                         ID = pk.ID,
                         Name = x.Name,
                         Columns = pk.Columns.ToList(),
                     };
-                    BuildAdditionalPrimaryKeyModelProperties(pkInfo, pk);
-                    return pkInfo;
+                    BuildAdditionalPrimaryKeyModelProperties(pkModel, pk);
+                    return pkModel;
                 })
                 .SingleOrDefault();
 
-        protected virtual void BuildAdditionalPrimaryKeyModelProperties(PrimaryKeyInfo pkInfo, BasePrimaryKey pk)
+        protected virtual void BuildAdditionalPrimaryKeyModelProperties(PrimaryKey pkModel, BasePrimaryKey pk)
         {
         }
 
-        private List<UniqueConstraintInfo> BuildUniqueConstraintModels(IBaseTable table)
+        private List<UniqueConstraint> BuildUniqueConstraintModels(IBaseTable table)
             => table.GetType().GetPropertyOrFieldMembers()
                 .Where(x => typeof(BaseUniqueConstraint).IsAssignableFrom(x.GetPropertyOrFieldType()))
                 .OrderBy(x => x.Name, StringComparer.Ordinal)
                 .Select(x =>
                 {
                     BaseUniqueConstraint uc = (BaseUniqueConstraint)x.GetPropertyOrFieldValue(table);
-                    UniqueConstraintInfo ucInfo = new()
+                    UniqueConstraint ucModel = new()
                     {
                         ID = uc.ID,
                         Name = x.Name,
                         Columns = uc.Columns.ToList(),
                     };
-                    BuildAdditionalUniqueConstraintModelProperties(ucInfo, uc);
-                    return ucInfo;
+                    BuildAdditionalUniqueConstraintModelProperties(ucModel, uc);
+                    return ucModel;
                 })
                 .ToList();
 
-        protected virtual void BuildAdditionalUniqueConstraintModelProperties(UniqueConstraintInfo ucInfo, BaseUniqueConstraint uc)
+        protected virtual void BuildAdditionalUniqueConstraintModelProperties(UniqueConstraint ucModel, BaseUniqueConstraint uc)
         {
         }
 
-        private List<ForeignKeyInfo> BuildForeignKeyModels(IBaseTable table)
+        private List<ForeignKey> BuildForeignKeyModels(IBaseTable table)
             => table.GetType().GetPropertyOrFieldMembers()
                 .Where(x => typeof(BaseForeignKey).IsAssignableFrom(x.GetPropertyOrFieldType()))
                 .OrderBy(x => x.Name, StringComparer.Ordinal)
                 .Select(x =>
                 {
                     BaseForeignKey fk = (BaseForeignKey)x.GetPropertyOrFieldValue(table);
-                    ForeignKeyInfo fkInfo = new()
+                    ForeignKey fkModel = new()
                     {
                         ID = fk.ID,
                         Name = x.Name,
@@ -164,12 +164,12 @@ namespace DotNetDBTools.DefinitionParsing.Core
                         OnUpdate = GetOnUpdateActionName(fk),
                         OnDelete = GetOnDeleteActionName(fk),
                     };
-                    BuildAdditionalForeignKeyModelProperties(fkInfo, fk);
-                    return fkInfo;
+                    BuildAdditionalForeignKeyModelProperties(fkModel, fk);
+                    return fkModel;
                 })
                 .ToList();
 
-        protected virtual void BuildAdditionalForeignKeyModelProperties(ForeignKeyInfo fkInfo, BaseForeignKey fk)
+        protected virtual void BuildAdditionalForeignKeyModelProperties(ForeignKey fkModel, BaseForeignKey fk)
         {
         }
 

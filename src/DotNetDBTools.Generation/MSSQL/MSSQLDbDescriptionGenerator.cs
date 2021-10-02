@@ -3,11 +3,11 @@ using DotNetDBTools.Models.MSSQL;
 
 namespace DotNetDBTools.Generation.MSSQL
 {
-    internal static class MSSQLDescriptionSourceGenerator
+    internal static class MSSQLDescriptionGenerator
     {
-        public static string GenerateDescription(MSSQLDatabaseInfo databaseInfo)
+        public static string GenerateDescription(MSSQLDatabase database)
         {
-            return TablesDescriptionGenerator.GenerateTablesDescription(databaseInfo);
+            return TablesDescriptionGenerator.GenerateTablesDescription(database);
         }
     }
 }

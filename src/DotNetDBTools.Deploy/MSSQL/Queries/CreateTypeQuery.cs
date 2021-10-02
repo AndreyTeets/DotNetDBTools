@@ -12,13 +12,13 @@ namespace DotNetDBTools.Deploy.MSSQL.Queries
         public string Sql => _sql;
         public IEnumerable<QueryParameter> Parameters => _parameters;
 
-        public CreateTypeQuery(MSSQLUserDefinedTypeInfo userDefinedType)
+        public CreateTypeQuery(MSSQLUserDefinedType userDefinedType)
         {
             _sql = GetSql(userDefinedType);
             _parameters = new List<QueryParameter>();
         }
 
-        private static string GetSql(MSSQLUserDefinedTypeInfo userDefinedType)
+        private static string GetSql(MSSQLUserDefinedType userDefinedType)
         {
             string query =
 $@"CREATE TYPE {userDefinedType.Name} FROM {MSSQLSqlTypeMapper.GetSqlType(userDefinedType.UnderlyingDataType)};";

@@ -31,7 +31,7 @@ WHERE i.is_unique_constraint = 1
         internal static class ResultsInterpreter
         {
             public static void BuildTablesUniqueConstraints(
-                Dictionary<string, TableInfo> tables,
+                Dictionary<string, Table> tables,
                 IEnumerable<UniqueConstraintRecord> uniqueConstraintRecords)
             {
                 UniqueConstraintsBuilder.BuildTablesUniqueConstraints(tables, uniqueConstraintRecords);

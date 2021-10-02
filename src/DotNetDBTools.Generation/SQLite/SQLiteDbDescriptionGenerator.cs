@@ -3,11 +3,11 @@ using DotNetDBTools.Models.SQLite;
 
 namespace DotNetDBTools.Generation.SQLite
 {
-    internal static class SQLiteDescriptionSourceGenerator
+    internal static class SQLiteDescriptionGenerator
     {
-        public static string GenerateDescription(SQLiteDatabaseInfo databaseInfo)
+        public static string GenerateDescription(SQLiteDatabase database)
         {
-            return TablesDescriptionGenerator.GenerateTablesDescription(databaseInfo);
+            return TablesDescriptionGenerator.GenerateTablesDescription(database);
         }
     }
 }

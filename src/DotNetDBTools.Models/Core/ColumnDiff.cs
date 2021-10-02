@@ -2,7 +2,7 @@
 {
     public class ColumnDiff
     {
-        public ColumnInfo NewColumn { get; set; }
-        public ColumnInfo OldColumn { get; set; }
+        public Column NewColumn { get; set; }
+        public Column OldColumn { get; set; }
     }
 }

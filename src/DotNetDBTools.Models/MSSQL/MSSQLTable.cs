@@ -2,7 +2,7 @@
 
 namespace DotNetDBTools.Models.MSSQL
 {
-    public class MSSQLViewInfo : ViewInfo
+    public class MSSQLTable : Table
     {
     }
 }
