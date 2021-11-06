@@ -1,7 +1,8 @@
 <h1 align="center">DotNetDBTools</h1>
 
-DotNetDBTools is a set of libraries to define and deploy relational databases. Or in other words - database version control tools.<br/>
-It provides the means to conviniently describe database structure for supported DBMS's in c# code, to analyze that structure and the means of publishing it to the selected DBMS with automatic differences calculation between what's being published and what's currently in the DBMS now.<br/>
+DotNetDBTools is a set of libraries to define and deploy relational databases throughout their evolution using database as code approach.<br/>
+Or in other words - state-based (declarative) database version control tools.<br/>
+It provides the means to conviniently describe database structure for supported DBMS's in c# code in a declarative way, to analyze that structure and the means of publishing it to the selected DBMS with automatic differences calculation between what's being published and what's currently in the DBMS now.<br/>
 
 ## More details
 Differences are calculated on the idea of assigning unique identifiers to each object (table, column, foreign key, function, e.t.c.) in database description (and saving them in DBMS as well) and then creating new objects during publish if there's no record of this identifier in DBMS now, altering only changed properties of this object (like changing name for a table, or changing data type for a column) if there's a record of this identifier in DBMS now and dropping objects if object was deleted in description but still exists in DBMS. Identifiers are there to provide a reliable mapping between what's in the description and what's in DBMS because it can't be done with names which often change.
@@ -120,7 +121,7 @@ new SqlConnection(_connectionString).Execute(File.ReadAllText("./publishScript.s
 # Additional information
 More end-to-end working examples can be found in /samples directory of this project.<br/>
 In order to run these samples docker container with appropriate DBMS have to be started (except for SQLite which works out of the box).
-To start containers simply run any(or all) integration test for the chosen DBMS, it will create container with required parameters and leave it running.
+To start containers simply run any (or all) integration test for the chosen DBMS, it will create container with required parameters and leave it running.
 
 # Licence
 MIT License. See [LICENSE](LICENSE) file.
