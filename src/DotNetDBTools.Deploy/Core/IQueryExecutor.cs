@@ -2,7 +2,7 @@
 
 namespace DotNetDBTools.Deploy.Core
 {
-    public interface IQueryExecutor
+    internal interface IQueryExecutor
     {
         public void BeginTransaction();
         public void CommitTransaction();

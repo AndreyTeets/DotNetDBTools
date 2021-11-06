@@ -3,7 +3,6 @@ using System.Data.SqlClient;
 using DotNetDBTools.Analysis.MSSQL;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.MSSQL;
-using DotNetDBTools.Deploy.MSSQL.Factories;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.MSSQL;
 
@@ -15,9 +14,7 @@ namespace DotNetDBTools.Deploy
             allowDbCreation: allowDbCreation,
             allowDataLoss: allowDataLoss,
             dbModelConverter: new MSSQLDbModelConverter(),
-            queryExecutorFactory: new MSSQLQueryExecutorFactory(),
-            genSqlScriptQueryExecutorFactory: new MSSQLGenSqlScriptQueryExecutorFactory(),
-            interactorFactory: new MSSQLInteractorFactory())
+            factory: new MSSQLFactory())
         {
         }
 

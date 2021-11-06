@@ -2,7 +2,7 @@
 
 namespace DotNetDBTools.Deploy.Core
 {
-    public class QueryParameter
+    internal class QueryParameter
     {
         public string Name { get; private set; }
         public object Value { get; private set; }

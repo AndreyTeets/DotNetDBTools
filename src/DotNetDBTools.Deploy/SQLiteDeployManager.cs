@@ -2,7 +2,6 @@
 using DotNetDBTools.Analysis.SQLite;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.SQLite;
-using DotNetDBTools.Deploy.SQLite.Factories;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.SQLite;
 
@@ -14,9 +13,7 @@ namespace DotNetDBTools.Deploy
             allowDbCreation: allowDbCreation,
             allowDataLoss: allowDataLoss,
             dbModelConverter: new SQLiteDbModelConverter(),
-            queryExecutorFactory: new SQLiteQueryExecutorFactory(),
-            genSqlScriptQueryExecutorFactory: new SQLiteGenSqlScriptQueryExecutorFactory(),
-            interactorFactory: new SQLiteInteractorFactory())
+            factory: new SQLiteFactory())
         {
         }
 

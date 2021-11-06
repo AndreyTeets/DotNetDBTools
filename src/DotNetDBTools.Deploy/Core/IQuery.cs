@@ -2,7 +2,7 @@
 
 namespace DotNetDBTools.Deploy.Core
 {
-    public interface IQuery
+    internal interface IQuery
     {
         public string Sql { get; }
         public IEnumerable<QueryParameter> Parameters { get; }

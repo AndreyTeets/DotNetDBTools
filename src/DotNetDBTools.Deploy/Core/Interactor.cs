@@ -2,7 +2,7 @@
 
 namespace DotNetDBTools.Deploy.Core
 {
-    public abstract class Interactor
+    internal abstract class Interactor
     {
         protected readonly IQueryExecutor QueryExecutor;
 

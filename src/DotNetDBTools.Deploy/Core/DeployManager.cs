@@ -5,7 +5,6 @@ using DotNetDBTools.Analysis;
 using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.Analysis.Core.Errors;
 using DotNetDBTools.DefinitionParsing;
-using DotNetDBTools.Deploy.Core.Factories;
 using DotNetDBTools.Generation;
 using DotNetDBTools.Models.Core;
 
@@ -16,24 +15,18 @@ namespace DotNetDBTools.Deploy.Core
         protected readonly bool AllowDbCreation; // TODO DeployOptions
         protected readonly bool AllowDataLoss;
         protected readonly IDbModelConverter DbModelConverter;
-        protected readonly IQueryExecutorFactory QueryExecutorFactory;
-        protected readonly IGenSqlScriptQueryExecutorFactory GenSqlScriptQueryExecutorFactory;
-        protected readonly IInteractorFactory InteractorFactory;
+        private protected readonly IFactory Factory;
 
-        protected DeployManager(
+        private protected DeployManager(
             bool allowDbCreation,
             bool allowDataLoss,
             IDbModelConverter dbModelConverter,
-            IQueryExecutorFactory queryExecutorFactory,
-            IGenSqlScriptQueryExecutorFactory genSqlScriptQueryExecutorFactory,
-            IInteractorFactory interactorFactory)
+            IFactory factory)
         {
             AllowDbCreation = allowDbCreation;
             AllowDataLoss = allowDataLoss;
             DbModelConverter = dbModelConverter;
-            QueryExecutorFactory = queryExecutorFactory;
-            GenSqlScriptQueryExecutorFactory = genSqlScriptQueryExecutorFactory;
-            InteractorFactory = interactorFactory;
+            Factory = factory;
         }
 
         public void PublishDatabase(string dbAssemblyPath, string connectionString)
@@ -51,7 +44,7 @@ namespace DotNetDBTools.Deploy.Core
             if (!AllowDataLoss && AnalysisHelper.LeadsToDataLoss(databaseDiff))
                 throw new Exception("Update would lead to data loss and it's not allowed.");
 
-            Interactor interactor = InteractorFactory.Create(QueryExecutorFactory.Create(connectionString));
+            Interactor interactor = Factory.CreateInteractor(Factory.CreateQueryExecutor(connectionString));
             interactor.ApplyDatabaseDiff(databaseDiff);
         }
 
@@ -90,7 +83,7 @@ namespace DotNetDBTools.Deploy.Core
 
         public void RegisterAsDNDBT(string connectionString)
         {
-            Interactor interactor = InteractorFactory.Create(QueryExecutorFactory.Create(connectionString));
+            Interactor interactor = Factory.CreateInteractor(Factory.CreateQueryExecutor(connectionString));
             if (interactor.DNDBTSysTablesExist())
                 throw new InvalidOperationException("Database is already registered");
             Database oldDatabase = interactor.GenerateDatabaseModelFromDBMSSysInfo();
@@ -100,13 +93,13 @@ namespace DotNetDBTools.Deploy.Core
 
         public void UnregisterAsDNDBT(string connectionString)
         {
-            Interactor interactor = InteractorFactory.Create(QueryExecutorFactory.Create(connectionString));
+            Interactor interactor = Factory.CreateInteractor(Factory.CreateQueryExecutor(connectionString));
             interactor.DropDNDBTSysTables();
         }
 
         public void GenerateDefinition(string connectionString, string outputDirectory)
         {
-            Interactor interactor = InteractorFactory.Create(QueryExecutorFactory.Create(connectionString));
+            Interactor interactor = Factory.CreateInteractor(Factory.CreateQueryExecutor(connectionString));
             Database oldDatabase;
             if (interactor.DNDBTSysTablesExist())
                 oldDatabase = interactor.GetDatabaseModelFromDNDBTSysInfo();
@@ -121,8 +114,8 @@ namespace DotNetDBTools.Deploy.Core
 
         private void GeneratePublishScript(Database newDatabase, Database oldDatabase, string outputPath)
         {
-            IGenSqlScriptQueryExecutor genSqlScriptQueryExecutor = GenSqlScriptQueryExecutorFactory.Create();
-            Interactor interactor = InteractorFactory.Create(genSqlScriptQueryExecutor);
+            IGenSqlScriptQueryExecutor genSqlScriptQueryExecutor = Factory.CreateGenSqlScriptQueryExecutor();
+            Interactor interactor = Factory.CreateInteractor(genSqlScriptQueryExecutor);
             DatabaseDiff databaseDiff = AnalysisHelper.CreateDatabaseDiff(newDatabase, oldDatabase);
             interactor.ApplyDatabaseDiff(databaseDiff);
             string generatedScript = genSqlScriptQueryExecutor.GetFinalScript();
