@@ -14,7 +14,7 @@ namespace DotNetDBTools.UnitTests.Deploy
         [Fact]
         public void Generate_MSSQLPublishScript_For_MSSQLSampleDB_CreatesCorrectScript_WhenCreatingV1()
         {
-            MSSQLDeployManager deployManager = new(new DeployOptions { AllowDbCreation = true });
+            MSSQLDeployManager deployManager = new(new DeployOptions());
 
             Assembly dbAssembly = AppDomain.CurrentDomain.GetAssemblies()
                 .Single(x => x.GetName().Name == "DotNetDBTools.SampleDB.MSSQL");
@@ -30,7 +30,7 @@ namespace DotNetDBTools.UnitTests.Deploy
         [Fact]
         public void Generate_MSSQLPublishScript_For_MSSQLSampleDB_CreatesCorrectScript_WhenUpdatingFromV1ToV2()
         {
-            MSSQLDeployManager deployManager = new(new DeployOptions { AllowDbCreation = true });
+            MSSQLDeployManager deployManager = new(new DeployOptions { AllowDataLoss = true });
 
             Assembly dbAssembly = AppDomain.CurrentDomain.GetAssemblies()
                 .Single(x => x.GetName().Name == "DotNetDBTools.SampleDB.MSSQL");
@@ -48,7 +48,7 @@ namespace DotNetDBTools.UnitTests.Deploy
         [Fact]
         public void Generate_MSSQLPublishScript_For_MSSQLSampleDB_CreatesCorrectScript_WhenExistingDbIsEqual()
         {
-            MSSQLDeployManager deployManager = new(new DeployOptions { AllowDbCreation = true });
+            MSSQLDeployManager deployManager = new(new DeployOptions());
 
             Assembly dbAssembly = AppDomain.CurrentDomain.GetAssemblies()
                 .Single(x => x.GetName().Name == "DotNetDBTools.SampleDB.MSSQL");

@@ -13,13 +13,13 @@ namespace DotNetDBTools.SampleBusinessLogicLib.Agnostic
 {
     public static class SampleBusinessLogic
     {
-        public static void ReadWriteSomeData(DbConnection dbConnection, Compiler compiler)
+        public static void ReadWriteSomeData(DbConnection connection, Compiler compiler)
         {
-            InsertSomeData(dbConnection, compiler);
-            ReadSomeData(dbConnection, compiler);
+            InsertSomeData(connection, compiler);
+            ReadSomeData(connection, compiler);
         }
 
-        private static void InsertSomeData(DbConnection dbConnection, Compiler compiler)
+        private static void InsertSomeData(DbConnection connection, Compiler compiler)
         {
             Query query = new Query(MyTable3)
                 .AsInsert(
@@ -34,12 +34,12 @@ namespace DotNetDBTools.SampleBusinessLogicLib.Agnostic
             string sql = sqlCompilationResult.Sql;
             Dictionary<string, object> bindings = sqlCompilationResult.NamedBindings;
 
-            dbConnection.Execute(sql, bindings);
+            connection.Execute(sql, bindings);
         }
 
-        private static void ReadSomeData(DbConnection dbConnection, Compiler compiler)
+        private static void ReadSomeData(DbConnection connection, Compiler compiler)
         {
-            QueryFactory db = new(dbConnection, compiler);
+            QueryFactory db = new(connection, compiler);
 
             List<byte[]> queryResults = db.Query(MyTable3)
                 .Select(new[] { MyTable3.MyColumn2 })

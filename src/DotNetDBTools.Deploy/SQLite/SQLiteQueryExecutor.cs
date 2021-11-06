@@ -1,5 +1,4 @@
-﻿using System;
-using System.Data.Common;
+﻿using System.Data.Common;
 using Dapper;
 using DotNetDBTools.Deploy.Core;
 
@@ -7,8 +6,8 @@ namespace DotNetDBTools.Deploy.SQLite
 {
     internal class SQLiteQueryExecutor : QueryExecutor
     {
-        public SQLiteQueryExecutor(Func<DbConnection> createDbConnection) : base(
-            createDbConnection: createDbConnection)
+        public SQLiteQueryExecutor(DbConnection connection)
+            : base(connection)
         {
         }
 

@@ -18,19 +18,33 @@ namespace DotNetDBTools.SampleSelfUpdatingApp.MSSQL
         public static void Main()
         {
             DropDatabaseIfExists(s_agnosticConnectionString);
+            CreateDatabase(s_agnosticConnectionString);
 
             Console.WriteLine("Creating new AgnosticSampleDB_SelfUpdatingApp v2 from dbAssembly file...");
-            DeployAgnosticSampleDB();
+            SqlConnection connection = new(s_agnosticConnectionString);
+            DeployAgnosticSampleDB(connection);
 
-            SqlConnection dbConnection = new(s_agnosticConnectionString);
             SqlServerCompiler compiler = new();
-            SampleBusinessLogic.ReadWriteSomeData(dbConnection, compiler);
+            SampleBusinessLogic.ReadWriteSomeData(connection, compiler);
         }
 
-        private static void DeployAgnosticSampleDB()
+        private static void DeployAgnosticSampleDB(SqlConnection connection)
         {
-            MSSQLDeployManager deployManager = new(new DeployOptions { AllowDbCreation = true });
-            deployManager.PublishDatabase(typeof(SampleDB.Agnostic.Tables.MyTable3).Assembly, s_agnosticConnectionString);
+            MSSQLDeployManager deployManager = new(new DeployOptions());
+            deployManager.RegisterAsDNDBT(connection);
+            deployManager.PublishDatabase(typeof(SampleDB.Agnostic.Tables.MyTable3).Assembly, connection);
+        }
+
+        private static void CreateDatabase(string connectionString)
+        {
+            SqlConnectionStringBuilder sqlConnectionBuilder = new(connectionString);
+            string databaseName = sqlConnectionBuilder.InitialCatalog;
+            sqlConnectionBuilder.InitialCatalog = string.Empty;
+            string connectionStringWithoutDb = sqlConnectionBuilder.ConnectionString;
+
+            using SqlConnection connection = new(connectionStringWithoutDb);
+            connection.Execute(
+$@"CREATE DATABASE {databaseName};");
         }
 
         private static void DropDatabaseIfExists(string connectionString)

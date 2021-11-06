@@ -1,13 +1,13 @@
-﻿using System.Data.SqlClient;
+﻿using System.Data.Common;
 using DotNetDBTools.Deploy.Core;
 
 namespace DotNetDBTools.Deploy.MSSQL
 {
     internal class MSSQLFactory : IFactory
     {
-        public IQueryExecutor CreateQueryExecutor(string connectionString)
+        public IQueryExecutor CreateQueryExecutor(DbConnection connection)
         {
-            return new MSSQLQueryExecutor(() => new SqlConnection(connectionString));
+            return new MSSQLQueryExecutor(connection);
         }
 
         public IGenSqlScriptQueryExecutor CreateGenSqlScriptQueryExecutor()

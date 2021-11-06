@@ -24,26 +24,37 @@ namespace DotNetDBTools.IntegrationTests.SQLite
         private string ConnectionString => $@"DataSource={DbFilesFolder}/{TestContext.TestName}.db;Mode=ReadWriteCreate;";
         public TestContext TestContext { get; set; }
 
+        private SQLiteDeployManager _deployManager;
+        private SqliteConnection _connection;
+        private SQLiteInteractor _interactor;
+
+        [TestInitialize]
+        public void TestInitialize()
+        {
+            DropDatabaseIfExists(ConnectionString);
+
+            _deployManager = new(new DeployOptions());
+            _connection = new(ConnectionString);
+            _interactor = new(new SQLiteQueryExecutor(_connection));
+        }
+
         [TestMethod]
         public void Publish_AgnosticSampleDB_CreatesDbFromZero_And_UpdatesItAgain_WithoutErrors()
         {
-            DropDatabaseIfExists(ConnectionString);
-            SQLiteDeployManager deployManager = new(new DeployOptions { AllowDbCreation = true });
-            deployManager.PublishDatabase(s_agnosticSampleDbAssemblyPath, ConnectionString);
-            deployManager.PublishDatabase(s_agnosticSampleDbAssemblyPath, ConnectionString);
+            _deployManager.RegisterAsDNDBT(_connection);
+            _deployManager.PublishDatabase(s_agnosticSampleDbAssemblyPath, _connection);
+            _deployManager.PublishDatabase(s_agnosticSampleDbAssemblyPath, _connection);
         }
 
         [TestMethod]
         public void AgnosticSampleDB_DbModelFromDNDBTSysInfo_IsEquivalentTo_DbModelFromDbAssembly()
         {
-            DropDatabaseIfExists(ConnectionString);
-            SQLiteInteractor interactor = new(new SQLiteQueryExecutor(() => new SqliteConnection(ConnectionString)));
-            SQLiteDeployManager deployManager = new(new DeployOptions { AllowDbCreation = true });
-            deployManager.PublishDatabase(s_agnosticSampleDbAssemblyPath, ConnectionString);
+            _deployManager.RegisterAsDNDBT(_connection);
+            _deployManager.PublishDatabase(s_agnosticSampleDbAssemblyPath, _connection);
 
             SQLiteDatabase dbModelFromDbAssembly = (SQLiteDatabase)new SQLiteDbModelConverter().FromAgnostic(
                 (AgnosticDatabase)DbDefinitionParser.CreateDatabaseModel(s_agnosticSampleDbAssemblyPath));
-            SQLiteDatabase dbModelFromDNDBTSysInfo = (SQLiteDatabase)interactor.GetDatabaseModelFromDNDBTSysInfo();
+            SQLiteDatabase dbModelFromDNDBTSysInfo = (SQLiteDatabase)_interactor.GetDatabaseModelFromDNDBTSysInfo();
 
             dbModelFromDNDBTSysInfo.Should().BeEquivalentTo(dbModelFromDbAssembly, options => options
                 .Excluding(database => database.Name)
@@ -53,15 +64,13 @@ namespace DotNetDBTools.IntegrationTests.SQLite
         [TestMethod]
         public void AgnosticSampleDB_DbModelFromDBMSSysInfo_IsEquivalentTo_DbModelFromDbAssembly()
         {
-            DropDatabaseIfExists(ConnectionString);
-            SQLiteInteractor interactor = new(new SQLiteQueryExecutor(() => new SqliteConnection(ConnectionString)));
-            SQLiteDeployManager deployManager = new(new DeployOptions { AllowDbCreation = true });
-            deployManager.PublishDatabase(s_agnosticSampleDbAssemblyPath, ConnectionString);
-            deployManager.UnregisterAsDNDBT(ConnectionString);
+            _deployManager.RegisterAsDNDBT(_connection);
+            _deployManager.PublishDatabase(s_agnosticSampleDbAssemblyPath, _connection);
+            _deployManager.UnregisterAsDNDBT(_connection);
 
             SQLiteDatabase dbModelFromDbAssembly = (SQLiteDatabase)new SQLiteDbModelConverter().FromAgnostic(
                 (AgnosticDatabase)DbDefinitionParser.CreateDatabaseModel(s_agnosticSampleDbAssemblyPath));
-            SQLiteDatabase dbModelFromDBMSSysInfo = (SQLiteDatabase)interactor.GenerateDatabaseModelFromDBMSSysInfo();
+            SQLiteDatabase dbModelFromDBMSSysInfo = (SQLiteDatabase)_interactor.GenerateDatabaseModelFromDBMSSysInfo();
 
             dbModelFromDBMSSysInfo.Should().BeEquivalentTo(dbModelFromDbAssembly, options => options
                 .Excluding(database => database.Name)
@@ -72,22 +81,19 @@ namespace DotNetDBTools.IntegrationTests.SQLite
         [TestMethod]
         public void Publish_SQLiteSampleDB_CreatesDbFromZero_And_UpdatesItAgain_WithoutErrors()
         {
-            DropDatabaseIfExists(ConnectionString);
-            SQLiteDeployManager deployManager = new(new DeployOptions { AllowDbCreation = true });
-            deployManager.PublishDatabase(s_sqliteSampleDbAssemblyPath, ConnectionString);
-            deployManager.PublishDatabase(s_sqliteSampleDbAssemblyPath, ConnectionString);
+            _deployManager.RegisterAsDNDBT(_connection);
+            _deployManager.PublishDatabase(s_sqliteSampleDbAssemblyPath, _connection);
+            _deployManager.PublishDatabase(s_sqliteSampleDbAssemblyPath, _connection);
         }
 
         [TestMethod]
         public void SQLiteSampleDB_DbModelFromDNDBTSysInfo_IsEquivalentTo_DbModelFromDbAssembly()
         {
-            DropDatabaseIfExists(ConnectionString);
-            SQLiteInteractor interactor = new(new SQLiteQueryExecutor(() => new SqliteConnection(ConnectionString)));
-            SQLiteDeployManager deployManager = new(new DeployOptions { AllowDbCreation = true });
-            deployManager.PublishDatabase(s_sqliteSampleDbAssemblyPath, ConnectionString);
+            _deployManager.RegisterAsDNDBT(_connection);
+            _deployManager.PublishDatabase(s_sqliteSampleDbAssemblyPath, _connection);
 
             SQLiteDatabase dbModelFromDbAssembly = (SQLiteDatabase)DbDefinitionParser.CreateDatabaseModel(s_sqliteSampleDbAssemblyPath);
-            SQLiteDatabase dbModelFromDNDBTSysInfo = (SQLiteDatabase)interactor.GetDatabaseModelFromDNDBTSysInfo();
+            SQLiteDatabase dbModelFromDNDBTSysInfo = (SQLiteDatabase)_interactor.GetDatabaseModelFromDNDBTSysInfo();
 
             dbModelFromDNDBTSysInfo.Should().BeEquivalentTo(dbModelFromDbAssembly, options => options
                 .Excluding(database => database.Name)
@@ -97,14 +103,12 @@ namespace DotNetDBTools.IntegrationTests.SQLite
         [TestMethod]
         public void SQLiteSampleDB_DbModelFromDBMSSysInfo_IsEquivalentTo_DbModelFromDbAssembly()
         {
-            DropDatabaseIfExists(ConnectionString);
-            SQLiteInteractor interactor = new(new SQLiteQueryExecutor(() => new SqliteConnection(ConnectionString)));
-            SQLiteDeployManager deployManager = new(new DeployOptions { AllowDbCreation = true });
-            deployManager.PublishDatabase(s_sqliteSampleDbAssemblyPath, ConnectionString);
-            deployManager.UnregisterAsDNDBT(ConnectionString);
+            _deployManager.RegisterAsDNDBT(_connection);
+            _deployManager.PublishDatabase(s_sqliteSampleDbAssemblyPath, _connection);
+            _deployManager.UnregisterAsDNDBT(_connection);
 
             SQLiteDatabase dbModelFromDbAssembly = (SQLiteDatabase)DbDefinitionParser.CreateDatabaseModel(s_sqliteSampleDbAssemblyPath);
-            SQLiteDatabase dbModelFromDBMSSysInfo = (SQLiteDatabase)interactor.GenerateDatabaseModelFromDBMSSysInfo();
+            SQLiteDatabase dbModelFromDBMSSysInfo = (SQLiteDatabase)_interactor.GenerateDatabaseModelFromDBMSSysInfo();
 
             dbModelFromDBMSSysInfo.Should().BeEquivalentTo(dbModelFromDbAssembly, options => options
                 .Excluding(database => database.Name)

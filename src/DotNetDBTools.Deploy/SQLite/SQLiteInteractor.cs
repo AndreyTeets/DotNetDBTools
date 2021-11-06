@@ -17,9 +17,6 @@ namespace DotNetDBTools.Deploy.SQLite
         {
         }
 
-        public override bool DatabaseExists(string databaseName) { return true; }
-        public override void CreateDatabase(string databaseName) { }
-
         public override Database GetDatabaseModelFromDNDBTSysInfo()
         {
             SQLiteDatabase database = (SQLiteDatabase)GenerateDatabaseModelFromDBMSSysInfo();

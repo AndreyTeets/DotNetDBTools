@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Common;
 using System.IO;
 using System.Reflection;
 using DotNetDBTools.Analysis;
@@ -12,56 +13,47 @@ namespace DotNetDBTools.Deploy.Core
 {
     public abstract class DeployManager : IDeployManager
     {
-        protected readonly DeployOptions DeployOptions;
-        protected readonly IDbModelConverter DbModelConverter;
-        private protected readonly IFactory Factory;
+        private readonly DeployOptions _options;
+        private readonly IDbModelConverter _dbModelConverter;
+        private readonly IFactory _factory;
 
         private protected DeployManager(
-            DeployOptions deployOptions,
+            DeployOptions options,
             IDbModelConverter dbModelConverter,
             IFactory factory)
         {
-            DeployOptions = deployOptions;
-            DbModelConverter = dbModelConverter;
-            Factory = factory;
+            _options = options;
+            _dbModelConverter = dbModelConverter;
+            _factory = factory;
         }
 
-        public void PublishDatabase(string dbAssemblyPath, string connectionString)
+        public void PublishDatabase(string dbAssemblyPath, DbConnection connection)
         {
             Assembly dbAssembly = AssemblyLoader.LoadDbAssemblyFromDll(dbAssemblyPath);
-            PublishDatabase(dbAssembly, connectionString);
+            PublishDatabase(dbAssembly, connection);
         }
 
-        public void PublishDatabase(Assembly dbAssembly, string connectionString)
+        public void PublishDatabase(Assembly dbAssembly, DbConnection connection)
         {
             Database newDatabase = CreateDatabaseModelFromDbAssembly(dbAssembly);
-            Database oldDatabase = GetDatabaseModelIfDbExistsOrCreateEmptyDbAndModel(connectionString);
+            Database oldDatabase = GetDatabaseModelFromRegisteredDb(connection);
             DatabaseDiff databaseDiff = AnalysisHelper.CreateDatabaseDiff(newDatabase, oldDatabase);
+            ValidateDatabaseDiff(databaseDiff);
 
-            if (!DeployOptions.AllowDataLoss && AnalysisHelper.LeadsToDataLoss(databaseDiff))
-                throw new Exception("Update would lead to data loss and it's not allowed.");
-
-            Interactor interactor = Factory.CreateInteractor(Factory.CreateQueryExecutor(connectionString));
+            Interactor interactor = _factory.CreateInteractor(_factory.CreateQueryExecutor(connection));
             interactor.ApplyDatabaseDiff(databaseDiff);
         }
 
-        public void GeneratePublishScript(string newDbAssemblyPath, string oldDbConnectionString, string outputPath)
+        public void GeneratePublishScript(string dbAssemblyPath, DbConnection connection, string outputPath)
         {
-            Assembly newDbAssembly = AssemblyLoader.LoadDbAssemblyFromDll(newDbAssemblyPath);
-            GeneratePublishScript(newDbAssembly, oldDbConnectionString, outputPath);
+            Assembly newDbAssembly = AssemblyLoader.LoadDbAssemblyFromDll(dbAssemblyPath);
+            GeneratePublishScript(newDbAssembly, connection, outputPath);
         }
 
-        public void GeneratePublishScript(Assembly newDbAssembly, string oldDbConnectionString, string outputPath)
+        public void GeneratePublishScript(Assembly dbAssembly, DbConnection connection, string outputPath)
         {
-            Database newDatabase = CreateDatabaseModelFromDbAssembly(newDbAssembly);
-            Database oldDatabase = GetDatabaseModelIfDbExistsAndRegisteredOrCreateEmptyModel(oldDbConnectionString);
-            GeneratePublishScript(newDatabase, oldDatabase, outputPath);
-        }
-
-        public void GeneratePublishScript(Assembly newDbAssembly, Assembly oldDbAssembly, string outputPath)
-        {
-            Database newDatabase = CreateDatabaseModelFromDbAssembly(newDbAssembly);
-            Database oldDatabase = CreateDatabaseModelFromDbAssembly(oldDbAssembly);
+            Database newDatabase = CreateDatabaseModelFromDbAssembly(dbAssembly);
+            Database oldDatabase = GetDatabaseModelFromRegisteredDb(connection);
             GeneratePublishScript(newDatabase, oldDatabase, outputPath);
         }
 
@@ -77,10 +69,25 @@ namespace DotNetDBTools.Deploy.Core
             Database oldDatabase = CreateEmptyDatabaseModel();
             GeneratePublishScript(newDatabase, oldDatabase, outputPath);
         }
+        protected abstract Database CreateEmptyDatabaseModel();
 
-        public void RegisterAsDNDBT(string connectionString)
+        public void GeneratePublishScript(string newDbAssemblyPath, string oldDbAssemblyPath, string outputPath)
         {
-            Interactor interactor = Factory.CreateInteractor(Factory.CreateQueryExecutor(connectionString));
+            Assembly newDbAssembly = AssemblyLoader.LoadDbAssemblyFromDll(newDbAssemblyPath);
+            Assembly oldDbAssembly = AssemblyLoader.LoadDbAssemblyFromDll(oldDbAssemblyPath);
+            GeneratePublishScript(newDbAssembly, oldDbAssembly, outputPath);
+        }
+
+        public void GeneratePublishScript(Assembly newDbAssembly, Assembly oldDbAssembly, string outputPath)
+        {
+            Database newDatabase = CreateDatabaseModelFromDbAssembly(newDbAssembly);
+            Database oldDatabase = CreateDatabaseModelFromDbAssembly(oldDbAssembly);
+            GeneratePublishScript(newDatabase, oldDatabase, outputPath);
+        }
+
+        public void RegisterAsDNDBT(DbConnection connection)
+        {
+            Interactor interactor = _factory.CreateInteractor(_factory.CreateQueryExecutor(connection));
             if (interactor.DNDBTSysTablesExist())
                 throw new InvalidOperationException("Database is already registered");
             Database oldDatabase = interactor.GenerateDatabaseModelFromDBMSSysInfo();
@@ -88,32 +95,30 @@ namespace DotNetDBTools.Deploy.Core
             interactor.PopulateDNDBTSysTables(oldDatabase);
         }
 
-        public void UnregisterAsDNDBT(string connectionString)
+        public void UnregisterAsDNDBT(DbConnection connection)
         {
-            Interactor interactor = Factory.CreateInteractor(Factory.CreateQueryExecutor(connectionString));
+            Interactor interactor = _factory.CreateInteractor(_factory.CreateQueryExecutor(connection));
             interactor.DropDNDBTSysTables();
         }
 
-        public void GenerateDefinition(string connectionString, string outputDirectory)
+        public void GenerateDefinition(DbConnection connection, string outputDirectory)
         {
-            Interactor interactor = Factory.CreateInteractor(Factory.CreateQueryExecutor(connectionString));
-            Database oldDatabase;
+            Interactor interactor = _factory.CreateInteractor(_factory.CreateQueryExecutor(connection));
+            Database database;
             if (interactor.DNDBTSysTablesExist())
-                oldDatabase = interactor.GetDatabaseModelFromDNDBTSysInfo();
+                database = interactor.GetDatabaseModelFromDNDBTSysInfo();
             else
-                oldDatabase = interactor.GenerateDatabaseModelFromDBMSSysInfo();
-            DbDefinitionGenerator.GenerateDefinition(oldDatabase, outputDirectory);
+                database = interactor.GenerateDatabaseModelFromDBMSSysInfo();
+            DbDefinitionGenerator.GenerateDefinition(database, outputDirectory);
         }
-
-        protected abstract Database GetDatabaseModelIfDbExistsOrCreateEmptyDbAndModel(string connectionString);
-        protected abstract Database GetDatabaseModelIfDbExistsAndRegisteredOrCreateEmptyModel(string connectionString);
-        protected abstract Database CreateEmptyDatabaseModel();
 
         private void GeneratePublishScript(Database newDatabase, Database oldDatabase, string outputPath)
         {
-            IGenSqlScriptQueryExecutor genSqlScriptQueryExecutor = Factory.CreateGenSqlScriptQueryExecutor();
-            Interactor interactor = Factory.CreateInteractor(genSqlScriptQueryExecutor);
             DatabaseDiff databaseDiff = AnalysisHelper.CreateDatabaseDiff(newDatabase, oldDatabase);
+            ValidateDatabaseDiff(databaseDiff);
+
+            IGenSqlScriptQueryExecutor genSqlScriptQueryExecutor = _factory.CreateGenSqlScriptQueryExecutor();
+            Interactor interactor = _factory.CreateInteractor(genSqlScriptQueryExecutor);
             interactor.ApplyDatabaseDiff(databaseDiff);
             string generatedScript = genSqlScriptQueryExecutor.GetFinalScript();
 
@@ -126,11 +131,26 @@ namespace DotNetDBTools.Deploy.Core
         {
             Database database = DbDefinitionParser.CreateDatabaseModel(dbAssembly);
             if (database.Kind == DatabaseKind.Agnostic)
-                database = DbModelConverter.FromAgnostic(database);
+                database = _dbModelConverter.FromAgnostic(database);
 
             if (!AnalysisHelper.DbIsValid(database, out DbError error))
                 throw new Exception($"Db is invalid: {error}");
             return database;
+        }
+
+        private Database GetDatabaseModelFromRegisteredDb(DbConnection connection)
+        {
+            Interactor interactor = _factory.CreateInteractor(_factory.CreateQueryExecutor(connection));
+            if (interactor.DNDBTSysTablesExist())
+                return interactor.GetDatabaseModelFromDNDBTSysInfo();
+            else
+                throw new InvalidOperationException("Database is not registered");
+        }
+
+        private void ValidateDatabaseDiff(DatabaseDiff databaseDiff)
+        {
+            if (!_options.AllowDataLoss && AnalysisHelper.LeadsToDataLoss(databaseDiff))
+                throw new Exception("Update would lead to data loss and it's not allowed.");
         }
     }
 }

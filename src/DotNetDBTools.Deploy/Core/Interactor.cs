@@ -11,8 +11,6 @@ namespace DotNetDBTools.Deploy.Core
             QueryExecutor = queryExecutor;
         }
 
-        public abstract bool DatabaseExists(string databaseName);
-        public abstract void CreateDatabase(string databaseName);
         public abstract Database GetDatabaseModelFromDNDBTSysInfo();
         public abstract Database GenerateDatabaseModelFromDBMSSysInfo();
         public abstract void ApplyDatabaseDiff(DatabaseDiff databaseDiff);

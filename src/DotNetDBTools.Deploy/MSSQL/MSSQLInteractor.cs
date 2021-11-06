@@ -18,17 +18,6 @@ namespace DotNetDBTools.Deploy.MSSQL
         {
         }
 
-        public override bool DatabaseExists(string databaseName)
-        {
-            bool databaseExists = QueryExecutor.QuerySingleOrDefault<bool>(new CheckDatabaseExistsQuery(databaseName));
-            return databaseExists;
-        }
-
-        public override void CreateDatabase(string databaseName)
-        {
-            QueryExecutor.Execute(new CreateDatabaseQuery(databaseName));
-        }
-
         public override Database GetDatabaseModelFromDNDBTSysInfo()
         {
             MSSQLDatabase database = (MSSQLDatabase)GenerateDatabaseModelFromDBMSSysInfo();

@@ -26,26 +26,38 @@ namespace DotNetDBTools.IntegrationTests.MSSQL
         private string ConnectionString => CreateConnectionString(s_connectionStringWithoutDb, TestContext.TestName);
         public TestContext TestContext { get; set; }
 
+        private MSSQLDeployManager _deployManager;
+        private SqlConnection _connection;
+        private MSSQLInteractor _interactor;
+
+        [TestInitialize]
+        public void TestInitialize()
+        {
+            DropDatabaseIfExists(ConnectionString);
+            CreateDatabase(ConnectionString);
+
+            _deployManager = new(new DeployOptions());
+            _connection = new(ConnectionString);
+            _interactor = new(new MSSQLQueryExecutor(_connection));
+        }
+
         [TestMethod]
         public void Publish_AgnosticSampleDB_CreatesDbFromZero_And_UpdatesItAgain_WithoutErrors()
         {
-            DropDatabaseIfExists(ConnectionString);
-            MSSQLDeployManager deployManager = new(new DeployOptions { AllowDbCreation = true });
-            deployManager.PublishDatabase(s_agnosticSampleDbAssemblyPath, ConnectionString);
-            deployManager.PublishDatabase(s_agnosticSampleDbAssemblyPath, ConnectionString);
+            _deployManager.RegisterAsDNDBT(_connection);
+            _deployManager.PublishDatabase(s_agnosticSampleDbAssemblyPath, _connection);
+            _deployManager.PublishDatabase(s_agnosticSampleDbAssemblyPath, _connection);
         }
 
         [TestMethod]
         public void AgnosticSampleDB_DbModelFromDNDBTSysInfo_IsEquivalentTo_DbModelFromDbAssembly()
         {
-            DropDatabaseIfExists(ConnectionString);
-            MSSQLInteractor interactor = new(new MSSQLQueryExecutor(() => new SqlConnection(ConnectionString)));
-            MSSQLDeployManager deployManager = new(new DeployOptions { AllowDbCreation = true });
-            deployManager.PublishDatabase(s_agnosticSampleDbAssemblyPath, ConnectionString);
+            _deployManager.RegisterAsDNDBT(_connection);
+            _deployManager.PublishDatabase(s_agnosticSampleDbAssemblyPath, _connection);
 
             MSSQLDatabase dbModelFromDbAssembly = (MSSQLDatabase)new MSSQLDbModelConverter().FromAgnostic(
                 (AgnosticDatabase)DbDefinitionParser.CreateDatabaseModel(s_agnosticSampleDbAssemblyPath));
-            MSSQLDatabase dbModelFromDNDBTSysInfo = (MSSQLDatabase)interactor.GetDatabaseModelFromDNDBTSysInfo();
+            MSSQLDatabase dbModelFromDNDBTSysInfo = (MSSQLDatabase)_interactor.GetDatabaseModelFromDNDBTSysInfo();
 
             dbModelFromDNDBTSysInfo.Should().BeEquivalentTo(dbModelFromDbAssembly, options => options
                 .Excluding(database => database.Name)
@@ -55,15 +67,13 @@ namespace DotNetDBTools.IntegrationTests.MSSQL
         [TestMethod]
         public void AgnosticSampleDB_DbModelFromDBMSSysInfo_IsEquivalentTo_DbModelFromDbAssembly()
         {
-            DropDatabaseIfExists(ConnectionString);
-            MSSQLInteractor interactor = new(new MSSQLQueryExecutor(() => new SqlConnection(ConnectionString)));
-            MSSQLDeployManager deployManager = new(new DeployOptions { AllowDbCreation = true });
-            deployManager.PublishDatabase(s_agnosticSampleDbAssemblyPath, ConnectionString);
-            deployManager.UnregisterAsDNDBT(ConnectionString);
+            _deployManager.RegisterAsDNDBT(_connection);
+            _deployManager.PublishDatabase(s_agnosticSampleDbAssemblyPath, _connection);
+            _deployManager.UnregisterAsDNDBT(_connection);
 
             MSSQLDatabase dbModelFromDbAssembly = (MSSQLDatabase)new MSSQLDbModelConverter().FromAgnostic(
                 (AgnosticDatabase)DbDefinitionParser.CreateDatabaseModel(s_agnosticSampleDbAssemblyPath));
-            MSSQLDatabase dbModelFromDBMSSysInfo = (MSSQLDatabase)interactor.GenerateDatabaseModelFromDBMSSysInfo();
+            MSSQLDatabase dbModelFromDBMSSysInfo = (MSSQLDatabase)_interactor.GenerateDatabaseModelFromDBMSSysInfo();
 
             dbModelFromDBMSSysInfo.Should().BeEquivalentTo(dbModelFromDbAssembly, options => options
                 .Excluding(database => database.Name)
@@ -74,22 +84,19 @@ namespace DotNetDBTools.IntegrationTests.MSSQL
         [TestMethod]
         public void Publish_MSSQLSampleDB_CreatesDbFromZero_And_UpdatesItAgain_WithoutErrors()
         {
-            DropDatabaseIfExists(ConnectionString);
-            MSSQLDeployManager deployManager = new(new DeployOptions { AllowDbCreation = true });
-            deployManager.PublishDatabase(s_mssqlSampleDbAssemblyPath, ConnectionString);
-            deployManager.PublishDatabase(s_mssqlSampleDbAssemblyPath, ConnectionString);
+            _deployManager.RegisterAsDNDBT(_connection);
+            _deployManager.PublishDatabase(s_mssqlSampleDbAssemblyPath, _connection);
+            _deployManager.PublishDatabase(s_mssqlSampleDbAssemblyPath, _connection);
         }
 
         [TestMethod]
         public void MSSQLSampleDB_DbModelFromDNDBTSysInfo_IsEquivalentTo_DbModelFromDbAssembly()
         {
-            DropDatabaseIfExists(ConnectionString);
-            MSSQLInteractor interactor = new(new MSSQLQueryExecutor(() => new SqlConnection(ConnectionString)));
-            MSSQLDeployManager deployManager = new(new DeployOptions { AllowDbCreation = true });
-            deployManager.PublishDatabase(s_mssqlSampleDbAssemblyPath, ConnectionString);
+            _deployManager.RegisterAsDNDBT(_connection);
+            _deployManager.PublishDatabase(s_mssqlSampleDbAssemblyPath, _connection);
 
             MSSQLDatabase dbModelFromDbAssembly = (MSSQLDatabase)DbDefinitionParser.CreateDatabaseModel(s_mssqlSampleDbAssemblyPath);
-            MSSQLDatabase dbModelFromDNDBTSysInfo = (MSSQLDatabase)interactor.GetDatabaseModelFromDNDBTSysInfo();
+            MSSQLDatabase dbModelFromDNDBTSysInfo = (MSSQLDatabase)_interactor.GetDatabaseModelFromDNDBTSysInfo();
 
             dbModelFromDNDBTSysInfo.Should().BeEquivalentTo(dbModelFromDbAssembly, options => options
                 .Excluding(database => database.Name)
@@ -101,14 +108,12 @@ namespace DotNetDBTools.IntegrationTests.MSSQL
         [TestMethod]
         public void MSSQLSampleDB_DbModelFromDBMSSysInfo_IsEquivalentTo_DbModelFromDbAssembly()
         {
-            DropDatabaseIfExists(ConnectionString);
-            MSSQLInteractor interactor = new(new MSSQLQueryExecutor(() => new SqlConnection(ConnectionString)));
-            MSSQLDeployManager deployManager = new(new DeployOptions { AllowDbCreation = true });
-            deployManager.PublishDatabase(s_mssqlSampleDbAssemblyPath, ConnectionString);
-            deployManager.UnregisterAsDNDBT(ConnectionString);
+            _deployManager.RegisterAsDNDBT(_connection);
+            _deployManager.PublishDatabase(s_mssqlSampleDbAssemblyPath, _connection);
+            _deployManager.UnregisterAsDNDBT(_connection);
 
             MSSQLDatabase dbModelFromDbAssembly = (MSSQLDatabase)DbDefinitionParser.CreateDatabaseModel(s_mssqlSampleDbAssemblyPath);
-            MSSQLDatabase dbModelFromDBMSSysInfo = (MSSQLDatabase)interactor.GenerateDatabaseModelFromDBMSSysInfo();
+            MSSQLDatabase dbModelFromDBMSSysInfo = (MSSQLDatabase)_interactor.GenerateDatabaseModelFromDBMSSysInfo();
 
             dbModelFromDBMSSysInfo.Should().BeEquivalentTo(dbModelFromDbAssembly, options => options
                 .Excluding(database => database.Name)
@@ -118,14 +123,22 @@ namespace DotNetDBTools.IntegrationTests.MSSQL
                 .Using(new MSSQLDefaultValueAsFunctionComparer()));
         }
 
+        private static void CreateDatabase(string connectionString)
+        {
+            SqlConnectionStringBuilder sqlConnectionBuilder = new(connectionString);
+            string databaseName = sqlConnectionBuilder.InitialCatalog;
+
+            using SqlConnection connection = new(s_connectionStringWithoutDb);
+            connection.Execute(
+$@"CREATE DATABASE {databaseName};");
+        }
+
         private static void DropDatabaseIfExists(string connectionString)
         {
             SqlConnectionStringBuilder sqlConnectionBuilder = new(connectionString);
             string databaseName = sqlConnectionBuilder.InitialCatalog;
-            sqlConnectionBuilder.InitialCatalog = string.Empty;
-            string connectionStringWithoutDb = sqlConnectionBuilder.ConnectionString;
 
-            using SqlConnection connection = new(connectionStringWithoutDb);
+            using SqlConnection connection = new(s_connectionStringWithoutDb);
             connection.Execute(
 $@"IF EXISTS (SELECT * FROM [sys].[databases] WHERE [name] = '{databaseName}')
 BEGIN

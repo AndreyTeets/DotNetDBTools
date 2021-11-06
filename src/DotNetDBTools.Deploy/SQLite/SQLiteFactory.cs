@@ -1,13 +1,13 @@
-﻿using DotNetDBTools.Deploy.Core;
-using Microsoft.Data.Sqlite;
+﻿using System.Data.Common;
+using DotNetDBTools.Deploy.Core;
 
 namespace DotNetDBTools.Deploy.SQLite
 {
     internal class SQLiteFactory : IFactory
     {
-        public IQueryExecutor CreateQueryExecutor(string connectionString)
+        public IQueryExecutor CreateQueryExecutor(DbConnection connection)
         {
-            return new SQLiteQueryExecutor(() => new SqliteConnection(connectionString));
+            return new SQLiteQueryExecutor(connection);
         }
 
         public IGenSqlScriptQueryExecutor CreateGenSqlScriptQueryExecutor()

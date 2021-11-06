@@ -19,17 +19,18 @@ namespace DotNetDBTools.SampleSelfUpdatingApp.SQLite
             DropDatabaseIfExists(s_agnosticConnectionString);
 
             Console.WriteLine("Creating new AgnosticSampleDB_SelfUpdatingApp v2 from dbAssembly file...");
-            DeployAgnosticSampleDB();
+            SqliteConnection connection = new(s_agnosticConnectionString);
+            DeployAgnosticSampleDB(connection);
 
-            SqliteConnection dbConnection = new(s_agnosticConnectionString);
             SqliteCompiler compiler = new();
-            SampleBusinessLogic.ReadWriteSomeData(dbConnection, compiler);
+            SampleBusinessLogic.ReadWriteSomeData(connection, compiler);
         }
 
-        private static void DeployAgnosticSampleDB()
+        private static void DeployAgnosticSampleDB(SqliteConnection connection)
         {
-            SQLiteDeployManager deployManager = new(new DeployOptions { AllowDbCreation = true });
-            deployManager.PublishDatabase(typeof(SampleDB.Agnostic.Tables.MyTable3).Assembly, s_agnosticConnectionString);
+            SQLiteDeployManager deployManager = new(new DeployOptions());
+            deployManager.RegisterAsDNDBT(connection);
+            deployManager.PublishDatabase(typeof(SampleDB.Agnostic.Tables.MyTable3).Assembly, connection);
         }
 
         private static void DropDatabaseIfExists(string connectionString)

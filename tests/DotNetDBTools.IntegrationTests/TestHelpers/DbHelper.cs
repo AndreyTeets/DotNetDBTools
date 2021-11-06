@@ -6,7 +6,7 @@ namespace DotNetDBTools.IntegrationTests.TestHelpers
 {
     public static class DbHelper
     {
-        public static async Task WaitUntilDatabaseAvailableAsync(DbConnection dbConnection, int timeoutSeconds)
+        public static async Task WaitUntilDatabaseAvailableAsync(DbConnection connection, int timeoutSeconds)
         {
             DateTime start = DateTime.UtcNow;
             bool connectionEstablised = false;
@@ -14,7 +14,7 @@ namespace DotNetDBTools.IntegrationTests.TestHelpers
             {
                 try
                 {
-                    await dbConnection.OpenAsync();
+                    await connection.OpenAsync();
                     connectionEstablised = true;
                 }
                 catch
