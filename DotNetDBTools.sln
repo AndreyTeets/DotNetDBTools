@@ -21,6 +21,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_SolutionItems", "_Solution
 		_test.sh = _test.sh
 		Directory.Build.props = Directory.Build.props
 		global.json = global.json
+		LICENSE = LICENSE
 		NuGet.Config = NuGet.Config
 		README.md = README.md
 	EndProjectSection
@@ -36,6 +37,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{3ADBBB40-72C8-493A-868C-7096F5C458D2}"
 	ProjectSection(SolutionItems) = preProject
 		build\scripts\build.ps1 = build\scripts\build.ps1
+		build\scripts\common.psm1 = build\scripts\common.psm1
 		build\scripts\publish.ps1 = build\scripts\publish.ps1
 		build\scripts\test.ps1 = build\scripts\test.ps1
 	EndProjectSection

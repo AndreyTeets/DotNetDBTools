@@ -1,9 +1,12 @@
-$ErrorActionPreference = 'Stop'
-$repoRoot = "$PSScriptRoot/../.."
+$ErrorActionPreference = "Stop"
+$ProgressPreference = "SilentlyContinue"
+Set-StrictMode -Version 3.0
+Import-Module "$PSScriptRoot/common.psm1"
 
+$repoRoot = "$PSScriptRoot/../.."
 Push-Location $repoRoot
-dotnet test --no-build DotNetDBTools.sln -c Release
-if ($LastExitCode -ne 0) {
-    throw
+try {
+    exec dotnet test --no-build DotNetDBTools.sln -c Release
+} finally {
+    Pop-Location
 }
-Pop-Location

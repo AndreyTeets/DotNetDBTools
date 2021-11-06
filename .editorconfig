@@ -27,10 +27,14 @@ indent_size = 2
 indent_size = 2
 
 ### Powershell files
-[*.ps1]
+[*.{ps1,psm1,psd1}]
+indent_size = 4
+
+### Windows cmd script files
+[*.{bat,cmd}]
 indent_size = 2
 
-### Shell script files
+### Linux shell script files
 [*.sh]
 end_of_line = lf
 indent_size = 2

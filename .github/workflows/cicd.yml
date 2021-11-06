@@ -1,4 +1,4 @@
-name: Build, Test and Publish
+name: Build, Test, Publish
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
     branches: [master]
 
 jobs:
-  build-and-test:
+  build-test-publish:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -36,4 +36,4 @@ jobs:
       - name: Publish
         if: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v') }}
         shell: pwsh
-        run: ./build/scripts/publish.ps1 "${{ secrets.NUGET_API_KEY }}"
+        run: ./build/scripts/publish.ps1 -NugetApiKey "${{ secrets.NUGET_API_KEY }}"
