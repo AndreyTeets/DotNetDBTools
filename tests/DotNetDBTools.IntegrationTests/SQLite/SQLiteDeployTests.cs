@@ -28,7 +28,7 @@ namespace DotNetDBTools.IntegrationTests.SQLite
         public void Publish_AgnosticSampleDB_CreatesDbFromZero_And_UpdatesItAgain_WithoutErrors()
         {
             DropDatabaseIfExists(ConnectionString);
-            SQLiteDeployManager deployManager = new(true, false);
+            SQLiteDeployManager deployManager = new(new DeployOptions { AllowDbCreation = true });
             deployManager.PublishDatabase(s_agnosticSampleDbAssemblyPath, ConnectionString);
             deployManager.PublishDatabase(s_agnosticSampleDbAssemblyPath, ConnectionString);
         }
@@ -38,7 +38,7 @@ namespace DotNetDBTools.IntegrationTests.SQLite
         {
             DropDatabaseIfExists(ConnectionString);
             SQLiteInteractor interactor = new(new SQLiteQueryExecutor(ConnectionString));
-            SQLiteDeployManager deployManager = new(true, false);
+            SQLiteDeployManager deployManager = new(new DeployOptions { AllowDbCreation = true });
             deployManager.PublishDatabase(s_agnosticSampleDbAssemblyPath, ConnectionString);
 
             SQLiteDatabase dbModelFromDbAssembly = (SQLiteDatabase)new SQLiteDbModelConverter().FromAgnostic(
@@ -55,7 +55,7 @@ namespace DotNetDBTools.IntegrationTests.SQLite
         {
             DropDatabaseIfExists(ConnectionString);
             SQLiteInteractor interactor = new(new SQLiteQueryExecutor(ConnectionString));
-            SQLiteDeployManager deployManager = new(true, false);
+            SQLiteDeployManager deployManager = new(new DeployOptions { AllowDbCreation = true });
             deployManager.PublishDatabase(s_agnosticSampleDbAssemblyPath, ConnectionString);
             deployManager.UnregisterAsDNDBT(ConnectionString);
 
@@ -73,7 +73,7 @@ namespace DotNetDBTools.IntegrationTests.SQLite
         public void Publish_SQLiteSampleDB_CreatesDbFromZero_And_UpdatesItAgain_WithoutErrors()
         {
             DropDatabaseIfExists(ConnectionString);
-            SQLiteDeployManager deployManager = new(true, false);
+            SQLiteDeployManager deployManager = new(new DeployOptions { AllowDbCreation = true });
             deployManager.PublishDatabase(s_sqliteSampleDbAssemblyPath, ConnectionString);
             deployManager.PublishDatabase(s_sqliteSampleDbAssemblyPath, ConnectionString);
         }
@@ -83,7 +83,7 @@ namespace DotNetDBTools.IntegrationTests.SQLite
         {
             DropDatabaseIfExists(ConnectionString);
             SQLiteInteractor interactor = new(new SQLiteQueryExecutor(ConnectionString));
-            SQLiteDeployManager deployManager = new(true, false);
+            SQLiteDeployManager deployManager = new(new DeployOptions { AllowDbCreation = true });
             deployManager.PublishDatabase(s_sqliteSampleDbAssemblyPath, ConnectionString);
 
             SQLiteDatabase dbModelFromDbAssembly = (SQLiteDatabase)DbDefinitionParser.CreateDatabaseModel(s_sqliteSampleDbAssemblyPath);
@@ -99,7 +99,7 @@ namespace DotNetDBTools.IntegrationTests.SQLite
         {
             DropDatabaseIfExists(ConnectionString);
             SQLiteInteractor interactor = new(new SQLiteQueryExecutor(ConnectionString));
-            SQLiteDeployManager deployManager = new(true, false);
+            SQLiteDeployManager deployManager = new(new DeployOptions { AllowDbCreation = true });
             deployManager.PublishDatabase(s_sqliteSampleDbAssemblyPath, ConnectionString);
             deployManager.UnregisterAsDNDBT(ConnectionString);
 

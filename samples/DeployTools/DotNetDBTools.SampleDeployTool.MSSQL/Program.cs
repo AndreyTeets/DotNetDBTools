@@ -50,8 +50,8 @@ namespace DotNetDBTools.SampleDeployTool.MSSQL
         private static void RunAgnosticSampleDBDeployExamples()
         {
             DropDatabaseIfExists(s_agnosticConnectionString);
-            IDeployManager deployManager = new MSSQLDeployManager(true, false);
-            IDeployManager dmDataLoss = new MSSQLDeployManager(false, true);
+            IDeployManager deployManager = new MSSQLDeployManager(new DeployOptions { AllowDbCreation = true });
+            IDeployManager dmDataLoss = new MSSQLDeployManager(new DeployOptions { AllowDataLoss = true });
             using SqlConnection connection = new(s_agnosticConnectionString);
 
             Console.WriteLine("Generating script to create new AgnosticSampleDB from dbAssembly file...");
@@ -96,8 +96,8 @@ namespace DotNetDBTools.SampleDeployTool.MSSQL
         private static void RunMSSQLSampleDBDeployExamples()
         {
             DropDatabaseIfExists(s_mssqlConnectionString);
-            IDeployManager deployManager = new MSSQLDeployManager(true, false);
-            IDeployManager dmDataLoss = new MSSQLDeployManager(false, true);
+            IDeployManager deployManager = new MSSQLDeployManager(new DeployOptions { AllowDbCreation = true });
+            IDeployManager dmDataLoss = new MSSQLDeployManager(new DeployOptions { AllowDataLoss = true });
             using SqlConnection connection = new(s_mssqlConnectionString);
 
             Console.WriteLine("Generating script to create new MSSQLSampleDB from dbAssembly file...");

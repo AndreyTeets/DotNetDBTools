@@ -14,7 +14,7 @@ namespace DotNetDBTools.UnitTests.Deploy
         [Fact]
         public void Generate_SQLitePublishScript_For_SQLiteSampleDB_CreatesCorrectScript_WhenCreatingV1()
         {
-            SQLiteDeployManager deployManager = new(true, false);
+            SQLiteDeployManager deployManager = new(new DeployOptions { AllowDbCreation = true });
 
             Assembly dbAssembly = AppDomain.CurrentDomain.GetAssemblies()
                 .Single(x => x.GetName().Name == "DotNetDBTools.SampleDB.SQLite");
@@ -30,7 +30,7 @@ namespace DotNetDBTools.UnitTests.Deploy
         [Fact]
         public void Generate_SQLitePublishScript_For_SQLiteSampleDB_CreatesCorrectScript_WhenUpdatingFromV1ToV2()
         {
-            SQLiteDeployManager deployManager = new(true, false);
+            SQLiteDeployManager deployManager = new(new DeployOptions { AllowDbCreation = true });
 
             Assembly dbAssembly = AppDomain.CurrentDomain.GetAssemblies()
                 .Single(x => x.GetName().Name == "DotNetDBTools.SampleDB.SQLite");
@@ -48,7 +48,7 @@ namespace DotNetDBTools.UnitTests.Deploy
         [Fact]
         public void Generate_SQLitePublishScript_For_SQLiteSampleDB_CreatesCorrectScript_WhenExistingDbIsEqual()
         {
-            SQLiteDeployManager deployManager = new(true, false);
+            SQLiteDeployManager deployManager = new(new DeployOptions { AllowDbCreation = true });
 
             Assembly dbAssembly = AppDomain.CurrentDomain.GetAssemblies()
                 .Single(x => x.GetName().Name == "DotNetDBTools.SampleDB.SQLite");

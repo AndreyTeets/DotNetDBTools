@@ -12,19 +12,16 @@ namespace DotNetDBTools.Deploy.Core
 {
     public abstract class DeployManager : IDeployManager
     {
-        protected readonly bool AllowDbCreation; // TODO DeployOptions
-        protected readonly bool AllowDataLoss;
+        protected readonly DeployOptions DeployOptions;
         protected readonly IDbModelConverter DbModelConverter;
         private protected readonly IFactory Factory;
 
         private protected DeployManager(
-            bool allowDbCreation,
-            bool allowDataLoss,
+            DeployOptions deployOptions,
             IDbModelConverter dbModelConverter,
             IFactory factory)
         {
-            AllowDbCreation = allowDbCreation;
-            AllowDataLoss = allowDataLoss;
+            DeployOptions = deployOptions;
             DbModelConverter = dbModelConverter;
             Factory = factory;
         }
@@ -41,7 +38,7 @@ namespace DotNetDBTools.Deploy.Core
             Database oldDatabase = GetDatabaseModelIfDbExistsOrCreateEmptyDbAndModel(connectionString);
             DatabaseDiff databaseDiff = AnalysisHelper.CreateDatabaseDiff(newDatabase, oldDatabase);
 
-            if (!AllowDataLoss && AnalysisHelper.LeadsToDataLoss(databaseDiff))
+            if (!DeployOptions.AllowDataLoss && AnalysisHelper.LeadsToDataLoss(databaseDiff))
                 throw new Exception("Update would lead to data loss and it's not allowed.");
 
             Interactor interactor = Factory.CreateInteractor(Factory.CreateQueryExecutor(connectionString));

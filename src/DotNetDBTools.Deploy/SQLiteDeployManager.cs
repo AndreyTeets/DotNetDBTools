@@ -9,9 +9,8 @@ namespace DotNetDBTools.Deploy
 {
     public class SQLiteDeployManager : DeployManager
     {
-        public SQLiteDeployManager(bool allowDbCreation = default, bool allowDataLoss = default) : base(
-            allowDbCreation: allowDbCreation,
-            allowDataLoss: allowDataLoss,
+        public SQLiteDeployManager(DeployOptions deployOptions) : base(
+            deployOptions: deployOptions,
             dbModelConverter: new SQLiteDbModelConverter(),
             factory: new SQLiteFactory())
         {
@@ -27,7 +26,7 @@ namespace DotNetDBTools.Deploy
             }
             else
             {
-                if (AllowDbCreation)
+                if (DeployOptions.AllowDbCreation)
                 {
                     interactor.CreateDNDBTSysTables();
                     return CreateEmptyDatabaseModel();

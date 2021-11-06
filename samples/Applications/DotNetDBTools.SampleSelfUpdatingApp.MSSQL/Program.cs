@@ -29,7 +29,7 @@ namespace DotNetDBTools.SampleSelfUpdatingApp.MSSQL
 
         private static void DeployAgnosticSampleDB()
         {
-            MSSQLDeployManager deployManager = new(true, false);
+            MSSQLDeployManager deployManager = new(new DeployOptions { AllowDbCreation = true });
             deployManager.PublishDatabase(typeof(SampleDB.Agnostic.Tables.MyTable3).Assembly, s_agnosticConnectionString);
         }
 

@@ -97,23 +97,23 @@ Also provides declarative means for database structure description with differen
 ## Example code to publish database
 Like this
 ```
-IDeployManager deployManager = new MSSQLDeployManager(true, false);
+IDeployManager deployManager = new MSSQLDeployManager(new DeployOptions { AllowDbCreation = true });
 deployManager.PublishDatabase("./MyDatabase.dll", _connectionString);
 ```
 Or like this
 ```
-IDeployManager deployManager = new MSSQLDeployManager(true, false);
+IDeployManager deployManager = new MSSQLDeployManager(new DeployOptions { AllowDbCreation = true });
 Assembly dbAssembly = Assembly.Load(File.ReadAllBytes("./MyDatabase.dll"));
 deployManager.PublishDatabase(dbAssembly, _connectionString);
 ```
 Or like this (if database project is referenced)
 ```
-IDeployManager deployManager = new MSSQLDeployManager(true, false);
+IDeployManager deployManager = new MSSQLDeployManager(new DeployOptions { AllowDbCreation = true });
 deployManager.PublishDatabase(typeof(MyDatabase.Tables.MyTable).Assembly, _connectionString);
 ```
 Or create publish sql-script and later execute it like this
 ```
-IDeployManager deployManager = new MSSQLDeployManager(true, false);
+IDeployManager deployManager = new MSSQLDeployManager(new DeployOptions { AllowDbCreation = true });
 deployManager.GeneratePublishScript("./MyDatabase.dll", _connectionString, "./publishScript.sql");
 new SqlConnection(_connectionString).Execute(File.ReadAllText("./publishScript.sql")); // Dapper call
 ```

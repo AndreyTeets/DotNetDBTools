@@ -45,8 +45,8 @@ namespace DotNetDBTools.SampleDeployTool.SQLite
         private static void RunAgnosticSampleDBDeployExamples()
         {
             DropDatabaseIfExists(s_agnosticConnectionString);
-            IDeployManager deployManager = new SQLiteDeployManager(true, false);
-            IDeployManager dmDataLoss = new SQLiteDeployManager(false, true);
+            IDeployManager deployManager = new SQLiteDeployManager(new DeployOptions { AllowDbCreation = true });
+            IDeployManager dmDataLoss = new SQLiteDeployManager(new DeployOptions { AllowDataLoss = true });
             using SqliteConnection connection = new(s_agnosticConnectionString);
 
             Console.WriteLine("Generating script to create new AgnosticSampleDB from dbAssembly file...");
@@ -91,8 +91,8 @@ namespace DotNetDBTools.SampleDeployTool.SQLite
         private static void RunSQLiteSampleDBDeployExamples()
         {
             DropDatabaseIfExists(s_sqliteConnectionString);
-            IDeployManager deployManager = new SQLiteDeployManager(true, false);
-            IDeployManager dmDataLoss = new SQLiteDeployManager(false, true);
+            IDeployManager deployManager = new SQLiteDeployManager(new DeployOptions { AllowDbCreation = true });
+            IDeployManager dmDataLoss = new SQLiteDeployManager(new DeployOptions { AllowDataLoss = true });
             using SqliteConnection connection = new(s_sqliteConnectionString);
 
             Console.WriteLine("Generating script to create new SQLiteSampleDB from dbAssembly file...");

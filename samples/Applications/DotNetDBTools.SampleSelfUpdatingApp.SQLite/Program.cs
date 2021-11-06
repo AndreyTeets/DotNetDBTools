@@ -28,7 +28,7 @@ namespace DotNetDBTools.SampleSelfUpdatingApp.SQLite
 
         private static void DeployAgnosticSampleDB()
         {
-            SQLiteDeployManager deployManager = new(true, false);
+            SQLiteDeployManager deployManager = new(new DeployOptions { AllowDbCreation = true });
             deployManager.PublishDatabase(typeof(SampleDB.Agnostic.Tables.MyTable3).Assembly, s_agnosticConnectionString);
         }
 

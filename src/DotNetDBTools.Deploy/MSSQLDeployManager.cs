@@ -10,9 +10,8 @@ namespace DotNetDBTools.Deploy
 {
     public class MSSQLDeployManager : DeployManager
     {
-        public MSSQLDeployManager(bool allowDbCreation = default, bool allowDataLoss = default) : base(
-            allowDbCreation: allowDbCreation,
-            allowDataLoss: allowDataLoss,
+        public MSSQLDeployManager(DeployOptions deployOptions) : base(
+            deployOptions: deployOptions,
             dbModelConverter: new MSSQLDbModelConverter(),
             factory: new MSSQLFactory())
         {
@@ -34,7 +33,7 @@ namespace DotNetDBTools.Deploy
             }
             else
             {
-                if (AllowDbCreation)
+                if (DeployOptions.AllowDbCreation)
                 {
                     interactorForEmpty.CreateDatabase(databaseName);
                     interactor.CreateDNDBTSysTables();

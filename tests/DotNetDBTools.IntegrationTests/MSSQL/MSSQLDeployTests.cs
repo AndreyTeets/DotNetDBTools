@@ -30,7 +30,7 @@ namespace DotNetDBTools.IntegrationTests.MSSQL
         public void Publish_AgnosticSampleDB_CreatesDbFromZero_And_UpdatesItAgain_WithoutErrors()
         {
             DropDatabaseIfExists(ConnectionString);
-            MSSQLDeployManager deployManager = new(true, false);
+            MSSQLDeployManager deployManager = new(new DeployOptions { AllowDbCreation = true });
             deployManager.PublishDatabase(s_agnosticSampleDbAssemblyPath, ConnectionString);
             deployManager.PublishDatabase(s_agnosticSampleDbAssemblyPath, ConnectionString);
         }
@@ -40,7 +40,7 @@ namespace DotNetDBTools.IntegrationTests.MSSQL
         {
             DropDatabaseIfExists(ConnectionString);
             MSSQLInteractor interactor = new(new MSSQLQueryExecutor(ConnectionString));
-            MSSQLDeployManager deployManager = new(true, false);
+            MSSQLDeployManager deployManager = new(new DeployOptions { AllowDbCreation = true });
             deployManager.PublishDatabase(s_agnosticSampleDbAssemblyPath, ConnectionString);
 
             MSSQLDatabase dbModelFromDbAssembly = (MSSQLDatabase)new MSSQLDbModelConverter().FromAgnostic(
@@ -57,7 +57,7 @@ namespace DotNetDBTools.IntegrationTests.MSSQL
         {
             DropDatabaseIfExists(ConnectionString);
             MSSQLInteractor interactor = new(new MSSQLQueryExecutor(ConnectionString));
-            MSSQLDeployManager deployManager = new(true, false);
+            MSSQLDeployManager deployManager = new(new DeployOptions { AllowDbCreation = true });
             deployManager.PublishDatabase(s_agnosticSampleDbAssemblyPath, ConnectionString);
             deployManager.UnregisterAsDNDBT(ConnectionString);
 
@@ -75,7 +75,7 @@ namespace DotNetDBTools.IntegrationTests.MSSQL
         public void Publish_MSSQLSampleDB_CreatesDbFromZero_And_UpdatesItAgain_WithoutErrors()
         {
             DropDatabaseIfExists(ConnectionString);
-            MSSQLDeployManager deployManager = new(true, false);
+            MSSQLDeployManager deployManager = new(new DeployOptions { AllowDbCreation = true });
             deployManager.PublishDatabase(s_mssqlSampleDbAssemblyPath, ConnectionString);
             deployManager.PublishDatabase(s_mssqlSampleDbAssemblyPath, ConnectionString);
         }
@@ -85,7 +85,7 @@ namespace DotNetDBTools.IntegrationTests.MSSQL
         {
             DropDatabaseIfExists(ConnectionString);
             MSSQLInteractor interactor = new(new MSSQLQueryExecutor(ConnectionString));
-            MSSQLDeployManager deployManager = new(true, false);
+            MSSQLDeployManager deployManager = new(new DeployOptions { AllowDbCreation = true });
             deployManager.PublishDatabase(s_mssqlSampleDbAssemblyPath, ConnectionString);
 
             MSSQLDatabase dbModelFromDbAssembly = (MSSQLDatabase)DbDefinitionParser.CreateDatabaseModel(s_mssqlSampleDbAssemblyPath);
@@ -103,7 +103,7 @@ namespace DotNetDBTools.IntegrationTests.MSSQL
         {
             DropDatabaseIfExists(ConnectionString);
             MSSQLInteractor interactor = new(new MSSQLQueryExecutor(ConnectionString));
-            MSSQLDeployManager deployManager = new(true, false);
+            MSSQLDeployManager deployManager = new(new DeployOptions { AllowDbCreation = true });
             deployManager.PublishDatabase(s_mssqlSampleDbAssemblyPath, ConnectionString);
             deployManager.UnregisterAsDNDBT(ConnectionString);
 
