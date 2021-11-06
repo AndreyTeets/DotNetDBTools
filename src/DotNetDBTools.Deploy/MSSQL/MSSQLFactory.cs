@@ -1,4 +1,5 @@
-﻿using DotNetDBTools.Deploy.Core;
+﻿using System.Data.SqlClient;
+using DotNetDBTools.Deploy.Core;
 
 namespace DotNetDBTools.Deploy.MSSQL
 {
@@ -6,7 +7,7 @@ namespace DotNetDBTools.Deploy.MSSQL
     {
         public IQueryExecutor CreateQueryExecutor(string connectionString)
         {
-            return new MSSQLQueryExecutor(connectionString);
+            return new MSSQLQueryExecutor(() => new SqlConnection(connectionString));
         }
 
         public IGenSqlScriptQueryExecutor CreateGenSqlScriptQueryExecutor()

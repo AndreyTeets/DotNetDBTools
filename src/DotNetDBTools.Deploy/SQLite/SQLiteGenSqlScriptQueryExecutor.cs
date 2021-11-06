@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -7,52 +6,26 @@ using DotNetDBTools.Deploy.Core;
 
 namespace DotNetDBTools.Deploy.SQLite
 {
-    internal class SQLiteGenSqlScriptQueryExecutor : IGenSqlScriptQueryExecutor
+    internal class SQLiteGenSqlScriptQueryExecutor : GenSqlScriptQueryExecutor
     {
-        private int _executeQueriesCount = 0;
-        private readonly List<string> _queries = new();
-
-        public int Execute(IQuery query)
+        protected override string CreateQueryText(IQuery query)
         {
             string queryName = query.GetType().Name;
             string queryWithParametersReplacedWithValues = ReplaceParameters(query);
-            _queries.Add($"--QUERY START: {queryName}\n{queryWithParametersReplacedWithValues}\n--QUERY END: {queryName}");
-            _executeQueriesCount++;
-            return 0;
+            return queryWithParametersReplacedWithValues;
         }
 
-        public void BeginTransaction()
+        protected override string CreateBeginTransactionText()
         {
-            _queries.Add(
+            return
 @"PRAGMA foreign_keys=off;
-BEGIN TRANSACTION;");
+BEGIN TRANSACTION;";
         }
 
-        public void CommitTransaction()
+        protected override string CreateCommitTransactionText()
         {
-            _queries.Add(
-@"COMMIT TRANSACTION;");
-        }
-
-        public void RollbackTransaction()
-        {
-        }
-
-        public IEnumerable<TOut> Query<TOut>(IQuery query)
-        {
-            throw new NotImplementedException();
-        }
-
-        public TOut QuerySingleOrDefault<TOut>(IQuery query)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string GetFinalScript()
-        {
-            if (_executeQueriesCount == 0)
-                return "";
-            return string.Join("\n\n", _queries);
+            return
+@"COMMIT TRANSACTION;";
         }
 
         private string ReplaceParameters(IQuery query)

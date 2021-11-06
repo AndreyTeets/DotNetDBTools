@@ -1,39 +1,32 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using DotNetDBTools.Deploy.Core;
 
 namespace DotNetDBTools.Deploy.MSSQL
 {
-    internal class MSSQLGenSqlScriptQueryExecutor : IGenSqlScriptQueryExecutor
+    internal class MSSQLGenSqlScriptQueryExecutor : GenSqlScriptQueryExecutor
     {
-        private int _executeQueriesCount = 0;
-        private readonly List<string> _queries = new();
-
-        public int Execute(IQuery query)
+        protected override string CreateQueryText(IQuery query)
         {
-            string queryName = query.GetType().Name;
             string paremeterDeclarations = GetParameterDeclarations(query);
             string queryWithParameterDeclarations = $"{paremeterDeclarations}{query.Sql}";
             string execQueryStatement = $"EXEC sp_executesql N'{queryWithParameterDeclarations.Replace("'", "''")}';";
-            _queries.Add($"--QUERY START: {queryName}\n{execQueryStatement}\n--QUERY END: {queryName}");
-            _executeQueriesCount++;
-            return 0;
+            return execQueryStatement;
         }
 
-        public void BeginTransaction()
+        protected override string CreateBeginTransactionText()
         {
-            _queries.Add(
+            return
 @"SET NOCOUNT ON;
 SET XACT_ABORT ON;
 BEGIN TRY;
-    BEGIN TRANSACTION;");
+    BEGIN TRANSACTION;";
         }
 
-        public void CommitTransaction()
+        protected override string CreateCommitTransactionText()
         {
-            _queries.Add(
+            return
 @"    COMMIT TRANSACTION;
 END TRY
 BEGIN CATCH;
@@ -42,28 +35,7 @@ BEGIN CATCH;
     DECLARE @ErrorMessage NVARCHAR(MAX), @ErrorSeverity INT, @ErrorState INT;
     SELECT @ErrorMessage = ERROR_MESSAGE() + ' Line ' + CAST(ERROR_LINE() AS NVARCHAR(5)), @ErrorSeverity = ERROR_SEVERITY(), @ErrorState = ERROR_STATE();
     RAISERROR(@ErrorMessage, @ErrorSeverity, @ErrorState);
-END CATCH;");
-        }
-
-        public void RollbackTransaction()
-        {
-        }
-
-        public IEnumerable<TOut> Query<TOut>(IQuery query)
-        {
-            throw new NotImplementedException();
-        }
-
-        public TOut QuerySingleOrDefault<TOut>(IQuery query)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string GetFinalScript()
-        {
-            if (_executeQueriesCount == 0)
-                return "";
-            return string.Join("\n\n", _queries);
+END CATCH;";
         }
 
         private string GetParameterDeclarations(IQuery query)

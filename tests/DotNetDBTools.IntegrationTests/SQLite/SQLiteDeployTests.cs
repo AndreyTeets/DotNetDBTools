@@ -37,7 +37,7 @@ namespace DotNetDBTools.IntegrationTests.SQLite
         public void AgnosticSampleDB_DbModelFromDNDBTSysInfo_IsEquivalentTo_DbModelFromDbAssembly()
         {
             DropDatabaseIfExists(ConnectionString);
-            SQLiteInteractor interactor = new(new SQLiteQueryExecutor(ConnectionString));
+            SQLiteInteractor interactor = new(new SQLiteQueryExecutor(() => new SqliteConnection(ConnectionString)));
             SQLiteDeployManager deployManager = new(new DeployOptions { AllowDbCreation = true });
             deployManager.PublishDatabase(s_agnosticSampleDbAssemblyPath, ConnectionString);
 
@@ -54,7 +54,7 @@ namespace DotNetDBTools.IntegrationTests.SQLite
         public void AgnosticSampleDB_DbModelFromDBMSSysInfo_IsEquivalentTo_DbModelFromDbAssembly()
         {
             DropDatabaseIfExists(ConnectionString);
-            SQLiteInteractor interactor = new(new SQLiteQueryExecutor(ConnectionString));
+            SQLiteInteractor interactor = new(new SQLiteQueryExecutor(() => new SqliteConnection(ConnectionString)));
             SQLiteDeployManager deployManager = new(new DeployOptions { AllowDbCreation = true });
             deployManager.PublishDatabase(s_agnosticSampleDbAssemblyPath, ConnectionString);
             deployManager.UnregisterAsDNDBT(ConnectionString);
@@ -82,7 +82,7 @@ namespace DotNetDBTools.IntegrationTests.SQLite
         public void SQLiteSampleDB_DbModelFromDNDBTSysInfo_IsEquivalentTo_DbModelFromDbAssembly()
         {
             DropDatabaseIfExists(ConnectionString);
-            SQLiteInteractor interactor = new(new SQLiteQueryExecutor(ConnectionString));
+            SQLiteInteractor interactor = new(new SQLiteQueryExecutor(() => new SqliteConnection(ConnectionString)));
             SQLiteDeployManager deployManager = new(new DeployOptions { AllowDbCreation = true });
             deployManager.PublishDatabase(s_sqliteSampleDbAssemblyPath, ConnectionString);
 
@@ -98,7 +98,7 @@ namespace DotNetDBTools.IntegrationTests.SQLite
         public void SQLiteSampleDB_DbModelFromDBMSSysInfo_IsEquivalentTo_DbModelFromDbAssembly()
         {
             DropDatabaseIfExists(ConnectionString);
-            SQLiteInteractor interactor = new(new SQLiteQueryExecutor(ConnectionString));
+            SQLiteInteractor interactor = new(new SQLiteQueryExecutor(() => new SqliteConnection(ConnectionString)));
             SQLiteDeployManager deployManager = new(new DeployOptions { AllowDbCreation = true });
             deployManager.PublishDatabase(s_sqliteSampleDbAssemblyPath, ConnectionString);
             deployManager.UnregisterAsDNDBT(ConnectionString);

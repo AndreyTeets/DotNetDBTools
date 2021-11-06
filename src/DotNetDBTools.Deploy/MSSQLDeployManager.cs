@@ -24,8 +24,8 @@ namespace DotNetDBTools.Deploy
             sqlConnectionBuilder.InitialCatalog = string.Empty;
             string connectionStringWithoutDb = sqlConnectionBuilder.ConnectionString;
 
-            MSSQLInteractor interactor = new(new MSSQLQueryExecutor(connectionString));
-            MSSQLInteractor interactorForEmpty = new(new MSSQLQueryExecutor(connectionStringWithoutDb));
+            Interactor interactor = Factory.CreateInteractor(Factory.CreateQueryExecutor(connectionString));
+            Interactor interactorForEmpty = Factory.CreateInteractor(Factory.CreateQueryExecutor(connectionStringWithoutDb));
             bool databaseExists = interactorForEmpty.DatabaseExists(databaseName);
             if (databaseExists)
             {
@@ -53,8 +53,8 @@ namespace DotNetDBTools.Deploy
             sqlConnectionBuilder.InitialCatalog = string.Empty;
             string connectionStringWithoutDb = sqlConnectionBuilder.ConnectionString;
 
-            MSSQLInteractor interactor = new(new MSSQLQueryExecutor(connectionString));
-            MSSQLInteractor interactorForEmpty = new(new MSSQLQueryExecutor(connectionStringWithoutDb));
+            Interactor interactor = Factory.CreateInteractor(Factory.CreateQueryExecutor(connectionString));
+            Interactor interactorForEmpty = Factory.CreateInteractor(Factory.CreateQueryExecutor(connectionStringWithoutDb));
             if (interactorForEmpty.DatabaseExists(databaseName) && interactor.DNDBTSysTablesExist())
                 return interactor.GetDatabaseModelFromDNDBTSysInfo();
             return CreateEmptyDatabaseModel();

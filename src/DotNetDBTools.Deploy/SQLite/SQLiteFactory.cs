@@ -1,4 +1,5 @@
 ﻿using DotNetDBTools.Deploy.Core;
+using Microsoft.Data.Sqlite;
 
 namespace DotNetDBTools.Deploy.SQLite
 {
@@ -6,7 +7,7 @@ namespace DotNetDBTools.Deploy.SQLite
     {
         public IQueryExecutor CreateQueryExecutor(string connectionString)
         {
-            return new SQLiteQueryExecutor(connectionString);
+            return new SQLiteQueryExecutor(() => new SqliteConnection(connectionString));
         }
 
         public IGenSqlScriptQueryExecutor CreateGenSqlScriptQueryExecutor()

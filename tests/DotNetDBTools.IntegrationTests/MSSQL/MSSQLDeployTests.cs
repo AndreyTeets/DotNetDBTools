@@ -39,7 +39,7 @@ namespace DotNetDBTools.IntegrationTests.MSSQL
         public void AgnosticSampleDB_DbModelFromDNDBTSysInfo_IsEquivalentTo_DbModelFromDbAssembly()
         {
             DropDatabaseIfExists(ConnectionString);
-            MSSQLInteractor interactor = new(new MSSQLQueryExecutor(ConnectionString));
+            MSSQLInteractor interactor = new(new MSSQLQueryExecutor(() => new SqlConnection(ConnectionString)));
             MSSQLDeployManager deployManager = new(new DeployOptions { AllowDbCreation = true });
             deployManager.PublishDatabase(s_agnosticSampleDbAssemblyPath, ConnectionString);
 
@@ -56,7 +56,7 @@ namespace DotNetDBTools.IntegrationTests.MSSQL
         public void AgnosticSampleDB_DbModelFromDBMSSysInfo_IsEquivalentTo_DbModelFromDbAssembly()
         {
             DropDatabaseIfExists(ConnectionString);
-            MSSQLInteractor interactor = new(new MSSQLQueryExecutor(ConnectionString));
+            MSSQLInteractor interactor = new(new MSSQLQueryExecutor(() => new SqlConnection(ConnectionString)));
             MSSQLDeployManager deployManager = new(new DeployOptions { AllowDbCreation = true });
             deployManager.PublishDatabase(s_agnosticSampleDbAssemblyPath, ConnectionString);
             deployManager.UnregisterAsDNDBT(ConnectionString);
@@ -84,7 +84,7 @@ namespace DotNetDBTools.IntegrationTests.MSSQL
         public void MSSQLSampleDB_DbModelFromDNDBTSysInfo_IsEquivalentTo_DbModelFromDbAssembly()
         {
             DropDatabaseIfExists(ConnectionString);
-            MSSQLInteractor interactor = new(new MSSQLQueryExecutor(ConnectionString));
+            MSSQLInteractor interactor = new(new MSSQLQueryExecutor(() => new SqlConnection(ConnectionString)));
             MSSQLDeployManager deployManager = new(new DeployOptions { AllowDbCreation = true });
             deployManager.PublishDatabase(s_mssqlSampleDbAssemblyPath, ConnectionString);
 
@@ -102,7 +102,7 @@ namespace DotNetDBTools.IntegrationTests.MSSQL
         public void MSSQLSampleDB_DbModelFromDBMSSysInfo_IsEquivalentTo_DbModelFromDbAssembly()
         {
             DropDatabaseIfExists(ConnectionString);
-            MSSQLInteractor interactor = new(new MSSQLQueryExecutor(ConnectionString));
+            MSSQLInteractor interactor = new(new MSSQLQueryExecutor(() => new SqlConnection(ConnectionString)));
             MSSQLDeployManager deployManager = new(new DeployOptions { AllowDbCreation = true });
             deployManager.PublishDatabase(s_mssqlSampleDbAssemblyPath, ConnectionString);
             deployManager.UnregisterAsDNDBT(ConnectionString);
