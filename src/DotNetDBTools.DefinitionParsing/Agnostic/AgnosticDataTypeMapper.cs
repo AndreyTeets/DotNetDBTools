@@ -2,6 +2,7 @@
 using DotNetDBTools.Definition.Agnostic.DataTypes;
 using DotNetDBTools.Definition.Core;
 using DotNetDBTools.DefinitionParsing.Core;
+using DotNetDBTools.Models.Agnostic;
 using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.DefinitionParsing.Agnostic
@@ -12,48 +13,77 @@ namespace DotNetDBTools.DefinitionParsing.Agnostic
         {
             return dataType switch
             {
-                StringDataType stringDataType => MapToDataTypeModel(stringDataType),
-                IntDataType intDataType => MapToDataTypeModel(intDataType),
-                BinaryDataType binaryDataType => MapToDataTypeModel(binaryDataType),
-                DateTimeDataType dateTimeDataType => MapToDataTypeModel(dateTimeDataType),
+                IntDataType dt => MapToDataTypeModel(dt),
+                RealDataType dt => MapToDataTypeModel(dt),
+                DecimalDataType dt => MapToDataTypeModel(dt),
+                BoolDataType dt => new AgnosticDataType() { Name = AgnosticDataTypeNames.Bool },
+
+                StringDataType dt => MapToDataTypeModel(dt),
+                BinaryDataType dt => MapToDataTypeModel(dt),
+                GuidDataType dt => new AgnosticDataType() { Name = AgnosticDataTypeNames.Guid },
+
+                DateDataType dt => new AgnosticDataType() { Name = AgnosticDataTypeNames.Date },
+                TimeDataType dt => new AgnosticDataType() { Name = AgnosticDataTypeNames.Time },
+                DateTimeDataType dt => MapToDataTypeModel(dt),
+
                 _ => throw new InvalidOperationException($"Invalid dataType: '{dataType}'")
             };
         }
 
-        private static DataType MapToDataTypeModel(StringDataType stringDataType)
+        private static AgnosticDataType MapToDataTypeModel(IntDataType intDataType)
         {
-            return new DataType()
+            return new AgnosticDataType()
             {
-                Name = DataTypeNames.String,
+                Name = AgnosticDataTypeNames.Int,
+                Size = int.Parse($"{intDataType.Size}".Replace("Int", "")),
+            };
+        }
+
+        private static AgnosticDataType MapToDataTypeModel(RealDataType realDataType)
+        {
+            return new AgnosticDataType()
+            {
+                Name = AgnosticDataTypeNames.Real,
+                IsDoublePrecision = realDataType.IsDoublePrecision,
+            };
+        }
+
+        private static AgnosticDataType MapToDataTypeModel(DecimalDataType decimalDataType)
+        {
+            return new AgnosticDataType()
+            {
+                Name = AgnosticDataTypeNames.Decimal,
+                Precision = decimalDataType.Precision,
+                Scale = decimalDataType.Scale,
+            };
+        }
+
+        private static AgnosticDataType MapToDataTypeModel(StringDataType stringDataType)
+        {
+            return new AgnosticDataType()
+            {
+                Name = AgnosticDataTypeNames.String,
                 Length = stringDataType.Length,
                 IsFixedLength = stringDataType.IsFixedLength,
             };
         }
 
-        private static DataType MapToDataTypeModel(IntDataType intDataType)
+        private static AgnosticDataType MapToDataTypeModel(BinaryDataType binaryDataType)
         {
-            return new DataType()
+            return new AgnosticDataType()
             {
-                Name = DataTypeNames.Int,
-                Size = int.Parse($"{intDataType.Size}".Replace("Int", "")),
-            };
-        }
-
-        private static DataType MapToDataTypeModel(BinaryDataType binaryDataType)
-        {
-            return new DataType()
-            {
-                Name = DataTypeNames.Binary,
+                Name = AgnosticDataTypeNames.Binary,
                 Length = binaryDataType.Length,
                 IsFixedLength = binaryDataType.IsFixedLength,
             };
         }
 
-        private static DataType MapToDataTypeModel(DateTimeDataType _)
+        private static AgnosticDataType MapToDataTypeModel(DateTimeDataType dateTimeDataType)
         {
-            return new DataType()
+            return new AgnosticDataType()
             {
-                Name = DataTypeNames.DateTime,
+                Name = AgnosticDataTypeNames.DateTime,
+                IsWithTimeZone = dateTimeDataType.IsWithTimeZone,
             };
         }
     }

@@ -19,7 +19,7 @@ namespace DotNetDBTools.SampleSelfUpdatingApp.SQLite
             DropDatabaseIfExists(s_agnosticConnectionString);
 
             Console.WriteLine("Creating new AgnosticSampleDB_SelfUpdatingApp v2 from dbAssembly file...");
-            SqliteConnection connection = new(s_agnosticConnectionString);
+            using SqliteConnection connection = new(s_agnosticConnectionString);
             DeployAgnosticSampleDB(connection);
 
             SqliteCompiler compiler = new();

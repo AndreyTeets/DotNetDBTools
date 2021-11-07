@@ -38,6 +38,12 @@ namespace DotNetDBTools.IntegrationTests.SQLite
             _interactor = new(new SQLiteQueryExecutor(_connection));
         }
 
+        [TestCleanup]
+        public void TestCleanup()
+        {
+            _connection.Dispose();
+        }
+
         [TestMethod]
         public void Publish_AgnosticSampleDB_CreatesDbFromZero_And_UpdatesItAgain_WithoutErrors()
         {

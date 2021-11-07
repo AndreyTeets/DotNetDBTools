@@ -15,7 +15,7 @@ namespace DotNetDBTools.Analysis.SQLite
             return true;
         }
 
-        private bool TriggersCodeIsValid(Database database, out DbError dbError)
+        private static bool TriggersCodeIsValid(Database database, out DbError dbError)
         {
             dbError = null;
             foreach (Table table in database.Tables)

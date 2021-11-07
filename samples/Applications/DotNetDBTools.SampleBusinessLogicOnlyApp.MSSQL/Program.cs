@@ -52,7 +52,7 @@ VALUES
     N'value2'
 );";
 
-            SqlConnection connection = new(s_connectionString);
+            using SqlConnection connection = new(s_connectionString);
             connection.Execute(query);
         }
 
@@ -67,7 +67,7 @@ INNER JOIN {MyTable2} t2
 WHERE t1.{MyTable1.MyColumn2} IN (N'value1', N'value2')
     AND t2.{MyTable2.MyColumn2} IS NULL;";
 
-            SqlConnection connection = new(s_connectionString);
+            using SqlConnection connection = new(s_connectionString);
             int count = connection.QuerySingle<int>(query);
             if (count != 1)
                 throw new Exception($"Wrong data in '{MyTable1}' or '{MyTable2}' table");

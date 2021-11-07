@@ -47,18 +47,11 @@ WHERE t.name != '{DNDBTSysTables.DNDBTDbObjects}';";
             private static Column MapToColumnModel(ColumnsBuilder.ColumnRecord builderColumnRecord)
             {
                 ColumnRecord columnRecord = (ColumnRecord)builderColumnRecord;
-                DataType dataType = MSSQLSqlTypeMapper.GetModelType(columnRecord.DataType, columnRecord.Length);
-                if (columnRecord.UserDefinedDataType is not null)
-                {
-                    dataType.Name = columnRecord.UserDefinedDataType;
-                    dataType.IsUserDefined = true;
-                }
-
                 return new Column()
                 {
                     ID = Guid.NewGuid(),
                     Name = columnRecord.ColumnName,
-                    DataType = dataType,
+                    DataType = ParseDataType(columnRecord),
                     Nullable = columnRecord.Nullable,
                     Identity = columnRecord.Identity,
                     Default = ParseDefault(columnRecord.Default),
@@ -97,6 +90,26 @@ WHERE t.name != '{DNDBTSysTables.DNDBTDbObjects}';";
                     for (int i = 0; i < numChars; i += 2)
                         bytes[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
                     return bytes;
+                }
+            }
+
+            private static DataType ParseDataType(ColumnRecord columnRecord)
+            {
+                string dataType = columnRecord.DataType.ToUpper();
+                int length = int.Parse(columnRecord.Length);
+                DataType dataTypeModel = MSSQLQueriesHelper.CreateDataTypeModel(dataType, length);
+
+                if (columnRecord.UserDefinedDataType is not null)
+                {
+                    return new MSSQLUserDefinedDataType
+                    {
+                        Name = columnRecord.UserDefinedDataType,
+                        UnderlyingType = dataTypeModel,
+                    };
+                }
+                else
+                {
+                    return dataTypeModel;
                 }
             }
         }

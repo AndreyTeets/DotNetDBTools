@@ -16,7 +16,7 @@ namespace DotNetDBTools.SampleDB.MSSQL.Tables
 
         public Column MyColumn2 = new("FE68EE3D-09D0-40AC-93F9-5E441FBB4F70")
         {
-            DataType = new StringDataType() { Length = 10, IsUnicode = true },
+            DataType = new StringDataType() { Length = 10 },
             Default = "33",
         };
 

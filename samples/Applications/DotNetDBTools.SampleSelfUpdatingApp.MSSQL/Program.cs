@@ -21,7 +21,7 @@ namespace DotNetDBTools.SampleSelfUpdatingApp.MSSQL
             CreateDatabase(s_agnosticConnectionString);
 
             Console.WriteLine("Creating new AgnosticSampleDB_SelfUpdatingApp v2 from dbAssembly file...");
-            SqlConnection connection = new(s_agnosticConnectionString);
+            using SqlConnection connection = new(s_agnosticConnectionString);
             DeployAgnosticSampleDB(connection);
 
             SqlServerCompiler compiler = new();

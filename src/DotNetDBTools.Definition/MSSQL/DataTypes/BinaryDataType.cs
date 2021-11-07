@@ -3,25 +3,27 @@
 namespace DotNetDBTools.Definition.MSSQL.DataTypes
 {
     /// <summary>
-    /// Column is declared as 'binary'/'varbinary'.
+    /// Column is declared as 'BINARY(Length)'/'VARBINARY(Length/MAX)'.
     /// </summary>
     public class BinaryDataType : IDataType
     {
         /// <summary>
-        /// The type is declared as 'binary(<see cref="Length"/>)'/'varbinary(<see cref="Length"/>)'<br/>
-        /// if <see cref="Length"/> is in range [1,8000] otherwise as 'binary(MAX)'/'varbinary(MAX)'.
+        /// Column is declared as 'BINARY(Length)'/'VARBINARY(Length)' if Length is in range [1,8000], otherwise as 'VARBINARY(MAX)' or throws for 'BINARY'.
         /// </summary>
         /// <remarks>
         /// Default value is 50.
         /// </remarks>
         public int Length { get; set; } = 50;
 
-        /// <summary>
-        /// The type is declared as 'binary' if <see cref="Length"/>=true', otherwise as 'varbinary'.
-        /// </summary>
         /// <remarks>
-        /// Default value is false.
+        /// Default value is <see cref="BinarySqlType.VARBINARY"/>.
         /// </remarks>
-        public bool IsFixedLength { get; set; } = false;
+        public BinarySqlType SqlType { get; set; } = BinarySqlType.VARBINARY;
+    }
+
+    public enum BinarySqlType
+    {
+        BINARY,
+        VARBINARY,
     }
 }

@@ -51,9 +51,9 @@ namespace DotNetDBTools.UnitTests.Analysis
             _comparer.Equals(_tableModel1, _tableModel2).Should().BeFalse();
 
             _tableModel2 = CreateTemplateAgnosticTableModel();
-            _tableModel2.Columns.Skip(1).First().DataType = new DataType()
+            _tableModel2.Columns.Skip(1).First().DataType = new AgnosticDataType()
             {
-                Name = DataTypeNames.String,
+                Name = AgnosticDataTypeNames.String,
             };
             _comparer.Equals(_tableModel1, _tableModel2).Should().BeFalse();
 
@@ -95,10 +95,10 @@ namespace DotNetDBTools.UnitTests.Analysis
                     {
                         ID = new Guid("33457F8A-AAA0-467A-A098-CE349157A493"),
                         Name = "C1",
-                        DataType = new DataType()
+                        DataType = new AgnosticDataType()
                         {
-                            Name = DataTypeNames.String,
-                            IsUnicode = true,
+                            Name = AgnosticDataTypeNames.String,
+                            IsFixedLength = true,
                             Length = 1000,
                         },
                         Default = "testval1",
@@ -108,9 +108,9 @@ namespace DotNetDBTools.UnitTests.Analysis
                     {
                         ID = new Guid("33457F8A-AAA0-467A-A098-CE349157A493"),
                         Name = "C2",
-                        DataType = new DataType()
+                        DataType = new AgnosticDataType()
                         {
-                            Name = DataTypeNames.Int,
+                            Name = AgnosticDataTypeNames.Int,
                         },
                         Default = 325,
                         Nullable = true,

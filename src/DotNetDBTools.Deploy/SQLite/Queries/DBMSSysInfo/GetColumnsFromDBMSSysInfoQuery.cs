@@ -40,12 +40,11 @@ WHERE sm.type = 'table'
             private static Column MapToColumnModel(ColumnsBuilder.ColumnRecord builderColumnRecord)
             {
                 ColumnRecord columnRecord = (ColumnRecord)builderColumnRecord;
-                DataType dataType = SQLiteSqlTypeMapper.GetModelType(columnRecord.DataType);
                 return new Column()
                 {
                     ID = Guid.NewGuid(),
                     Name = columnRecord.ColumnName,
-                    DataType = dataType,
+                    DataType = ParseDataType(columnRecord),
                     Nullable = columnRecord.Nullable,
                     Identity = columnRecord.IsIdentityCandidate,
                     Default = ParseDefault(columnRecord.Default),
@@ -81,6 +80,22 @@ WHERE sm.type = 'table'
                         bytes[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
                     return bytes;
                 }
+            }
+
+            private static DataType ParseDataType(ColumnRecord columnRecord)
+            {
+                string dataType = columnRecord.DataType.ToUpper();
+                switch (dataType)
+                {
+                    case SQLiteDataTypeNames.INTEGER:
+                    case SQLiteDataTypeNames.REAL:
+                    case SQLiteDataTypeNames.NUMERIC:
+                    case SQLiteDataTypeNames.TEXT:
+                    case SQLiteDataTypeNames.BLOB:
+                        return new DataType { Name = dataType };
+                    default:
+                        throw new InvalidOperationException($"Invalid column record datatype: {columnRecord.DataType}");
+                };
             }
         }
     }

@@ -3,7 +3,7 @@
 namespace DotNetDBTools.Definition.MSSQL.DataTypes
 {
     /// <summary>
-    /// Column is declared as 'bit'.
+    /// Column is declared as 'BIT'.
     /// </summary>
     public class BoolDataType : IDataType
     {

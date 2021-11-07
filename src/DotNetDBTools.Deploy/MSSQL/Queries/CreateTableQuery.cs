@@ -4,7 +4,6 @@ using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.MSSQL;
 using static DotNetDBTools.Deploy.MSSQL.MSSQLQueriesHelper;
-using static DotNetDBTools.Deploy.MSSQL.MSSQLSqlTypeMapper;
 
 namespace DotNetDBTools.Deploy.MSSQL.Queries
 {
@@ -51,7 +50,7 @@ $@"{trigger.Code}";
             List<string> tableDefinitions = new();
 
             tableDefinitions.AddRange(table.Columns.Select(c =>
-$@"    {c.Name} {GetSqlType(c.DataType)}{GetIdentityStatement(c)} {GetNullabilityStatement(c)}{GetDefaultValStatement(c)}"));
+$@"    {c.Name} {c.DataType.Name}{GetIdentityStatement(c)} {GetNullabilityStatement(c)}{GetDefaultValStatement(c)}"));
 
             if (table.PrimaryKey is not null)
             {

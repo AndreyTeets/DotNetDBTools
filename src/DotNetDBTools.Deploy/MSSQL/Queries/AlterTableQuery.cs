@@ -4,7 +4,6 @@ using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.MSSQL;
 using static DotNetDBTools.Deploy.MSSQL.MSSQLQueriesHelper;
-using static DotNetDBTools.Deploy.MSSQL.MSSQLSqlTypeMapper;
 
 namespace DotNetDBTools.Deploy.MSSQL.Queries
 {
@@ -98,7 +97,7 @@ EXEC sp_rename '{tableName}.{oldColumnName}', '{newColumnName}', 'COLUMN';"
 
             public static string AddColumn(string tableName, Column c) =>
 $@"
-ALTER TABLE {tableName} ADD {c.Name} {GetSqlType(c.DataType)}{GetIdentityStatement(c)} {GetNullabilityStatement(c)};"
+ALTER TABLE {tableName} ADD {c.Name} {c.DataType.Name}{GetIdentityStatement(c)} {GetNullabilityStatement(c)};"
                 ;
             public static string DropColumn(string tableName, string columnName) =>
 $@"
@@ -106,7 +105,7 @@ ALTER TABLE {tableName} DROP COLUMN {columnName};"
                 ;
             public static string AlterColumnTypeAndNullability(string tableName, Column c) =>
 $@"
-ALTER TABLE {tableName} ALTER COLUMN {c.Name} {GetSqlType(c.DataType)} {GetNullabilityStatement(c)};"
+ALTER TABLE {tableName} ALTER COLUMN {c.Name} {c.DataType.Name} {GetNullabilityStatement(c)};"
                 ;
 
             public static string AddPrimaryKey(string tableName, PrimaryKey pk) =>

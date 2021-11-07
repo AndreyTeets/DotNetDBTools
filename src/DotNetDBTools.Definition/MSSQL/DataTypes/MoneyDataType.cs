@@ -2,12 +2,18 @@
 
 namespace DotNetDBTools.Definition.MSSQL.DataTypes
 {
+    /// <summary>
+    /// Column is declared as 'SMALLMONEY'/'MONEY'.
+    /// </summary>
     public class MoneyDataType : IDataType
     {
-        public MSSQLMoneyType MSSQLType { get; set; } = MSSQLMoneyType.MONEY;
+        /// <remarks>
+        /// Default value is <see cref="MoneySqlType.MONEY"/>.
+        /// </remarks>
+        public MoneySqlType SqlType { get; set; } = MoneySqlType.MONEY;
     }
 
-    public enum MSSQLMoneyType
+    public enum MoneySqlType
     {
         SMALLMONEY,
         MONEY,

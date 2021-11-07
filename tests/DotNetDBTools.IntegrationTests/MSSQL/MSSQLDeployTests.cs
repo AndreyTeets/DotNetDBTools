@@ -41,6 +41,12 @@ namespace DotNetDBTools.IntegrationTests.MSSQL
             _interactor = new(new MSSQLQueryExecutor(_connection));
         }
 
+        [TestCleanup]
+        public void TestCleanup()
+        {
+            _connection.Dispose();
+        }
+
         [TestMethod]
         public void Publish_AgnosticSampleDB_CreatesDbFromZero_And_UpdatesItAgain_WithoutErrors()
         {

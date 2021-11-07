@@ -51,9 +51,9 @@ WHERE t.is_user_defined = 1
                 ID = Guid.NewGuid(),
                 Name = userDefinedTypeRecord.Name,
                 Nullable = userDefinedTypeRecord.Nullable,
-                UnderlyingDataType = MSSQLSqlTypeMapper.GetModelType(
-                    userDefinedTypeRecord.UnderlyingDataTypeName,
-                    userDefinedTypeRecord.UnderlyingDataTypeLength),
+                UnderlyingDataType = MSSQLQueriesHelper.CreateDataTypeModel(
+                    userDefinedTypeRecord.UnderlyingDataTypeName.ToUpper(),
+                    int.Parse(userDefinedTypeRecord.UnderlyingDataTypeLength)),
             };
         }
     }

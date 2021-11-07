@@ -29,7 +29,8 @@ namespace DotNetDBTools.IntegrationTests.MSSQL
         {
             await DockerHelper.StopAndRemoveContainerIfExistsAndNotRunningOrOld(MsSqlContainerName, oldMinutes: 60);
             await CreateAndStartMsSqlContainerIfNotExists();
-            await DbHelper.WaitUntilDatabaseAvailableAsync(new SqlConnection(MsSqlContainerConnectionString), timeoutSeconds: 60);
+            using SqlConnection connection = new(MsSqlContainerConnectionString);
+            await DbHelper.WaitUntilDatabaseAvailableAsync(connection, timeoutSeconds: 60);
         }
 
         private static async Task CreateAndStartMsSqlContainerIfNotExists()

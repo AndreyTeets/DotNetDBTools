@@ -28,7 +28,7 @@ BEGIN TRANSACTION;";
 @"COMMIT TRANSACTION;";
         }
 
-        private string ReplaceParameters(IQuery query)
+        private static string ReplaceParameters(IQuery query)
         {
             string pattern = @"(@.+?)([\s|,|;|$])";
             string result = Regex.Replace(query.Sql, pattern, match =>
@@ -38,7 +38,7 @@ BEGIN TRANSACTION;";
             return result;
         }
 
-        private string Quote(QueryParameter queryParameter)
+        private static string Quote(QueryParameter queryParameter)
         {
             if (queryParameter.Value is null)
                 return "NULL";

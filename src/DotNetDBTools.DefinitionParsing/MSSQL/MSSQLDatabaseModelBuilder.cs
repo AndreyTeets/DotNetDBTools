@@ -50,7 +50,7 @@ namespace DotNetDBTools.DefinitionParsing.MSSQL
             return userDefinedTypeModels;
         }
 
-        private List<MSSQLFunction> BuildFunctionModels(Assembly dbAssembly)
+        private static List<MSSQLFunction> BuildFunctionModels(Assembly dbAssembly)
         {
             IEnumerable<IFunction> functions = GetInstancesOfAllTypesImplementingInterface<IFunction>(dbAssembly);
             List<MSSQLFunction> functionModels = new();

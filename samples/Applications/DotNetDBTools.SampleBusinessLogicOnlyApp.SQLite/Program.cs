@@ -51,7 +51,7 @@ VALUES
     'value2'
 );";
 
-            SqliteConnection connection = new(s_connectionString);
+            using SqliteConnection connection = new(s_connectionString);
             connection.Execute(query);
         }
 
@@ -66,7 +66,7 @@ INNER JOIN {MyTable2} t2
 WHERE t1.{MyTable1.MyColumn2} IN ('value1', 'value2')
     AND t2.{MyTable2.MyColumn2} IS NULL;";
 
-            SqliteConnection connection = new(s_connectionString);
+            using SqliteConnection connection = new(s_connectionString);
             int count = connection.QuerySingle<int>(query);
             if (count != 1)
                 throw new Exception($"Wrong data in '{MyTable1}' or '{MyTable2}' table");

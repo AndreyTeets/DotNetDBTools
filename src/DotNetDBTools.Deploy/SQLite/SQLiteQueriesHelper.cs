@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.SQLite;
-using static DotNetDBTools.Deploy.SQLite.SQLiteSqlTypeMapper;
 
 namespace DotNetDBTools.Deploy.SQLite
 {
@@ -14,7 +13,7 @@ namespace DotNetDBTools.Deploy.SQLite
             List<string> tableDefinitions = new();
 
             tableDefinitions.AddRange(table.Columns.Select(c =>
-$@"    {c.Name} {GetSqlType(c.DataType)}{GetPrimaryKeyStatement(c, table.PrimaryKey)} {GetNullabilityStatement(c)}{GetDefaultValStatement(c)}"));
+$@"    {c.Name} {c.DataType.Name}{GetPrimaryKeyStatement(c, table.PrimaryKey)} {GetNullabilityStatement(c)}{GetDefaultValStatement(c)}"));
 
             if (table.PrimaryKey is not null && table.PrimaryKey.Columns.Count() > 1)
             {

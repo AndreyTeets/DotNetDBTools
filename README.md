@@ -15,15 +15,23 @@ public class MyTable : ITable
 
     public Column MyKeyColumn = new("A2F2A4DE-1337-4594-AE41-72ED4D05F317")
     {
-        DataType = new IntDataType(),
+        DataType = new IntDataType() { Size = IntSize.Int64 },
         Identity = true,
     };
 
     public Column MyDataColumn = new("FE68EE3D-09D0-40AC-93F9-5E441FBB4F70")
     {
         DataType = new StringDataType() { Length = 40 },
-        Default = "33",
         Nullable = true,
+        Default = "33",
+    };
+
+    public Column MyDataColumn2 = new("34CB2ADB-3A6B-4BCD-A9F0-21321AB659C1")
+    {
+        DataType = new DateTimeDataType() { SqlType = DateTimeSqlType.DATETIME },
+        Default = "GETDATE()",
+        DefaultIsFunction = true,
+        DefaultConstraintName = "DF_MyTable_MyDataColumn2",
     };
 
     public PrimaryKey PK_MyTable = new("37A45DEF-F4A0-4BE7-8BFB-8FBED4A7D705")
@@ -35,22 +43,26 @@ public class MyTable : ITable
     {
         Columns = new string[] { nameof(MyDataColumn) },
     };
+
+    public Index IDX_MyTable_MyDataColumn2 = new("74390B3C-BC39-4860-A42E-12BAA400F927")
+    {
+        Columns = new string[] { nameof(MyDataColumn2) },
+        IncludeColumns = null,
+        Unique = true,
+    };
 }
 ```
 
 ## Example usage of additionally generated description classes for use in business logic
 ```
-private static void ReadSomeData()
-{
-    string sql =
+string sql =
 $@"SELECT
     {MyTable.MyDataColumn}
 FROM {MyTable}
 WHERE {MyTable.MyKeyColumn} IN (1, 2)
     AND {MyTable.MyDataColumn} IS NOT NULL;";
 
-    IEnumerable<string> values = connection.Query<string>(sql); // Dapper call
-}
+IEnumerable<string> values = connection.Query<string>(sql); // Dapper call
 ```
 
 ## How is 'SQL Server Data Tools (SSDT)' different
@@ -119,7 +131,7 @@ Note: database has to be registered with DotNetDBTools using `deployManager.Regi
 Create an instance of IDeployManager for the appropriate dbms using non-default options if needed and a DbConnection instance to pass to deployManager methods
 ```
 IDeployManager deployManager = new MSSQLDeployManager(new DeployOptions() { AllowDataLoss = true });
-DbConnection connection = new SqlConnection(SomeMSSQLConnectionString)
+using DbConnection connection = new SqlConnection(SomeMSSQLConnectionString);
 ```
 And then publish database like this
 ```

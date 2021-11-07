@@ -15,7 +15,7 @@ namespace DotNetDBTools.Analysis.SQLite
             return ConvertToSQLiteModel((AgnosticDatabase)database);
         }
 
-        private SQLiteDatabase ConvertToSQLiteModel(AgnosticDatabase database)
+        private static SQLiteDatabase ConvertToSQLiteModel(AgnosticDatabase database)
            => new(database.Name)
            {
                Tables = database.Tables.Select(x => ConvertToSQLiteModel((AgnosticTable)x)).ToList(),
@@ -48,16 +48,22 @@ namespace DotNetDBTools.Analysis.SQLite
         {
             foreach (Column column in columns)
             {
-                if (column.DataType.Name == DataTypeNames.DateTime)
+                column.DataType = column.DataType.Name switch
                 {
-                    throw new InvalidOperationException(
-                        $"Unable to convert agnostic database to sqlite:" +
-                        $" data type {column.DataType.Name} is not supported by sqlite.");
-                }
+                    AgnosticDataTypeNames.Int => new DataType { Name = SQLiteDataTypeNames.INTEGER },
+                    AgnosticDataTypeNames.Real => new DataType { Name = SQLiteDataTypeNames.REAL },
+                    AgnosticDataTypeNames.Decimal => new DataType { Name = SQLiteDataTypeNames.NUMERIC },
+                    AgnosticDataTypeNames.Bool => new DataType { Name = SQLiteDataTypeNames.INTEGER },
 
-                column.DataType = new DataType()
-                {
-                    Name = column.DataType.Name,
+                    AgnosticDataTypeNames.String => new DataType { Name = SQLiteDataTypeNames.TEXT },
+                    AgnosticDataTypeNames.Binary => new DataType { Name = SQLiteDataTypeNames.BLOB },
+                    AgnosticDataTypeNames.Guid => new DataType { Name = SQLiteDataTypeNames.BLOB },
+
+                    AgnosticDataTypeNames.Date => new DataType { Name = SQLiteDataTypeNames.NUMERIC },
+                    AgnosticDataTypeNames.Time => new DataType { Name = SQLiteDataTypeNames.NUMERIC },
+                    AgnosticDataTypeNames.DateTime => new DataType { Name = SQLiteDataTypeNames.NUMERIC },
+
+                    _ => throw new InvalidOperationException($"Invalid agnostic column datatype name: {column.DataType.Name}"),
                 };
             }
             return columns;

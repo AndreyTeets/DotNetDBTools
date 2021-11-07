@@ -110,7 +110,7 @@ namespace DotNetDBTools.Analysis.Core
             foreach (object item in collection2)
                 AddOrIncrement(collection2ObjectsCounts, item);
 
-            if (collection1ObjectsCounts.Count() != collection2ObjectsCounts.Count())
+            if (collection1ObjectsCounts.Count != collection2ObjectsCounts.Count)
                 return false;
 
             foreach (object key in collection1ObjectsCounts.Keys)

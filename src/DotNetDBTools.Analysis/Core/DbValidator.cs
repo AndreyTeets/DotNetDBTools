@@ -15,7 +15,7 @@ namespace DotNetDBTools.Analysis.Core
             return true;
         }
 
-        private bool ForeignKeyReferencesAreValid(Database database, out DbError dbError)
+        private static bool ForeignKeyReferencesAreValid(Database database, out DbError dbError)
         {
             dbError = null;
             foreach (Table table in database.Tables)

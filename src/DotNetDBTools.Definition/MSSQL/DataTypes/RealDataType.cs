@@ -2,8 +2,14 @@
 
 namespace DotNetDBTools.Definition.MSSQL.DataTypes
 {
+    /// <summary>
+    /// Column is declared as 'REAL'/'FLOAT'.
+    /// </summary>
     public class RealDataType : IDataType
     {
-        public bool IsSingle { get; set; } = false;
+        /// <remarks>
+        /// Default value is true.
+        /// </remarks>
+        public bool IsDoublePrecision { get; set; } = true;
     }
 }

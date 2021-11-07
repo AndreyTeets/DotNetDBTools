@@ -38,12 +38,12 @@ BEGIN CATCH;
 END CATCH;";
         }
 
-        private string GetParameterDeclarations(IQuery query)
+        private static string GetParameterDeclarations(IQuery query)
         {
             return string.Join("", query.Parameters.Select(x => $"DECLARE {x.Name} {GetSqlType(x)} = {Quote(x)};\n"));
         }
 
-        private string GetSqlType(QueryParameter queryParameter)
+        private static string GetSqlType(QueryParameter queryParameter)
         {
             return queryParameter.Type switch
             {
@@ -53,7 +53,7 @@ END CATCH;";
             };
         }
 
-        private string Quote(QueryParameter queryParameter)
+        private static string Quote(QueryParameter queryParameter)
         {
             if (queryParameter.Value is null)
                 return "NULL";

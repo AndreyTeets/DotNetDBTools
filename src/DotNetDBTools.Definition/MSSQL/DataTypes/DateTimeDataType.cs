@@ -2,12 +2,18 @@
 
 namespace DotNetDBTools.Definition.MSSQL.DataTypes
 {
+    /// <summary>
+    /// Column is declared as 'SMALLDATETIME'/'DATETIME'/'DATETIME2'/'DATETIMEOFFSET'.
+    /// </summary>
     public class DateTimeDataType : IDataType
     {
-        public MSSQLDateTimeType MSSQLType { get; set; } = MSSQLDateTimeType.DATETIME2;
+        /// <remarks>
+        /// Default value is <see cref="DateTimeSqlType.DATETIME2"/>.
+        /// </remarks>
+        public DateTimeSqlType SqlType { get; set; } = DateTimeSqlType.DATETIME2;
     }
 
-    public enum MSSQLDateTimeType
+    public enum DateTimeSqlType
     {
         SMALLDATETIME,
         DATETIME,
