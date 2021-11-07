@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Databases\DotNetDBTools.SampleDB.SQLite\DotNetDBTools.SampleDB.SQLite.csproj" />
+    <ProjectReference Include="..\..\Databases\DotNetDBTools.SampleDB.PostgreSQL\DotNetDBTools.SampleDB.PostgreSQL.csproj" />
   </ItemGroup>
 
 </Project>

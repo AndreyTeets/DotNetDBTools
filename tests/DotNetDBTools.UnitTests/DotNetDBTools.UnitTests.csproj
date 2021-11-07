@@ -23,6 +23,10 @@
     <ProjectReference Include="..\..\samples\Databases\DotNetDBTools.SampleDBv2.Agnostic\DotNetDBTools.SampleDBv2.Agnostic.csproj" />
     <ProjectReference Include="..\..\samples\Databases\DotNetDBTools.SampleDB.MSSQL\DotNetDBTools.SampleDB.MSSQL.csproj" />
     <ProjectReference Include="..\..\samples\Databases\DotNetDBTools.SampleDBv2.MSSQL\DotNetDBTools.SampleDBv2.MSSQL.csproj" />
+    <ProjectReference Include="..\..\samples\Databases\DotNetDBTools.SampleDB.MySQL\DotNetDBTools.SampleDB.MySQL.csproj" />
+    <ProjectReference Include="..\..\samples\Databases\DotNetDBTools.SampleDBv2.MySQL\DotNetDBTools.SampleDBv2.MySQL.csproj" />
+    <ProjectReference Include="..\..\samples\Databases\DotNetDBTools.SampleDB.PostgreSQL\DotNetDBTools.SampleDB.PostgreSQL.csproj" />
+    <ProjectReference Include="..\..\samples\Databases\DotNetDBTools.SampleDBv2.PostgreSQL\DotNetDBTools.SampleDBv2.PostgreSQL.csproj" />
     <ProjectReference Include="..\..\samples\Databases\DotNetDBTools.SampleDB.SQLite\DotNetDBTools.SampleDB.SQLite.csproj" />
     <ProjectReference Include="..\..\samples\Databases\DotNetDBTools.SampleDBv2.SQLite\DotNetDBTools.SampleDBv2.SQLite.csproj" />
     <ProjectReference Include="..\..\src\DotNetDBTools.Deploy\DotNetDBTools.Deploy.csproj" />

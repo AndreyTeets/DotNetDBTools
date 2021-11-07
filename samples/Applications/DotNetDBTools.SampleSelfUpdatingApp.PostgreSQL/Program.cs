@@ -1,4 +1,4 @@
-﻿namespace DotNetDBTools.SampleBusinessLogicOnlyApp.Postgres
+﻿namespace DotNetDBTools.SampleSelfUpdatingApp.PostgreSQL
 {
     public static class Program
     {

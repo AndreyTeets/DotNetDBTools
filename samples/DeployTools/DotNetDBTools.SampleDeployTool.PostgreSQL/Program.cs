@@ -1,4 +1,4 @@
-﻿namespace DotNetDBTools.SampleDeployTool.Postgres
+﻿namespace DotNetDBTools.SampleDeployTool.PostgreSQL
 {
     public class Program
     {
