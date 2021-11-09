@@ -8,6 +8,7 @@
     <IncludeSource>true</IncludeSource>
     <EmbedAllSources>true</EmbedAllSources>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <DebugType>portable</DebugType>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageId>$(AssemblyName)</PackageId>
@@ -30,5 +31,9 @@ It provides the means to conviniently describe database structure for supported 
     <InternalsVisibleTo Include="DotNetDBTools.IntegrationTests" />
     <InternalsVisibleTo Include="DotNetDBTools.UnitTests" />
   </ItemGroup>
-  
+
+  <PropertyGroup Condition="'$(CI_BUILD)' == 'true'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+
 </Project>

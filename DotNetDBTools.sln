@@ -24,6 +24,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_SolutionItems", "_Solution
 		LICENSE = LICENSE
 		NuGet.Config = NuGet.Config
 		README.md = README.md
+		tests.runsettings = tests.runsettings
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{D2572AC4-083E-4C75-B25D-A969F76B63E2}"
@@ -31,6 +32,11 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "props", "props", "{51CED495-5A91-4209-AEE8-A6AEE4DF64EA}"
 	ProjectSection(SolutionItems) = preProject
 		build\props\Analyzer.props = build\props\Analyzer.props
+		build\props\PKG.coverlet.props = build\props\PKG.coverlet.props
+		build\props\PKG.FluentAssertions.props = build\props\PKG.FluentAssertions.props
+		build\props\PKG.Microsoft.NET.Test.Sdk.props = build\props\PKG.Microsoft.NET.Test.Sdk.props
+		build\props\PKG.MSTest.props = build\props\PKG.MSTest.props
+		build\props\PKG.xunit.props = build\props\PKG.xunit.props
 		build\props\Source.props = build\props\Source.props
 	EndProjectSection
 EndProject

@@ -33,6 +33,14 @@ jobs:
         shell: pwsh
         run: ./build/scripts/test.ps1
 
+      - name: Upload code coverage
+        if: ${{ false }}
+        uses: codecov/codecov-action@v2
+        with:
+          files: ./tests/TestResults/coverage.opencover.xml
+          fail_ci_if_error: true
+          verbose: true
+
       - name: Publish
         if: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v') }}
         shell: pwsh

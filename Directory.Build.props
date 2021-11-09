@@ -11,6 +11,8 @@
 
     <IsPackable>false</IsPackable>
     <Version>0.1.0</Version>
+
+    <RunSettingsFilePath>$(MSBuildThisFileDirectory)\tests.runsettings</RunSettingsFilePath>
   </PropertyGroup>
 
 </Project>

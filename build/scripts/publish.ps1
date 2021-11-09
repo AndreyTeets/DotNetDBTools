@@ -1,3 +1,4 @@
+#!/usr/bin/env pwsh
 [CmdletBinding(PositionalBinding = $false)]
 param(
     [string]$NugetApiKey
