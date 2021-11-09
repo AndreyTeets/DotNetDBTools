@@ -5,9 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Dapper" Version="2.0.90" />
-    <PackageReference Include="SqlKata" Version="2.3.7" />
-    <PackageReference Include="SqlKata.Execution" Version="2.3.7" />
+    <PackageReference Include="Dapper" Version="$(DapperVersion)" />
+    <PackageReference Include="SqlKata" Version="$(SqlKataVersion)" />
+    <PackageReference Include="SqlKata.Execution" Version="$(SqlKataVersion)" />
   </ItemGroup>
 
   <ItemGroup>

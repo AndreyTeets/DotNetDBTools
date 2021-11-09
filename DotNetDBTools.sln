@@ -37,7 +37,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "props", "props", "{51CED495
 		build\props\PKG.Microsoft.NET.Test.Sdk.props = build\props\PKG.Microsoft.NET.Test.Sdk.props
 		build\props\PKG.MSTest.props = build\props\PKG.MSTest.props
 		build\props\PKG.xunit.props = build\props\PKG.xunit.props
-		build\props\Source.props = build\props\Source.props
+		build\props\PKG_VERSIONS.props = build\props\PKG_VERSIONS.props
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{3ADBBB40-72C8-493A-868C-7096F5C458D2}"
@@ -137,6 +137,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.SampleDeployT
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{B7ABF1B7-9417-4762-8EE3-AE1548F3C2DB}"
+	ProjectSection(SolutionItems) = preProject
+		src\Directory.Build.props = src\Directory.Build.props
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.Analysis", "src\DotNetDBTools.Analysis\DotNetDBTools.Analysis.csproj", "{3162A36E-F7D2-4A11-9DEA-7C0961397999}"
 EndProject

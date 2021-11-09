@@ -1,0 +1,29 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <!--Source packages-->
+    <DapperVersion>2.0.90</DapperVersion>
+    <CodeAnalysisVersion>3.11.0</CodeAnalysisVersion>
+    <CodeAnalysisAnalyzersVersion>3.3.2</CodeAnalysisAnalyzersVersion>
+
+    <!--Tests system packages-->
+    <TestSDKVersion>16.11.0</TestSDKVersion>
+    <MSTestVersion>2.2.3</MSTestVersion>
+    <XUnitVersion>2.4.1</XUnitVersion>
+    <XUnitVSRunnerVersion>2.4.3</XUnitVSRunnerVersion>
+    <CoverletVersion>3.1.0</CoverletVersion>
+
+    <!--Tests packages-->
+    <FluentAssertionsVersion>6.1.0</FluentAssertionsVersion>
+    <CodeAnalysisTestingVersion>1.1.0</CodeAnalysisTestingVersion>
+    <DockerDotNetVersion>3.125.5</DockerDotNetVersion>
+
+    <!--Samples and tests packages-->
+    <SqlClientVersion>4.8.2</SqlClientVersion>
+    <MySqlConnectorVersion>1.3.12</MySqlConnectorVersion>
+    <NpgsqlVersion>5.0.10</NpgsqlVersion>
+    <SqliteVersion>5.0.9</SqliteVersion>
+    <SqlKataVersion>2.3.7</SqlKataVersion>
+  </PropertyGroup>
+
+</Project>

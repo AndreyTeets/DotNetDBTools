@@ -1,4 +1,6 @@
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project>
+
+  <Import Project="..\Directory.Build.props" />
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -23,9 +25,9 @@ It provides the means to conviniently describe database structure for supported 
     </Description>
     <Authors>Andrey Teets</Authors>
     <Copyright>Copyright (c) 2021 Andrey Teets</Copyright>
-    <PackageOutputPath>$(ProjectDir)..\..\artifacts\nuget\$(Configuration)</PackageOutputPath>
+    <PackageOutputPath>$(MSBuildThisFileDirectory)..\artifacts\nuget\$(Configuration)</PackageOutputPath>
   </PropertyGroup>
-  
+
   <ItemGroup>
     <InternalsVisibleTo Include="DotNetDBTools.AnalyzersTests" />
     <InternalsVisibleTo Include="DotNetDBTools.IntegrationTests" />

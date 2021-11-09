@@ -1,7 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="$(ProjectDir)..\..\build\props\Source.props" />
-
   <PropertyGroup>
     <Description>
 $(Description)

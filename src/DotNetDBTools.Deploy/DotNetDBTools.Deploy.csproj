@@ -1,7 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="$(ProjectDir)..\..\build\props\Source.props" />
-
   <PropertyGroup>
     <Description>
 $(Description)
@@ -10,7 +8,7 @@ DotNetDBTools.Deploy is a library that provides the means to manage databases de
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Dapper" Version="2.0.90" />
+    <PackageReference Include="Dapper" Version="$(DapperVersion)" />
   </ItemGroup>
 
   <ItemGroup>
