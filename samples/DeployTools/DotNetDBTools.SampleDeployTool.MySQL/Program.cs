@@ -1,9 +1,10 @@
 ﻿namespace DotNetDBTools.SampleDeployTool.MySQL
 {
-    public class Program
+    public static class Program
     {
         public static void Main()
         {
+            throw new System.NotImplementedException();
         }
     }
 }

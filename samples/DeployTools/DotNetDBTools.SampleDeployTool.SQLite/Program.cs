@@ -7,7 +7,7 @@ using Microsoft.Data.Sqlite;
 
 namespace DotNetDBTools.SampleDeployTool.SQLite
 {
-    public class Program
+    public static class Program
     {
         private const string RepoRoot = "../../../../../..";
         private static readonly string s_samplesOutputDir = $"{RepoRoot}/SamplesOutput";

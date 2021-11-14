@@ -7,7 +7,7 @@ using DotNetDBTools.Deploy;
 
 namespace DotNetDBTools.SampleDeployTool.MSSQL
 {
-    public class Program
+    public static class Program
     {
         private const string MsSqlServerPassword = "Strong(!)Passw0rd";
         private const string MsSqlServerHostPort = "5005";

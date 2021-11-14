@@ -4,6 +4,7 @@
     {
         public static void Main()
         {
+            throw new System.NotImplementedException();
         }
     }
 }

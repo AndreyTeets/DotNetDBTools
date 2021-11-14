@@ -10,7 +10,6 @@ namespace DotNetDBTools.Deploy.SQLite
     {
         protected override string CreateQueryText(IQuery query)
         {
-            string queryName = query.GetType().Name;
             string queryWithParametersReplacedWithValues = ReplaceParameters(query);
             return queryWithParametersReplacedWithValues;
         }

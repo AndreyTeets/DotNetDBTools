@@ -95,7 +95,7 @@ WHERE sm.type = 'table'
                         return new DataType { Name = dataType };
                     default:
                         throw new InvalidOperationException($"Invalid column record datatype: {columnRecord.DataType}");
-                };
+                }
             }
         }
     }

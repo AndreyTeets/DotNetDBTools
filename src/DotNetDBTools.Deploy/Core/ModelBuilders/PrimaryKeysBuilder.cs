@@ -20,7 +20,6 @@ namespace DotNetDBTools.Deploy.Core.ModelBuilders
                 columnNames[pkr.ConstraintName].Add(
                     pkr.ColumnPosition, pkr.ColumnName);
 
-                PrimaryKey pk = MapExceptColumnsToPrimaryKeyModel(pkr);
                 tables[pkr.TableName].PrimaryKey = MapExceptColumnsToPrimaryKeyModel(pkr);
             }
 

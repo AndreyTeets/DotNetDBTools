@@ -52,7 +52,7 @@ WHERE sm.type = 'table'
                     foreach (Column column in tables[tableRecord.TableName].Columns.Where(c => c.Identity == true))
                     {
                         bool hasAutoincrementKeyWord = tableRecord.TableDefinition
-                            .IndexOf("AUTOINCREMENT", StringComparison.OrdinalIgnoreCase) > 0;
+                            .IndexOf("AUTOINCREMENT", StringComparison.OrdinalIgnoreCase) > -1;
                         if (!hasAutoincrementKeyWord)
                             column.Identity = false;
                     }
