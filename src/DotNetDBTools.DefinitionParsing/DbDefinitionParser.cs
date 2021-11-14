@@ -3,6 +3,8 @@ using System.Reflection;
 using DotNetDBTools.DefinitionParsing.Agnostic;
 using DotNetDBTools.DefinitionParsing.Core;
 using DotNetDBTools.DefinitionParsing.MSSQL;
+using DotNetDBTools.DefinitionParsing.MySQL;
+using DotNetDBTools.DefinitionParsing.PostgreSQL;
 using DotNetDBTools.DefinitionParsing.SQLite;
 using DotNetDBTools.Models.Core;
 
@@ -23,6 +25,8 @@ namespace DotNetDBTools.DefinitionParsing
             {
                 DatabaseKind.Agnostic => new AgnosticDatabaseModelBuilder().BuildDatabaseModel(dbAssembly),
                 DatabaseKind.MSSQL => new MSSQLDatabaseModelBuilder().BuildDatabaseModel(dbAssembly),
+                DatabaseKind.MySQL => new MySQLDatabaseModelBuilder().BuildDatabaseModel(dbAssembly),
+                DatabaseKind.PostgreSQL => new PostgreSQLDatabaseModelBuilder().BuildDatabaseModel(dbAssembly),
                 DatabaseKind.SQLite => new SQLiteDatabaseModelBuilder().BuildDatabaseModel(dbAssembly),
                 _ => throw new InvalidOperationException($"Invalid dbKind: {dbKind}"),
             };

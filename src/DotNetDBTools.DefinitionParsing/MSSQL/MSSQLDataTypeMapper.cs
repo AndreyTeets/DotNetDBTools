@@ -14,38 +14,29 @@ namespace DotNetDBTools.DefinitionParsing.MSSQL
         {
             return dataType switch
             {
-                IUserDefinedType userDefinedType => MapToDataTypeModel(userDefinedType),
-
-                IntDataType dt => MapToDataTypeModel(dt),
-                RealDataType dt => MapToDataTypeModel(dt),
-                DecimalDataType dt => MapToDataTypeModel(dt),
+                IntDataType dt => Map(dt),
+                RealDataType dt => Map(dt),
+                DecimalDataType dt => Map(dt),
                 BoolDataType dt => new DataType() { Name = MSSQLDataTypeNames.BIT },
 
                 MoneyDataType dt => new DataType() { Name = dt.SqlType.ToString() },
-                RowVersionDataType dt => new DataType() { Name = MSSQLDataTypeNames.ROWVERSION },
 
-                StringDataType dt => MapToDataTypeModel(dt),
-                BinaryDataType dt => MapToDataTypeModel(dt),
-                GuidDataType dt => new DataType() { Name = MSSQLDataTypeNames.UNIQUEIDENTIFIER },
+                StringDataType dt => Map(dt),
+                BinaryDataType dt => Map(dt),
 
                 DateDataType dt => new DataType() { Name = MSSQLDataTypeNames.DATE },
                 TimeDataType dt => new DataType() { Name = MSSQLDataTypeNames.TIME },
                 DateTimeDataType dt => new DataType() { Name = dt.SqlType.ToString() },
 
+                GuidDataType dt => new DataType() { Name = MSSQLDataTypeNames.UNIQUEIDENTIFIER },
+                RowVersionDataType dt => new DataType() { Name = MSSQLDataTypeNames.ROWVERSION },
+
+                IUserDefinedType userDefinedType => Map(userDefinedType),
                 _ => throw new InvalidOperationException($"Invalid dataType: '{dataType}'")
             };
         }
 
-        private DataType MapToDataTypeModel(IUserDefinedType userDefinedType)
-        {
-            return new MSSQLUserDefinedDataType
-            {
-                Name = userDefinedType.GetType().Name,
-                UnderlyingType = MapToDataTypeModel(userDefinedType.UnderlyingType),
-            };
-        }
-
-        private static DataType MapToDataTypeModel(IntDataType intDataType)
+        private static DataType Map(IntDataType intDataType)
         {
             return intDataType.Size switch
             {
@@ -57,7 +48,7 @@ namespace DotNetDBTools.DefinitionParsing.MSSQL
             };
         }
 
-        private static DataType MapToDataTypeModel(RealDataType realDataType)
+        private static DataType Map(RealDataType realDataType)
         {
             if (realDataType.IsDoublePrecision)
                 return new DataType() { Name = MSSQLDataTypeNames.FLOAT };
@@ -65,26 +56,25 @@ namespace DotNetDBTools.DefinitionParsing.MSSQL
                 return new DataType() { Name = MSSQLDataTypeNames.REAL };
         }
 
-        private static DataType MapToDataTypeModel(DecimalDataType decimalDataType)
+        private static DataType Map(DecimalDataType decimalDataType)
         {
             return new DataType { Name = $"{MSSQLDataTypeNames.DECIMAL}({decimalDataType.Precision}, {decimalDataType.Scale})" };
         }
 
-        private static DataType MapToDataTypeModel(StringDataType stringDataType)
+        private static DataType Map(StringDataType stringDataType)
         {
             string stringTypeName = stringDataType.SqlType.ToString();
-            (bool isFixedLength, bool isUnicode) = stringTypeName switch
+            (bool isFixedLength, int maxAllowedLength) = stringTypeName switch
             {
-                MSSQLDataTypeNames.CHAR => (true, false),
-                MSSQLDataTypeNames.NCHAR => (true, true),
-                MSSQLDataTypeNames.VARCHAR => (false, false),
-                MSSQLDataTypeNames.NVARCHAR => (false, true),
+                MSSQLDataTypeNames.CHAR => (true, 8000),
+                MSSQLDataTypeNames.NCHAR => (true, 4000),
+                MSSQLDataTypeNames.VARCHAR => (false, 8000),
+                MSSQLDataTypeNames.NVARCHAR => (false, 4000),
                 _ => throw new InvalidOperationException($"Invalid string data type sql type: {stringDataType.SqlType}"),
             };
 
             string lengthStr = stringDataType.Length.ToString();
-            if (isUnicode && stringDataType.Length > 4000 ||
-                !isUnicode && stringDataType.Length > 8000 ||
+            if (stringDataType.Length > maxAllowedLength ||
                 stringDataType.Length < 1)
             {
                 if (isFixedLength)
@@ -95,18 +85,18 @@ namespace DotNetDBTools.DefinitionParsing.MSSQL
             return new DataType { Name = $"{stringTypeName}({lengthStr})" };
         }
 
-        private static DataType MapToDataTypeModel(BinaryDataType binaryDataType)
+        private static DataType Map(BinaryDataType binaryDataType)
         {
             string binaryTypeName = binaryDataType.SqlType.ToString();
-            bool isFixedLength = binaryTypeName switch
+            (bool isFixedLength, int maxAllowedLength) = binaryTypeName switch
             {
-                MSSQLDataTypeNames.BINARY => true,
-                MSSQLDataTypeNames.VARBINARY => false,
+                MSSQLDataTypeNames.BINARY => (true, 8000),
+                MSSQLDataTypeNames.VARBINARY => (false, 8000),
                 _ => throw new InvalidOperationException($"Invalid binary data type sql type: {binaryDataType.SqlType}"),
             };
 
             string lengthStr = binaryDataType.Length.ToString();
-            if (binaryDataType.Length > 8000 ||
+            if (binaryDataType.Length > maxAllowedLength ||
                 binaryDataType.Length < 1)
             {
                 if (isFixedLength)
@@ -115,6 +105,15 @@ namespace DotNetDBTools.DefinitionParsing.MSSQL
             }
 
             return new DataType { Name = $"{binaryTypeName}({lengthStr})" };
+        }
+
+        private DataType Map(IUserDefinedType userDefinedType)
+        {
+            return new MSSQLUserDefinedDataType
+            {
+                Name = userDefinedType.GetType().Name,
+                UnderlyingType = MapToDataTypeModel(userDefinedType.UnderlyingType),
+            };
         }
     }
 }

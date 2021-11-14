@@ -8,14 +8,14 @@
 
   <ItemGroup Condition="'$(UsePackagesInSampleApplications)'=='True'">
     <PackageReference Include="DotNetDBTools.Definition" Version="$(Version)" PrivateAssets="all" />
-    <!--<PackageReference Include="DotNetDBTools.DefinitionAnalyzer" Version="$(Version)" PrivateAssets="all" />
-    <PackageReference Include="DotNetDBTools.DescriptionSourceGenerator" Version="$(Version)" PrivateAssets="all" />-->
+    <PackageReference Include="DotNetDBTools.DefinitionAnalyzer" Version="$(Version)" PrivateAssets="all" />
+    <PackageReference Include="DotNetDBTools.DescriptionSourceGenerator" Version="$(Version)" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(UsePackagesInSampleApplications)'!='True'">
     <ProjectReference Include="..\..\..\src\DotNetDBTools.Definition\DotNetDBTools.Definition.csproj" PrivateAssets="all" />
-    <!--<ProjectReference Include="..\..\..\src\DotNetDBTools.DefinitionAnalyzer\DotNetDBTools.DefinitionAnalyzer.csproj" OutputItemType="Analyzer" PrivateAssets="all" />
-    <ProjectReference Include="..\..\..\src\DotNetDBTools.DescriptionSourceGenerator\DotNetDBTools.DescriptionSourceGenerator.csproj" OutputItemType="Analyzer" PrivateAssets="all" />-->
+    <ProjectReference Include="..\..\..\src\DotNetDBTools.DefinitionAnalyzer\DotNetDBTools.DefinitionAnalyzer.csproj" OutputItemType="Analyzer" PrivateAssets="all" />
+    <ProjectReference Include="..\..\..\src\DotNetDBTools.DescriptionSourceGenerator\DotNetDBTools.DescriptionSourceGenerator.csproj" OutputItemType="Analyzer" PrivateAssets="all" />
   </ItemGroup>
 
   <Target Name="CopyDbDllToSamplesOutput" AfterTargets="PostBuildEvent">

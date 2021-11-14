@@ -57,12 +57,12 @@ namespace DotNetDBTools.Analysis.MSSQL
 
                     AgnosticDataTypeNames.String => ConvertStringSqlType((AgnosticDataType)column.DataType),
                     AgnosticDataTypeNames.Binary => ConvertBinarySqlType((AgnosticDataType)column.DataType),
-                    AgnosticDataTypeNames.Guid => new DataType { Name = MSSQLDataTypeNames.UNIQUEIDENTIFIER },
 
                     AgnosticDataTypeNames.Date => new DataType { Name = MSSQLDataTypeNames.DATE },
                     AgnosticDataTypeNames.Time => new DataType { Name = MSSQLDataTypeNames.TIME },
                     AgnosticDataTypeNames.DateTime => ConvertDateTimeSqlType((AgnosticDataType)column.DataType),
 
+                    AgnosticDataTypeNames.Guid => new DataType { Name = MSSQLDataTypeNames.UNIQUEIDENTIFIER },
                     _ => throw new InvalidOperationException($"Invalid agnostic column datatype name: {column.DataType.Name}"),
                 };
             }

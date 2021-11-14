@@ -4,6 +4,8 @@
     {
         Agnostic,
         MSSQL,
+        MySQL,
+        PostgreSQL,
         SQLite,
     }
 }

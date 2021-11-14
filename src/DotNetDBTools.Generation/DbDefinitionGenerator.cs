@@ -3,9 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using DotNetDBTools.Generation.Core;
 using DotNetDBTools.Generation.MSSQL;
+using DotNetDBTools.Generation.MySQL;
+using DotNetDBTools.Generation.PostgreSQL;
 using DotNetDBTools.Generation.SQLite;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.MSSQL;
+using DotNetDBTools.Models.MySQL;
+using DotNetDBTools.Models.PostgreSQL;
 using DotNetDBTools.Models.SQLite;
 
 namespace DotNetDBTools.Generation
@@ -28,6 +32,8 @@ namespace DotNetDBTools.Generation
             IEnumerable<DefinitionSourceFile> definitionSourceFiles = database.Kind switch
             {
                 DatabaseKind.MSSQL => MSSQLDefinitionGenerator.GenerateDefinition((MSSQLDatabase)database),
+                DatabaseKind.MySQL => MySQLDefinitionGenerator.GenerateDefinition((MySQLDatabase)database),
+                DatabaseKind.PostgreSQL => PostgreSQLDefinitionGenerator.GenerateDefinition((PostgreSQLDatabase)database),
                 DatabaseKind.SQLite => SQLiteDefinitionGenerator.GenerateDefinition((SQLiteDatabase)database),
                 _ => throw new InvalidOperationException($"Invalid dbKind: {database.Kind}"),
             };

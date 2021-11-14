@@ -59,15 +59,15 @@ namespace DotNetDBTools.Deploy.MSSQL
                 case MSSQLDataTypeNames.SMALLMONEY:
                 case MSSQLDataTypeNames.MONEY:
 
-                case MSSQLDataTypeNames.UNIQUEIDENTIFIER:
-                case MSSQLDataTypeNames.ROWVERSION:
-
                 case MSSQLDataTypeNames.DATE:
                 case MSSQLDataTypeNames.TIME:
                 case MSSQLDataTypeNames.SMALLDATETIME:
                 case MSSQLDataTypeNames.DATETIME:
                 case MSSQLDataTypeNames.DATETIME2:
                 case MSSQLDataTypeNames.DATETIMEOFFSET:
+
+                case MSSQLDataTypeNames.UNIQUEIDENTIFIER:
+                case MSSQLDataTypeNames.ROWVERSION:
                     return new DataType { Name = dataType };
 
                 case MSSQLDataTypeNames.CHAR:

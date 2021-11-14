@@ -16,6 +16,7 @@ namespace DotNetDBTools.Models.MSSQL
             Functions = new List<MSSQLFunction>();
             Procedures = new List<MSSQLProcedure>();
         }
+
         public IEnumerable<MSSQLUserDefinedType> UserDefinedTypes { get; set; }
         public IEnumerable<MSSQLUserDefinedTableType> UserDefinedTableTypes { get; set; }
         public IEnumerable<MSSQLFunction> Functions { get; set; }
