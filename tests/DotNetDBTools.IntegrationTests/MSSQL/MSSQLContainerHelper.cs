@@ -2,18 +2,16 @@
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 using DotNetDBTools.IntegrationTests.TestHelpers;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace DotNetDBTools.IntegrationTests.MSSQL
 {
-    [TestClass]
-    public class MSSQLContainerAssemblyFixture
+    public class MSSQLContainerHelper
     {
         private const string MsSqlImage = "mcr.microsoft.com/mssql/server";
-        private const string MsSqlImageTag = "2019-latest";
+        private const string MsSqlImageTag = "2019-CU13-ubuntu-20.04";
         private const string MsSqlContainerName = "DotNetDBTools_IntegrationTests_MSSQL";
         private const string MsSqlServerPassword = "Strong(!)Passw0rd";
-        private const string MsSqlServerHostPort = "5005";
+        private const int MsSqlServerHostPort = 5005;
 
         public static string MsSqlContainerConnectionString =>
             new SqlConnectionStringBuilder()
@@ -24,8 +22,7 @@ namespace DotNetDBTools.IntegrationTests.MSSQL
                 Password = MsSqlServerPassword,
             }.ConnectionString;
 
-        [AssemblyInitialize]
-        public static async Task AssemblyInitialize(TestContext _)
+        public static async Task InitContainer()
         {
             await DockerHelper.StopAndRemoveContainerIfExistsAndNotRunningOrOld(MsSqlContainerName, oldMinutes: 60);
             await CreateAndStartMsSqlContainerIfNotExists();
@@ -43,7 +40,7 @@ namespace DotNetDBTools.IntegrationTests.MSSQL
 
             Dictionary<string, string> portRedirects = new()
             {
-                { "1433/tcp", MsSqlServerHostPort },
+                { "1433/tcp", MsSqlServerHostPort.ToString() },
             };
 
             await DockerHelper.CreateAndStartContainerIfNotExists(

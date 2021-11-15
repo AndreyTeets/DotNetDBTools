@@ -124,8 +124,8 @@ namespace DotNetDBTools.IntegrationTests.SQLite
 
         private static void DropDatabaseIfExists(string connectionString)
         {
-            SqliteConnectionStringBuilder sqlConnectionBuilder = new(connectionString);
-            string dbFilePath = sqlConnectionBuilder.DataSource;
+            SqliteConnectionStringBuilder connectionStringBuilder = new(connectionString);
+            string dbFilePath = connectionStringBuilder.DataSource;
 
             if (File.Exists(dbFilePath))
                 File.Delete(dbFilePath);

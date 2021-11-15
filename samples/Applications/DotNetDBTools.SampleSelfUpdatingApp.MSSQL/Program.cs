@@ -37,10 +37,10 @@ namespace DotNetDBTools.SampleSelfUpdatingApp.MSSQL
 
         private static void CreateDatabase(string connectionString)
         {
-            SqlConnectionStringBuilder sqlConnectionBuilder = new(connectionString);
-            string databaseName = sqlConnectionBuilder.InitialCatalog;
-            sqlConnectionBuilder.InitialCatalog = string.Empty;
-            string connectionStringWithoutDb = sqlConnectionBuilder.ConnectionString;
+            SqlConnectionStringBuilder connectionStringBuilder = new(connectionString);
+            string databaseName = connectionStringBuilder.InitialCatalog;
+            connectionStringBuilder.InitialCatalog = string.Empty;
+            string connectionStringWithoutDb = connectionStringBuilder.ConnectionString;
 
             using SqlConnection connection = new(connectionStringWithoutDb);
             connection.Execute(
@@ -49,10 +49,10 @@ $@"CREATE DATABASE {databaseName};");
 
         private static void DropDatabaseIfExists(string connectionString)
         {
-            SqlConnectionStringBuilder sqlConnectionBuilder = new(connectionString);
-            string databaseName = sqlConnectionBuilder.InitialCatalog;
-            sqlConnectionBuilder.InitialCatalog = string.Empty;
-            string connectionStringWithoutDb = sqlConnectionBuilder.ConnectionString;
+            SqlConnectionStringBuilder connectionStringBuilder = new(connectionString);
+            string databaseName = connectionStringBuilder.InitialCatalog;
+            connectionStringBuilder.InitialCatalog = string.Empty;
+            string connectionStringWithoutDb = connectionStringBuilder.ConnectionString;
 
             using SqlConnection connection = new(connectionStringWithoutDb);
             connection.Execute(

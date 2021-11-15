@@ -18,7 +18,7 @@ namespace DotNetDBTools.IntegrationTests.MSSQL
     [TestClass]
     public class MSSQLDeployTests
     {
-        private static readonly string s_connectionStringWithoutDb = MSSQLContainerAssemblyFixture.MsSqlContainerConnectionString;
+        private static readonly string s_connectionStringWithoutDb = MSSQLContainerHelper.MsSqlContainerConnectionString;
 
         private static readonly string s_agnosticSampleDbAssemblyPath = $"{SamplesOutputDir}/DotNetDBTools.SampleDB.Agnostic.dll";
         private static readonly string s_mssqlSampleDbAssemblyPath = $"{SamplesOutputDir}/DotNetDBTools.SampleDB.MSSQL.dll";
@@ -131,8 +131,8 @@ namespace DotNetDBTools.IntegrationTests.MSSQL
 
         private static void CreateDatabase(string connectionString)
         {
-            SqlConnectionStringBuilder sqlConnectionBuilder = new(connectionString);
-            string databaseName = sqlConnectionBuilder.InitialCatalog;
+            SqlConnectionStringBuilder connectionStringBuilder = new(connectionString);
+            string databaseName = connectionStringBuilder.InitialCatalog;
 
             using SqlConnection connection = new(s_connectionStringWithoutDb);
             connection.Execute(
@@ -141,8 +141,8 @@ $@"CREATE DATABASE {databaseName};");
 
         private static void DropDatabaseIfExists(string connectionString)
         {
-            SqlConnectionStringBuilder sqlConnectionBuilder = new(connectionString);
-            string databaseName = sqlConnectionBuilder.InitialCatalog;
+            SqlConnectionStringBuilder connectionStringBuilder = new(connectionString);
+            string databaseName = connectionStringBuilder.InitialCatalog;
 
             using SqlConnection connection = new(s_connectionStringWithoutDb);
             connection.Execute(
@@ -160,9 +160,9 @@ END;");
 
         private static string CreateConnectionString(string connectionStringWithoutDb, string databaseName)
         {
-            SqlConnectionStringBuilder sqlConnectionBuilder = new(connectionStringWithoutDb);
-            sqlConnectionBuilder.InitialCatalog = databaseName;
-            string connectionString = sqlConnectionBuilder.ConnectionString;
+            SqlConnectionStringBuilder connectionStringBuilder = new(connectionStringWithoutDb);
+            connectionStringBuilder.InitialCatalog = databaseName;
+            string connectionString = connectionStringBuilder.ConnectionString;
             return connectionString;
         }
 
