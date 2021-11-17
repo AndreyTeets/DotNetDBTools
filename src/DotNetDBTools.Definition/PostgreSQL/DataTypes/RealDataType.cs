@@ -3,7 +3,7 @@
 namespace DotNetDBTools.Definition.PostgreSQL.DataTypes
 {
     /// <summary>
-    /// Column is declared as 'REAL'/'FLOAT8'.
+    /// Column is declared as 'FLOAT4'/'FLOAT8'.
     /// </summary>
     public class RealDataType : IDataType
     {

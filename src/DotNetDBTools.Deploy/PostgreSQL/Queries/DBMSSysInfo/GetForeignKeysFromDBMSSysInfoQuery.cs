@@ -10,29 +10,42 @@ namespace DotNetDBTools.Deploy.PostgreSQL.Queries.DBMSSysInfo
     {
         public string Sql =>
 $@"SELECT
-    thisTable.name AS {nameof(ForeignKeyRecord.ThisTableName)},
-    foreignKey.name AS {nameof(ForeignKeyRecord.ForeignKeyName)},
-    thisColumns.name AS {nameof(ForeignKeyRecord.ThisColumnName)},
-    fkColumnsMap.constraint_column_id AS {nameof(ForeignKeyRecord.ThisColumnPosition)},
-    referencedTable.name AS {nameof(ForeignKeyRecord.ReferencedTableName)},
-    referencedColumns.name AS {nameof(ForeignKeyRecord.ReferencedColumnName)},
-    fkColumnsMap.constraint_column_id AS  {nameof(ForeignKeyRecord.ReferencedColumnPosition)},
-    foreignKey.update_referential_action_desc AS {nameof(ForeignKeyRecord.OnUpdate)},
-    foreignKey.delete_referential_action_desc AS {nameof(ForeignKeyRecord.OnDelete)}
-FROM sys.tables thisTable
-INNER JOIN sys.foreign_keys foreignKey
-    ON foreignKey.parent_object_id = thisTable.object_id
-INNER JOIN sys.tables referencedTable
-    ON referencedTable.object_id = foreignKey.referenced_object_id
-INNER JOIN sys.foreign_key_columns fkColumnsMap
-    ON fkColumnsMap.constraint_object_id = foreignKey.object_id
-INNER JOIN sys.columns thisColumns
-    ON thisColumns.object_id = foreignKey.parent_object_id
-        AND thisColumns.column_id = fkColumnsMap.parent_column_id
-INNER JOIN sys.columns referencedColumns
-    ON referencedColumns.object_id = foreignKey.referenced_object_id
-        AND referencedColumns.column_id = fkColumnsMap.referenced_column_id
-WHERE thisTable.name != '{DNDBTSysTables.DNDBTDbObjects}';";
+    this_table.relname AS ""{nameof(ForeignKeyRecord.ThisTableName)}"",
+    this_table_constraint.conname AS ""{nameof(ForeignKeyRecord.ForeignKeyName)}"",
+    this_columns.attname AS ""{nameof(ForeignKeyRecord.ThisColumnName)}"",
+    this_columns_positions.col_pos AS ""{nameof(ForeignKeyRecord.ThisColumnPosition)}"",
+    referenced_table.relname AS ""{nameof(ForeignKeyRecord.ReferencedTableName)}"",
+    referenced_columns.attname AS ""{nameof(ForeignKeyRecord.ReferencedColumnName)}"",
+    referenced_columns_positions.col_pos AS ""{nameof(ForeignKeyRecord.ReferencedColumnPosition)}"",
+    this_table_constraint.confupdtype AS ""{nameof(ForeignKeyRecord.OnUpdate)}"",
+    this_table_constraint.confdeltype AS ""{nameof(ForeignKeyRecord.OnDelete)}""
+FROM pg_catalog.pg_class this_table
+INNER JOIN pg_catalog.pg_namespace this_table_ns
+    ON this_table_ns.oid = this_table.relnamespace
+INNER JOIN pg_catalog.pg_constraint this_table_constraint
+    ON this_table_constraint.conrelid = this_table.oid
+INNER JOIN pg_catalog.pg_class referenced_table
+    ON referenced_table.oid = this_table_constraint.confrelid
+INNER JOIN LATERAL (
+    SELECT ROW_NUMBER() OVER(), * FROM UNNEST(this_table_constraint.conkey)
+) this_columns_positions(col_pos, col_num)
+    ON TRUE
+INNER JOIN LATERAL (
+    SELECT ROW_NUMBER() OVER(), * FROM UNNEST(this_table_constraint.confkey)
+) referenced_columns_positions(col_pos, col_num)
+    ON referenced_columns_positions.col_pos = this_columns_positions.col_pos
+INNER JOIN pg_catalog.pg_attribute this_columns
+    ON this_columns.attrelid = this_table.oid
+        AND this_columns.attnum = this_columns_positions.col_num
+        AND NOT this_columns.attisdropped
+INNER JOIN pg_catalog.pg_attribute referenced_columns
+    ON referenced_columns.attrelid = referenced_table.oid
+        AND referenced_columns.attnum = referenced_columns_positions.col_num
+        AND NOT referenced_columns.attisdropped
+WHERE this_table.relkind = 'r'
+    AND this_table_constraint.contype = 'f'
+    AND this_table_ns.nspname NOT IN ('information_schema', 'pg_catalog')
+    AND this_table.relname != '{DNDBTSysTables.DNDBTDbObjects}';";
 
         public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
 
@@ -49,10 +62,11 @@ WHERE thisTable.name != '{DNDBTSysTables.DNDBTDbObjects}';";
             private static string MapUpdateActionName(string sqlActionName) =>
                 sqlActionName switch
                 {
-                    "NO_ACTION" => "NoAction",
-                    "CASCADE" => "Cascade",
-                    "SET_DEFAULT" => "SetDefault",
-                    "SET_NULL" => "SetNull",
+                    "a" => "NoAction",
+                    "r" => "Restrict",
+                    "c" => "Cascade",
+                    "d" => "SetDefault",
+                    "n" => "SetNull",
                     _ => throw new InvalidOperationException($"Invalid sqlActionName: '{sqlActionName}'")
                 };
         }

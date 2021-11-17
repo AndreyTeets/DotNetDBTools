@@ -25,7 +25,8 @@ namespace DotNetDBTools.Deploy.MSSQL.Queries
         {
             StringBuilder sb = new();
 
-            sb.Append(Queries.RenameTable(tableDiff.OldTable.Name, tableDiff.NewTable.Name));
+            if (tableDiff.OldTable.Name != tableDiff.NewTable.Name)
+                sb.Append(Queries.RenameTable(tableDiff.OldTable.Name, tableDiff.NewTable.Name));
 
             foreach (Trigger trigger in tableDiff.TriggersToDrop)
                 sb.Append(Queries.DropTrigger(trigger.Name));
@@ -70,7 +71,8 @@ namespace DotNetDBTools.Deploy.MSSQL.Queries
                 if (columnDiff.OldColumn.Default is not null)
                     sb.Append(Queries.DropDefaultConstraint(tableDiff.NewTable.Name, columnDiff.OldColumn));
 
-                sb.Append(Queries.RenameColumn(tableDiff.NewTable.Name, columnDiff.OldColumn.Name, columnDiff.NewColumn.Name));
+                if (columnDiff.OldColumn.Name != columnDiff.NewColumn.Name)
+                    sb.Append(Queries.RenameColumn(tableDiff.NewTable.Name, columnDiff.OldColumn.Name, columnDiff.NewColumn.Name));
                 sb.Append(Queries.AlterColumnTypeAndNullability(tableDiff.NewTable.Name, columnDiff.NewColumn));
 
                 if (columnDiff.NewColumn.Default is not null)

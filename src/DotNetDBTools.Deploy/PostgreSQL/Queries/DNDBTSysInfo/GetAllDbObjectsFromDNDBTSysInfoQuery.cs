@@ -10,11 +10,11 @@ namespace DotNetDBTools.Deploy.PostgreSQL.Queries.DNDBTSysInfo
     {
         public string Sql =>
 $@"SELECT
-    {DNDBTSysTables.DNDBTDbObjects.ID},
-    {DNDBTSysTables.DNDBTDbObjects.ParentID},
-    {DNDBTSysTables.DNDBTDbObjects.Type},
-    {DNDBTSysTables.DNDBTDbObjects.Name}
-FROM {DNDBTSysTables.DNDBTDbObjects};";
+    ""{DNDBTSysTables.DNDBTDbObjects.ID}"",
+    ""{DNDBTSysTables.DNDBTDbObjects.ParentID}"",
+    ""{DNDBTSysTables.DNDBTDbObjects.Type}"",
+    ""{DNDBTSysTables.DNDBTDbObjects.Name}""
+FROM ""{DNDBTSysTables.DNDBTDbObjects}"";";
 
         public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
 

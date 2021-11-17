@@ -6,7 +6,7 @@ namespace DotNetDBTools.Deploy.PostgreSQL.Queries.DNDBTSysInfo
     internal class CheckDNDBTSysTablesExistQuery : IQuery
     {
         public string Sql =>
-$@"SELECT TOP 1 1 FROM sys.tables WHERE name = '{DNDBTSysTables.DNDBTDbObjects}';";
+$@"SELECT TRUE FROM pg_catalog.pg_class WHERE relname = '{DNDBTSysTables.DNDBTDbObjects}' LIMIT 1;";
 
         public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
     }

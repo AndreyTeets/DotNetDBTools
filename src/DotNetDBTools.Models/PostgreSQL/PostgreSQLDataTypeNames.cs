@@ -6,7 +6,7 @@
         public const string INT = nameof(INT);
         public const string BIGINT = nameof(BIGINT);
 
-        public const string REAL = nameof(REAL);
+        public const string FLOAT4 = nameof(FLOAT4);
         public const string FLOAT8 = nameof(FLOAT8);
         public const string DECIMAL = nameof(DECIMAL);
         public const string BOOL = nameof(BOOL);

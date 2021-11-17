@@ -19,7 +19,7 @@ namespace DotNetDBTools.Deploy.PostgreSQL.Queries
         private static string GetSql(PostgreSQLTable table)
         {
             string query =
-$@"DROP TABLE {table.Name};";
+$@"DROP TABLE ""{table.Name}"";";
 
             return query;
         }

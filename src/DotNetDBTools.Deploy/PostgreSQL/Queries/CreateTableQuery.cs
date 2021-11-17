@@ -24,7 +24,7 @@ namespace DotNetDBTools.Deploy.PostgreSQL.Queries
         private static string GetSql(PostgreSQLTable table)
         {
             string query =
-$@"CREATE TABLE {table.Name}
+$@"CREATE TABLE ""{table.Name}""
 (
 {GetTableDefinitionsText(table)}
 );";
@@ -32,8 +32,8 @@ $@"CREATE TABLE {table.Name}
             foreach (Index index in table.Indexes)
             {
                 string _ =
-$@"CREATE INDEX {index.Name}
-ON {table.Name} ({string.Join(", ", index.Columns)});";
+$@"CREATE INDEX ""{index.Name}""
+ON ""{table.Name}"" ({string.Join(", ", index.Columns.Select(x => $@"""{x}"""))});";
             }
 
             foreach (Trigger trigger in table.Triggers)
@@ -50,19 +50,19 @@ $@"{trigger.Code}";
             List<string> tableDefinitions = new();
 
             tableDefinitions.AddRange(table.Columns.Select(c =>
-$@"    {c.Name} {c.DataType.Name}{GetIdentityStatement(c)} {GetNullabilityStatement(c)}{GetDefaultValStatement(c)}"));
+$@"    ""{c.Name}"" {c.DataType.Name}{GetIdentityStatement(c)} {GetNullabilityStatement(c)}{GetDefaultValStatement(c)}"));
 
             if (table.PrimaryKey is not null)
             {
                 tableDefinitions.Add(
-$@"    CONSTRAINT {table.PrimaryKey.Name} PRIMARY KEY ({string.Join(", ", table.PrimaryKey.Columns)})");
+$@"    CONSTRAINT ""{table.PrimaryKey.Name}"" PRIMARY KEY ({string.Join(", ", table.PrimaryKey.Columns.Select(x => $@"""{x}"""))})");
             }
 
             tableDefinitions.AddRange(table.UniqueConstraints.Select(uc =>
-$@"    CONSTRAINT {uc.Name} UNIQUE ({string.Join(", ", uc.Columns)})"));
+$@"    CONSTRAINT ""{uc.Name}"" UNIQUE ({string.Join(", ", uc.Columns.Select(x => $@"""{x}"""))})"));
 
             IEnumerable<string> _ = table.CheckConstraints.Select(cc =>
-$@"    CONSTRAINT {cc.Name} CHECK ({cc.Code})");
+$@"    CONSTRAINT ""{cc.Name}"" CHECK ({cc.Code})");
 
             return string.Join(",\n", tableDefinitions);
         }
@@ -71,7 +71,7 @@ $@"    CONSTRAINT {cc.Name} CHECK ({cc.Code})");
         {
             if (column.Default is not null)
             {
-                return $" CONSTRAINT {column.DefaultConstraintName} DEFAULT {QuoteDefaultValue(column.Default)}";
+                return $@" CONSTRAINT ""{column.DefaultConstraintName}"" DEFAULT {QuoteDefaultValue(column.Default)}";
             }
             return "";
         }

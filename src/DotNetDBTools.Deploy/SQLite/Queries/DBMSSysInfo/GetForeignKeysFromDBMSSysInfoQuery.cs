@@ -41,6 +41,7 @@ WHERE sm.type = 'table'
                 sqlActionName switch
                 {
                     "NO ACTION" => "NoAction",
+                    "RESTRICT" => "Restrict",
                     "CASCADE" => "Cascade",
                     "SET DEFAULT" => "SetDefault",
                     "SET NULL" => "SetNull",

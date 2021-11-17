@@ -16,7 +16,7 @@ $@"SELECT
     fkColumnsMap.constraint_column_id AS {nameof(ForeignKeyRecord.ThisColumnPosition)},
     referencedTable.name AS {nameof(ForeignKeyRecord.ReferencedTableName)},
     referencedColumns.name AS {nameof(ForeignKeyRecord.ReferencedColumnName)},
-    fkColumnsMap.constraint_column_id AS  {nameof(ForeignKeyRecord.ReferencedColumnPosition)},
+    fkColumnsMap.constraint_column_id AS {nameof(ForeignKeyRecord.ReferencedColumnPosition)},
     foreignKey.update_referential_action_desc AS {nameof(ForeignKeyRecord.OnUpdate)},
     foreignKey.delete_referential_action_desc AS {nameof(ForeignKeyRecord.OnDelete)}
 FROM sys.tables thisTable

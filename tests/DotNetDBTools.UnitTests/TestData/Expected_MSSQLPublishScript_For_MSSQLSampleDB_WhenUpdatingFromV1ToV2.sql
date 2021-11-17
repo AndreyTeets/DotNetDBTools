@@ -107,7 +107,6 @@ ALTER TABLE [MyTable1NewName] DROP CONSTRAINT DF_MyTable1_MyColumn2;
 ALTER TABLE MyTable1NewName DROP COLUMN MyColumn2;
 ALTER TABLE MyTable1NewName DROP COLUMN MyColumn3;
 ALTER TABLE [MyTable1NewName] DROP CONSTRAINT DF_MyTable1_MyColumn1;
-EXEC sp_rename ''MyTable1NewName.MyColumn1'', ''MyColumn1'', ''COLUMN'';
 ALTER TABLE MyTable1NewName ALTER COLUMN MyColumn1 BIGINT NULL;
 ALTER TABLE MyTable1NewName ADD CONSTRAINT DF_MyTable1NewName_MyColumn1 DEFAULT 15 FOR MyColumn1;';
 --QUERY END: AlterTableQuery
@@ -145,7 +144,7 @@ WHERE ID = ''a2f2a4de-1337-4594-ae41-72ed4d05f317'';';
 --QUERY END: UpdateDNDBTSysInfoQuery
 
 --QUERY START: AlterTableQuery
-EXEC sp_executesql N'EXEC sp_rename ''MyTable2'', ''MyTable2'';
+EXEC sp_executesql N'
 ALTER TABLE MyTable2 DROP CONSTRAINT PK_MyTable2;
 ALTER TABLE [MyTable2] DROP CONSTRAINT DF_MyTable2_MyColumn2;
 ALTER TABLE MyTable2 DROP COLUMN MyColumn2;
@@ -221,9 +220,8 @@ VALUES
 --QUERY END: InsertDNDBTSysInfoQuery
 
 --QUERY START: AlterTableQuery
-EXEC sp_executesql N'EXEC sp_rename ''MyTable5'', ''MyTable5'';
+EXEC sp_executesql N'
 ALTER TABLE [MyTable5] DROP CONSTRAINT DF_MyTable5_MyColumn2;
-EXEC sp_rename ''MyTable5.MyColumn2'', ''MyColumn2'', ''COLUMN'';
 ALTER TABLE MyTable5 ALTER COLUMN MyColumn2 MyUserDefinedType1 NULL;
 ALTER TABLE MyTable5 ADD CONSTRAINT DF_MyTable5_MyColumn2 DEFAULT ''cc'' FOR MyColumn2;';
 --QUERY END: AlterTableQuery

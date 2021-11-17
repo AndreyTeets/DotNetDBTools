@@ -21,8 +21,8 @@ namespace DotNetDBTools.Deploy.PostgreSQL.Queries.DNDBTSysInfo
         private static string GetSql(Guid objectID)
         {
             string query =
-$@"DELETE FROM {DNDBTSysTables.DNDBTDbObjects}
-WHERE {DNDBTSysTables.DNDBTDbObjects.ID} = '{objectID}';";
+$@"DELETE FROM ""{DNDBTSysTables.DNDBTDbObjects}""
+WHERE ""{DNDBTSysTables.DNDBTDbObjects.ID}"" = '{objectID}';";
 
             return query;
         }

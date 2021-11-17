@@ -9,21 +9,27 @@ namespace DotNetDBTools.Deploy.PostgreSQL.Queries.DBMSSysInfo
     {
         public string Sql =>
 $@"SELECT
-    t.name AS {nameof(PrimaryKeyRecord.TableName)},
-    i.name AS {nameof(PrimaryKeyRecord.ConstraintName)},
-    c.name AS {nameof(PrimaryKeyRecord.ColumnName)},
-    ic.key_ordinal AS {nameof(PrimaryKeyRecord.ColumnPosition)}
-FROM sys.tables t
-INNER JOIN sys.columns c
-      ON c.object_id = t.object_id
-INNER JOIN sys.indexes i
-    ON i.object_id = t.object_id
-INNER JOIN sys.index_columns ic
-    ON ic.object_id = t.object_id
-        AND ic.index_id = i.index_id
-        AND ic.column_id = c.column_id
-WHERE i.is_primary_key = 1
-    AND t.name != '{DNDBTSysTables.DNDBTDbObjects}';";
+    t.relname AS ""{nameof(PrimaryKeyRecord.TableName)}"",
+    c.conname AS ""{nameof(PrimaryKeyRecord.ConstraintName)}"",
+    a.attname AS ""{nameof(PrimaryKeyRecord.ColumnName)}"",
+    p.col_pos AS ""{nameof(PrimaryKeyRecord.ColumnPosition)}""
+FROM pg_catalog.pg_class t
+INNER JOIN pg_catalog.pg_namespace n
+    ON n.oid = t.relnamespace
+INNER JOIN pg_catalog.pg_constraint c
+    ON c.conrelid = t.oid
+INNER JOIN LATERAL (
+    SELECT ROW_NUMBER() OVER(), * FROM UNNEST(c.conkey)
+) p(col_pos, col_num)
+    ON TRUE
+INNER JOIN pg_catalog.pg_attribute a
+    ON a.attrelid = t.oid
+        AND a.attnum = p.col_num
+        AND NOT a.attisdropped
+WHERE t.relkind = 'r'
+    AND c.contype = 'p'
+    AND n.nspname NOT IN ('information_schema', 'pg_catalog')
+    AND t.relname != '{DNDBTSysTables.DNDBTDbObjects}';";
 
         public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
 

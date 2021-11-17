@@ -242,7 +242,7 @@ namespace DotNetDBTools.Deploy.PostgreSQL
 
         private void DropFunction(PostgreSQLFunction function)
         {
-            QueryExecutor.Execute(new GenericQuery($"DROP FUNCTION {function.Name};"));
+            QueryExecutor.Execute(new GenericQuery($@"DROP FUNCTION ""{function.Name}"";"));
             QueryExecutor.Execute(new DeleteDNDBTSysInfoQuery(function.ID));
         }
 
@@ -254,7 +254,7 @@ namespace DotNetDBTools.Deploy.PostgreSQL
 
         private void DropView(PostgreSQLView view)
         {
-            QueryExecutor.Execute(new GenericQuery($"DROP VIEW {view.Name};"));
+            QueryExecutor.Execute(new GenericQuery($@"DROP VIEW ""{view.Name}"";"));
             QueryExecutor.Execute(new DeleteDNDBTSysInfoQuery(view.ID));
         }
 
@@ -266,7 +266,7 @@ namespace DotNetDBTools.Deploy.PostgreSQL
 
         private void DropProcedure(PostgreSQLProcedure procedure)
         {
-            QueryExecutor.Execute(new GenericQuery($"DROP PROCEDURE {procedure.Name};"));
+            QueryExecutor.Execute(new GenericQuery($@"DROP PROCEDURE ""{procedure.Name}"";"));
             QueryExecutor.Execute(new DeleteDNDBTSysInfoQuery(procedure.ID));
         }
     }

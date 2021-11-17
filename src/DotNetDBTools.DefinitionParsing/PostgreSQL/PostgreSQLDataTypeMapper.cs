@@ -52,7 +52,7 @@ namespace DotNetDBTools.DefinitionParsing.PostgreSQL
             if (realDataType.IsDoublePrecision)
                 return new DataType() { Name = PostgreSQLDataTypeNames.FLOAT8 };
             else
-                return new DataType() { Name = PostgreSQLDataTypeNames.REAL };
+                return new DataType() { Name = PostgreSQLDataTypeNames.FLOAT4 };
         }
 
         private static DataType Map(DecimalDataType decimalDataType)

@@ -54,6 +54,22 @@ WHERE sm.type = 'table'
                 };
             }
 
+            private static DataType ParseDataType(ColumnRecord columnRecord)
+            {
+                string dataType = columnRecord.DataType.ToUpper();
+                switch (dataType)
+                {
+                    case SQLiteDataTypeNames.INTEGER:
+                    case SQLiteDataTypeNames.REAL:
+                    case SQLiteDataTypeNames.NUMERIC:
+                    case SQLiteDataTypeNames.TEXT:
+                    case SQLiteDataTypeNames.BLOB:
+                        return new DataType { Name = dataType };
+                    default:
+                        throw new InvalidOperationException($"Invalid column record datatype: {columnRecord.DataType}");
+                }
+            }
+
             private static object ParseDefault(string value)
             {
                 if (value is null)
@@ -79,22 +95,6 @@ WHERE sm.type = 'table'
                     for (int i = 0; i < numChars; i += 2)
                         bytes[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
                     return bytes;
-                }
-            }
-
-            private static DataType ParseDataType(ColumnRecord columnRecord)
-            {
-                string dataType = columnRecord.DataType.ToUpper();
-                switch (dataType)
-                {
-                    case SQLiteDataTypeNames.INTEGER:
-                    case SQLiteDataTypeNames.REAL:
-                    case SQLiteDataTypeNames.NUMERIC:
-                    case SQLiteDataTypeNames.TEXT:
-                    case SQLiteDataTypeNames.BLOB:
-                        return new DataType { Name = dataType };
-                    default:
-                        throw new InvalidOperationException($"Invalid column record datatype: {columnRecord.DataType}");
                 }
             }
         }

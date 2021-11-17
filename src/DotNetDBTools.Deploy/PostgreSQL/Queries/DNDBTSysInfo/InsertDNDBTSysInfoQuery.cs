@@ -30,12 +30,12 @@ namespace DotNetDBTools.Deploy.PostgreSQL.Queries.DNDBTSysInfo
         private static string GetSql(PostgreSQLDbObjectsTypes objectType)
         {
             string query =
-$@"INSERT INTO {DNDBTSysTables.DNDBTDbObjects}
+$@"INSERT INTO ""{DNDBTSysTables.DNDBTDbObjects}""
 (
-    {DNDBTSysTables.DNDBTDbObjects.ID},
-    {DNDBTSysTables.DNDBTDbObjects.ParentID},
-    {DNDBTSysTables.DNDBTDbObjects.Type},
-    {DNDBTSysTables.DNDBTDbObjects.Name}
+    ""{DNDBTSysTables.DNDBTDbObjects.ID}"",
+    ""{DNDBTSysTables.DNDBTDbObjects.ParentID}"",
+    ""{DNDBTSysTables.DNDBTDbObjects.Type}"",
+    ""{DNDBTSysTables.DNDBTDbObjects.Name}""
 )
 VALUES
 (

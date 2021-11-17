@@ -77,6 +77,7 @@ $@"    CONSTRAINT {fk.Name} FOREIGN KEY ({string.Join(", ", fk.ThisColumnNames)}
             modelActionName switch
             {
                 "NoAction" => "NO ACTION",
+                "Restrict" => "RESTRICT",
                 "Cascade" => "CASCADE",
                 "SetDefault" => "SET DEFAULT",
                 "SetNull" => "SET NULL",

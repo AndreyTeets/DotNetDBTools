@@ -1,6 +1,17 @@
-﻿using Dapper;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Dapper;
+using DotNetDBTools.Analysis.PostgreSQL;
+using DotNetDBTools.DefinitionParsing;
+using DotNetDBTools.Deploy;
+using DotNetDBTools.Deploy.PostgreSQL;
+using DotNetDBTools.Models.Agnostic;
+using DotNetDBTools.Models.PostgreSQL;
+using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Npgsql;
+using static DotNetDBTools.IntegrationTests.Constants;
 
 namespace DotNetDBTools.IntegrationTests.PostgreSQL
 {
@@ -9,10 +20,15 @@ namespace DotNetDBTools.IntegrationTests.PostgreSQL
     {
         private static readonly string s_connectionStringWithoutDb = PostgreSQLContainerHelper.PostgreSQLContainerConnectionString;
 
+        private static readonly string s_agnosticSampleDbAssemblyPath = $"{SamplesOutputDir}/DotNetDBTools.SampleDB.Agnostic.dll";
+        private static readonly string s_postgresqlSampleDbAssemblyPath = $"{SamplesOutputDir}/DotNetDBTools.SampleDB.PostgreSQL.dll";
+
         private string ConnectionString => CreateConnectionString(s_connectionStringWithoutDb, TestContext.TestName);
         public TestContext TestContext { get; set; }
 
+        private PostgreSQLDeployManager _deployManager;
         private NpgsqlConnection _connection;
+        private PostgreSQLInteractor _interactor;
 
         [TestInitialize]
         public void TestInitialize()
@@ -20,7 +36,9 @@ namespace DotNetDBTools.IntegrationTests.PostgreSQL
             DropDatabaseIfExists(ConnectionString);
             CreateDatabase(ConnectionString);
 
+            _deployManager = new(new DeployOptions());
             _connection = new(ConnectionString);
+            _interactor = new(new PostgreSQLQueryExecutor(_connection));
         }
 
         [TestCleanup]
@@ -30,9 +48,85 @@ namespace DotNetDBTools.IntegrationTests.PostgreSQL
         }
 
         [TestMethod]
-        public void DbSetupWorks()
+        public void Publish_AgnosticSampleDB_CreatesDbFromZero_And_UpdatesItAgain_WithoutErrors()
         {
-            Assert.IsTrue(true);
+            _deployManager.RegisterAsDNDBT(_connection);
+            _deployManager.PublishDatabase(s_agnosticSampleDbAssemblyPath, _connection);
+            _deployManager.PublishDatabase(s_agnosticSampleDbAssemblyPath, _connection);
+        }
+
+        [TestMethod]
+        public void AgnosticSampleDB_DbModelFromDNDBTSysInfo_IsEquivalentTo_DbModelFromDbAssembly()
+        {
+            _deployManager.RegisterAsDNDBT(_connection);
+            _deployManager.PublishDatabase(s_agnosticSampleDbAssemblyPath, _connection);
+
+            PostgreSQLDatabase dbModelFromDbAssembly = (PostgreSQLDatabase)new PostgreSQLDbModelConverter().FromAgnostic(
+                (AgnosticDatabase)DbDefinitionParser.CreateDatabaseModel(s_agnosticSampleDbAssemblyPath));
+            PostgreSQLDatabase dbModelFromDNDBTSysInfo = (PostgreSQLDatabase)_interactor.GetDatabaseModelFromDNDBTSysInfo();
+
+            dbModelFromDNDBTSysInfo.Should().BeEquivalentTo(dbModelFromDbAssembly, options => options
+                .Excluding(database => database.Name)
+                .Excluding(database => database.Views));
+        }
+
+        [TestMethod]
+        public void AgnosticSampleDB_DbModelFromDBMSSysInfo_IsEquivalentTo_DbModelFromDbAssembly()
+        {
+            _deployManager.RegisterAsDNDBT(_connection);
+            _deployManager.PublishDatabase(s_agnosticSampleDbAssemblyPath, _connection);
+            _deployManager.UnregisterAsDNDBT(_connection);
+
+            PostgreSQLDatabase dbModelFromDbAssembly = (PostgreSQLDatabase)new PostgreSQLDbModelConverter().FromAgnostic(
+                (AgnosticDatabase)DbDefinitionParser.CreateDatabaseModel(s_agnosticSampleDbAssemblyPath));
+            PostgreSQLDatabase dbModelFromDBMSSysInfo = (PostgreSQLDatabase)_interactor.GenerateDatabaseModelFromDBMSSysInfo();
+
+            dbModelFromDBMSSysInfo.Should().BeEquivalentTo(dbModelFromDbAssembly, options => options
+                .Excluding(database => database.Name)
+                .Excluding(database => database.Views)
+                .Excluding(database => database.Path.EndsWith(".ID", StringComparison.Ordinal)));
+        }
+
+        [TestMethod]
+        public void Publish_PostgreSQLSampleDB_CreatesDbFromZero_And_UpdatesItAgain_WithoutErrors()
+        {
+            _deployManager.RegisterAsDNDBT(_connection);
+            _deployManager.PublishDatabase(s_postgresqlSampleDbAssemblyPath, _connection);
+            _deployManager.PublishDatabase(s_postgresqlSampleDbAssemblyPath, _connection);
+        }
+
+        [TestMethod]
+        public void PostgreSQLSampleDB_DbModelFromDNDBTSysInfo_IsEquivalentTo_DbModelFromDbAssembly()
+        {
+            _deployManager.RegisterAsDNDBT(_connection);
+            _deployManager.PublishDatabase(s_postgresqlSampleDbAssemblyPath, _connection);
+
+            PostgreSQLDatabase dbModelFromDbAssembly = (PostgreSQLDatabase)DbDefinitionParser.CreateDatabaseModel(s_postgresqlSampleDbAssemblyPath);
+            PostgreSQLDatabase dbModelFromDNDBTSysInfo = (PostgreSQLDatabase)_interactor.GetDatabaseModelFromDNDBTSysInfo();
+
+            dbModelFromDNDBTSysInfo.Should().BeEquivalentTo(dbModelFromDbAssembly, options => options
+                .Excluding(database => database.Name)
+                .Excluding(database => database.Functions)
+                .Excluding(database => database.Views)
+                .Using(new PostgreSQLDefaultValueAsFunctionComparer()));
+        }
+
+        [TestMethod]
+        public void PostgreSQLSampleDB_DbModelFromDBMSSysInfo_IsEquivalentTo_DbModelFromDbAssembly()
+        {
+            _deployManager.RegisterAsDNDBT(_connection);
+            _deployManager.PublishDatabase(s_postgresqlSampleDbAssemblyPath, _connection);
+            _deployManager.UnregisterAsDNDBT(_connection);
+
+            PostgreSQLDatabase dbModelFromDbAssembly = (PostgreSQLDatabase)DbDefinitionParser.CreateDatabaseModel(s_postgresqlSampleDbAssemblyPath);
+            PostgreSQLDatabase dbModelFromDBMSSysInfo = (PostgreSQLDatabase)_interactor.GenerateDatabaseModelFromDBMSSysInfo();
+
+            dbModelFromDBMSSysInfo.Should().BeEquivalentTo(dbModelFromDbAssembly, options => options
+                .Excluding(database => database.Name)
+                .Excluding(database => database.Views)
+                .Excluding(database => database.Functions)
+                .Excluding(database => database.Path.EndsWith(".ID", StringComparison.Ordinal))
+                .Using(new PostgreSQLDefaultValueAsFunctionComparer()));
         }
 
         private static void CreateDatabase(string connectionString)
@@ -62,6 +156,28 @@ DROP DATABASE IF EXISTS ""{databaseName}"";");
             connectionStringBuilder.Database = databaseName;
             string connectionString = connectionStringBuilder.ConnectionString;
             return connectionString;
+        }
+
+        private class PostgreSQLDefaultValueAsFunctionComparer : IEqualityComparer<PostgreSQLDefaultValueAsFunction>
+        {
+            public bool Equals(PostgreSQLDefaultValueAsFunction x, PostgreSQLDefaultValueAsFunction y)
+            {
+                string xNormalizedFunctionText = NormalizeFunctionText(x.FunctionText);
+                string yNormalizedFunctionText = NormalizeFunctionText(y.FunctionText);
+                return string.Equals(xNormalizedFunctionText, yNormalizedFunctionText, StringComparison.OrdinalIgnoreCase);
+            }
+
+            public int GetHashCode(PostgreSQLDefaultValueAsFunction obj)
+            {
+                return obj.GetHashCode();
+            }
+
+            private static string NormalizeFunctionText(string value)
+            {
+                return value.ToUpper()
+                    .Replace("::INTEGER", "")
+                    .Replace("'", "");
+            }
         }
     }
 }

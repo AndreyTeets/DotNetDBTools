@@ -8,7 +8,7 @@ namespace DotNetDBTools.Deploy.PostgreSQL
     {
         public static string GetIdentityStatement(Column column)
         {
-            return column.Identity ? " IDENTITY" : "";
+            return column.Identity ? " GENERATED ALWAYS AS IDENTITY" : "";
         }
 
         public static string GetNullabilityStatement(Column column) =>
@@ -29,13 +29,14 @@ namespace DotNetDBTools.Deploy.PostgreSQL
                 _ => throw new InvalidOperationException($"Invalid value type: '{value.GetType()}'")
             };
 
-            static string ToHex(byte[] val) => "0x" + BitConverter.ToString(val).Replace("-", "");
+            static string ToHex(byte[] val) => $@"'\x{BitConverter.ToString(val).Replace("-", "")}'";
         }
 
         public static string MapActionName(string modelActionName) =>
             modelActionName switch
             {
                 "NoAction" => "NO ACTION",
+                "Restrict" => "RESTRICT",
                 "Cascade" => "CASCADE",
                 "SetDefault" => "SET DEFAULT",
                 "SetNull" => "SET NULL",
@@ -44,15 +45,15 @@ namespace DotNetDBTools.Deploy.PostgreSQL
 
         public static DataType CreateDataTypeModel(string dataType, int length)
         {
-            switch (dataType)
+            string normalizedDataType = NormalizeTypeName(dataType);
+            switch (normalizedDataType)
             {
                 case PostgreSQLDataTypeNames.SMALLINT:
                 case PostgreSQLDataTypeNames.INT:
                 case PostgreSQLDataTypeNames.BIGINT:
 
-                case PostgreSQLDataTypeNames.REAL:
+                case PostgreSQLDataTypeNames.FLOAT4:
                 case PostgreSQLDataTypeNames.FLOAT8:
-                case PostgreSQLDataTypeNames.DECIMAL:
                 case PostgreSQLDataTypeNames.BOOL:
 
                 case PostgreSQLDataTypeNames.MONEY:
@@ -61,25 +62,50 @@ namespace DotNetDBTools.Deploy.PostgreSQL
                 case PostgreSQLDataTypeNames.BYTEA:
 
                 case PostgreSQLDataTypeNames.DATE:
+
+                case PostgreSQLDataTypeNames.UUID:
+                case PostgreSQLDataTypeNames.JSON:
+                case PostgreSQLDataTypeNames.JSONB:
+                    return new DataType { Name = normalizedDataType };
+
+                case PostgreSQLDataTypeNames.DECIMAL:
+                    return new DataType { Name = $"{normalizedDataType}({GetDecimalPrecisionAndScale(length)})" };
+
+                case PostgreSQLDataTypeNames.CHAR:
+                case PostgreSQLDataTypeNames.VARCHAR:
+                    return new DataType { Name = $"{normalizedDataType}({length - 4})" };
+
                 case PostgreSQLDataTypeNames.TIME:
                 case PostgreSQLDataTypeNames.TIMETZ:
                 case PostgreSQLDataTypeNames.TIMESTAMP:
                 case PostgreSQLDataTypeNames.TIMESTAMPTZ:
 
-                case PostgreSQLDataTypeNames.UUID:
-                case PostgreSQLDataTypeNames.JSON:
-                case PostgreSQLDataTypeNames.JSONB:
-                    return new DataType { Name = dataType };
-
-                case PostgreSQLDataTypeNames.CHAR:
-                case PostgreSQLDataTypeNames.VARCHAR:
-
                 case PostgreSQLDataTypeNames.BIT:
                 case PostgreSQLDataTypeNames.VARBIT:
-                    return new DataType { Name = $"{dataType}({length})" };
+                    return new DataType { Name = $"{normalizedDataType}({length})" };
 
                 default:
-                    throw new InvalidOperationException($"Invalid datatype: {dataType}");
+                    throw new InvalidOperationException($"Invalid normalized datatype: {normalizedDataType}");
+            }
+
+            string NormalizeTypeName(string dataType)
+            {
+                return dataType.ToUpper() switch
+                {
+                    "INT2" => PostgreSQLDataTypeNames.SMALLINT,
+                    "INT4" => PostgreSQLDataTypeNames.INT,
+                    "INT8" => PostgreSQLDataTypeNames.BIGINT,
+                    "NUMERIC" => PostgreSQLDataTypeNames.DECIMAL,
+                    "BPCHAR" => PostgreSQLDataTypeNames.CHAR,
+                    _ => dataType.ToUpper(),
+                };
+            }
+
+            string GetDecimalPrecisionAndScale(int length)
+            {
+                int precision = ((length - 4) >> 16) & 65535;
+                int scale = (length - 4) & 65535;
+                return $"{precision}, {scale}";
             }
         }
     }
