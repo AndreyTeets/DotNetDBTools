@@ -21,7 +21,7 @@ namespace DotNetDBTools.Deploy.SQLite
         {
             SQLiteDatabase database = (SQLiteDatabase)GenerateDatabaseModelFromDBMSSysInfo();
 
-            GetAllDbObjectsFromDNDBTSysInfoQuery.ResultsInterpreter.ReplaceDbModelObjectsIDsWithRecordOnes(
+            GetAllDbObjectsFromDNDBTSysInfoQuery.ResultsInterpreter.ReplaceDbModelObjectsIDsWithRecordOnesAndFillExtraInfo(
                 database,
                 QueryExecutor.Query<GetAllDbObjectsFromDNDBTSysInfoQuery.DNDBTDbObjectRecord>(
                     new GetAllDbObjectsFromDNDBTSysInfoQuery()));
@@ -112,8 +112,8 @@ namespace DotNetDBTools.Deploy.SQLite
             foreach (SQLiteTable table in db.Tables)
             {
                 QueryExecutor.Execute(new InsertDNDBTSysInfoQuery(table.ID, null, SQLiteDbObjectsTypes.Table, table.Name));
-                foreach (Column column in table.Columns)
-                    QueryExecutor.Execute(new InsertDNDBTSysInfoQuery(column.ID, table.ID, SQLiteDbObjectsTypes.Column, column.Name));
+                foreach (Column c in table.Columns)
+                    QueryExecutor.Execute(new InsertDNDBTSysInfoQuery(c.ID, table.ID, SQLiteDbObjectsTypes.Column, c.Name, GetColumnExtraInfo(c)));
                 PrimaryKey pk = table.PrimaryKey;
                 if (pk is not null)
                     QueryExecutor.Execute(new InsertDNDBTSysInfoQuery(pk.ID, table.ID, SQLiteDbObjectsTypes.PrimaryKey, pk.Name));
@@ -136,8 +136,8 @@ namespace DotNetDBTools.Deploy.SQLite
         {
             QueryExecutor.Execute(new CreateTableQuery(table));
             QueryExecutor.Execute(new InsertDNDBTSysInfoQuery(table.ID, null, SQLiteDbObjectsTypes.Table, table.Name));
-            foreach (Column column in table.Columns)
-                QueryExecutor.Execute(new InsertDNDBTSysInfoQuery(column.ID, table.ID, SQLiteDbObjectsTypes.Column, column.Name));
+            foreach (Column c in table.Columns)
+                QueryExecutor.Execute(new InsertDNDBTSysInfoQuery(c.ID, table.ID, SQLiteDbObjectsTypes.Column, c.Name, GetColumnExtraInfo(c)));
             PrimaryKey pk = table.PrimaryKey;
             if (pk is not null)
                 QueryExecutor.Execute(new InsertDNDBTSysInfoQuery(pk.ID, table.ID, SQLiteDbObjectsTypes.PrimaryKey, pk.Name));
@@ -194,11 +194,11 @@ namespace DotNetDBTools.Deploy.SQLite
                 QueryExecutor.Execute(new DeleteDNDBTSysInfoQuery(column.ID));
 
             QueryExecutor.Execute(new UpdateDNDBTSysInfoQuery(tableDiff.NewTable.ID, tableDiff.NewTable.Name));
-            foreach (ColumnDiff columnDiff in tableDiff.ChangedColumns)
-                QueryExecutor.Execute(new UpdateDNDBTSysInfoQuery(columnDiff.NewColumn.ID, columnDiff.NewColumn.Name));
+            foreach (ColumnDiff cDiff in tableDiff.ChangedColumns)
+                QueryExecutor.Execute(new UpdateDNDBTSysInfoQuery(cDiff.NewColumn.ID, cDiff.NewColumn.Name, GetColumnExtraInfo(cDiff.NewColumn)));
 
-            foreach (Column column in tableDiff.AddedColumns)
-                QueryExecutor.Execute(new InsertDNDBTSysInfoQuery(column.ID, tableDiff.NewTable.ID, SQLiteDbObjectsTypes.Column, column.Name));
+            foreach (Column c in tableDiff.AddedColumns)
+                QueryExecutor.Execute(new InsertDNDBTSysInfoQuery(c.ID, tableDiff.NewTable.ID, SQLiteDbObjectsTypes.Column, c.Name, GetColumnExtraInfo(c)));
             PrimaryKey pk = tableDiff.PrimaryKeyToCreate;
             if (pk is not null)
                 QueryExecutor.Execute(new InsertDNDBTSysInfoQuery(pk.ID, tableDiff.NewTable.ID, SQLiteDbObjectsTypes.PrimaryKey, pk.Name));
@@ -224,6 +224,11 @@ namespace DotNetDBTools.Deploy.SQLite
         {
             QueryExecutor.Execute(new GenericQuery($"DROP VIEW {view.Name};"));
             QueryExecutor.Execute(new DeleteDNDBTSysInfoQuery(view.ID));
+        }
+
+        private static string GetColumnExtraInfo(Column column)
+        {
+            return (column.Default as DefaultValueAsFunction)?.FunctionText;
         }
     }
 }

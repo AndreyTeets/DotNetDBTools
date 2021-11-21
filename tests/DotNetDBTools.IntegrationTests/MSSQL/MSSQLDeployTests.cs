@@ -68,8 +68,7 @@ namespace DotNetDBTools.IntegrationTests.MSSQL
 
             dbModelFromDNDBTSysInfo.Should().BeEquivalentTo(dbModelFromDbAssembly, options => options
                 .Excluding(database => database.Name)
-                .Excluding(database => database.Views)
-                .Using(new DefaultValueAsFunctionComparer()));
+                .Excluding(database => database.Views));
         }
 
         [TestMethod]
@@ -110,8 +109,7 @@ namespace DotNetDBTools.IntegrationTests.MSSQL
             dbModelFromDNDBTSysInfo.Should().BeEquivalentTo(dbModelFromDbAssembly, options => options
                 .Excluding(database => database.Name)
                 .Excluding(database => database.Functions)
-                .Excluding(database => database.Views)
-                .Using(new DefaultValueAsFunctionComparer()));
+                .Excluding(database => database.Views));
         }
 
         [TestMethod]
@@ -187,8 +185,7 @@ END;");
 
             private static string NormalizeFunctionText(string value)
             {
-                return value
-                    .ToUpper()
+                return value.ToUpper()
                     .Replace("(", "")
                     .Replace(")", "");
             }

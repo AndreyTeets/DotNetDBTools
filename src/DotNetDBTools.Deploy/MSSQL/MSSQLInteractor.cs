@@ -145,8 +145,8 @@ namespace DotNetDBTools.Deploy.MSSQL
             foreach (MSSQLTable table in db.Tables)
             {
                 QueryExecutor.Execute(new InsertDNDBTSysInfoQuery(table.ID, null, MSSQLDbObjectsTypes.Table, table.Name));
-                foreach (Column column in table.Columns)
-                    QueryExecutor.Execute(new InsertDNDBTSysInfoQuery(column.ID, table.ID, MSSQLDbObjectsTypes.Column, column.Name));
+                foreach (Column c in table.Columns)
+                    QueryExecutor.Execute(new InsertDNDBTSysInfoQuery(c.ID, table.ID, MSSQLDbObjectsTypes.Column, c.Name, GetColumnExtraInfo(c)));
                 PrimaryKey pk = table.PrimaryKey;
                 if (pk is not null)
                     QueryExecutor.Execute(new InsertDNDBTSysInfoQuery(pk.ID, table.ID, MSSQLDbObjectsTypes.PrimaryKey, pk.Name));
@@ -198,8 +198,8 @@ namespace DotNetDBTools.Deploy.MSSQL
         {
             QueryExecutor.Execute(new CreateTableQuery(table));
             QueryExecutor.Execute(new InsertDNDBTSysInfoQuery(table.ID, null, MSSQLDbObjectsTypes.Table, table.Name));
-            foreach (Column column in table.Columns)
-                QueryExecutor.Execute(new InsertDNDBTSysInfoQuery(column.ID, table.ID, MSSQLDbObjectsTypes.Column, column.Name));
+            foreach (Column c in table.Columns)
+                QueryExecutor.Execute(new InsertDNDBTSysInfoQuery(c.ID, table.ID, MSSQLDbObjectsTypes.Column, c.Name, GetColumnExtraInfo(c)));
             PrimaryKey pk = table.PrimaryKey;
             if (pk is not null)
                 QueryExecutor.Execute(new InsertDNDBTSysInfoQuery(pk.ID, table.ID, MSSQLDbObjectsTypes.PrimaryKey, pk.Name));
@@ -250,11 +250,11 @@ namespace DotNetDBTools.Deploy.MSSQL
                 QueryExecutor.Execute(new DeleteDNDBTSysInfoQuery(column.ID));
 
             QueryExecutor.Execute(new UpdateDNDBTSysInfoQuery(tableDiff.NewTable.ID, tableDiff.NewTable.Name));
-            foreach (ColumnDiff columnDiff in tableDiff.ChangedColumns)
-                QueryExecutor.Execute(new UpdateDNDBTSysInfoQuery(columnDiff.NewColumn.ID, columnDiff.NewColumn.Name));
+            foreach (ColumnDiff cDiff in tableDiff.ChangedColumns)
+                QueryExecutor.Execute(new UpdateDNDBTSysInfoQuery(cDiff.NewColumn.ID, cDiff.NewColumn.Name, GetColumnExtraInfo(cDiff.NewColumn)));
 
-            foreach (Column column in tableDiff.AddedColumns)
-                QueryExecutor.Execute(new InsertDNDBTSysInfoQuery(column.ID, tableDiff.NewTable.ID, MSSQLDbObjectsTypes.Column, column.Name));
+            foreach (Column c in tableDiff.AddedColumns)
+                QueryExecutor.Execute(new InsertDNDBTSysInfoQuery(c.ID, tableDiff.NewTable.ID, MSSQLDbObjectsTypes.Column, c.Name, GetColumnExtraInfo(c)));
             PrimaryKey pk = tableDiff.PrimaryKeyToCreate;
             if (pk is not null)
                 QueryExecutor.Execute(new InsertDNDBTSysInfoQuery(pk.ID, tableDiff.NewTable.ID, MSSQLDbObjectsTypes.PrimaryKey, pk.Name));
@@ -326,6 +326,11 @@ namespace DotNetDBTools.Deploy.MSSQL
         {
             QueryExecutor.Execute(new GenericQuery($"DROP PROCEDURE {procedure.Name};"));
             QueryExecutor.Execute(new DeleteDNDBTSysInfoQuery(procedure.ID));
+        }
+
+        private static string GetColumnExtraInfo(Column column)
+        {
+            return (column.Default as DefaultValueAsFunction)?.FunctionText;
         }
     }
 }

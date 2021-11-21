@@ -8,6 +8,7 @@
             public readonly string ParentID = nameof(ParentID);
             public readonly string Type = nameof(Type);
             public readonly string Name = nameof(Name);
+            public readonly string ExtraInfo = nameof(ExtraInfo);
 
             public override string ToString() => nameof(DNDBTDbObjects);
             public static implicit operator string(DNDBTDbObjectsTableDescription description) => description.ToString();

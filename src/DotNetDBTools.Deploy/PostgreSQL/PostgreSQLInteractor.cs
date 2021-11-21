@@ -22,7 +22,7 @@ namespace DotNetDBTools.Deploy.PostgreSQL
         {
             PostgreSQLDatabase database = (PostgreSQLDatabase)GenerateDatabaseModelFromDBMSSysInfo();
 
-            GetAllDbObjectsFromDNDBTSysInfoQuery.ResultsInterpreter.ReplaceDbModelObjectsIDsWithRecordOnes(
+            GetAllDbObjectsFromDNDBTSysInfoQuery.ResultsInterpreter.ReplaceDbModelObjectsIDsWithRecordOnesAndFillExtraInfo(
                 database,
                 QueryExecutor.Query<GetAllDbObjectsFromDNDBTSysInfoQuery.DNDBTDbObjectRecord>(
                     new GetAllDbObjectsFromDNDBTSysInfoQuery()));
@@ -124,8 +124,8 @@ namespace DotNetDBTools.Deploy.PostgreSQL
             foreach (PostgreSQLTable table in db.Tables)
             {
                 QueryExecutor.Execute(new InsertDNDBTSysInfoQuery(table.ID, null, PostgreSQLDbObjectsTypes.Table, table.Name));
-                foreach (Column column in table.Columns)
-                    QueryExecutor.Execute(new InsertDNDBTSysInfoQuery(column.ID, table.ID, PostgreSQLDbObjectsTypes.Column, column.Name));
+                foreach (Column c in table.Columns)
+                    QueryExecutor.Execute(new InsertDNDBTSysInfoQuery(c.ID, table.ID, PostgreSQLDbObjectsTypes.Column, c.Name, GetColumnExtraInfo(c)));
                 PrimaryKey pk = table.PrimaryKey;
                 if (pk is not null)
                     QueryExecutor.Execute(new InsertDNDBTSysInfoQuery(pk.ID, table.ID, PostgreSQLDbObjectsTypes.PrimaryKey, pk.Name));
@@ -152,8 +152,8 @@ namespace DotNetDBTools.Deploy.PostgreSQL
         {
             QueryExecutor.Execute(new CreateTableQuery(table));
             QueryExecutor.Execute(new InsertDNDBTSysInfoQuery(table.ID, null, PostgreSQLDbObjectsTypes.Table, table.Name));
-            foreach (Column column in table.Columns)
-                QueryExecutor.Execute(new InsertDNDBTSysInfoQuery(column.ID, table.ID, PostgreSQLDbObjectsTypes.Column, column.Name));
+            foreach (Column c in table.Columns)
+                QueryExecutor.Execute(new InsertDNDBTSysInfoQuery(c.ID, table.ID, PostgreSQLDbObjectsTypes.Column, c.Name, GetColumnExtraInfo(c)));
             PrimaryKey pk = table.PrimaryKey;
             if (pk is not null)
                 QueryExecutor.Execute(new InsertDNDBTSysInfoQuery(pk.ID, table.ID, PostgreSQLDbObjectsTypes.PrimaryKey, pk.Name));
@@ -204,11 +204,11 @@ namespace DotNetDBTools.Deploy.PostgreSQL
                 QueryExecutor.Execute(new DeleteDNDBTSysInfoQuery(column.ID));
 
             QueryExecutor.Execute(new UpdateDNDBTSysInfoQuery(tableDiff.NewTable.ID, tableDiff.NewTable.Name));
-            foreach (ColumnDiff columnDiff in tableDiff.ChangedColumns)
-                QueryExecutor.Execute(new UpdateDNDBTSysInfoQuery(columnDiff.NewColumn.ID, columnDiff.NewColumn.Name));
+            foreach (ColumnDiff cDiff in tableDiff.ChangedColumns)
+                QueryExecutor.Execute(new UpdateDNDBTSysInfoQuery(cDiff.NewColumn.ID, cDiff.NewColumn.Name, GetColumnExtraInfo(cDiff.NewColumn)));
 
-            foreach (Column column in tableDiff.AddedColumns)
-                QueryExecutor.Execute(new InsertDNDBTSysInfoQuery(column.ID, tableDiff.NewTable.ID, PostgreSQLDbObjectsTypes.Column, column.Name));
+            foreach (Column c in tableDiff.AddedColumns)
+                QueryExecutor.Execute(new InsertDNDBTSysInfoQuery(c.ID, tableDiff.NewTable.ID, PostgreSQLDbObjectsTypes.Column, c.Name, GetColumnExtraInfo(c)));
             PrimaryKey pk = tableDiff.PrimaryKeyToCreate;
             if (pk is not null)
                 QueryExecutor.Execute(new InsertDNDBTSysInfoQuery(pk.ID, tableDiff.NewTable.ID, PostgreSQLDbObjectsTypes.PrimaryKey, pk.Name));
@@ -268,6 +268,11 @@ namespace DotNetDBTools.Deploy.PostgreSQL
         {
             QueryExecutor.Execute(new GenericQuery($@"DROP PROCEDURE ""{procedure.Name}"";"));
             QueryExecutor.Execute(new DeleteDNDBTSysInfoQuery(procedure.ID));
+        }
+
+        private static string GetColumnExtraInfo(Column column)
+        {
+            return (column.Default as DefaultValueAsFunction)?.FunctionText;
         }
     }
 }

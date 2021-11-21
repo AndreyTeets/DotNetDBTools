@@ -10,8 +10,9 @@ $@"CREATE TABLE {DNDBTSysTables.DNDBTDbObjects}
 (
     {DNDBTSysTables.DNDBTDbObjects.ID} UNIQUEIDENTIFIER PRIMARY KEY,
     {DNDBTSysTables.DNDBTDbObjects.ParentID} UNIQUEIDENTIFIER NULL,
-    {DNDBTSysTables.DNDBTDbObjects.Type} NVARCHAR(256) NOT NULL,
-    {DNDBTSysTables.DNDBTDbObjects.Name} NVARCHAR(MAX) NOT NULL
+    {DNDBTSysTables.DNDBTDbObjects.Type} NVARCHAR(32) NOT NULL,
+    {DNDBTSysTables.DNDBTDbObjects.Name} NVARCHAR(256) NOT NULL,
+    {DNDBTSysTables.DNDBTDbObjects.ExtraInfo} NVARCHAR(MAX) NULL
 );";
 
         public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();

@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using DotNetDBTools.Analysis.SQLite;
 using DotNetDBTools.DefinitionParsing;
 using DotNetDBTools.Deploy;
 using DotNetDBTools.Deploy.SQLite;
 using DotNetDBTools.Models.Agnostic;
+using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.SQLite;
 using FluentAssertions;
 using Microsoft.Data.Sqlite;
@@ -81,7 +83,8 @@ namespace DotNetDBTools.IntegrationTests.SQLite
             dbModelFromDBMSSysInfo.Should().BeEquivalentTo(dbModelFromDbAssembly, options => options
                 .Excluding(database => database.Name)
                 .Excluding(database => database.Views)
-                .Excluding(database => database.Path.EndsWith(".ID", StringComparison.Ordinal)));
+                .Excluding(database => database.Path.EndsWith(".ID", StringComparison.Ordinal))
+                .Using(new DefaultValueAsFunctionComparer()));
         }
 
         [TestMethod]
@@ -119,7 +122,8 @@ namespace DotNetDBTools.IntegrationTests.SQLite
             dbModelFromDBMSSysInfo.Should().BeEquivalentTo(dbModelFromDbAssembly, options => options
                 .Excluding(database => database.Name)
                 .Excluding(database => database.Views)
-                .Excluding(database => database.Path.EndsWith(".ID", StringComparison.Ordinal)));
+                .Excluding(database => database.Path.EndsWith(".ID", StringComparison.Ordinal))
+                .Using(new DefaultValueAsFunctionComparer()));
         }
 
         private static void DropDatabaseIfExists(string connectionString)
@@ -130,6 +134,26 @@ namespace DotNetDBTools.IntegrationTests.SQLite
             if (File.Exists(dbFilePath))
                 File.Delete(dbFilePath);
             Directory.CreateDirectory(Path.GetDirectoryName(dbFilePath));
+        }
+
+        private class DefaultValueAsFunctionComparer : IEqualityComparer<DefaultValueAsFunction>
+        {
+            public bool Equals(DefaultValueAsFunction x, DefaultValueAsFunction y)
+            {
+                string xNormalizedFunctionText = NormalizeFunctionText(x.FunctionText);
+                string yNormalizedFunctionText = NormalizeFunctionText(y.FunctionText);
+                return string.Equals(xNormalizedFunctionText, yNormalizedFunctionText, StringComparison.OrdinalIgnoreCase);
+            }
+
+            public int GetHashCode(DefaultValueAsFunction obj)
+            {
+                return obj.GetHashCode();
+            }
+
+            private static string NormalizeFunctionText(string value)
+            {
+                return value.ToUpper();
+            }
         }
     }
 }

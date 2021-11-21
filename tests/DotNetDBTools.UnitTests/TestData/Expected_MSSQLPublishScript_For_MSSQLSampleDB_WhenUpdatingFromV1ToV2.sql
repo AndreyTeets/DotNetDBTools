@@ -29,19 +29,22 @@ EXEC sp_executesql N'CREATE TYPE MyUserDefinedType1 FROM VARCHAR(110);';
 EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = ''0cd1e71c-cc9c-440f-ac0b-81a1d6f7ddaa'';
 DECLARE @ParentID UNIQUEIDENTIFIER = NULL;
 DECLARE @Name NVARCHAR(MAX) = ''MyUserDefinedType1'';
+DECLARE @ExtraInfo NVARCHAR(MAX) = NULL;
 INSERT INTO DNDBTDbObjects
 (
     ID,
     ParentID,
     Type,
-    Name
+    Name,
+    ExtraInfo
 )
 VALUES
 (
     @ID,
     @ParentID,
     ''UserDefinedType'',
-    @Name
+    @Name,
+    @ExtraInfo
 );';
 -- QUERY END: InsertDNDBTSysInfoQuery
 
@@ -132,15 +135,23 @@ WHERE ID = ''6e95de30-e01a-4fb4-b8b7-8f0c40bb682c'';';
 -- QUERY END: DeleteDNDBTSysInfoQuery
 
 -- QUERY START: UpdateDNDBTSysInfoQuery
-EXEC sp_executesql N'UPDATE DNDBTDbObjects SET
-    Name = ''MyTable1NewName''
-WHERE ID = ''299675e6-4faa-4d0f-a36a-224306ba5bcb'';';
+EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = ''299675e6-4faa-4d0f-a36a-224306ba5bcb'';
+DECLARE @Name NVARCHAR(MAX) = ''MyTable1NewName'';
+DECLARE @ExtraInfo NVARCHAR(MAX) = NULL;
+UPDATE DNDBTDbObjects SET
+    Name = @Name,
+    ExtraInfo = @ExtraInfo
+WHERE ID = @ID;';
 -- QUERY END: UpdateDNDBTSysInfoQuery
 
 -- QUERY START: UpdateDNDBTSysInfoQuery
-EXEC sp_executesql N'UPDATE DNDBTDbObjects SET
-    Name = ''MyColumn1''
-WHERE ID = ''a2f2a4de-1337-4594-ae41-72ed4d05f317'';';
+EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = ''a2f2a4de-1337-4594-ae41-72ed4d05f317'';
+DECLARE @Name NVARCHAR(MAX) = ''MyColumn1'';
+DECLARE @ExtraInfo NVARCHAR(MAX) = NULL;
+UPDATE DNDBTDbObjects SET
+    Name = @Name,
+    ExtraInfo = @ExtraInfo
+WHERE ID = @ID;';
 -- QUERY END: UpdateDNDBTSysInfoQuery
 
 -- QUERY START: AlterTableQuery
@@ -168,34 +179,45 @@ WHERE ID = ''5a0d1926-3270-4eb2-92eb-00be56c7af23'';';
 -- QUERY END: DeleteDNDBTSysInfoQuery
 
 -- QUERY START: UpdateDNDBTSysInfoQuery
-EXEC sp_executesql N'UPDATE DNDBTDbObjects SET
-    Name = ''MyTable2''
-WHERE ID = ''bfb9030c-a8c3-4882-9c42-1c6ad025cf8f'';';
+EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = ''bfb9030c-a8c3-4882-9c42-1c6ad025cf8f'';
+DECLARE @Name NVARCHAR(MAX) = ''MyTable2'';
+DECLARE @ExtraInfo NVARCHAR(MAX) = NULL;
+UPDATE DNDBTDbObjects SET
+    Name = @Name,
+    ExtraInfo = @ExtraInfo
+WHERE ID = @ID;';
 -- QUERY END: UpdateDNDBTSysInfoQuery
 
 -- QUERY START: UpdateDNDBTSysInfoQuery
-EXEC sp_executesql N'UPDATE DNDBTDbObjects SET
-    Name = ''MyColumn1NewName''
-WHERE ID = ''c480f22f-7c01-4f41-b282-35e9f5cd1fe3'';';
+EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = ''c480f22f-7c01-4f41-b282-35e9f5cd1fe3'';
+DECLARE @Name NVARCHAR(MAX) = ''MyColumn1NewName'';
+DECLARE @ExtraInfo NVARCHAR(MAX) = NULL;
+UPDATE DNDBTDbObjects SET
+    Name = @Name,
+    ExtraInfo = @ExtraInfo
+WHERE ID = @ID;';
 -- QUERY END: UpdateDNDBTSysInfoQuery
 
 -- QUERY START: InsertDNDBTSysInfoQuery
 EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = ''c2df19c2-e029-4014-8a5b-4ab42fecb6b8'';
 DECLARE @ParentID UNIQUEIDENTIFIER = ''bfb9030c-a8c3-4882-9c42-1c6ad025cf8f'';
 DECLARE @Name NVARCHAR(MAX) = ''MyColumn2'';
+DECLARE @ExtraInfo NVARCHAR(MAX) = NULL;
 INSERT INTO DNDBTDbObjects
 (
     ID,
     ParentID,
     Type,
-    Name
+    Name,
+    ExtraInfo
 )
 VALUES
 (
     @ID,
     @ParentID,
     ''Column'',
-    @Name
+    @Name,
+    @ExtraInfo
 );';
 -- QUERY END: InsertDNDBTSysInfoQuery
 
@@ -203,19 +225,22 @@ VALUES
 EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = ''3a43615b-40b3-4a13-99e7-93af7c56e8ce'';
 DECLARE @ParentID UNIQUEIDENTIFIER = ''bfb9030c-a8c3-4882-9c42-1c6ad025cf8f'';
 DECLARE @Name NVARCHAR(MAX) = ''PK_MyTable2'';
+DECLARE @ExtraInfo NVARCHAR(MAX) = NULL;
 INSERT INTO DNDBTDbObjects
 (
     ID,
     ParentID,
     Type,
-    Name
+    Name,
+    ExtraInfo
 )
 VALUES
 (
     @ID,
     @ParentID,
     ''PrimaryKey'',
-    @Name
+    @Name,
+    @ExtraInfo
 );';
 -- QUERY END: InsertDNDBTSysInfoQuery
 
@@ -227,15 +252,23 @@ ALTER TABLE MyTable5 ADD CONSTRAINT DF_MyTable5_MyColumn2 DEFAULT ''cc'' FOR MyC
 -- QUERY END: AlterTableQuery
 
 -- QUERY START: UpdateDNDBTSysInfoQuery
-EXEC sp_executesql N'UPDATE DNDBTDbObjects SET
-    Name = ''MyTable5''
-WHERE ID = ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'';';
+EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'';
+DECLARE @Name NVARCHAR(MAX) = ''MyTable5'';
+DECLARE @ExtraInfo NVARCHAR(MAX) = NULL;
+UPDATE DNDBTDbObjects SET
+    Name = @Name,
+    ExtraInfo = @ExtraInfo
+WHERE ID = @ID;';
 -- QUERY END: UpdateDNDBTSysInfoQuery
 
 -- QUERY START: UpdateDNDBTSysInfoQuery
-EXEC sp_executesql N'UPDATE DNDBTDbObjects SET
-    Name = ''MyColumn2''
-WHERE ID = ''15ae6061-426d-4485-85e6-ecd3e0f98882'';';
+EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = ''15ae6061-426d-4485-85e6-ecd3e0f98882'';
+DECLARE @Name NVARCHAR(MAX) = ''MyColumn2'';
+DECLARE @ExtraInfo NVARCHAR(MAX) = NULL;
+UPDATE DNDBTDbObjects SET
+    Name = @Name,
+    ExtraInfo = @ExtraInfo
+WHERE ID = @ID;';
 -- QUERY END: UpdateDNDBTSysInfoQuery
 
 -- QUERY START: DropTypeQuery
@@ -255,19 +288,22 @@ EXEC sp_executesql N'CREATE TABLE MyTable3
 EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = ''474cd761-2522-4529-9d20-2b94115f9626'';
 DECLARE @ParentID UNIQUEIDENTIFIER = NULL;
 DECLARE @Name NVARCHAR(MAX) = ''MyTable3'';
+DECLARE @ExtraInfo NVARCHAR(MAX) = NULL;
 INSERT INTO DNDBTDbObjects
 (
     ID,
     ParentID,
     Type,
-    Name
+    Name,
+    ExtraInfo
 )
 VALUES
 (
     @ID,
     @ParentID,
     ''Table'',
-    @Name
+    @Name,
+    @ExtraInfo
 );';
 -- QUERY END: InsertDNDBTSysInfoQuery
 
@@ -275,19 +311,22 @@ VALUES
 EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = ''726f503a-d944-46ee-a0ff-6a2c2faab46e'';
 DECLARE @ParentID UNIQUEIDENTIFIER = ''474cd761-2522-4529-9d20-2b94115f9626'';
 DECLARE @Name NVARCHAR(MAX) = ''MyColumn1'';
+DECLARE @ExtraInfo NVARCHAR(MAX) = NULL;
 INSERT INTO DNDBTDbObjects
 (
     ID,
     ParentID,
     Type,
-    Name
+    Name,
+    ExtraInfo
 )
 VALUES
 (
     @ID,
     @ParentID,
     ''Column'',
-    @Name
+    @Name,
+    @ExtraInfo
 );';
 -- QUERY END: InsertDNDBTSysInfoQuery
 
@@ -295,19 +334,22 @@ VALUES
 EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = ''169824e1-8b74-4b60-af17-99656d6dbbee'';
 DECLARE @ParentID UNIQUEIDENTIFIER = ''474cd761-2522-4529-9d20-2b94115f9626'';
 DECLARE @Name NVARCHAR(MAX) = ''MyColumn2'';
+DECLARE @ExtraInfo NVARCHAR(MAX) = NULL;
 INSERT INTO DNDBTDbObjects
 (
     ID,
     ParentID,
     Type,
-    Name
+    Name,
+    ExtraInfo
 )
 VALUES
 (
     @ID,
     @ParentID,
     ''Column'',
-    @Name
+    @Name,
+    @ExtraInfo
 );';
 -- QUERY END: InsertDNDBTSysInfoQuery
 
@@ -315,19 +357,22 @@ VALUES
 EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = ''fd288e38-35ba-4bb1-ace3-597c99ef26c7'';
 DECLARE @ParentID UNIQUEIDENTIFIER = ''474cd761-2522-4529-9d20-2b94115f9626'';
 DECLARE @Name NVARCHAR(MAX) = ''UQ_MyTable3_MyColumns12'';
+DECLARE @ExtraInfo NVARCHAR(MAX) = NULL;
 INSERT INTO DNDBTDbObjects
 (
     ID,
     ParentID,
     Type,
-    Name
+    Name,
+    ExtraInfo
 )
 VALUES
 (
     @ID,
     @ParentID,
     ''UniqueConstraint'',
-    @Name
+    @Name,
+    @ExtraInfo
 );';
 -- QUERY END: InsertDNDBTSysInfoQuery
 
@@ -341,19 +386,22 @@ EXEC sp_executesql N'ALTER TABLE MyTable1NewName ADD CONSTRAINT FK_MyTable1_MyCo
 EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = ''d11b2a53-32db-432f-bb6b-f91788844ba9'';
 DECLARE @ParentID UNIQUEIDENTIFIER = ''299675e6-4faa-4d0f-a36a-224306ba5bcb'';
 DECLARE @Name NVARCHAR(MAX) = ''FK_MyTable1_MyColumn1_MyTable2_MyColumn1'';
+DECLARE @ExtraInfo NVARCHAR(MAX) = NULL;
 INSERT INTO DNDBTDbObjects
 (
     ID,
     ParentID,
     Type,
-    Name
+    Name,
+    ExtraInfo
 )
 VALUES
 (
     @ID,
     @ParentID,
     ''ForeignKey'',
-    @Name
+    @Name,
+    @ExtraInfo
 );';
 -- QUERY END: InsertDNDBTSysInfoQuery
 
@@ -367,19 +415,22 @@ EXEC sp_executesql N'ALTER TABLE MyTable2 ADD CONSTRAINT FK_MyTable2_MyColumns12
 EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = ''480f3508-9d51-4190-88aa-45bc20e49119'';
 DECLARE @ParentID UNIQUEIDENTIFIER = ''bfb9030c-a8c3-4882-9c42-1c6ad025cf8f'';
 DECLARE @Name NVARCHAR(MAX) = ''FK_MyTable2_MyColumns12_MyTable3_MyColumns12'';
+DECLARE @ExtraInfo NVARCHAR(MAX) = NULL;
 INSERT INTO DNDBTDbObjects
 (
     ID,
     ParentID,
     Type,
-    Name
+    Name,
+    ExtraInfo
 )
 VALUES
 (
     @ID,
     @ParentID,
     ''ForeignKey'',
-    @Name
+    @Name,
+    @ExtraInfo
 );';
 -- QUERY END: InsertDNDBTSysInfoQuery
 
