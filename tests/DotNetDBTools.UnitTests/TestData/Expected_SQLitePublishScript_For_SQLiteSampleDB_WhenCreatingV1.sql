@@ -1,20 +1,20 @@
 PRAGMA foreign_keys=off;
 BEGIN TRANSACTION;
 
---QUERY START: CreateTableQuery
+-- QUERY START: CreateTableQuery
 CREATE TABLE MyTable1
 (
-    MyColumn1 INTEGER NOT NULL CONSTRAINT DF_MyTable1_MyColumn1 DEFAULT 15,
-    MyColumn2 TEXT NOT NULL CONSTRAINT DF_MyTable1_MyColumn2 DEFAULT '33',
+    MyColumn1 INTEGER NOT NULL DEFAULT 15,
+    MyColumn2 TEXT NOT NULL DEFAULT '33',
     MyColumn3 INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     CONSTRAINT UQ_MyTable1_MyColumn2 UNIQUE (MyColumn2),
     CONSTRAINT FK_MyTable1_MyColumn1_MyTable2_MyColumn1 FOREIGN KEY (MyColumn1)
         REFERENCES MyTable2(MyColumn1)
         ON UPDATE NO ACTION ON DELETE CASCADE
 );
---QUERY END: CreateTableQuery
+-- QUERY END: CreateTableQuery
 
---QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: InsertDNDBTSysInfoQuery
 INSERT INTO DNDBTDbObjects
 (
     ID,
@@ -29,9 +29,9 @@ VALUES
     'Table',
     'MyTable1'
 );
---QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: InsertDNDBTSysInfoQuery
 
---QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: InsertDNDBTSysInfoQuery
 INSERT INTO DNDBTDbObjects
 (
     ID,
@@ -46,9 +46,9 @@ VALUES
     'Column',
     'MyColumn1'
 );
---QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: InsertDNDBTSysInfoQuery
 
---QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: InsertDNDBTSysInfoQuery
 INSERT INTO DNDBTDbObjects
 (
     ID,
@@ -63,9 +63,9 @@ VALUES
     'Column',
     'MyColumn2'
 );
---QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: InsertDNDBTSysInfoQuery
 
---QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: InsertDNDBTSysInfoQuery
 INSERT INTO DNDBTDbObjects
 (
     ID,
@@ -80,9 +80,9 @@ VALUES
     'Column',
     'MyColumn3'
 );
---QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: InsertDNDBTSysInfoQuery
 
---QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: InsertDNDBTSysInfoQuery
 INSERT INTO DNDBTDbObjects
 (
     ID,
@@ -97,9 +97,9 @@ VALUES
     'PrimaryKey',
     'PK_MyTable1'
 );
---QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: InsertDNDBTSysInfoQuery
 
---QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: InsertDNDBTSysInfoQuery
 INSERT INTO DNDBTDbObjects
 (
     ID,
@@ -114,9 +114,9 @@ VALUES
     'UniqueConstraint',
     'UQ_MyTable1_MyColumn2'
 );
---QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: InsertDNDBTSysInfoQuery
 
---QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: InsertDNDBTSysInfoQuery
 INSERT INTO DNDBTDbObjects
 (
     ID,
@@ -131,17 +131,17 @@ VALUES
     'ForeignKey',
     'FK_MyTable1_MyColumn1_MyTable2_MyColumn1'
 );
---QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: InsertDNDBTSysInfoQuery
 
---QUERY START: CreateTableQuery
+-- QUERY START: CreateTableQuery
 CREATE TABLE MyTable2
 (
-    MyColumn1 INTEGER PRIMARY KEY NOT NULL CONSTRAINT DF_MyTable2_MyColumn1 DEFAULT 333,
-    MyColumn2 BLOB NULL CONSTRAINT DF_MyTable2_MyColumn2 DEFAULT 0x000102
+    MyColumn1 INTEGER PRIMARY KEY NOT NULL DEFAULT 333,
+    MyColumn2 BLOB NULL DEFAULT 0x000102
 );
---QUERY END: CreateTableQuery
+-- QUERY END: CreateTableQuery
 
---QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: InsertDNDBTSysInfoQuery
 INSERT INTO DNDBTDbObjects
 (
     ID,
@@ -156,9 +156,9 @@ VALUES
     'Table',
     'MyTable2'
 );
---QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: InsertDNDBTSysInfoQuery
 
---QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: InsertDNDBTSysInfoQuery
 INSERT INTO DNDBTDbObjects
 (
     ID,
@@ -173,9 +173,9 @@ VALUES
     'Column',
     'MyColumn1'
 );
---QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: InsertDNDBTSysInfoQuery
 
---QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: InsertDNDBTSysInfoQuery
 INSERT INTO DNDBTDbObjects
 (
     ID,
@@ -190,9 +190,9 @@ VALUES
     'Column',
     'MyColumn2'
 );
---QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: InsertDNDBTSysInfoQuery
 
---QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: InsertDNDBTSysInfoQuery
 INSERT INTO DNDBTDbObjects
 (
     ID,
@@ -207,6 +207,65 @@ VALUES
     'PrimaryKey',
     'PK_MyTable2'
 );
---QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: InsertDNDBTSysInfoQuery
+
+-- QUERY START: CreateTableQuery
+CREATE TABLE MyTable5
+(
+    MyColumn1 INTEGER NOT NULL DEFAULT (ABS(-15)),
+    MyColumn3 NUMERIC NULL
+);
+-- QUERY END: CreateTableQuery
+
+-- QUERY START: InsertDNDBTSysInfoQuery
+INSERT INTO DNDBTDbObjects
+(
+    ID,
+    ParentID,
+    Type,
+    Name
+)
+VALUES
+(
+    '6ca51f29-c1bc-4349-b9c1-6f1ea170f162',
+    NULL,
+    'Table',
+    'MyTable5'
+);
+-- QUERY END: InsertDNDBTSysInfoQuery
+
+-- QUERY START: InsertDNDBTSysInfoQuery
+INSERT INTO DNDBTDbObjects
+(
+    ID,
+    ParentID,
+    Type,
+    Name
+)
+VALUES
+(
+    '5309d66f-2030-402e-912e-5547babaa072',
+    '6ca51f29-c1bc-4349-b9c1-6f1ea170f162',
+    'Column',
+    'MyColumn1'
+);
+-- QUERY END: InsertDNDBTSysInfoQuery
+
+-- QUERY START: InsertDNDBTSysInfoQuery
+INSERT INTO DNDBTDbObjects
+(
+    ID,
+    ParentID,
+    Type,
+    Name
+)
+VALUES
+(
+    '4dde852d-ec19-4b61-80f9-da428d8ff41a',
+    '6ca51f29-c1bc-4349-b9c1-6f1ea170f162',
+    'Column',
+    'MyColumn3'
+);
+-- QUERY END: InsertDNDBTSysInfoQuery
 
 COMMIT TRANSACTION;

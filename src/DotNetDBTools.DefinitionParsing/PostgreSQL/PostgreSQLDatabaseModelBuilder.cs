@@ -7,7 +7,8 @@ using DotNetDBTools.Models.PostgreSQL;
 
 namespace DotNetDBTools.DefinitionParsing.PostgreSQL
 {
-    internal class PostgreSQLDatabaseModelBuilder : DatabaseModelBuilder
+    internal class PostgreSQLDatabaseModelBuilder
+        : DatabaseModelBuilder<PostgreSQLTable, PostgreSQLView, Models.Core.Column>
     {
         public PostgreSQLDatabaseModelBuilder()
             : base(new PostgreSQLDataTypeMapper(), new PostgreSQLDefaultValueMapper())
@@ -18,8 +19,8 @@ namespace DotNetDBTools.DefinitionParsing.PostgreSQL
         {
             return new PostgreSQLDatabase(DbAssemblyInfoHelper.GetDbName(dbAssembly))
             {
-                Tables = BuildTableModels<PostgreSQLTable>(dbAssembly),
-                Views = BuildViewModels<PostgreSQLView>(dbAssembly),
+                Tables = BuildTableModels(dbAssembly),
+                Views = BuildViewModels(dbAssembly),
                 Functions = BuildFunctionModels(dbAssembly),
                 Procedures = new List<PostgreSQLProcedure>(),
             };

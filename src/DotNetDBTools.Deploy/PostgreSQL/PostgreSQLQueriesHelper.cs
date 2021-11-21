@@ -22,7 +22,7 @@ namespace DotNetDBTools.Deploy.PostgreSQL
         {
             return value switch
             {
-                PostgreSQLDefaultValueAsFunction => $"{((PostgreSQLDefaultValueAsFunction)value).FunctionText}",
+                DefaultValueAsFunction => $"{((DefaultValueAsFunction)value).FunctionText}",
                 string => $"'{value}'",
                 long => $"{value}",
                 byte[] => $"{ToHex((byte[])value)}",
@@ -79,6 +79,7 @@ namespace DotNetDBTools.Deploy.PostgreSQL
                 case PostgreSQLDataTypeNames.TIMETZ:
                 case PostgreSQLDataTypeNames.TIMESTAMP:
                 case PostgreSQLDataTypeNames.TIMESTAMPTZ:
+                    return new DataType { Name = length == -1 ? normalizedDataType : $"{normalizedDataType}({length})" };
 
                 case PostgreSQLDataTypeNames.BIT:
                 case PostgreSQLDataTypeNames.VARBIT:

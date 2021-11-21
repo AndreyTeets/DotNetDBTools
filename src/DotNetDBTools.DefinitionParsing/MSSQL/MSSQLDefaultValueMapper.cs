@@ -3,7 +3,7 @@ using DotNetDBTools.Definition.Core;
 using DotNetDBTools.Definition.MSSQL;
 using DotNetDBTools.Definition.MSSQL.DataTypes;
 using DotNetDBTools.DefinitionParsing.Core;
-using DotNetDBTools.Models.MSSQL;
+using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.DefinitionParsing.MSSQL
 {
@@ -14,8 +14,8 @@ namespace DotNetDBTools.DefinitionParsing.MSSQL
             object value = column.Default;
             if (value is null)
                 return null;
-            if (((Column)column).DefaultIsFunction)
-                return new MSSQLDefaultValueAsFunction() { FunctionText = (string)value };
+            if (((Definition.MSSQL.Column)column).DefaultIsFunction)
+                return new DefaultValueAsFunction() { FunctionText = (string)value };
             return MapByColumnDataType(column.DataType, value);
         }
 

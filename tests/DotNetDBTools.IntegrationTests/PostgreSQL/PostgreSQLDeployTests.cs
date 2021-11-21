@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Dapper;
 using DotNetDBTools.Analysis.PostgreSQL;
 using DotNetDBTools.DefinitionParsing;
 using DotNetDBTools.Deploy;
 using DotNetDBTools.Deploy.PostgreSQL;
 using DotNetDBTools.Models.Agnostic;
+using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.PostgreSQL;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -67,7 +67,8 @@ namespace DotNetDBTools.IntegrationTests.PostgreSQL
 
             dbModelFromDNDBTSysInfo.Should().BeEquivalentTo(dbModelFromDbAssembly, options => options
                 .Excluding(database => database.Name)
-                .Excluding(database => database.Views));
+                .Excluding(database => database.Views)
+                .Using(new DefaultValueAsFunctionComparer()));
         }
 
         [TestMethod]
@@ -84,7 +85,8 @@ namespace DotNetDBTools.IntegrationTests.PostgreSQL
             dbModelFromDBMSSysInfo.Should().BeEquivalentTo(dbModelFromDbAssembly, options => options
                 .Excluding(database => database.Name)
                 .Excluding(database => database.Views)
-                .Excluding(database => database.Path.EndsWith(".ID", StringComparison.Ordinal)));
+                .Excluding(database => database.Path.EndsWith(".ID", StringComparison.Ordinal))
+                .Using(new DefaultValueAsFunctionComparer()));
         }
 
         [TestMethod]
@@ -108,7 +110,7 @@ namespace DotNetDBTools.IntegrationTests.PostgreSQL
                 .Excluding(database => database.Name)
                 .Excluding(database => database.Functions)
                 .Excluding(database => database.Views)
-                .Using(new PostgreSQLDefaultValueAsFunctionComparer()));
+                .Using(new DefaultValueAsFunctionComparer()));
         }
 
         [TestMethod]
@@ -126,7 +128,7 @@ namespace DotNetDBTools.IntegrationTests.PostgreSQL
                 .Excluding(database => database.Views)
                 .Excluding(database => database.Functions)
                 .Excluding(database => database.Path.EndsWith(".ID", StringComparison.Ordinal))
-                .Using(new PostgreSQLDefaultValueAsFunctionComparer()));
+                .Using(new DefaultValueAsFunctionComparer()));
         }
 
         private static void CreateDatabase(string connectionString)
@@ -158,16 +160,16 @@ DROP DATABASE IF EXISTS ""{databaseName}"";");
             return connectionString;
         }
 
-        private class PostgreSQLDefaultValueAsFunctionComparer : IEqualityComparer<PostgreSQLDefaultValueAsFunction>
+        private class DefaultValueAsFunctionComparer : IEqualityComparer<DefaultValueAsFunction>
         {
-            public bool Equals(PostgreSQLDefaultValueAsFunction x, PostgreSQLDefaultValueAsFunction y)
+            public bool Equals(DefaultValueAsFunction x, DefaultValueAsFunction y)
             {
                 string xNormalizedFunctionText = NormalizeFunctionText(x.FunctionText);
                 string yNormalizedFunctionText = NormalizeFunctionText(y.FunctionText);
                 return string.Equals(xNormalizedFunctionText, yNormalizedFunctionText, StringComparison.OrdinalIgnoreCase);
             }
 
-            public int GetHashCode(PostgreSQLDefaultValueAsFunction obj)
+            public int GetHashCode(DefaultValueAsFunction obj)
             {
                 return obj.GetHashCode();
             }

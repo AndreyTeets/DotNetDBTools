@@ -19,7 +19,7 @@ namespace DotNetDBTools.Deploy.MySQL.Queries
         private static string GetSql(MySQLTable table)
         {
             string query =
-$@"DROP TABLE {table.Name};";
+$@"DROP TABLE `{table.Name}`;";
 
             return query;
         }

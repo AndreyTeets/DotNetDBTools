@@ -5,7 +5,8 @@ using DotNetDBTools.Models.Agnostic;
 
 namespace DotNetDBTools.DefinitionParsing.Agnostic
 {
-    internal class AgnosticDatabaseModelBuilder : DatabaseModelBuilder
+    internal class AgnosticDatabaseModelBuilder
+        : DatabaseModelBuilder<AgnosticTable, AgnosticView, Models.Core.Column>
     {
         public AgnosticDatabaseModelBuilder()
             : base(new AgnosticDataTypeMapper(), new AgnosticDefaultValueMapper())
@@ -16,8 +17,8 @@ namespace DotNetDBTools.DefinitionParsing.Agnostic
         {
             return new AgnosticDatabase(DbAssemblyInfoHelper.GetDbName(dbAssembly))
             {
-                Tables = BuildTableModels<AgnosticTable>(dbAssembly),
-                Views = BuildViewModels<AgnosticView>(dbAssembly),
+                Tables = BuildTableModels(dbAssembly),
+                Views = BuildViewModels(dbAssembly),
             };
         }
 

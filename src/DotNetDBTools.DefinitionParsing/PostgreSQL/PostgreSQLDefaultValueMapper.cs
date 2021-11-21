@@ -1,9 +1,8 @@
 ﻿using System;
 using DotNetDBTools.Definition.Core;
-using DotNetDBTools.Definition.PostgreSQL;
 using DotNetDBTools.Definition.PostgreSQL.DataTypes;
 using DotNetDBTools.DefinitionParsing.Core;
-using DotNetDBTools.Models.PostgreSQL;
+using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.DefinitionParsing.PostgreSQL
 {
@@ -14,8 +13,8 @@ namespace DotNetDBTools.DefinitionParsing.PostgreSQL
             object value = column.Default;
             if (value is null)
                 return null;
-            if (((Column)column).DefaultIsFunction)
-                return new PostgreSQLDefaultValueAsFunction() { FunctionText = (string)value };
+            if (((Definition.PostgreSQL.Column)column).DefaultIsFunction)
+                return new DefaultValueAsFunction() { FunctionText = (string)value };
             return MapByColumnDataType(column.DataType, value);
         }
 

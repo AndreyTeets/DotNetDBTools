@@ -1,18 +1,18 @@
 DO $$
 BEGIN
 
---QUERY START: CreateTableQuery
+-- QUERY START: CreateTableQuery
 EXECUTE 'CREATE TABLE "MyTable1"
 (
-    "MyColumn1" INT NOT NULL CONSTRAINT "DF_MyTable1_MyColumn1" DEFAULT 15,
-    "MyColumn2" VARCHAR(10) NOT NULL CONSTRAINT "DF_MyTable1_MyColumn2" DEFAULT ''33'',
+    "MyColumn1" INT NOT NULL DEFAULT 15,
+    "MyColumn2" VARCHAR(10) NOT NULL DEFAULT ''33'',
     "MyColumn3" INT GENERATED ALWAYS AS IDENTITY NOT NULL,
     CONSTRAINT "PK_MyTable1" PRIMARY KEY ("MyColumn3"),
     CONSTRAINT "UQ_MyTable1_MyColumn2" UNIQUE ("MyColumn2")
 );';
---QUERY END: CreateTableQuery
+-- QUERY END: CreateTableQuery
 
---QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: InsertDNDBTSysInfoQuery
 EXECUTE 'INSERT INTO "DNDBTDbObjects"
 (
     "ID",
@@ -27,9 +27,9 @@ VALUES
     ''Table'',
     ''MyTable1''
 );';
---QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: InsertDNDBTSysInfoQuery
 
---QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: InsertDNDBTSysInfoQuery
 EXECUTE 'INSERT INTO "DNDBTDbObjects"
 (
     "ID",
@@ -44,9 +44,9 @@ VALUES
     ''Column'',
     ''MyColumn1''
 );';
---QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: InsertDNDBTSysInfoQuery
 
---QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: InsertDNDBTSysInfoQuery
 EXECUTE 'INSERT INTO "DNDBTDbObjects"
 (
     "ID",
@@ -61,9 +61,9 @@ VALUES
     ''Column'',
     ''MyColumn2''
 );';
---QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: InsertDNDBTSysInfoQuery
 
---QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: InsertDNDBTSysInfoQuery
 EXECUTE 'INSERT INTO "DNDBTDbObjects"
 (
     "ID",
@@ -78,9 +78,9 @@ VALUES
     ''Column'',
     ''MyColumn3''
 );';
---QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: InsertDNDBTSysInfoQuery
 
---QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: InsertDNDBTSysInfoQuery
 EXECUTE 'INSERT INTO "DNDBTDbObjects"
 (
     "ID",
@@ -95,9 +95,9 @@ VALUES
     ''PrimaryKey'',
     ''PK_MyTable1''
 );';
---QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: InsertDNDBTSysInfoQuery
 
---QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: InsertDNDBTSysInfoQuery
 EXECUTE 'INSERT INTO "DNDBTDbObjects"
 (
     "ID",
@@ -112,18 +112,18 @@ VALUES
     ''UniqueConstraint'',
     ''UQ_MyTable1_MyColumn2''
 );';
---QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: InsertDNDBTSysInfoQuery
 
---QUERY START: CreateTableQuery
+-- QUERY START: CreateTableQuery
 EXECUTE 'CREATE TABLE "MyTable2"
 (
-    "MyColumn1" INT NOT NULL CONSTRAINT "DF_MyTable2_MyColumn1" DEFAULT 333,
-    "MyColumn2" BYTEA NULL CONSTRAINT "DF_MyTable2_MyColumn2" DEFAULT ''\x000102'',
+    "MyColumn1" INT NOT NULL DEFAULT 333,
+    "MyColumn2" BYTEA NULL DEFAULT ''\x000102'',
     CONSTRAINT "PK_MyTable2" PRIMARY KEY ("MyColumn1")
 );';
---QUERY END: CreateTableQuery
+-- QUERY END: CreateTableQuery
 
---QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: InsertDNDBTSysInfoQuery
 EXECUTE 'INSERT INTO "DNDBTDbObjects"
 (
     "ID",
@@ -138,9 +138,9 @@ VALUES
     ''Table'',
     ''MyTable2''
 );';
---QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: InsertDNDBTSysInfoQuery
 
---QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: InsertDNDBTSysInfoQuery
 EXECUTE 'INSERT INTO "DNDBTDbObjects"
 (
     "ID",
@@ -155,9 +155,9 @@ VALUES
     ''Column'',
     ''MyColumn1''
 );';
---QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: InsertDNDBTSysInfoQuery
 
---QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: InsertDNDBTSysInfoQuery
 EXECUTE 'INSERT INTO "DNDBTDbObjects"
 (
     "ID",
@@ -172,9 +172,9 @@ VALUES
     ''Column'',
     ''MyColumn2''
 );';
---QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: InsertDNDBTSysInfoQuery
 
---QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: InsertDNDBTSysInfoQuery
 EXECUTE 'INSERT INTO "DNDBTDbObjects"
 (
     "ID",
@@ -189,17 +189,17 @@ VALUES
     ''PrimaryKey'',
     ''PK_MyTable2''
 );';
---QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: InsertDNDBTSysInfoQuery
 
---QUERY START: CreateTableQuery
+-- QUERY START: CreateTableQuery
 EXECUTE 'CREATE TABLE "MyTable5"
 (
-    "MyColumn1" INT NOT NULL CONSTRAINT "DF_MyTable5_MyColumn1" DEFAULT ABS(-15),
+    "MyColumn1" INT NOT NULL DEFAULT ABS(-15),
     "MyColumn3" TIMESTAMPTZ(6) NULL
 );';
---QUERY END: CreateTableQuery
+-- QUERY END: CreateTableQuery
 
---QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: InsertDNDBTSysInfoQuery
 EXECUTE 'INSERT INTO "DNDBTDbObjects"
 (
     "ID",
@@ -214,9 +214,9 @@ VALUES
     ''Table'',
     ''MyTable5''
 );';
---QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: InsertDNDBTSysInfoQuery
 
---QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: InsertDNDBTSysInfoQuery
 EXECUTE 'INSERT INTO "DNDBTDbObjects"
 (
     "ID",
@@ -231,9 +231,9 @@ VALUES
     ''Column'',
     ''MyColumn1''
 );';
---QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: InsertDNDBTSysInfoQuery
 
---QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: InsertDNDBTSysInfoQuery
 EXECUTE 'INSERT INTO "DNDBTDbObjects"
 (
     "ID",
@@ -248,15 +248,15 @@ VALUES
     ''Column'',
     ''MyColumn3''
 );';
---QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: InsertDNDBTSysInfoQuery
 
---QUERY START: CreateForeignKeyQuery
+-- QUERY START: CreateForeignKeyQuery
 EXECUTE 'ALTER TABLE "MyTable1" ADD CONSTRAINT "FK_MyTable1_MyColumn1_MyTable2_MyColumn1" FOREIGN KEY ("MyColumn1")
     REFERENCES "MyTable2" ("MyColumn1")
     ON UPDATE NO ACTION ON DELETE CASCADE;';
---QUERY END: CreateForeignKeyQuery
+-- QUERY END: CreateForeignKeyQuery
 
---QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: InsertDNDBTSysInfoQuery
 EXECUTE 'INSERT INTO "DNDBTDbObjects"
 (
     "ID",
@@ -271,7 +271,7 @@ VALUES
     ''ForeignKey'',
     ''FK_MyTable1_MyColumn1_MyTable2_MyColumn1''
 );';
---QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: InsertDNDBTSysInfoQuery
 
 END;
 $$

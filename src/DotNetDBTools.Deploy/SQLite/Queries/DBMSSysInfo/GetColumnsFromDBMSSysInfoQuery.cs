@@ -16,7 +16,7 @@ $@"SELECT
     ti.type AS {nameof(ColumnRecord.DataType)},
     CASE WHEN ti.[notnull] = 1 THEN 0 ELSE 1 END AS {nameof(ColumnRecord.Nullable)},
     CASE WHEN ti.pk = 1 AND lower(ti.type) = 'integer' THEN 1 ELSE 0 END AS {nameof(ColumnRecord.IsIdentityCandidate)},
-    ti.dflt_value AS [{nameof(ColumnRecord.Default)}]
+    ti.dflt_value AS ""{nameof(ColumnRecord.Default)}""
 FROM sqlite_master sm
 INNER JOIN pragma_table_info(sm.name) ti
 WHERE sm.type = 'table'
@@ -48,9 +48,6 @@ WHERE sm.type = 'table'
                     Nullable = columnRecord.Nullable,
                     Identity = columnRecord.IsIdentityCandidate,
                     Default = ParseDefault(columnRecord.Default),
-                    DefaultConstraintName = columnRecord.Default is not null
-                        ? $"DF_{columnRecord.TableName}_{columnRecord.ColumnName}"
-                        : null,
                 };
             }
 
@@ -80,7 +77,7 @@ WHERE sm.type = 'table'
                 if (IsString(value))
                     return TrimOuterQuotes(value);
                 if (IsFunction(value))
-                    return new SQLiteDefaultValueAsFunction() { FunctionText = value };
+                    return new DefaultValueAsFunction() { FunctionText = value };
                 return long.Parse(value);
 
                 static bool IsByte(string val) => val.StartsWith("0x", StringComparison.Ordinal);

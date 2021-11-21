@@ -28,7 +28,7 @@ namespace DotNetDBTools.Analysis.MySQL
                 ID = table.ID,
                 Name = table.Name,
                 Columns = ConvertToMySQLModel(table.Columns),
-                PrimaryKey = table.PrimaryKey,
+                PrimaryKey = table.PrimaryKey is null ? table.PrimaryKey : ConvertToMySQLModel(table.PrimaryKey, table.Name),
                 UniqueConstraints = table.UniqueConstraints,
                 CheckConstraints = table.CheckConstraints,
                 Indexes = table.Indexes,
@@ -42,6 +42,14 @@ namespace DotNetDBTools.Analysis.MySQL
                 ID = view.ID,
                 Name = view.Name,
                 Code = view.Code,
+            };
+
+        private static PrimaryKey ConvertToMySQLModel(PrimaryKey pk, string tableName)
+            => new()
+            {
+                ID = pk.ID,
+                Name = $"PK_{tableName}",
+                Columns = pk.Columns,
             };
 
         private static IEnumerable<Column> ConvertToMySQLModel(IEnumerable<Column> columns)

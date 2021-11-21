@@ -1,4 +1,5 @@
-﻿using DotNetDBTools.Analysis.Core;
+﻿using System.Linq;
+using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.Analysis.Core.Errors;
 using DotNetDBTools.Models.Core;
 
@@ -11,6 +12,8 @@ namespace DotNetDBTools.Analysis.MySQL
             if (!HasNoBadTables(database, out dbError))
                 return false;
             if (!TriggersCodeIsValid(database, out dbError))
+                return false;
+            if (!IdentityColumnsAreValid(database, out dbError))
                 return false;
             return true;
         }
@@ -34,6 +37,28 @@ $"Trigger '{trigger.Name}' in table '{table.Name}' has different name in it's cr
 
                         return false;
                     }
+                }
+            }
+            return true;
+        }
+
+        private static bool IdentityColumnsAreValid(Database database, out DbError dbError)
+        {
+            dbError = null;
+            foreach (Table table in database.Tables)
+            {
+                Column identityColumn = table.Columns.FirstOrDefault(c => c.Identity);
+                if (identityColumn is not null && table.PrimaryKey?.Columns.Any(c => c == identityColumn?.Name) != true)
+                {
+                    string errorMessage =
+$"Identity column '{identityColumn.Name}' in table '{table.Name}' is not a primary key";
+
+                    dbError = new InvalidIdentityColumnDbError(
+                        errorMessage: errorMessage,
+                        tableName: table.Name,
+                        identityColumnName: identityColumn.Name);
+
+                    return false;
                 }
             }
             return true;

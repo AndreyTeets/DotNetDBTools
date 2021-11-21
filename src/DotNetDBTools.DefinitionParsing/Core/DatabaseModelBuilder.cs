@@ -7,7 +7,10 @@ using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.DefinitionParsing.Core
 {
-    internal abstract class DatabaseModelBuilder
+    internal abstract class DatabaseModelBuilder<TTable, TView, TColumn>
+         where TTable : Table, new()
+         where TView : View, new()
+         where TColumn : Column, new()
     {
         protected readonly IDataTypeMapper DataTypeMapper;
         protected readonly IDefaultValueMapper DefaultValueMapper;
@@ -20,14 +23,13 @@ namespace DotNetDBTools.DefinitionParsing.Core
             DefaultValueMapper = defaultValueMapper;
         }
 
-        protected List<T> BuildTableModels<T>(Assembly dbAssembly)
-            where T : Table, new()
+        protected List<TTable> BuildTableModels(Assembly dbAssembly)
         {
             IEnumerable<IBaseTable> tables = GetInstancesOfAllTypesImplementingInterface<IBaseTable>(dbAssembly);
-            List<T> tableModels = new();
+            List<TTable> tableModels = new();
             foreach (IBaseTable table in tables)
             {
-                T tableModel = new()
+                TTable tableModel = new()
                 {
                     ID = table.ID,
                     Name = table.GetType().Name,
@@ -44,20 +46,15 @@ namespace DotNetDBTools.DefinitionParsing.Core
             }
             return tableModels;
         }
+        protected virtual void BuildAdditionalTableModelProperties(TTable tableModel, IBaseTable table) { }
 
-        protected virtual void BuildAdditionalTableModelProperties<T>(T tableModel, IBaseTable table)
-            where T : Table, new()
-        {
-        }
-
-        protected List<T> BuildViewModels<T>(Assembly dbAssembly)
-            where T : View, new()
+        protected List<TView> BuildViewModels(Assembly dbAssembly)
         {
             IEnumerable<IBaseView> views = GetInstancesOfAllTypesImplementingInterface<IBaseView>(dbAssembly);
-            List<T> viewModels = new();
+            List<TView> viewModels = new();
             foreach (IBaseView view in views)
             {
-                T viewModel = new()
+                TView viewModel = new()
                 {
                     ID = view.ID,
                     Name = view.GetType().Name,
@@ -68,13 +65,9 @@ namespace DotNetDBTools.DefinitionParsing.Core
             }
             return viewModels;
         }
+        protected virtual void BuildAdditionalViewModelProperties(TView viewModel, IBaseView view) { }
 
-        protected virtual void BuildAdditionalViewModelProperties<T>(T viewModel, IBaseView view)
-            where T : View, new()
-        {
-        }
-
-        private List<Column> BuildColumnModels(IBaseTable table)
+        private List<TColumn> BuildColumnModels(IBaseTable table)
             => table.GetType().GetPropertyOrFieldMembers()
                 .Where(x => typeof(BaseColumn).IsAssignableFrom(x.GetPropertyOrFieldType()))
                 .OrderBy(x => x.Name, StringComparer.Ordinal)
@@ -82,7 +75,7 @@ namespace DotNetDBTools.DefinitionParsing.Core
                 {
                     BaseColumn column = (BaseColumn)x.GetPropertyOrFieldValue(table);
                     DataType dataTypeModel = DataTypeMapper.MapToDataTypeModel(column.DataType);
-                    Column columnModel = new()
+                    TColumn columnModel = new()
                     {
                         ID = column.ID,
                         Name = x.Name,
@@ -90,18 +83,12 @@ namespace DotNetDBTools.DefinitionParsing.Core
                         Nullable = column.Nullable,
                         Identity = column.Identity,
                         Default = DefaultValueMapper.MapDefaultValue(column),
-                        DefaultConstraintName = column.Default is not null
-                            ? column.DefaultConstraintName ?? $"DF_{table.GetType().Name}_{x.Name}"
-                            : null,
                     };
-                    BuildAdditionalColumnModelProperties(columnModel, column);
+                    BuildAdditionalColumnModelProperties(columnModel, column, table.GetType().Name);
                     return columnModel;
                 })
                 .ToList();
-
-        protected virtual void BuildAdditionalColumnModelProperties(Column columnModel, BaseColumn column)
-        {
-        }
+        protected virtual void BuildAdditionalColumnModelProperties(TColumn columnModel, BaseColumn column, string tableName) { }
 
         private PrimaryKey BuildPrimaryKeyModels(IBaseTable table)
             => table.GetType().GetPropertyOrFieldMembers()
@@ -116,14 +103,11 @@ namespace DotNetDBTools.DefinitionParsing.Core
                         Name = x.Name,
                         Columns = pk.Columns.ToList(),
                     };
-                    BuildAdditionalPrimaryKeyModelProperties(pkModel, pk);
+                    BuildAdditionalPrimaryKeyModelProperties(pkModel, pk, table.GetType().Name);
                     return pkModel;
                 })
                 .SingleOrDefault();
-
-        protected virtual void BuildAdditionalPrimaryKeyModelProperties(PrimaryKey pkModel, BasePrimaryKey pk)
-        {
-        }
+        protected virtual void BuildAdditionalPrimaryKeyModelProperties(PrimaryKey pkModel, BasePrimaryKey pk, string tableName) { }
 
         private List<UniqueConstraint> BuildUniqueConstraintModels(IBaseTable table)
             => table.GetType().GetPropertyOrFieldMembers()
@@ -138,14 +122,11 @@ namespace DotNetDBTools.DefinitionParsing.Core
                         Name = x.Name,
                         Columns = uc.Columns.ToList(),
                     };
-                    BuildAdditionalUniqueConstraintModelProperties(ucModel, uc);
+                    BuildAdditionalUniqueConstraintModelProperties(ucModel, uc, table.GetType().Name);
                     return ucModel;
                 })
                 .ToList();
-
-        protected virtual void BuildAdditionalUniqueConstraintModelProperties(UniqueConstraint ucModel, BaseUniqueConstraint uc)
-        {
-        }
+        protected virtual void BuildAdditionalUniqueConstraintModelProperties(UniqueConstraint ucModel, BaseUniqueConstraint uc, string tableName) { }
 
         private List<ForeignKey> BuildForeignKeyModels(IBaseTable table)
             => table.GetType().GetPropertyOrFieldMembers()
@@ -164,15 +145,11 @@ namespace DotNetDBTools.DefinitionParsing.Core
                         OnUpdate = GetOnUpdateActionName(fk),
                         OnDelete = GetOnDeleteActionName(fk),
                     };
-                    BuildAdditionalForeignKeyModelProperties(fkModel, fk);
+                    BuildAdditionalForeignKeyModelProperties(fkModel, fk, table.GetType().Name);
                     return fkModel;
                 })
                 .ToList();
-
-        protected virtual void BuildAdditionalForeignKeyModelProperties(ForeignKey fkModel, BaseForeignKey fk)
-        {
-        }
-
+        protected virtual void BuildAdditionalForeignKeyModelProperties(ForeignKey fkModel, BaseForeignKey fk, string tableName) { }
         protected abstract string GetOnUpdateActionName(BaseForeignKey fk);
         protected abstract string GetOnDeleteActionName(BaseForeignKey fk);
 

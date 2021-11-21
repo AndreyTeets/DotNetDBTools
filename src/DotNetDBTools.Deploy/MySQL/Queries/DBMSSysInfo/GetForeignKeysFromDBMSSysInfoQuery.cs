@@ -10,29 +10,27 @@ namespace DotNetDBTools.Deploy.MySQL.Queries.DBMSSysInfo
     {
         public string Sql =>
 $@"SELECT
-    thisTable.name AS {nameof(ForeignKeyRecord.ThisTableName)},
-    foreignKey.name AS {nameof(ForeignKeyRecord.ForeignKeyName)},
-    thisColumns.name AS {nameof(ForeignKeyRecord.ThisColumnName)},
-    fkColumnsMap.constraint_column_id AS {nameof(ForeignKeyRecord.ThisColumnPosition)},
-    referencedTable.name AS {nameof(ForeignKeyRecord.ReferencedTableName)},
-    referencedColumns.name AS {nameof(ForeignKeyRecord.ReferencedColumnName)},
-    fkColumnsMap.constraint_column_id AS {nameof(ForeignKeyRecord.ReferencedColumnPosition)},
-    foreignKey.update_referential_action_desc AS {nameof(ForeignKeyRecord.OnUpdate)},
-    foreignKey.delete_referential_action_desc AS {nameof(ForeignKeyRecord.OnDelete)}
-FROM sys.tables thisTable
-INNER JOIN sys.foreign_keys foreignKey
-    ON foreignKey.parent_object_id = thisTable.object_id
-INNER JOIN sys.tables referencedTable
-    ON referencedTable.object_id = foreignKey.referenced_object_id
-INNER JOIN sys.foreign_key_columns fkColumnsMap
-    ON fkColumnsMap.constraint_object_id = foreignKey.object_id
-INNER JOIN sys.columns thisColumns
-    ON thisColumns.object_id = foreignKey.parent_object_id
-        AND thisColumns.column_id = fkColumnsMap.parent_column_id
-INNER JOIN sys.columns referencedColumns
-    ON referencedColumns.object_id = foreignKey.referenced_object_id
-        AND referencedColumns.column_id = fkColumnsMap.referenced_column_id
-WHERE thisTable.name != '{DNDBTSysTables.DNDBTDbObjects}';";
+    tc.TABLE_NAME AS {nameof(ForeignKeyRecord.ThisTableName)},
+    tc.CONSTRAINT_NAME AS {nameof(ForeignKeyRecord.ForeignKeyName)},
+    kcu.COLUMN_NAME AS {nameof(ForeignKeyRecord.ThisColumnName)},
+    kcu.ORDINAL_POSITION AS {nameof(ForeignKeyRecord.ThisColumnPosition)},
+    kcu.REFERENCED_TABLE_NAME AS {nameof(ForeignKeyRecord.ReferencedTableName)},
+    kcu.REFERENCED_COLUMN_NAME AS {nameof(ForeignKeyRecord.ReferencedColumnName)},
+    kcu.POSITION_IN_UNIQUE_CONSTRAINT AS {nameof(ForeignKeyRecord.ReferencedColumnPosition)},
+    rc.UPDATE_RULE AS {nameof(ForeignKeyRecord.OnUpdate)},
+    rc.DELETE_RULE AS {nameof(ForeignKeyRecord.OnDelete)}
+FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc
+INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE kcu
+    ON kcu.CONSTRAINT_SCHEMA = tc.CONSTRAINT_SCHEMA
+        AND kcu.TABLE_NAME = tc.TABLE_NAME
+        AND kcu.CONSTRAINT_NAME = tc.CONSTRAINT_NAME
+INNER JOIN INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS rc
+    ON rc.CONSTRAINT_SCHEMA = tc.CONSTRAINT_SCHEMA
+        AND rc.TABLE_NAME = tc.TABLE_NAME
+        AND rc.CONSTRAINT_NAME = tc.CONSTRAINT_NAME
+WHERE tc.CONSTRAINT_SCHEMA = (select DATABASE())
+    AND tc.CONSTRAINT_TYPE = 'FOREIGN KEY'
+    AND tc.TABLE_NAME != '{DNDBTSysTables.DNDBTDbObjects}';";
 
         public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
 
@@ -49,10 +47,11 @@ WHERE thisTable.name != '{DNDBTSysTables.DNDBTDbObjects}';";
             private static string MapUpdateActionName(string sqlActionName) =>
                 sqlActionName switch
                 {
-                    "NO_ACTION" => "NoAction",
+                    "NO ACTION" => "NoAction",
+                    "RESTRICT" => "Restrict",
                     "CASCADE" => "Cascade",
-                    "SET_DEFAULT" => "SetDefault",
-                    "SET_NULL" => "SetNull",
+                    "SET DEFAULT" => "SetDefault",
+                    "SET NULL" => "SetNull",
                     _ => throw new InvalidOperationException($"Invalid sqlActionName: '{sqlActionName}'")
                 };
         }

@@ -13,7 +13,6 @@ namespace DotNetDBTools.SampleDB.PostgreSQL.Tables
             DataType = new IntDataType() { Size = IntSize.Int64 },
             Nullable = false,
             Default = 333,
-            DefaultConstraintName = "DF_MyTable2_MyColumn1NewName",
         };
 
         public Column MyColumn2 = new("C2DF19C2-E029-4014-8A5B-4AB42FECB6B8")

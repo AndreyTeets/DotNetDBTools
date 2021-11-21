@@ -21,9 +21,9 @@ namespace DotNetDBTools.Deploy.MySQL.Queries.DNDBTSysInfo
         private static string GetSql(Guid objectID, string objectName)
         {
             string query =
-$@"UPDATE {DNDBTSysTables.DNDBTDbObjects} SET
-    {DNDBTSysTables.DNDBTDbObjects.Name} = '{objectName}'
-WHERE {DNDBTSysTables.DNDBTDbObjects.ID} = '{objectID}';";
+$@"UPDATE `{DNDBTSysTables.DNDBTDbObjects}` SET
+    `{DNDBTSysTables.DNDBTDbObjects.Name}` = '{objectName}'
+WHERE `{DNDBTSysTables.DNDBTDbObjects.ID}` = '{objectID}';";
 
             return query;
         }

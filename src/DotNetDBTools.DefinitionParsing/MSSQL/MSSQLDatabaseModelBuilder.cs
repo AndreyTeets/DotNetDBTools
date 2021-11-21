@@ -8,7 +8,8 @@ using DotNetDBTools.Models.MSSQL;
 
 namespace DotNetDBTools.DefinitionParsing.MSSQL
 {
-    internal class MSSQLDatabaseModelBuilder : DatabaseModelBuilder
+    internal class MSSQLDatabaseModelBuilder
+        : DatabaseModelBuilder<MSSQLTable, MSSQLView, MSSQLColumn>
     {
         public MSSQLDatabaseModelBuilder()
             : base(new MSSQLDataTypeMapper(), new MSSQLDefaultValueMapper())
@@ -19,13 +20,20 @@ namespace DotNetDBTools.DefinitionParsing.MSSQL
         {
             return new MSSQLDatabase(DbAssemblyInfoHelper.GetDbName(dbAssembly))
             {
-                Tables = BuildTableModels<MSSQLTable>(dbAssembly),
-                Views = BuildViewModels<MSSQLView>(dbAssembly),
+                Tables = BuildTableModels(dbAssembly),
+                Views = BuildViewModels(dbAssembly),
                 UserDefinedTypes = BuildUserDefinedTypeModels(dbAssembly),
                 UserDefinedTableTypes = new List<MSSQLUserDefinedTableType>(),
                 Functions = BuildFunctionModels(dbAssembly),
                 Procedures = new List<MSSQLProcedure>(),
             };
+        }
+
+        protected override void BuildAdditionalColumnModelProperties(MSSQLColumn columnModel, BaseColumn column, string tableName)
+        {
+            columnModel.DefaultConstraintName = column.Default is not null
+                ? ((Definition.MSSQL.Column)column).DefaultConstraintName ?? $"DF_{tableName}_{columnModel.Name}"
+                : null;
         }
 
         protected override string GetOnUpdateActionName(BaseForeignKey fk) => ((Definition.MSSQL.ForeignKey)fk).OnUpdate.ToString();

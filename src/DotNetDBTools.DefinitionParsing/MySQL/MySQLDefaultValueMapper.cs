@@ -1,9 +1,8 @@
 ﻿using System;
 using DotNetDBTools.Definition.Core;
-using DotNetDBTools.Definition.MySQL;
 using DotNetDBTools.Definition.MySQL.DataTypes;
 using DotNetDBTools.DefinitionParsing.Core;
-using DotNetDBTools.Models.MySQL;
+using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.DefinitionParsing.MySQL
 {
@@ -14,8 +13,8 @@ namespace DotNetDBTools.DefinitionParsing.MySQL
             object value = column.Default;
             if (value is null)
                 return null;
-            if (((Column)column).DefaultIsFunction)
-                return new MySQLDefaultValueAsFunction() { FunctionText = (string)value };
+            if (((Definition.MySQL.Column)column).DefaultIsFunction)
+                return new DefaultValueAsFunction() { FunctionText = (string)value };
             return MapByColumnDataType(column.DataType, value);
         }
 

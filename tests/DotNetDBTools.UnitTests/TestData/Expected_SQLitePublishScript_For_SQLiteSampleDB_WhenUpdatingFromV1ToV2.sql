@@ -1,10 +1,10 @@
 PRAGMA foreign_keys=off;
 BEGIN TRANSACTION;
 
---QUERY START: AlterTableQuery
+-- QUERY START: AlterTableQuery
 CREATE TABLE _DNDBTTemp_MyTable1NewName
 (
-    MyColumn1 INTEGER NULL CONSTRAINT DF_MyTable1NewName_MyColumn1 DEFAULT 15,
+    MyColumn1 INTEGER NULL DEFAULT 15,
     CONSTRAINT FK_MyTable1_MyColumn1_MyTable2_MyColumn1 FOREIGN KEY (MyColumn1)
         REFERENCES MyTable2(MyColumn1NewName)
         ON UPDATE NO ACTION ON DELETE SET NULL
@@ -17,46 +17,46 @@ FROM MyTable1;
 DROP TABLE MyTable1;
 
 ALTER TABLE _DNDBTTemp_MyTable1NewName RENAME TO MyTable1NewName;
---QUERY END: AlterTableQuery
+-- QUERY END: AlterTableQuery
 
---QUERY START: DeleteDNDBTSysInfoQuery
+-- QUERY START: DeleteDNDBTSysInfoQuery
 DELETE FROM DNDBTDbObjects
 WHERE ID = 'd11b2a53-32db-432f-bb6b-f91788844ba9';
---QUERY END: DeleteDNDBTSysInfoQuery
+-- QUERY END: DeleteDNDBTSysInfoQuery
 
---QUERY START: DeleteDNDBTSysInfoQuery
+-- QUERY START: DeleteDNDBTSysInfoQuery
 DELETE FROM DNDBTDbObjects
 WHERE ID = 'f3f08522-26ee-4950-9135-22edf2e4e0cf';
---QUERY END: DeleteDNDBTSysInfoQuery
+-- QUERY END: DeleteDNDBTSysInfoQuery
 
---QUERY START: DeleteDNDBTSysInfoQuery
+-- QUERY START: DeleteDNDBTSysInfoQuery
 DELETE FROM DNDBTDbObjects
 WHERE ID = '37a45def-f4a0-4be7-8bfb-8fbed4a7d705';
---QUERY END: DeleteDNDBTSysInfoQuery
+-- QUERY END: DeleteDNDBTSysInfoQuery
 
---QUERY START: DeleteDNDBTSysInfoQuery
+-- QUERY START: DeleteDNDBTSysInfoQuery
 DELETE FROM DNDBTDbObjects
 WHERE ID = 'fe68ee3d-09d0-40ac-93f9-5e441fbb4f70';
---QUERY END: DeleteDNDBTSysInfoQuery
+-- QUERY END: DeleteDNDBTSysInfoQuery
 
---QUERY START: DeleteDNDBTSysInfoQuery
+-- QUERY START: DeleteDNDBTSysInfoQuery
 DELETE FROM DNDBTDbObjects
 WHERE ID = '6e95de30-e01a-4fb4-b8b7-8f0c40bb682c';
---QUERY END: DeleteDNDBTSysInfoQuery
+-- QUERY END: DeleteDNDBTSysInfoQuery
 
---QUERY START: UpdateDNDBTSysInfoQuery
+-- QUERY START: UpdateDNDBTSysInfoQuery
 UPDATE DNDBTDbObjects SET
     Name = 'MyTable1NewName'
 WHERE ID = '299675e6-4faa-4d0f-a36a-224306ba5bcb';
---QUERY END: UpdateDNDBTSysInfoQuery
+-- QUERY END: UpdateDNDBTSysInfoQuery
 
---QUERY START: UpdateDNDBTSysInfoQuery
+-- QUERY START: UpdateDNDBTSysInfoQuery
 UPDATE DNDBTDbObjects SET
     Name = 'MyColumn1'
 WHERE ID = 'a2f2a4de-1337-4594-ae41-72ed4d05f317';
---QUERY END: UpdateDNDBTSysInfoQuery
+-- QUERY END: UpdateDNDBTSysInfoQuery
 
---QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: InsertDNDBTSysInfoQuery
 INSERT INTO DNDBTDbObjects
 (
     ID,
@@ -71,13 +71,13 @@ VALUES
     'ForeignKey',
     'FK_MyTable1_MyColumn1_MyTable2_MyColumn1'
 );
---QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: InsertDNDBTSysInfoQuery
 
---QUERY START: AlterTableQuery
+-- QUERY START: AlterTableQuery
 CREATE TABLE _DNDBTTemp_MyTable2
 (
-    MyColumn1NewName INTEGER PRIMARY KEY NOT NULL CONSTRAINT DF_MyTable2_MyColumn1NewName DEFAULT 333,
-    MyColumn2 BLOB NULL CONSTRAINT DF_MyTable2_MyColumn2 DEFAULT 0x000102,
+    MyColumn1NewName INTEGER PRIMARY KEY NOT NULL DEFAULT 333,
+    MyColumn2 BLOB NULL DEFAULT 0x000102,
     CONSTRAINT FK_MyTable2_MyColumns12_MyTable3_MyColumns12 FOREIGN KEY (MyColumn1NewName, MyColumn2)
         REFERENCES MyTable3(MyColumn1, MyColumn2)
         ON UPDATE NO ACTION ON DELETE SET DEFAULT
@@ -90,31 +90,31 @@ FROM MyTable2;
 DROP TABLE MyTable2;
 
 ALTER TABLE _DNDBTTemp_MyTable2 RENAME TO MyTable2;
---QUERY END: AlterTableQuery
+-- QUERY END: AlterTableQuery
 
---QUERY START: DeleteDNDBTSysInfoQuery
+-- QUERY START: DeleteDNDBTSysInfoQuery
 DELETE FROM DNDBTDbObjects
 WHERE ID = '3a43615b-40b3-4a13-99e7-93af7c56e8ce';
---QUERY END: DeleteDNDBTSysInfoQuery
+-- QUERY END: DeleteDNDBTSysInfoQuery
 
---QUERY START: DeleteDNDBTSysInfoQuery
+-- QUERY START: DeleteDNDBTSysInfoQuery
 DELETE FROM DNDBTDbObjects
 WHERE ID = '5a0d1926-3270-4eb2-92eb-00be56c7af23';
---QUERY END: DeleteDNDBTSysInfoQuery
+-- QUERY END: DeleteDNDBTSysInfoQuery
 
---QUERY START: UpdateDNDBTSysInfoQuery
+-- QUERY START: UpdateDNDBTSysInfoQuery
 UPDATE DNDBTDbObjects SET
     Name = 'MyTable2'
 WHERE ID = 'bfb9030c-a8c3-4882-9c42-1c6ad025cf8f';
---QUERY END: UpdateDNDBTSysInfoQuery
+-- QUERY END: UpdateDNDBTSysInfoQuery
 
---QUERY START: UpdateDNDBTSysInfoQuery
+-- QUERY START: UpdateDNDBTSysInfoQuery
 UPDATE DNDBTDbObjects SET
     Name = 'MyColumn1NewName'
 WHERE ID = 'c480f22f-7c01-4f41-b282-35e9f5cd1fe3';
---QUERY END: UpdateDNDBTSysInfoQuery
+-- QUERY END: UpdateDNDBTSysInfoQuery
 
---QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: InsertDNDBTSysInfoQuery
 INSERT INTO DNDBTDbObjects
 (
     ID,
@@ -129,9 +129,9 @@ VALUES
     'Column',
     'MyColumn2'
 );
---QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: InsertDNDBTSysInfoQuery
 
---QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: InsertDNDBTSysInfoQuery
 INSERT INTO DNDBTDbObjects
 (
     ID,
@@ -146,9 +146,9 @@ VALUES
     'PrimaryKey',
     'PK_MyTable2'
 );
---QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: InsertDNDBTSysInfoQuery
 
---QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: InsertDNDBTSysInfoQuery
 INSERT INTO DNDBTDbObjects
 (
     ID,
@@ -163,18 +163,18 @@ VALUES
     'ForeignKey',
     'FK_MyTable2_MyColumns12_MyTable3_MyColumns12'
 );
---QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: InsertDNDBTSysInfoQuery
 
---QUERY START: CreateTableQuery
+-- QUERY START: CreateTableQuery
 CREATE TABLE MyTable3
 (
-    MyColumn1 INTEGER NOT NULL CONSTRAINT DF_MyTable3_MyColumn1 DEFAULT 333,
+    MyColumn1 INTEGER NOT NULL DEFAULT 333,
     MyColumn2 BLOB NOT NULL,
     CONSTRAINT UQ_MyTable3_MyColumns12 UNIQUE (MyColumn1, MyColumn2)
 );
---QUERY END: CreateTableQuery
+-- QUERY END: CreateTableQuery
 
---QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: InsertDNDBTSysInfoQuery
 INSERT INTO DNDBTDbObjects
 (
     ID,
@@ -189,9 +189,9 @@ VALUES
     'Table',
     'MyTable3'
 );
---QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: InsertDNDBTSysInfoQuery
 
---QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: InsertDNDBTSysInfoQuery
 INSERT INTO DNDBTDbObjects
 (
     ID,
@@ -206,9 +206,9 @@ VALUES
     'Column',
     'MyColumn1'
 );
---QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: InsertDNDBTSysInfoQuery
 
---QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: InsertDNDBTSysInfoQuery
 INSERT INTO DNDBTDbObjects
 (
     ID,
@@ -223,9 +223,9 @@ VALUES
     'Column',
     'MyColumn2'
 );
---QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: InsertDNDBTSysInfoQuery
 
---QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: InsertDNDBTSysInfoQuery
 INSERT INTO DNDBTDbObjects
 (
     ID,
@@ -240,6 +240,6 @@ VALUES
     'UniqueConstraint',
     'UQ_MyTable3_MyColumns12'
 );
---QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: InsertDNDBTSysInfoQuery
 
 COMMIT TRANSACTION;

@@ -21,6 +21,7 @@ namespace DotNetDBTools.SampleDB.MSSQL.Tables
             DataType = new MyUserDefinedType1(),
             Nullable = true,
             Default = "cc",
+            DefaultConstraintName = "DF_MyTable5_MyColumn2",
         };
 
         public Column MyColumn3 = new("4DDE852D-EC19-4B61-80F9-DA428D8FF41A")

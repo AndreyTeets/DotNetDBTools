@@ -11,7 +11,7 @@ namespace DotNetDBTools.IntegrationTests.MySQL
         private const string MySQLImageTag = "8.0.27";
         private const string MySQLContainerName = "DotNetDBTools_IntegrationTests_MySQL";
         private const string MySQLServerPassword = "Strong(!)Passw0rd";
-        private const int MySQLServerHostPort = 5007;
+        private const int MySQLServerHostPort = 5006;
 
         public static string MySQLContainerConnectionString =>
             new MySqlConnectionStringBuilder()

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Models.Core;
@@ -37,13 +38,19 @@ namespace DotNetDBTools.Deploy.MySQL.Queries
                 sb.Append(Queries.DropCheckConstraint(tableDiff.NewTable.Name, cc.Name));
             foreach (UniqueConstraint uc in tableDiff.UniqueConstraintsToDrop)
                 sb.Append(Queries.DropUniqueConstraint(tableDiff.NewTable.Name, uc.Name));
+
             if (tableDiff.PrimaryKeyToDrop is not null)
-                sb.Append(Queries.DropPrimaryKey(tableDiff.NewTable.Name, tableDiff.PrimaryKeyToDrop.Name));
-
-            AppendColumnsAlters(sb, tableDiff);
-
-            if (tableDiff.PrimaryKeyToCreate is not null)
+            {
+                Column identityColumn = tableDiff.OldTable.Columns.FirstOrDefault(c => c.Identity);
+                if (tableDiff.PrimaryKeyToDrop.Columns.Any(c => c == identityColumn?.Name))
+                    sb.Append(Queries.DropPrimaryKeyAndColumnIdentityAttribute(tableDiff.NewTable.Name, identityColumn));
+                else
+                    sb.Append(Queries.DropPrimaryKey(tableDiff.NewTable.Name));
+            }
+            bool addedPk = AppendColumnsAlters(sb, tableDiff);
+            if (tableDiff.PrimaryKeyToCreate is not null && !addedPk)
                 sb.Append(Queries.AddPrimaryKey(tableDiff.NewTable.Name, tableDiff.PrimaryKeyToCreate));
+
             foreach (UniqueConstraint uc in tableDiff.UniqueConstraintsToCreate)
                 sb.Append(Queries.AddUniqueConstraint(tableDiff.NewTable.Name, uc));
             foreach (CheckConstraint cc in tableDiff.CheckConstraintsToCreate)
@@ -57,7 +64,7 @@ namespace DotNetDBTools.Deploy.MySQL.Queries
             return sb.ToString();
         }
 
-        private static void AppendColumnsAlters(StringBuilder sb, MySQLTableDiff tableDiff)
+        private static bool AppendColumnsAlters(StringBuilder sb, MySQLTableDiff tableDiff)
         {
             foreach (Column column in tableDiff.RemovedColumns)
             {
@@ -79,81 +86,102 @@ namespace DotNetDBTools.Deploy.MySQL.Queries
                     sb.Append(Queries.AddDefaultConstraint(tableDiff.NewTable.Name, columnDiff.NewColumn));
             }
 
+            bool addedPk = false;
             foreach (Column column in tableDiff.AddedColumns)
             {
-                sb.Append(Queries.AddColumn(tableDiff.NewTable.Name, column));
+                if (tableDiff.PrimaryKeyToCreate is not null && tableDiff.PrimaryKeyToCreate.Columns.Any(c => c == column.Name))
+                {
+                    sb.Append(Queries.AddColumnAsPrimaryKey(tableDiff.NewTable.Name, column, tableDiff.PrimaryKeyToCreate));
+                    addedPk = true;
+                }
+                else
+                {
+                    sb.Append(Queries.AddColumn(tableDiff.NewTable.Name, column));
+                }
+
                 if (column.Default is not null)
                     sb.Append(Queries.AddDefaultConstraint(tableDiff.NewTable.Name, column));
             }
+            return addedPk;
         }
 
         private static class Queries
         {
             public static string RenameTable(string oldTableName, string newTableName) =>
-$@"EXEC sp_rename '{oldTableName}', '{newTableName}';"
+$@"RENAME TABLE `{oldTableName}` TO `{newTableName}`;"
                 ;
             public static string RenameColumn(string tableName, string oldColumnName, string newColumnName) =>
 $@"
-EXEC sp_rename '{tableName}.{oldColumnName}', '{newColumnName}', 'COLUMN';"
+ALTER TABLE `{tableName}` RENAME COLUMN `{oldColumnName}` TO `{newColumnName}`;"
                 ;
 
             public static string AddColumn(string tableName, Column c) =>
 $@"
-ALTER TABLE {tableName} ADD {c.Name} {c.DataType.Name}{GetIdentityStatement(c)} {GetNullabilityStatement(c)};"
+ALTER TABLE `{tableName}` ADD COLUMN `{c.Name}` {c.DataType.Name}{GetIdentityStatement(c)} {GetNullabilityStatement(c)};"
                 ;
+            public static string AddColumnAsPrimaryKey(string tableName, Column c, PrimaryKey pk) =>
+$@"
+ALTER TABLE `{tableName}` ADD COLUMN `{c.Name}` {c.DataType.Name}{GetIdentityStatement(c)} {GetNullabilityStatement(c)},
+     ADD PRIMARY KEY ({string.Join(", ", pk.Columns.Select(x => $@"`{x}`"))});"
+    ;
             public static string DropColumn(string tableName, string columnName) =>
 $@"
-ALTER TABLE {tableName} DROP COLUMN {columnName};"
+ALTER TABLE `{tableName}` DROP COLUMN `{columnName}`;"
                 ;
             public static string AlterColumnTypeAndNullability(string tableName, Column c) =>
 $@"
-ALTER TABLE {tableName} ALTER COLUMN {c.Name} {c.DataType.Name} {GetNullabilityStatement(c)};"
+ALTER TABLE `{tableName}` MODIFY COLUMN `{c.Name}` {c.DataType.Name} {GetNullabilityStatement(c)};"
                 ;
 
             public static string AddPrimaryKey(string tableName, PrimaryKey pk) =>
 $@"
-ALTER TABLE {tableName} ADD CONSTRAINT {pk.Name} PRIMARY KEY ({string.Join(", ", pk.Columns)});"
+ALTER TABLE `{tableName}` ADD PRIMARY KEY ({string.Join(", ", pk.Columns.Select(x => $@"`{x}`"))});"
                 ;
-            public static string DropPrimaryKey(string tableName, string pkName) =>
+            public static string DropPrimaryKey(string tableName) =>
 $@"
-ALTER TABLE {tableName} DROP CONSTRAINT {pkName};"
+ALTER TABLE `{tableName}` DROP PRIMARY KEY;"
+    ;
+            public static string DropPrimaryKeyAndColumnIdentityAttribute(string tableName, Column identityColumn) =>
+$@"
+ALTER TABLE `{tableName}` DROP PRIMARY KEY,
+    MODIFY COLUMN `{identityColumn.Name}` {identityColumn.DataType.Name} {GetNullabilityStatement(identityColumn)};"
                 ;
 
             public static string AddUniqueConstraint(string tableName, UniqueConstraint uc) =>
 $@"
-ALTER TABLE {tableName} ADD CONSTRAINT {uc.Name} UNIQUE ({string.Join(", ", uc.Columns)});"
+ALTER TABLE `{tableName}` ADD CONSTRAINT `{uc.Name}` UNIQUE ({string.Join(", ", uc.Columns.Select(x => $@"`{x}`"))});"
                 ;
             public static string DropUniqueConstraint(string tableName, string ucName) =>
 $@"
-ALTER TABLE {tableName} DROP CONSTRAINT {ucName};"
+ALTER TABLE `{tableName}` DROP CONSTRAINT `{ucName}`;"
                 ;
 
             public static string AddCheckConstraint(string tableName, CheckConstraint cc) =>
 $@"
-ALTER TABLE {tableName} ADD CONSTRAINT {cc.Name} CHECK ({cc.Code});"
+ALTER TABLE `{tableName}` ADD CONSTRAINT `{cc.Name}` CHECK ({cc.Code});"
                 ;
             public static string DropCheckConstraint(string tableName, string ccName) =>
 $@"
-ALTER TABLE {tableName} DROP CONSTRAINT {ccName};"
+ALTER TABLE `{tableName}` DROP CONSTRAINT `{ccName}`;"
                 ;
 
             public static string AddDefaultConstraint(string tableName, Column c) =>
 $@"
-ALTER TABLE {tableName} ADD CONSTRAINT {c.DefaultConstraintName} DEFAULT {QuoteDefaultValue(c.Default)} FOR {c.Name};"
+ALTER TABLE `{tableName}` ALTER COLUMN `{c.Name}` SET DEFAULT {QuoteDefaultValue(c.Default)};"
                 ;
             public static string DropDefaultConstraint(string tableName, Column c) =>
 $@"
-ALTER TABLE [{tableName}] DROP CONSTRAINT {c.DefaultConstraintName};"
+ALTER TABLE `{tableName}` ALTER COLUMN `{c.Name}` DROP DEFAULT;"
                 ;
 
             public static string CreateIndex(string tableName, Index index) =>
 $@"
-CREATE INDEX {index.Name}
-ON {tableName} ({string.Join(", ", index.Columns)});"
+CREATE INDEX `{index.Name}`
+ON `{tableName}` ({string.Join(", ", index.Columns.Select(x => $@"`{x}`"))});"
                 ;
             public static string DropIndex(string indexName) =>
 $@"
-DROP INDEX {indexName};"
+DROP INDEX `{indexName}`;"
                 ;
 
             public static string CreateTrigger(Trigger trigger) =>
@@ -162,7 +190,7 @@ $@"
                 ;
             public static string DropTrigger(string triggerName) =>
 $@"
-DROP TRIGGER {triggerName};"
+DROP TRIGGER `{triggerName}`;"
                 ;
         }
     }

@@ -10,7 +10,7 @@ namespace DotNetDBTools.SampleDeployTool.PostgreSQL
     public static class Program
     {
         private const string PostgreSQLServerPassword = "Strong(!)Passw0rd";
-        private const string PostgreSQLServerHostPort = "5006";
+        private const string PostgreSQLServerHostPort = "5007";
         private const string AgnosticDatabaseName = "AgnosticSampleDB";
         private const string PostgreSQLDatabaseName = "PostgreSQLSampleDB";
 

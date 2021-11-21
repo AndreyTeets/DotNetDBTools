@@ -8,6 +8,7 @@ using DotNetDBTools.DefinitionParsing;
 using DotNetDBTools.Deploy;
 using DotNetDBTools.Deploy.MSSQL;
 using DotNetDBTools.Models.Agnostic;
+using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.MSSQL;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -67,7 +68,8 @@ namespace DotNetDBTools.IntegrationTests.MSSQL
 
             dbModelFromDNDBTSysInfo.Should().BeEquivalentTo(dbModelFromDbAssembly, options => options
                 .Excluding(database => database.Name)
-                .Excluding(database => database.Views));
+                .Excluding(database => database.Views)
+                .Using(new DefaultValueAsFunctionComparer()));
         }
 
         [TestMethod]
@@ -84,7 +86,8 @@ namespace DotNetDBTools.IntegrationTests.MSSQL
             dbModelFromDBMSSysInfo.Should().BeEquivalentTo(dbModelFromDbAssembly, options => options
                 .Excluding(database => database.Name)
                 .Excluding(database => database.Views)
-                .Excluding(database => database.Path.EndsWith(".ID", StringComparison.Ordinal)));
+                .Excluding(database => database.Path.EndsWith(".ID", StringComparison.Ordinal))
+                .Using(new DefaultValueAsFunctionComparer()));
         }
 
         [TestMethod]
@@ -108,7 +111,7 @@ namespace DotNetDBTools.IntegrationTests.MSSQL
                 .Excluding(database => database.Name)
                 .Excluding(database => database.Functions)
                 .Excluding(database => database.Views)
-                .Using(new MSSQLDefaultValueAsFunctionComparer()));
+                .Using(new DefaultValueAsFunctionComparer()));
         }
 
         [TestMethod]
@@ -126,7 +129,7 @@ namespace DotNetDBTools.IntegrationTests.MSSQL
                 .Excluding(database => database.Views)
                 .Excluding(database => database.Functions)
                 .Excluding(database => database.Path.EndsWith(".ID", StringComparison.Ordinal))
-                .Using(new MSSQLDefaultValueAsFunctionComparer()));
+                .Using(new DefaultValueAsFunctionComparer()));
         }
 
         private static void CreateDatabase(string connectionString)
@@ -166,20 +169,28 @@ END;");
             return connectionString;
         }
 
-        private class MSSQLDefaultValueAsFunctionComparer : IEqualityComparer<MSSQLDefaultValueAsFunction>
+        private class DefaultValueAsFunctionComparer : IEqualityComparer<DefaultValueAsFunction>
         {
-            public bool Equals(MSSQLDefaultValueAsFunction x, MSSQLDefaultValueAsFunction y)
+            public bool Equals(DefaultValueAsFunction x, DefaultValueAsFunction y)
             {
                 if (!char.IsLetter(x.FunctionText.FirstOrDefault()) || !char.IsLetter(y.FunctionText.FirstOrDefault()))
                     return string.Equals(x.FunctionText, y.FunctionText, StringComparison.Ordinal);
-                string xNormalizedFunctionText = x.FunctionText.Replace("(", "").Replace(")", "");
-                string yNormalizedFunctionText = y.FunctionText.Replace("(", "").Replace(")", "");
+                string xNormalizedFunctionText = NormalizeFunctionText(x.FunctionText);
+                string yNormalizedFunctionText = NormalizeFunctionText(y.FunctionText);
                 return string.Equals(xNormalizedFunctionText, yNormalizedFunctionText, StringComparison.OrdinalIgnoreCase);
             }
 
-            public int GetHashCode(MSSQLDefaultValueAsFunction obj)
+            public int GetHashCode(DefaultValueAsFunction obj)
             {
                 return obj.GetHashCode();
+            }
+
+            private static string NormalizeFunctionText(string value)
+            {
+                return value
+                    .ToUpper()
+                    .Replace("(", "")
+                    .Replace(")", "");
             }
         }
     }

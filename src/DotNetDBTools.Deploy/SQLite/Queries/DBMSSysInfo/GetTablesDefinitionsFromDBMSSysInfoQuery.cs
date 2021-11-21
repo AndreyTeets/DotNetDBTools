@@ -34,8 +34,6 @@ WHERE sm.type = 'table'
             {
                 foreach (TableRecord tableRecord in tableRecords)
                 {
-                    foreach (Column c in tables[tableRecord.TableName].Columns)
-                        c.DefaultConstraintName = GetDefaultConstraintName(tableRecord.TableDefinition, c) ?? c.DefaultConstraintName;
                     foreach (UniqueConstraint uc in tables[tableRecord.TableName].UniqueConstraints)
                         uc.Name = GetUniqueConstraintName(tableRecord.TableDefinition, uc.Columns) ?? uc.Name;
                     foreach (ForeignKey fk in tables[tableRecord.TableName].ForeignKeys)
@@ -57,17 +55,6 @@ WHERE sm.type = 'table'
                             column.Identity = false;
                     }
                 }
-            }
-
-            private static string GetDefaultConstraintName(string tableDefinition, Column column)
-            {
-                if (column.Default is null)
-                    return null;
-                string pattern = @$" {column.Name} [\s|\w|\d|_]+ NULL CONSTRAINT (?<constraintName>[\w|\d|_]+) DEFAULT ";
-                Match match = Regex.Match(tableDefinition, pattern);
-                if (match.Groups["constraintName"].Success)
-                    return match.Groups["constraintName"].Value;
-                return null;
             }
 
             private static string GetUniqueConstraintName(string tableDefinition, IEnumerable<string> columns)

@@ -139,11 +139,11 @@ ALTER TABLE {tableName} DROP CONSTRAINT {ccName};"
 
             public static string AddDefaultConstraint(string tableName, Column c) =>
 $@"
-ALTER TABLE {tableName} ADD CONSTRAINT {c.DefaultConstraintName} DEFAULT {QuoteDefaultValue(c.Default)} FOR {c.Name};"
+ALTER TABLE {tableName} ADD CONSTRAINT {((MSSQLColumn)c).DefaultConstraintName} DEFAULT {QuoteDefaultValue(c.Default)} FOR {c.Name};"
                 ;
             public static string DropDefaultConstraint(string tableName, Column c) =>
 $@"
-ALTER TABLE [{tableName}] DROP CONSTRAINT {c.DefaultConstraintName};"
+ALTER TABLE [{tableName}] DROP CONSTRAINT {((MSSQLColumn)c).DefaultConstraintName};"
                 ;
 
             public static string CreateIndex(string tableName, Index index) =>

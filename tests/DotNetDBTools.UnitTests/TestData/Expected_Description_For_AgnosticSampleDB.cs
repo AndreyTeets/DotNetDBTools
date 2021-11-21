@@ -19,8 +19,17 @@
             public override string ToString() => nameof(MyTable2);
             public static implicit operator string(MyTable2Description description) => description.ToString();
         }
+        public class MyTable5Description
+        {
+            public readonly string MyColumn1 = nameof(MyColumn1);
+            public readonly string MyColumn3 = nameof(MyColumn3);
+
+            public override string ToString() => nameof(MyTable5);
+            public static implicit operator string(MyTable5Description description) => description.ToString();
+        }
 
         public static readonly MyTable1Description MyTable1 = new();
         public static readonly MyTable2Description MyTable2 = new();
+        public static readonly MyTable5Description MyTable5 = new();
     }
 }

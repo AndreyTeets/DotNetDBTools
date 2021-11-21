@@ -9,21 +9,18 @@ namespace DotNetDBTools.Deploy.MySQL.Queries.DBMSSysInfo
     {
         public string Sql =>
 $@"SELECT
-    t.name AS {nameof(PrimaryKeyRecord.TableName)},
-    i.name AS {nameof(PrimaryKeyRecord.ConstraintName)},
-    c.name AS {nameof(PrimaryKeyRecord.ColumnName)},
-    ic.key_ordinal AS {nameof(PrimaryKeyRecord.ColumnPosition)}
-FROM sys.tables t
-INNER JOIN sys.columns c
-      ON c.object_id = t.object_id
-INNER JOIN sys.indexes i
-    ON i.object_id = t.object_id
-INNER JOIN sys.index_columns ic
-    ON ic.object_id = t.object_id
-        AND ic.index_id = i.index_id
-        AND ic.column_id = c.column_id
-WHERE i.is_primary_key = 1
-    AND t.name != '{DNDBTSysTables.DNDBTDbObjects}';";
+    tc.TABLE_NAME AS {nameof(PrimaryKeyRecord.TableName)},
+    CONCAT('PK_', tc.TABLE_NAME) AS {nameof(PrimaryKeyRecord.ConstraintName)},
+    kcu.COLUMN_NAME AS {nameof(PrimaryKeyRecord.ColumnName)},
+    kcu.ORDINAL_POSITION AS {nameof(PrimaryKeyRecord.ColumnPosition)}
+FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc
+INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE kcu
+    ON kcu.CONSTRAINT_SCHEMA = tc.CONSTRAINT_SCHEMA
+        AND kcu.TABLE_NAME = tc.TABLE_NAME
+        AND kcu.CONSTRAINT_NAME = tc.CONSTRAINT_NAME
+WHERE tc.CONSTRAINT_SCHEMA = (select DATABASE())
+    AND tc.CONSTRAINT_TYPE = 'PRIMARY KEY'
+    AND tc.TABLE_NAME != '{DNDBTSysTables.DNDBTDbObjects}';";
 
         public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
 

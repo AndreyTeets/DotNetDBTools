@@ -5,7 +5,8 @@ using DotNetDBTools.Models.SQLite;
 
 namespace DotNetDBTools.DefinitionParsing.SQLite
 {
-    internal class SQLiteDatabaseModelBuilder : DatabaseModelBuilder
+    internal class SQLiteDatabaseModelBuilder
+        : DatabaseModelBuilder<SQLiteTable, SQLiteView, Models.Core.Column>
     {
         public SQLiteDatabaseModelBuilder()
             : base(new SQLiteDataTypeMapper(), new SQLiteDefaultValueMapper())
@@ -16,8 +17,8 @@ namespace DotNetDBTools.DefinitionParsing.SQLite
         {
             return new SQLiteDatabase(DbAssemblyInfoHelper.GetDbName(dbAssembly))
             {
-                Tables = BuildTableModels<SQLiteTable>(dbAssembly),
-                Views = BuildViewModels<SQLiteView>(dbAssembly),
+                Tables = BuildTableModels(dbAssembly),
+                Views = BuildViewModels(dbAssembly),
             };
         }
 

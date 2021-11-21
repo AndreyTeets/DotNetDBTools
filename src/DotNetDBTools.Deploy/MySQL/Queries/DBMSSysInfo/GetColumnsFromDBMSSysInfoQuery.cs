@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.ModelBuilders;
 using DotNetDBTools.Models.Core;
@@ -11,30 +12,23 @@ namespace DotNetDBTools.Deploy.MySQL.Queries.DBMSSysInfo
     {
         public string Sql =>
 $@"SELECT
-    t.name AS {nameof(ColumnRecord.TableName)},
-    c.name AS {nameof(ColumnRecord.ColumnName)},
-    (SELECT tp.name FROM sys.types tp WHERE tp.user_type_id = c.system_type_id) AS {nameof(ColumnRecord.DataType)},
-    (SELECT tp.name FROM sys.types tp WHERE tp.user_type_id = c.user_type_id AND tp.is_user_defined = 1) AS {nameof(ColumnRecord.UserDefinedDataType)},
-    c.is_nullable AS {nameof(ColumnRecord.Nullable)},
-    c.is_identity AS [{nameof(ColumnRecord.Identity)}],
-    dc.definition AS [{nameof(ColumnRecord.Default)}],
-    dc.name AS {nameof(ColumnRecord.DefaultConstraintName)},
-    c.max_length AS {nameof(ColumnRecord.Length)}
-FROM sys.tables t
-INNER JOIN sys.columns c
-    ON c.object_id = t.object_id
-LEFT JOIN sys.default_constraints dc
-    ON dc.object_id = c.default_object_id
-WHERE t.name != '{DNDBTSysTables.DNDBTDbObjects}';";
+    c.TABLE_NAME AS {nameof(ColumnRecord.TableName)},
+    c.COLUMN_NAME AS {nameof(ColumnRecord.ColumnName)},
+    c.DATA_TYPE AS {nameof(ColumnRecord.DataType)},
+    c.COLUMN_TYPE AS {nameof(ColumnRecord.FullDataType)},
+    CASE WHEN c.IS_NULLABLE = 'YES' THEN TRUE ELSE FALSE END AS {nameof(ColumnRecord.Nullable)},
+    CASE WHEN c.EXTRA = 'auto_increment' THEN TRUE ELSE FALSE END AS {nameof(ColumnRecord.Identity)},
+    c.COLUMN_DEFAULT AS `{nameof(ColumnRecord.Default)}`
+FROM INFORMATION_SCHEMA.COLUMNS c
+WHERE c.TABLE_SCHEMA = (select DATABASE())
+    AND c.TABLE_NAME != '{DNDBTSysTables.DNDBTDbObjects}';";
 
         public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
 
         internal class ColumnRecord : ColumnsBuilder.ColumnRecord
         {
-            public string UserDefinedDataType { get; set; }
+            public string FullDataType { get; set; }
             public bool Identity { get; set; }
-            public string DefaultConstraintName { get; set; }
-            public string Length { get; set; }
         }
 
         internal static class ResultsInterpreter
@@ -54,42 +48,40 @@ WHERE t.name != '{DNDBTSysTables.DNDBTDbObjects}';";
                     DataType = ParseDataType(columnRecord),
                     Nullable = columnRecord.Nullable,
                     Identity = columnRecord.Identity,
-                    Default = ParseDefault(columnRecord.Default),
-                    DefaultConstraintName = columnRecord.DefaultConstraintName,
+                    Default = ParseDefault(columnRecord),
                 };
             }
 
             private static DataType ParseDataType(ColumnRecord columnRecord)
             {
                 string dataType = columnRecord.DataType.ToUpper();
-                int length = int.Parse(columnRecord.Length);
-                DataType dataTypeModel = MySQLQueriesHelper.CreateDataTypeModel(dataType, length);
+                string fullDataType = columnRecord.FullDataType.ToUpper();
+                DataType dataTypeModel = MySQLQueriesHelper.CreateDataTypeModel(dataType, fullDataType);
                 return dataTypeModel;
             }
 
-            private static object ParseDefault(string valueFromDBMSSysTable)
+            private static object ParseDefault(ColumnRecord columnRecord)
             {
-                if (valueFromDBMSSysTable is null)
+                if (columnRecord.Default is null)
                     return null;
-                string value = TrimOuterParantheses(valueFromDBMSSysTable);
+                string value = columnRecord.Default;
 
-                if (IsNumber(value))
-                    return long.Parse(TrimOuterParantheses(value));
+                if (IsFunction(value))
+                    return new DefaultValueAsFunction() { FunctionText = value };
+                if (IsString(columnRecord.DataType.ToUpper()))
+                    return TrimOuterQuotesIfExist(value.Replace("_utf8mb4", ""));
                 if (IsByte(value))
                     return ToByteArray(value);
-                if (IsString(value))
-                    return TrimOuterQuotes(value);
-                if (IsFunction(value))
-                    return new MySQLDefaultValueAsFunction() { FunctionText = value };
+                if (IsNumber(value))
+                    return long.Parse(value);
 
-                throw new ArgumentException($"Invalid parameter value '{valueFromDBMSSysTable}'", nameof(valueFromDBMSSysTable));
+                throw new InvalidOperationException($"Invalid default parameter value '{value}'");
 
-                static bool IsNumber(string val) => val.StartsWith("(", StringComparison.Ordinal);
+                static bool IsFunction(string val) => val.Contains("(") && val.Contains(")");
+                static bool IsString(string dataType) => new string[] { "TEXT", "CHAR" }.Any(x => dataType.Contains(x));
                 static bool IsByte(string val) => val.StartsWith("0x", StringComparison.Ordinal);
-                static bool IsString(string val) => val.StartsWith("'", StringComparison.Ordinal);
-                static bool IsFunction(string val) => !long.TryParse(val, out _);
-                static string TrimOuterParantheses(string val) => val.Substring(1, val.Length - 2);
-                static string TrimOuterQuotes(string val) => val.Substring(1, val.Length - 2);
+                static bool IsNumber(string val) => long.TryParse(val, out long _);
+                static string TrimOuterQuotesIfExist(string val) => val.Contains(@"\'") ? val.Substring(2, val.Length - 4) : val;
                 static byte[] ToByteArray(string val)
                 {
                     string hex = val.Substring(2, val.Length - 2);

@@ -60,9 +60,6 @@ WHERE c.relkind = 'r'
                     Nullable = columnRecord.Nullable,
                     Identity = columnRecord.Identity,
                     Default = ParseDefault(columnRecord.Default),
-                    DefaultConstraintName = columnRecord.Default is not null
-                        ? $"DF_{columnRecord.TableName}_{columnRecord.ColumnName}"
-                        : null,
                 };
             }
 
@@ -81,7 +78,7 @@ WHERE c.relkind = 'r'
                 string value = valueFromDBMSSysTable;
 
                 if (IsFunction(value))
-                    return new PostgreSQLDefaultValueAsFunction() { FunctionText = value };
+                    return new DefaultValueAsFunction() { FunctionText = value };
                 if (IsByte(value))
                     return ToByteArray(value);
                 if (IsString(value))
@@ -92,8 +89,8 @@ WHERE c.relkind = 'r'
                 throw new ArgumentException($"Invalid parameter value '{valueFromDBMSSysTable}'", nameof(valueFromDBMSSysTable));
 
                 static bool IsFunction(string val) => val.Contains("(") && val.Contains(")");
-                static bool IsByte(string val) => !IsFunction(val) && val.Contains("::bytea");
                 static bool IsString(string val) => !IsFunction(val) && new string[] { "::text", "::character" }.Any(x => val.Contains(x));
+                static bool IsByte(string val) => !IsFunction(val) && val.Contains("::bytea");
                 static bool IsNumber(string val) => !IsFunction(val) && long.TryParse(val, out _);
                 static string TrimOuterQuotes(string val) => val.Substring(1, val.Length - 2);
                 static byte[] ToByteArray(string val)

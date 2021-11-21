@@ -22,14 +22,14 @@ namespace DotNetDBTools.Deploy.MSSQL
         {
             return value switch
             {
-                MSSQLDefaultValueAsFunction => $"{((MSSQLDefaultValueAsFunction)value).FunctionText}",
+                DefaultValueAsFunction => $"{((DefaultValueAsFunction)value).FunctionText}",
                 string => $"'{value}'",
                 long => $"{value}",
                 byte[] => $"{ToHex((byte[])value)}",
                 _ => throw new InvalidOperationException($"Invalid value type: '{value.GetType()}'")
             };
 
-            static string ToHex(byte[] val) => "0x" + BitConverter.ToString(val).Replace("-", "");
+            static string ToHex(byte[] val) => $@"0x{BitConverter.ToString(val).Replace("-", "")}";
         }
 
         public static string MapActionName(string modelActionName) =>

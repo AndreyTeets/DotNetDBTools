@@ -47,7 +47,7 @@ WHERE t.name != '{DNDBTSysTables.DNDBTDbObjects}';";
             private static Column MapToColumnModel(ColumnsBuilder.ColumnRecord builderColumnRecord)
             {
                 ColumnRecord columnRecord = (ColumnRecord)builderColumnRecord;
-                return new Column()
+                return new MSSQLColumn()
                 {
                     ID = Guid.NewGuid(),
                     Name = columnRecord.ColumnName,
@@ -92,7 +92,7 @@ WHERE t.name != '{DNDBTSysTables.DNDBTDbObjects}';";
                 if (IsString(value))
                     return TrimOuterQuotes(value);
                 if (IsFunction(value))
-                    return new MSSQLDefaultValueAsFunction() { FunctionText = value };
+                    return new DefaultValueAsFunction() { FunctionText = value };
 
                 throw new ArgumentException($"Invalid parameter value '{valueFromDBMSSysTable}'", nameof(valueFromDBMSSysTable));
 

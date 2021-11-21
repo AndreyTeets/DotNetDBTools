@@ -55,7 +55,7 @@ $@"    CONSTRAINT {fk.Name} FOREIGN KEY ({string.Join(", ", fk.ThisColumnNames)}
         {
             if (column.Default is not null)
             {
-                return $" CONSTRAINT {column.DefaultConstraintName} DEFAULT {QuoteDefaultValue(column.Default)}";
+                return $" DEFAULT {QuoteDefaultValue(column.Default)}";
             }
             return "";
         }
@@ -64,13 +64,14 @@ $@"    CONSTRAINT {fk.Name} FOREIGN KEY ({string.Join(", ", fk.ThisColumnNames)}
         {
             return value switch
             {
+                DefaultValueAsFunction => $"({((DefaultValueAsFunction)value).FunctionText})",
                 string => $"'{value}'",
                 long => $"{value}",
                 byte[] => $"{ToHex((byte[])value)}",
                 _ => throw new InvalidOperationException($"Invalid value type: '{value.GetType()}'")
             };
 
-            static string ToHex(byte[] val) => "0x" + BitConverter.ToString(val).Replace("-", "");
+            static string ToHex(byte[] val) => $@"0x{BitConverter.ToString(val).Replace("-", "")}";
         }
 
         public static string MapActionName(string modelActionName) =>

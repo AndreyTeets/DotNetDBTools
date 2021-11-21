@@ -10,10 +10,5 @@ namespace DotNetDBTools.Deploy.MySQL
             : base(connection)
         {
         }
-
-        protected override void BeforeBeginTransaction(DbConnection connection)
-        {
-            connection.Execute("SET XACT_ABORT ON;");
-        }
     }
 }

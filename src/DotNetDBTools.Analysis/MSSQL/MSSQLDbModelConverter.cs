@@ -27,7 +27,7 @@ namespace DotNetDBTools.Analysis.MSSQL
             {
                 ID = table.ID,
                 Name = table.Name,
-                Columns = ConvertToMSSQLModel(table.Columns),
+                Columns = ConvertToMSSQLModel(table.Columns, table.Name),
                 PrimaryKey = table.PrimaryKey,
                 UniqueConstraints = table.UniqueConstraints,
                 CheckConstraints = table.CheckConstraints,
@@ -44,11 +44,12 @@ namespace DotNetDBTools.Analysis.MSSQL
                 Code = view.Code,
             };
 
-        private static IEnumerable<Column> ConvertToMSSQLModel(IEnumerable<Column> columns)
+        private static IEnumerable<Column> ConvertToMSSQLModel(IEnumerable<Column> columns, string tableName)
         {
+            List<Column> mssqlColumns = new();
             foreach (Column column in columns)
             {
-                column.DataType = column.DataType.Name switch
+                DataType dataType = column.DataType.Name switch
                 {
                     AgnosticDataTypeNames.Int => ConvertIntSqlType((AgnosticDataType)column.DataType),
                     AgnosticDataTypeNames.Real => ConvertRealSqlType((AgnosticDataType)column.DataType),
@@ -65,8 +66,22 @@ namespace DotNetDBTools.Analysis.MSSQL
                     AgnosticDataTypeNames.Guid => new DataType { Name = MSSQLDataTypeNames.UNIQUEIDENTIFIER },
                     _ => throw new InvalidOperationException($"Invalid agnostic column datatype name: {column.DataType.Name}"),
                 };
+
+                MSSQLColumn mssqlColumn = new()
+                {
+                    ID = column.ID,
+                    Name = column.Name,
+                    DataType = dataType,
+                    Nullable = column.Nullable,
+                    Identity = column.Identity,
+                    Default = column.Default,
+                    DefaultConstraintName = column.Default is not null
+                        ? $"DF_{tableName}_{column.Name}"
+                        : null
+                };
+                mssqlColumns.Add(mssqlColumn);
             }
-            return columns;
+            return mssqlColumns;
         }
 
         private static DataType ConvertIntSqlType(AgnosticDataType dataType)

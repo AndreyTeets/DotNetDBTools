@@ -12,7 +12,7 @@ namespace DotNetDBTools.Deploy.Core
         {
             string queryName = query.GetType().Name;
             string queryText = CreateQueryText(query);
-            _queries.Add($"--QUERY START: {queryName}\n{queryText}\n--QUERY END: {queryName}");
+            _queries.Add($"-- QUERY START: {queryName}\n{queryText}\n-- QUERY END: {queryName}");
             _executeQueriesCount++;
             return 0;
         }

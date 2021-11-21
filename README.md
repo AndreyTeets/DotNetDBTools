@@ -31,7 +31,6 @@ public class MyTable : ITable
         DataType = new DateTimeDataType() { SqlType = DateTimeSqlType.DATETIME },
         Default = "GETDATE()",
         DefaultIsFunction = true,
-        DefaultConstraintName = "DF_MyTable_MyDataColumn2",
     };
 
     public PrimaryKey PK_MyTable = new("37A45DEF-F4A0-4BE7-8BFB-8FBED4A7D705")

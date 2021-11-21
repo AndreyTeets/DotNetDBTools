@@ -11,7 +11,7 @@ namespace DotNetDBTools.IntegrationTests.PostgreSQL
         private const string PostgreSQLImageTag = "14.1-alpine3.14";
         private const string PostgreSQLContainerName = "DotNetDBTools_IntegrationTests_PostgreSQL";
         private const string PostgreSQLServerPassword = "Strong(!)Passw0rd";
-        private const int PostgreSQLServerHostPort = 5006;
+        private const int PostgreSQLServerHostPort = 5007;
 
         public static string PostgreSQLContainerConnectionString =>
             new NpgsqlConnectionStringBuilder()

@@ -64,43 +64,34 @@ namespace DotNetDBTools.Deploy.MySQL
         public override void ApplyDatabaseDiff(DatabaseDiff databaseDiff)
         {
             MySQLDatabaseDiff dbDiff = (MySQLDatabaseDiff)databaseDiff;
-            QueryExecutor.BeginTransaction();
-            try
-            {
-                Dictionary<Guid, Table> newDbFKToTableMap = ForeignKeysHelper.CreateFKToTableMap(dbDiff.NewDatabase.Tables);
-                Dictionary<Guid, Table> oldDbFKToTableMap = ForeignKeysHelper.CreateFKToTableMap(dbDiff.OldDatabase.Tables);
 
-                foreach (MySQLProcedure procedure in dbDiff.ProceduresToDrop)
-                    DropProcedure(procedure);
-                foreach (MySQLView view in dbDiff.ViewsToDrop)
-                    DropView(view);
-                foreach (MySQLFunction function in dbDiff.FunctionsToDrop)
-                    DropFunction(function);
-                foreach (ForeignKey fk in dbDiff.AllForeignKeysToDrop)
-                    DropForeignKey(fk, oldDbFKToTableMap);
-                foreach (MySQLTable table in dbDiff.RemovedTables)
-                    DropTable(table);
+            Dictionary<Guid, Table> newDbFKToTableMap = ForeignKeysHelper.CreateFKToTableMap(dbDiff.NewDatabase.Tables);
+            Dictionary<Guid, Table> oldDbFKToTableMap = ForeignKeysHelper.CreateFKToTableMap(dbDiff.OldDatabase.Tables);
 
-                foreach (MySQLTableDiff tableDiff in dbDiff.ChangedTables)
-                    AlterTable(tableDiff);
+            foreach (MySQLProcedure procedure in dbDiff.ProceduresToDrop)
+                DropProcedure(procedure);
+            foreach (MySQLView view in dbDiff.ViewsToDrop)
+                DropView(view);
+            foreach (MySQLFunction function in dbDiff.FunctionsToDrop)
+                DropFunction(function);
+            foreach (ForeignKey fk in dbDiff.AllForeignKeysToDrop)
+                DropForeignKey(fk, oldDbFKToTableMap);
+            foreach (MySQLTable table in dbDiff.RemovedTables)
+                DropTable(table);
 
-                foreach (MySQLTable table in dbDiff.AddedTables)
-                    CreateTable(table);
-                foreach (ForeignKey fk in dbDiff.AllForeignKeysToCreate)
-                    CreateForeignKey(fk, newDbFKToTableMap);
-                foreach (MySQLFunction function in dbDiff.FunctionsToCreate)
-                    CreateFunction(function);
-                foreach (MySQLView view in dbDiff.ViewsToCreate)
-                    CreateView(view);
-                foreach (MySQLProcedure procedure in dbDiff.ProceduresToCreate)
-                    CreateProcedure(procedure);
-            }
-            catch (Exception)
-            {
-                QueryExecutor.RollbackTransaction();
-                throw;
-            }
-            QueryExecutor.CommitTransaction();
+            foreach (MySQLTableDiff tableDiff in dbDiff.ChangedTables)
+                AlterTable(tableDiff);
+
+            foreach (MySQLTable table in dbDiff.AddedTables)
+                CreateTable(table);
+            foreach (ForeignKey fk in dbDiff.AllForeignKeysToCreate)
+                CreateForeignKey(fk, newDbFKToTableMap);
+            foreach (MySQLFunction function in dbDiff.FunctionsToCreate)
+                CreateFunction(function);
+            foreach (MySQLView view in dbDiff.ViewsToCreate)
+                CreateView(view);
+            foreach (MySQLProcedure procedure in dbDiff.ProceduresToCreate)
+                CreateProcedure(procedure);
         }
 
         public override bool DNDBTSysTablesExist()
@@ -242,7 +233,7 @@ namespace DotNetDBTools.Deploy.MySQL
 
         private void DropFunction(MySQLFunction function)
         {
-            QueryExecutor.Execute(new GenericQuery($"DROP FUNCTION {function.Name};"));
+            QueryExecutor.Execute(new GenericQuery($"DROP FUNCTION `{function.Name}`;"));
             QueryExecutor.Execute(new DeleteDNDBTSysInfoQuery(function.ID));
         }
 
@@ -254,7 +245,7 @@ namespace DotNetDBTools.Deploy.MySQL
 
         private void DropView(MySQLView view)
         {
-            QueryExecutor.Execute(new GenericQuery($"DROP VIEW {view.Name};"));
+            QueryExecutor.Execute(new GenericQuery($"DROP VIEW `{view.Name}`;"));
             QueryExecutor.Execute(new DeleteDNDBTSysInfoQuery(view.ID));
         }
 
@@ -266,7 +257,7 @@ namespace DotNetDBTools.Deploy.MySQL
 
         private void DropProcedure(MySQLProcedure procedure)
         {
-            QueryExecutor.Execute(new GenericQuery($"DROP PROCEDURE {procedure.Name};"));
+            QueryExecutor.Execute(new GenericQuery($"DROP PROCEDURE `{procedure.Name}`;"));
             QueryExecutor.Execute(new DeleteDNDBTSysInfoQuery(procedure.ID));
         }
     }

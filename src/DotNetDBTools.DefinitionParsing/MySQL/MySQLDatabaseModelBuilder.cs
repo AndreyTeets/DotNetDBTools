@@ -7,7 +7,8 @@ using DotNetDBTools.Models.MySQL;
 
 namespace DotNetDBTools.DefinitionParsing.MySQL
 {
-    internal class MySQLDatabaseModelBuilder : DatabaseModelBuilder
+    internal class MySQLDatabaseModelBuilder
+        : DatabaseModelBuilder<MySQLTable, MySQLView, Models.Core.Column>
     {
         public MySQLDatabaseModelBuilder()
             : base(new MySQLDataTypeMapper(), new MySQLDefaultValueMapper())
@@ -18,11 +19,16 @@ namespace DotNetDBTools.DefinitionParsing.MySQL
         {
             return new MySQLDatabase(DbAssemblyInfoHelper.GetDbName(dbAssembly))
             {
-                Tables = BuildTableModels<MySQLTable>(dbAssembly),
-                Views = BuildViewModels<MySQLView>(dbAssembly),
+                Tables = BuildTableModels(dbAssembly),
+                Views = BuildViewModels(dbAssembly),
                 Functions = BuildFunctionModels(dbAssembly),
                 Procedures = new List<MySQLProcedure>(),
             };
+        }
+
+        protected override void BuildAdditionalPrimaryKeyModelProperties(Models.Core.PrimaryKey pkModel, BasePrimaryKey pk, string tableName)
+        {
+            pkModel.Name = $"PK_{tableName}";
         }
 
         protected override string GetOnUpdateActionName(BaseForeignKey fk) => ((Definition.MySQL.ForeignKey)fk).OnUpdate.ToString();

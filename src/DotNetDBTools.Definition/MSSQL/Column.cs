@@ -6,7 +6,7 @@ namespace DotNetDBTools.Definition.MSSQL
     {
         public Column(string id) : base(id) { }
 
-        public bool DefaultIsFunction { get; set; }
+        public string DefaultConstraintName { get; set; }
         public string ComputeCode { get; set; }
     }
 }

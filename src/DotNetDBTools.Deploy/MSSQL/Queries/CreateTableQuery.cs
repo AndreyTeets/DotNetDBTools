@@ -71,7 +71,7 @@ $@"    CONSTRAINT {cc.Name} CHECK ({cc.Code})");
         {
             if (column.Default is not null)
             {
-                return $" CONSTRAINT {column.DefaultConstraintName} DEFAULT {QuoteDefaultValue(column.Default)}";
+                return $" CONSTRAINT {((MSSQLColumn)column).DefaultConstraintName} DEFAULT {QuoteDefaultValue(column.Default)}";
             }
             return "";
         }

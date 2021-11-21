@@ -15,6 +15,6 @@ namespace DotNetDBTools.Definition.Core
         public bool Nullable { get; set; }
         public bool Identity { get; set; }
         public object Default { get; set; }
-        public string DefaultConstraintName { get; set; }
+        public bool DefaultIsFunction { get; set; }
     }
 }

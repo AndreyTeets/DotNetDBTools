@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Linq;
+using System.Text.RegularExpressions;
 using DotNetDBTools.Deploy.Core;
 
 namespace DotNetDBTools.Deploy.MySQL
@@ -9,48 +10,28 @@ namespace DotNetDBTools.Deploy.MySQL
     {
         protected override string CreateQueryText(IQuery query)
         {
-            string paremeterDeclarations = GetParameterDeclarations(query);
-            string queryWithParameterDeclarations = $"{paremeterDeclarations}{query.Sql}";
-            string execQueryStatement = $"EXEC sp_executesql N'{queryWithParameterDeclarations.Replace("'", "''")}';";
-            return execQueryStatement;
+            string queryWithParametersReplacedWithValues = ReplaceParameters(query);
+            return queryWithParametersReplacedWithValues;
         }
 
         protected override string CreateBeginTransactionText()
         {
-            return
-@"SET NOCOUNT ON;
-SET XACT_ABORT ON;
-BEGIN TRY;
-    BEGIN TRANSACTION;";
+            return "";
         }
 
         protected override string CreateCommitTransactionText()
         {
-            return
-@"    COMMIT TRANSACTION;
-END TRY
-BEGIN CATCH;
-    ROLLBACK TRANSACTION;
-
-    DECLARE @ErrorMessage NVARCHAR(MAX), @ErrorSeverity INT, @ErrorState INT;
-    SELECT @ErrorMessage = ERROR_MESSAGE() + ' Line ' + CAST(ERROR_LINE() AS NVARCHAR(5)), @ErrorSeverity = ERROR_SEVERITY(), @ErrorState = ERROR_STATE();
-    RAISERROR(@ErrorMessage, @ErrorSeverity, @ErrorState);
-END CATCH;";
+            return "";
         }
 
-        private static string GetParameterDeclarations(IQuery query)
+        private static string ReplaceParameters(IQuery query)
         {
-            return string.Join("", query.Parameters.Select(x => $"DECLARE {x.Name} {GetSqlType(x)} = {Quote(x)};\n"));
-        }
-
-        private static string GetSqlType(QueryParameter queryParameter)
-        {
-            return queryParameter.Type switch
+            string pattern = @"(@.+?)([\s|,|;|$])";
+            string result = Regex.Replace(query.Sql, pattern, match =>
             {
-                DbType.String => "NVARCHAR(MAX)",
-                DbType.Guid => "UNIQUEIDENTIFIER",
-                _ => throw new InvalidOperationException($"Invalid query parameter type: '{queryParameter.Type}'")
-            };
+                return Quote(query.Parameters.Single(x => x.Name == match.Groups[1].Value)) + match.Groups[2].Value;
+            });
+            return result;
         }
 
         private static string Quote(QueryParameter queryParameter)
@@ -59,7 +40,7 @@ END CATCH;";
                 return "NULL";
             return queryParameter.Type switch
             {
-                DbType.String or DbType.Guid => $"'{queryParameter.Value}'",
+                DbType.String => $"'{queryParameter.Value}'",
                 _ => throw new InvalidOperationException($"Invalid query parameter type: '{queryParameter.Type}'")
             };
         }

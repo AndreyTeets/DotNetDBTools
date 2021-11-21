@@ -8,7 +8,7 @@ namespace DotNetDBTools.Deploy.MySQL
     {
         public static string GetIdentityStatement(Column column)
         {
-            return column.Identity ? " IDENTITY" : "";
+            return column.Identity ? " AUTO_INCREMENT" : "";
         }
 
         public static string GetNullabilityStatement(Column column) =>
@@ -22,27 +22,28 @@ namespace DotNetDBTools.Deploy.MySQL
         {
             return value switch
             {
-                MySQLDefaultValueAsFunction => $"{((MySQLDefaultValueAsFunction)value).FunctionText}",
-                string => $"'{value}'",
-                long => $"{value}",
-                byte[] => $"{ToHex((byte[])value)}",
+                DefaultValueAsFunction => $"({((DefaultValueAsFunction)value).FunctionText})",
+                string => $"('{value}')",
+                long => $"({value})",
+                byte[] => $"({ToHex((byte[])value)})",
                 _ => throw new InvalidOperationException($"Invalid value type: '{value.GetType()}'")
             };
 
-            static string ToHex(byte[] val) => "0x" + BitConverter.ToString(val).Replace("-", "");
+            static string ToHex(byte[] val) => $@"0x{BitConverter.ToString(val).Replace("-", "")}";
         }
 
         public static string MapActionName(string modelActionName) =>
             modelActionName switch
             {
                 "NoAction" => "NO ACTION",
+                "Restrict" => "RESTRICT",
                 "Cascade" => "CASCADE",
                 "SetDefault" => "SET DEFAULT",
                 "SetNull" => "SET NULL",
                 _ => throw new InvalidOperationException($"Invalid modelActionName: '{modelActionName}'")
             };
 
-        public static DataType CreateDataTypeModel(string dataType, int length)
+        public static DataType CreateDataTypeModel(string dataType, string fullDataType)
         {
             switch (dataType)
             {
@@ -76,13 +77,15 @@ namespace DotNetDBTools.Deploy.MySQL
                 case MySQLDataTypeNames.JSON:
                 case MySQLDataTypeNames.ENUM:
                 case MySQLDataTypeNames.SET:
-                    return new DataType { Name = dataType };
 
                 case MySQLDataTypeNames.CHAR:
                 case MySQLDataTypeNames.VARCHAR:
 
+                case MySQLDataTypeNames.BINARY:
+                case MySQLDataTypeNames.VARBINARY:
+
                 case MySQLDataTypeNames.BIT:
-                    return new DataType { Name = $"{dataType}({length})" };
+                    return new DataType { Name = fullDataType };
 
                 default:
                     throw new InvalidOperationException($"Invalid datatype: {dataType}");

@@ -10,18 +10,18 @@ namespace DotNetDBTools.Deploy.MySQL.Queries.DNDBTSysInfo
     {
         public string Sql =>
 $@"SELECT
-    {DNDBTSysTables.DNDBTDbObjects.ID},
-    {DNDBTSysTables.DNDBTDbObjects.ParentID},
-    {DNDBTSysTables.DNDBTDbObjects.Type},
-    {DNDBTSysTables.DNDBTDbObjects.Name}
-FROM {DNDBTSysTables.DNDBTDbObjects};";
+    CAST(`{DNDBTSysTables.DNDBTDbObjects.ID}` AS CHAR(36)) AS {nameof(DNDBTDbObjectRecord.ID)},
+    CAST(`{DNDBTSysTables.DNDBTDbObjects.ParentID}` AS CHAR(36)) AS {nameof(DNDBTDbObjectRecord.ParentID)},
+    `{DNDBTSysTables.DNDBTDbObjects.Type}`,
+    `{DNDBTSysTables.DNDBTDbObjects.Name}`
+FROM `{DNDBTSysTables.DNDBTDbObjects}`;";
 
         public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
 
         internal class DNDBTDbObjectRecord
         {
-            public Guid ID { get; set; }
-            public Guid? ParentID { get; set; }
+            public string ID { get; set; }
+            public string ParentID { get; set; }
             public string Type { get; set; }
             public string Name { get; set; }
         }
@@ -34,7 +34,7 @@ FROM {DNDBTSysTables.DNDBTDbObjects};";
             {
                 Dictionary<string, Guid> dbObjectIDsMap = new();
                 foreach (DNDBTDbObjectRecord dbObjRec in dbObjectRecords)
-                    dbObjectIDsMap.Add($"{dbObjRec.Type}_{dbObjRec.Name}_{dbObjRec.ParentID}", dbObjRec.ID);
+                    dbObjectIDsMap.Add($"{dbObjRec.Type}_{dbObjRec.Name}_{dbObjRec.ParentID}", new Guid(dbObjRec.ID));
 
                 foreach (Table table in database.Tables)
                 {

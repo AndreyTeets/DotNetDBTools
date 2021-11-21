@@ -21,8 +21,8 @@ namespace DotNetDBTools.Deploy.MySQL.Queries.DNDBTSysInfo
             _sql = GetSql(objectType);
             _parameters = new List<QueryParameter>
             {
-                new QueryParameter(IDParameterName, objectID, DbType.Guid),
-                new QueryParameter(ParentIDParameterName, parentObjectID, DbType.Guid),
+                new QueryParameter(IDParameterName, objectID.ToString(), DbType.String),
+                new QueryParameter(ParentIDParameterName, parentObjectID?.ToString(), DbType.String),
                 new QueryParameter(NameParameterName, objectName, DbType.String),
             };
         }
@@ -30,12 +30,12 @@ namespace DotNetDBTools.Deploy.MySQL.Queries.DNDBTSysInfo
         private static string GetSql(MySQLDbObjectsTypes objectType)
         {
             string query =
-$@"INSERT INTO {DNDBTSysTables.DNDBTDbObjects}
+$@"INSERT INTO `{DNDBTSysTables.DNDBTDbObjects}`
 (
-    {DNDBTSysTables.DNDBTDbObjects.ID},
-    {DNDBTSysTables.DNDBTDbObjects.ParentID},
-    {DNDBTSysTables.DNDBTDbObjects.Type},
-    {DNDBTSysTables.DNDBTDbObjects.Name}
+    `{DNDBTSysTables.DNDBTDbObjects.ID}`,
+    `{DNDBTSysTables.DNDBTDbObjects.ParentID}`,
+    `{DNDBTSysTables.DNDBTDbObjects.Type}`,
+    `{DNDBTSysTables.DNDBTDbObjects.Name}`
 )
 VALUES
 (

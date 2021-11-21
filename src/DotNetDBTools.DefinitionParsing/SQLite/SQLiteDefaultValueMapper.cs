@@ -1,9 +1,8 @@
 ﻿using System;
 using DotNetDBTools.Definition.Core;
-using DotNetDBTools.Definition.SQLite;
 using DotNetDBTools.Definition.SQLite.DataTypes;
 using DotNetDBTools.DefinitionParsing.Core;
-using DotNetDBTools.Models.SQLite;
+using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.DefinitionParsing.SQLite
 {
@@ -14,8 +13,8 @@ namespace DotNetDBTools.DefinitionParsing.SQLite
             object value = column.Default;
             if (value is null)
                 return null;
-            if (((Column)column).DefaultIsFunction)
-                return new SQLiteDefaultValueAsFunction() { FunctionText = (string)value };
+            if (((Definition.SQLite.Column)column).DefaultIsFunction)
+                return new DefaultValueAsFunction() { FunctionText = (string)value };
             return MapByColumnDataType(column.DataType, value);
         }
 
