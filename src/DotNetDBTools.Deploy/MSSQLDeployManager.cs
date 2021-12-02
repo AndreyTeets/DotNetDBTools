@@ -8,11 +8,16 @@ namespace DotNetDBTools.Deploy
 {
     public class MSSQLDeployManager : DeployManager
     {
-        public MSSQLDeployManager(DeployOptions options) : base(
-            options: options,
+        public MSSQLDeployManager() : base(
+            options: new DeployOptions(),
             dbModelConverter: new MSSQLDbModelConverter(),
             factory: new MSSQLFactory())
         {
+        }
+
+        public MSSQLDeployManager(DeployOptions options) : this()
+        {
+            Options = options;
         }
 
         protected override Database CreateEmptyDatabaseModel()

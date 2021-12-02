@@ -8,11 +8,16 @@ namespace DotNetDBTools.Deploy
 {
     public class SQLiteDeployManager : DeployManager
     {
-        public SQLiteDeployManager(DeployOptions options) : base(
-            options: options,
+        public SQLiteDeployManager() : base(
+            options: new DeployOptions(),
             dbModelConverter: new SQLiteDbModelConverter(),
             factory: new SQLiteFactory())
         {
+        }
+
+        public SQLiteDeployManager(DeployOptions options) : this()
+        {
+            Options = options;
         }
 
         protected override Database CreateEmptyDatabaseModel()

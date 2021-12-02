@@ -5,6 +5,8 @@ namespace DotNetDBTools.Deploy
 {
     public interface IDeployManager
     {
+        public DeployOptions Options { get; set; }
+
         public void PublishDatabase(string dbAssemblyPath, DbConnection connection);
         public void PublishDatabase(Assembly dbAssembly, DbConnection connection);
         public void GeneratePublishScript(string dbAssemblyPath, DbConnection connection, string outputPath);

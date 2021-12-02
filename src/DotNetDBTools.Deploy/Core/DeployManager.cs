@@ -13,7 +13,8 @@ namespace DotNetDBTools.Deploy.Core
 {
     public abstract class DeployManager : IDeployManager
     {
-        private readonly DeployOptions _options;
+        public DeployOptions Options { get; set; }
+
         private readonly IDbModelConverter _dbModelConverter;
         private readonly IFactory _factory;
 
@@ -22,7 +23,7 @@ namespace DotNetDBTools.Deploy.Core
             IDbModelConverter dbModelConverter,
             IFactory factory)
         {
-            _options = options;
+            Options = options;
             _dbModelConverter = dbModelConverter;
             _factory = factory;
         }
@@ -149,7 +150,7 @@ namespace DotNetDBTools.Deploy.Core
 
         private void ValidateDatabaseDiff(DatabaseDiff databaseDiff)
         {
-            if (!_options.AllowDataLoss && AnalysisHelper.LeadsToDataLoss(databaseDiff))
+            if (!Options.AllowDataLoss && AnalysisHelper.LeadsToDataLoss(databaseDiff))
                 throw new Exception("Update would lead to data loss and it's not allowed.");
         }
     }

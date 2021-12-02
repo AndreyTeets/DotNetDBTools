@@ -1,151 +1,58 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Data.Common;
 using System.Data.SqlClient;
-using System.Linq;
 using Dapper;
 using DotNetDBTools.Analysis.MSSQL;
-using DotNetDBTools.DefinitionParsing;
 using DotNetDBTools.Deploy;
+using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.MSSQL;
-using DotNetDBTools.Models.Agnostic;
-using DotNetDBTools.Models.Core;
+using DotNetDBTools.IntegrationTests.Base;
 using DotNetDBTools.Models.MSSQL;
-using FluentAssertions;
+using FluentAssertions.Equivalency;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static DotNetDBTools.IntegrationTests.Constants;
 
 namespace DotNetDBTools.IntegrationTests.MSSQL
 {
     [TestClass]
-    public class MSSQLDeployTests
+    public class MSSQLDeployTests : BaseDeployTests<
+        MSSQLDatabase,
+        SqlConnection,
+        MSSQLDbModelConverter,
+        MSSQLDeployManager>
     {
-        private static readonly string s_connectionStringWithoutDb = MSSQLContainerHelper.MsSqlContainerConnectionString;
+        private static string ConnectionStringWithoutDb => MSSQLContainerHelper.MsSqlContainerConnectionString;
+        protected override string AgnosticSampleDbAssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDB.Agnostic.dll";
+        protected override string SpecificDBMSSampleDbAssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDB.MSSQL.dll";
 
-        private static readonly string s_agnosticSampleDbAssemblyPath = $"{SamplesOutputDir}/DotNetDBTools.SampleDB.Agnostic.dll";
-        private static readonly string s_mssqlSampleDbAssemblyPath = $"{SamplesOutputDir}/DotNetDBTools.SampleDB.MSSQL.dll";
-
-        private string ConnectionString => CreateConnectionString(s_connectionStringWithoutDb, TestContext.TestName);
-        public TestContext TestContext { get; set; }
-
-        private MSSQLDeployManager _deployManager;
-        private SqlConnection _connection;
-        private MSSQLInteractor _interactor;
-
-        [TestInitialize]
-        public void TestInitialize()
+        protected override EquivalencyAssertionOptions<MSSQLDatabase> AddAdditionalDbModelEquivalenceyOptions(
+            EquivalencyAssertionOptions<MSSQLDatabase> options)
         {
-            DropDatabaseIfExists(ConnectionString);
-            CreateDatabase(ConnectionString);
-
-            _deployManager = new(new DeployOptions());
-            _connection = new(ConnectionString);
-            _interactor = new(new MSSQLQueryExecutor(_connection));
+            return options.Excluding(database => database.Functions);
         }
 
-        [TestCleanup]
-        public void TestCleanup()
+        protected override string NormalizeDefaultValueAsFunctionText(string value)
         {
-            _connection.Dispose();
+            return value.ToUpper()
+                .Replace("(", "")
+                .Replace(")", "");
         }
 
-        [TestMethod]
-        public void Publish_AgnosticSampleDB_CreatesDbFromZero_And_UpdatesItAgain_WithoutErrors()
-        {
-            _deployManager.RegisterAsDNDBT(_connection);
-            _deployManager.PublishDatabase(s_agnosticSampleDbAssemblyPath, _connection);
-            _deployManager.PublishDatabase(s_agnosticSampleDbAssemblyPath, _connection);
-        }
-
-        [TestMethod]
-        public void AgnosticSampleDB_DbModelFromDNDBTSysInfo_IsEquivalentTo_DbModelFromDbAssembly()
-        {
-            _deployManager.RegisterAsDNDBT(_connection);
-            _deployManager.PublishDatabase(s_agnosticSampleDbAssemblyPath, _connection);
-
-            MSSQLDatabase dbModelFromDbAssembly = (MSSQLDatabase)new MSSQLDbModelConverter().FromAgnostic(
-                (AgnosticDatabase)DbDefinitionParser.CreateDatabaseModel(s_agnosticSampleDbAssemblyPath));
-            MSSQLDatabase dbModelFromDNDBTSysInfo = (MSSQLDatabase)_interactor.GetDatabaseModelFromDNDBTSysInfo();
-
-            dbModelFromDNDBTSysInfo.Should().BeEquivalentTo(dbModelFromDbAssembly, options => options
-                .Excluding(database => database.Name)
-                .Excluding(database => database.Views));
-        }
-
-        [TestMethod]
-        public void AgnosticSampleDB_DbModelFromDBMSSysInfo_IsEquivalentTo_DbModelFromDbAssembly()
-        {
-            _deployManager.RegisterAsDNDBT(_connection);
-            _deployManager.PublishDatabase(s_agnosticSampleDbAssemblyPath, _connection);
-            _deployManager.UnregisterAsDNDBT(_connection);
-
-            MSSQLDatabase dbModelFromDbAssembly = (MSSQLDatabase)new MSSQLDbModelConverter().FromAgnostic(
-                (AgnosticDatabase)DbDefinitionParser.CreateDatabaseModel(s_agnosticSampleDbAssemblyPath));
-            MSSQLDatabase dbModelFromDBMSSysInfo = (MSSQLDatabase)_interactor.GenerateDatabaseModelFromDBMSSysInfo();
-
-            dbModelFromDBMSSysInfo.Should().BeEquivalentTo(dbModelFromDbAssembly, options => options
-                .Excluding(database => database.Name)
-                .Excluding(database => database.Views)
-                .Excluding(database => database.Path.EndsWith(".ID", StringComparison.Ordinal))
-                .Using(new DefaultValueAsFunctionComparer()));
-        }
-
-        [TestMethod]
-        public void Publish_MSSQLSampleDB_CreatesDbFromZero_And_UpdatesItAgain_WithoutErrors()
-        {
-            _deployManager.RegisterAsDNDBT(_connection);
-            _deployManager.PublishDatabase(s_mssqlSampleDbAssemblyPath, _connection);
-            _deployManager.PublishDatabase(s_mssqlSampleDbAssemblyPath, _connection);
-        }
-
-        [TestMethod]
-        public void MSSQLSampleDB_DbModelFromDNDBTSysInfo_IsEquivalentTo_DbModelFromDbAssembly()
-        {
-            _deployManager.RegisterAsDNDBT(_connection);
-            _deployManager.PublishDatabase(s_mssqlSampleDbAssemblyPath, _connection);
-
-            MSSQLDatabase dbModelFromDbAssembly = (MSSQLDatabase)DbDefinitionParser.CreateDatabaseModel(s_mssqlSampleDbAssemblyPath);
-            MSSQLDatabase dbModelFromDNDBTSysInfo = (MSSQLDatabase)_interactor.GetDatabaseModelFromDNDBTSysInfo();
-
-            dbModelFromDNDBTSysInfo.Should().BeEquivalentTo(dbModelFromDbAssembly, options => options
-                .Excluding(database => database.Name)
-                .Excluding(database => database.Functions)
-                .Excluding(database => database.Views));
-        }
-
-        [TestMethod]
-        public void MSSQLSampleDB_DbModelFromDBMSSysInfo_IsEquivalentTo_DbModelFromDbAssembly()
-        {
-            _deployManager.RegisterAsDNDBT(_connection);
-            _deployManager.PublishDatabase(s_mssqlSampleDbAssemblyPath, _connection);
-            _deployManager.UnregisterAsDNDBT(_connection);
-
-            MSSQLDatabase dbModelFromDbAssembly = (MSSQLDatabase)DbDefinitionParser.CreateDatabaseModel(s_mssqlSampleDbAssemblyPath);
-            MSSQLDatabase dbModelFromDBMSSysInfo = (MSSQLDatabase)_interactor.GenerateDatabaseModelFromDBMSSysInfo();
-
-            dbModelFromDBMSSysInfo.Should().BeEquivalentTo(dbModelFromDbAssembly, options => options
-                .Excluding(database => database.Name)
-                .Excluding(database => database.Views)
-                .Excluding(database => database.Functions)
-                .Excluding(database => database.Path.EndsWith(".ID", StringComparison.Ordinal))
-                .Using(new DefaultValueAsFunctionComparer()));
-        }
-
-        private static void CreateDatabase(string connectionString)
+        protected override void CreateDatabase(string connectionString)
         {
             SqlConnectionStringBuilder connectionStringBuilder = new(connectionString);
             string databaseName = connectionStringBuilder.InitialCatalog;
 
-            using SqlConnection connection = new(s_connectionStringWithoutDb);
+            using SqlConnection connection = new(ConnectionStringWithoutDb);
             connection.Execute(
 $@"CREATE DATABASE {databaseName};");
         }
 
-        private static void DropDatabaseIfExists(string connectionString)
+        protected override void DropDatabaseIfExists(string connectionString)
         {
             SqlConnectionStringBuilder connectionStringBuilder = new(connectionString);
             string databaseName = connectionStringBuilder.InitialCatalog;
 
-            using SqlConnection connection = new(s_connectionStringWithoutDb);
+            using SqlConnection connection = new(ConnectionStringWithoutDb);
             connection.Execute(
 $@"IF EXISTS (SELECT * FROM [sys].[databases] WHERE [name] = '{databaseName}')
 BEGIN
@@ -159,36 +66,18 @@ BEGIN
 END;");
         }
 
-        private static string CreateConnectionString(string connectionStringWithoutDb, string databaseName)
+        protected override string CreateConnectionString(string testName)
         {
-            SqlConnectionStringBuilder connectionStringBuilder = new(connectionStringWithoutDb);
+            string databaseName = testName;
+            SqlConnectionStringBuilder connectionStringBuilder = new(ConnectionStringWithoutDb);
             connectionStringBuilder.InitialCatalog = databaseName;
             string connectionString = connectionStringBuilder.ConnectionString;
             return connectionString;
         }
 
-        private class DefaultValueAsFunctionComparer : IEqualityComparer<DefaultValueAsFunction>
+        private protected override Interactor CreateInteractor(DbConnection connection)
         {
-            public bool Equals(DefaultValueAsFunction x, DefaultValueAsFunction y)
-            {
-                if (!char.IsLetter(x.FunctionText.FirstOrDefault()) || !char.IsLetter(y.FunctionText.FirstOrDefault()))
-                    return string.Equals(x.FunctionText, y.FunctionText, StringComparison.Ordinal);
-                string xNormalizedFunctionText = NormalizeFunctionText(x.FunctionText);
-                string yNormalizedFunctionText = NormalizeFunctionText(y.FunctionText);
-                return string.Equals(xNormalizedFunctionText, yNormalizedFunctionText, StringComparison.OrdinalIgnoreCase);
-            }
-
-            public int GetHashCode(DefaultValueAsFunction obj)
-            {
-                return obj.GetHashCode();
-            }
-
-            private static string NormalizeFunctionText(string value)
-            {
-                return value.ToUpper()
-                    .Replace("(", "")
-                    .Replace(")", "");
-            }
+            return new MSSQLInteractor(new MSSQLQueryExecutor(connection));
         }
     }
 }

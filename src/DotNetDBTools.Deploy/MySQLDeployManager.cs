@@ -8,11 +8,16 @@ namespace DotNetDBTools.Deploy
 {
     public class MySQLDeployManager : DeployManager
     {
-        public MySQLDeployManager(DeployOptions options) : base(
-            options: options,
+        public MySQLDeployManager() : base(
+            options: new DeployOptions(),
             dbModelConverter: new MySQLDbModelConverter(),
             factory: new MySQLFactory())
         {
+        }
+
+        public MySQLDeployManager(DeployOptions options) : this()
+        {
+            Options = options;
         }
 
         protected override Database CreateEmptyDatabaseModel()

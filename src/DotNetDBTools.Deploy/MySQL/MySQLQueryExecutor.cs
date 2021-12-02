@@ -1,5 +1,4 @@
 ﻿using System.Data.Common;
-using Dapper;
 using DotNetDBTools.Deploy.Core;
 
 namespace DotNetDBTools.Deploy.MySQL

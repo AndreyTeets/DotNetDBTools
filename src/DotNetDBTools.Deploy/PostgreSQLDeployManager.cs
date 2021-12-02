@@ -8,11 +8,16 @@ namespace DotNetDBTools.Deploy
 {
     public class PostgreSQLDeployManager : DeployManager
     {
-        public PostgreSQLDeployManager(DeployOptions options) : base(
-            options: options,
+        public PostgreSQLDeployManager() : base(
+            options: new DeployOptions(),
             dbModelConverter: new PostgreSQLDbModelConverter(),
             factory: new PostgreSQLFactory())
         {
+        }
+
+        public PostgreSQLDeployManager(DeployOptions options) : this()
+        {
+            Options = options;
         }
 
         protected override Database CreateEmptyDatabaseModel()

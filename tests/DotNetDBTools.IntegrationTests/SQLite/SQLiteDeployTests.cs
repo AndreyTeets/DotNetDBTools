@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Data.Common;
 using System.IO;
 using DotNetDBTools.Analysis.SQLite;
-using DotNetDBTools.DefinitionParsing;
 using DotNetDBTools.Deploy;
+using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.SQLite;
-using DotNetDBTools.Models.Agnostic;
-using DotNetDBTools.Models.Core;
+using DotNetDBTools.IntegrationTests.Base;
 using DotNetDBTools.Models.SQLite;
-using FluentAssertions;
+using FluentAssertions.Equivalency;
 using Microsoft.Data.Sqlite;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static DotNetDBTools.IntegrationTests.Constants;
@@ -16,117 +14,33 @@ using static DotNetDBTools.IntegrationTests.Constants;
 namespace DotNetDBTools.IntegrationTests.SQLite
 {
     [TestClass]
-    public class SQLiteDeployTests
+    public class SQLiteDeployTests : BaseDeployTests<
+        SQLiteDatabase,
+        SqliteConnection,
+        SQLiteDbModelConverter,
+        SQLiteDeployManager>
     {
         private const string DbFilesFolder = @"./tmp";
 
-        private static readonly string s_agnosticSampleDbAssemblyPath = $"{SamplesOutputDir}/DotNetDBTools.SampleDB.Agnostic.dll";
-        private static readonly string s_sqliteSampleDbAssemblyPath = $"{SamplesOutputDir}/DotNetDBTools.SampleDB.SQLite.dll";
+        protected override string AgnosticSampleDbAssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDB.Agnostic.dll";
+        protected override string SpecificDBMSSampleDbAssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDB.SQLite.dll";
 
-        private string ConnectionString => $@"DataSource={DbFilesFolder}/{TestContext.TestName}.db;Mode=ReadWriteCreate;";
-        public TestContext TestContext { get; set; }
-
-        private SQLiteDeployManager _deployManager;
-        private SqliteConnection _connection;
-        private SQLiteInteractor _interactor;
-
-        [TestInitialize]
-        public void TestInitialize()
+        protected override EquivalencyAssertionOptions<SQLiteDatabase> AddAdditionalDbModelEquivalenceyOptions(
+            EquivalencyAssertionOptions<SQLiteDatabase> options)
         {
-            DropDatabaseIfExists(ConnectionString);
-
-            _deployManager = new(new DeployOptions());
-            _connection = new(ConnectionString);
-            _interactor = new(new SQLiteQueryExecutor(_connection));
+            return options;
         }
 
-        [TestCleanup]
-        public void TestCleanup()
+        protected override string NormalizeDefaultValueAsFunctionText(string value)
         {
-            _connection.Dispose();
+            return value.ToUpper();
         }
 
-        [TestMethod]
-        public void Publish_AgnosticSampleDB_CreatesDbFromZero_And_UpdatesItAgain_WithoutErrors()
+        protected override void CreateDatabase(string connectionString)
         {
-            _deployManager.RegisterAsDNDBT(_connection);
-            _deployManager.PublishDatabase(s_agnosticSampleDbAssemblyPath, _connection);
-            _deployManager.PublishDatabase(s_agnosticSampleDbAssemblyPath, _connection);
         }
 
-        [TestMethod]
-        public void AgnosticSampleDB_DbModelFromDNDBTSysInfo_IsEquivalentTo_DbModelFromDbAssembly()
-        {
-            _deployManager.RegisterAsDNDBT(_connection);
-            _deployManager.PublishDatabase(s_agnosticSampleDbAssemblyPath, _connection);
-
-            SQLiteDatabase dbModelFromDbAssembly = (SQLiteDatabase)new SQLiteDbModelConverter().FromAgnostic(
-                (AgnosticDatabase)DbDefinitionParser.CreateDatabaseModel(s_agnosticSampleDbAssemblyPath));
-            SQLiteDatabase dbModelFromDNDBTSysInfo = (SQLiteDatabase)_interactor.GetDatabaseModelFromDNDBTSysInfo();
-
-            dbModelFromDNDBTSysInfo.Should().BeEquivalentTo(dbModelFromDbAssembly, options => options
-                .Excluding(database => database.Name)
-                .Excluding(database => database.Views));
-        }
-
-        [TestMethod]
-        public void AgnosticSampleDB_DbModelFromDBMSSysInfo_IsEquivalentTo_DbModelFromDbAssembly()
-        {
-            _deployManager.RegisterAsDNDBT(_connection);
-            _deployManager.PublishDatabase(s_agnosticSampleDbAssemblyPath, _connection);
-            _deployManager.UnregisterAsDNDBT(_connection);
-
-            SQLiteDatabase dbModelFromDbAssembly = (SQLiteDatabase)new SQLiteDbModelConverter().FromAgnostic(
-                (AgnosticDatabase)DbDefinitionParser.CreateDatabaseModel(s_agnosticSampleDbAssemblyPath));
-            SQLiteDatabase dbModelFromDBMSSysInfo = (SQLiteDatabase)_interactor.GenerateDatabaseModelFromDBMSSysInfo();
-
-            dbModelFromDBMSSysInfo.Should().BeEquivalentTo(dbModelFromDbAssembly, options => options
-                .Excluding(database => database.Name)
-                .Excluding(database => database.Views)
-                .Excluding(database => database.Path.EndsWith(".ID", StringComparison.Ordinal))
-                .Using(new DefaultValueAsFunctionComparer()));
-        }
-
-        [TestMethod]
-        public void Publish_SQLiteSampleDB_CreatesDbFromZero_And_UpdatesItAgain_WithoutErrors()
-        {
-            _deployManager.RegisterAsDNDBT(_connection);
-            _deployManager.PublishDatabase(s_sqliteSampleDbAssemblyPath, _connection);
-            _deployManager.PublishDatabase(s_sqliteSampleDbAssemblyPath, _connection);
-        }
-
-        [TestMethod]
-        public void SQLiteSampleDB_DbModelFromDNDBTSysInfo_IsEquivalentTo_DbModelFromDbAssembly()
-        {
-            _deployManager.RegisterAsDNDBT(_connection);
-            _deployManager.PublishDatabase(s_sqliteSampleDbAssemblyPath, _connection);
-
-            SQLiteDatabase dbModelFromDbAssembly = (SQLiteDatabase)DbDefinitionParser.CreateDatabaseModel(s_sqliteSampleDbAssemblyPath);
-            SQLiteDatabase dbModelFromDNDBTSysInfo = (SQLiteDatabase)_interactor.GetDatabaseModelFromDNDBTSysInfo();
-
-            dbModelFromDNDBTSysInfo.Should().BeEquivalentTo(dbModelFromDbAssembly, options => options
-                .Excluding(database => database.Name)
-                .Excluding(database => database.Views));
-        }
-
-        [TestMethod]
-        public void SQLiteSampleDB_DbModelFromDBMSSysInfo_IsEquivalentTo_DbModelFromDbAssembly()
-        {
-            _deployManager.RegisterAsDNDBT(_connection);
-            _deployManager.PublishDatabase(s_sqliteSampleDbAssemblyPath, _connection);
-            _deployManager.UnregisterAsDNDBT(_connection);
-
-            SQLiteDatabase dbModelFromDbAssembly = (SQLiteDatabase)DbDefinitionParser.CreateDatabaseModel(s_sqliteSampleDbAssemblyPath);
-            SQLiteDatabase dbModelFromDBMSSysInfo = (SQLiteDatabase)_interactor.GenerateDatabaseModelFromDBMSSysInfo();
-
-            dbModelFromDBMSSysInfo.Should().BeEquivalentTo(dbModelFromDbAssembly, options => options
-                .Excluding(database => database.Name)
-                .Excluding(database => database.Views)
-                .Excluding(database => database.Path.EndsWith(".ID", StringComparison.Ordinal))
-                .Using(new DefaultValueAsFunctionComparer()));
-        }
-
-        private static void DropDatabaseIfExists(string connectionString)
+        protected override void DropDatabaseIfExists(string connectionString)
         {
             SqliteConnectionStringBuilder connectionStringBuilder = new(connectionString);
             string dbFilePath = connectionStringBuilder.DataSource;
@@ -136,24 +50,14 @@ namespace DotNetDBTools.IntegrationTests.SQLite
             Directory.CreateDirectory(Path.GetDirectoryName(dbFilePath));
         }
 
-        private class DefaultValueAsFunctionComparer : IEqualityComparer<DefaultValueAsFunction>
+        protected override string CreateConnectionString(string testName)
         {
-            public bool Equals(DefaultValueAsFunction x, DefaultValueAsFunction y)
-            {
-                string xNormalizedFunctionText = NormalizeFunctionText(x.FunctionText);
-                string yNormalizedFunctionText = NormalizeFunctionText(y.FunctionText);
-                return string.Equals(xNormalizedFunctionText, yNormalizedFunctionText, StringComparison.OrdinalIgnoreCase);
-            }
+            return $@"DataSource={DbFilesFolder}/{testName}.db;Mode=ReadWriteCreate;";
+        }
 
-            public int GetHashCode(DefaultValueAsFunction obj)
-            {
-                return obj.GetHashCode();
-            }
-
-            private static string NormalizeFunctionText(string value)
-            {
-                return value.ToUpper();
-            }
+        private protected override Interactor CreateInteractor(DbConnection connection)
+        {
+            return new SQLiteInteractor(new SQLiteQueryExecutor(connection));
         }
     }
 }
