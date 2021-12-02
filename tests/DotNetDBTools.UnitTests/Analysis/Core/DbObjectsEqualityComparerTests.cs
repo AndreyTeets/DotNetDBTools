@@ -7,7 +7,7 @@ using DotNetDBTools.Models.Core;
 using FluentAssertions;
 using Xunit;
 
-namespace DotNetDBTools.UnitTests.Analysis
+namespace DotNetDBTools.UnitTests.Analysis.Core
 {
     public class DbObjectsEqualityComparerTests
     {
