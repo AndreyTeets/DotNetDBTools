@@ -8,25 +8,22 @@ using DotNetDBTools.Models.MSSQL;
 
 namespace DotNetDBTools.DefinitionParsing.MSSQL
 {
-    internal class MSSQLDatabaseModelBuilder
-        : DatabaseModelBuilder<MSSQLTable, MSSQLView, MSSQLColumn>
+    internal class MSSQLDatabaseModelBuilder : DatabaseModelBuilder<
+        MSSQLDatabase,
+        MSSQLTable,
+        MSSQLView,
+        MSSQLColumn>
     {
         public MSSQLDatabaseModelBuilder()
             : base(new MSSQLDataTypeMapper(), new MSSQLDefaultValueMapper())
         {
         }
 
-        public MSSQLDatabase BuildDatabaseModel(Assembly dbAssembly)
+        protected override void BuildAdditionalDbObjects(Database database, Assembly dbAssembly)
         {
-            return new MSSQLDatabase(DbAssemblyInfoHelper.GetDbName(dbAssembly))
-            {
-                Tables = BuildTableModels(dbAssembly),
-                Views = BuildViewModels(dbAssembly),
-                UserDefinedTypes = BuildUserDefinedTypeModels(dbAssembly),
-                UserDefinedTableTypes = new List<MSSQLUserDefinedTableType>(),
-                Functions = BuildFunctionModels(dbAssembly),
-                Procedures = new List<MSSQLProcedure>(),
-            };
+            MSSQLDatabase mssqlDatabase = (MSSQLDatabase)database;
+            mssqlDatabase.UserDefinedTypes = BuildUserDefinedTypeModels(dbAssembly);
+            mssqlDatabase.Functions = BuildFunctionModels(dbAssembly);
         }
 
         protected override void BuildAdditionalColumnModelProperties(MSSQLColumn columnModel, BaseColumn column, string tableName)

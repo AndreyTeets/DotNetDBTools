@@ -6,26 +6,27 @@ using DotNetDBTools.Analysis;
 using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.Analysis.Core.Errors;
 using DotNetDBTools.DefinitionParsing;
+using DotNetDBTools.Deploy.Core.Editors;
 using DotNetDBTools.Generation;
 using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.Deploy.Core
 {
-    public abstract class DeployManager : IDeployManager
+    public abstract class DeployManager<TDatabase> : IDeployManager
+        where TDatabase : Database, new()
     {
         public DeployOptions Options { get; set; }
 
-        private readonly IDbModelConverter _dbModelConverter;
         private readonly IFactory _factory;
+        private readonly IDbModelConverter _dbModelConverter;
 
         private protected DeployManager(
             DeployOptions options,
-            IDbModelConverter dbModelConverter,
             IFactory factory)
         {
             Options = options;
-            _dbModelConverter = dbModelConverter;
             _factory = factory;
+            _dbModelConverter = _factory.CreateDbModelConverter();
         }
 
         public void PublishDatabase(string dbAssemblyPath, DbConnection connection)
@@ -41,8 +42,8 @@ namespace DotNetDBTools.Deploy.Core
             DatabaseDiff databaseDiff = AnalysisHelper.CreateDatabaseDiff(newDatabase, oldDatabase);
             ValidateDatabaseDiff(databaseDiff);
 
-            Interactor interactor = _factory.CreateInteractor(_factory.CreateQueryExecutor(connection));
-            interactor.ApplyDatabaseDiff(databaseDiff);
+            IDbEditor dbEditor = _factory.CreateDbEditor(_factory.CreateQueryExecutor(connection));
+            dbEditor.ApplyDatabaseDiff(databaseDiff);
         }
 
         public void GeneratePublishScript(string dbAssemblyPath, DbConnection connection, string outputPath)
@@ -67,10 +68,9 @@ namespace DotNetDBTools.Deploy.Core
         public void GeneratePublishScript(Assembly dbAssembly, string outputPath)
         {
             Database newDatabase = CreateDatabaseModelFromDbAssembly(dbAssembly);
-            Database oldDatabase = CreateEmptyDatabaseModel();
+            Database oldDatabase = new TDatabase();
             GeneratePublishScript(newDatabase, oldDatabase, outputPath);
         }
-        protected abstract Database CreateEmptyDatabaseModel();
 
         public void GeneratePublishScript(string newDbAssemblyPath, string oldDbAssemblyPath, string outputPath)
         {
@@ -88,28 +88,34 @@ namespace DotNetDBTools.Deploy.Core
 
         public void RegisterAsDNDBT(DbConnection connection)
         {
-            Interactor interactor = _factory.CreateInteractor(_factory.CreateQueryExecutor(connection));
-            if (interactor.DNDBTSysTablesExist())
+            IQueryExecutor queryExecutor = _factory.CreateQueryExecutor(connection);
+            IDbEditor dbEditor = _factory.CreateDbEditor(queryExecutor);
+            IDbModelFromDbSysInfoBuilder dbModelFromDbSysInfoBuilder = _factory.CreateDbModelFromDbSysInfoBuilder(queryExecutor);
+
+            if (dbEditor.DNDBTSysTablesExist())
                 throw new InvalidOperationException("Database is already registered");
-            Database oldDatabase = interactor.GenerateDatabaseModelFromDBMSSysInfo();
-            interactor.CreateDNDBTSysTables();
-            interactor.PopulateDNDBTSysTables(oldDatabase);
+            Database oldDatabase = dbModelFromDbSysInfoBuilder.GenerateDatabaseModelFromDBMSSysInfo();
+            dbEditor.CreateDNDBTSysTables();
+            dbEditor.PopulateDNDBTSysTables(oldDatabase);
         }
 
         public void UnregisterAsDNDBT(DbConnection connection)
         {
-            Interactor interactor = _factory.CreateInteractor(_factory.CreateQueryExecutor(connection));
-            interactor.DropDNDBTSysTables();
+            IDbEditor dbEditor = _factory.CreateDbEditor(_factory.CreateQueryExecutor(connection));
+            dbEditor.DropDNDBTSysTables();
         }
 
         public void GenerateDefinition(DbConnection connection, string outputDirectory)
         {
-            Interactor interactor = _factory.CreateInteractor(_factory.CreateQueryExecutor(connection));
+            IQueryExecutor queryExecutor = _factory.CreateQueryExecutor(connection);
+            IDbEditor dbEditor = _factory.CreateDbEditor(queryExecutor);
+            IDbModelFromDbSysInfoBuilder dbModelFromDbSysInfoBuilder = _factory.CreateDbModelFromDbSysInfoBuilder(queryExecutor);
+
             Database database;
-            if (interactor.DNDBTSysTablesExist())
-                database = interactor.GetDatabaseModelFromDNDBTSysInfo();
+            if (dbEditor.DNDBTSysTablesExist())
+                database = dbModelFromDbSysInfoBuilder.GetDatabaseModelFromDNDBTSysInfo();
             else
-                database = interactor.GenerateDatabaseModelFromDBMSSysInfo();
+                database = dbModelFromDbSysInfoBuilder.GenerateDatabaseModelFromDBMSSysInfo();
             DbDefinitionGenerator.GenerateDefinition(database, outputDirectory);
         }
 
@@ -119,8 +125,8 @@ namespace DotNetDBTools.Deploy.Core
             ValidateDatabaseDiff(databaseDiff);
 
             IGenSqlScriptQueryExecutor genSqlScriptQueryExecutor = _factory.CreateGenSqlScriptQueryExecutor();
-            Interactor interactor = _factory.CreateInteractor(genSqlScriptQueryExecutor);
-            interactor.ApplyDatabaseDiff(databaseDiff);
+            IDbEditor dbEditor = _factory.CreateDbEditor(genSqlScriptQueryExecutor);
+            dbEditor.ApplyDatabaseDiff(databaseDiff);
             string generatedScript = genSqlScriptQueryExecutor.GetFinalScript();
 
             string fullPath = Path.GetFullPath(outputPath);
@@ -141,9 +147,12 @@ namespace DotNetDBTools.Deploy.Core
 
         private Database GetDatabaseModelFromRegisteredDb(DbConnection connection)
         {
-            Interactor interactor = _factory.CreateInteractor(_factory.CreateQueryExecutor(connection));
-            if (interactor.DNDBTSysTablesExist())
-                return interactor.GetDatabaseModelFromDNDBTSysInfo();
+            IQueryExecutor queryExecutor = _factory.CreateQueryExecutor(connection);
+            IDbEditor dbEditor = _factory.CreateDbEditor(queryExecutor);
+            IDbModelFromDbSysInfoBuilder dbModelFromDbSysInfoBuilder = _factory.CreateDbModelFromDbSysInfoBuilder(queryExecutor);
+
+            if (dbEditor.DNDBTSysTablesExist())
+                return dbModelFromDbSysInfoBuilder.GetDatabaseModelFromDNDBTSysInfo();
             else
                 throw new InvalidOperationException("Database is not registered");
         }

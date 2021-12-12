@@ -1,7 +1,7 @@
 DO $$
 BEGIN
 
--- QUERY START: CreateTableQuery
+-- QUERY START: PostgreSQLCreateTableQuery
 EXECUTE 'CREATE TABLE "MyTable1"
 (
     "MyColumn1" INT NOT NULL DEFAULT 15,
@@ -10,9 +10,9 @@ EXECUTE 'CREATE TABLE "MyTable1"
     CONSTRAINT "PK_MyTable1" PRIMARY KEY ("MyColumn3"),
     CONSTRAINT "UQ_MyTable1_MyColumn2" UNIQUE ("MyColumn2")
 );';
--- QUERY END: CreateTableQuery
+-- QUERY END: PostgreSQLCreateTableQuery
 
--- QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: PostgreSQLInsertDNDBTSysInfoQuery
 EXECUTE 'INSERT INTO "DNDBTDbObjects"
 (
     "ID",
@@ -29,9 +29,9 @@ VALUES
     ''MyTable1'',
     NULL
 );';
--- QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
 
--- QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: PostgreSQLInsertDNDBTSysInfoQuery
 EXECUTE 'INSERT INTO "DNDBTDbObjects"
 (
     "ID",
@@ -48,9 +48,9 @@ VALUES
     ''MyColumn1'',
     NULL
 );';
--- QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
 
--- QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: PostgreSQLInsertDNDBTSysInfoQuery
 EXECUTE 'INSERT INTO "DNDBTDbObjects"
 (
     "ID",
@@ -67,9 +67,9 @@ VALUES
     ''MyColumn2'',
     NULL
 );';
--- QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
 
--- QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: PostgreSQLInsertDNDBTSysInfoQuery
 EXECUTE 'INSERT INTO "DNDBTDbObjects"
 (
     "ID",
@@ -86,9 +86,9 @@ VALUES
     ''MyColumn3'',
     NULL
 );';
--- QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
 
--- QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: PostgreSQLInsertDNDBTSysInfoQuery
 EXECUTE 'INSERT INTO "DNDBTDbObjects"
 (
     "ID",
@@ -105,9 +105,9 @@ VALUES
     ''PK_MyTable1'',
     NULL
 );';
--- QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
 
--- QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: PostgreSQLInsertDNDBTSysInfoQuery
 EXECUTE 'INSERT INTO "DNDBTDbObjects"
 (
     "ID",
@@ -124,18 +124,18 @@ VALUES
     ''UQ_MyTable1_MyColumn2'',
     NULL
 );';
--- QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
 
--- QUERY START: CreateTableQuery
+-- QUERY START: PostgreSQLCreateTableQuery
 EXECUTE 'CREATE TABLE "MyTable2"
 (
     "MyColumn1" INT NOT NULL DEFAULT 333,
     "MyColumn2" BYTEA NULL DEFAULT ''\x000102'',
     CONSTRAINT "PK_MyTable2" PRIMARY KEY ("MyColumn1")
 );';
--- QUERY END: CreateTableQuery
+-- QUERY END: PostgreSQLCreateTableQuery
 
--- QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: PostgreSQLInsertDNDBTSysInfoQuery
 EXECUTE 'INSERT INTO "DNDBTDbObjects"
 (
     "ID",
@@ -152,9 +152,9 @@ VALUES
     ''MyTable2'',
     NULL
 );';
--- QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
 
--- QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: PostgreSQLInsertDNDBTSysInfoQuery
 EXECUTE 'INSERT INTO "DNDBTDbObjects"
 (
     "ID",
@@ -171,9 +171,9 @@ VALUES
     ''MyColumn1'',
     NULL
 );';
--- QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
 
--- QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: PostgreSQLInsertDNDBTSysInfoQuery
 EXECUTE 'INSERT INTO "DNDBTDbObjects"
 (
     "ID",
@@ -190,9 +190,9 @@ VALUES
     ''MyColumn2'',
     NULL
 );';
--- QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
 
--- QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: PostgreSQLInsertDNDBTSysInfoQuery
 EXECUTE 'INSERT INTO "DNDBTDbObjects"
 (
     "ID",
@@ -209,17 +209,17 @@ VALUES
     ''PK_MyTable2'',
     NULL
 );';
--- QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
 
--- QUERY START: CreateTableQuery
+-- QUERY START: PostgreSQLCreateTableQuery
 EXECUTE 'CREATE TABLE "MyTable5"
 (
     "MyColumn1" INT NOT NULL DEFAULT ABS(-15),
     "MyColumn3" TIMESTAMPTZ(6) NULL
 );';
--- QUERY END: CreateTableQuery
+-- QUERY END: PostgreSQLCreateTableQuery
 
--- QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: PostgreSQLInsertDNDBTSysInfoQuery
 EXECUTE 'INSERT INTO "DNDBTDbObjects"
 (
     "ID",
@@ -236,9 +236,9 @@ VALUES
     ''MyTable5'',
     NULL
 );';
--- QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
 
--- QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: PostgreSQLInsertDNDBTSysInfoQuery
 EXECUTE 'INSERT INTO "DNDBTDbObjects"
 (
     "ID",
@@ -255,9 +255,9 @@ VALUES
     ''MyColumn1'',
     ''ABS(-15)''
 );';
--- QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
 
--- QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: PostgreSQLInsertDNDBTSysInfoQuery
 EXECUTE 'INSERT INTO "DNDBTDbObjects"
 (
     "ID",
@@ -274,15 +274,15 @@ VALUES
     ''MyColumn3'',
     NULL
 );';
--- QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
 
--- QUERY START: CreateForeignKeyQuery
+-- QUERY START: PostgreSQLCreateForeignKeyQuery
 EXECUTE 'ALTER TABLE "MyTable1" ADD CONSTRAINT "FK_MyTable1_MyColumn1_MyTable2_MyColumn1" FOREIGN KEY ("MyColumn1")
     REFERENCES "MyTable2" ("MyColumn1")
     ON UPDATE NO ACTION ON DELETE CASCADE;';
--- QUERY END: CreateForeignKeyQuery
+-- QUERY END: PostgreSQLCreateForeignKeyQuery
 
--- QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: PostgreSQLInsertDNDBTSysInfoQuery
 EXECUTE 'INSERT INTO "DNDBTDbObjects"
 (
     "ID",
@@ -299,7 +299,7 @@ VALUES
     ''FK_MyTable1_MyColumn1_MyTable2_MyColumn1'',
     NULL
 );';
--- QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
 
 END;
 $$

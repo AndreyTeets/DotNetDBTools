@@ -7,6 +7,8 @@ namespace DotNetDBTools.IntegrationTests.MSSQL
     [TestClass]
     public class MSSQLSampleApplicationsTests : BaseSampleApplicationsTests
     {
+        protected override string SyncScopeName => nameof(MSSQLContainerHelper);
+
         protected override string SampleDeployToolAssemblyPath =>
             $"{RepoRoot}/samples/DeployTools/DotNetDBTools.SampleDeployTool.MSSQL/{ProjectsOutDirPath}/DotNetDBTools.SampleDeployTool.MSSQL.dll";
 

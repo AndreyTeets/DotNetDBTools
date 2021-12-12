@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using DotNetDBTools.Models.Core;
-using DotNetDBTools.Models.SQLite;
 
 namespace DotNetDBTools.Deploy.SQLite
 {
     internal static class SQLiteQueriesHelper
     {
-        public static string GetTableDefinitionsText(SQLiteTable table)
+        public static string GetTableDefinitionsText(Table table)
         {
             List<string> tableDefinitions = new();
 

@@ -3,27 +3,26 @@ using System.Reflection;
 using DotNetDBTools.Definition.Core;
 using DotNetDBTools.Definition.MySQL;
 using DotNetDBTools.DefinitionParsing.Core;
+using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.MySQL;
 
 namespace DotNetDBTools.DefinitionParsing.MySQL
 {
-    internal class MySQLDatabaseModelBuilder
-        : DatabaseModelBuilder<MySQLTable, MySQLView, Models.Core.Column>
+    internal class MySQLDatabaseModelBuilder : DatabaseModelBuilder<
+        MySQLDatabase,
+        MySQLTable,
+        MySQLView,
+        Models.Core.Column>
     {
         public MySQLDatabaseModelBuilder()
             : base(new MySQLDataTypeMapper(), new MySQLDefaultValueMapper())
         {
         }
 
-        public MySQLDatabase BuildDatabaseModel(Assembly dbAssembly)
+        protected override void BuildAdditionalDbObjects(Database database, Assembly dbAssembly)
         {
-            return new MySQLDatabase(DbAssemblyInfoHelper.GetDbName(dbAssembly))
-            {
-                Tables = BuildTableModels(dbAssembly),
-                Views = BuildViewModels(dbAssembly),
-                Functions = BuildFunctionModels(dbAssembly),
-                Procedures = new List<MySQLProcedure>(),
-            };
+            MySQLDatabase mssqlDatabase = (MySQLDatabase)database;
+            mssqlDatabase.Functions = BuildFunctionModels(dbAssembly);
         }
 
         protected override void BuildAdditionalPrimaryKeyModelProperties(Models.Core.PrimaryKey pkModel, BasePrimaryKey pk, string tableName)

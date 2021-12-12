@@ -20,10 +20,10 @@ namespace DotNetDBTools.IntegrationTests.SQLite
         SQLiteDbModelConverter,
         SQLiteDeployManager>
     {
-        private const string DbFilesFolder = @"./tmp";
-
         protected override string AgnosticSampleDbAssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDB.Agnostic.dll";
         protected override string SpecificDBMSSampleDbAssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDB.SQLite.dll";
+
+        private const string DbFilesFolder = @"./tmp";
 
         protected override EquivalencyAssertionOptions<SQLiteDatabase> AddAdditionalDbModelEquivalenceyOptions(
             EquivalencyAssertionOptions<SQLiteDatabase> options)
@@ -55,9 +55,9 @@ namespace DotNetDBTools.IntegrationTests.SQLite
             return $@"DataSource={DbFilesFolder}/{testName}.db;Mode=ReadWriteCreate;";
         }
 
-        private protected override Interactor CreateInteractor(DbConnection connection)
+        private protected override IDbModelFromDbSysInfoBuilder CreateDbModelFromDbSysInfoBuilder(DbConnection connection)
         {
-            return new SQLiteInteractor(new SQLiteQueryExecutor(connection));
+            return new SQLiteDbModelFromDbSysInfoBuilder(new SQLiteQueryExecutor(connection));
         }
     }
 }

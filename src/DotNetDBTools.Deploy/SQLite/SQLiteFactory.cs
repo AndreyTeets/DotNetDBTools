@@ -1,5 +1,9 @@
 ﻿using System.Data.Common;
+using DotNetDBTools.Analysis.Core;
+using DotNetDBTools.Analysis.SQLite;
 using DotNetDBTools.Deploy.Core;
+using DotNetDBTools.Deploy.Core.Editors;
+using DotNetDBTools.Deploy.SQLite.Editors;
 
 namespace DotNetDBTools.Deploy.SQLite
 {
@@ -15,9 +19,19 @@ namespace DotNetDBTools.Deploy.SQLite
             return new SQLiteGenSqlScriptQueryExecutor();
         }
 
-        public Interactor CreateInteractor(IQueryExecutor queryExecutor)
+        public IDbModelConverter CreateDbModelConverter()
         {
-            return new SQLiteInteractor(queryExecutor);
+            return new SQLiteDbModelConverter();
+        }
+
+        public IDbEditor CreateDbEditor(IQueryExecutor queryExecutor)
+        {
+            return new SQLiteDbEditor(queryExecutor);
+        }
+
+        public IDbModelFromDbSysInfoBuilder CreateDbModelFromDbSysInfoBuilder(IQueryExecutor queryExecutor)
+        {
+            return new SQLiteDbModelFromDbSysInfoBuilder(queryExecutor);
         }
     }
 }

@@ -7,6 +7,8 @@ namespace DotNetDBTools.IntegrationTests.SQLite
     [TestClass]
     public class SQLiteSampleApplicationsTests : BaseSampleApplicationsTests
     {
+        protected override string SyncScopeName => null;
+
         protected override string SampleDeployToolAssemblyPath =>
             $"{RepoRoot}/samples/DeployTools/DotNetDBTools.SampleDeployTool.SQLite/{ProjectsOutDirPath}/DotNetDBTools.SampleDeployTool.SQLite.dll";
 

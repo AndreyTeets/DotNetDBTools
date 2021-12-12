@@ -7,6 +7,8 @@ namespace DotNetDBTools.IntegrationTests.MySQL
     [TestClass]
     public class MySQLSampleApplicationsTests : BaseSampleApplicationsTests
     {
+        protected override string SyncScopeName => null;
+
         protected override string SampleDeployToolAssemblyPath =>
             $"{RepoRoot}/samples/DeployTools/DotNetDBTools.SampleDeployTool.MySQL/{ProjectsOutDirPath}/DotNetDBTools.SampleDeployTool.MySQL.dll";
 

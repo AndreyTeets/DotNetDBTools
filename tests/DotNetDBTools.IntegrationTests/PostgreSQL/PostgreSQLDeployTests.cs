@@ -20,10 +20,10 @@ namespace DotNetDBTools.IntegrationTests.PostgreSQL
         PostgreSQLDbModelConverter,
         PostgreSQLDeployManager>
     {
-        private static string ConnectionStringWithoutDb => PostgreSQLContainerHelper.PostgreSQLContainerConnectionString;
-
         protected override string AgnosticSampleDbAssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDB.Agnostic.dll";
         protected override string SpecificDBMSSampleDbAssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDB.PostgreSQL.dll";
+
+        private static string ConnectionStringWithoutDb => PostgreSQLContainerHelper.PostgreSQLContainerConnectionString;
 
         protected override EquivalencyAssertionOptions<PostgreSQLDatabase> AddAdditionalDbModelEquivalenceyOptions(
             EquivalencyAssertionOptions<PostgreSQLDatabase> options)
@@ -68,9 +68,9 @@ DROP DATABASE IF EXISTS ""{databaseName}"";");
             return connectionString;
         }
 
-        private protected override Interactor CreateInteractor(DbConnection connection)
+        private protected override IDbModelFromDbSysInfoBuilder CreateDbModelFromDbSysInfoBuilder(DbConnection connection)
         {
-            return new PostgreSQLInteractor(new PostgreSQLQueryExecutor(connection));
+            return new PostgreSQLDbModelFromDbSysInfoBuilder(new PostgreSQLQueryExecutor(connection));
         }
     }
 }

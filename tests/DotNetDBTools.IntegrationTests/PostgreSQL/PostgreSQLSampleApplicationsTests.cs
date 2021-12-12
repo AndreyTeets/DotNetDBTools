@@ -7,6 +7,8 @@ namespace DotNetDBTools.IntegrationTests.PostgreSQL
     [TestClass]
     public class PostgreSQLSampleApplicationsTests : BaseSampleApplicationsTests
     {
+        protected override string SyncScopeName => null;
+
         protected override string SampleDeployToolAssemblyPath =>
             $"{RepoRoot}/samples/DeployTools/DotNetDBTools.SampleDeployTool.PostgreSQL/{ProjectsOutDirPath}/DotNetDBTools.SampleDeployTool.PostgreSQL.dll";
 

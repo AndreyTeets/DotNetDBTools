@@ -20,10 +20,10 @@ namespace DotNetDBTools.IntegrationTests.MySQL
         MySQLDbModelConverter,
         MySQLDeployManager>
     {
-        private static string ConnectionStringWithoutDb => MySQLContainerHelper.MySQLContainerConnectionString;
-
         protected override string AgnosticSampleDbAssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDB.Agnostic.dll";
         protected override string SpecificDBMSSampleDbAssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDB.MySQL.dll";
+
+        private static string ConnectionStringWithoutDb => MySQLContainerHelper.MySQLContainerConnectionString;
 
         protected override EquivalencyAssertionOptions<MySQLDatabase> AddAdditionalDbModelEquivalenceyOptions(
             EquivalencyAssertionOptions<MySQLDatabase> options)
@@ -67,9 +67,9 @@ $@"DROP DATABASE IF EXISTS `{databaseName}`;");
             return connectionString;
         }
 
-        private protected override Interactor CreateInteractor(DbConnection connection)
+        private protected override IDbModelFromDbSysInfoBuilder CreateDbModelFromDbSysInfoBuilder(DbConnection connection)
         {
-            return new MySQLInteractor(new MySQLQueryExecutor(connection));
+            return new MySQLDbModelFromDbSysInfoBuilder(new MySQLQueryExecutor(connection));
         }
 
         private static string MangleDbNameIfTooLong(string databaseName)

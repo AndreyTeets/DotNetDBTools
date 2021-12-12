@@ -1,5 +1,9 @@
 ﻿using System.Data.Common;
+using DotNetDBTools.Analysis.Core;
+using DotNetDBTools.Analysis.MSSQL;
 using DotNetDBTools.Deploy.Core;
+using DotNetDBTools.Deploy.Core.Editors;
+using DotNetDBTools.Deploy.MSSQL.Editors;
 
 namespace DotNetDBTools.Deploy.MSSQL
 {
@@ -15,9 +19,19 @@ namespace DotNetDBTools.Deploy.MSSQL
             return new MSSQLGenSqlScriptQueryExecutor();
         }
 
-        public Interactor CreateInteractor(IQueryExecutor queryExecutor)
+        public IDbModelConverter CreateDbModelConverter()
         {
-            return new MSSQLInteractor(queryExecutor);
+            return new MSSQLDbModelConverter();
+        }
+
+        public IDbEditor CreateDbEditor(IQueryExecutor queryExecutor)
+        {
+            return new MSSQLDbEditor(queryExecutor);
+        }
+
+        public IDbModelFromDbSysInfoBuilder CreateDbModelFromDbSysInfoBuilder(IQueryExecutor queryExecutor)
+        {
+            return new MSSQLDbModelFromDbSysInfoBuilder(queryExecutor);
         }
     }
 }

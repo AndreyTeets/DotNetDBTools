@@ -1,28 +1,19 @@
-﻿using DotNetDBTools.Analysis.MSSQL;
-using DotNetDBTools.Deploy.Core;
+﻿using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.MSSQL;
-using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.MSSQL;
 
 namespace DotNetDBTools.Deploy
 {
-    public class MSSQLDeployManager : DeployManager
+    public class MSSQLDeployManager : DeployManager<MSSQLDatabase>
     {
-        public MSSQLDeployManager() : base(
+        public MSSQLDeployManager()
+            : this(new DeployOptions()) { }
+
+        public MSSQLDeployManager(DeployOptions options) : base(
             options: new DeployOptions(),
-            dbModelConverter: new MSSQLDbModelConverter(),
             factory: new MSSQLFactory())
         {
-        }
-
-        public MSSQLDeployManager(DeployOptions options) : this()
-        {
             Options = options;
-        }
-
-        protected override Database CreateEmptyDatabaseModel()
-        {
-            return new MSSQLDatabase(null);
         }
     }
 }

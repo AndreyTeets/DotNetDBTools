@@ -1,0 +1,109 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using DotNetDBTools.Deploy.Core;
+using DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo;
+using DotNetDBTools.Models.Core;
+
+namespace DotNetDBTools.Deploy.PostgreSQL.Queries.DBMSSysInfo
+{
+    internal class PostgreSQLGetColumnsFromDBMSSysInfoQuery : GetColumnsFromDBMSSysInfoQuery
+    {
+        public override string Sql =>
+$@"SELECT
+    c.relname AS ""{nameof(PostgreSQLColumnRecord.TableName)}"",
+    a.attname AS ""{nameof(PostgreSQLColumnRecord.ColumnName)}"",
+    t.typname AS ""{nameof(PostgreSQLColumnRecord.DataType)}"",
+    NOT a.attnotnull AS ""{nameof(PostgreSQLColumnRecord.Nullable)}"",
+    pg_get_serial_sequence('""' || n.nspname || '"".""' || c.relname || '""', a.attname) IS NOT NULL AS ""{nameof(PostgreSQLColumnRecord.Identity)}"",
+    pg_get_expr(d.adbin, d.adrelid) AS ""{nameof(PostgreSQLColumnRecord.Default)}"",
+    a.atttypmod AS ""{nameof(PostgreSQLColumnRecord.Length)}""
+FROM pg_catalog.pg_class c
+INNER JOIN pg_catalog.pg_namespace n
+    ON n.oid = c.relnamespace
+INNER JOIN pg_catalog.pg_attribute a
+    ON a.attrelid = c.oid
+        AND a.attnum > 0
+        AND NOT a.attisdropped
+INNER JOIN pg_catalog.pg_type t
+    ON t.oid = a.atttypid
+LEFT JOIN pg_catalog.pg_attrdef d
+    ON (d.adrelid,  d.adnum) = (a.attrelid, a.attnum)
+WHERE c.relkind = 'r'
+    AND n.nspname NOT IN ('information_schema', 'pg_catalog')
+    AND c.relname != '{DNDBTSysTables.DNDBTDbObjects}';";
+
+        public override RecordsLoader Loader => new PostgreSQLRecordsLoader();
+        public override RecordMapper Mapper => new PostgreSQLRecordMapper();
+
+        public class PostgreSQLColumnRecord : ColumnRecord
+        {
+            public bool Identity { get; set; }
+            public string Length { get; set; }
+        }
+
+        public class PostgreSQLRecordsLoader : RecordsLoader
+        {
+            public override IEnumerable<ColumnRecord> GetRecords(IQueryExecutor queryExecutor, GetColumnsFromDBMSSysInfoQuery query) =>
+                queryExecutor.Query<PostgreSQLColumnRecord>(query);
+        }
+
+        public class PostgreSQLRecordMapper : RecordMapper
+        {
+            public override Column MapToColumnModel(ColumnRecord builderColumnRecord)
+            {
+                PostgreSQLColumnRecord columnRecord = (PostgreSQLColumnRecord)builderColumnRecord;
+                return new Column()
+                {
+                    ID = Guid.NewGuid(),
+                    Name = columnRecord.ColumnName,
+                    DataType = ParseDataType(columnRecord),
+                    Nullable = columnRecord.Nullable,
+                    Identity = columnRecord.Identity,
+                    Default = ParseDefault(columnRecord.Default),
+                };
+            }
+
+            private static DataType ParseDataType(PostgreSQLColumnRecord columnRecord)
+            {
+                string dataType = columnRecord.DataType.ToUpper();
+                int length = int.Parse(columnRecord.Length);
+                DataType dataTypeModel = PostgreSQLQueriesHelper.CreateDataTypeModel(dataType, length);
+                return dataTypeModel;
+            }
+
+            private static object ParseDefault(string valueFromDBMSSysTable)
+            {
+                if (valueFromDBMSSysTable is null)
+                    return null;
+                string value = valueFromDBMSSysTable;
+
+                if (IsFunction(value))
+                    return new DefaultValueAsFunction() { FunctionText = value };
+                if (IsByte(value))
+                    return ToByteArray(value);
+                if (IsString(value))
+                    return TrimOuterQuotes(value.Remove(value.LastIndexOf("::", StringComparison.Ordinal)));
+                if (IsNumber(value))
+                    return long.Parse(value);
+
+                throw new ArgumentException($"Invalid parameter value '{valueFromDBMSSysTable}'", nameof(valueFromDBMSSysTable));
+
+                static bool IsFunction(string val) => val.Contains("(") && val.Contains(")");
+                static bool IsString(string val) => !IsFunction(val) && new string[] { "::text", "::character" }.Any(x => val.Contains(x));
+                static bool IsByte(string val) => !IsFunction(val) && val.Contains("::bytea");
+                static bool IsNumber(string val) => !IsFunction(val) && long.TryParse(val, out _);
+                static string TrimOuterQuotes(string val) => val.Substring(1, val.Length - 2);
+                static byte[] ToByteArray(string val)
+                {
+                    string hex = TrimOuterQuotes(val.Substring(2, val.Length - 2).Replace("::bytea", ""));
+                    int numChars = hex.Length;
+                    byte[] bytes = new byte[numChars / 2];
+                    for (int i = 0; i < numChars; i += 2)
+                        bytes[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
+                    return bytes;
+                }
+            }
+        }
+    }
+}

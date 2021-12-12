@@ -1,25 +1,18 @@
-﻿using System.Reflection;
-using DotNetDBTools.Definition.Core;
+﻿using DotNetDBTools.Definition.Core;
 using DotNetDBTools.DefinitionParsing.Core;
 using DotNetDBTools.Models.SQLite;
 
 namespace DotNetDBTools.DefinitionParsing.SQLite
 {
-    internal class SQLiteDatabaseModelBuilder
-        : DatabaseModelBuilder<SQLiteTable, SQLiteView, Models.Core.Column>
+    internal class SQLiteDatabaseModelBuilder : DatabaseModelBuilder<
+        SQLiteDatabase,
+        SQLiteTable,
+        SQLiteView,
+        Models.Core.Column>
     {
         public SQLiteDatabaseModelBuilder()
             : base(new SQLiteDataTypeMapper(), new SQLiteDefaultValueMapper())
         {
-        }
-
-        public SQLiteDatabase BuildDatabaseModel(Assembly dbAssembly)
-        {
-            return new SQLiteDatabase(DbAssemblyInfoHelper.GetDbName(dbAssembly))
-            {
-                Tables = BuildTableModels(dbAssembly),
-                Views = BuildViewModels(dbAssembly),
-            };
         }
 
         protected override string GetOnUpdateActionName(BaseForeignKey fk) => ((Definition.SQLite.ForeignKey)fk).OnUpdate.ToString();

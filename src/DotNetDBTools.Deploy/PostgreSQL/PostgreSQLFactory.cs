@@ -1,5 +1,9 @@
 ﻿using System.Data.Common;
+using DotNetDBTools.Analysis.Core;
+using DotNetDBTools.Analysis.PostgreSQL;
 using DotNetDBTools.Deploy.Core;
+using DotNetDBTools.Deploy.Core.Editors;
+using DotNetDBTools.Deploy.PostgreSQL.Editors;
 
 namespace DotNetDBTools.Deploy.PostgreSQL
 {
@@ -15,9 +19,19 @@ namespace DotNetDBTools.Deploy.PostgreSQL
             return new PostgreSQLGenSqlScriptQueryExecutor();
         }
 
-        public Interactor CreateInteractor(IQueryExecutor queryExecutor)
+        public IDbModelConverter CreateDbModelConverter()
         {
-            return new PostgreSQLInteractor(queryExecutor);
+            return new PostgreSQLDbModelConverter();
+        }
+
+        public IDbEditor CreateDbEditor(IQueryExecutor queryExecutor)
+        {
+            return new PostgreSQLDbEditor(queryExecutor);
+        }
+
+        public IDbModelFromDbSysInfoBuilder CreateDbModelFromDbSysInfoBuilder(IQueryExecutor queryExecutor)
+        {
+            return new PostgreSQLDbModelFromDbSysInfoBuilder(queryExecutor);
         }
     }
 }

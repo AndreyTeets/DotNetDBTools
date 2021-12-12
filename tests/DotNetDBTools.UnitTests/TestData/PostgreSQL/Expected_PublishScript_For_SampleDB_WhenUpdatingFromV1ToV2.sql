@@ -1,16 +1,16 @@
 DO $$
 BEGIN
 
--- QUERY START: DropForeignKeyQuery
+-- QUERY START: PostgreSQLDropForeignKeyQuery
 EXECUTE 'ALTER TABLE "MyTable1" DROP CONSTRAINT "FK_MyTable1_MyColumn1_MyTable2_MyColumn1";';
--- QUERY END: DropForeignKeyQuery
+-- QUERY END: PostgreSQLDropForeignKeyQuery
 
--- QUERY START: DeleteDNDBTSysInfoQuery
+-- QUERY START: PostgreSQLDeleteDNDBTSysInfoQuery
 EXECUTE 'DELETE FROM "DNDBTDbObjects"
 WHERE "ID" = ''d11b2a53-32db-432f-bb6b-f91788844ba9'';';
--- QUERY END: DeleteDNDBTSysInfoQuery
+-- QUERY END: PostgreSQLDeleteDNDBTSysInfoQuery
 
--- QUERY START: AlterTableQuery
+-- QUERY START: PostgreSQLAlterTableQuery
 EXECUTE 'ALTER TABLE "MyTable1" RENAME TO "MyTable1NewName";
 ALTER TABLE "MyTable1NewName" DROP CONSTRAINT "UQ_MyTable1_MyColumn2";
 ALTER TABLE "MyTable1NewName" DROP CONSTRAINT "PK_MyTable1";
@@ -21,43 +21,43 @@ ALTER TABLE "MyTable1NewName" ALTER COLUMN "MyColumn1" DROP DEFAULT;
 ALTER TABLE "MyTable1NewName" ALTER COLUMN "MyColumn1" SET DATA TYPE BIGINT;
 ALTER TABLE "MyTable1NewName" ALTER COLUMN "MyColumn1" DROP NOT NULL;
 ALTER TABLE "MyTable1NewName" ALTER COLUMN "MyColumn1" SET DEFAULT 15;';
--- QUERY END: AlterTableQuery
+-- QUERY END: PostgreSQLAlterTableQuery
 
--- QUERY START: DeleteDNDBTSysInfoQuery
+-- QUERY START: PostgreSQLDeleteDNDBTSysInfoQuery
 EXECUTE 'DELETE FROM "DNDBTDbObjects"
 WHERE "ID" = ''f3f08522-26ee-4950-9135-22edf2e4e0cf'';';
--- QUERY END: DeleteDNDBTSysInfoQuery
+-- QUERY END: PostgreSQLDeleteDNDBTSysInfoQuery
 
--- QUERY START: DeleteDNDBTSysInfoQuery
+-- QUERY START: PostgreSQLDeleteDNDBTSysInfoQuery
 EXECUTE 'DELETE FROM "DNDBTDbObjects"
 WHERE "ID" = ''37a45def-f4a0-4be7-8bfb-8fbed4a7d705'';';
--- QUERY END: DeleteDNDBTSysInfoQuery
+-- QUERY END: PostgreSQLDeleteDNDBTSysInfoQuery
 
--- QUERY START: DeleteDNDBTSysInfoQuery
+-- QUERY START: PostgreSQLDeleteDNDBTSysInfoQuery
 EXECUTE 'DELETE FROM "DNDBTDbObjects"
 WHERE "ID" = ''fe68ee3d-09d0-40ac-93f9-5e441fbb4f70'';';
--- QUERY END: DeleteDNDBTSysInfoQuery
+-- QUERY END: PostgreSQLDeleteDNDBTSysInfoQuery
 
--- QUERY START: DeleteDNDBTSysInfoQuery
+-- QUERY START: PostgreSQLDeleteDNDBTSysInfoQuery
 EXECUTE 'DELETE FROM "DNDBTDbObjects"
 WHERE "ID" = ''6e95de30-e01a-4fb4-b8b7-8f0c40bb682c'';';
--- QUERY END: DeleteDNDBTSysInfoQuery
+-- QUERY END: PostgreSQLDeleteDNDBTSysInfoQuery
 
--- QUERY START: UpdateDNDBTSysInfoQuery
+-- QUERY START: PostgreSQLUpdateDNDBTSysInfoQuery
 EXECUTE 'UPDATE "DNDBTDbObjects" SET
     "Name" = ''MyTable1NewName'',
     "ExtraInfo" = NULL
 WHERE "ID" = ''299675e6-4faa-4d0f-a36a-224306ba5bcb'';';
--- QUERY END: UpdateDNDBTSysInfoQuery
+-- QUERY END: PostgreSQLUpdateDNDBTSysInfoQuery
 
--- QUERY START: UpdateDNDBTSysInfoQuery
+-- QUERY START: PostgreSQLUpdateDNDBTSysInfoQuery
 EXECUTE 'UPDATE "DNDBTDbObjects" SET
     "Name" = ''MyColumn1'',
     "ExtraInfo" = NULL
 WHERE "ID" = ''a2f2a4de-1337-4594-ae41-72ed4d05f317'';';
--- QUERY END: UpdateDNDBTSysInfoQuery
+-- QUERY END: PostgreSQLUpdateDNDBTSysInfoQuery
 
--- QUERY START: AlterTableQuery
+-- QUERY START: PostgreSQLAlterTableQuery
 EXECUTE '
 ALTER TABLE "MyTable2" DROP CONSTRAINT "PK_MyTable2";
 ALTER TABLE "MyTable2" ALTER COLUMN "MyColumn2" DROP DEFAULT;
@@ -69,33 +69,33 @@ ALTER TABLE "MyTable2" ALTER COLUMN "MyColumn1NewName" SET DEFAULT 333;
 ALTER TABLE "MyTable2" ADD COLUMN "MyColumn2" BYTEA NULL;
 ALTER TABLE "MyTable2" ALTER COLUMN "MyColumn2" SET DEFAULT ''\x000102'';
 ALTER TABLE "MyTable2" ADD CONSTRAINT "PK_MyTable2" PRIMARY KEY ("MyColumn1NewName");';
--- QUERY END: AlterTableQuery
+-- QUERY END: PostgreSQLAlterTableQuery
 
--- QUERY START: DeleteDNDBTSysInfoQuery
+-- QUERY START: PostgreSQLDeleteDNDBTSysInfoQuery
 EXECUTE 'DELETE FROM "DNDBTDbObjects"
 WHERE "ID" = ''3a43615b-40b3-4a13-99e7-93af7c56e8ce'';';
--- QUERY END: DeleteDNDBTSysInfoQuery
+-- QUERY END: PostgreSQLDeleteDNDBTSysInfoQuery
 
--- QUERY START: DeleteDNDBTSysInfoQuery
+-- QUERY START: PostgreSQLDeleteDNDBTSysInfoQuery
 EXECUTE 'DELETE FROM "DNDBTDbObjects"
 WHERE "ID" = ''5a0d1926-3270-4eb2-92eb-00be56c7af23'';';
--- QUERY END: DeleteDNDBTSysInfoQuery
+-- QUERY END: PostgreSQLDeleteDNDBTSysInfoQuery
 
--- QUERY START: UpdateDNDBTSysInfoQuery
+-- QUERY START: PostgreSQLUpdateDNDBTSysInfoQuery
 EXECUTE 'UPDATE "DNDBTDbObjects" SET
     "Name" = ''MyTable2'',
     "ExtraInfo" = NULL
 WHERE "ID" = ''bfb9030c-a8c3-4882-9c42-1c6ad025cf8f'';';
--- QUERY END: UpdateDNDBTSysInfoQuery
+-- QUERY END: PostgreSQLUpdateDNDBTSysInfoQuery
 
--- QUERY START: UpdateDNDBTSysInfoQuery
+-- QUERY START: PostgreSQLUpdateDNDBTSysInfoQuery
 EXECUTE 'UPDATE "DNDBTDbObjects" SET
     "Name" = ''MyColumn1NewName'',
     "ExtraInfo" = NULL
 WHERE "ID" = ''c480f22f-7c01-4f41-b282-35e9f5cd1fe3'';';
--- QUERY END: UpdateDNDBTSysInfoQuery
+-- QUERY END: PostgreSQLUpdateDNDBTSysInfoQuery
 
--- QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: PostgreSQLInsertDNDBTSysInfoQuery
 EXECUTE 'INSERT INTO "DNDBTDbObjects"
 (
     "ID",
@@ -112,9 +112,9 @@ VALUES
     ''MyColumn2'',
     NULL
 );';
--- QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
 
--- QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: PostgreSQLInsertDNDBTSysInfoQuery
 EXECUTE 'INSERT INTO "DNDBTDbObjects"
 (
     "ID",
@@ -131,18 +131,18 @@ VALUES
     ''PK_MyTable2'',
     NULL
 );';
--- QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
 
--- QUERY START: CreateTableQuery
+-- QUERY START: PostgreSQLCreateTableQuery
 EXECUTE 'CREATE TABLE "MyTable3"
 (
     "MyColumn1" BIGINT NOT NULL DEFAULT 333,
     "MyColumn2" BYTEA NOT NULL,
     CONSTRAINT "UQ_MyTable3_MyColumns12" UNIQUE ("MyColumn1", "MyColumn2")
 );';
--- QUERY END: CreateTableQuery
+-- QUERY END: PostgreSQLCreateTableQuery
 
--- QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: PostgreSQLInsertDNDBTSysInfoQuery
 EXECUTE 'INSERT INTO "DNDBTDbObjects"
 (
     "ID",
@@ -159,9 +159,9 @@ VALUES
     ''MyTable3'',
     NULL
 );';
--- QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
 
--- QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: PostgreSQLInsertDNDBTSysInfoQuery
 EXECUTE 'INSERT INTO "DNDBTDbObjects"
 (
     "ID",
@@ -178,9 +178,9 @@ VALUES
     ''MyColumn1'',
     NULL
 );';
--- QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
 
--- QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: PostgreSQLInsertDNDBTSysInfoQuery
 EXECUTE 'INSERT INTO "DNDBTDbObjects"
 (
     "ID",
@@ -197,9 +197,9 @@ VALUES
     ''MyColumn2'',
     NULL
 );';
--- QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
 
--- QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: PostgreSQLInsertDNDBTSysInfoQuery
 EXECUTE 'INSERT INTO "DNDBTDbObjects"
 (
     "ID",
@@ -216,15 +216,15 @@ VALUES
     ''UQ_MyTable3_MyColumns12'',
     NULL
 );';
--- QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
 
--- QUERY START: CreateForeignKeyQuery
+-- QUERY START: PostgreSQLCreateForeignKeyQuery
 EXECUTE 'ALTER TABLE "MyTable1NewName" ADD CONSTRAINT "FK_MyTable1_MyColumn1_MyTable2_MyColumn1" FOREIGN KEY ("MyColumn1")
     REFERENCES "MyTable2" ("MyColumn1NewName")
     ON UPDATE NO ACTION ON DELETE SET NULL;';
--- QUERY END: CreateForeignKeyQuery
+-- QUERY END: PostgreSQLCreateForeignKeyQuery
 
--- QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: PostgreSQLInsertDNDBTSysInfoQuery
 EXECUTE 'INSERT INTO "DNDBTDbObjects"
 (
     "ID",
@@ -241,15 +241,15 @@ VALUES
     ''FK_MyTable1_MyColumn1_MyTable2_MyColumn1'',
     NULL
 );';
--- QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
 
--- QUERY START: CreateForeignKeyQuery
+-- QUERY START: PostgreSQLCreateForeignKeyQuery
 EXECUTE 'ALTER TABLE "MyTable2" ADD CONSTRAINT "FK_MyTable2_MyColumns12_MyTable3_MyColumns12" FOREIGN KEY ("MyColumn1NewName", "MyColumn2")
     REFERENCES "MyTable3" ("MyColumn1", "MyColumn2")
     ON UPDATE NO ACTION ON DELETE SET DEFAULT;';
--- QUERY END: CreateForeignKeyQuery
+-- QUERY END: PostgreSQLCreateForeignKeyQuery
 
--- QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: PostgreSQLInsertDNDBTSysInfoQuery
 EXECUTE 'INSERT INTO "DNDBTDbObjects"
 (
     "ID",
@@ -266,7 +266,7 @@ VALUES
     ''FK_MyTable2_MyColumns12_MyTable3_MyColumns12'',
     NULL
 );';
--- QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
 
 END;
 $$

@@ -3,27 +3,26 @@ using System.Reflection;
 using DotNetDBTools.Definition.Core;
 using DotNetDBTools.Definition.PostgreSQL;
 using DotNetDBTools.DefinitionParsing.Core;
+using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.PostgreSQL;
 
 namespace DotNetDBTools.DefinitionParsing.PostgreSQL
 {
-    internal class PostgreSQLDatabaseModelBuilder
-        : DatabaseModelBuilder<PostgreSQLTable, PostgreSQLView, Models.Core.Column>
+    internal class PostgreSQLDatabaseModelBuilder : DatabaseModelBuilder<
+        PostgreSQLDatabase,
+        PostgreSQLTable,
+        PostgreSQLView,
+        Models.Core.Column>
     {
         public PostgreSQLDatabaseModelBuilder()
             : base(new PostgreSQLDataTypeMapper(), new PostgreSQLDefaultValueMapper())
         {
         }
 
-        public PostgreSQLDatabase BuildDatabaseModel(Assembly dbAssembly)
+        protected override void BuildAdditionalDbObjects(Database database, Assembly dbAssembly)
         {
-            return new PostgreSQLDatabase(DbAssemblyInfoHelper.GetDbName(dbAssembly))
-            {
-                Tables = BuildTableModels(dbAssembly),
-                Views = BuildViewModels(dbAssembly),
-                Functions = BuildFunctionModels(dbAssembly),
-                Procedures = new List<PostgreSQLProcedure>(),
-            };
+            PostgreSQLDatabase mssqlDatabase = (PostgreSQLDatabase)database;
+            mssqlDatabase.Functions = BuildFunctionModels(dbAssembly);
         }
 
         protected override string GetOnUpdateActionName(BaseForeignKey fk) => ((Definition.PostgreSQL.ForeignKey)fk).OnUpdate.ToString();

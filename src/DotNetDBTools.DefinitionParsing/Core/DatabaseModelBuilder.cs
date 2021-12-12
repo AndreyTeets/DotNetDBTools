@@ -7,10 +7,15 @@ using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.DefinitionParsing.Core
 {
-    internal abstract class DatabaseModelBuilder<TTable, TView, TColumn>
-         where TTable : Table, new()
-         where TView : View, new()
-         where TColumn : Column, new()
+    internal abstract class DatabaseModelBuilder<
+        TDatabase,
+        TTable,
+        TView,
+        TColumn>
+        where TDatabase : Database, new()
+        where TTable : Table, new()
+        where TView : View, new()
+        where TColumn : Column, new()
     {
         protected readonly IDataTypeMapper DataTypeMapper;
         protected readonly IDefaultValueMapper DefaultValueMapper;
@@ -22,6 +27,17 @@ namespace DotNetDBTools.DefinitionParsing.Core
             DataTypeMapper = dataTypeMapper;
             DefaultValueMapper = defaultValueMapper;
         }
+
+        public Database BuildDatabaseModel(Assembly dbAssembly)
+        {
+            TDatabase database = new();
+            database.Name = DbAssemblyInfoHelper.GetDbName(dbAssembly);
+            database.Tables = BuildTableModels(dbAssembly);
+            database.Views = BuildViewModels(dbAssembly);
+            BuildAdditionalDbObjects(database, dbAssembly);
+            return database;
+        }
+        protected virtual void BuildAdditionalDbObjects(Database database, Assembly dbAssembly) { }
 
         protected List<TTable> BuildTableModels(Assembly dbAssembly)
         {

@@ -5,6 +5,9 @@ namespace DotNetDBTools.Models.PostgreSQL
 {
     public class PostgreSQLDatabase : Database
     {
+        public PostgreSQLDatabase()
+            : this(null) { }
+
         public PostgreSQLDatabase(string name)
         {
             Kind = DatabaseKind.PostgreSQL;

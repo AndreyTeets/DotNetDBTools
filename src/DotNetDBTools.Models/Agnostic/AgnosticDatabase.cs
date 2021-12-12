@@ -5,6 +5,9 @@ namespace DotNetDBTools.Models.Agnostic
 {
     public class AgnosticDatabase : Database
     {
+        public AgnosticDatabase()
+            : this(null) { }
+
         public AgnosticDatabase(string name)
         {
             Kind = DatabaseKind.Agnostic;

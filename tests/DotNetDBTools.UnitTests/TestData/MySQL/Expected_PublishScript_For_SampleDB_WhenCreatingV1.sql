@@ -1,4 +1,4 @@
--- QUERY START: CreateTableQuery
+-- QUERY START: MySQLCreateTableQuery
 CREATE TABLE `MyTable1`
 (
     `MyColumn1` INT NOT NULL DEFAULT (15),
@@ -7,9 +7,9 @@ CREATE TABLE `MyTable1`
     CONSTRAINT `PK_MyTable1` PRIMARY KEY (`MyColumn3`),
     CONSTRAINT `UQ_MyTable1_MyColumn2` UNIQUE (`MyColumn2`)
 );
--- QUERY END: CreateTableQuery
+-- QUERY END: MySQLCreateTableQuery
 
--- QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: MySQLInsertDNDBTSysInfoQuery
 INSERT INTO `DNDBTDbObjects`
 (
     `ID`,
@@ -26,9 +26,9 @@ VALUES
     'MyTable1',
     NULL
 );
--- QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: MySQLInsertDNDBTSysInfoQuery
 
--- QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: MySQLInsertDNDBTSysInfoQuery
 INSERT INTO `DNDBTDbObjects`
 (
     `ID`,
@@ -45,9 +45,9 @@ VALUES
     'MyColumn1',
     NULL
 );
--- QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: MySQLInsertDNDBTSysInfoQuery
 
--- QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: MySQLInsertDNDBTSysInfoQuery
 INSERT INTO `DNDBTDbObjects`
 (
     `ID`,
@@ -64,9 +64,9 @@ VALUES
     'MyColumn2',
     NULL
 );
--- QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: MySQLInsertDNDBTSysInfoQuery
 
--- QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: MySQLInsertDNDBTSysInfoQuery
 INSERT INTO `DNDBTDbObjects`
 (
     `ID`,
@@ -83,9 +83,9 @@ VALUES
     'MyColumn3',
     NULL
 );
--- QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: MySQLInsertDNDBTSysInfoQuery
 
--- QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: MySQLInsertDNDBTSysInfoQuery
 INSERT INTO `DNDBTDbObjects`
 (
     `ID`,
@@ -102,9 +102,9 @@ VALUES
     'PK_MyTable1',
     NULL
 );
--- QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: MySQLInsertDNDBTSysInfoQuery
 
--- QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: MySQLInsertDNDBTSysInfoQuery
 INSERT INTO `DNDBTDbObjects`
 (
     `ID`,
@@ -121,18 +121,18 @@ VALUES
     'UQ_MyTable1_MyColumn2',
     NULL
 );
--- QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: MySQLInsertDNDBTSysInfoQuery
 
--- QUERY START: CreateTableQuery
+-- QUERY START: MySQLCreateTableQuery
 CREATE TABLE `MyTable2`
 (
     `MyColumn1` INT NOT NULL DEFAULT (333),
     `MyColumn2` BINARY(6) NULL DEFAULT (0x000102),
     CONSTRAINT `PK_MyTable2` PRIMARY KEY (`MyColumn1`)
 );
--- QUERY END: CreateTableQuery
+-- QUERY END: MySQLCreateTableQuery
 
--- QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: MySQLInsertDNDBTSysInfoQuery
 INSERT INTO `DNDBTDbObjects`
 (
     `ID`,
@@ -149,9 +149,9 @@ VALUES
     'MyTable2',
     NULL
 );
--- QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: MySQLInsertDNDBTSysInfoQuery
 
--- QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: MySQLInsertDNDBTSysInfoQuery
 INSERT INTO `DNDBTDbObjects`
 (
     `ID`,
@@ -168,9 +168,9 @@ VALUES
     'MyColumn1',
     NULL
 );
--- QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: MySQLInsertDNDBTSysInfoQuery
 
--- QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: MySQLInsertDNDBTSysInfoQuery
 INSERT INTO `DNDBTDbObjects`
 (
     `ID`,
@@ -187,9 +187,9 @@ VALUES
     'MyColumn2',
     NULL
 );
--- QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: MySQLInsertDNDBTSysInfoQuery
 
--- QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: MySQLInsertDNDBTSysInfoQuery
 INSERT INTO `DNDBTDbObjects`
 (
     `ID`,
@@ -206,17 +206,17 @@ VALUES
     'PK_MyTable2',
     NULL
 );
--- QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: MySQLInsertDNDBTSysInfoQuery
 
--- QUERY START: CreateTableQuery
+-- QUERY START: MySQLCreateTableQuery
 CREATE TABLE `MyTable5`
 (
     `MyColumn1` INT NOT NULL DEFAULT (ABS(-15)),
     `MyColumn3` DATETIME NULL
 );
--- QUERY END: CreateTableQuery
+-- QUERY END: MySQLCreateTableQuery
 
--- QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: MySQLInsertDNDBTSysInfoQuery
 INSERT INTO `DNDBTDbObjects`
 (
     `ID`,
@@ -233,9 +233,9 @@ VALUES
     'MyTable5',
     NULL
 );
--- QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: MySQLInsertDNDBTSysInfoQuery
 
--- QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: MySQLInsertDNDBTSysInfoQuery
 INSERT INTO `DNDBTDbObjects`
 (
     `ID`,
@@ -252,9 +252,9 @@ VALUES
     'MyColumn1',
     'ABS(-15)'
 );
--- QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: MySQLInsertDNDBTSysInfoQuery
 
--- QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: MySQLInsertDNDBTSysInfoQuery
 INSERT INTO `DNDBTDbObjects`
 (
     `ID`,
@@ -271,15 +271,15 @@ VALUES
     'MyColumn3',
     NULL
 );
--- QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: MySQLInsertDNDBTSysInfoQuery
 
--- QUERY START: CreateForeignKeyQuery
+-- QUERY START: MySQLCreateForeignKeyQuery
 ALTER TABLE `MyTable1` ADD CONSTRAINT `FK_MyTable1_MyColumn1_MyTable2_MyColumn1` FOREIGN KEY (`MyColumn1`)
     REFERENCES `MyTable2` (`MyColumn1`)
     ON UPDATE NO ACTION ON DELETE CASCADE;
--- QUERY END: CreateForeignKeyQuery
+-- QUERY END: MySQLCreateForeignKeyQuery
 
--- QUERY START: InsertDNDBTSysInfoQuery
+-- QUERY START: MySQLInsertDNDBTSysInfoQuery
 INSERT INTO `DNDBTDbObjects`
 (
     `ID`,
@@ -296,4 +296,4 @@ VALUES
     'FK_MyTable1_MyColumn1_MyTable2_MyColumn1',
     NULL
 );
--- QUERY END: InsertDNDBTSysInfoQuery
+-- QUERY END: MySQLInsertDNDBTSysInfoQuery

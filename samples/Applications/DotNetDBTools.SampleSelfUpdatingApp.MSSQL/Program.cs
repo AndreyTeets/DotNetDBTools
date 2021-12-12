@@ -59,10 +59,7 @@ $@"CREATE DATABASE {databaseName};");
 $@"IF EXISTS (SELECT * FROM [sys].[databases] WHERE [name] = '{databaseName}')
 BEGIN
     ALTER DATABASE {databaseName}
-    SET OFFLINE WITH ROLLBACK IMMEDIATE;
-
-    ALTER DATABASE {databaseName}
-    SET ONLINE;
+    SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
 
     DROP DATABASE {databaseName};
 END;");

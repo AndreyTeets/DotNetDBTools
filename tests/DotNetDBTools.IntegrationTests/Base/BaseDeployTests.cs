@@ -19,15 +19,15 @@ namespace DotNetDBTools.IntegrationTests.Base
         where TDbModelConverter : IDbModelConverter, new()
         where TDeployManager : IDeployManager, new()
     {
+        public TestContext TestContext { get; set; }
+
         protected abstract string AgnosticSampleDbAssemblyPath { get; }
         protected abstract string SpecificDBMSSampleDbAssemblyPath { get; }
 
-        public TestContext TestContext { get; set; }
         private string ConnectionString => CreateConnectionString(TestContext.TestName);
-
         private TDeployManager _deployManager;
         private TDbConnection _connection;
-        private Interactor _interactor;
+        private IDbModelFromDbSysInfoBuilder _dbModelFromDbSysInfoBuilder;
 
         [TestInitialize]
         public void TestInitialize()
@@ -38,13 +38,13 @@ namespace DotNetDBTools.IntegrationTests.Base
             _deployManager = new();
             _connection = new();
             _connection.ConnectionString = ConnectionString;
-            _interactor = CreateInteractor(_connection);
+            _dbModelFromDbSysInfoBuilder = CreateDbModelFromDbSysInfoBuilder(_connection);
         }
 
         [TestCleanup]
         public void TestCleanup()
         {
-            _connection.Dispose();
+            _connection?.Dispose();
         }
 
         [TestMethod]
@@ -63,7 +63,7 @@ namespace DotNetDBTools.IntegrationTests.Base
 
             TDatabase dbModelFromDbAssembly = (TDatabase)new TDbModelConverter().FromAgnostic(
                 (AgnosticDatabase)DbDefinitionParser.CreateDatabaseModel(AgnosticSampleDbAssemblyPath));
-            TDatabase dbModelFromDNDBTSysInfo = (TDatabase)_interactor.GetDatabaseModelFromDNDBTSysInfo();
+            TDatabase dbModelFromDNDBTSysInfo = (TDatabase)_dbModelFromDbSysInfoBuilder.GetDatabaseModelFromDNDBTSysInfo();
 
             AssertDbModelEquivalence(dbModelFromDbAssembly, dbModelFromDNDBTSysInfo, false);
         }
@@ -77,7 +77,7 @@ namespace DotNetDBTools.IntegrationTests.Base
 
             TDatabase dbModelFromDbAssembly = (TDatabase)new TDbModelConverter().FromAgnostic(
                 (AgnosticDatabase)DbDefinitionParser.CreateDatabaseModel(AgnosticSampleDbAssemblyPath));
-            TDatabase dbModelFromDBMSSysInfo = (TDatabase)_interactor.GenerateDatabaseModelFromDBMSSysInfo();
+            TDatabase dbModelFromDBMSSysInfo = (TDatabase)_dbModelFromDbSysInfoBuilder.GenerateDatabaseModelFromDBMSSysInfo();
 
             AssertDbModelEquivalence(dbModelFromDbAssembly, dbModelFromDBMSSysInfo, true);
         }
@@ -97,7 +97,7 @@ namespace DotNetDBTools.IntegrationTests.Base
             _deployManager.PublishDatabase(SpecificDBMSSampleDbAssemblyPath, _connection);
 
             TDatabase dbModelFromDbAssembly = (TDatabase)DbDefinitionParser.CreateDatabaseModel(SpecificDBMSSampleDbAssemblyPath);
-            TDatabase dbModelFromDNDBTSysInfo = (TDatabase)_interactor.GetDatabaseModelFromDNDBTSysInfo();
+            TDatabase dbModelFromDNDBTSysInfo = (TDatabase)_dbModelFromDbSysInfoBuilder.GetDatabaseModelFromDNDBTSysInfo();
 
             AssertDbModelEquivalence(dbModelFromDbAssembly, dbModelFromDNDBTSysInfo, false);
         }
@@ -110,7 +110,7 @@ namespace DotNetDBTools.IntegrationTests.Base
             _deployManager.UnregisterAsDNDBT(_connection);
 
             TDatabase dbModelFromDbAssembly = (TDatabase)DbDefinitionParser.CreateDatabaseModel(SpecificDBMSSampleDbAssemblyPath);
-            TDatabase dbModelFromDBMSSysInfo = (TDatabase)_interactor.GenerateDatabaseModelFromDBMSSysInfo();
+            TDatabase dbModelFromDBMSSysInfo = (TDatabase)_dbModelFromDbSysInfoBuilder.GenerateDatabaseModelFromDBMSSysInfo();
 
             AssertDbModelEquivalence(dbModelFromDbAssembly, dbModelFromDBMSSysInfo, true);
         }
@@ -138,7 +138,7 @@ namespace DotNetDBTools.IntegrationTests.Base
         protected abstract void CreateDatabase(string connectionString);
         protected abstract void DropDatabaseIfExists(string connectionString);
         protected abstract string CreateConnectionString(string testName);
-        private protected abstract Interactor CreateInteractor(DbConnection connection);
+        private protected abstract IDbModelFromDbSysInfoBuilder CreateDbModelFromDbSysInfoBuilder(DbConnection connection);
 
         private class DefaultValueAsFunctionComparer : IEqualityComparer<DefaultValueAsFunction>
         {
