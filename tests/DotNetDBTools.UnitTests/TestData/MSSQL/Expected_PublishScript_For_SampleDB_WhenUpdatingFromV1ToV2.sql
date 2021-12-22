@@ -244,33 +244,6 @@ VALUES
 );';
 -- QUERY END: MSSQLInsertDNDBTSysInfoQuery
 
--- QUERY START: MSSQLAlterTableQuery
-EXEC sp_executesql N'
-ALTER TABLE [MyTable5] DROP CONSTRAINT DF_MyTable5_MyColumn2;
-ALTER TABLE MyTable5 ALTER COLUMN MyColumn2 MyUserDefinedType1 NULL;
-ALTER TABLE MyTable5 ADD CONSTRAINT DF_MyTable5_MyColumn2 DEFAULT ''cc'' FOR MyColumn2;';
--- QUERY END: MSSQLAlterTableQuery
-
--- QUERY START: MSSQLUpdateDNDBTSysInfoQuery
-EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'';
-DECLARE @Name NVARCHAR(MAX) = ''MyTable5'';
-DECLARE @ExtraInfo NVARCHAR(MAX) = NULL;
-UPDATE DNDBTDbObjects SET
-    Name = @Name,
-    ExtraInfo = @ExtraInfo
-WHERE ID = @ID;';
--- QUERY END: MSSQLUpdateDNDBTSysInfoQuery
-
--- QUERY START: MSSQLUpdateDNDBTSysInfoQuery
-EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = ''15ae6061-426d-4485-85e6-ecd3e0f98882'';
-DECLARE @Name NVARCHAR(MAX) = ''MyColumn2'';
-DECLARE @ExtraInfo NVARCHAR(MAX) = NULL;
-UPDATE DNDBTDbObjects SET
-    Name = @Name,
-    ExtraInfo = @ExtraInfo
-WHERE ID = @ID;';
--- QUERY END: MSSQLUpdateDNDBTSysInfoQuery
-
 -- QUERY START: MSSQLDropTypeQuery
 EXEC sp_executesql N'DROP TYPE _DNDBTTemp_MyUserDefinedType1;';
 -- QUERY END: MSSQLDropTypeQuery

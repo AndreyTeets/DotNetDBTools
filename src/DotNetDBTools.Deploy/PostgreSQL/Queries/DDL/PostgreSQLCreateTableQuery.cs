@@ -40,7 +40,7 @@ $@"{trigger.Code}";
             List<string> tableDefinitions = new();
 
             tableDefinitions.AddRange(table.Columns.Select(c =>
-$@"    ""{c.Name}"" {c.DataType.Name}{GetIdentityStatement(c)} {GetNullabilityStatement(c)}{GetDefaultValStatement(c)}"));
+$@"    ""{c.Name}"" {c.DataType.GetQuotedName()}{GetIdentityStatement(c)} {GetNullabilityStatement(c)}{GetDefaultValStatement(c)}"));
 
             if (table.PrimaryKey is not null)
             {
@@ -52,7 +52,7 @@ $@"    CONSTRAINT ""{table.PrimaryKey.Name}"" PRIMARY KEY ({string.Join(", ", ta
 $@"    CONSTRAINT ""{uc.Name}"" UNIQUE ({string.Join(", ", uc.Columns.Select(x => $@"""{x}"""))})"));
 
             IEnumerable<string> _ = table.CheckConstraints.Select(cc =>
-$@"    CONSTRAINT ""{cc.Name}"" CHECK ({cc.Code})");
+$@"    CONSTRAINT ""{cc.Name}"" {cc.Code}");
 
             return string.Join(",\n", tableDefinitions);
         }

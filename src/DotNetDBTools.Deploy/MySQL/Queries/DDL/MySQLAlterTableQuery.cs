@@ -147,7 +147,7 @@ ALTER TABLE `{tableName}` DROP CONSTRAINT `{ucName}`;"
 
             public static string AddCheckConstraint(string tableName, CheckConstraint cc) =>
 $@"
-ALTER TABLE `{tableName}` ADD CONSTRAINT `{cc.Name}` CHECK ({cc.Code});"
+ALTER TABLE `{tableName}` ADD CONSTRAINT `{cc.Name}` {cc.Code};"
                 ;
             public static string DropCheckConstraint(string tableName, string ccName) =>
 $@"

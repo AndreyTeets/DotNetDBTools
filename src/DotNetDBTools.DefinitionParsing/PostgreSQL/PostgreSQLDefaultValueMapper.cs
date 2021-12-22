@@ -13,12 +13,12 @@ namespace DotNetDBTools.DefinitionParsing.PostgreSQL
             object value = column.Default;
             if (value is null)
                 return null;
-            if (((Definition.PostgreSQL.Column)column).DefaultIsFunction)
+            if (column.DefaultIsFunction)
                 return new DefaultValueAsFunction() { FunctionText = (string)value };
             return MapByColumnDataType(column.DataType, value);
         }
 
-        private static object MapByColumnDataType(IDataType dataType, object value)
+        public static object MapByColumnDataType(IDataType dataType, object value)
         {
             return dataType switch
             {

@@ -1,6 +1,151 @@
 DO $$
 BEGIN
 
+-- QUERY START: PostgreSQLCreateCompositeTypeQuery
+EXECUTE 'CREATE TYPE "MyCompositeType1" AS
+(
+    "MyAttribute1" VARCHAR(100),
+    "MyAttribute2" INT
+);';
+-- QUERY END: PostgreSQLCreateCompositeTypeQuery
+
+-- QUERY START: PostgreSQLInsertDNDBTSysInfoQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "ExtraInfo"
+)
+VALUES
+(
+    ''29bf2520-1d74-49ab-a602-14bd692371f2'',
+    NULL,
+    ''UserDefinedType'',
+    ''MyCompositeType1'',
+    NULL
+);';
+-- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
+
+-- QUERY START: PostgreSQLCreateDomainTypeQuery
+EXECUTE 'CREATE DOMAIN "MyDomain1" AS VARCHAR(100)    NULL
+    CONSTRAINT "MyDomain1_CK1" CHECK (value = lower(value))
+    CONSTRAINT "MyDomain1_CK2" CHECK (char_length(value) > 3);';
+-- QUERY END: PostgreSQLCreateDomainTypeQuery
+
+-- QUERY START: PostgreSQLInsertDNDBTSysInfoQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "ExtraInfo"
+)
+VALUES
+(
+    ''a28bcb6c-3cbc-467e-a52c-ac740c98a537'',
+    NULL,
+    ''UserDefinedType'',
+    ''MyDomain1'',
+    NULL
+);';
+-- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
+
+-- QUERY START: PostgreSQLInsertDNDBTSysInfoQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "ExtraInfo"
+)
+VALUES
+(
+    ''7a053cee-abcc-4993-8eea-12b87c5194e6'',
+    ''a28bcb6c-3cbc-467e-a52c-ac740c98a537'',
+    ''CheckConstraint'',
+    ''MyDomain1_CK1'',
+    ''CHECK (value = lower(value))''
+);';
+-- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
+
+-- QUERY START: PostgreSQLInsertDNDBTSysInfoQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "ExtraInfo"
+)
+VALUES
+(
+    ''7905b7a8-cf45-4328-8a2b-00616d98235e'',
+    ''a28bcb6c-3cbc-467e-a52c-ac740c98a537'',
+    ''CheckConstraint'',
+    ''MyDomain1_CK2'',
+    ''CHECK (char_length(value) > 3)''
+);';
+-- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
+
+-- QUERY START: PostgreSQLCreateEnumTypeQuery
+EXECUTE 'CREATE TYPE "MyEnumType1" AS ENUM
+(
+    ''Label1'',
+    ''Label2''
+);';
+-- QUERY END: PostgreSQLCreateEnumTypeQuery
+
+-- QUERY START: PostgreSQLInsertDNDBTSysInfoQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "ExtraInfo"
+)
+VALUES
+(
+    ''9286cc1d-f0a5-4046-adc0-b9ae298c6f91'',
+    NULL,
+    ''UserDefinedType'',
+    ''MyEnumType1'',
+    NULL
+);';
+-- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
+
+-- QUERY START: PostgreSQLCreateRangeTypeQuery
+EXECUTE 'CREATE TYPE "MyRangeType1" AS RANGE
+(
+    SUBTYPE = TIMESTAMP,
+    SUBTYPE_OPCLASS = "timestamp_ops",
+    MULTIRANGE_TYPE_NAME = "MyRangeType1_multirange"
+);';
+-- QUERY END: PostgreSQLCreateRangeTypeQuery
+
+-- QUERY START: PostgreSQLInsertDNDBTSysInfoQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "ExtraInfo"
+)
+VALUES
+(
+    ''b02db666-fbbc-4cd7-a14d-4049251b9a7b'',
+    NULL,
+    ''UserDefinedType'',
+    ''MyRangeType1'',
+    NULL
+);';
+-- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
+
 -- QUERY START: PostgreSQLCreateTableQuery
 EXECUTE 'CREATE TABLE "MyTable1"
 (
@@ -215,7 +360,11 @@ VALUES
 EXECUTE 'CREATE TABLE "MyTable5"
 (
     "MyColumn1" INT NOT NULL DEFAULT ABS(-15),
-    "MyColumn3" TIMESTAMPTZ(6) NULL
+    "MyColumn2" "MyCompositeType1" NOT NULL,
+    "MyColumn3" TIMESTAMPTZ(6) NULL,
+    "MyColumn4" "MyDomain1" NOT NULL,
+    "MyColumn5" "MyEnumType1" NOT NULL,
+    "MyColumn6" "MyRangeType1" NOT NULL
 );';
 -- QUERY END: PostgreSQLCreateTableQuery
 
@@ -268,10 +417,86 @@ EXECUTE 'INSERT INTO "DNDBTDbObjects"
 )
 VALUES
 (
+    ''15ae6061-426d-4485-85e6-ecd3e0f98882'',
+    ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
+    ''Column'',
+    ''MyColumn2'',
+    NULL
+);';
+-- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
+
+-- QUERY START: PostgreSQLInsertDNDBTSysInfoQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "ExtraInfo"
+)
+VALUES
+(
     ''4dde852d-ec19-4b61-80f9-da428d8ff41a'',
     ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
     ''Column'',
     ''MyColumn3'',
+    NULL
+);';
+-- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
+
+-- QUERY START: PostgreSQLInsertDNDBTSysInfoQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "ExtraInfo"
+)
+VALUES
+(
+    ''45856161-db66-49f6-afde-9214d2d2d4b0'',
+    ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
+    ''Column'',
+    ''MyColumn4'',
+    NULL
+);';
+-- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
+
+-- QUERY START: PostgreSQLInsertDNDBTSysInfoQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "ExtraInfo"
+)
+VALUES
+(
+    ''b45d163b-f49e-499f-a9e5-2538cd073b80'',
+    ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
+    ''Column'',
+    ''MyColumn5'',
+    NULL
+);';
+-- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
+
+-- QUERY START: PostgreSQLInsertDNDBTSysInfoQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "ExtraInfo"
+)
+VALUES
+(
+    ''c8b03b75-a8a2-47e0-bf5c-f3e4f1b8f500'',
+    ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
+    ''Column'',
+    ''MyColumn6'',
     NULL
 );';
 -- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery

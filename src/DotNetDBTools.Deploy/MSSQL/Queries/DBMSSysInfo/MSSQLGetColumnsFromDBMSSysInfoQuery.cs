@@ -63,22 +63,12 @@ WHERE t.name != '{DNDBTSysTables.DNDBTDbObjects}';";
 
             private static DataType ParseDataType(MSSQLColumnRecord columnRecord)
             {
+                if (columnRecord.UserDefinedDataType is not null)
+                    return new DataType { Name = columnRecord.UserDefinedDataType, IsUserDefined = true };
+
                 string dataType = columnRecord.DataType.ToUpper();
                 int length = int.Parse(columnRecord.Length);
-                DataType dataTypeModel = MSSQLQueriesHelper.CreateDataTypeModel(dataType, length);
-
-                if (columnRecord.UserDefinedDataType is not null)
-                {
-                    return new MSSQLUserDefinedDataType
-                    {
-                        Name = columnRecord.UserDefinedDataType,
-                        UnderlyingType = dataTypeModel,
-                    };
-                }
-                else
-                {
-                    return dataTypeModel;
-                }
+                return MSSQLQueriesHelper.CreateDataTypeModel(dataType, length);
             }
 
             private static object ParseDefault(string valueFromDBMSSysTable)

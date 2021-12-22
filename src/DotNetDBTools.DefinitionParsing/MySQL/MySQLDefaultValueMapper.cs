@@ -13,7 +13,7 @@ namespace DotNetDBTools.DefinitionParsing.MySQL
             object value = column.Default;
             if (value is null)
                 return null;
-            if (((Definition.MySQL.Column)column).DefaultIsFunction)
+            if (column.DefaultIsFunction)
                 return new DefaultValueAsFunction() { FunctionText = (string)value };
             return MapByColumnDataType(column.DataType, value);
         }

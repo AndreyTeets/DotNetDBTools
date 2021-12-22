@@ -31,7 +31,7 @@ namespace DotNetDBTools.DefinitionParsing.MSSQL
                 GuidDataType dt => new DataType() { Name = MSSQLDataTypeNames.UNIQUEIDENTIFIER },
                 RowVersionDataType dt => new DataType() { Name = MSSQLDataTypeNames.ROWVERSION },
 
-                IUserDefinedType userDefinedType => Map(userDefinedType),
+                IUserDefinedType udt => new DataType { Name = udt.GetType().Name, IsUserDefined = true },
                 _ => throw new InvalidOperationException($"Invalid dataType: '{dataType}'")
             };
         }
@@ -105,15 +105,6 @@ namespace DotNetDBTools.DefinitionParsing.MSSQL
             }
 
             return new DataType { Name = $"{binaryTypeName}({lengthStr})" };
-        }
-
-        private DataType Map(IUserDefinedType userDefinedType)
-        {
-            return new MSSQLUserDefinedDataType
-            {
-                Name = userDefinedType.GetType().Name,
-                UnderlyingType = MapToDataTypeModel(userDefinedType.UnderlyingType),
-            };
         }
     }
 }

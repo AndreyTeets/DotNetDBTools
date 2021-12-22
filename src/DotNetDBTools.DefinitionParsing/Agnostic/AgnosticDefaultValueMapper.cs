@@ -13,7 +13,7 @@ namespace DotNetDBTools.DefinitionParsing.Agnostic
             object value = column.Default;
             if (value is null)
                 return null;
-            if (((Definition.Agnostic.Column)column).DefaultIsFunction)
+            if (column.DefaultIsFunction)
                 return new DefaultValueAsFunction() { FunctionText = (string)value };
             return MapByColumnDataType(column.DataType, value);
         }

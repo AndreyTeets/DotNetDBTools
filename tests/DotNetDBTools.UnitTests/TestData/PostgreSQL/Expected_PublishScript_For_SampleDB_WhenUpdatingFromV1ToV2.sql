@@ -10,6 +10,204 @@ EXECUTE 'DELETE FROM "DNDBTDbObjects"
 WHERE "ID" = ''d11b2a53-32db-432f-bb6b-f91788844ba9'';';
 -- QUERY END: PostgreSQLDeleteDNDBTSysInfoQuery
 
+-- QUERY START: PostgreSQLRenameTypeToTempQuery
+EXECUTE 'ALTER TYPE "MyCompositeType1" RENAME TO "_DNDBTTemp_MyCompositeType1";';
+-- QUERY END: PostgreSQLRenameTypeToTempQuery
+
+-- QUERY START: PostgreSQLDeleteDNDBTSysInfoQuery
+EXECUTE 'DELETE FROM "DNDBTDbObjects"
+WHERE "ID" = ''29bf2520-1d74-49ab-a602-14bd692371f2'';';
+-- QUERY END: PostgreSQLDeleteDNDBTSysInfoQuery
+
+-- QUERY START: PostgreSQLRenameTypeToTempQuery
+EXECUTE 'ALTER DOMAIN "MyDomain1" RENAME TO "_DNDBTTemp_MyDomain1";';
+-- QUERY END: PostgreSQLRenameTypeToTempQuery
+
+-- QUERY START: PostgreSQLDeleteDNDBTSysInfoQuery
+EXECUTE 'DELETE FROM "DNDBTDbObjects"
+WHERE "ID" = ''a28bcb6c-3cbc-467e-a52c-ac740c98a537'';';
+-- QUERY END: PostgreSQLDeleteDNDBTSysInfoQuery
+
+-- QUERY START: PostgreSQLDeleteDNDBTSysInfoQuery
+EXECUTE 'DELETE FROM "DNDBTDbObjects"
+WHERE "ID" = ''7a053cee-abcc-4993-8eea-12b87c5194e6'';';
+-- QUERY END: PostgreSQLDeleteDNDBTSysInfoQuery
+
+-- QUERY START: PostgreSQLDeleteDNDBTSysInfoQuery
+EXECUTE 'DELETE FROM "DNDBTDbObjects"
+WHERE "ID" = ''7905b7a8-cf45-4328-8a2b-00616d98235e'';';
+-- QUERY END: PostgreSQLDeleteDNDBTSysInfoQuery
+
+-- QUERY START: PostgreSQLRenameTypeToTempQuery
+EXECUTE 'ALTER TYPE "MyEnumType1" RENAME TO "_DNDBTTemp_MyEnumType1";';
+-- QUERY END: PostgreSQLRenameTypeToTempQuery
+
+-- QUERY START: PostgreSQLDeleteDNDBTSysInfoQuery
+EXECUTE 'DELETE FROM "DNDBTDbObjects"
+WHERE "ID" = ''9286cc1d-f0a5-4046-adc0-b9ae298c6f91'';';
+-- QUERY END: PostgreSQLDeleteDNDBTSysInfoQuery
+
+-- QUERY START: PostgreSQLRenameTypeToTempQuery
+EXECUTE 'ALTER TYPE "MyRangeType1" RENAME TO "_DNDBTTemp_MyRangeType1";
+ALTER FUNCTION "MyRangeType1"(TIMESTAMP,TIMESTAMP) RENAME TO "_DNDBTTemp_MyRangeType1";
+ALTER FUNCTION "MyRangeType1" RENAME TO "_DNDBTTemp_MyRangeType1";
+ALTER TYPE "MyRangeType1_multirange" RENAME TO "_DNDBTTemp_MyRangeType1_multirange";
+ALTER FUNCTION "MyRangeType1_multirange"() RENAME TO "_DNDBTTemp_MyRangeType1_multirange";
+ALTER FUNCTION "MyRangeType1_multirange"("_DNDBTTemp_MyRangeType1") RENAME TO "_DNDBTTemp_MyRangeType1_multirange";
+ALTER FUNCTION "MyRangeType1_multirange" RENAME TO "_DNDBTTemp_MyRangeType1_multirange";';
+-- QUERY END: PostgreSQLRenameTypeToTempQuery
+
+-- QUERY START: PostgreSQLDeleteDNDBTSysInfoQuery
+EXECUTE 'DELETE FROM "DNDBTDbObjects"
+WHERE "ID" = ''b02db666-fbbc-4cd7-a14d-4049251b9a7b'';';
+-- QUERY END: PostgreSQLDeleteDNDBTSysInfoQuery
+
+-- QUERY START: PostgreSQLCreateCompositeTypeQuery
+EXECUTE 'CREATE TYPE "MyCompositeType1" AS
+(
+    "MyAttribute1" VARCHAR(110),
+    "MyAttribute2" INT
+);';
+-- QUERY END: PostgreSQLCreateCompositeTypeQuery
+
+-- QUERY START: PostgreSQLInsertDNDBTSysInfoQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "ExtraInfo"
+)
+VALUES
+(
+    ''29bf2520-1d74-49ab-a602-14bd692371f2'',
+    NULL,
+    ''UserDefinedType'',
+    ''MyCompositeType1'',
+    NULL
+);';
+-- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
+
+-- QUERY START: PostgreSQLCreateDomainTypeQuery
+EXECUTE 'CREATE DOMAIN "MyDomain1" AS VARCHAR(111)    NULL
+    CONSTRAINT "MyDomain1_CK1" CHECK (value = lower(value))
+    CONSTRAINT "MyDomain1_CK2" CHECK (char_length(value) > 3);';
+-- QUERY END: PostgreSQLCreateDomainTypeQuery
+
+-- QUERY START: PostgreSQLInsertDNDBTSysInfoQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "ExtraInfo"
+)
+VALUES
+(
+    ''a28bcb6c-3cbc-467e-a52c-ac740c98a537'',
+    NULL,
+    ''UserDefinedType'',
+    ''MyDomain1'',
+    NULL
+);';
+-- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
+
+-- QUERY START: PostgreSQLInsertDNDBTSysInfoQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "ExtraInfo"
+)
+VALUES
+(
+    ''7a053cee-abcc-4993-8eea-12b87c5194e6'',
+    ''a28bcb6c-3cbc-467e-a52c-ac740c98a537'',
+    ''CheckConstraint'',
+    ''MyDomain1_CK1'',
+    ''CHECK (value = lower(value))''
+);';
+-- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
+
+-- QUERY START: PostgreSQLInsertDNDBTSysInfoQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "ExtraInfo"
+)
+VALUES
+(
+    ''7905b7a8-cf45-4328-8a2b-00616d98235e'',
+    ''a28bcb6c-3cbc-467e-a52c-ac740c98a537'',
+    ''CheckConstraint'',
+    ''MyDomain1_CK2'',
+    ''CHECK (char_length(value) > 3)''
+);';
+-- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
+
+-- QUERY START: PostgreSQLCreateEnumTypeQuery
+EXECUTE 'CREATE TYPE "MyEnumType1" AS ENUM
+(
+    ''Label1'',
+    ''Label2'',
+    ''Label3''
+);';
+-- QUERY END: PostgreSQLCreateEnumTypeQuery
+
+-- QUERY START: PostgreSQLInsertDNDBTSysInfoQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "ExtraInfo"
+)
+VALUES
+(
+    ''9286cc1d-f0a5-4046-adc0-b9ae298c6f91'',
+    NULL,
+    ''UserDefinedType'',
+    ''MyEnumType1'',
+    NULL
+);';
+-- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
+
+-- QUERY START: PostgreSQLCreateRangeTypeQuery
+EXECUTE 'CREATE TYPE "MyRangeType1" AS RANGE
+(
+    SUBTYPE = TIMESTAMPTZ,
+    SUBTYPE_OPCLASS = "timestamptz_ops",
+    MULTIRANGE_TYPE_NAME = "MyRangeType1_multirange"
+);';
+-- QUERY END: PostgreSQLCreateRangeTypeQuery
+
+-- QUERY START: PostgreSQLInsertDNDBTSysInfoQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "ExtraInfo"
+)
+VALUES
+(
+    ''b02db666-fbbc-4cd7-a14d-4049251b9a7b'',
+    NULL,
+    ''UserDefinedType'',
+    ''MyRangeType1'',
+    NULL
+);';
+-- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
+
 -- QUERY START: PostgreSQLAlterTableQuery
 EXECUTE 'ALTER TABLE "MyTable1" RENAME TO "MyTable1NewName";
 ALTER TABLE "MyTable1NewName" DROP CONSTRAINT "UQ_MyTable1_MyColumn2";
@@ -18,7 +216,8 @@ ALTER TABLE "MyTable1NewName" ALTER COLUMN "MyColumn2" DROP DEFAULT;
 ALTER TABLE "MyTable1NewName" DROP COLUMN "MyColumn2";
 ALTER TABLE "MyTable1NewName" DROP COLUMN "MyColumn3";
 ALTER TABLE "MyTable1NewName" ALTER COLUMN "MyColumn1" DROP DEFAULT;
-ALTER TABLE "MyTable1NewName" ALTER COLUMN "MyColumn1" SET DATA TYPE BIGINT;
+ALTER TABLE "MyTable1NewName" ALTER COLUMN "MyColumn1" SET DATA TYPE BIGINT
+    USING ("MyColumn1"::text::BIGINT);
 ALTER TABLE "MyTable1NewName" ALTER COLUMN "MyColumn1" DROP NOT NULL;
 ALTER TABLE "MyTable1NewName" ALTER COLUMN "MyColumn1" SET DEFAULT 15;';
 -- QUERY END: PostgreSQLAlterTableQuery
@@ -64,7 +263,8 @@ ALTER TABLE "MyTable2" ALTER COLUMN "MyColumn2" DROP DEFAULT;
 ALTER TABLE "MyTable2" DROP COLUMN "MyColumn2";
 ALTER TABLE "MyTable2" ALTER COLUMN "MyColumn1" DROP DEFAULT;
 ALTER TABLE "MyTable2" RENAME COLUMN "MyColumn1" TO "MyColumn1NewName";
-ALTER TABLE "MyTable2" ALTER COLUMN "MyColumn1NewName" SET DATA TYPE BIGINT;
+ALTER TABLE "MyTable2" ALTER COLUMN "MyColumn1NewName" SET DATA TYPE BIGINT
+    USING ("MyColumn1NewName"::text::BIGINT);
 ALTER TABLE "MyTable2" ALTER COLUMN "MyColumn1NewName" SET DEFAULT 333;
 ALTER TABLE "MyTable2" ADD COLUMN "MyColumn2" BYTEA NULL;
 ALTER TABLE "MyTable2" ALTER COLUMN "MyColumn2" SET DEFAULT ''\x000102'';
@@ -132,6 +332,69 @@ VALUES
     NULL
 );';
 -- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
+
+-- QUERY START: PostgreSQLAlterTableQuery
+EXECUTE '
+ALTER TABLE "MyTable5" ALTER COLUMN "MyColumn2" SET DATA TYPE "MyCompositeType1"
+    USING ("MyColumn2"::text::"MyCompositeType1");
+ALTER TABLE "MyTable5" ALTER COLUMN "MyColumn4" SET DATA TYPE "MyDomain1"
+    USING ("MyColumn4"::text::"MyDomain1");
+ALTER TABLE "MyTable5" ALTER COLUMN "MyColumn5" SET DATA TYPE "MyEnumType1"
+    USING ("MyColumn5"::text::"MyEnumType1");
+ALTER TABLE "MyTable5" ALTER COLUMN "MyColumn6" SET DATA TYPE "MyRangeType1"
+    USING ("MyColumn6"::text::"MyRangeType1");';
+-- QUERY END: PostgreSQLAlterTableQuery
+
+-- QUERY START: PostgreSQLUpdateDNDBTSysInfoQuery
+EXECUTE 'UPDATE "DNDBTDbObjects" SET
+    "Name" = ''MyTable5'',
+    "ExtraInfo" = NULL
+WHERE "ID" = ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'';';
+-- QUERY END: PostgreSQLUpdateDNDBTSysInfoQuery
+
+-- QUERY START: PostgreSQLUpdateDNDBTSysInfoQuery
+EXECUTE 'UPDATE "DNDBTDbObjects" SET
+    "Name" = ''MyColumn2'',
+    "ExtraInfo" = NULL
+WHERE "ID" = ''15ae6061-426d-4485-85e6-ecd3e0f98882'';';
+-- QUERY END: PostgreSQLUpdateDNDBTSysInfoQuery
+
+-- QUERY START: PostgreSQLUpdateDNDBTSysInfoQuery
+EXECUTE 'UPDATE "DNDBTDbObjects" SET
+    "Name" = ''MyColumn4'',
+    "ExtraInfo" = NULL
+WHERE "ID" = ''45856161-db66-49f6-afde-9214d2d2d4b0'';';
+-- QUERY END: PostgreSQLUpdateDNDBTSysInfoQuery
+
+-- QUERY START: PostgreSQLUpdateDNDBTSysInfoQuery
+EXECUTE 'UPDATE "DNDBTDbObjects" SET
+    "Name" = ''MyColumn5'',
+    "ExtraInfo" = NULL
+WHERE "ID" = ''b45d163b-f49e-499f-a9e5-2538cd073b80'';';
+-- QUERY END: PostgreSQLUpdateDNDBTSysInfoQuery
+
+-- QUERY START: PostgreSQLUpdateDNDBTSysInfoQuery
+EXECUTE 'UPDATE "DNDBTDbObjects" SET
+    "Name" = ''MyColumn6'',
+    "ExtraInfo" = NULL
+WHERE "ID" = ''c8b03b75-a8a2-47e0-bf5c-f3e4f1b8f500'';';
+-- QUERY END: PostgreSQLUpdateDNDBTSysInfoQuery
+
+-- QUERY START: PostgreSQLDropTypeQuery
+EXECUTE 'DROP TYPE "_DNDBTTemp_MyCompositeType1";';
+-- QUERY END: PostgreSQLDropTypeQuery
+
+-- QUERY START: PostgreSQLDropTypeQuery
+EXECUTE 'DROP DOMAIN "_DNDBTTemp_MyDomain1";';
+-- QUERY END: PostgreSQLDropTypeQuery
+
+-- QUERY START: PostgreSQLDropTypeQuery
+EXECUTE 'DROP TYPE "_DNDBTTemp_MyEnumType1";';
+-- QUERY END: PostgreSQLDropTypeQuery
+
+-- QUERY START: PostgreSQLDropTypeQuery
+EXECUTE 'DROP TYPE "_DNDBTTemp_MyRangeType1";';
+-- QUERY END: PostgreSQLDropTypeQuery
 
 -- QUERY START: PostgreSQLCreateTableQuery
 EXECUTE 'CREATE TABLE "MyTable3"

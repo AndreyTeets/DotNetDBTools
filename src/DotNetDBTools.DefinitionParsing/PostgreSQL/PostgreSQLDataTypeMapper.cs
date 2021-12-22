@@ -1,6 +1,7 @@
 ﻿using System;
 using DotNetDBTools.Definition.Core;
 using DotNetDBTools.Definition.PostgreSQL.DataTypes;
+using DotNetDBTools.Definition.PostgreSQL.UserDefinedTypes;
 using DotNetDBTools.DefinitionParsing.Core;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.PostgreSQL;
@@ -32,6 +33,11 @@ namespace DotNetDBTools.DefinitionParsing.PostgreSQL
                 JsonDataType dt => new DataType() { Name = dt.SqlType.ToString() },
 
                 ArrayDataType dt => Map(dt),
+                IBaseType t => new DataType { Name = t.GetType().Name, IsUserDefined = true },
+                ICompositeType t => new DataType { Name = t.GetType().Name, IsUserDefined = true },
+                IDomain t => new DataType { Name = t.GetType().Name, IsUserDefined = true },
+                IEnumType t => new DataType { Name = t.GetType().Name, IsUserDefined = true },
+                IRangeType t => new DataType { Name = t.GetType().Name, IsUserDefined = true },
                 _ => throw new InvalidOperationException($"Invalid dataType: {dataType}")
             };
         }

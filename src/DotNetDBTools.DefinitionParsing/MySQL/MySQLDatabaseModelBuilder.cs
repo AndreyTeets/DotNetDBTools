@@ -21,8 +21,8 @@ namespace DotNetDBTools.DefinitionParsing.MySQL
 
         protected override void BuildAdditionalDbObjects(Database database, Assembly dbAssembly)
         {
-            MySQLDatabase mssqlDatabase = (MySQLDatabase)database;
-            mssqlDatabase.Functions = BuildFunctionModels(dbAssembly);
+            MySQLDatabase mysqlDatabase = (MySQLDatabase)database;
+            mysqlDatabase.Functions = BuildFunctionModels(dbAssembly);
         }
 
         protected override void BuildAdditionalPrimaryKeyModelProperties(Models.Core.PrimaryKey pkModel, BasePrimaryKey pk, string tableName)

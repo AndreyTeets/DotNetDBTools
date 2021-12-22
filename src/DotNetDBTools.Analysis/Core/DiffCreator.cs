@@ -150,11 +150,17 @@ namespace DotNetDBTools.Analysis.Core
             foreach (TItem newCollectionItem in newCollection)
             {
                 if (oldCollectionItemIDToItemMap.TryGetValue(newCollectionItem.ID, out TItem oldCollectionItem) &&
-                    !DbObjectsEqualityComparer.Equals(newCollectionItem, oldCollectionItem))
+                    (!DbObjectsEqualityComparer.Equals(newCollectionItem, oldCollectionItem) ||
+                        AdditionalItemsNonEqualityConditionIsTrue(newCollectionItem, oldCollectionItem)))
                 {
                     changedItemFoundAction(newCollectionItem, oldCollectionItem);
                 }
             }
+        }
+
+        protected virtual bool AdditionalItemsNonEqualityConditionIsTrue<TItem>(TItem newItem, TItem oldItem)
+        {
+            return false;
         }
     }
 }

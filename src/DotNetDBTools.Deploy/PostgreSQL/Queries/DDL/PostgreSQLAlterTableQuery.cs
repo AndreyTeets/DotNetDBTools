@@ -94,7 +94,7 @@ ALTER TABLE ""{tableName}"" RENAME COLUMN ""{oldColumnName}"" TO ""{newColumnNam
 
             public static string AddColumn(string tableName, Column c) =>
 $@"
-ALTER TABLE ""{tableName}"" ADD COLUMN ""{c.Name}"" {c.DataType.Name}{GetIdentityStatement(c)} {GetNullabilityStatement(c)};"
+ALTER TABLE ""{tableName}"" ADD COLUMN ""{c.Name}"" {c.DataType.GetQuotedName()}{GetIdentityStatement(c)} {GetNullabilityStatement(c)};"
                 ;
             public static string DropColumn(string tableName, string columnName) =>
 $@"
@@ -102,8 +102,9 @@ ALTER TABLE ""{tableName}"" DROP COLUMN ""{columnName}"";"
                 ;
             public static string AlterColumnType(string tableName, Column c) =>
 $@"
-ALTER TABLE ""{tableName}"" ALTER COLUMN ""{c.Name}"" SET DATA TYPE {c.DataType.Name};"
-                ;
+ALTER TABLE ""{tableName}"" ALTER COLUMN ""{c.Name}"" SET DATA TYPE {c.DataType.GetQuotedName()}
+    USING (""{c.Name}""::text::{c.DataType.GetQuotedName()});"
+                ; // TODO Add TypeChangeConversionsList<DataType(srcType),DataType(destType),string(usingCode)> in definition for columns?
             public static string SetColumnNotNull(string tableName, Column c) =>
 $@"
 ALTER TABLE ""{tableName}"" ALTER COLUMN ""{c.Name}"" SET NOT NULL;"
@@ -133,7 +134,7 @@ ALTER TABLE ""{tableName}"" DROP CONSTRAINT ""{ucName}"";"
 
             public static string AddCheckConstraint(string tableName, CheckConstraint cc) =>
 $@"
-ALTER TABLE ""{tableName}"" ADD CONSTRAINT ""{cc.Name}"" CHECK ({cc.Code});"
+ALTER TABLE ""{tableName}"" ADD CONSTRAINT ""{cc.Name}"" {cc.Code};"
                 ;
             public static string DropCheckConstraint(string tableName, string ccName) =>
 $@"

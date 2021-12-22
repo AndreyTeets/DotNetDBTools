@@ -47,7 +47,7 @@ namespace DotNetDBTools.SampleDB.MSSQL.Tables
 
         public CheckConstraint CK_MyTable1_MyCheck1 = new("EB9C59B5-BC7E-49D7-ADAA-F5600B6A19A2")
         {
-            Code = $"{nameof(MyColumn1)} >= 0",
+            Code = $"CHECK ({nameof(MyColumn1)} >= 0)",
         };
     }
 }

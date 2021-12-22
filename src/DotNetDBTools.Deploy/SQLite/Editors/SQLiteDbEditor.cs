@@ -34,8 +34,8 @@ namespace DotNetDBTools.Deploy.SQLite.Editors
                     QueryExecutor.Execute(new SQLiteInsertDNDBTSysInfoQuery(pk.ID, table.ID, DbObjectsTypes.PrimaryKey, pk.Name));
                 foreach (UniqueConstraint uc in table.UniqueConstraints)
                     QueryExecutor.Execute(new SQLiteInsertDNDBTSysInfoQuery(uc.ID, table.ID, DbObjectsTypes.UniqueConstraint, uc.Name));
-                foreach (CheckConstraint cc in table.CheckConstraints)
-                    QueryExecutor.Execute(new SQLiteInsertDNDBTSysInfoQuery(cc.ID, table.ID, DbObjectsTypes.CheckConstraint, cc.Name));
+                foreach (CheckConstraint ck in table.CheckConstraints)
+                    QueryExecutor.Execute(new SQLiteInsertDNDBTSysInfoQuery(ck.ID, table.ID, DbObjectsTypes.CheckConstraint, ck.Name, ck.GetExtraInfo()));
                 foreach (Index index in table.Indexes)
                     QueryExecutor.Execute(new SQLiteInsertDNDBTSysInfoQuery(index.ID, table.ID, DbObjectsTypes.Index, index.Name));
                 foreach (Trigger trigger in table.Triggers)

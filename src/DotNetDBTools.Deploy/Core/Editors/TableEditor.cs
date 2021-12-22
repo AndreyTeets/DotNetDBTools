@@ -38,8 +38,8 @@ namespace DotNetDBTools.Deploy.Core.Editors
                 QueryExecutor.Execute(Create<TInsertDNDBTSysInfoQuery>(pk.ID, table.ID, DbObjectsTypes.PrimaryKey, pk.Name));
             foreach (UniqueConstraint uc in table.UniqueConstraints)
                 QueryExecutor.Execute(Create<TInsertDNDBTSysInfoQuery>(uc.ID, table.ID, DbObjectsTypes.UniqueConstraint, uc.Name));
-            foreach (CheckConstraint cc in table.CheckConstraints)
-                QueryExecutor.Execute(Create<TInsertDNDBTSysInfoQuery>(cc.ID, table.ID, DbObjectsTypes.CheckConstraint, cc.Name));
+            foreach (CheckConstraint ck in table.CheckConstraints)
+                QueryExecutor.Execute(Create<TInsertDNDBTSysInfoQuery>(ck.ID, table.ID, DbObjectsTypes.CheckConstraint, ck.Name, ck.GetExtraInfo()));
             foreach (Index index in table.Indexes)
                 QueryExecutor.Execute(Create<TInsertDNDBTSysInfoQuery>(index.ID, table.ID, DbObjectsTypes.Index, index.Name));
             foreach (Trigger trigger in table.Triggers)
@@ -93,8 +93,8 @@ namespace DotNetDBTools.Deploy.Core.Editors
                 QueryExecutor.Execute(Create<TInsertDNDBTSysInfoQuery>(pk.ID, tableDiff.NewTable.ID, DbObjectsTypes.PrimaryKey, pk.Name));
             foreach (UniqueConstraint uc in tableDiff.UniqueConstraintsToCreate)
                 QueryExecutor.Execute(Create<TInsertDNDBTSysInfoQuery>(uc.ID, tableDiff.NewTable.ID, DbObjectsTypes.UniqueConstraint, uc.Name));
-            foreach (CheckConstraint cc in tableDiff.CheckConstraintsToCreate)
-                QueryExecutor.Execute(Create<TInsertDNDBTSysInfoQuery>(cc.ID, tableDiff.NewTable.ID, DbObjectsTypes.CheckConstraint, cc.Name));
+            foreach (CheckConstraint ck in tableDiff.CheckConstraintsToCreate)
+                QueryExecutor.Execute(Create<TInsertDNDBTSysInfoQuery>(ck.ID, tableDiff.NewTable.ID, DbObjectsTypes.CheckConstraint, ck.Name, ck.GetExtraInfo()));
             foreach (Index index in tableDiff.IndexesToCreate)
                 QueryExecutor.Execute(Create<TInsertDNDBTSysInfoQuery>(index.ID, tableDiff.NewTable.ID, DbObjectsTypes.Index, index.Name));
             foreach (Trigger trigger in tableDiff.TriggersToCreate)

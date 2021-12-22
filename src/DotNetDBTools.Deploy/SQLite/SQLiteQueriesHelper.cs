@@ -28,6 +28,9 @@ $@"    CONSTRAINT {fk.Name} FOREIGN KEY ({string.Join(", ", fk.ThisColumnNames)}
         REFERENCES {fk.ReferencedTableName}({string.Join(", ", fk.ReferencedTableColumnNames)})
         ON UPDATE {MapActionName(fk.OnUpdate)} ON DELETE {MapActionName(fk.OnDelete)}"));
 
+            IEnumerable<string> _ = table.CheckConstraints.Select(cc =>
+$@"    CONSTRAINT {cc.Name} {cc.Code}");
+
             return string.Join(",\n", tableDefinitions);
         }
 

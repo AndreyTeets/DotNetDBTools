@@ -53,7 +53,7 @@ $@"    CONSTRAINT {table.PrimaryKey.Name} PRIMARY KEY ({string.Join(", ", table.
 $@"    CONSTRAINT {uc.Name} UNIQUE ({string.Join(", ", uc.Columns)})"));
 
             IEnumerable<string> _ = table.CheckConstraints.Select(cc =>
-$@"    CONSTRAINT {cc.Name} CHECK ({cc.Code})");
+$@"    CONSTRAINT {cc.Name} {cc.Code}");
 
             return string.Join(",\n", tableDefinitions);
         }

@@ -28,10 +28,7 @@ namespace DotNetDBTools.Analysis.Core
             where T : class
         {
             Type parentType = first.GetType();
-            IEnumerable properties = parentType
-                .GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                .Where(x => x.CanRead && x.Name != "SyncRoot" && x.GetIndexParameters().Length == 0 &&
-                    x.Module.Assembly.FullName == typeof(Database).Assembly.FullName);
+            IEnumerable<PropertyInfo> properties = GetProperties(parentType);
 
             foreach (PropertyInfo property in properties)
             {
@@ -79,6 +76,14 @@ namespace DotNetDBTools.Analysis.Core
             }
 
             return true;
+        }
+
+        private static IEnumerable<PropertyInfo> GetProperties(Type parentType)
+        {
+            return parentType
+                .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                .Where(x => x.CanRead && x.Name != "SyncRoot" && x.GetIndexParameters().Length == 0 &&
+                    x.Module.Assembly.FullName == typeof(Database).Assembly.FullName);
         }
 
         private static bool IsSimpleObject(Type type)
@@ -151,10 +156,8 @@ namespace DotNetDBTools.Analysis.Core
 
                 if (IsSimpleObject(xType))
                     return SimpleObjectsAreEqual(x, y);
-                else if (typeof(DBObject).IsAssignableFrom(xType))
-                    return HaveEqualPropertiesRecursive(x, y);
                 else
-                    throw new InvalidOperationException($"Invalid item type '{xType}' in collection");
+                    return HaveEqualPropertiesRecursive(x, y);
             }
 
             public int GetHashCode(object obj)
@@ -162,10 +165,24 @@ namespace DotNetDBTools.Analysis.Core
                 Type type = obj.GetType();
                 if (IsSimpleObject(type))
                     return obj.GetHashCode();
-                else if (typeof(DBObject).IsAssignableFrom(type))
-                    return ((DBObject)obj).ID.GetHashCode();
                 else
-                    throw new InvalidOperationException($"Invalid item type '{type}' in collection");
+                    return GetAggregatedSimplePropertiesHashCode(obj);
+            }
+
+            private int GetAggregatedSimplePropertiesHashCode(object obj)
+            {
+                IEnumerable<PropertyInfo> properties = GetProperties(obj.GetType());
+                long propertiesHashCodesSum = 0;
+                foreach (PropertyInfo property in properties)
+                {
+                    if (IsSimpleObject(property.PropertyType))
+                    {
+                        object propValue = property.GetValue(obj, null);
+                        if (propValue is not null)
+                            propertiesHashCodesSum += propValue.GetHashCode();
+                    }
+                }
+                return propertiesHashCodesSum.GetHashCode();
             }
         }
     }

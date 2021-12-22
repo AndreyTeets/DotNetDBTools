@@ -8,6 +8,7 @@ using DotNetDBTools.Deploy.Core.Queries;
 using DotNetDBTools.Deploy.PostgreSQL.Queries.DNDBTSysInfo;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.PostgreSQL;
+using DotNetDBTools.Models.PostgreSQL.UserDefinedTypes;
 
 namespace DotNetDBTools.Deploy.PostgreSQL.Editors
 {
@@ -18,17 +19,31 @@ namespace DotNetDBTools.Deploy.PostgreSQL.Editors
     {
         private readonly ITableEditor _tableEditor;
         private readonly IForeignKeyEditor _foreignKeyEditor;
+        private readonly PostgreSQLUserDefinedTypesEditor _userDefinedTypesEditor;
 
         public PostgreSQLDbEditor(IQueryExecutor queryExecutor)
             : base(queryExecutor)
         {
             _tableEditor = new PostgreSQLTableEditor(queryExecutor);
             _foreignKeyEditor = new PostgreSQLForeignKeyEditor(queryExecutor);
+            _userDefinedTypesEditor = new PostgreSQLUserDefinedTypesEditor(queryExecutor);
         }
 
         public override void PopulateDNDBTSysTables(Database database)
         {
             PostgreSQLDatabase db = (PostgreSQLDatabase)database;
+            foreach (PostgreSQLCompositeType type in db.CompositeTypes)
+                QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(type.ID, null, DbObjectsTypes.UserDefinedType, type.Name));
+            foreach (PostgreSQLDomainType type in db.DomainTypes)
+            {
+                QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(type.ID, null, DbObjectsTypes.UserDefinedType, type.Name, type.GetExtraInfo()));
+                foreach (CheckConstraint ck in type.CheckConstraints)
+                    QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(ck.ID, type.ID, DbObjectsTypes.CheckConstraint, ck.Name, ck.GetExtraInfo()));
+            }
+            foreach (PostgreSQLEnumType type in db.EnumTypes)
+                QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(type.ID, null, DbObjectsTypes.UserDefinedType, type.Name));
+            foreach (PostgreSQLRangeType type in db.RangeTypes)
+                QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(type.ID, null, DbObjectsTypes.UserDefinedType, type.Name));
             foreach (PostgreSQLTable table in db.Tables)
             {
                 QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(table.ID, null, DbObjectsTypes.Table, table.Name));
@@ -39,8 +54,8 @@ namespace DotNetDBTools.Deploy.PostgreSQL.Editors
                     QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(pk.ID, table.ID, DbObjectsTypes.PrimaryKey, pk.Name));
                 foreach (UniqueConstraint uc in table.UniqueConstraints)
                     QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(uc.ID, table.ID, DbObjectsTypes.UniqueConstraint, uc.Name));
-                foreach (CheckConstraint cc in table.CheckConstraints)
-                    QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(cc.ID, table.ID, DbObjectsTypes.CheckConstraint, cc.Name));
+                foreach (CheckConstraint ck in table.CheckConstraints)
+                    QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(ck.ID, table.ID, DbObjectsTypes.CheckConstraint, ck.Name, ck.GetExtraInfo()));
                 foreach (Index index in table.Indexes)
                     QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(index.ID, table.ID, DbObjectsTypes.Index, index.Name));
                 foreach (Trigger trigger in table.Triggers)
@@ -76,8 +91,11 @@ namespace DotNetDBTools.Deploy.PostgreSQL.Editors
                 foreach (PostgreSQLTable table in dbDiff.RemovedTables)
                     _tableEditor.DropTable(table);
 
+                _userDefinedTypesEditor.RenameAllUserDefinedTypesToTempInDbAndInDbDiff(dbDiff);
+                _userDefinedTypesEditor.CreateAllUserDefinedTypes(dbDiff);
                 foreach (PostgreSQLTableDiff tableDiff in dbDiff.ChangedTables)
                     _tableEditor.AlterTable(tableDiff);
+                _userDefinedTypesEditor.DropAllUserDefinedTypes(dbDiff);
 
                 foreach (PostgreSQLTable table in dbDiff.AddedTables)
                     _tableEditor.CreateTable(table);

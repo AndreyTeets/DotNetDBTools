@@ -8,5 +8,10 @@ namespace DotNetDBTools.Deploy.Core
         {
             return (column.Default as DefaultValueAsFunction)?.FunctionText;
         }
+
+        public static string GetExtraInfo(this CheckConstraint ck)
+        {
+            return ck.Code;
+        }
     }
 }
