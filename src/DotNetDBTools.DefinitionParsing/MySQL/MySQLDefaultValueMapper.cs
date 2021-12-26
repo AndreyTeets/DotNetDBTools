@@ -14,7 +14,7 @@ namespace DotNetDBTools.DefinitionParsing.MySQL
             if (value is null)
                 return null;
             if (column.DefaultIsFunction)
-                return new DefaultValueAsFunction() { FunctionText = (string)value };
+                return new CodePiece() { Code = (string)value };
             return MapByColumnDataType(column.DataType, value);
         }
 

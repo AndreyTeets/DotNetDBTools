@@ -21,7 +21,7 @@ namespace DotNetDBTools.Deploy.MSSQL
         public MSSQLDbModelFromDbSysInfoBuilder(IQueryExecutor queryExecutor)
             : base(queryExecutor) { }
 
-        protected override void ReplaceAdditionalDbModelObjectsIDsWithRecordOnes(Database database, Dictionary<string, DNDBTInfo> dbObjectIDsMap)
+        protected override void ReplaceAdditionalDbModelObjectsIDsAndCodeWithDNDBTSysInfo(Database database, Dictionary<string, DNDBTInfo> dbObjectIDsMap)
         {
             MSSQLDatabase mssqlDatabase = (MSSQLDatabase)database;
             foreach (MSSQLUserDefinedType udt in mssqlDatabase.UserDefinedTypes)

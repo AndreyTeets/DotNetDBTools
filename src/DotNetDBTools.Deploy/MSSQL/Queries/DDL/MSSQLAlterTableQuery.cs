@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Queries.DDL;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.MSSQL;
@@ -118,9 +119,9 @@ $@"
 ALTER TABLE {tableName} DROP CONSTRAINT {ucName};"
                 ;
 
-            public static string AddCheckConstraint(string tableName, CheckConstraint cc) =>
+            public static string AddCheckConstraint(string tableName, CheckConstraint ck) =>
 $@"
-ALTER TABLE {tableName} ADD CONSTRAINT {cc.Name} {cc.Code};"
+ALTER TABLE {tableName} ADD CONSTRAINT {ck.Name} {ck.GetCode()};"
                 ;
             public static string DropCheckConstraint(string tableName, string ccName) =>
 $@"
@@ -148,7 +149,7 @@ DROP INDEX {indexName};"
 
             public static string CreateTrigger(Trigger trigger) =>
 $@"
-{trigger.Code}"
+{trigger.CodePiece}"
                 ;
             public static string DropTrigger(string triggerName) =>
 $@"

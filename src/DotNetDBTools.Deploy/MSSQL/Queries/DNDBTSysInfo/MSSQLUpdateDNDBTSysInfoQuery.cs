@@ -10,29 +10,29 @@ namespace DotNetDBTools.Deploy.MSSQL.Queries.DNDBTSysInfo
     {
         private const string IDParameterName = "@ID";
         private const string NameParameterName = "@Name";
-        private const string ExtraInfoParameterName = "@ExtraInfo";
+        private const string CodeParameterName = "@Code";
 
-        public MSSQLUpdateDNDBTSysInfoQuery(Guid objectID, string objectName, string extraInfo = null)
-            : base(objectID, objectName, extraInfo) { }
+        public MSSQLUpdateDNDBTSysInfoQuery(Guid objectID, string objectName, string objectCode = null)
+            : base(objectID, objectName, objectCode) { }
 
         protected override string GetSql()
         {
             string query =
 $@"UPDATE {DNDBTSysTables.DNDBTDbObjects} SET
     {DNDBTSysTables.DNDBTDbObjects.Name} = {NameParameterName},
-    {DNDBTSysTables.DNDBTDbObjects.ExtraInfo} = {ExtraInfoParameterName}
+    {DNDBTSysTables.DNDBTDbObjects.Code} = {CodeParameterName}
 WHERE {DNDBTSysTables.DNDBTDbObjects.ID} = {IDParameterName};";
 
             return query;
         }
 
-        protected override List<QueryParameter> GetParameters(Guid objectID, string objectName, string extraInfo)
+        protected override List<QueryParameter> GetParameters(Guid objectID, string objectName, string objectCode)
         {
             return new List<QueryParameter>
             {
                 new QueryParameter(IDParameterName, objectID, DbType.Guid),
                 new QueryParameter(NameParameterName, objectName, DbType.String),
-                new QueryParameter(ExtraInfoParameterName, extraInfo, DbType.String),
+                new QueryParameter(CodeParameterName, objectCode, DbType.String),
             };
         }
     }

@@ -41,7 +41,7 @@ namespace DotNetDBTools.Analysis.MSSQL
             {
                 ID = view.ID,
                 Name = view.Name,
-                Code = view.Code,
+                CodePiece = view.CodePiece,
             };
 
         private static IEnumerable<Column> ConvertToMSSQLModel(IEnumerable<Column> columns, string tableName)

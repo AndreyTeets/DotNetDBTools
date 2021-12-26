@@ -2,6 +2,6 @@
 {
     public class Trigger : DBObject
     {
-        public string Code { get; set; }
+        public CodePiece CodePiece { get; set; }
     }
 }

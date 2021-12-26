@@ -3,7 +3,7 @@ using System.Reflection;
 using DotNetDBTools.DefinitionParsing;
 using DotNetDBTools.Generation.Agnostic;
 using DotNetDBTools.Models.Agnostic;
-using DotNetDBTools.UnitTests.TestHelpers;
+using DotNetDBTools.UnitTests.Utilities;
 using FluentAssertions;
 using Xunit;
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.Deploy.SQLite
@@ -28,8 +29,8 @@ $@"    CONSTRAINT {fk.Name} FOREIGN KEY ({string.Join(", ", fk.ThisColumnNames)}
         REFERENCES {fk.ReferencedTableName}({string.Join(", ", fk.ReferencedTableColumnNames)})
         ON UPDATE {MapActionName(fk.OnUpdate)} ON DELETE {MapActionName(fk.OnDelete)}"));
 
-            IEnumerable<string> _ = table.CheckConstraints.Select(cc =>
-$@"    CONSTRAINT {cc.Name} {cc.Code}");
+            IEnumerable<string> _ = table.CheckConstraints.Select(ck =>
+$@"    CONSTRAINT {ck.Name} {ck.GetCode()}");
 
             return string.Join(",\n", tableDefinitions);
         }
@@ -66,7 +67,7 @@ $@"    CONSTRAINT {cc.Name} {cc.Code}");
         {
             return value switch
             {
-                DefaultValueAsFunction => $"({((DefaultValueAsFunction)value).FunctionText})",
+                CodePiece => $"({((CodePiece)value).Code})",
                 string => $"'{value}'",
                 long => $"{value}",
                 byte[] => $"{ToHex((byte[])value)}",

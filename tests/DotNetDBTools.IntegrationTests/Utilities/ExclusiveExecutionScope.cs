@@ -2,7 +2,7 @@
 using System.Collections.Concurrent;
 using System.Threading;
 
-namespace DotNetDBTools.IntegrationTests.TestHelpers
+namespace DotNetDBTools.IntegrationTests.Utilities
 {
     public static class ExclusiveExecutionScope
     {

@@ -11,13 +11,13 @@ namespace DotNetDBTools.Deploy.Core.Queries.DNDBTSysInfo
         private readonly string _sql;
         private readonly List<QueryParameter> _parameters;
 
-        public UpdateDNDBTSysInfoQuery(Guid objectID, string objectName, string extraInfo)
+        public UpdateDNDBTSysInfoQuery(Guid objectID, string objectName, string objectCode)
         {
             _sql = GetSql();
-            _parameters = GetParameters(objectID, objectName, extraInfo);
+            _parameters = GetParameters(objectID, objectName, objectCode);
         }
 
         protected abstract string GetSql();
-        protected abstract List<QueryParameter> GetParameters(Guid objectID, string objectName, string extraInfo);
+        protected abstract List<QueryParameter> GetParameters(Guid objectID, string objectName, string objectCode);
     }
 }

@@ -12,7 +12,7 @@ $@"CREATE TABLE ""{DNDBTSysTables.DNDBTDbObjects}""
     ""{DNDBTSysTables.DNDBTDbObjects.ParentID}"" UUID NULL,
     ""{DNDBTSysTables.DNDBTDbObjects.Type}"" VARCHAR(32) NOT NULL,
     ""{DNDBTSysTables.DNDBTDbObjects.Name}"" VARCHAR(256) NOT NULL,
-    ""{DNDBTSysTables.DNDBTDbObjects.ExtraInfo}"" TEXT NULL
+    ""{DNDBTSysTables.DNDBTDbObjects.Code}"" TEXT NULL
 );";
     }
 }

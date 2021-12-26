@@ -5,6 +5,7 @@ using DotNetDBTools.Deploy;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.SQLite;
 using DotNetDBTools.IntegrationTests.Base;
+using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.SQLite;
 using FluentAssertions.Equivalency;
 using Microsoft.Data.Sqlite;
@@ -31,9 +32,9 @@ namespace DotNetDBTools.IntegrationTests.SQLite
             return options;
         }
 
-        protected override string NormalizeDefaultValueAsFunctionText(string value)
+        protected override string GetNormalizedCodeFromCodePiece(CodePiece codePiece)
         {
-            return value.ToUpper();
+            return codePiece.Code.ToUpper();
         }
 
         protected override void CreateDatabase(string connectionString)

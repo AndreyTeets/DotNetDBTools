@@ -77,7 +77,7 @@ namespace DotNetDBTools.Deploy.PostgreSQL.Editors
             QueryExecutor.Execute(new PostgreSQLCreateDomainTypeQuery(type));
             QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(type.ID, null, DbObjectsTypes.UserDefinedType, type.Name));
             foreach (CheckConstraint ck in type.CheckConstraints)
-                QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(ck.ID, type.ID, DbObjectsTypes.CheckConstraint, ck.Name, ck.GetExtraInfo()));
+                QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(ck.ID, type.ID, DbObjectsTypes.CheckConstraint, ck.Name, ck.GetCode()));
         }
 
         private void CreateEnumType(PostgreSQLEnumType type)

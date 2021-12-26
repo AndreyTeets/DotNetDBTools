@@ -15,13 +15,13 @@ namespace DotNetDBTools.Deploy.Core.Queries.DNDBTSysInfo
             public abstract Guid? GetParentID();
             public string Type { get; set; }
             public string Name { get; set; }
-            public string ExtraInfo { get; set; }
+            public string Code { get; set; }
         }
 
         public class DNDBTInfo
         {
             public Guid ID { get; set; }
-            public string ExtraInfo { get; set; }
+            public string Code { get; set; }
         }
 
         public abstract class RecordsLoader

@@ -77,7 +77,7 @@ EXECUTE 'INSERT INTO "DNDBTDbObjects"
     "ParentID",
     "Type",
     "Name",
-    "ExtraInfo"
+    "Code"
 )
 VALUES
 (
@@ -102,7 +102,7 @@ EXECUTE 'INSERT INTO "DNDBTDbObjects"
     "ParentID",
     "Type",
     "Name",
-    "ExtraInfo"
+    "Code"
 )
 VALUES
 (
@@ -121,7 +121,7 @@ EXECUTE 'INSERT INTO "DNDBTDbObjects"
     "ParentID",
     "Type",
     "Name",
-    "ExtraInfo"
+    "Code"
 )
 VALUES
 (
@@ -140,7 +140,7 @@ EXECUTE 'INSERT INTO "DNDBTDbObjects"
     "ParentID",
     "Type",
     "Name",
-    "ExtraInfo"
+    "Code"
 )
 VALUES
 (
@@ -168,7 +168,7 @@ EXECUTE 'INSERT INTO "DNDBTDbObjects"
     "ParentID",
     "Type",
     "Name",
-    "ExtraInfo"
+    "Code"
 )
 VALUES
 (
@@ -196,7 +196,7 @@ EXECUTE 'INSERT INTO "DNDBTDbObjects"
     "ParentID",
     "Type",
     "Name",
-    "ExtraInfo"
+    "Code"
 )
 VALUES
 (
@@ -245,14 +245,14 @@ WHERE "ID" = ''6e95de30-e01a-4fb4-b8b7-8f0c40bb682c'';';
 -- QUERY START: PostgreSQLUpdateDNDBTSysInfoQuery
 EXECUTE 'UPDATE "DNDBTDbObjects" SET
     "Name" = ''MyTable1NewName'',
-    "ExtraInfo" = NULL
+    "Code" = NULL
 WHERE "ID" = ''299675e6-4faa-4d0f-a36a-224306ba5bcb'';';
 -- QUERY END: PostgreSQLUpdateDNDBTSysInfoQuery
 
 -- QUERY START: PostgreSQLUpdateDNDBTSysInfoQuery
 EXECUTE 'UPDATE "DNDBTDbObjects" SET
     "Name" = ''MyColumn1'',
-    "ExtraInfo" = NULL
+    "Code" = NULL
 WHERE "ID" = ''a2f2a4de-1337-4594-ae41-72ed4d05f317'';';
 -- QUERY END: PostgreSQLUpdateDNDBTSysInfoQuery
 
@@ -284,14 +284,14 @@ WHERE "ID" = ''5a0d1926-3270-4eb2-92eb-00be56c7af23'';';
 -- QUERY START: PostgreSQLUpdateDNDBTSysInfoQuery
 EXECUTE 'UPDATE "DNDBTDbObjects" SET
     "Name" = ''MyTable2'',
-    "ExtraInfo" = NULL
+    "Code" = NULL
 WHERE "ID" = ''bfb9030c-a8c3-4882-9c42-1c6ad025cf8f'';';
 -- QUERY END: PostgreSQLUpdateDNDBTSysInfoQuery
 
 -- QUERY START: PostgreSQLUpdateDNDBTSysInfoQuery
 EXECUTE 'UPDATE "DNDBTDbObjects" SET
     "Name" = ''MyColumn1NewName'',
-    "ExtraInfo" = NULL
+    "Code" = NULL
 WHERE "ID" = ''c480f22f-7c01-4f41-b282-35e9f5cd1fe3'';';
 -- QUERY END: PostgreSQLUpdateDNDBTSysInfoQuery
 
@@ -302,7 +302,7 @@ EXECUTE 'INSERT INTO "DNDBTDbObjects"
     "ParentID",
     "Type",
     "Name",
-    "ExtraInfo"
+    "Code"
 )
 VALUES
 (
@@ -321,7 +321,7 @@ EXECUTE 'INSERT INTO "DNDBTDbObjects"
     "ParentID",
     "Type",
     "Name",
-    "ExtraInfo"
+    "Code"
 )
 VALUES
 (
@@ -348,35 +348,35 @@ ALTER TABLE "MyTable5" ALTER COLUMN "MyColumn6" SET DATA TYPE "MyRangeType1"
 -- QUERY START: PostgreSQLUpdateDNDBTSysInfoQuery
 EXECUTE 'UPDATE "DNDBTDbObjects" SET
     "Name" = ''MyTable5'',
-    "ExtraInfo" = NULL
+    "Code" = NULL
 WHERE "ID" = ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'';';
 -- QUERY END: PostgreSQLUpdateDNDBTSysInfoQuery
 
 -- QUERY START: PostgreSQLUpdateDNDBTSysInfoQuery
 EXECUTE 'UPDATE "DNDBTDbObjects" SET
     "Name" = ''MyColumn2'',
-    "ExtraInfo" = NULL
+    "Code" = NULL
 WHERE "ID" = ''15ae6061-426d-4485-85e6-ecd3e0f98882'';';
 -- QUERY END: PostgreSQLUpdateDNDBTSysInfoQuery
 
 -- QUERY START: PostgreSQLUpdateDNDBTSysInfoQuery
 EXECUTE 'UPDATE "DNDBTDbObjects" SET
     "Name" = ''MyColumn4'',
-    "ExtraInfo" = NULL
+    "Code" = NULL
 WHERE "ID" = ''45856161-db66-49f6-afde-9214d2d2d4b0'';';
 -- QUERY END: PostgreSQLUpdateDNDBTSysInfoQuery
 
 -- QUERY START: PostgreSQLUpdateDNDBTSysInfoQuery
 EXECUTE 'UPDATE "DNDBTDbObjects" SET
     "Name" = ''MyColumn5'',
-    "ExtraInfo" = NULL
+    "Code" = NULL
 WHERE "ID" = ''b45d163b-f49e-499f-a9e5-2538cd073b80'';';
 -- QUERY END: PostgreSQLUpdateDNDBTSysInfoQuery
 
 -- QUERY START: PostgreSQLUpdateDNDBTSysInfoQuery
 EXECUTE 'UPDATE "DNDBTDbObjects" SET
     "Name" = ''MyColumn6'',
-    "ExtraInfo" = NULL
+    "Code" = NULL
 WHERE "ID" = ''c8b03b75-a8a2-47e0-bf5c-f3e4f1b8f500'';';
 -- QUERY END: PostgreSQLUpdateDNDBTSysInfoQuery
 
@@ -412,7 +412,7 @@ EXECUTE 'INSERT INTO "DNDBTDbObjects"
     "ParentID",
     "Type",
     "Name",
-    "ExtraInfo"
+    "Code"
 )
 VALUES
 (
@@ -431,7 +431,7 @@ EXECUTE 'INSERT INTO "DNDBTDbObjects"
     "ParentID",
     "Type",
     "Name",
-    "ExtraInfo"
+    "Code"
 )
 VALUES
 (
@@ -450,7 +450,7 @@ EXECUTE 'INSERT INTO "DNDBTDbObjects"
     "ParentID",
     "Type",
     "Name",
-    "ExtraInfo"
+    "Code"
 )
 VALUES
 (
@@ -469,7 +469,7 @@ EXECUTE 'INSERT INTO "DNDBTDbObjects"
     "ParentID",
     "Type",
     "Name",
-    "ExtraInfo"
+    "Code"
 )
 VALUES
 (
@@ -494,7 +494,7 @@ EXECUTE 'INSERT INTO "DNDBTDbObjects"
     "ParentID",
     "Type",
     "Name",
-    "ExtraInfo"
+    "Code"
 )
 VALUES
 (
@@ -519,7 +519,7 @@ EXECUTE 'INSERT INTO "DNDBTDbObjects"
     "ParentID",
     "Type",
     "Name",
-    "ExtraInfo"
+    "Code"
 )
 VALUES
 (

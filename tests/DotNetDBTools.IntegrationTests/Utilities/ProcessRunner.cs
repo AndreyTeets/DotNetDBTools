@@ -2,9 +2,9 @@
 using System.IO;
 using System.Text;
 
-namespace DotNetDBTools.IntegrationTests.TestHelpers
+namespace DotNetDBTools.IntegrationTests.Utilities
 {
-    public static class ProcessHelper
+    public static class ProcessRunner
     {
         public static (int, string) RunProcess(string filePath)
         {

@@ -2,6 +2,6 @@
 {
     public class CheckConstraint : DBObject
     {
-        public string Code { get; set; }
+        public CodePiece CodePiece { get; set; }
     }
 }

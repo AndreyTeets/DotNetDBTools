@@ -27,7 +27,7 @@ ON {table.Name} ({string.Join(", ", index.Columns)});";
             foreach (Trigger trigger in table.Triggers)
             {
                 string _ =
-$@"{trigger.Code}";
+$@"{trigger.CodePiece}";
             }
 
             return query;

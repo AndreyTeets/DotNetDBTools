@@ -16,7 +16,7 @@ EXECUTE 'INSERT INTO "DNDBTDbObjects"
     "ParentID",
     "Type",
     "Name",
-    "ExtraInfo"
+    "Code"
 )
 VALUES
 (
@@ -41,7 +41,7 @@ EXECUTE 'INSERT INTO "DNDBTDbObjects"
     "ParentID",
     "Type",
     "Name",
-    "ExtraInfo"
+    "Code"
 )
 VALUES
 (
@@ -60,7 +60,7 @@ EXECUTE 'INSERT INTO "DNDBTDbObjects"
     "ParentID",
     "Type",
     "Name",
-    "ExtraInfo"
+    "Code"
 )
 VALUES
 (
@@ -79,7 +79,7 @@ EXECUTE 'INSERT INTO "DNDBTDbObjects"
     "ParentID",
     "Type",
     "Name",
-    "ExtraInfo"
+    "Code"
 )
 VALUES
 (
@@ -106,7 +106,7 @@ EXECUTE 'INSERT INTO "DNDBTDbObjects"
     "ParentID",
     "Type",
     "Name",
-    "ExtraInfo"
+    "Code"
 )
 VALUES
 (
@@ -134,7 +134,7 @@ EXECUTE 'INSERT INTO "DNDBTDbObjects"
     "ParentID",
     "Type",
     "Name",
-    "ExtraInfo"
+    "Code"
 )
 VALUES
 (
@@ -164,7 +164,7 @@ EXECUTE 'INSERT INTO "DNDBTDbObjects"
     "ParentID",
     "Type",
     "Name",
-    "ExtraInfo"
+    "Code"
 )
 VALUES
 (
@@ -183,7 +183,7 @@ EXECUTE 'INSERT INTO "DNDBTDbObjects"
     "ParentID",
     "Type",
     "Name",
-    "ExtraInfo"
+    "Code"
 )
 VALUES
 (
@@ -202,7 +202,7 @@ EXECUTE 'INSERT INTO "DNDBTDbObjects"
     "ParentID",
     "Type",
     "Name",
-    "ExtraInfo"
+    "Code"
 )
 VALUES
 (
@@ -221,7 +221,7 @@ EXECUTE 'INSERT INTO "DNDBTDbObjects"
     "ParentID",
     "Type",
     "Name",
-    "ExtraInfo"
+    "Code"
 )
 VALUES
 (
@@ -240,7 +240,7 @@ EXECUTE 'INSERT INTO "DNDBTDbObjects"
     "ParentID",
     "Type",
     "Name",
-    "ExtraInfo"
+    "Code"
 )
 VALUES
 (
@@ -259,7 +259,7 @@ EXECUTE 'INSERT INTO "DNDBTDbObjects"
     "ParentID",
     "Type",
     "Name",
-    "ExtraInfo"
+    "Code"
 )
 VALUES
 (
@@ -287,7 +287,7 @@ EXECUTE 'INSERT INTO "DNDBTDbObjects"
     "ParentID",
     "Type",
     "Name",
-    "ExtraInfo"
+    "Code"
 )
 VALUES
 (
@@ -306,7 +306,7 @@ EXECUTE 'INSERT INTO "DNDBTDbObjects"
     "ParentID",
     "Type",
     "Name",
-    "ExtraInfo"
+    "Code"
 )
 VALUES
 (
@@ -325,7 +325,7 @@ EXECUTE 'INSERT INTO "DNDBTDbObjects"
     "ParentID",
     "Type",
     "Name",
-    "ExtraInfo"
+    "Code"
 )
 VALUES
 (
@@ -344,7 +344,7 @@ EXECUTE 'INSERT INTO "DNDBTDbObjects"
     "ParentID",
     "Type",
     "Name",
-    "ExtraInfo"
+    "Code"
 )
 VALUES
 (
@@ -375,7 +375,7 @@ EXECUTE 'INSERT INTO "DNDBTDbObjects"
     "ParentID",
     "Type",
     "Name",
-    "ExtraInfo"
+    "Code"
 )
 VALUES
 (
@@ -394,7 +394,7 @@ EXECUTE 'INSERT INTO "DNDBTDbObjects"
     "ParentID",
     "Type",
     "Name",
-    "ExtraInfo"
+    "Code"
 )
 VALUES
 (
@@ -413,7 +413,7 @@ EXECUTE 'INSERT INTO "DNDBTDbObjects"
     "ParentID",
     "Type",
     "Name",
-    "ExtraInfo"
+    "Code"
 )
 VALUES
 (
@@ -432,7 +432,7 @@ EXECUTE 'INSERT INTO "DNDBTDbObjects"
     "ParentID",
     "Type",
     "Name",
-    "ExtraInfo"
+    "Code"
 )
 VALUES
 (
@@ -451,7 +451,7 @@ EXECUTE 'INSERT INTO "DNDBTDbObjects"
     "ParentID",
     "Type",
     "Name",
-    "ExtraInfo"
+    "Code"
 )
 VALUES
 (
@@ -470,7 +470,7 @@ EXECUTE 'INSERT INTO "DNDBTDbObjects"
     "ParentID",
     "Type",
     "Name",
-    "ExtraInfo"
+    "Code"
 )
 VALUES
 (
@@ -489,7 +489,7 @@ EXECUTE 'INSERT INTO "DNDBTDbObjects"
     "ParentID",
     "Type",
     "Name",
-    "ExtraInfo"
+    "Code"
 )
 VALUES
 (
@@ -514,7 +514,7 @@ EXECUTE 'INSERT INTO "DNDBTDbObjects"
     "ParentID",
     "Type",
     "Name",
-    "ExtraInfo"
+    "Code"
 )
 VALUES
 (

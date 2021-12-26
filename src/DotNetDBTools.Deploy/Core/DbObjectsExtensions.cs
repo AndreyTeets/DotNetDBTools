@@ -4,14 +4,14 @@ namespace DotNetDBTools.Deploy.Core
 {
     internal static class DbObjectsExtensions
     {
-        public static string GetExtraInfo(this Column column)
+        public static string GetCode(this Column column)
         {
-            return (column.Default as DefaultValueAsFunction)?.FunctionText;
+            return (column.Default as CodePiece)?.Code;
         }
 
-        public static string GetExtraInfo(this CheckConstraint ck)
+        public static string GetCode(this CheckConstraint ck)
         {
-            return ck.Code;
+            return ck.CodePiece.Code;
         }
     }
 }

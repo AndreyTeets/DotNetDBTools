@@ -13,7 +13,7 @@ $@"SELECT
     {DNDBTSysTables.DNDBTDbObjects.ParentID},
     {DNDBTSysTables.DNDBTDbObjects.Type},
     {DNDBTSysTables.DNDBTDbObjects.Name},
-    {DNDBTSysTables.DNDBTDbObjects.ExtraInfo}
+    {DNDBTSysTables.DNDBTDbObjects.Code}
 FROM {DNDBTSysTables.DNDBTDbObjects};";
 
         public override RecordsLoader Loader => new MSSQLRecordsLoader();

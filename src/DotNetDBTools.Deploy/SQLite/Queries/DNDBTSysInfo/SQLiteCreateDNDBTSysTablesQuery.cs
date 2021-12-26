@@ -12,7 +12,7 @@ $@"CREATE TABLE {DNDBTSysTables.DNDBTDbObjects}
     {DNDBTSysTables.DNDBTDbObjects.ParentID} BLOB NULL,
     {DNDBTSysTables.DNDBTDbObjects.Type} TEXT NOT NULL,
     {DNDBTSysTables.DNDBTDbObjects.Name} TEXT NOT NULL,
-    {DNDBTSysTables.DNDBTDbObjects.ExtraInfo} TEXT NULL
+    {DNDBTSysTables.DNDBTDbObjects.Code} TEXT NULL
 ) WITHOUT ROWID;";
     }
 }

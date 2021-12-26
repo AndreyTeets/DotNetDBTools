@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
-using DotNetDBTools.IntegrationTests.TestHelpers;
+using DotNetDBTools.IntegrationTests.Utilities;
 
 namespace DotNetDBTools.IntegrationTests.MSSQL
 {
@@ -24,10 +24,10 @@ namespace DotNetDBTools.IntegrationTests.MSSQL
 
         public static async Task InitContainer()
         {
-            await DockerHelper.StopAndRemoveContainerIfExistsAndNotRunningOrOld(MsSqlContainerName, oldMinutes: 60);
+            await DockerRunner.StopAndRemoveContainerIfExistsAndNotRunningOrOld(MsSqlContainerName, oldMinutes: 60);
             await CreateAndStartMsSqlContainerIfNotExists();
             using SqlConnection connection = new(MsSqlContainerConnectionString);
-            await DbHelper.WaitUntilDatabaseAvailableAsync(connection, timeoutSeconds: 60);
+            await DbAvailabilityChecker.WaitUntilDatabaseAvailableAsync(connection, timeoutSeconds: 60);
         }
 
         private static async Task CreateAndStartMsSqlContainerIfNotExists()
@@ -43,7 +43,7 @@ namespace DotNetDBTools.IntegrationTests.MSSQL
                 { "1433/tcp", MsSqlServerHostPort.ToString() },
             };
 
-            await DockerHelper.CreateAndStartContainerIfNotExists(
+            await DockerRunner.CreateAndStartContainerIfNotExists(
                 MsSqlContainerName,
                 $"{MsSqlImage}:{MsSqlImageTag}",
                 envVariables,

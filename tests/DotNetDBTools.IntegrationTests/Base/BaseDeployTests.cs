@@ -122,7 +122,7 @@ namespace DotNetDBTools.IntegrationTests.Base
                 EquivalencyAssertionOptions<TDatabase> configuredOptions = options
                     .Excluding(database => database.Name)
                     .Excluding(database => database.Views)
-                    .Using(new DefaultValueAsFunctionComparer(NormalizeDefaultValueAsFunctionText));
+                    .Using(new CodePieceComparer(GetNormalizedCodeFromCodePiece));
 
                 if (excludeIDs)
                     configuredOptions = configuredOptions.Excluding(database => database.Path.EndsWith(".ID", StringComparison.Ordinal));
@@ -134,31 +134,36 @@ namespace DotNetDBTools.IntegrationTests.Base
 
         protected abstract EquivalencyAssertionOptions<TDatabase> AddAdditionalDbModelEquivalenceyOptions(
             EquivalencyAssertionOptions<TDatabase> options);
-        protected abstract string NormalizeDefaultValueAsFunctionText(string value);
+        protected abstract string GetNormalizedCodeFromCodePiece(CodePiece codePiece);
         protected abstract void CreateDatabase(string connectionString);
         protected abstract void DropDatabaseIfExists(string connectionString);
         protected abstract string CreateConnectionString(string testName);
         private protected abstract IDbModelFromDbSysInfoBuilder CreateDbModelFromDbSysInfoBuilder(DbConnection connection);
 
-        private class DefaultValueAsFunctionComparer : IEqualityComparer<DefaultValueAsFunction>
+        private class CodePieceComparer : IEqualityComparer<CodePiece>
         {
-            private readonly Func<string, string> _normalizeDefaultValueAsFunctionText;
+            private readonly Func<CodePiece, string> _getNormalizedCodeFromCodePiece;
 
-            public DefaultValueAsFunctionComparer(Func<string, string> normalizeDefaultValueAsFunctionText)
+            public CodePieceComparer(Func<CodePiece, string> getNormalizedCodeFromCodePiece)
             {
-                _normalizeDefaultValueAsFunctionText = normalizeDefaultValueAsFunctionText;
+                _getNormalizedCodeFromCodePiece = getNormalizedCodeFromCodePiece;
             }
 
-            public bool Equals(DefaultValueAsFunction x, DefaultValueAsFunction y)
+            public bool Equals(CodePiece x, CodePiece y)
             {
-                string xNormalizedFunctionText = _normalizeDefaultValueAsFunctionText(x.FunctionText);
-                string yNormalizedFunctionText = _normalizeDefaultValueAsFunctionText(y.FunctionText);
-                return string.Equals(xNormalizedFunctionText, yNormalizedFunctionText, StringComparison.OrdinalIgnoreCase);
+                if (x.Code is null && y.Code is null)
+                    return true;
+                else if (x.Code is null || y.Code is null)
+                    return false;
+
+                string xNormalizedCode = _getNormalizedCodeFromCodePiece(x);
+                string yNormalizedCode = _getNormalizedCodeFromCodePiece(y);
+                return string.Equals(xNormalizedCode, yNormalizedCode, StringComparison.OrdinalIgnoreCase);
             }
 
-            public int GetHashCode(DefaultValueAsFunction obj)
+            public int GetHashCode(CodePiece obj)
             {
-                return obj.GetHashCode();
+                return obj.Code?.GetHashCode() ?? 0;
             }
         }
     }

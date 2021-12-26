@@ -74,7 +74,7 @@ namespace DotNetDBTools.DefinitionParsing.Core
                 {
                     ID = view.ID,
                     Name = view.GetType().Name,
-                    Code = view.Code,
+                    CodePiece = new CodePiece { Code = view.Code },
                 };
                 BuildAdditionalViewModelProperties(viewModel, view);
                 viewModels.Add(viewModel);

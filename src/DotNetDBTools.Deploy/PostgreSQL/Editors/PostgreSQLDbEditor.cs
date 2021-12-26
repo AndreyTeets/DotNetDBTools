@@ -36,9 +36,9 @@ namespace DotNetDBTools.Deploy.PostgreSQL.Editors
                 QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(type.ID, null, DbObjectsTypes.UserDefinedType, type.Name));
             foreach (PostgreSQLDomainType type in db.DomainTypes)
             {
-                QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(type.ID, null, DbObjectsTypes.UserDefinedType, type.Name, type.GetExtraInfo()));
+                QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(type.ID, null, DbObjectsTypes.UserDefinedType, type.Name, type.GetCode()));
                 foreach (CheckConstraint ck in type.CheckConstraints)
-                    QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(ck.ID, type.ID, DbObjectsTypes.CheckConstraint, ck.Name, ck.GetExtraInfo()));
+                    QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(ck.ID, type.ID, DbObjectsTypes.CheckConstraint, ck.Name, ck.GetCode()));
             }
             foreach (PostgreSQLEnumType type in db.EnumTypes)
                 QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(type.ID, null, DbObjectsTypes.UserDefinedType, type.Name));
@@ -48,14 +48,14 @@ namespace DotNetDBTools.Deploy.PostgreSQL.Editors
             {
                 QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(table.ID, null, DbObjectsTypes.Table, table.Name));
                 foreach (Column c in table.Columns)
-                    QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(c.ID, table.ID, DbObjectsTypes.Column, c.Name, c.GetExtraInfo()));
+                    QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(c.ID, table.ID, DbObjectsTypes.Column, c.Name, c.GetCode()));
                 PrimaryKey pk = table.PrimaryKey;
                 if (pk is not null)
                     QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(pk.ID, table.ID, DbObjectsTypes.PrimaryKey, pk.Name));
                 foreach (UniqueConstraint uc in table.UniqueConstraints)
                     QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(uc.ID, table.ID, DbObjectsTypes.UniqueConstraint, uc.Name));
                 foreach (CheckConstraint ck in table.CheckConstraints)
-                    QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(ck.ID, table.ID, DbObjectsTypes.CheckConstraint, ck.Name, ck.GetExtraInfo()));
+                    QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(ck.ID, table.ID, DbObjectsTypes.CheckConstraint, ck.Name, ck.GetCode()));
                 foreach (Index index in table.Indexes)
                     QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(index.ID, table.ID, DbObjectsTypes.Index, index.Name));
                 foreach (Trigger trigger in table.Triggers)
@@ -118,7 +118,7 @@ namespace DotNetDBTools.Deploy.PostgreSQL.Editors
 
         private void CreateFunction(PostgreSQLFunction function)
         {
-            QueryExecutor.Execute(new GenericQuery($"{function.Code}"));
+            QueryExecutor.Execute(new GenericQuery($"{function.CodePiece}"));
             QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(function.ID, null, DbObjectsTypes.Function, function.Name));
         }
 
@@ -130,7 +130,7 @@ namespace DotNetDBTools.Deploy.PostgreSQL.Editors
 
         private void CreateView(PostgreSQLView view)
         {
-            QueryExecutor.Execute(new GenericQuery($"{view.Code}"));
+            QueryExecutor.Execute(new GenericQuery($"{view.CodePiece}"));
             QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(view.ID, null, DbObjectsTypes.View, view.Name));
         }
 
@@ -142,7 +142,7 @@ namespace DotNetDBTools.Deploy.PostgreSQL.Editors
 
         private void CreateProcedure(PostgreSQLProcedure procedure)
         {
-            QueryExecutor.Execute(new GenericQuery($"{procedure.Code}"));
+            QueryExecutor.Execute(new GenericQuery($"{procedure.CodePiece}"));
             QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(procedure.ID, null, DbObjectsTypes.Procedure, procedure.Name));
         }
 

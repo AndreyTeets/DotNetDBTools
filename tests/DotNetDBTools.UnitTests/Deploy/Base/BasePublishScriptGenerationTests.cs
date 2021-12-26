@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Reflection;
 using DotNetDBTools.Deploy;
-using DotNetDBTools.UnitTests.TestHelpers;
+using DotNetDBTools.UnitTests.Utilities;
 using FluentAssertions;
 using Xunit;
 

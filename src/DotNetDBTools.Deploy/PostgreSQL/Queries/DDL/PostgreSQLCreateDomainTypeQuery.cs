@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using DotNetDBTools.Models.Core;
 using DotNetDBTools.Deploy.Core;
+using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.PostgreSQL.UserDefinedTypes;
 using static DotNetDBTools.Deploy.PostgreSQL.PostgreSQLQueriesHelper;
 
@@ -44,7 +44,7 @@ $@"    {GetNullabilityStatement(type)}");
             foreach (CheckConstraint ck in type.CheckConstraints)
             {
                 definitions.Add(
-$@"    CONSTRAINT ""{ck.Name}"" {ck.Code}");
+$@"    CONSTRAINT ""{ck.Name}"" {ck.GetCode()}");
             }
 
             return string.Join("\n", definitions);

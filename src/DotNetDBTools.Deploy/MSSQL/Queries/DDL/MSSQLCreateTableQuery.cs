@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Queries.DDL;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.MSSQL;
@@ -30,7 +31,7 @@ ON {table.Name} ({string.Join(", ", index.Columns)});";
             foreach (Trigger trigger in table.Triggers)
             {
                 string _ =
-$@"{trigger.Code}";
+$@"{trigger.CodePiece}";
             }
 
             return query;
@@ -52,8 +53,8 @@ $@"    CONSTRAINT {table.PrimaryKey.Name} PRIMARY KEY ({string.Join(", ", table.
             tableDefinitions.AddRange(table.UniqueConstraints.Select(uc =>
 $@"    CONSTRAINT {uc.Name} UNIQUE ({string.Join(", ", uc.Columns)})"));
 
-            IEnumerable<string> _ = table.CheckConstraints.Select(cc =>
-$@"    CONSTRAINT {cc.Name} {cc.Code}");
+            IEnumerable<string> _ = table.CheckConstraints.Select(ck =>
+$@"    CONSTRAINT {ck.Name} {ck.GetCode()}");
 
             return string.Join(",\n", tableDefinitions);
         }

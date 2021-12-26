@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Docker.DotNet;
 using Docker.DotNet.Models;
 
-namespace DotNetDBTools.IntegrationTests.TestHelpers
+namespace DotNetDBTools.IntegrationTests.Utilities
 {
-    public static class DockerHelper
+    public static class DockerRunner
     {
         public static async Task StopAndRemoveContainerIfExistsAndNotRunningOrOld(string containerName, int oldMinutes)
         {

@@ -2,6 +2,6 @@
 {
     public abstract class View : DBObject
     {
-        public string Code { get; set; }
+        public CodePiece CodePiece { get; set; }
     }
 }

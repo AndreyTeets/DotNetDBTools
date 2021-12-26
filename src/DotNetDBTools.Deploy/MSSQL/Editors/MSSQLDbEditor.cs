@@ -37,14 +37,14 @@ namespace DotNetDBTools.Deploy.MSSQL.Editors
             {
                 QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(table.ID, null, DbObjectsTypes.Table, table.Name));
                 foreach (Column c in table.Columns)
-                    QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(c.ID, table.ID, DbObjectsTypes.Column, c.Name, c.GetExtraInfo()));
+                    QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(c.ID, table.ID, DbObjectsTypes.Column, c.Name, c.GetCode()));
                 PrimaryKey pk = table.PrimaryKey;
                 if (pk is not null)
                     QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(pk.ID, table.ID, DbObjectsTypes.PrimaryKey, pk.Name));
                 foreach (UniqueConstraint uc in table.UniqueConstraints)
                     QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(uc.ID, table.ID, DbObjectsTypes.UniqueConstraint, uc.Name));
                 foreach (CheckConstraint ck in table.CheckConstraints)
-                    QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(ck.ID, table.ID, DbObjectsTypes.CheckConstraint, ck.Name, ck.GetExtraInfo()));
+                    QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(ck.ID, table.ID, DbObjectsTypes.CheckConstraint, ck.Name, ck.GetCode()));
                 foreach (Index index in table.Indexes)
                     QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(index.ID, table.ID, DbObjectsTypes.Index, index.Name));
                 foreach (Trigger trigger in table.Triggers)
@@ -153,7 +153,7 @@ namespace DotNetDBTools.Deploy.MSSQL.Editors
 
         private void CreateFunction(MSSQLFunction function)
         {
-            QueryExecutor.Execute(new GenericQuery($"{function.Code}"));
+            QueryExecutor.Execute(new GenericQuery($"{function.CodePiece}"));
             QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(function.ID, null, DbObjectsTypes.Function, function.Name));
         }
 
@@ -165,7 +165,7 @@ namespace DotNetDBTools.Deploy.MSSQL.Editors
 
         private void CreateView(MSSQLView view)
         {
-            QueryExecutor.Execute(new GenericQuery($"{view.Code}"));
+            QueryExecutor.Execute(new GenericQuery($"{view.CodePiece}"));
             QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(view.ID, null, DbObjectsTypes.View, view.Name));
         }
 
@@ -177,7 +177,7 @@ namespace DotNetDBTools.Deploy.MSSQL.Editors
 
         private void CreateProcedure(MSSQLProcedure procedure)
         {
-            QueryExecutor.Execute(new GenericQuery($"{procedure.Code}"));
+            QueryExecutor.Execute(new GenericQuery($"{procedure.CodePiece}"));
             QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(procedure.ID, null, DbObjectsTypes.Procedure, procedure.Name));
         }
 

@@ -13,9 +13,9 @@ namespace DotNetDBTools.Deploy.PostgreSQL
                 return type.Name;
         }
 
-        public static string GetExtraInfo(this PostgreSQLDomainType type)
+        public static string GetCode(this PostgreSQLDomainType type)
         {
-            return (type.Default as DefaultValueAsFunction)?.FunctionText;
+            return (type.Default as CodePiece)?.Code;
         }
     }
 }

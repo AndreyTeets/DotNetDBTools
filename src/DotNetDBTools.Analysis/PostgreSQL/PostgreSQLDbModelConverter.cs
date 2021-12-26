@@ -41,7 +41,7 @@ namespace DotNetDBTools.Analysis.PostgreSQL
             {
                 ID = view.ID,
                 Name = view.Name,
-                Code = view.Code,
+                CodePiece = view.CodePiece,
             };
 
         private static IEnumerable<Column> ConvertToPostgreSQLModel(IEnumerable<Column> columns)

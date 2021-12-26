@@ -39,7 +39,7 @@ namespace DotNetDBTools.Deploy.Core
         public Database GetDatabaseModelFromDNDBTSysInfo()
         {
             Database database = GenerateDatabaseModelFromDBMSSysInfo();
-            ReplaceDbModelObjectsIDsWithRecordOnes(database);
+            ReplaceDbModelObjectsIDsAndCodeWithDNDBTSysInfo(database);
             return database;
         }
 
@@ -52,14 +52,14 @@ namespace DotNetDBTools.Deploy.Core
         }
         protected virtual void BuildAdditionalDbObjects(Database database) { }
 
-        private void ReplaceDbModelObjectsIDsWithRecordOnes(Database database)
+        private void ReplaceDbModelObjectsIDsAndCodeWithDNDBTSysInfo(Database database)
         {
             TGetAllDbObjectsFromDNDBTSysInfoQuery query = new();
             IEnumerable<DNDBTDbObjectRecord> dbObjectRecords = query.Loader.GetRecords(QueryExecutor, query);
             Dictionary<string, DNDBTInfo> dbObjectIDsMap = new();
             foreach (DNDBTDbObjectRecord dbObjRec in dbObjectRecords)
             {
-                DNDBTInfo dndbtInfo = new() { ID = dbObjRec.GetID(), ExtraInfo = dbObjRec.ExtraInfo };
+                DNDBTInfo dndbtInfo = new() { ID = dbObjRec.GetID(), Code = dbObjRec.Code };
                 dbObjectIDsMap.Add($"{dbObjRec.Type}_{dbObjRec.Name}_{dbObjRec.GetParentID()}", dndbtInfo);
             }
 
@@ -70,8 +70,8 @@ namespace DotNetDBTools.Deploy.Core
                 {
                     DNDBTInfo dndbtInfo = dbObjectIDsMap[$"{DbObjectsTypes.Column}_{column.Name}_{table.ID}"];
                     column.ID = dndbtInfo.ID;
-                    if (column.Default is DefaultValueAsFunction defaultValueAsFunction)
-                        defaultValueAsFunction.FunctionText = dndbtInfo.ExtraInfo;
+                    if (column.Default is CodePiece codePiece)
+                        codePiece.Code = dndbtInfo.Code;
                 }
 
                 if (table.PrimaryKey is not null)
@@ -82,9 +82,9 @@ namespace DotNetDBTools.Deploy.Core
                     fk.ID = dbObjectIDsMap[$"{DbObjectsTypes.ForeignKey}_{fk.Name}_{table.ID}"].ID;
             }
 
-            ReplaceAdditionalDbModelObjectsIDsWithRecordOnes(database, dbObjectIDsMap);
+            ReplaceAdditionalDbModelObjectsIDsAndCodeWithDNDBTSysInfo(database, dbObjectIDsMap);
         }
-        protected virtual void ReplaceAdditionalDbModelObjectsIDsWithRecordOnes(Database database, Dictionary<string, DNDBTInfo> dbObjectIDsMap) { }
+        protected virtual void ReplaceAdditionalDbModelObjectsIDsAndCodeWithDNDBTSysInfo(Database database, Dictionary<string, DNDBTInfo> dbObjectIDsMap) { }
 
         private IEnumerable<Table> BuildTables()
         {

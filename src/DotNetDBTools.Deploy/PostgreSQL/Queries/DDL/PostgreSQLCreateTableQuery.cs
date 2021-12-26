@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Queries.DDL;
 using DotNetDBTools.Models.Core;
 using static DotNetDBTools.Deploy.PostgreSQL.PostgreSQLQueriesHelper;
@@ -29,7 +30,7 @@ ON ""{table.Name}"" ({string.Join(", ", index.Columns.Select(x => $@"""{x}"""))}
             foreach (Trigger trigger in table.Triggers)
             {
                 string _ =
-$@"{trigger.Code}";
+$@"{trigger.CodePiece}";
             }
 
             return query;
@@ -51,8 +52,8 @@ $@"    CONSTRAINT ""{table.PrimaryKey.Name}"" PRIMARY KEY ({string.Join(", ", ta
             tableDefinitions.AddRange(table.UniqueConstraints.Select(uc =>
 $@"    CONSTRAINT ""{uc.Name}"" UNIQUE ({string.Join(", ", uc.Columns.Select(x => $@"""{x}"""))})"));
 
-            IEnumerable<string> _ = table.CheckConstraints.Select(cc =>
-$@"    CONSTRAINT ""{cc.Name}"" {cc.Code}");
+            IEnumerable<string> _ = table.CheckConstraints.Select(ck =>
+$@"    CONSTRAINT ""{ck.Name}"" {ck.GetCode()}");
 
             return string.Join(",\n", tableDefinitions);
         }

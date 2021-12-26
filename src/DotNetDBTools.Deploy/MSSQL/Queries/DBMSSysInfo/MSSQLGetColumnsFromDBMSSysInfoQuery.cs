@@ -84,7 +84,7 @@ WHERE t.name != '{DNDBTSysTables.DNDBTDbObjects}';";
                 if (IsString(value))
                     return TrimOuterQuotes(value);
                 if (IsFunction(value))
-                    return new DefaultValueAsFunction() { FunctionText = value };
+                    return new CodePiece() { Code = value };
 
                 throw new ArgumentException($"Invalid parameter value '{valueFromDBMSSysTable}'", nameof(valueFromDBMSSysTable));
 

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using DotNetDBTools.IntegrationTests.TestHelpers;
+using DotNetDBTools.IntegrationTests.Utilities;
 using MySqlConnector;
 
 namespace DotNetDBTools.IntegrationTests.MySQL
@@ -24,10 +24,10 @@ namespace DotNetDBTools.IntegrationTests.MySQL
 
         public static async Task InitContainer()
         {
-            await DockerHelper.StopAndRemoveContainerIfExistsAndNotRunningOrOld(MySQLContainerName, oldMinutes: 60);
+            await DockerRunner.StopAndRemoveContainerIfExistsAndNotRunningOrOld(MySQLContainerName, oldMinutes: 60);
             await CreateAndStartMySQLContainerIfNotExists();
             using MySqlConnection connection = new(MySQLContainerConnectionString);
-            await DbHelper.WaitUntilDatabaseAvailableAsync(connection, timeoutSeconds: 60);
+            await DbAvailabilityChecker.WaitUntilDatabaseAvailableAsync(connection, timeoutSeconds: 60);
         }
 
         private static async Task CreateAndStartMySQLContainerIfNotExists()
@@ -42,7 +42,7 @@ namespace DotNetDBTools.IntegrationTests.MySQL
                 { "3306/tcp", MySQLServerHostPort.ToString() },
             };
 
-            await DockerHelper.CreateAndStartContainerIfNotExists(
+            await DockerRunner.CreateAndStartContainerIfNotExists(
                 MySQLContainerName,
                 $"{MySQLImage}:{MySQLImageTag}",
                 envVariables,

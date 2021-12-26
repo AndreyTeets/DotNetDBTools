@@ -27,7 +27,7 @@ namespace DotNetDBTools.Deploy.PostgreSQL
         public PostgreSQLDbModelFromDbSysInfoBuilder(IQueryExecutor queryExecutor)
             : base(queryExecutor) { }
 
-        protected override void ReplaceAdditionalDbModelObjectsIDsWithRecordOnes(Database database, Dictionary<string, DNDBTInfo> dbObjectIDsMap)
+        protected override void ReplaceAdditionalDbModelObjectsIDsAndCodeWithDNDBTSysInfo(Database database, Dictionary<string, DNDBTInfo> dbObjectIDsMap)
         {
             PostgreSQLDatabase postgresqlDatabase = (PostgreSQLDatabase)database;
             foreach (PostgreSQLCompositeType type in postgresqlDatabase.CompositeTypes)
@@ -36,14 +36,14 @@ namespace DotNetDBTools.Deploy.PostgreSQL
             {
                 DNDBTInfo dndbtInfo = dbObjectIDsMap[$"{DbObjectsTypes.UserDefinedType}_{type.Name}_{null}"];
                 type.ID = dndbtInfo.ID;
-                if (type.Default is DefaultValueAsFunction defaultValueAsFunction)
-                    defaultValueAsFunction.FunctionText = dndbtInfo.ExtraInfo;
+                if (type.Default is CodePiece codePiece)
+                    codePiece.Code = dndbtInfo.Code;
 
                 foreach (CheckConstraint ck in type.CheckConstraints)
                 {
                     DNDBTInfo dndbtInfoCK = dbObjectIDsMap[$"{DbObjectsTypes.CheckConstraint}_{ck.Name}_{type.ID}"];
                     ck.ID = dndbtInfoCK.ID;
-                    ck.Code = dndbtInfoCK.ExtraInfo;
+                    ck.CodePiece = new CodePiece { Code = dndbtInfoCK.Code };
                 }
             }
             foreach (PostgreSQLEnumType type in postgresqlDatabase.EnumTypes)
@@ -118,7 +118,7 @@ namespace DotNetDBTools.Deploy.PostgreSQL
                 {
                     ID = Guid.NewGuid(),
                     Name = typeRecord.CheckConstrantName,
-                    Code = typeRecord.CheckConstrantCode
+                    CodePiece = new CodePiece { Code = typeRecord.CheckConstrantCode },
                 };
                 ((List<CheckConstraint>)typesMap[typeRecord.TypeName].CheckConstraints).Add(checkConstraint);
             }

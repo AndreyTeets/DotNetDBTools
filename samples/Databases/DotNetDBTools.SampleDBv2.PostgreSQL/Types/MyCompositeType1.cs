@@ -1,8 +1,8 @@
 ﻿using System;
-using DotNetDBTools.Definition.Core;
-using DotNetDBTools.Definition.PostgreSQL.UserDefinedTypes;
-using DotNetDBTools.Definition.PostgreSQL.DataTypes;
 using System.Collections.Generic;
+using DotNetDBTools.Definition.Core;
+using DotNetDBTools.Definition.PostgreSQL.DataTypes;
+using DotNetDBTools.Definition.PostgreSQL.UserDefinedTypes;
 
 namespace DotNetDBTools.SampleDB.PostgreSQL.Types
 {

@@ -52,7 +52,7 @@ ON {tableDiff.NewTable.Name} ({string.Join(", ", index.Columns)});";
             foreach (Trigger trigger in tableDiff.TriggersToCreate)
             {
                 string _ =
-$@"{trigger.Code}";
+$@"{trigger.CodePiece}";
             }
 
             return query;

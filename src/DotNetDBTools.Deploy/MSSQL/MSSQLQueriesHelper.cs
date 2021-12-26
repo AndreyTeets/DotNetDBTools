@@ -22,7 +22,7 @@ namespace DotNetDBTools.Deploy.MSSQL
         {
             return value switch
             {
-                DefaultValueAsFunction => $"{((DefaultValueAsFunction)value).FunctionText}",
+                CodePiece => $"{((CodePiece)value).Code}",
                 string => $"'{value}'",
                 long => $"{value}",
                 byte[] => $"{ToHex((byte[])value)}",

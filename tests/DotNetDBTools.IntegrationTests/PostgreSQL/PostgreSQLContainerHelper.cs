@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using DotNetDBTools.IntegrationTests.TestHelpers;
+using DotNetDBTools.IntegrationTests.Utilities;
 using Npgsql;
 
 namespace DotNetDBTools.IntegrationTests.PostgreSQL
@@ -24,10 +24,10 @@ namespace DotNetDBTools.IntegrationTests.PostgreSQL
 
         public static async Task InitContainer()
         {
-            await DockerHelper.StopAndRemoveContainerIfExistsAndNotRunningOrOld(PostgreSQLContainerName, oldMinutes: 60);
+            await DockerRunner.StopAndRemoveContainerIfExistsAndNotRunningOrOld(PostgreSQLContainerName, oldMinutes: 60);
             await CreateAndStartPostgreSQLContainerIfNotExists();
             using NpgsqlConnection connection = new(PostgreSQLContainerConnectionString);
-            await DbHelper.WaitUntilDatabaseAvailableAsync(connection, timeoutSeconds: 60);
+            await DbAvailabilityChecker.WaitUntilDatabaseAvailableAsync(connection, timeoutSeconds: 60);
         }
 
         private static async Task CreateAndStartPostgreSQLContainerIfNotExists()
@@ -42,7 +42,7 @@ namespace DotNetDBTools.IntegrationTests.PostgreSQL
                 { "5432/tcp", PostgreSQLServerHostPort.ToString() },
             };
 
-            await DockerHelper.CreateAndStartContainerIfNotExists(
+            await DockerRunner.CreateAndStartContainerIfNotExists(
                 PostgreSQLContainerName,
                 $"{PostgreSQLImage}:{PostgreSQLImageTag}",
                 envVariables,

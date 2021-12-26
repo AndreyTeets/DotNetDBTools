@@ -1,5 +1,5 @@
 ﻿using System;
-using DotNetDBTools.IntegrationTests.TestHelpers;
+using DotNetDBTools.IntegrationTests.Utilities;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -17,10 +17,10 @@ namespace DotNetDBTools.IntegrationTests.Base
         {
             using IDisposable _ = ExclusiveExecutionScope.CreateScope(SyncScopeName);
 
-            (int exitCodeDeploy, string outputDeploy) = ProcessHelper.RunProcess(SampleDeployToolAssemblyPath);
+            (int exitCodeDeploy, string outputDeploy) = ProcessRunner.RunProcess(SampleDeployToolAssemblyPath);
             exitCodeDeploy.Should().Be(0, $"process output: '{outputDeploy}'");
 
-            (int exitCodeApplication, string outputApplication) = ProcessHelper.RunProcess(SampleBusinessLogicOnlyAppAssemblyPath);
+            (int exitCodeApplication, string outputApplication) = ProcessRunner.RunProcess(SampleBusinessLogicOnlyAppAssemblyPath);
             exitCodeApplication.Should().Be(0, $"process output: '{outputApplication}'");
         }
 
@@ -29,7 +29,7 @@ namespace DotNetDBTools.IntegrationTests.Base
         {
             using IDisposable _ = ExclusiveExecutionScope.CreateScope(SyncScopeName);
 
-            (int exitCodeApplication, string outputApplication) = ProcessHelper.RunProcess(SampleSelfUpdatingAppAssemblyPath);
+            (int exitCodeApplication, string outputApplication) = ProcessRunner.RunProcess(SampleSelfUpdatingAppAssemblyPath);
             exitCodeApplication.Should().Be(0, $"process output: '{outputApplication}'");
         }
     }

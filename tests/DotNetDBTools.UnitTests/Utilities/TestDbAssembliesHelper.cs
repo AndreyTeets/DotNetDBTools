@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Reflection;
 
-namespace DotNetDBTools.UnitTests.TestHelpers
+namespace DotNetDBTools.UnitTests.Utilities
 {
     public static class TestDbAssembliesHelper
     {

@@ -11,13 +11,13 @@ namespace DotNetDBTools.Deploy.Core.Queries.DNDBTSysInfo
         private readonly string _sql;
         private readonly List<QueryParameter> _parameters;
 
-        public InsertDNDBTSysInfoQuery(Guid objectID, Guid? parentObjectID, DbObjectsTypes objectType, string objectName, string extraInfo)
+        public InsertDNDBTSysInfoQuery(Guid objectID, Guid? parentObjectID, DbObjectsTypes objectType, string objectName, string objectCode)
         {
             _sql = GetSql(objectType);
-            _parameters = GetParameters(objectID, parentObjectID, objectName, extraInfo);
+            _parameters = GetParameters(objectID, parentObjectID, objectName, objectCode);
         }
 
         protected abstract string GetSql(DbObjectsTypes objectType);
-        protected abstract List<QueryParameter> GetParameters(Guid objectID, Guid? parentObjectID, string objectName, string extraInfo);
+        protected abstract List<QueryParameter> GetParameters(Guid objectID, Guid? parentObjectID, string objectName, string objectCode);
     }
 }

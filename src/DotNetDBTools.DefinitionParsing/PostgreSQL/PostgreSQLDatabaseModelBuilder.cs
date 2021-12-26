@@ -90,7 +90,7 @@ namespace DotNetDBTools.DefinitionParsing.PostgreSQL
                 if (value is null)
                     return null;
                 if (domain.DefaultIsFunction)
-                    return new DefaultValueAsFunction() { FunctionText = (string)value };
+                    return new CodePiece() { Code = (string)value };
                 return PostgreSQLDefaultValueMapper.MapByColumnDataType(domain.UnderlyingType, value);
             }
             List<Models.Core.CheckConstraint> BuildCheckConstraintModels(IDomain type)
@@ -105,7 +105,7 @@ namespace DotNetDBTools.DefinitionParsing.PostgreSQL
                     {
                         ID = checkConstraint.ID,
                         Name = x.Name,
-                        Code = checkConstraint.Code,
+                        CodePiece = new CodePiece { Code = checkConstraint.Code },
                     };
                     return checkConstraintModel;
                 })
@@ -197,7 +197,7 @@ namespace DotNetDBTools.DefinitionParsing.PostgreSQL
                 {
                     ID = function.ID,
                     Name = function.GetType().Name,
-                    Code = function.Code,
+                    CodePiece = new CodePiece { Code = function.Code },
                 };
                 functionModels.Add(functionModel);
             }

@@ -43,14 +43,14 @@ WHERE `ID` = '6e95de30-e01a-4fb4-b8b7-8f0c40bb682c';
 -- QUERY START: MySQLUpdateDNDBTSysInfoQuery
 UPDATE `DNDBTDbObjects` SET
     `Name` = 'MyTable1NewName',
-    `ExtraInfo` = NULL
+    `Code` = NULL
 WHERE `ID` = '299675e6-4faa-4d0f-a36a-224306ba5bcb';
 -- QUERY END: MySQLUpdateDNDBTSysInfoQuery
 
 -- QUERY START: MySQLUpdateDNDBTSysInfoQuery
 UPDATE `DNDBTDbObjects` SET
     `Name` = 'MyColumn1',
-    `ExtraInfo` = NULL
+    `Code` = NULL
 WHERE `ID` = 'a2f2a4de-1337-4594-ae41-72ed4d05f317';
 -- QUERY END: MySQLUpdateDNDBTSysInfoQuery
 
@@ -81,14 +81,14 @@ WHERE `ID` = '5a0d1926-3270-4eb2-92eb-00be56c7af23';
 -- QUERY START: MySQLUpdateDNDBTSysInfoQuery
 UPDATE `DNDBTDbObjects` SET
     `Name` = 'MyTable2',
-    `ExtraInfo` = NULL
+    `Code` = NULL
 WHERE `ID` = 'bfb9030c-a8c3-4882-9c42-1c6ad025cf8f';
 -- QUERY END: MySQLUpdateDNDBTSysInfoQuery
 
 -- QUERY START: MySQLUpdateDNDBTSysInfoQuery
 UPDATE `DNDBTDbObjects` SET
     `Name` = 'MyColumn1NewName',
-    `ExtraInfo` = NULL
+    `Code` = NULL
 WHERE `ID` = 'c480f22f-7c01-4f41-b282-35e9f5cd1fe3';
 -- QUERY END: MySQLUpdateDNDBTSysInfoQuery
 
@@ -99,7 +99,7 @@ INSERT INTO `DNDBTDbObjects`
     `ParentID`,
     `Type`,
     `Name`,
-    `ExtraInfo`
+    `Code`
 )
 VALUES
 (
@@ -118,7 +118,7 @@ INSERT INTO `DNDBTDbObjects`
     `ParentID`,
     `Type`,
     `Name`,
-    `ExtraInfo`
+    `Code`
 )
 VALUES
 (
@@ -146,7 +146,7 @@ INSERT INTO `DNDBTDbObjects`
     `ParentID`,
     `Type`,
     `Name`,
-    `ExtraInfo`
+    `Code`
 )
 VALUES
 (
@@ -165,7 +165,7 @@ INSERT INTO `DNDBTDbObjects`
     `ParentID`,
     `Type`,
     `Name`,
-    `ExtraInfo`
+    `Code`
 )
 VALUES
 (
@@ -184,7 +184,7 @@ INSERT INTO `DNDBTDbObjects`
     `ParentID`,
     `Type`,
     `Name`,
-    `ExtraInfo`
+    `Code`
 )
 VALUES
 (
@@ -203,7 +203,7 @@ INSERT INTO `DNDBTDbObjects`
     `ParentID`,
     `Type`,
     `Name`,
-    `ExtraInfo`
+    `Code`
 )
 VALUES
 (
@@ -228,7 +228,7 @@ INSERT INTO `DNDBTDbObjects`
     `ParentID`,
     `Type`,
     `Name`,
-    `ExtraInfo`
+    `Code`
 )
 VALUES
 (
@@ -253,7 +253,7 @@ INSERT INTO `DNDBTDbObjects`
     `ParentID`,
     `Type`,
     `Name`,
-    `ExtraInfo`
+    `Code`
 )
 VALUES
 (

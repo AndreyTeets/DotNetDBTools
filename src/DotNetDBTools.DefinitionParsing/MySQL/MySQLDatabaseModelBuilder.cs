@@ -43,7 +43,7 @@ namespace DotNetDBTools.DefinitionParsing.MySQL
                 {
                     ID = function.ID,
                     Name = function.GetType().Name,
-                    Code = function.Code,
+                    CodePiece = new CodePiece { Code = function.Code },
                 };
                 functionModels.Add(functionModel);
             }

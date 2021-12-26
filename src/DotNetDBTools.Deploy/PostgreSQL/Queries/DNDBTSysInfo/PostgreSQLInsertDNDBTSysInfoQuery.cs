@@ -11,10 +11,10 @@ namespace DotNetDBTools.Deploy.PostgreSQL.Queries.DNDBTSysInfo
         private const string IDParameterName = "@ID";
         private const string ParentIDParameterName = "@ParentID";
         private const string NameParameterName = "@Name";
-        private const string ExtraInfoParameterName = "@ExtraInfo";
+        private const string CodeParameterName = "@Code";
 
-        public PostgreSQLInsertDNDBTSysInfoQuery(Guid objectID, Guid? parentObjectID, DbObjectsTypes objectType, string objectName, string extraInfo = null)
-            : base(objectID, parentObjectID, objectType, objectName, extraInfo) { }
+        public PostgreSQLInsertDNDBTSysInfoQuery(Guid objectID, Guid? parentObjectID, DbObjectsTypes objectType, string objectName, string objectCode = null)
+            : base(objectID, parentObjectID, objectType, objectName, objectCode) { }
 
         protected override string GetSql(DbObjectsTypes objectType)
         {
@@ -25,7 +25,7 @@ $@"INSERT INTO ""{DNDBTSysTables.DNDBTDbObjects}""
     ""{DNDBTSysTables.DNDBTDbObjects.ParentID}"",
     ""{DNDBTSysTables.DNDBTDbObjects.Type}"",
     ""{DNDBTSysTables.DNDBTDbObjects.Name}"",
-    ""{DNDBTSysTables.DNDBTDbObjects.ExtraInfo}""
+    ""{DNDBTSysTables.DNDBTDbObjects.Code}""
 )
 VALUES
 (
@@ -33,20 +33,20 @@ VALUES
     {ParentIDParameterName},
     '{objectType}',
     {NameParameterName},
-    {ExtraInfoParameterName}
+    {CodeParameterName}
 );";
 
             return query;
         }
 
-        protected override List<QueryParameter> GetParameters(Guid objectID, Guid? parentObjectID, string objectName, string extraInfo)
+        protected override List<QueryParameter> GetParameters(Guid objectID, Guid? parentObjectID, string objectName, string objectCode)
         {
             return new List<QueryParameter>
             {
                 new QueryParameter(IDParameterName, objectID, DbType.Guid),
                 new QueryParameter(ParentIDParameterName, parentObjectID, DbType.Guid),
                 new QueryParameter(NameParameterName, objectName, DbType.String),
-                new QueryParameter(ExtraInfoParameterName, extraInfo, DbType.String),
+                new QueryParameter(CodeParameterName, objectCode, DbType.String),
             };
         }
     }

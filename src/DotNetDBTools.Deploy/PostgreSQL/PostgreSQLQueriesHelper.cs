@@ -23,7 +23,7 @@ namespace DotNetDBTools.Deploy.PostgreSQL
         {
             return value switch
             {
-                DefaultValueAsFunction => $"{((DefaultValueAsFunction)value).FunctionText}",
+                CodePiece => $"{((CodePiece)value).Code}",
                 string => $"'{value}'",
                 long => $"{value}",
                 byte[] => $"{ToHex((byte[])value)}",
@@ -124,7 +124,7 @@ namespace DotNetDBTools.Deploy.PostgreSQL
             string value = valueFromDBMSSysTable;
 
             if (IsFunction(value))
-                return new DefaultValueAsFunction() { FunctionText = value };
+                return new CodePiece() { Code = value };
             if (IsByte(value))
                 return ToByteArray(value);
             if (IsString(value))

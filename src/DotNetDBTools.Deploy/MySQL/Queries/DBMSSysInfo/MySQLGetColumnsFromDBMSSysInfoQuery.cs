@@ -68,7 +68,7 @@ WHERE c.TABLE_SCHEMA = (select DATABASE())
                 string value = columnRecord.Default;
 
                 if (IsFunction(value))
-                    return new DefaultValueAsFunction() { FunctionText = value };
+                    return new CodePiece() { Code = value };
                 if (IsString(columnRecord.DataType.ToUpper()))
                     return TrimOuterQuotesIfExist(value.Replace("_utf8mb4", ""));
                 if (IsByte(value))

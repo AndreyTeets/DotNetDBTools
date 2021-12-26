@@ -25,7 +25,7 @@ namespace DotNetDBTools.Analysis.MySQL
             {
                 foreach (Trigger trigger in table.Triggers)
                 {
-                    if (!trigger.Code.Contains($"CREATE TRIGGER {trigger.Name} "))
+                    if (!trigger.CodePiece.Code.Contains($"CREATE TRIGGER {trigger.Name} "))
                     {
                         string errorMessage =
 $"Trigger '{trigger.Name}' in table '{table.Name}' has different name in it's creation code";

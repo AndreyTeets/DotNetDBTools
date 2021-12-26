@@ -28,14 +28,14 @@ namespace DotNetDBTools.Deploy.SQLite.Editors
             {
                 QueryExecutor.Execute(new SQLiteInsertDNDBTSysInfoQuery(table.ID, null, DbObjectsTypes.Table, table.Name));
                 foreach (Column c in table.Columns)
-                    QueryExecutor.Execute(new SQLiteInsertDNDBTSysInfoQuery(c.ID, table.ID, DbObjectsTypes.Column, c.Name, c.GetExtraInfo()));
+                    QueryExecutor.Execute(new SQLiteInsertDNDBTSysInfoQuery(c.ID, table.ID, DbObjectsTypes.Column, c.Name, c.GetCode()));
                 PrimaryKey pk = table.PrimaryKey;
                 if (pk is not null)
                     QueryExecutor.Execute(new SQLiteInsertDNDBTSysInfoQuery(pk.ID, table.ID, DbObjectsTypes.PrimaryKey, pk.Name));
                 foreach (UniqueConstraint uc in table.UniqueConstraints)
                     QueryExecutor.Execute(new SQLiteInsertDNDBTSysInfoQuery(uc.ID, table.ID, DbObjectsTypes.UniqueConstraint, uc.Name));
                 foreach (CheckConstraint ck in table.CheckConstraints)
-                    QueryExecutor.Execute(new SQLiteInsertDNDBTSysInfoQuery(ck.ID, table.ID, DbObjectsTypes.CheckConstraint, ck.Name, ck.GetExtraInfo()));
+                    QueryExecutor.Execute(new SQLiteInsertDNDBTSysInfoQuery(ck.ID, table.ID, DbObjectsTypes.CheckConstraint, ck.Name, ck.GetCode()));
                 foreach (Index index in table.Indexes)
                     QueryExecutor.Execute(new SQLiteInsertDNDBTSysInfoQuery(index.ID, table.ID, DbObjectsTypes.Index, index.Name));
                 foreach (Trigger trigger in table.Triggers)
@@ -74,7 +74,7 @@ namespace DotNetDBTools.Deploy.SQLite.Editors
 
         private void CreateView(SQLiteView view)
         {
-            QueryExecutor.Execute(new GenericQuery($"{view.Code}"));
+            QueryExecutor.Execute(new GenericQuery($"{view.CodePiece}"));
             QueryExecutor.Execute(new SQLiteInsertDNDBTSysInfoQuery(view.ID, null, DbObjectsTypes.View, view.Name));
         }
 

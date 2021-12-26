@@ -5,6 +5,7 @@ using DotNetDBTools.Deploy;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.MySQL;
 using DotNetDBTools.IntegrationTests.Base;
+using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.MySQL;
 using FluentAssertions.Equivalency;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -31,9 +32,9 @@ namespace DotNetDBTools.IntegrationTests.MySQL
             return options.Excluding(database => database.Functions);
         }
 
-        protected override string NormalizeDefaultValueAsFunctionText(string value)
+        protected override string GetNormalizedCodeFromCodePiece(CodePiece codePiece)
         {
-            return value.ToUpper()
+            return codePiece.Code.ToUpper()
                 .Replace("(", "")
                 .Replace(")", "");
         }

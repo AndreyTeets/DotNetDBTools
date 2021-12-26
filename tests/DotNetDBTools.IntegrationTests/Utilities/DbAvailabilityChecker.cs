@@ -2,9 +2,9 @@
 using System.Data.Common;
 using System.Threading.Tasks;
 
-namespace DotNetDBTools.IntegrationTests.TestHelpers
+namespace DotNetDBTools.IntegrationTests.Utilities
 {
-    public static class DbHelper
+    public static class DbAvailabilityChecker
     {
         public static async Task WaitUntilDatabaseAvailableAsync(DbConnection connection, int timeoutSeconds)
         {

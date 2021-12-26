@@ -129,7 +129,7 @@ namespace DotNetDBTools.UnitTests.Analysis.Core
                     {
                         ID = new Guid("75D55104-DDF0-4F9D-B0B2-CF8F85A3A0A7"),
                         Name = "CK_T1_1",
-                        Code = "C2 >= 0",
+                        CodePiece = new CodePiece { Code = "CHECK (C2 >= 0)" },
                     }
                 },
                 Indexes = new List<Models.Core.Index>()

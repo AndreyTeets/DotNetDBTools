@@ -13,7 +13,7 @@ $@"SELECT
     CAST(`{DNDBTSysTables.DNDBTDbObjects.ParentID}` AS CHAR(36)) AS {nameof(MySQLDNDBTDbObjectRecord.ParentID)},
     `{DNDBTSysTables.DNDBTDbObjects.Type}`,
     `{DNDBTSysTables.DNDBTDbObjects.Name}`,
-    `{DNDBTSysTables.DNDBTDbObjects.ExtraInfo}`
+    `{DNDBTSysTables.DNDBTDbObjects.Code}`
 FROM `{DNDBTSysTables.DNDBTDbObjects}`;";
 
         public override RecordsLoader Loader => new MySQLRecordsLoader();

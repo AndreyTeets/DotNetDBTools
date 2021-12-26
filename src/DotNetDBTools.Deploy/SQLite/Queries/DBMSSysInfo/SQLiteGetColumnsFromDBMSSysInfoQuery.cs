@@ -79,7 +79,7 @@ WHERE sm.type = 'table'
                 if (IsString(value))
                     return TrimOuterQuotes(value);
                 if (IsFunction(value))
-                    return new DefaultValueAsFunction() { FunctionText = value };
+                    return new CodePiece() { Code = value };
                 return long.Parse(value);
 
                 static bool IsByte(string val) => val.StartsWith("0x", StringComparison.Ordinal);
