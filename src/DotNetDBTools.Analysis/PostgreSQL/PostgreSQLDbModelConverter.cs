@@ -30,7 +30,7 @@ namespace DotNetDBTools.Analysis.PostgreSQL
                 Columns = ConvertToPostgreSQLModel(table.Columns),
                 PrimaryKey = table.PrimaryKey,
                 UniqueConstraints = table.UniqueConstraints,
-                CheckConstraints = table.CheckConstraints,
+                CheckConstraints = table.CheckConstraints.Select(ck => { ck.CodePiece = ConvertCodePiece(ck.CodePiece); return ck; }).ToList(),
                 Indexes = table.Indexes,
                 Triggers = table.Triggers,
                 ForeignKeys = table.ForeignKeys,
@@ -115,6 +115,11 @@ namespace DotNetDBTools.Analysis.PostgreSQL
                 return new DataType { Name = PostgreSQLDataTypeNames.TIMESTAMPTZ };
             else
                 return new DataType { Name = PostgreSQLDataTypeNames.TIMESTAMP };
+        }
+
+        private static CodePiece ConvertCodePiece(CodePiece codePiece)
+        {
+            return new CodePiece { Code = ((AgnosticCodePiece)codePiece).DbKindToCodeMap[DatabaseKind.PostgreSQL] };
         }
     }
 }

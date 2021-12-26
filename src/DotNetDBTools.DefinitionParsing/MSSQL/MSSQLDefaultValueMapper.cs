@@ -23,9 +23,10 @@ namespace DotNetDBTools.DefinitionParsing.MSSQL
         {
             return dataType switch
             {
-                StringDataType stringDataType => (string)value,
-                IntDataType intDataType => (long)(int)value,
-                BinaryDataType binaryDataType => (byte[])value,
+                StringDataType => (string)value,
+                IntDataType => (long)(int)value,
+                DecimalDataType => (decimal)value,
+                BinaryDataType => (byte[])value,
                 IUserDefinedType userDefinedType => MapByColumnDataType(userDefinedType.UnderlyingType, value),
                 _ => throw new InvalidOperationException($"Invalid default value type: '{value.GetType()}' for a column with type '{dataType.GetType()}'"),
             };

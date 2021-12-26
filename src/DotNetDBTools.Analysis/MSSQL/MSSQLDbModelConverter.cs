@@ -30,7 +30,7 @@ namespace DotNetDBTools.Analysis.MSSQL
                 Columns = ConvertToMSSQLModel(table.Columns, table.Name),
                 PrimaryKey = table.PrimaryKey,
                 UniqueConstraints = table.UniqueConstraints,
-                CheckConstraints = table.CheckConstraints,
+                CheckConstraints = table.CheckConstraints.Select(ck => { ck.CodePiece = ConvertCodePiece(ck.CodePiece); return ck; }).ToList(),
                 Indexes = table.Indexes,
                 Triggers = table.Triggers,
                 ForeignKeys = table.ForeignKeys,
@@ -147,6 +147,11 @@ namespace DotNetDBTools.Analysis.MSSQL
                 return new DataType { Name = MSSQLDataTypeNames.DATETIMEOFFSET };
             else
                 return new DataType { Name = MSSQLDataTypeNames.DATETIME2 };
+        }
+
+        private static CodePiece ConvertCodePiece(CodePiece codePiece)
+        {
+            return new CodePiece { Code = ((AgnosticCodePiece)codePiece).DbKindToCodeMap[DatabaseKind.MSSQL] };
         }
     }
 }

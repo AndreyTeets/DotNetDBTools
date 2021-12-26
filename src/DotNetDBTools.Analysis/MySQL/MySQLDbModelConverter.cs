@@ -30,7 +30,7 @@ namespace DotNetDBTools.Analysis.MySQL
                 Columns = ConvertToMySQLModel(table.Columns),
                 PrimaryKey = table.PrimaryKey is null ? table.PrimaryKey : ConvertToMySQLModel(table.PrimaryKey, table.Name),
                 UniqueConstraints = table.UniqueConstraints,
-                CheckConstraints = table.CheckConstraints,
+                CheckConstraints = table.CheckConstraints.Select(ck => { ck.CodePiece = ConvertCodePiece(ck.CodePiece); return ck; }).ToList(),
                 Indexes = table.Indexes,
                 Triggers = table.Triggers,
                 ForeignKeys = table.ForeignKeys,
@@ -99,7 +99,7 @@ namespace DotNetDBTools.Analysis.MySQL
 
         private static DataType ConvertDecimalSqlType(AgnosticDataType dataType)
         {
-            return new DataType { Name = $"{MySQLDataTypeNames.DECIMAL}({dataType.Precision}, {dataType.Scale})" };
+            return new DataType { Name = $"{MySQLDataTypeNames.DECIMAL}({dataType.Precision},{dataType.Scale})" };
         }
 
         private static DataType ConvertStringSqlType(AgnosticDataType dataType)
@@ -136,6 +136,11 @@ namespace DotNetDBTools.Analysis.MySQL
                 return new DataType { Name = MySQLDataTypeNames.TIMESTAMP };
             else
                 return new DataType { Name = MySQLDataTypeNames.DATETIME };
+        }
+
+        private static CodePiece ConvertCodePiece(CodePiece codePiece)
+        {
+            return new CodePiece { Code = ((AgnosticCodePiece)codePiece).DbKindToCodeMap[DatabaseKind.MySQL] };
         }
     }
 }

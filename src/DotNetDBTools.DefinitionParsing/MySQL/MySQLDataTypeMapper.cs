@@ -59,7 +59,7 @@ namespace DotNetDBTools.DefinitionParsing.MySQL
 
         private static DataType Map(DecimalDataType decimalDataType)
         {
-            return new DataType { Name = $"{MySQLDataTypeNames.DECIMAL}({decimalDataType.Precision}, {decimalDataType.Scale})" };
+            return new DataType { Name = $"{MySQLDataTypeNames.DECIMAL}({decimalDataType.Precision},{decimalDataType.Scale})" };
         }
 
         private static DataType Map(StringDataType stringDataType)

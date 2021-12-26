@@ -49,6 +49,7 @@ namespace DotNetDBTools.Analysis.Core
             BuildColumnsDiff(tableDiff, newDbTable, oldDbTable);
             BuildPrimaryKeyDiff(tableDiff, newDbTable, oldDbTable);
             BuildUniqueConstraintsDiff(tableDiff, newDbTable, oldDbTable);
+            BuildCheckConstraintsDiff(tableDiff, newDbTable, oldDbTable);
             BuildForeignKeysDiff(tableDiff, newDbTable, oldDbTable);
             return tableDiff;
         }
@@ -108,6 +109,24 @@ namespace DotNetDBTools.Analysis.Core
 
             tableDiff.UniqueConstraintsToCreate = uniqueConstraintsToCreate;
             tableDiff.UniqueConstraintsToDrop = uniqueConstraintsToDrop;
+        }
+
+        private void BuildCheckConstraintsDiff<TTableDiff>(TTableDiff tableDiff, Table newDbTable, Table oldDbTable)
+            where TTableDiff : TableDiff, new()
+        {
+            List<CheckConstraint> checkConstraintsToCreate = null;
+            List<CheckConstraint> checkConstraintsToDrop = null;
+            FillAddedAndRemovedItemsAndApplyActionToChangedItems(
+                newDbTable.CheckConstraints, oldDbTable.CheckConstraints,
+                ref checkConstraintsToCreate, ref checkConstraintsToDrop,
+                (newCK, oldCK) =>
+                {
+                    checkConstraintsToCreate.Add(newCK);
+                    checkConstraintsToDrop.Add(oldCK);
+                });
+
+            tableDiff.CheckConstraintsToCreate = checkConstraintsToCreate;
+            tableDiff.CheckConstraintsToDrop = checkConstraintsToDrop;
         }
 
         private void BuildForeignKeysDiff<TTableDiff>(TTableDiff tableDiff, Table newDbTable, Table oldDbTable)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo;
 using DotNetDBTools.Models.Core;
@@ -19,7 +20,9 @@ $@"SELECT
     c.is_identity AS [{nameof(MSSQLColumnRecord.Identity)}],
     dc.definition AS [{nameof(MSSQLColumnRecord.Default)}],
     dc.name AS {nameof(MSSQLColumnRecord.DefaultConstraintName)},
-    c.max_length AS {nameof(MSSQLColumnRecord.Length)}
+    c.max_length AS {nameof(MSSQLColumnRecord.Length)},
+    c.precision AS {nameof(MSSQLColumnRecord.Precision)},
+    c.scale AS {nameof(MSSQLColumnRecord.Scale)}
 FROM sys.tables t
 INNER JOIN sys.columns c
     ON c.object_id = t.object_id
@@ -35,7 +38,9 @@ WHERE t.name != '{DNDBTSysTables.DNDBTDbObjects}';";
             public string UserDefinedDataType { get; set; }
             public bool Identity { get; set; }
             public string DefaultConstraintName { get; set; }
-            public string Length { get; set; }
+            public int Length { get; set; }
+            public int Precision { get; set; }
+            public int Scale { get; set; }
         }
 
         public class MSSQLRecordsLoader : RecordsLoader
@@ -49,14 +54,15 @@ WHERE t.name != '{DNDBTSysTables.DNDBTDbObjects}';";
             public override Column MapToColumnModel(ColumnRecord builderColumnRecord)
             {
                 MSSQLColumnRecord columnRecord = (MSSQLColumnRecord)builderColumnRecord;
+                DataType dataType = ParseDataType(columnRecord);
                 return new MSSQLColumn()
                 {
                     ID = Guid.NewGuid(),
                     Name = columnRecord.ColumnName,
-                    DataType = ParseDataType(columnRecord),
+                    DataType = dataType,
                     Nullable = columnRecord.Nullable,
                     Identity = columnRecord.Identity,
-                    Default = ParseDefault(columnRecord.Default),
+                    Default = ParseDefault(dataType, columnRecord),
                     DefaultConstraintName = columnRecord.DefaultConstraintName,
                 };
             }
@@ -66,32 +72,52 @@ WHERE t.name != '{DNDBTSysTables.DNDBTDbObjects}';";
                 if (columnRecord.UserDefinedDataType is not null)
                     return new DataType { Name = columnRecord.UserDefinedDataType, IsUserDefined = true };
 
-                string dataType = columnRecord.DataType.ToUpper();
-                int length = int.Parse(columnRecord.Length);
-                return MSSQLQueriesHelper.CreateDataTypeModel(dataType, length);
+                return MSSQLQueriesHelper.CreateDataTypeModel(
+                    columnRecord.DataType.ToUpper(),
+                    columnRecord.Length,
+                    columnRecord.Precision,
+                    columnRecord.Scale);
             }
 
-            private static object ParseDefault(string valueFromDBMSSysTable)
+            private static object ParseDefault(DataType dataType, MSSQLColumnRecord columnRecord)
             {
+                string valueFromDBMSSysTable = columnRecord.Default;
                 if (valueFromDBMSSysTable is null)
                     return null;
                 string value = TrimOuterParantheses(valueFromDBMSSysTable);
 
-                if (IsNumber(value))
-                    return long.Parse(TrimOuterParantheses(value));
-                if (IsByte(value))
-                    return ToByteArray(value);
-                if (IsString(value))
-                    return TrimOuterQuotes(value);
                 if (IsFunction(value))
                     return new CodePiece() { Code = value };
 
-                throw new ArgumentException($"Invalid parameter value '{valueFromDBMSSysTable}'", nameof(valueFromDBMSSysTable));
+                string baseDataType = columnRecord.DataType.ToUpper();
+                switch (baseDataType)
+                {
+                    case MSSQLDataTypeNames.TINYINT:
+                    case MSSQLDataTypeNames.SMALLINT:
+                    case MSSQLDataTypeNames.INT:
+                    case MSSQLDataTypeNames.BIGINT:
+                        return long.Parse(TrimOuterParantheses(value));
+                    case MSSQLDataTypeNames.DECIMAL:
+                        return decimal.Parse(TrimOuterParantheses(value), CultureInfo.InvariantCulture);
+                    case MSSQLDataTypeNames.CHAR:
+                    case MSSQLDataTypeNames.VARCHAR:
+                    case MSSQLDataTypeNames.NCHAR:
+                    case MSSQLDataTypeNames.NVARCHAR:
+                        return TrimOuterQuotes(value);
+                    case MSSQLDataTypeNames.BINARY:
+                    case MSSQLDataTypeNames.VARBINARY:
+                        return ToByteArray(value);
+                    default:
+                        throw new InvalidOperationException($"Invalid default value [{valueFromDBMSSysTable}] for data type [{dataType.Name}]");
+                }
 
-                static bool IsNumber(string val) => val.StartsWith("(", StringComparison.Ordinal);
-                static bool IsByte(string val) => val.StartsWith("0x", StringComparison.Ordinal);
-                static bool IsString(string val) => val.StartsWith("'", StringComparison.Ordinal);
-                static bool IsFunction(string val) => !long.TryParse(val, out _);
+                static bool IsFunction(string val) => val.Contains("(") && val.Contains(")") && !IsString(val) && !IsNumber(val);
+                static bool IsNumber(string val) =>
+                    double.TryParse(TrimOuterParantheses(val), NumberStyles.Number, CultureInfo.InvariantCulture, out double _);
+                static bool IsString(string val) =>
+                    val.StartsWith("'", StringComparison.Ordinal) &&
+                    val.EndsWith("'", StringComparison.Ordinal) &&
+                    !TrimOuterQuotes(val).Replace("''", "").Contains("'");
                 static string TrimOuterParantheses(string val) => val.Substring(1, val.Length - 2);
                 static string TrimOuterQuotes(string val) => val.Substring(1, val.Length - 2);
                 static byte[] ToByteArray(string val)

@@ -17,6 +17,7 @@ namespace DotNetDBTools.Deploy.SQLite
         SQLiteGetColumnsFromDBMSSysInfoQuery,
         SQLiteGetPrimaryKeysFromDBMSSysInfoQuery,
         SQLiteGetUniqueConstraintsFromDBMSSysInfoQuery,
+        SQLiteGetCheckConstraintsFromDBMSSysInfoQuery,
         SQLiteGetForeignKeysFromDBMSSysInfoQuery,
         SQLiteGetAllDbObjectsFromDNDBTSysInfoQuery>
     {
@@ -27,13 +28,36 @@ namespace DotNetDBTools.Deploy.SQLite
         {
             SQLiteGetTablesDefinitionsFromDBMSSysInfoQuery query = new();
             IEnumerable<TableRecord> tableRecords = QueryExecutor.Query<TableRecord>(query);
+            BuildCheckConstraints(tables, tableRecords);
             BuildTablesConstraintNames(tables, tableRecords);
             ProcessTablesIdentityColumnCandidates(tables, tableRecords);
         }
 
+        private static void BuildCheckConstraints(
+            Dictionary<string, Table> tables,
+            IEnumerable<TableRecord> tableRecords)
+        {
+            foreach (TableRecord tableRecord in tableRecords)
+            {
+                string pattern = @$"CONSTRAINT (?<ConstraintName>[\[|\]|\w|\d|_]+) CHECK \((?<ConstraintCode>.+)\)";
+                MatchCollection matches = Regex.Matches(tableRecord.TableDefinition, pattern);
+                foreach (Match match in matches)
+                {
+                    CheckConstraint ck = new()
+                    {
+                        ID = Guid.NewGuid(),
+                        Name = GetIdentifierName(match.Groups["ConstraintName"].Value),
+                        CodePiece = new CodePiece { Code = $@"CHECK ({match.Groups["ConstraintCode"].Value})" },
+                    };
+                    ((List<CheckConstraint>)tables[tableRecord.TableName].CheckConstraints).Add(ck);
+                }
+                // TODO constraint that was defined without name or for a column
+            }
+        }
+
         private void BuildTablesConstraintNames(
-                Dictionary<string, Table> tables,
-                IEnumerable<TableRecord> tableRecords)
+            Dictionary<string, Table> tables,
+            IEnumerable<TableRecord> tableRecords)
         {
             foreach (TableRecord tableRecord in tableRecords)
             {
@@ -63,21 +87,26 @@ namespace DotNetDBTools.Deploy.SQLite
         private static string GetUniqueConstraintName(string tableDefinition, IEnumerable<string> columns)
         {
             string columnsList = string.Join(", ", columns);
-            string pattern = @$"CONSTRAINT (?<constraintName>[\w|\d|_]+) UNIQUE \({columnsList}\)";
+            string pattern = @$"CONSTRAINT (?<ConstraintName>[\[|\]|\w|\d|_]+) UNIQUE \({columnsList}\)";
             Match match = Regex.Match(tableDefinition, pattern);
-            if (match.Groups["constraintName"].Success)
-                return match.Groups["constraintName"].Value;
+            if (match.Groups["ConstraintName"].Success)
+                return GetIdentifierName(match.Groups["ConstraintName"].Value);
             return null;
         }
 
         private static string GetForeignKeyConstraintName(string tableDefinition, IEnumerable<string> thisColumns)
         {
             string thisColumnsList = string.Join(", ", thisColumns);
-            string pattern = @$"CONSTRAINT (?<constraintName>[\w|\d|_]+) FOREIGN KEY \({thisColumnsList}\)";
+            string pattern = @$"CONSTRAINT (?<ConstraintName>[\[|\]|\w|\d|_]+) FOREIGN KEY \({thisColumnsList}\)";
             Match match = Regex.Match(tableDefinition, pattern);
-            if (match.Groups["constraintName"].Success)
-                return match.Groups["constraintName"].Value;
+            if (match.Groups["ConstraintName"].Success)
+                return GetIdentifierName(match.Groups["ConstraintName"].Value);
             return null;
+        }
+
+        private static string GetIdentifierName(string value)
+        {
+            return value.Replace("[", "").Replace("]", "");
         }
     }
 }

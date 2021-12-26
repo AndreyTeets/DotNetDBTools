@@ -5,9 +5,11 @@ BEGIN TRANSACTION;
 CREATE TABLE _DNDBTTemp_MyTable1NewName
 (
     MyColumn1 INTEGER NULL DEFAULT 15,
+    MyColumn4 NUMERIC NOT NULL DEFAULT 7.36,
     CONSTRAINT FK_MyTable1_MyColumn1_MyTable2_MyColumn1 FOREIGN KEY (MyColumn1)
         REFERENCES MyTable2(MyColumn1NewName)
-        ON UPDATE NO ACTION ON DELETE SET NULL
+        ON UPDATE NO ACTION ON DELETE SET NULL,
+    CONSTRAINT [CK_MyTable1_MyCheck1] CHECK (MyColumn4 >= 1)
 );
 
 INSERT INTO  _DNDBTTemp_MyTable1NewName(MyColumn1)
@@ -18,6 +20,11 @@ DROP TABLE MyTable1;
 
 ALTER TABLE _DNDBTTemp_MyTable1NewName RENAME TO MyTable1NewName;
 -- QUERY END: SQLiteAlterTableQuery
+
+-- QUERY START: SQLiteDeleteDNDBTSysInfoQuery
+DELETE FROM DNDBTDbObjects
+WHERE ID = 'eb9c59b5-bc7e-49d7-adaa-f5600b6a19a2';
+-- QUERY END: SQLiteDeleteDNDBTSysInfoQuery
 
 -- QUERY START: SQLiteDeleteDNDBTSysInfoQuery
 DELETE FROM DNDBTDbObjects
@@ -52,6 +59,25 @@ UPDATE DNDBTDbObjects SET
     Code = NULL
 WHERE ID = 'a2f2a4de-1337-4594-ae41-72ed4d05f317';
 -- QUERY END: SQLiteUpdateDNDBTSysInfoQuery
+
+-- QUERY START: SQLiteInsertDNDBTSysInfoQuery
+INSERT INTO DNDBTDbObjects
+(
+    ID,
+    ParentID,
+    Type,
+    Name,
+    Code
+)
+VALUES
+(
+    'eb9c59b5-bc7e-49d7-adaa-f5600b6a19a2',
+    '299675e6-4faa-4d0f-a36a-224306ba5bcb',
+    'CheckConstraint',
+    'CK_MyTable1_MyCheck1',
+    'CHECK (MyColumn4 >= 1)'
+);
+-- QUERY END: SQLiteInsertDNDBTSysInfoQuery
 
 -- QUERY START: SQLiteDeleteDNDBTSysInfoQuery
 DELETE FROM DNDBTDbObjects

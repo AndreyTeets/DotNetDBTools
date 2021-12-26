@@ -14,8 +14,10 @@ namespace DotNetDBTools.DefinitionParsing.MSSQL
         MSSQLView,
         MSSQLColumn>
     {
-        public MSSQLDatabaseModelBuilder()
-            : base(new MSSQLDataTypeMapper(), new MSSQLDefaultValueMapper())
+        public MSSQLDatabaseModelBuilder() : base(
+            new MSSQLDataTypeMapper(),
+            new MSSQLDbObjectCodeMapper(),
+            new MSSQLDefaultValueMapper())
         {
         }
 

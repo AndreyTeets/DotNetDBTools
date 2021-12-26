@@ -152,8 +152,10 @@ EXECUTE 'CREATE TABLE "MyTable1"
     "MyColumn1" INT NOT NULL DEFAULT 15,
     "MyColumn2" VARCHAR(10) NOT NULL DEFAULT ''33'',
     "MyColumn3" INT GENERATED ALWAYS AS IDENTITY NOT NULL,
+    "MyColumn4" DECIMAL(19, 2) NOT NULL DEFAULT 7.36,
     CONSTRAINT "PK_MyTable1" PRIMARY KEY ("MyColumn3"),
-    CONSTRAINT "UQ_MyTable1_MyColumn2" UNIQUE ("MyColumn2")
+    CONSTRAINT "UQ_MyTable1_MyColumn2" UNIQUE ("MyColumn2"),
+    CONSTRAINT "CK_MyTable1_MyCheck1" CHECK ("MyColumn4" >= 0)
 );';
 -- QUERY END: PostgreSQLCreateTableQuery
 
@@ -244,6 +246,25 @@ EXECUTE 'INSERT INTO "DNDBTDbObjects"
 )
 VALUES
 (
+    ''867ac528-e87e-4c93-b6e3-dd2fcbbb837f'',
+    ''299675e6-4faa-4d0f-a36a-224306ba5bcb'',
+    ''Column'',
+    ''MyColumn4'',
+    NULL
+);';
+-- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
+
+-- QUERY START: PostgreSQLInsertDNDBTSysInfoQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
     ''37a45def-f4a0-4be7-8bfb-8fbed4a7d705'',
     ''299675e6-4faa-4d0f-a36a-224306ba5bcb'',
     ''PrimaryKey'',
@@ -268,6 +289,25 @@ VALUES
     ''UniqueConstraint'',
     ''UQ_MyTable1_MyColumn2'',
     NULL
+);';
+-- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
+
+-- QUERY START: PostgreSQLInsertDNDBTSysInfoQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''eb9c59b5-bc7e-49d7-adaa-f5600b6a19a2'',
+    ''299675e6-4faa-4d0f-a36a-224306ba5bcb'',
+    ''CheckConstraint'',
+    ''CK_MyTable1_MyCheck1'',
+    ''CHECK ("MyColumn4" >= 0)''
 );';
 -- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
 

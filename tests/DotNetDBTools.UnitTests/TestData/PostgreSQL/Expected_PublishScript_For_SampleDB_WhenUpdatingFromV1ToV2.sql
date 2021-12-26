@@ -210,6 +210,7 @@ VALUES
 
 -- QUERY START: PostgreSQLAlterTableQuery
 EXECUTE 'ALTER TABLE "MyTable1" RENAME TO "MyTable1NewName";
+ALTER TABLE "MyTable1NewName" DROP CONSTRAINT "CK_MyTable1_MyCheck1";
 ALTER TABLE "MyTable1NewName" DROP CONSTRAINT "UQ_MyTable1_MyColumn2";
 ALTER TABLE "MyTable1NewName" DROP CONSTRAINT "PK_MyTable1";
 ALTER TABLE "MyTable1NewName" ALTER COLUMN "MyColumn2" DROP DEFAULT;
@@ -219,8 +220,14 @@ ALTER TABLE "MyTable1NewName" ALTER COLUMN "MyColumn1" DROP DEFAULT;
 ALTER TABLE "MyTable1NewName" ALTER COLUMN "MyColumn1" SET DATA TYPE BIGINT
     USING ("MyColumn1"::text::BIGINT);
 ALTER TABLE "MyTable1NewName" ALTER COLUMN "MyColumn1" DROP NOT NULL;
-ALTER TABLE "MyTable1NewName" ALTER COLUMN "MyColumn1" SET DEFAULT 15;';
+ALTER TABLE "MyTable1NewName" ALTER COLUMN "MyColumn1" SET DEFAULT 15;
+ALTER TABLE "MyTable1NewName" ADD CONSTRAINT "CK_MyTable1_MyCheck1" CHECK ("MyColumn4" >= 1);';
 -- QUERY END: PostgreSQLAlterTableQuery
+
+-- QUERY START: PostgreSQLDeleteDNDBTSysInfoQuery
+EXECUTE 'DELETE FROM "DNDBTDbObjects"
+WHERE "ID" = ''eb9c59b5-bc7e-49d7-adaa-f5600b6a19a2'';';
+-- QUERY END: PostgreSQLDeleteDNDBTSysInfoQuery
 
 -- QUERY START: PostgreSQLDeleteDNDBTSysInfoQuery
 EXECUTE 'DELETE FROM "DNDBTDbObjects"
@@ -255,6 +262,25 @@ EXECUTE 'UPDATE "DNDBTDbObjects" SET
     "Code" = NULL
 WHERE "ID" = ''a2f2a4de-1337-4594-ae41-72ed4d05f317'';';
 -- QUERY END: PostgreSQLUpdateDNDBTSysInfoQuery
+
+-- QUERY START: PostgreSQLInsertDNDBTSysInfoQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''eb9c59b5-bc7e-49d7-adaa-f5600b6a19a2'',
+    ''299675e6-4faa-4d0f-a36a-224306ba5bcb'',
+    ''CheckConstraint'',
+    ''CK_MyTable1_MyCheck1'',
+    ''CHECK ("MyColumn4" >= 1)''
+);';
+-- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
 
 -- QUERY START: PostgreSQLAlterTableQuery
 EXECUTE '

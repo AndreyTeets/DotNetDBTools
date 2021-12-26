@@ -18,13 +18,16 @@ namespace DotNetDBTools.DefinitionParsing.Core
         where TColumn : Column, new()
     {
         protected readonly IDataTypeMapper DataTypeMapper;
+        protected readonly IDbObjectCodeMapper DbObjectCodeMapper;
         protected readonly IDefaultValueMapper DefaultValueMapper;
 
         protected DatabaseModelBuilder(
             IDataTypeMapper dataTypeMapper,
+            IDbObjectCodeMapper dbObjectCodeMapper,
             IDefaultValueMapper defaultValueMapper)
         {
             DataTypeMapper = dataTypeMapper;
+            DbObjectCodeMapper = dbObjectCodeMapper;
             DefaultValueMapper = defaultValueMapper;
         }
 
@@ -52,7 +55,7 @@ namespace DotNetDBTools.DefinitionParsing.Core
                     Columns = BuildColumnModels(table),
                     PrimaryKey = BuildPrimaryKeyModels(table),
                     UniqueConstraints = BuildUniqueConstraintModels(table),
-                    CheckConstraints = new List<CheckConstraint>(),
+                    CheckConstraints = BuildCheckConstraintModels(table),
                     Indexes = new List<Index>(),
                     Triggers = new List<Trigger>(),
                     ForeignKeys = BuildForeignKeyModels(table),
@@ -143,6 +146,25 @@ namespace DotNetDBTools.DefinitionParsing.Core
                 })
                 .ToList();
         protected virtual void BuildAdditionalUniqueConstraintModelProperties(UniqueConstraint ucModel, BaseUniqueConstraint uc, string tableName) { }
+
+        private List<CheckConstraint> BuildCheckConstraintModels(IBaseTable table)
+            => table.GetType().GetPropertyOrFieldMembers()
+                .Where(x => typeof(BaseCheckConstraint).IsAssignableFrom(x.GetPropertyOrFieldType()))
+                .OrderBy(x => x.Name, StringComparer.Ordinal)
+                .Select(x =>
+                {
+                    BaseCheckConstraint ck = (BaseCheckConstraint)x.GetPropertyOrFieldValue(table);
+                    CheckConstraint ckModel = new()
+                    {
+                        ID = ck.ID,
+                        Name = x.Name,
+                        CodePiece = DbObjectCodeMapper.MapToCodePiece(ck),
+                    };
+                    BuildAdditionalCheckConstraintModelProperties(ckModel, ck, table.GetType().Name);
+                    return ckModel;
+                })
+                .ToList();
+        protected virtual void BuildAdditionalCheckConstraintModelProperties(CheckConstraint ckModel, BaseCheckConstraint ck, string tableName) { }
 
         private List<ForeignKey> BuildForeignKeyModels(IBaseTable table)
             => table.GetType().GetPropertyOrFieldMembers()

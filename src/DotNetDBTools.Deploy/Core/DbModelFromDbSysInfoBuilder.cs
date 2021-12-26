@@ -4,6 +4,7 @@ using System.Linq;
 using DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo;
 using DotNetDBTools.Deploy.Core.Queries.DNDBTSysInfo;
 using DotNetDBTools.Models.Core;
+using static DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo.GetCheckConstraintsFromDBMSSysInfoQuery;
 using static DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo.GetColumnsFromDBMSSysInfoQuery;
 using static DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo.GetForeignKeysFromDBMSSysInfoQuery;
 using static DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo.GetPrimaryKeysFromDBMSSysInfoQuery;
@@ -18,6 +19,7 @@ namespace DotNetDBTools.Deploy.Core
         TGetColumnsFromDBMSSysInfoQuery,
         TGetPrimaryKeysFromDBMSSysInfoQuery,
         TGetUniqueConstraintsFromDBMSSysInfoQuery,
+        TGetCheckConstraintsFromDBMSSysInfoQuery,
         TGetForeignKeysFromDBMSSysInfoQuery,
         TGetAllDbObjectsFromDNDBTSysInfoQuery>
         : IDbModelFromDbSysInfoBuilder
@@ -26,6 +28,7 @@ namespace DotNetDBTools.Deploy.Core
         where TGetColumnsFromDBMSSysInfoQuery : GetColumnsFromDBMSSysInfoQuery, new()
         where TGetPrimaryKeysFromDBMSSysInfoQuery : GetPrimaryKeysFromDBMSSysInfoQuery, new()
         where TGetUniqueConstraintsFromDBMSSysInfoQuery : GetUniqueConstraintsFromDBMSSysInfoQuery, new()
+        where TGetCheckConstraintsFromDBMSSysInfoQuery : GetCheckConstraintsFromDBMSSysInfoQuery, new()
         where TGetForeignKeysFromDBMSSysInfoQuery : GetForeignKeysFromDBMSSysInfoQuery, new()
         where TGetAllDbObjectsFromDNDBTSysInfoQuery : GetAllDbObjectsFromDNDBTSysInfoQuery, new()
     {
@@ -78,6 +81,12 @@ namespace DotNetDBTools.Deploy.Core
                     table.PrimaryKey.ID = dbObjectIDsMap[$"{DbObjectsTypes.PrimaryKey}_{table.PrimaryKey.Name}_{table.ID}"].ID;
                 foreach (UniqueConstraint uc in table.UniqueConstraints)
                     uc.ID = dbObjectIDsMap[$"{DbObjectsTypes.UniqueConstraint}_{uc.Name}_{table.ID}"].ID;
+                foreach (CheckConstraint ck in table.CheckConstraints)
+                {
+                    DNDBTInfo dndbtInfoCK = dbObjectIDsMap[$"{DbObjectsTypes.CheckConstraint}_{ck.Name}_{table.ID}"];
+                    ck.ID = dndbtInfoCK.ID;
+                    ck.CodePiece = new CodePiece { Code = dndbtInfoCK.Code };
+                }
                 foreach (ForeignKey fk in table.ForeignKeys)
                     fk.ID = dbObjectIDsMap[$"{DbObjectsTypes.ForeignKey}_{fk.Name}_{table.ID}"].ID;
             }
@@ -91,6 +100,7 @@ namespace DotNetDBTools.Deploy.Core
             Dictionary<string, Table> tables = BuildTablesListWithColumns();
             BuildTablesPrimaryKeys(tables);
             BuildTablesUniqueConstraints(tables);
+            BuildTablesCheckConstraints(tables);
             BuildTablesForeignKeys(tables);
             BuildAdditionalTablesAttributes(tables);
             return tables.Select(x => x.Value);
@@ -172,6 +182,17 @@ namespace DotNetDBTools.Deploy.Core
                 {
                     uc.Columns = columnNames[uc.Name].Select(x => x.Value).ToList();
                 }
+            }
+        }
+
+        private void BuildTablesCheckConstraints(Dictionary<string, Table> tables)
+        {
+            TGetCheckConstraintsFromDBMSSysInfoQuery query = new();
+            IEnumerable<CheckConstraintRecord> checkConstraintRecords = QueryExecutor.Query<CheckConstraintRecord>(query);
+            foreach (CheckConstraintRecord ckr in checkConstraintRecords)
+            {
+                CheckConstraint ck = query.Mapper.MapToCheckConstraintModel(ckr);
+                ((List<CheckConstraint>)tables[ckr.TableName].CheckConstraints).Add(ck);
             }
         }
 

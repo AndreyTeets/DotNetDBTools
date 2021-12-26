@@ -54,17 +54,18 @@ WHERE c.relkind = 'r'
             public override Column MapToColumnModel(ColumnRecord builderColumnRecord)
             {
                 PostgreSQLColumnRecord columnRecord = (PostgreSQLColumnRecord)builderColumnRecord;
+                DataType dataType = PostgreSQLQueriesHelper.CreateDataTypeModel(
+                    columnRecord.DataType,
+                    columnRecord.Length,
+                    columnRecord.IsBaseDataType);
                 return new Column()
                 {
                     ID = Guid.NewGuid(),
                     Name = columnRecord.ColumnName,
-                    DataType = PostgreSQLQueriesHelper.CreateDataTypeModel(
-                        columnRecord.DataType,
-                        columnRecord.Length,
-                        columnRecord.IsBaseDataType),
+                    DataType = dataType,
                     Nullable = columnRecord.Nullable,
                     Identity = columnRecord.Identity,
-                    Default = PostgreSQLQueriesHelper.ParseDefault(columnRecord.Default),
+                    Default = PostgreSQLQueriesHelper.ParseDefault(dataType, columnRecord.Default),
                 };
             }
         }

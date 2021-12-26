@@ -11,6 +11,5 @@ namespace DotNetDBTools.Definition.Core
         }
 
         public Guid ID => _id;
-        public string Code { get; set; }
     }
 }

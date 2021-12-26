@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Linq;
+using System.Globalization;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.PostgreSQL;
 
@@ -26,6 +26,7 @@ namespace DotNetDBTools.Deploy.PostgreSQL
                 CodePiece => $"{((CodePiece)value).Code}",
                 string => $"'{value}'",
                 long => $"{value}",
+                decimal val => $"{val.ToString(CultureInfo.InvariantCulture)}",
                 byte[] => $"{ToHex((byte[])value)}",
                 _ => throw new InvalidOperationException($"Invalid value type: '{value.GetType()}'")
             };
@@ -117,7 +118,7 @@ namespace DotNetDBTools.Deploy.PostgreSQL
             }
         }
 
-        public static object ParseDefault(string valueFromDBMSSysTable)
+        public static object ParseDefault(DataType dataType, string valueFromDBMSSysTable)
         {
             if (valueFromDBMSSysTable is null)
                 return null;
@@ -125,19 +126,27 @@ namespace DotNetDBTools.Deploy.PostgreSQL
 
             if (IsFunction(value))
                 return new CodePiece() { Code = value };
-            if (IsByte(value))
-                return ToByteArray(value);
-            if (IsString(value))
-                return TrimOuterQuotes(value.Remove(value.LastIndexOf("::", StringComparison.Ordinal)));
-            if (IsNumber(value))
-                return long.Parse(value);
 
-            throw new ArgumentException($"Invalid parameter value '{valueFromDBMSSysTable}'", nameof(valueFromDBMSSysTable));
+            string baseDataType = dataType.Name.Split('[')[0].Split('(')[0];
+            switch (baseDataType)
+            {
+                case PostgreSQLDataTypeNames.SMALLINT:
+                case PostgreSQLDataTypeNames.INT:
+                case PostgreSQLDataTypeNames.BIGINT:
+                    return long.Parse(value);
+                case PostgreSQLDataTypeNames.DECIMAL:
+                    return decimal.Parse(value, CultureInfo.InvariantCulture);
+                case PostgreSQLDataTypeNames.CHAR:
+                case PostgreSQLDataTypeNames.VARCHAR:
+                case PostgreSQLDataTypeNames.TEXT:
+                    return TrimOuterQuotes(value.Remove(value.LastIndexOf("::", StringComparison.Ordinal)));
+                case PostgreSQLDataTypeNames.BYTEA:
+                    return ToByteArray(value);
+                default:
+                    throw new InvalidOperationException($"Invalid default value [{valueFromDBMSSysTable}] for data type [{dataType.Name}]");
+            }
 
-            static bool IsFunction(string val) => val.Contains("(") && val.Contains(")");
-            static bool IsString(string val) => !IsFunction(val) && new string[] { "::text", "::character" }.Any(x => val.Contains(x));
-            static bool IsByte(string val) => !IsFunction(val) && val.Contains("::bytea");
-            static bool IsNumber(string val) => !IsFunction(val) && long.TryParse(val, out _);
+            static bool IsFunction(string val) => val.Contains("(") && val.Contains(")") && !val.StartsWith("'", StringComparison.Ordinal);
             static string TrimOuterQuotes(string val) => val.Substring(1, val.Length - 2);
             static byte[] ToByteArray(string val)
             {

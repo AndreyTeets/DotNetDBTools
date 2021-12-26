@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Models.Core;
@@ -29,8 +30,8 @@ $@"    CONSTRAINT {fk.Name} FOREIGN KEY ({string.Join(", ", fk.ThisColumnNames)}
         REFERENCES {fk.ReferencedTableName}({string.Join(", ", fk.ReferencedTableColumnNames)})
         ON UPDATE {MapActionName(fk.OnUpdate)} ON DELETE {MapActionName(fk.OnDelete)}"));
 
-            IEnumerable<string> _ = table.CheckConstraints.Select(ck =>
-$@"    CONSTRAINT {ck.Name} {ck.GetCode()}");
+            tableDefinitions.AddRange(table.CheckConstraints.Select(ck =>
+$@"    CONSTRAINT [{ck.Name}] {ck.GetCode()}"));
 
             return string.Join(",\n", tableDefinitions);
         }
@@ -70,6 +71,7 @@ $@"    CONSTRAINT {ck.Name} {ck.GetCode()}");
                 CodePiece => $"({((CodePiece)value).Code})",
                 string => $"'{value}'",
                 long => $"{value}",
+                decimal val => $"{val.ToString(CultureInfo.InvariantCulture)}",
                 byte[] => $"{ToHex((byte[])value)}",
                 _ => throw new InvalidOperationException($"Invalid value type: '{value.GetType()}'")
             };

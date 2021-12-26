@@ -10,8 +10,10 @@ namespace DotNetDBTools.DefinitionParsing.SQLite
         SQLiteView,
         Models.Core.Column>
     {
-        public SQLiteDatabaseModelBuilder()
-            : base(new SQLiteDataTypeMapper(), new SQLiteDefaultValueMapper())
+        public SQLiteDatabaseModelBuilder() : base(
+            new SQLiteDataTypeMapper(),
+            new SQLiteDbObjectCodeMapper(),
+            new SQLiteDefaultValueMapper())
         {
         }
 

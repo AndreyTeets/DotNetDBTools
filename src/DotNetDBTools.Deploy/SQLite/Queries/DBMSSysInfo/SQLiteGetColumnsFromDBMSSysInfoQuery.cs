@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo;
 using DotNetDBTools.Models.Core;
@@ -42,6 +43,7 @@ WHERE sm.type = 'table'
             public override Column MapToColumnModel(ColumnRecord builderColumnRecord)
             {
                 SQLiteColumnRecord columnRecord = (SQLiteColumnRecord)builderColumnRecord;
+                DataType dataType = ParseDataType(columnRecord);
                 return new Column()
                 {
                     ID = Guid.NewGuid(),
@@ -49,7 +51,7 @@ WHERE sm.type = 'table'
                     DataType = ParseDataType(columnRecord),
                     Nullable = columnRecord.Nullable,
                     Identity = columnRecord.IsIdentityCandidate,
-                    Default = ParseDefault(columnRecord.Default),
+                    Default = ParseDefault(dataType, columnRecord.Default),
                 };
             }
 
@@ -69,22 +71,31 @@ WHERE sm.type = 'table'
                 }
             }
 
-            private static object ParseDefault(string value)
+            private static object ParseDefault(DataType dataType, string valueFromDBMSSysTable)
             {
-                if (value is null)
+                if (valueFromDBMSSysTable is null)
                     return null;
+                string value = valueFromDBMSSysTable;
 
-                if (IsByte(value))
-                    return ToByteArray(value);
-                if (IsString(value))
-                    return TrimOuterQuotes(value);
                 if (IsFunction(value))
                     return new CodePiece() { Code = value };
-                return long.Parse(value);
 
-                static bool IsByte(string val) => val.StartsWith("0x", StringComparison.Ordinal);
-                static bool IsString(string val) => val.StartsWith("'", StringComparison.Ordinal);
-                static bool IsFunction(string val) => !long.TryParse(val, out _);
+                string baseDataType = dataType.Name;
+                switch (baseDataType)
+                {
+                    case SQLiteDataTypeNames.INTEGER:
+                        return long.Parse(value);
+                    case SQLiteDataTypeNames.NUMERIC:
+                        return decimal.Parse(value, CultureInfo.InvariantCulture);
+                    case SQLiteDataTypeNames.TEXT:
+                        return TrimOuterQuotes(value);
+                    case SQLiteDataTypeNames.BLOB:
+                        return ToByteArray(value);
+                    default:
+                        throw new InvalidOperationException($"Invalid default value [{valueFromDBMSSysTable}] for data type [{dataType.Name}]");
+                }
+
+                static bool IsFunction(string val) => val.Contains("(") && val.Contains(")") && !val.StartsWith("'", StringComparison.Ordinal);
                 static string TrimOuterQuotes(string val) => val.Substring(1, val.Length - 2);
                 static byte[] ToByteArray(string val)
                 {

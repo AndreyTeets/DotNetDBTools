@@ -14,8 +14,10 @@ namespace DotNetDBTools.DefinitionParsing.MySQL
         MySQLView,
         Models.Core.Column>
     {
-        public MySQLDatabaseModelBuilder()
-            : base(new MySQLDataTypeMapper(), new MySQLDefaultValueMapper())
+        public MySQLDatabaseModelBuilder() : base(
+            new MySQLDataTypeMapper(),
+            new MySQLDbObjectCodeMapper(),
+            new MySQLDefaultValueMapper())
         {
         }
 

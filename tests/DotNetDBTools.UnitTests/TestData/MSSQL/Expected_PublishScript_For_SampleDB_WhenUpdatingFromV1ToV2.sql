@@ -104,6 +104,7 @@ EXEC (@SqlText);';
 
 -- QUERY START: MSSQLAlterTableQuery
 EXEC sp_executesql N'EXEC sp_rename ''MyTable1'', ''MyTable1NewName'';
+ALTER TABLE MyTable1NewName DROP CONSTRAINT CK_MyTable1_MyCheck1;
 ALTER TABLE MyTable1NewName DROP CONSTRAINT UQ_MyTable1_MyColumn2;
 ALTER TABLE MyTable1NewName DROP CONSTRAINT PK_MyTable1;
 ALTER TABLE [MyTable1NewName] DROP CONSTRAINT DF_MyTable1_MyColumn2;
@@ -111,8 +112,17 @@ ALTER TABLE MyTable1NewName DROP COLUMN MyColumn2;
 ALTER TABLE MyTable1NewName DROP COLUMN MyColumn3;
 ALTER TABLE [MyTable1NewName] DROP CONSTRAINT DF_MyTable1_MyColumn1;
 ALTER TABLE MyTable1NewName ALTER COLUMN MyColumn1 BIGINT NULL;
-ALTER TABLE MyTable1NewName ADD CONSTRAINT DF_MyTable1NewName_MyColumn1 DEFAULT 15 FOR MyColumn1;';
+ALTER TABLE MyTable1NewName ADD CONSTRAINT DF_MyTable1NewName_MyColumn1 DEFAULT 15 FOR MyColumn1;
+ALTER TABLE [MyTable1NewName] DROP CONSTRAINT DF_MyTable1_MyColumn4;
+ALTER TABLE MyTable1NewName ALTER COLUMN MyColumn4 DECIMAL(19, 2) NOT NULL;
+ALTER TABLE MyTable1NewName ADD CONSTRAINT DF_MyTable1NewName_MyColumn4 DEFAULT 7.36 FOR MyColumn4;
+ALTER TABLE MyTable1NewName ADD CONSTRAINT CK_MyTable1_MyCheck1 CHECK (MyColumn4 >= 1);';
 -- QUERY END: MSSQLAlterTableQuery
+
+-- QUERY START: MSSQLDeleteDNDBTSysInfoQuery
+EXEC sp_executesql N'DELETE FROM DNDBTDbObjects
+WHERE ID = ''eb9c59b5-bc7e-49d7-adaa-f5600b6a19a2'';';
+-- QUERY END: MSSQLDeleteDNDBTSysInfoQuery
 
 -- QUERY START: MSSQLDeleteDNDBTSysInfoQuery
 EXEC sp_executesql N'DELETE FROM DNDBTDbObjects
@@ -153,6 +163,39 @@ UPDATE DNDBTDbObjects SET
     Code = @Code
 WHERE ID = @ID;';
 -- QUERY END: MSSQLUpdateDNDBTSysInfoQuery
+
+-- QUERY START: MSSQLUpdateDNDBTSysInfoQuery
+EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = ''867ac528-e87e-4c93-b6e3-dd2fcbbb837f'';
+DECLARE @Name NVARCHAR(MAX) = ''MyColumn4'';
+DECLARE @Code NVARCHAR(MAX) = NULL;
+UPDATE DNDBTDbObjects SET
+    Name = @Name,
+    Code = @Code
+WHERE ID = @ID;';
+-- QUERY END: MSSQLUpdateDNDBTSysInfoQuery
+
+-- QUERY START: MSSQLInsertDNDBTSysInfoQuery
+EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = ''eb9c59b5-bc7e-49d7-adaa-f5600b6a19a2'';
+DECLARE @ParentID UNIQUEIDENTIFIER = ''299675e6-4faa-4d0f-a36a-224306ba5bcb'';
+DECLARE @Name NVARCHAR(MAX) = ''CK_MyTable1_MyCheck1'';
+DECLARE @Code NVARCHAR(MAX) = ''CHECK (MyColumn4 >= 1)'';
+INSERT INTO DNDBTDbObjects
+(
+    ID,
+    ParentID,
+    Type,
+    Name,
+    Code
+)
+VALUES
+(
+    @ID,
+    @ParentID,
+    ''CheckConstraint'',
+    @Name,
+    @Code
+);';
+-- QUERY END: MSSQLInsertDNDBTSysInfoQuery
 
 -- QUERY START: MSSQLAlterTableQuery
 EXEC sp_executesql N'

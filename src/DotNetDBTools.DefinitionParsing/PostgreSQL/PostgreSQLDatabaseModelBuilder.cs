@@ -19,8 +19,10 @@ namespace DotNetDBTools.DefinitionParsing.PostgreSQL
         PostgreSQLView,
         Models.Core.Column>
     {
-        public PostgreSQLDatabaseModelBuilder()
-            : base(new PostgreSQLDataTypeMapper(), new PostgreSQLDefaultValueMapper())
+        public PostgreSQLDatabaseModelBuilder() : base(
+            new PostgreSQLDataTypeMapper(),
+            new PostgreSQLDbObjectCodeMapper(),
+            new PostgreSQLDefaultValueMapper())
         {
         }
 
@@ -100,14 +102,14 @@ namespace DotNetDBTools.DefinitionParsing.PostgreSQL
                 .OrderBy(x => x.Name, StringComparer.Ordinal)
                 .Select(x =>
                 {
-                    BaseCheckConstraint checkConstraint = (BaseCheckConstraint)x.GetPropertyOrFieldValue(type);
-                    Models.Core.CheckConstraint checkConstraintModel = new()
+                    BaseCheckConstraint ck = (BaseCheckConstraint)x.GetPropertyOrFieldValue(type);
+                    Models.Core.CheckConstraint ckModel = new()
                     {
-                        ID = checkConstraint.ID,
+                        ID = ck.ID,
                         Name = x.Name,
-                        CodePiece = new CodePiece { Code = checkConstraint.Code },
+                        CodePiece = DbObjectCodeMapper.MapToCodePiece(ck),
                     };
-                    return checkConstraintModel;
+                    return ckModel;
                 })
                 .ToList();
             }

@@ -36,6 +36,7 @@ namespace DotNetDBTools.IntegrationTests.PostgreSQL
         {
             return codePiece.Code.ToUpper()
                 .Replace("::INTEGER", "")
+                .Replace("::NUMERIC", "")
                 .Replace("::TEXT", "")
                 .Replace("'", "");
         }

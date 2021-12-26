@@ -10,8 +10,10 @@ namespace DotNetDBTools.DefinitionParsing.Agnostic
         AgnosticView,
         Models.Core.Column>
     {
-        public AgnosticDatabaseModelBuilder()
-            : base(new AgnosticDataTypeMapper(), new AgnosticDefaultValueMapper())
+        public AgnosticDatabaseModelBuilder() : base(
+            new AgnosticDataTypeMapper(),
+            new AgnosticDbObjectCodeMapper(),
+            new AgnosticDefaultValueMapper())
         {
         }
 

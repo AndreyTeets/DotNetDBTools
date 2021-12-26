@@ -21,6 +21,7 @@ namespace DotNetDBTools.Deploy.PostgreSQL
         PostgreSQLGetColumnsFromDBMSSysInfoQuery,
         PostgreSQLGetPrimaryKeysFromDBMSSysInfoQuery,
         PostgreSQLGetUniqueConstraintsFromDBMSSysInfoQuery,
+        PostgreSQLGetCheckConstraintsFromDBMSSysInfoQuery,
         PostgreSQLGetForeignKeysFromDBMSSysInfoQuery,
         PostgreSQLGetAllDbObjectsFromDNDBTSysInfoQuery>
     {
@@ -99,15 +100,16 @@ namespace DotNetDBTools.Deploy.PostgreSQL
             {
                 if (!typesMap.ContainsKey(typeRecord.TypeName))
                 {
+                    DataType underlyingType = PostgreSQLQueriesHelper.CreateDataTypeModel(
+                        typeRecord.UnderlyingTypeName,
+                        typeRecord.UnderlyingTypeLength,
+                        typeRecord.UnderlyingTypeIsBaseDataType);
                     PostgreSQLDomainType type = new()
                     {
                         ID = Guid.NewGuid(),
                         Name = typeRecord.TypeName,
-                        UnderlyingType = PostgreSQLQueriesHelper.CreateDataTypeModel(
-                            typeRecord.UnderlyingTypeName,
-                            typeRecord.UnderlyingTypeLength,
-                            typeRecord.UnderlyingTypeIsBaseDataType),
-                        Default = PostgreSQLQueriesHelper.ParseDefault(typeRecord.Default),
+                        UnderlyingType = underlyingType,
+                        Default = PostgreSQLQueriesHelper.ParseDefault(underlyingType, typeRecord.Default),
                         Nullable = typeRecord.Nullable,
                         CheckConstraints = new List<CheckConstraint>(),
                     };

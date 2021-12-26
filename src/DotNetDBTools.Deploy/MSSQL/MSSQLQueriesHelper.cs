@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.MSSQL;
 
@@ -25,6 +26,7 @@ namespace DotNetDBTools.Deploy.MSSQL
                 CodePiece => $"{((CodePiece)value).Code}",
                 string => $"'{value}'",
                 long => $"{value}",
+                decimal val => $"{val.ToString(CultureInfo.InvariantCulture)}",
                 byte[] => $"{ToHex((byte[])value)}",
                 _ => throw new InvalidOperationException($"Invalid value type: '{value.GetType()}'")
             };
@@ -42,7 +44,7 @@ namespace DotNetDBTools.Deploy.MSSQL
                 _ => throw new InvalidOperationException($"Invalid modelActionName: '{modelActionName}'")
             };
 
-        public static DataType CreateDataTypeModel(string dataType, int length)
+        public static DataType CreateDataTypeModel(string dataType, int length, int precision, int scale)
         {
             switch (dataType)
             {
@@ -53,7 +55,6 @@ namespace DotNetDBTools.Deploy.MSSQL
 
                 case MSSQLDataTypeNames.REAL:
                 case MSSQLDataTypeNames.FLOAT:
-                case MSSQLDataTypeNames.DECIMAL:
                 case MSSQLDataTypeNames.BIT:
 
                 case MSSQLDataTypeNames.SMALLMONEY:
@@ -69,6 +70,9 @@ namespace DotNetDBTools.Deploy.MSSQL
                 case MSSQLDataTypeNames.UNIQUEIDENTIFIER:
                 case MSSQLDataTypeNames.ROWVERSION:
                     return new DataType { Name = dataType };
+
+                case MSSQLDataTypeNames.DECIMAL:
+                    return new DataType { Name = length == -1 ? dataType : $"{dataType}({precision}, {scale})" };
 
                 case MSSQLDataTypeNames.CHAR:
                 case MSSQLDataTypeNames.VARCHAR:

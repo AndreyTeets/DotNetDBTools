@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo;
 using DotNetDBTools.Models.Core;
+using DotNetDBTools.Models.MySQL;
 
 namespace DotNetDBTools.Deploy.MySQL.Queries.DBMSSysInfo
 {
@@ -17,7 +19,8 @@ $@"SELECT
     c.COLUMN_TYPE AS {nameof(MySQLColumnRecord.FullDataType)},
     CASE WHEN c.IS_NULLABLE = 'YES' THEN TRUE ELSE FALSE END AS {nameof(MySQLColumnRecord.Nullable)},
     CASE WHEN c.EXTRA = 'auto_increment' THEN TRUE ELSE FALSE END AS {nameof(MySQLColumnRecord.Identity)},
-    c.COLUMN_DEFAULT AS `{nameof(MySQLColumnRecord.Default)}`
+    c.COLUMN_DEFAULT AS `{nameof(MySQLColumnRecord.Default)}`,
+    CASE WHEN c.EXTRA = 'DEFAULT_GENERATED' THEN TRUE ELSE FALSE END AS {nameof(MySQLColumnRecord.DefaultIsFunction)}
 FROM INFORMATION_SCHEMA.COLUMNS c
 WHERE c.TABLE_SCHEMA = (select DATABASE())
     AND c.TABLE_NAME != '{DNDBTSysTables.DNDBTDbObjects}';";
@@ -29,6 +32,7 @@ WHERE c.TABLE_SCHEMA = (select DATABASE())
         {
             public string FullDataType { get; set; }
             public bool Identity { get; set; }
+            public bool DefaultIsFunction { get; set; }
         }
 
         public class MySQLRecordsLoader : RecordsLoader
@@ -42,14 +46,15 @@ WHERE c.TABLE_SCHEMA = (select DATABASE())
             public override Column MapToColumnModel(ColumnRecord builderColumnRecord)
             {
                 MySQLColumnRecord columnRecord = (MySQLColumnRecord)builderColumnRecord;
+                DataType dataType = ParseDataType(columnRecord);
                 return new Column()
                 {
                     ID = Guid.NewGuid(),
                     Name = columnRecord.ColumnName,
-                    DataType = ParseDataType(columnRecord),
+                    DataType = dataType,
                     Nullable = columnRecord.Nullable,
                     Identity = columnRecord.Identity,
-                    Default = ParseDefault(columnRecord),
+                    Default = ParseDefault(dataType, columnRecord),
                 };
             }
 
@@ -61,27 +66,45 @@ WHERE c.TABLE_SCHEMA = (select DATABASE())
                 return dataTypeModel;
             }
 
-            private static object ParseDefault(MySQLColumnRecord columnRecord)
+            private static object ParseDefault(DataType dataType, MySQLColumnRecord columnRecord)
             {
-                if (columnRecord.Default is null)
-                    return null;
                 string value = columnRecord.Default;
+                if (value is null)
+                    return null;
 
                 if (IsFunction(value))
                     return new CodePiece() { Code = value };
-                if (IsString(columnRecord.DataType.ToUpper()))
-                    return TrimOuterQuotesIfExist(value.Replace("_utf8mb4", ""));
-                if (IsByte(value))
-                    return ToByteArray(value);
-                if (IsNumber(value))
-                    return long.Parse(value);
 
-                throw new InvalidOperationException($"Invalid default parameter value '{value}'");
+                string baseDataType = dataType.Name.Split('(')[0];
+                switch (baseDataType)
+                {
+                    case MySQLDataTypeNames.TINYINT:
+                    case MySQLDataTypeNames.SMALLINT:
+                    case MySQLDataTypeNames.MEDIUMINT:
+                    case MySQLDataTypeNames.INT:
+                    case MySQLDataTypeNames.BIGINT:
+                        return long.Parse(value);
+                    case MySQLDataTypeNames.DECIMAL:
+                        return decimal.Parse(value, CultureInfo.InvariantCulture);
+                    case MySQLDataTypeNames.CHAR:
+                    case MySQLDataTypeNames.VARCHAR:
+                    case MySQLDataTypeNames.TINYTEXT:
+                    case MySQLDataTypeNames.TEXT:
+                    case MySQLDataTypeNames.MEDIUMTEXT:
+                    case MySQLDataTypeNames.LONGTEXT:
+                        return TrimOuterQuotesIfExist(value.Replace("_utf8mb4", ""));
+                    case MySQLDataTypeNames.BINARY:
+                    case MySQLDataTypeNames.VARBINARY:
+                    case MySQLDataTypeNames.TINYBLOB:
+                    case MySQLDataTypeNames.BLOB:
+                    case MySQLDataTypeNames.MEDIUMBLOB:
+                    case MySQLDataTypeNames.LONGBLOB:
+                        return ToByteArray(value);
+                    default:
+                        throw new InvalidOperationException($"Invalid default value [{value}] for data type [{dataType.Name}]");
+                }
 
-                static bool IsFunction(string val) => val.Contains("(") && val.Contains(")");
-                static bool IsString(string dataType) => new string[] { "TEXT", "CHAR" }.Any(x => dataType.Contains(x));
-                static bool IsByte(string val) => val.StartsWith("0x", StringComparison.Ordinal);
-                static bool IsNumber(string val) => long.TryParse(val, out long _);
+                bool IsFunction(string val) => val.Contains("(") && val.Contains(")") && columnRecord.DefaultIsFunction;
                 static string TrimOuterQuotesIfExist(string val) => val.Contains(@"\'") ? val.Substring(2, val.Length - 4) : val;
                 static byte[] ToByteArray(string val)
                 {

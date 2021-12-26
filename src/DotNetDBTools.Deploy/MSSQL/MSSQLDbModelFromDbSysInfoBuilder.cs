@@ -15,6 +15,7 @@ namespace DotNetDBTools.Deploy.MSSQL
         MSSQLGetColumnsFromDBMSSysInfoQuery,
         MSSQLGetPrimaryKeysFromDBMSSysInfoQuery,
         MSSQLGetUniqueConstraintsFromDBMSSysInfoQuery,
+        MSSQLGetCheckConstraintsFromDBMSSysInfoQuery,
         MSSQLGetForeignKeysFromDBMSSysInfoQuery,
         MSSQLGetAllDbObjectsFromDNDBTSysInfoQuery>
     {

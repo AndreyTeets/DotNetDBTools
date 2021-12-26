@@ -12,7 +12,9 @@ $@"SELECT
     t.name AS {nameof(UserDefinedTypeRecord.Name)},
     t.is_nullable AS {nameof(UserDefinedTypeRecord.Nullable)},
     st.name AS {nameof(UserDefinedTypeRecord.UnderlyingDataTypeName)},
-    t.max_length AS {nameof(UserDefinedTypeRecord.UnderlyingDataTypeLength)}
+    t.max_length AS {nameof(UserDefinedTypeRecord.UnderlyingDataTypeLength)},
+    t.precision AS {nameof(UserDefinedTypeRecord.UnderlyingDataTypePrecision)},
+    t.scale AS {nameof(UserDefinedTypeRecord.UnderlyingDataTypeScale)}
 FROM sys.types t
 INNER JOIN sys.types st
     ON st.user_type_id = t.system_type_id
@@ -27,7 +29,9 @@ WHERE t.is_user_defined = 1
             public string Name { get; set; }
             public bool Nullable { get; set; }
             public string UnderlyingDataTypeName { get; set; }
-            public string UnderlyingDataTypeLength { get; set; }
+            public int UnderlyingDataTypeLength { get; set; }
+            public int UnderlyingDataTypePrecision { get; set; }
+            public int UnderlyingDataTypeScale { get; set; }
         }
 
         public class RecordMapper
@@ -41,7 +45,9 @@ WHERE t.is_user_defined = 1
                     Nullable = userDefinedTypeRecord.Nullable,
                     UnderlyingDataType = MSSQLQueriesHelper.CreateDataTypeModel(
                         userDefinedTypeRecord.UnderlyingDataTypeName.ToUpper(),
-                        int.Parse(userDefinedTypeRecord.UnderlyingDataTypeLength)),
+                        userDefinedTypeRecord.UnderlyingDataTypeLength,
+                        userDefinedTypeRecord.UnderlyingDataTypePrecision,
+                        userDefinedTypeRecord.UnderlyingDataTypeScale),
                 };
             }
         }

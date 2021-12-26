@@ -9,6 +9,7 @@ WHERE `ID` = 'd11b2a53-32db-432f-bb6b-f91788844ba9';
 
 -- QUERY START: MySQLAlterTableQuery
 RENAME TABLE `MyTable1` TO `MyTable1NewName`;
+ALTER TABLE `MyTable1NewName` DROP CONSTRAINT `CK_MyTable1_MyCheck1`;
 ALTER TABLE `MyTable1NewName` DROP CONSTRAINT `UQ_MyTable1_MyColumn2`;
 ALTER TABLE `MyTable1NewName` DROP PRIMARY KEY,
     MODIFY COLUMN `MyColumn3` INT NOT NULL;
@@ -18,7 +19,13 @@ ALTER TABLE `MyTable1NewName` DROP COLUMN `MyColumn3`;
 ALTER TABLE `MyTable1NewName` ALTER COLUMN `MyColumn1` DROP DEFAULT;
 ALTER TABLE `MyTable1NewName` MODIFY COLUMN `MyColumn1` BIGINT NULL;
 ALTER TABLE `MyTable1NewName` ALTER COLUMN `MyColumn1` SET DEFAULT (15);
+ALTER TABLE `MyTable1NewName` ADD CONSTRAINT `CK_MyTable1_MyCheck1` CHECK (MyColumn4 >= 1);
 -- QUERY END: MySQLAlterTableQuery
+
+-- QUERY START: MySQLDeleteDNDBTSysInfoQuery
+DELETE FROM `DNDBTDbObjects`
+WHERE `ID` = 'eb9c59b5-bc7e-49d7-adaa-f5600b6a19a2';
+-- QUERY END: MySQLDeleteDNDBTSysInfoQuery
 
 -- QUERY START: MySQLDeleteDNDBTSysInfoQuery
 DELETE FROM `DNDBTDbObjects`
@@ -53,6 +60,25 @@ UPDATE `DNDBTDbObjects` SET
     `Code` = NULL
 WHERE `ID` = 'a2f2a4de-1337-4594-ae41-72ed4d05f317';
 -- QUERY END: MySQLUpdateDNDBTSysInfoQuery
+
+-- QUERY START: MySQLInsertDNDBTSysInfoQuery
+INSERT INTO `DNDBTDbObjects`
+(
+    `ID`,
+    `ParentID`,
+    `Type`,
+    `Name`,
+    `Code`
+)
+VALUES
+(
+    'eb9c59b5-bc7e-49d7-adaa-f5600b6a19a2',
+    '299675e6-4faa-4d0f-a36a-224306ba5bcb',
+    'CheckConstraint',
+    'CK_MyTable1_MyCheck1',
+    'CHECK (MyColumn4 >= 1)'
+);
+-- QUERY END: MySQLInsertDNDBTSysInfoQuery
 
 -- QUERY START: MySQLAlterTableQuery
 

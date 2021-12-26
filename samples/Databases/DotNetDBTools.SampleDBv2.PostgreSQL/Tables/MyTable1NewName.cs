@@ -15,6 +15,12 @@ namespace DotNetDBTools.SampleDB.PostgreSQL.Tables
             Default = 15,
         };
 
+        public Column MyColumn4 = new("867AC528-E87E-4C93-B6E3-DD2FCBBB837F")
+        {
+            DataType = new DecimalDataType(),
+            Default = 7.36m,
+        };
+
         public ForeignKey FK_MyTable1_MyColumn1_MyTable2_MyColumn1 = new("D11B2A53-32DB-432F-BB6B-F91788844BA9")
         {
             ThisColumns = new string[] { nameof(MyColumn1) },
@@ -26,7 +32,7 @@ namespace DotNetDBTools.SampleDB.PostgreSQL.Tables
 
         public CheckConstraint CK_MyTable1_MyCheck1 = new("EB9C59B5-BC7E-49D7-ADAA-F5600B6A19A2")
         {
-            Code = $"CHECK ({nameof(MyColumn1)} >= 0)",
+            Code = @$"CHECK (""{nameof(MyColumn4)}"" >= 1)",
         };
     }
 }

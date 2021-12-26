@@ -36,8 +36,10 @@ EXEC sp_executesql N'CREATE TABLE MyTable1
     MyColumn1 INT NOT NULL CONSTRAINT DF_MyTable1_MyColumn1 DEFAULT 15,
     MyColumn2 NVARCHAR(10) NOT NULL CONSTRAINT DF_MyTable1_MyColumn2 DEFAULT ''33'',
     MyColumn3 INT IDENTITY NOT NULL,
+    MyColumn4 DECIMAL(19, 2) NOT NULL CONSTRAINT DF_MyTable1_MyColumn4 DEFAULT 7.36,
     CONSTRAINT PK_MyTable1 PRIMARY KEY (MyColumn3),
-    CONSTRAINT UQ_MyTable1_MyColumn2 UNIQUE (MyColumn2)
+    CONSTRAINT UQ_MyTable1_MyColumn2 UNIQUE (MyColumn2),
+    CONSTRAINT [CK_MyTable1_MyCheck1] CHECK (MyColumn4 >= 0)
 );';
 -- QUERY END: MSSQLCreateTableQuery
 
@@ -134,6 +136,29 @@ VALUES
 -- QUERY END: MSSQLInsertDNDBTSysInfoQuery
 
 -- QUERY START: MSSQLInsertDNDBTSysInfoQuery
+EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = ''867ac528-e87e-4c93-b6e3-dd2fcbbb837f'';
+DECLARE @ParentID UNIQUEIDENTIFIER = ''299675e6-4faa-4d0f-a36a-224306ba5bcb'';
+DECLARE @Name NVARCHAR(MAX) = ''MyColumn4'';
+DECLARE @Code NVARCHAR(MAX) = NULL;
+INSERT INTO DNDBTDbObjects
+(
+    ID,
+    ParentID,
+    Type,
+    Name,
+    Code
+)
+VALUES
+(
+    @ID,
+    @ParentID,
+    ''Column'',
+    @Name,
+    @Code
+);';
+-- QUERY END: MSSQLInsertDNDBTSysInfoQuery
+
+-- QUERY START: MSSQLInsertDNDBTSysInfoQuery
 EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = ''37a45def-f4a0-4be7-8bfb-8fbed4a7d705'';
 DECLARE @ParentID UNIQUEIDENTIFIER = ''299675e6-4faa-4d0f-a36a-224306ba5bcb'';
 DECLARE @Name NVARCHAR(MAX) = ''PK_MyTable1'';
@@ -174,6 +199,29 @@ VALUES
     @ID,
     @ParentID,
     ''UniqueConstraint'',
+    @Name,
+    @Code
+);';
+-- QUERY END: MSSQLInsertDNDBTSysInfoQuery
+
+-- QUERY START: MSSQLInsertDNDBTSysInfoQuery
+EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = ''eb9c59b5-bc7e-49d7-adaa-f5600b6a19a2'';
+DECLARE @ParentID UNIQUEIDENTIFIER = ''299675e6-4faa-4d0f-a36a-224306ba5bcb'';
+DECLARE @Name NVARCHAR(MAX) = ''CK_MyTable1_MyCheck1'';
+DECLARE @Code NVARCHAR(MAX) = ''CHECK (MyColumn4 >= 0)'';
+INSERT INTO DNDBTDbObjects
+(
+    ID,
+    ParentID,
+    Type,
+    Name,
+    Code
+)
+VALUES
+(
+    @ID,
+    @ParentID,
+    ''CheckConstraint'',
     @Name,
     @Code
 );';

@@ -37,6 +37,9 @@ namespace DotNetDBTools.IntegrationTests.MSSQL
         protected override string GetNormalizedCodeFromCodePiece(CodePiece codePiece)
         {
             return codePiece.Code.ToUpper()
+                .Replace("[", "")
+                .Replace("]", "")
+                .Replace(" ", "")
                 .Replace("(", "")
                 .Replace(")", "");
         }

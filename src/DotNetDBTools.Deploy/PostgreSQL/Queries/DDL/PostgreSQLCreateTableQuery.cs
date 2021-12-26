@@ -52,8 +52,8 @@ $@"    CONSTRAINT ""{table.PrimaryKey.Name}"" PRIMARY KEY ({string.Join(", ", ta
             tableDefinitions.AddRange(table.UniqueConstraints.Select(uc =>
 $@"    CONSTRAINT ""{uc.Name}"" UNIQUE ({string.Join(", ", uc.Columns.Select(x => $@"""{x}"""))})"));
 
-            IEnumerable<string> _ = table.CheckConstraints.Select(ck =>
-$@"    CONSTRAINT ""{ck.Name}"" {ck.GetCode()}");
+            tableDefinitions.AddRange(table.CheckConstraints.Select(ck =>
+$@"    CONSTRAINT ""{ck.Name}"" {ck.GetCode()}"));
 
             return string.Join(",\n", tableDefinitions);
         }

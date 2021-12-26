@@ -35,6 +35,7 @@ namespace DotNetDBTools.IntegrationTests.MySQL
         protected override string GetNormalizedCodeFromCodePiece(CodePiece codePiece)
         {
             return codePiece.Code.ToUpper()
+                .Replace("`", "")
                 .Replace("(", "")
                 .Replace(")", "");
         }

@@ -53,8 +53,8 @@ namespace DotNetDBTools.Deploy.Core.Editors
                 QueryExecutor.Execute(Create<TDeleteDNDBTSysInfoQuery>(trigger.ID));
             foreach (Index index in table.Indexes)
                 QueryExecutor.Execute(Create<TDeleteDNDBTSysInfoQuery>(index.ID));
-            foreach (CheckConstraint cc in table.CheckConstraints)
-                QueryExecutor.Execute(Create<TDeleteDNDBTSysInfoQuery>(cc.ID));
+            foreach (CheckConstraint ck in table.CheckConstraints)
+                QueryExecutor.Execute(Create<TDeleteDNDBTSysInfoQuery>(ck.ID));
             foreach (UniqueConstraint uc in table.UniqueConstraints)
                 QueryExecutor.Execute(Create<TDeleteDNDBTSysInfoQuery>(uc.ID));
             PrimaryKey pk = table.PrimaryKey;
@@ -73,8 +73,8 @@ namespace DotNetDBTools.Deploy.Core.Editors
                 QueryExecutor.Execute(Create<TDeleteDNDBTSysInfoQuery>(trigger.ID));
             foreach (Index index in tableDiff.IndexesToDrop)
                 QueryExecutor.Execute(Create<TDeleteDNDBTSysInfoQuery>(index.ID));
-            foreach (CheckConstraint cc in tableDiff.CheckConstraintsToDrop)
-                QueryExecutor.Execute(Create<TDeleteDNDBTSysInfoQuery>(cc.ID));
+            foreach (CheckConstraint ck in tableDiff.CheckConstraintsToDrop)
+                QueryExecutor.Execute(Create<TDeleteDNDBTSysInfoQuery>(ck.ID));
             foreach (UniqueConstraint uc in tableDiff.UniqueConstraintsToDrop)
                 QueryExecutor.Execute(Create<TDeleteDNDBTSysInfoQuery>(uc.ID));
             if (tableDiff.PrimaryKeyToDrop is not null)

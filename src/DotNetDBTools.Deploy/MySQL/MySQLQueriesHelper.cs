@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.MySQL;
 
@@ -25,6 +26,7 @@ namespace DotNetDBTools.Deploy.MySQL
                 CodePiece => $"({((CodePiece)value).Code})",
                 string => $"('{value}')",
                 long => $"({value})",
+                decimal val => $"{val.ToString(CultureInfo.InvariantCulture)}",
                 byte[] => $"({ToHex((byte[])value)})",
                 _ => throw new InvalidOperationException($"Invalid value type: '{value.GetType()}'")
             };

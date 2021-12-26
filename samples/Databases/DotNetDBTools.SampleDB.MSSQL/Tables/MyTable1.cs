@@ -26,6 +26,12 @@ namespace DotNetDBTools.SampleDB.MSSQL.Tables
             Identity = true,
         };
 
+        public Column MyColumn4 = new("867AC528-E87E-4C93-B6E3-DD2FCBBB837F")
+        {
+            DataType = new DecimalDataType(),
+            Default = 7.36m,
+        };
+
         public PrimaryKey PK_MyTable1 = new("37A45DEF-F4A0-4BE7-8BFB-8FBED4A7D705")
         {
             Columns = new string[] { nameof(MyColumn3) },
@@ -47,7 +53,7 @@ namespace DotNetDBTools.SampleDB.MSSQL.Tables
 
         public CheckConstraint CK_MyTable1_MyCheck1 = new("EB9C59B5-BC7E-49D7-ADAA-F5600B6A19A2")
         {
-            Code = $"CHECK ({nameof(MyColumn1)} >= 0)",
+            Code = $"CHECK ({nameof(MyColumn4)} >= 0)",
         };
     }
 }

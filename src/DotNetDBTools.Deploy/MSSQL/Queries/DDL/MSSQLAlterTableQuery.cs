@@ -24,8 +24,8 @@ namespace DotNetDBTools.Deploy.MSSQL.Queries.DDL
             foreach (Index index in tableDiff.IndexesToDrop)
                 sb.Append(Queries.DropIndex(index.Name));
 
-            foreach (CheckConstraint cc in tableDiff.CheckConstraintsToDrop)
-                sb.Append(Queries.DropCheckConstraint(tableDiff.NewTable.Name, cc.Name));
+            foreach (CheckConstraint ck in tableDiff.CheckConstraintsToDrop)
+                sb.Append(Queries.DropCheckConstraint(tableDiff.NewTable.Name, ck.Name));
             foreach (UniqueConstraint uc in tableDiff.UniqueConstraintsToDrop)
                 sb.Append(Queries.DropUniqueConstraint(tableDiff.NewTable.Name, uc.Name));
             if (tableDiff.PrimaryKeyToDrop is not null)
@@ -37,8 +37,8 @@ namespace DotNetDBTools.Deploy.MSSQL.Queries.DDL
                 sb.Append(Queries.AddPrimaryKey(tableDiff.NewTable.Name, tableDiff.PrimaryKeyToCreate));
             foreach (UniqueConstraint uc in tableDiff.UniqueConstraintsToCreate)
                 sb.Append(Queries.AddUniqueConstraint(tableDiff.NewTable.Name, uc));
-            foreach (CheckConstraint cc in tableDiff.CheckConstraintsToCreate)
-                sb.Append(Queries.AddCheckConstraint(tableDiff.NewTable.Name, cc));
+            foreach (CheckConstraint ck in tableDiff.CheckConstraintsToCreate)
+                sb.Append(Queries.AddCheckConstraint(tableDiff.NewTable.Name, ck));
 
             foreach (Index index in tableDiff.IndexesToCreate)
                 sb.Append(Queries.CreateIndex(tableDiff.NewTable.Name, index));
@@ -123,9 +123,9 @@ ALTER TABLE {tableName} DROP CONSTRAINT {ucName};"
 $@"
 ALTER TABLE {tableName} ADD CONSTRAINT {ck.Name} {ck.GetCode()};"
                 ;
-            public static string DropCheckConstraint(string tableName, string ccName) =>
+            public static string DropCheckConstraint(string tableName, string ckName) =>
 $@"
-ALTER TABLE {tableName} DROP CONSTRAINT {ccName};"
+ALTER TABLE {tableName} DROP CONSTRAINT {ckName};"
                 ;
 
             public static string AddDefaultConstraint(string tableName, Column c) =>
