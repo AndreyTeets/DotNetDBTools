@@ -18,11 +18,13 @@ namespace DotNetDBTools.Deploy.PostgreSQL
     internal class PostgreSQLDbModelFromDbSysInfoBuilder : DbModelFromDbSysInfoBuilder<
         PostgreSQLDatabase,
         PostgreSQLTable,
+        PostgreSQLView,
         PostgreSQLGetColumnsFromDBMSSysInfoQuery,
         PostgreSQLGetPrimaryKeysFromDBMSSysInfoQuery,
         PostgreSQLGetUniqueConstraintsFromDBMSSysInfoQuery,
         PostgreSQLGetCheckConstraintsFromDBMSSysInfoQuery,
         PostgreSQLGetForeignKeysFromDBMSSysInfoQuery,
+        PostgreSQLGetViewsFromDBMSSysInfoQuery,
         PostgreSQLGetAllDbObjectsFromDNDBTSysInfoQuery>
     {
         public PostgreSQLDbModelFromDbSysInfoBuilder(IQueryExecutor queryExecutor)
@@ -44,7 +46,7 @@ namespace DotNetDBTools.Deploy.PostgreSQL
                 {
                     DNDBTInfo dndbtInfoCK = dbObjectIDsMap[$"{DbObjectsTypes.CheckConstraint}_{ck.Name}_{type.ID}"];
                     ck.ID = dndbtInfoCK.ID;
-                    ck.CodePiece = new CodePiece { Code = dndbtInfoCK.Code };
+                    ck.CodePiece.Code = dndbtInfoCK.Code;
                 }
             }
             foreach (PostgreSQLEnumType type in postgresqlDatabase.EnumTypes)

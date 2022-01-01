@@ -29,11 +29,12 @@ namespace DotNetDBTools.Analysis.PostgreSQL
             BuildDomainTypesDiff(databaseDiff, (PostgreSQLDatabase)newDatabase, (PostgreSQLDatabase)oldDatabase);
             BuildEnumTypesDiff(databaseDiff, (PostgreSQLDatabase)newDatabase, (PostgreSQLDatabase)oldDatabase);
             BuildRangeTypesDiff(databaseDiff, (PostgreSQLDatabase)newDatabase, (PostgreSQLDatabase)oldDatabase);
-
             FillChangedUserDefinedTypesNames(databaseDiff);
-            BuildTablesDiff<PostgreSQLTableDiff>(databaseDiff, newDatabase, oldDatabase);
 
+            BuildTablesDiff<PostgreSQLTableDiff>(databaseDiff, newDatabase, oldDatabase);
             ForeignKeysHelper.BuildAllForeignKeysToBeDroppedAndCreated(databaseDiff);
+
+            BuildViewsDiff(databaseDiff);
             return databaseDiff;
         }
 

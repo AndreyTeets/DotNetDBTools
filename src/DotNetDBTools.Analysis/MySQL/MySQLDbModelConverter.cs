@@ -41,7 +41,7 @@ namespace DotNetDBTools.Analysis.MySQL
             {
                 ID = view.ID,
                 Name = view.Name,
-                CodePiece = view.CodePiece,
+                CodePiece = new CodePiece { Code = ((AgnosticCodePiece)view.CodePiece).DbKindToCodeMap[DatabaseKind.MySQL] },
             };
 
         private static PrimaryKey ConvertToMySQLModel(PrimaryKey pk, string tableName)

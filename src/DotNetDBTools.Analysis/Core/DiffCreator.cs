@@ -31,6 +31,23 @@ namespace DotNetDBTools.Analysis.Core
             databaseDiff.ChangedTables = changedTables;
         }
 
+        protected void BuildViewsDiff(DatabaseDiff dbDiff)
+        {
+            List<View> viewsToCreate = null;
+            List<View> viewsToDrop = null;
+            FillAddedAndRemovedItemsAndApplyActionToChangedItems(
+                dbDiff.NewDatabase.Views, dbDiff.OldDatabase.Views,
+                ref viewsToCreate, ref viewsToDrop,
+                (newView, oldView) =>
+                {
+                    viewsToCreate.Add(newView);
+                    viewsToDrop.Add(oldView);
+                });
+
+            dbDiff.ViewsToCreate = viewsToCreate;
+            dbDiff.ViewsToDrop = viewsToDrop;
+        }
+
         private TTableDiff CreateTableDiff<TTableDiff>(Table newDbTable, Table oldDbTable)
             where TTableDiff : TableDiff, new()
         {

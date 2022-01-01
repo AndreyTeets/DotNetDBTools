@@ -41,7 +41,7 @@ namespace DotNetDBTools.Analysis.MSSQL
             {
                 ID = view.ID,
                 Name = view.Name,
-                CodePiece = view.CodePiece,
+                CodePiece = new CodePiece { Code = ((AgnosticCodePiece)view.CodePiece).DbKindToCodeMap[DatabaseKind.MSSQL] },
             };
 
         private static IEnumerable<Column> ConvertToMSSQLModel(IEnumerable<Column> columns, string tableName)

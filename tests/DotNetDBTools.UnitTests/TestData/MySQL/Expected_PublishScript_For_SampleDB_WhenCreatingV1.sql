@@ -337,3 +337,40 @@ VALUES
     NULL
 );
 -- QUERY END: MySQLInsertDNDBTSysInfoQuery
+
+-- QUERY START: GenericQuery
+CREATE VIEW MyView1 AS
+SELECT
+    t1.MyColumn1,
+    t1.MyColumn4,
+    t2.MyColumn2
+FROM MyTable1 t1
+LEFT JOIN MyTable2 t2
+    ON t2.MyColumn1 = t1.MyColumn1;
+-- QUERY END: GenericQuery
+
+-- QUERY START: MySQLInsertDNDBTSysInfoQuery
+INSERT INTO `DNDBTDbObjects`
+(
+    `ID`,
+    `ParentID`,
+    `Type`,
+    `Name`,
+    `Code`
+)
+VALUES
+(
+    'e2569aae-d5da-4a77-b3cd-51adbdb272d9',
+    NULL,
+    'View',
+    'MyView1',
+    'CREATE VIEW MyView1 AS
+SELECT
+    t1.MyColumn1,
+    t1.MyColumn4,
+    t2.MyColumn2
+FROM MyTable1 t1
+LEFT JOIN MyTable2 t2
+    ON t2.MyColumn1 = t1.MyColumn1;'
+);
+-- QUERY END: MySQLInsertDNDBTSysInfoQuery

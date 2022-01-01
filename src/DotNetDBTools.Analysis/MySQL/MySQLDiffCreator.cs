@@ -23,6 +23,8 @@ namespace DotNetDBTools.Analysis.MySQL
 
             BuildTablesDiff<MySQLTableDiff>(databaseDiff, newDatabase, oldDatabase);
             ForeignKeysHelper.BuildAllForeignKeysToBeDroppedAndCreated(databaseDiff);
+
+            BuildViewsDiff(databaseDiff);
             return databaseDiff;
         }
     }

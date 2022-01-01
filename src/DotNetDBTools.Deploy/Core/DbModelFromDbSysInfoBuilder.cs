@@ -9,6 +9,7 @@ using static DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo.GetColumnsFromDBMSSys
 using static DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo.GetForeignKeysFromDBMSSysInfoQuery;
 using static DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo.GetPrimaryKeysFromDBMSSysInfoQuery;
 using static DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo.GetUniqueConstraintsFromDBMSSysInfoQuery;
+using static DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo.GetViewsFromDBMSSysInfoQuery;
 using static DotNetDBTools.Deploy.Core.Queries.DNDBTSysInfo.GetAllDbObjectsFromDNDBTSysInfoQuery;
 
 namespace DotNetDBTools.Deploy.Core
@@ -16,20 +17,24 @@ namespace DotNetDBTools.Deploy.Core
     internal abstract class DbModelFromDbSysInfoBuilder<
         TDatabase,
         TTable,
+        TView,
         TGetColumnsFromDBMSSysInfoQuery,
         TGetPrimaryKeysFromDBMSSysInfoQuery,
         TGetUniqueConstraintsFromDBMSSysInfoQuery,
         TGetCheckConstraintsFromDBMSSysInfoQuery,
         TGetForeignKeysFromDBMSSysInfoQuery,
+        TGetViewsFromDBMSSysInfoQuery,
         TGetAllDbObjectsFromDNDBTSysInfoQuery>
         : IDbModelFromDbSysInfoBuilder
         where TDatabase : Database, new()
         where TTable : Table, new()
+        where TView : View, new()
         where TGetColumnsFromDBMSSysInfoQuery : GetColumnsFromDBMSSysInfoQuery, new()
         where TGetPrimaryKeysFromDBMSSysInfoQuery : GetPrimaryKeysFromDBMSSysInfoQuery, new()
         where TGetUniqueConstraintsFromDBMSSysInfoQuery : GetUniqueConstraintsFromDBMSSysInfoQuery, new()
         where TGetCheckConstraintsFromDBMSSysInfoQuery : GetCheckConstraintsFromDBMSSysInfoQuery, new()
         where TGetForeignKeysFromDBMSSysInfoQuery : GetForeignKeysFromDBMSSysInfoQuery, new()
+        where TGetViewsFromDBMSSysInfoQuery : GetViewsFromDBMSSysInfoQuery, new()
         where TGetAllDbObjectsFromDNDBTSysInfoQuery : GetAllDbObjectsFromDNDBTSysInfoQuery, new()
     {
         protected readonly IQueryExecutor QueryExecutor;
@@ -50,6 +55,7 @@ namespace DotNetDBTools.Deploy.Core
         {
             TDatabase database = new();
             database.Tables = BuildTables();
+            database.Views = BuildViews();
             BuildAdditionalDbObjects(database);
             return database;
         }
@@ -85,10 +91,17 @@ namespace DotNetDBTools.Deploy.Core
                 {
                     DNDBTInfo dndbtInfoCK = dbObjectIDsMap[$"{DbObjectsTypes.CheckConstraint}_{ck.Name}_{table.ID}"];
                     ck.ID = dndbtInfoCK.ID;
-                    ck.CodePiece = new CodePiece { Code = dndbtInfoCK.Code };
+                    ck.CodePiece.Code = dndbtInfoCK.Code;
                 }
                 foreach (ForeignKey fk in table.ForeignKeys)
                     fk.ID = dbObjectIDsMap[$"{DbObjectsTypes.ForeignKey}_{fk.Name}_{table.ID}"].ID;
+            }
+
+            foreach (View view in database.Views)
+            {
+                DNDBTInfo dndbtInfo = dbObjectIDsMap[$"{DbObjectsTypes.View}_{view.Name}_{null}"];
+                view.ID = dndbtInfo.ID;
+                view.CodePiece.Code = dndbtInfo.Code;
             }
 
             ReplaceAdditionalDbModelObjectsIDsAndCodeWithDNDBTSysInfo(database, dbObjectIDsMap);
@@ -106,6 +119,24 @@ namespace DotNetDBTools.Deploy.Core
             return tables.Select(x => x.Value);
         }
         protected virtual void BuildAdditionalTablesAttributes(Dictionary<string, Table> tables) { }
+
+        private IEnumerable<View> BuildViews()
+        {
+            TGetViewsFromDBMSSysInfoQuery query = new();
+            IEnumerable<ViewRecord> viewRecords = QueryExecutor.Query<ViewRecord>(query);
+            List<View> views = new();
+            foreach (ViewRecord viewRecord in viewRecords)
+            {
+                TView view = new()
+                {
+                    ID = Guid.NewGuid(),
+                    Name = viewRecord.ViewName,
+                    CodePiece = new CodePiece { Code = viewRecord.ViewCode },
+                };
+                views.Add(view);
+            }
+            return views;
+        }
 
         private Dictionary<string, Table> BuildTablesListWithColumns()
         {

@@ -51,7 +51,7 @@ namespace DotNetDBTools.Deploy.MySQL.Editors
             foreach (MySQLFunction function in db.Functions)
                 QueryExecutor.Execute(new MySQLInsertDNDBTSysInfoQuery(function.ID, null, DbObjectsTypes.Function, function.Name));
             foreach (MySQLView view in db.Views)
-                QueryExecutor.Execute(new MySQLInsertDNDBTSysInfoQuery(view.ID, null, DbObjectsTypes.View, view.Name));
+                QueryExecutor.Execute(new MySQLInsertDNDBTSysInfoQuery(view.ID, null, DbObjectsTypes.View, view.Name, view.GetCode()));
             foreach (MySQLProcedure procedure in db.Procedures)
                 QueryExecutor.Execute(new MySQLInsertDNDBTSysInfoQuery(procedure.ID, null, DbObjectsTypes.Procedure, procedure.Name));
         }
@@ -103,8 +103,8 @@ namespace DotNetDBTools.Deploy.MySQL.Editors
 
         private void CreateView(MySQLView view)
         {
-            QueryExecutor.Execute(new GenericQuery($"{view.CodePiece}"));
-            QueryExecutor.Execute(new MySQLInsertDNDBTSysInfoQuery(view.ID, null, DbObjectsTypes.View, view.Name));
+            QueryExecutor.Execute(new GenericQuery($"{view.GetCode()}"));
+            QueryExecutor.Execute(new MySQLInsertDNDBTSysInfoQuery(view.ID, null, DbObjectsTypes.View, view.Name, view.GetCode()));
         }
 
         private void DropView(MySQLView view)

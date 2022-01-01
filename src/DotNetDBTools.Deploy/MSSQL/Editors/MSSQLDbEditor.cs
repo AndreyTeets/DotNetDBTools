@@ -57,7 +57,7 @@ namespace DotNetDBTools.Deploy.MSSQL.Editors
             foreach (MSSQLFunction function in db.Functions)
                 QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(function.ID, null, DbObjectsTypes.Function, function.Name));
             foreach (MSSQLView view in db.Views)
-                QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(view.ID, null, DbObjectsTypes.View, view.Name));
+                QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(view.ID, null, DbObjectsTypes.View, view.Name, view.GetCode()));
             foreach (MSSQLProcedure procedure in db.Procedures)
                 QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(procedure.ID, null, DbObjectsTypes.Procedure, procedure.Name));
         }
@@ -165,8 +165,8 @@ namespace DotNetDBTools.Deploy.MSSQL.Editors
 
         private void CreateView(MSSQLView view)
         {
-            QueryExecutor.Execute(new GenericQuery($"{view.CodePiece}"));
-            QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(view.ID, null, DbObjectsTypes.View, view.Name));
+            QueryExecutor.Execute(new GenericQuery($"{view.GetCode()}"));
+            QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(view.ID, null, DbObjectsTypes.View, view.Name, view.GetCode()));
         }
 
         private void DropView(MSSQLView view)

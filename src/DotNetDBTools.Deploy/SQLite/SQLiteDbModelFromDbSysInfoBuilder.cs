@@ -13,11 +13,13 @@ namespace DotNetDBTools.Deploy.SQLite
     internal class SQLiteDbModelFromDbSysInfoBuilder : DbModelFromDbSysInfoBuilder<
         SQLiteDatabase,
         SQLiteTable,
+        SQLiteView,
         SQLiteGetColumnsFromDBMSSysInfoQuery,
         SQLiteGetPrimaryKeysFromDBMSSysInfoQuery,
         SQLiteGetUniqueConstraintsFromDBMSSysInfoQuery,
         SQLiteGetCheckConstraintsFromDBMSSysInfoQuery,
         SQLiteGetForeignKeysFromDBMSSysInfoQuery,
+        SQLiteGetViewsFromDBMSSysInfoQuery,
         SQLiteGetAllDbObjectsFromDNDBTSysInfoQuery>
     {
         public SQLiteDbModelFromDbSysInfoBuilder(IQueryExecutor queryExecutor)

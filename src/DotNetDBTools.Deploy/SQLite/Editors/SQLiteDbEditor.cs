@@ -44,7 +44,7 @@ namespace DotNetDBTools.Deploy.SQLite.Editors
                     QueryExecutor.Execute(new SQLiteInsertDNDBTSysInfoQuery(fk.ID, table.ID, DbObjectsTypes.ForeignKey, fk.Name));
             }
             foreach (SQLiteView view in db.Views)
-                QueryExecutor.Execute(new SQLiteInsertDNDBTSysInfoQuery(view.ID, null, DbObjectsTypes.View, view.Name));
+                QueryExecutor.Execute(new SQLiteInsertDNDBTSysInfoQuery(view.ID, null, DbObjectsTypes.View, view.Name, view.GetCode()));
         }
 
         public override void ApplyDatabaseDiff(DatabaseDiff databaseDiff)
@@ -74,8 +74,8 @@ namespace DotNetDBTools.Deploy.SQLite.Editors
 
         private void CreateView(SQLiteView view)
         {
-            QueryExecutor.Execute(new GenericQuery($"{view.CodePiece}"));
-            QueryExecutor.Execute(new SQLiteInsertDNDBTSysInfoQuery(view.ID, null, DbObjectsTypes.View, view.Name));
+            QueryExecutor.Execute(new GenericQuery($"{view.GetCode()}"));
+            QueryExecutor.Execute(new SQLiteInsertDNDBTSysInfoQuery(view.ID, null, DbObjectsTypes.View, view.Name, view.GetCode()));
         }
 
         private void DropView(SQLiteView view)

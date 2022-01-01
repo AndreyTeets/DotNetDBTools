@@ -2,6 +2,5 @@
 {
     public interface IBaseView : IDbObject
     {
-        public string Code { get; }
     }
 }

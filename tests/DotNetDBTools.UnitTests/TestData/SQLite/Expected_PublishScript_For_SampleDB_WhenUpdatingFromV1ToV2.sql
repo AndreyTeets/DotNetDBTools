@@ -1,6 +1,15 @@
 PRAGMA foreign_keys=off;
 BEGIN TRANSACTION;
 
+-- QUERY START: GenericQuery
+DROP VIEW MyView1;
+-- QUERY END: GenericQuery
+
+-- QUERY START: SQLiteDeleteDNDBTSysInfoQuery
+DELETE FROM DNDBTDbObjects
+WHERE ID = 'e2569aae-d5da-4a77-b3cd-51adbdb272d9';
+-- QUERY END: SQLiteDeleteDNDBTSysInfoQuery
+
 -- QUERY START: SQLiteAlterTableQuery
 CREATE TABLE _DNDBTTemp_MyTable1NewName
 (
@@ -285,6 +294,43 @@ VALUES
     'UniqueConstraint',
     'UQ_MyTable3_MyColumns12',
     NULL
+);
+-- QUERY END: SQLiteInsertDNDBTSysInfoQuery
+
+-- QUERY START: GenericQuery
+CREATE VIEW MyView1 AS
+SELECT
+    t1.MyColumn1,
+    t1.MyColumn4,
+    t2.MyColumn2
+FROM MyTable1NewName t1
+LEFT JOIN MyTable2 t2
+    ON t2.MyColumn1NewName = t1.MyColumn1;
+-- QUERY END: GenericQuery
+
+-- QUERY START: SQLiteInsertDNDBTSysInfoQuery
+INSERT INTO DNDBTDbObjects
+(
+    ID,
+    ParentID,
+    Type,
+    Name,
+    Code
+)
+VALUES
+(
+    'e2569aae-d5da-4a77-b3cd-51adbdb272d9',
+    NULL,
+    'View',
+    'MyView1',
+    'CREATE VIEW MyView1 AS
+SELECT
+    t1.MyColumn1,
+    t1.MyColumn4,
+    t2.MyColumn2
+FROM MyTable1NewName t1
+LEFT JOIN MyTable2 t2
+    ON t2.MyColumn1NewName = t1.MyColumn1;'
 );
 -- QUERY END: SQLiteInsertDNDBTSysInfoQuery
 

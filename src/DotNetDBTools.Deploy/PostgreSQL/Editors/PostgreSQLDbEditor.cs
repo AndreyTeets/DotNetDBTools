@@ -66,7 +66,7 @@ namespace DotNetDBTools.Deploy.PostgreSQL.Editors
             foreach (PostgreSQLFunction function in db.Functions)
                 QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(function.ID, null, DbObjectsTypes.Function, function.Name));
             foreach (PostgreSQLView view in db.Views)
-                QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(view.ID, null, DbObjectsTypes.View, view.Name));
+                QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(view.ID, null, DbObjectsTypes.View, view.Name, view.GetCode()));
             foreach (PostgreSQLProcedure procedure in db.Procedures)
                 QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(procedure.ID, null, DbObjectsTypes.Procedure, procedure.Name));
         }
@@ -130,8 +130,8 @@ namespace DotNetDBTools.Deploy.PostgreSQL.Editors
 
         private void CreateView(PostgreSQLView view)
         {
-            QueryExecutor.Execute(new GenericQuery($"{view.CodePiece}"));
-            QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(view.ID, null, DbObjectsTypes.View, view.Name));
+            QueryExecutor.Execute(new GenericQuery($"{view.GetCode()}"));
+            QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(view.ID, null, DbObjectsTypes.View, view.Name, view.GetCode()));
         }
 
         private void DropView(PostgreSQLView view)

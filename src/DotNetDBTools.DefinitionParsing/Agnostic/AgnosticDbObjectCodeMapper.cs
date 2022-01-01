@@ -23,6 +23,17 @@ namespace DotNetDBTools.DefinitionParsing.Agnostic
                         { DatabaseKind.SQLite, ck.Code(Definition.Agnostic.DbmsKind.SQLite) },
                     }
                 },
+                Definition.Agnostic.IView view => new AgnosticCodePiece
+                {
+                    Code = null,
+                    DbKindToCodeMap = new Dictionary<DatabaseKind, string>()
+                    {
+                        { DatabaseKind.MSSQL, view.Code(Definition.Agnostic.DbmsKind.MSSQL) },
+                        { DatabaseKind.MySQL, view.Code(Definition.Agnostic.DbmsKind.MySQL) },
+                        { DatabaseKind.PostgreSQL, view.Code(Definition.Agnostic.DbmsKind.PostgreSQL) },
+                        { DatabaseKind.SQLite, view.Code(Definition.Agnostic.DbmsKind.SQLite) },
+                    }
+                },
                 _ => throw new InvalidOperationException($"Invalid dbObject for code mapping: {dbObject}"),
             };
         }

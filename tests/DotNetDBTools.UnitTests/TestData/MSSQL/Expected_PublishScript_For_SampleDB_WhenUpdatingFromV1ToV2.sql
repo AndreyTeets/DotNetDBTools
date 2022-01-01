@@ -3,6 +3,15 @@ SET XACT_ABORT ON;
 BEGIN TRY;
     BEGIN TRANSACTION;
 
+-- QUERY START: GenericQuery
+EXEC sp_executesql N'DROP VIEW MyView1;';
+-- QUERY END: GenericQuery
+
+-- QUERY START: MSSQLDeleteDNDBTSysInfoQuery
+EXEC sp_executesql N'DELETE FROM DNDBTDbObjects
+WHERE ID = ''e2569aae-d5da-4a77-b3cd-51adbdb272d9'';';
+-- QUERY END: MSSQLDeleteDNDBTSysInfoQuery
+
 -- QUERY START: MSSQLDropForeignKeyQuery
 EXEC sp_executesql N'ALTER TABLE MyTable1 DROP CONSTRAINT FK_MyTable1_MyColumn1_MyTable2_MyColumn1;';
 -- QUERY END: MSSQLDropForeignKeyQuery
@@ -445,6 +454,47 @@ VALUES
     @ID,
     @ParentID,
     ''ForeignKey'',
+    @Name,
+    @Code
+);';
+-- QUERY END: MSSQLInsertDNDBTSysInfoQuery
+
+-- QUERY START: GenericQuery
+EXEC sp_executesql N'CREATE VIEW MyView1 AS
+SELECT
+    t1.MyColumn1,
+    t1.MyColumn4,
+    t2.MyColumn2
+FROM MyTable1NewName t1
+LEFT JOIN MyTable2 t2
+    ON t2.MyColumn1NewName = t1.MyColumn1;';
+-- QUERY END: GenericQuery
+
+-- QUERY START: MSSQLInsertDNDBTSysInfoQuery
+EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = ''e2569aae-d5da-4a77-b3cd-51adbdb272d9'';
+DECLARE @ParentID UNIQUEIDENTIFIER = NULL;
+DECLARE @Name NVARCHAR(MAX) = ''MyView1'';
+DECLARE @Code NVARCHAR(MAX) = ''CREATE VIEW MyView1 AS
+SELECT
+    t1.MyColumn1,
+    t1.MyColumn4,
+    t2.MyColumn2
+FROM MyTable1NewName t1
+LEFT JOIN MyTable2 t2
+    ON t2.MyColumn1NewName = t1.MyColumn1;'';
+INSERT INTO DNDBTDbObjects
+(
+    ID,
+    ParentID,
+    Type,
+    Name,
+    Code
+)
+VALUES
+(
+    @ID,
+    @ParentID,
+    ''View'',
     @Name,
     @Code
 );';

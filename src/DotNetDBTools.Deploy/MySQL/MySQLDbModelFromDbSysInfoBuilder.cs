@@ -8,11 +8,13 @@ namespace DotNetDBTools.Deploy.MySQL
     internal class MySQLDbModelFromDbSysInfoBuilder : DbModelFromDbSysInfoBuilder<
         MySQLDatabase,
         MySQLTable,
+        MySQLView,
         MySQLGetColumnsFromDBMSSysInfoQuery,
         MySQLGetPrimaryKeysFromDBMSSysInfoQuery,
         MySQLGetUniqueConstraintsFromDBMSSysInfoQuery,
         MySQLGetCheckConstraintsFromDBMSSysInfoQuery,
         MySQLGetForeignKeysFromDBMSSysInfoQuery,
+        MySQLGetViewsFromDBMSSysInfoQuery,
         MySQLGetAllDbObjectsFromDNDBTSysInfoQuery>
     {
         public MySQLDbModelFromDbSysInfoBuilder(IQueryExecutor queryExecutor)

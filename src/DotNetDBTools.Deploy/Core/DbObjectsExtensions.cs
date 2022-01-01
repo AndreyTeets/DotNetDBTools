@@ -13,5 +13,10 @@ namespace DotNetDBTools.Deploy.Core
         {
             return ck.CodePiece.Code;
         }
+
+        public static string GetCode(this View view)
+        {
+            return view.CodePiece.Code;
+        }
     }
 }

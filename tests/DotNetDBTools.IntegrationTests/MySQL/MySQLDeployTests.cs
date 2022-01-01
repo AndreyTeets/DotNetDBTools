@@ -1,4 +1,5 @@
 ﻿using System.Data.Common;
+using System.Text.RegularExpressions;
 using Dapper;
 using DotNetDBTools.Analysis.MySQL;
 using DotNetDBTools.Deploy;
@@ -34,10 +35,19 @@ namespace DotNetDBTools.IntegrationTests.MySQL
 
         protected override string GetNormalizedCodeFromCodePiece(CodePiece codePiece)
         {
-            return codePiece.Code.ToUpper()
+            string res = codePiece.Code.ToUpper()
+                .Replace("\r", "")
+                .Replace("\n", "")
+                .Replace(" ", "")
+                .Replace(";", "")
                 .Replace("`", "")
                 .Replace("(", "")
-                .Replace(")", "");
+                .Replace(")", "")
+                .Replace($"{MangleDbNameIfTooLong(TestContext.TestName).ToUpper()}.", "");
+            string identifier = @"[\w|\d|_]+";
+            res = Regex.Replace(res, $"AS{identifier},", ",");
+            res = Regex.Replace(res, $"AS{identifier}FROM", "FROM");
+            return res;
         }
 
         protected override void CreateDatabase(string connectionString)

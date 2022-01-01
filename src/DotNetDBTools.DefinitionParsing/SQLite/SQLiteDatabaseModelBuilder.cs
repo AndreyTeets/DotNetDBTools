@@ -1,4 +1,5 @@
 ﻿using DotNetDBTools.Definition.Core;
+using DotNetDBTools.DefinitionParsing.Common;
 using DotNetDBTools.DefinitionParsing.Core;
 using DotNetDBTools.Models.SQLite;
 
@@ -12,7 +13,7 @@ namespace DotNetDBTools.DefinitionParsing.SQLite
     {
         public SQLiteDatabaseModelBuilder() : base(
             new SQLiteDataTypeMapper(),
-            new SQLiteDbObjectCodeMapper(),
+            new SpecificDbmsDbObjectCodeMapper(),
             new SQLiteDefaultValueMapper())
         {
         }

@@ -12,11 +12,13 @@ namespace DotNetDBTools.Deploy.MSSQL
     internal class MSSQLDbModelFromDbSysInfoBuilder : DbModelFromDbSysInfoBuilder<
         MSSQLDatabase,
         MSSQLTable,
+        MSSQLView,
         MSSQLGetColumnsFromDBMSSysInfoQuery,
         MSSQLGetPrimaryKeysFromDBMSSysInfoQuery,
         MSSQLGetUniqueConstraintsFromDBMSSysInfoQuery,
         MSSQLGetCheckConstraintsFromDBMSSysInfoQuery,
         MSSQLGetForeignKeysFromDBMSSysInfoQuery,
+        MSSQLGetViewsFromDBMSSysInfoQuery,
         MSSQLGetAllDbObjectsFromDNDBTSysInfoQuery>
     {
         public MSSQLDbModelFromDbSysInfoBuilder(IQueryExecutor queryExecutor)

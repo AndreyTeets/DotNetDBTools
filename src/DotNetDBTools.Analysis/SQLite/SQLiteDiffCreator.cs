@@ -18,6 +18,7 @@ namespace DotNetDBTools.Analysis.SQLite
             };
 
             BuildTablesDiff<SQLiteTableDiff>(databaseDiff, newDatabase, oldDatabase);
+            BuildViewsDiff(databaseDiff);
             return databaseDiff;
         }
     }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo;
 using DotNetDBTools.Models.Core;
@@ -21,9 +20,13 @@ $@"SELECT
     CASE WHEN c.EXTRA = 'auto_increment' THEN TRUE ELSE FALSE END AS {nameof(MySQLColumnRecord.Identity)},
     c.COLUMN_DEFAULT AS `{nameof(MySQLColumnRecord.Default)}`,
     CASE WHEN c.EXTRA = 'DEFAULT_GENERATED' THEN TRUE ELSE FALSE END AS {nameof(MySQLColumnRecord.DefaultIsFunction)}
-FROM INFORMATION_SCHEMA.COLUMNS c
-WHERE c.TABLE_SCHEMA = (select DATABASE())
-    AND c.TABLE_NAME != '{DNDBTSysTables.DNDBTDbObjects}';";
+FROM INFORMATION_SCHEMA.TABLES t
+INNER JOIN INFORMATION_SCHEMA.COLUMNS c
+    ON c.TABLE_SCHEMA = t.TABLE_SCHEMA
+        AND c.TABLE_NAME = t.TABLE_NAME
+WHERE t.TABLE_SCHEMA = (select DATABASE())
+    AND t.TABLE_TYPE = 'BASE TABLE'
+    AND t.TABLE_NAME != '{DNDBTSysTables.DNDBTDbObjects}';";
 
         public override RecordsLoader Loader => new MySQLRecordsLoader();
         public override RecordMapper Mapper => new MySQLRecordMapper();

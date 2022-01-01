@@ -41,7 +41,7 @@ namespace DotNetDBTools.Analysis.SQLite
             {
                 ID = view.ID,
                 Name = view.Name,
-                CodePiece = view.CodePiece,
+                CodePiece = new CodePiece { Code = ((AgnosticCodePiece)view.CodePiece).DbKindToCodeMap[DatabaseKind.SQLite] },
             };
 
         private static IEnumerable<Column> ConvertToSQLiteModel(IEnumerable<Column> columns)

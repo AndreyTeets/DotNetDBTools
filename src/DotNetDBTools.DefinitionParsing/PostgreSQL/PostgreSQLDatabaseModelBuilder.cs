@@ -6,6 +6,7 @@ using DotNetDBTools.Definition.Core;
 using DotNetDBTools.Definition.PostgreSQL;
 using DotNetDBTools.Definition.PostgreSQL.DataTypes;
 using DotNetDBTools.Definition.PostgreSQL.UserDefinedTypes;
+using DotNetDBTools.DefinitionParsing.Common;
 using DotNetDBTools.DefinitionParsing.Core;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.PostgreSQL;
@@ -21,7 +22,7 @@ namespace DotNetDBTools.DefinitionParsing.PostgreSQL
     {
         public PostgreSQLDatabaseModelBuilder() : base(
             new PostgreSQLDataTypeMapper(),
-            new PostgreSQLDbObjectCodeMapper(),
+            new SpecificDbmsDbObjectCodeMapper(),
             new PostgreSQLDefaultValueMapper())
         {
         }

@@ -1,11 +1,9 @@
-﻿using DotNetDBTools.Definition.Core;
+﻿using DotNetDBTools.Definition.Common;
 
 namespace DotNetDBTools.Definition.PostgreSQL
 {
-    public class CheckConstraint : BaseCheckConstraint
+    public class CheckConstraint : SpecificDbmsCheckConstraint
     {
         public CheckConstraint(string id) : base(id) { }
-
-        public string Code { get; set; }
     }
 }

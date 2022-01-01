@@ -35,10 +35,13 @@ namespace DotNetDBTools.IntegrationTests.PostgreSQL
         protected override string GetNormalizedCodeFromCodePiece(CodePiece codePiece)
         {
             return codePiece.Code.ToUpper()
+                .Replace("\r", "")
+                .Replace("\n", "")
+                .Replace(" ", "")
+                .Replace("'", "")
                 .Replace("::INTEGER", "")
                 .Replace("::NUMERIC", "")
-                .Replace("::TEXT", "")
-                .Replace("'", "");
+                .Replace("::TEXT", "");
         }
 
         protected override void CreateDatabase(string connectionString)

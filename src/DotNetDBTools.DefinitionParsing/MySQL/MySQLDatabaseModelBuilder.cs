@@ -2,6 +2,7 @@
 using System.Reflection;
 using DotNetDBTools.Definition.Core;
 using DotNetDBTools.Definition.MySQL;
+using DotNetDBTools.DefinitionParsing.Common;
 using DotNetDBTools.DefinitionParsing.Core;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.MySQL;
@@ -16,7 +17,7 @@ namespace DotNetDBTools.DefinitionParsing.MySQL
     {
         public MySQLDatabaseModelBuilder() : base(
             new MySQLDataTypeMapper(),
-            new MySQLDbObjectCodeMapper(),
+            new SpecificDbmsDbObjectCodeMapper(),
             new MySQLDefaultValueMapper())
         {
         }

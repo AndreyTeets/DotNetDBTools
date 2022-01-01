@@ -34,7 +34,11 @@ namespace DotNetDBTools.IntegrationTests.SQLite
 
         protected override string GetNormalizedCodeFromCodePiece(CodePiece codePiece)
         {
-            return codePiece.Code.ToUpper();
+            return codePiece.Code.ToUpper()
+                .Replace("\r", "")
+                .Replace("\n", "")
+                .Replace(" ", "")
+                .Replace(";", "");
         }
 
         protected override void CreateDatabase(string connectionString)

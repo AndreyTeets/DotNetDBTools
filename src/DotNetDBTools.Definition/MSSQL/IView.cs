@@ -1,8 +1,8 @@
-﻿using DotNetDBTools.Definition.Core;
+﻿using DotNetDBTools.Definition.Common;
 
 namespace DotNetDBTools.Definition.MSSQL
 {
-    public interface IView : IBaseView
+    public interface IView : ISpecificDbmsView
     {
     }
 }

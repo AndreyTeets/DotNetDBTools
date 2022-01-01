@@ -2,6 +2,7 @@
 using System.Reflection;
 using DotNetDBTools.Definition.Core;
 using DotNetDBTools.Definition.MSSQL;
+using DotNetDBTools.DefinitionParsing.Common;
 using DotNetDBTools.DefinitionParsing.Core;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.MSSQL;
@@ -16,7 +17,7 @@ namespace DotNetDBTools.DefinitionParsing.MSSQL
     {
         public MSSQLDatabaseModelBuilder() : base(
             new MSSQLDataTypeMapper(),
-            new MSSQLDbObjectCodeMapper(),
+            new SpecificDbmsDbObjectCodeMapper(),
             new MSSQLDefaultValueMapper())
         {
         }

@@ -23,9 +23,12 @@ namespace DotNetDBTools.Analysis.MSSQL
                 ProceduresToDrop = new List<MSSQLProcedure>(),
             };
 
-            BuildTablesDiff<MSSQLTableDiff>(databaseDiff, newDatabase, oldDatabase);
             BuildUserDefinedTypesDiff(databaseDiff, (MSSQLDatabase)newDatabase, (MSSQLDatabase)oldDatabase);
+
+            BuildTablesDiff<MSSQLTableDiff>(databaseDiff, newDatabase, oldDatabase);
             ForeignKeysHelper.BuildAllForeignKeysToBeDroppedAndCreated(databaseDiff);
+
+            BuildViewsDiff(databaseDiff);
             return databaseDiff;
         }
 

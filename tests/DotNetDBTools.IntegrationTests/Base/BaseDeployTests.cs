@@ -65,7 +65,7 @@ namespace DotNetDBTools.IntegrationTests.Base
                 (AgnosticDatabase)DbDefinitionParser.CreateDatabaseModel(AgnosticSampleDbAssemblyPath));
             TDatabase dbModelFromDNDBTSysInfo = (TDatabase)_dbModelFromDbSysInfoBuilder.GetDatabaseModelFromDNDBTSysInfo();
 
-            AssertDbModelEquivalence(dbModelFromDbAssembly, dbModelFromDNDBTSysInfo, false);
+            AssertDbModelEquivalence(dbModelFromDbAssembly, dbModelFromDNDBTSysInfo, CompareMode.None);
         }
 
         [TestMethod]
@@ -79,7 +79,7 @@ namespace DotNetDBTools.IntegrationTests.Base
                 (AgnosticDatabase)DbDefinitionParser.CreateDatabaseModel(AgnosticSampleDbAssemblyPath));
             TDatabase dbModelFromDBMSSysInfo = (TDatabase)_dbModelFromDbSysInfoBuilder.GenerateDatabaseModelFromDBMSSysInfo();
 
-            AssertDbModelEquivalence(dbModelFromDbAssembly, dbModelFromDBMSSysInfo, true);
+            AssertDbModelEquivalence(dbModelFromDbAssembly, dbModelFromDBMSSysInfo, CompareMode.IgnoreIDsAndNormalizeCodePieces);
         }
 
         [TestMethod]
@@ -99,7 +99,7 @@ namespace DotNetDBTools.IntegrationTests.Base
             TDatabase dbModelFromDbAssembly = (TDatabase)DbDefinitionParser.CreateDatabaseModel(SpecificDBMSSampleDbAssemblyPath);
             TDatabase dbModelFromDNDBTSysInfo = (TDatabase)_dbModelFromDbSysInfoBuilder.GetDatabaseModelFromDNDBTSysInfo();
 
-            AssertDbModelEquivalence(dbModelFromDbAssembly, dbModelFromDNDBTSysInfo, false);
+            AssertDbModelEquivalence(dbModelFromDbAssembly, dbModelFromDNDBTSysInfo, CompareMode.None);
         }
 
         [TestMethod]
@@ -112,20 +112,20 @@ namespace DotNetDBTools.IntegrationTests.Base
             TDatabase dbModelFromDbAssembly = (TDatabase)DbDefinitionParser.CreateDatabaseModel(SpecificDBMSSampleDbAssemblyPath);
             TDatabase dbModelFromDBMSSysInfo = (TDatabase)_dbModelFromDbSysInfoBuilder.GenerateDatabaseModelFromDBMSSysInfo();
 
-            AssertDbModelEquivalence(dbModelFromDbAssembly, dbModelFromDBMSSysInfo, true);
+            AssertDbModelEquivalence(dbModelFromDbAssembly, dbModelFromDBMSSysInfo, CompareMode.IgnoreIDsAndNormalizeCodePieces);
         }
 
-        private void AssertDbModelEquivalence(TDatabase dbModelFromDbAssembly, TDatabase dbModelFromDBMSSysInfo, bool excludeIDs)
+        private void AssertDbModelEquivalence(TDatabase dbModelFromDbAssembly, TDatabase dbModelFromDBMSSysInfo, CompareMode compareMode)
         {
             dbModelFromDBMSSysInfo.Should().BeEquivalentTo(dbModelFromDbAssembly, options =>
             {
-                EquivalencyAssertionOptions<TDatabase> configuredOptions = options
-                    .Excluding(database => database.Name)
-                    .Excluding(database => database.Views)
-                    .Using(new CodePieceComparer(GetNormalizedCodeFromCodePiece));
+                EquivalencyAssertionOptions<TDatabase> configuredOptions = options.Excluding(database => database.Name);
 
-                if (excludeIDs)
+                if (compareMode.HasFlag(CompareMode.IgnoreIDs))
                     configuredOptions = configuredOptions.Excluding(database => database.Path.EndsWith(".ID", StringComparison.Ordinal));
+
+                if (compareMode.HasFlag(CompareMode.NormalizeCodePieces))
+                    configuredOptions = configuredOptions.Using(new CodePieceComparer(GetNormalizedCodeFromCodePiece));
 
                 configuredOptions = AddAdditionalDbModelEquivalenceyOptions(configuredOptions);
                 return configuredOptions;
@@ -139,6 +139,14 @@ namespace DotNetDBTools.IntegrationTests.Base
         protected abstract void DropDatabaseIfExists(string connectionString);
         protected abstract string CreateConnectionString(string testName);
         private protected abstract IDbModelFromDbSysInfoBuilder CreateDbModelFromDbSysInfoBuilder(DbConnection connection);
+
+        private enum CompareMode
+        {
+            None = 0,
+            IgnoreIDs = 1,
+            NormalizeCodePieces = 2,
+            IgnoreIDsAndNormalizeCodePieces = 1 | 2,
+        }
 
         private class CodePieceComparer : IEqualityComparer<CodePiece>
         {
