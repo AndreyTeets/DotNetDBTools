@@ -1,0 +1,8 @@
+CREATE FUNCTION "MyFunction1"(a INT, b INT)
+RETURNS INT
+LANGUAGE SQL
+IMMUTABLE
+AS
+$FuncBody$
+SELECT a + b;
+$FuncBody$;

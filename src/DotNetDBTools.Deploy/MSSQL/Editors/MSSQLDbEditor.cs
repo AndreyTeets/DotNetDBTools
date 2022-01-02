@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.Deploy.Common.Editors;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Editors;
@@ -19,12 +17,16 @@ namespace DotNetDBTools.Deploy.MSSQL.Editors
         MSSQLDropDNDBTSysTablesQuery>
     {
         private readonly ITableEditor _tableEditor;
+        private readonly IIndexEditor _indexEditor;
+        private readonly ITriggerEditor _triggerEditor;
         private readonly IForeignKeyEditor _foreignKeyEditor;
 
         public MSSQLDbEditor(IQueryExecutor queryExecutor)
             : base(queryExecutor)
         {
             _tableEditor = new MSSQLTableEditor(queryExecutor);
+            _indexEditor = new MSSQLIndexEditor(queryExecutor);
+            _triggerEditor = new MSSQLTriggerEditor(queryExecutor);
             _foreignKeyEditor = new MSSQLForeignKeyEditor(queryExecutor);
         }
 
@@ -45,21 +47,21 @@ namespace DotNetDBTools.Deploy.MSSQL.Editors
                     QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(uc.ID, table.ID, DbObjectsTypes.UniqueConstraint, uc.Name));
                 foreach (CheckConstraint ck in table.CheckConstraints)
                     QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(ck.ID, table.ID, DbObjectsTypes.CheckConstraint, ck.Name, ck.GetCode()));
-                foreach (Index index in table.Indexes)
-                    QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(index.ID, table.ID, DbObjectsTypes.Index, index.Name));
-                foreach (Trigger trigger in table.Triggers)
-                    QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(trigger.ID, table.ID, DbObjectsTypes.Trigger, trigger.Name));
+                foreach (Index idx in table.Indexes)
+                    QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(idx.ID, table.ID, DbObjectsTypes.Index, idx.Name));
+                foreach (Trigger trg in table.Triggers)
+                    QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(trg.ID, table.ID, DbObjectsTypes.Trigger, trg.Name, trg.GetCode()));
                 foreach (ForeignKey fk in table.ForeignKeys)
                     QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(fk.ID, table.ID, DbObjectsTypes.ForeignKey, fk.Name));
             }
             foreach (MSSQLUserDefinedTableType udtt in db.UserDefinedTableTypes)
                 QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(udtt.ID, null, DbObjectsTypes.UserDefinedTableType, udtt.Name));
-            foreach (MSSQLFunction function in db.Functions)
-                QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(function.ID, null, DbObjectsTypes.Function, function.Name));
+            foreach (MSSQLFunction func in db.Functions)
+                QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(func.ID, null, DbObjectsTypes.Function, func.Name, func.GetCode()));
             foreach (MSSQLView view in db.Views)
                 QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(view.ID, null, DbObjectsTypes.View, view.Name, view.GetCode()));
-            foreach (MSSQLProcedure procedure in db.Procedures)
-                QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(procedure.ID, null, DbObjectsTypes.Procedure, procedure.Name));
+            foreach (MSSQLProcedure proc in db.Procedures)
+                QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(proc.ID, null, DbObjectsTypes.Procedure, proc.Name, proc.GetCode()));
         }
 
         public override void ApplyDatabaseDiff(DatabaseDiff databaseDiff)
@@ -68,9 +70,7 @@ namespace DotNetDBTools.Deploy.MSSQL.Editors
             QueryExecutor.BeginTransaction();
             try
             {
-                Dictionary<Guid, Table> newDbFKToTableMap = ForeignKeysHelper.CreateFKToTableMap(dbDiff.NewDatabase.Tables);
-                Dictionary<Guid, Table> oldDbFKToTableMap = ForeignKeysHelper.CreateFKToTableMap(dbDiff.OldDatabase.Tables);
-
+                _triggerEditor.DropTriggers(dbDiff);
                 foreach (MSSQLProcedure procedure in dbDiff.ProceduresToDrop)
                     DropProcedure(procedure);
                 foreach (MSSQLView view in dbDiff.ViewsToDrop)
@@ -79,8 +79,8 @@ namespace DotNetDBTools.Deploy.MSSQL.Editors
                     DropFunction(function);
                 foreach (MSSQLUserDefinedTableType udtt in dbDiff.UserDefinedTableTypesToDrop)
                     DropUserDefinedTableType(udtt);
-                foreach (ForeignKey fk in dbDiff.AllForeignKeysToDrop)
-                    _foreignKeyEditor.DropForeignKey(fk, oldDbFKToTableMap);
+                _foreignKeyEditor.DropForeignKeys(dbDiff);
+                _indexEditor.DropIndexes(dbDiff);
                 foreach (MSSQLTable table in dbDiff.RemovedTables)
                     _tableEditor.DropTable(table);
 
@@ -97,8 +97,8 @@ namespace DotNetDBTools.Deploy.MSSQL.Editors
 
                 foreach (MSSQLTable table in dbDiff.AddedTables)
                     _tableEditor.CreateTable(table);
-                foreach (ForeignKey fk in dbDiff.AllForeignKeysToCreate)
-                    _foreignKeyEditor.CreateForeignKey(fk, newDbFKToTableMap);
+                _indexEditor.CreateIndexes(dbDiff);
+                _foreignKeyEditor.CreateForeignKeys(dbDiff);
                 foreach (MSSQLUserDefinedTableType udtt in dbDiff.UserDefinedTableTypesToCreate)
                     CreateUserDefinedTableType(udtt);
                 foreach (MSSQLFunction function in dbDiff.FunctionsToCreate)
@@ -107,6 +107,7 @@ namespace DotNetDBTools.Deploy.MSSQL.Editors
                     CreateView(view);
                 foreach (MSSQLProcedure procedure in dbDiff.ProceduresToCreate)
                     CreateProcedure(procedure);
+                _triggerEditor.CreateTriggers(dbDiff);
             }
             catch (Exception)
             {
@@ -151,16 +152,16 @@ namespace DotNetDBTools.Deploy.MSSQL.Editors
             QueryExecutor.Execute(new MSSQLDeleteDNDBTSysInfoQuery(udtt.ID));
         }
 
-        private void CreateFunction(MSSQLFunction function)
+        private void CreateFunction(MSSQLFunction func)
         {
-            QueryExecutor.Execute(new GenericQuery($"{function.CodePiece}"));
-            QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(function.ID, null, DbObjectsTypes.Function, function.Name));
+            QueryExecutor.Execute(new GenericQuery($"{func.GetCode()}"));
+            QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(func.ID, null, DbObjectsTypes.Function, func.Name, func.GetCode()));
         }
 
-        private void DropFunction(MSSQLFunction function)
+        private void DropFunction(MSSQLFunction func)
         {
-            QueryExecutor.Execute(new GenericQuery($"DROP FUNCTION {function.Name};"));
-            QueryExecutor.Execute(new MSSQLDeleteDNDBTSysInfoQuery(function.ID));
+            QueryExecutor.Execute(new GenericQuery($"DROP FUNCTION {func.Name};"));
+            QueryExecutor.Execute(new MSSQLDeleteDNDBTSysInfoQuery(func.ID));
         }
 
         private void CreateView(MSSQLView view)
@@ -175,16 +176,16 @@ namespace DotNetDBTools.Deploy.MSSQL.Editors
             QueryExecutor.Execute(new MSSQLDeleteDNDBTSysInfoQuery(view.ID));
         }
 
-        private void CreateProcedure(MSSQLProcedure procedure)
+        private void CreateProcedure(MSSQLProcedure proc)
         {
-            QueryExecutor.Execute(new GenericQuery($"{procedure.CodePiece}"));
-            QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(procedure.ID, null, DbObjectsTypes.Procedure, procedure.Name));
+            QueryExecutor.Execute(new GenericQuery($"{proc.GetCode()}"));
+            QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(proc.ID, null, DbObjectsTypes.Procedure, proc.Name, proc.GetCode()));
         }
 
-        private void DropProcedure(MSSQLProcedure procedure)
+        private void DropProcedure(MSSQLProcedure proc)
         {
-            QueryExecutor.Execute(new GenericQuery($"DROP PROCEDURE {procedure.Name};"));
-            QueryExecutor.Execute(new MSSQLDeleteDNDBTSysInfoQuery(procedure.ID));
+            QueryExecutor.Execute(new GenericQuery($"DROP PROCEDURE {proc.Name};"));
+            QueryExecutor.Execute(new MSSQLDeleteDNDBTSysInfoQuery(proc.ID));
         }
     }
 }

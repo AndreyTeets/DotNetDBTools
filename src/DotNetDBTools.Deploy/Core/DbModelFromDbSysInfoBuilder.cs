@@ -7,7 +7,9 @@ using DotNetDBTools.Models.Core;
 using static DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo.GetCheckConstraintsFromDBMSSysInfoQuery;
 using static DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo.GetColumnsFromDBMSSysInfoQuery;
 using static DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo.GetForeignKeysFromDBMSSysInfoQuery;
+using static DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo.GetIndexesFromDBMSSysInfoQuery;
 using static DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo.GetPrimaryKeysFromDBMSSysInfoQuery;
+using static DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo.GetTriggersFromDBMSSysInfoQuery;
 using static DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo.GetUniqueConstraintsFromDBMSSysInfoQuery;
 using static DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo.GetViewsFromDBMSSysInfoQuery;
 using static DotNetDBTools.Deploy.Core.Queries.DNDBTSysInfo.GetAllDbObjectsFromDNDBTSysInfoQuery;
@@ -22,6 +24,8 @@ namespace DotNetDBTools.Deploy.Core
         TGetPrimaryKeysFromDBMSSysInfoQuery,
         TGetUniqueConstraintsFromDBMSSysInfoQuery,
         TGetCheckConstraintsFromDBMSSysInfoQuery,
+        TGetIndexesFromDBMSSysInfoQuery,
+        TGetTriggersFromDBMSSysInfoQuery,
         TGetForeignKeysFromDBMSSysInfoQuery,
         TGetViewsFromDBMSSysInfoQuery,
         TGetAllDbObjectsFromDNDBTSysInfoQuery>
@@ -33,7 +37,9 @@ namespace DotNetDBTools.Deploy.Core
         where TGetPrimaryKeysFromDBMSSysInfoQuery : GetPrimaryKeysFromDBMSSysInfoQuery, new()
         where TGetUniqueConstraintsFromDBMSSysInfoQuery : GetUniqueConstraintsFromDBMSSysInfoQuery, new()
         where TGetCheckConstraintsFromDBMSSysInfoQuery : GetCheckConstraintsFromDBMSSysInfoQuery, new()
+        where TGetIndexesFromDBMSSysInfoQuery : GetIndexesFromDBMSSysInfoQuery, new()
         where TGetForeignKeysFromDBMSSysInfoQuery : GetForeignKeysFromDBMSSysInfoQuery, new()
+        where TGetTriggersFromDBMSSysInfoQuery : GetTriggersFromDBMSSysInfoQuery, new()
         where TGetViewsFromDBMSSysInfoQuery : GetViewsFromDBMSSysInfoQuery, new()
         where TGetAllDbObjectsFromDNDBTSysInfoQuery : GetAllDbObjectsFromDNDBTSysInfoQuery, new()
     {
@@ -93,6 +99,14 @@ namespace DotNetDBTools.Deploy.Core
                     ck.ID = dndbtInfoCK.ID;
                     ck.CodePiece.Code = dndbtInfoCK.Code;
                 }
+                foreach (Index idx in table.Indexes)
+                    idx.ID = dbObjectIDsMap[$"{DbObjectsTypes.Index}_{idx.Name}_{table.ID}"].ID;
+                foreach (Trigger trg in table.Triggers)
+                {
+                    DNDBTInfo dndbtInfoTRG = dbObjectIDsMap[$"{DbObjectsTypes.Trigger}_{trg.Name}_{table.ID}"];
+                    trg.ID = dndbtInfoTRG.ID;
+                    trg.CodePiece.Code = dndbtInfoTRG.Code;
+                }
                 foreach (ForeignKey fk in table.ForeignKeys)
                     fk.ID = dbObjectIDsMap[$"{DbObjectsTypes.ForeignKey}_{fk.Name}_{table.ID}"].ID;
             }
@@ -114,6 +128,8 @@ namespace DotNetDBTools.Deploy.Core
             BuildTablesPrimaryKeys(tables);
             BuildTablesUniqueConstraints(tables);
             BuildTablesCheckConstraints(tables);
+            BuildTablesIndexes(tables);
+            BuildTablesTriggers(tables);
             BuildTablesForeignKeys(tables);
             BuildAdditionalTablesAttributes(tables);
             return tables.Select(x => x.Value);
@@ -176,9 +192,7 @@ namespace DotNetDBTools.Deploy.Core
                 if (!columnNames.ContainsKey(pkr.ConstraintName))
                     columnNames.Add(pkr.ConstraintName, new SortedDictionary<int, string>());
 
-                columnNames[pkr.ConstraintName].Add(
-                    pkr.ColumnPosition, pkr.ColumnName);
-
+                columnNames[pkr.ConstraintName].Add(pkr.ColumnPosition, pkr.ColumnName);
                 tables[pkr.TableName].PrimaryKey = query.Mapper.MapExceptColumnsToPrimaryKeyModel(pkr);
             }
 
@@ -200,8 +214,7 @@ namespace DotNetDBTools.Deploy.Core
                 if (!columnNames.ContainsKey(ucr.ConstraintName))
                     columnNames.Add(ucr.ConstraintName, new SortedDictionary<int, string>());
 
-                columnNames[ucr.ConstraintName].Add(
-                    ucr.ColumnPosition, ucr.ColumnName);
+                columnNames[ucr.ConstraintName].Add(ucr.ColumnPosition, ucr.ColumnName);
 
                 UniqueConstraint uc = query.Mapper.MapExceptColumnsToUniqueConstraintModel(ucr);
                 ((List<UniqueConstraint>)tables[ucr.TableName].UniqueConstraints).Add(uc);
@@ -227,6 +240,57 @@ namespace DotNetDBTools.Deploy.Core
             }
         }
 
+        private void BuildTablesIndexes(Dictionary<string, Table> tables)
+        {
+            TGetIndexesFromDBMSSysInfoQuery query = new();
+            IEnumerable<IndexRecord> indexRecords = QueryExecutor.Query<IndexRecord>(query);
+            Dictionary<string, SortedDictionary<int, string>> columnNames = new();
+            Dictionary<string, SortedDictionary<int, string>> includeColumnNames = new();
+            Dictionary<string, HashSet<string>> addedIndexesForTable = new();
+            foreach (IndexRecord ir in indexRecords)
+            {
+                if (!addedIndexesForTable.ContainsKey(ir.TableName))
+                    addedIndexesForTable.Add(ir.TableName, new HashSet<string>());
+
+                if (!columnNames.ContainsKey(ir.IndexName))
+                    columnNames.Add(ir.IndexName, new SortedDictionary<int, string>());
+                if (!includeColumnNames.ContainsKey(ir.IndexName))
+                    includeColumnNames.Add(ir.IndexName, new SortedDictionary<int, string>());
+
+                if (!ir.IsIncludeColumn)
+                    columnNames[ir.IndexName].Add(ir.ColumnPosition, ir.ColumnName);
+                else
+                    includeColumnNames[ir.IndexName].Add(ir.ColumnPosition, ir.ColumnName);
+
+                if (!addedIndexesForTable[ir.TableName].Contains(ir.IndexName))
+                {
+                    Index index = query.Mapper.MapExceptColumnsToIndexModel(ir);
+                    ((List<Index>)tables[ir.TableName].Indexes).Add(index);
+                    addedIndexesForTable[ir.TableName].Add(ir.IndexName);
+                }
+            }
+
+            foreach (Table table in tables.Values)
+            {
+                foreach (Index index in table.Indexes)
+                {
+                    index.Columns = columnNames[index.Name].Select(x => x.Value).ToList();
+                    index.IncludeColumns = includeColumnNames[index.Name].Select(x => x.Value).ToList();
+                }
+            }
+        }
+
+        private void BuildTablesTriggers(Dictionary<string, Table> tables)
+        {
+            TGetTriggersFromDBMSSysInfoQuery query = new();
+            IEnumerable<TriggerRecord> triggerRecords = QueryExecutor.Query<TriggerRecord>(query);
+            foreach (TriggerRecord tr in triggerRecords)
+            {
+                Trigger trigger = query.Mapper.MapToTriggerModel(tr);
+                ((List<Trigger>)tables[tr.TableName].Triggers).Add(trigger);
+            }
+        }
+
         private void BuildTablesForeignKeys(Dictionary<string, Table> tables)
         {
             TGetForeignKeysFromDBMSSysInfoQuery query = new();
@@ -244,10 +308,8 @@ namespace DotNetDBTools.Deploy.Core
                 if (!referencedColumnNames.ContainsKey(fkr.ForeignKeyName))
                     referencedColumnNames.Add(fkr.ForeignKeyName, new SortedDictionary<int, string>());
 
-                thisColumnNames[fkr.ForeignKeyName].Add(
-                    fkr.ThisColumnPosition, fkr.ThisColumnName);
-                referencedColumnNames[fkr.ForeignKeyName].Add(
-                    fkr.ReferencedColumnPosition, fkr.ReferencedColumnName);
+                thisColumnNames[fkr.ForeignKeyName].Add(fkr.ThisColumnPosition, fkr.ThisColumnName);
+                referencedColumnNames[fkr.ForeignKeyName].Add(fkr.ReferencedColumnPosition, fkr.ReferencedColumnName);
 
                 if (!addedForeignKeysForTable[fkr.ThisTableName].Contains(fkr.ForeignKeyName))
                 {

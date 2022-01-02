@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using DotNetDBTools.Analysis.PostgreSQL;
 using DotNetDBTools.Definition.Core;
 using DotNetDBTools.Definition.PostgreSQL;
 using DotNetDBTools.Definition.PostgreSQL.DataTypes;
@@ -35,6 +36,7 @@ namespace DotNetDBTools.DefinitionParsing.PostgreSQL
             postgresqlDatabase.EnumTypes = BuildEnumTypeModels(dbAssembly);
             postgresqlDatabase.RangeTypes = BuildRangeTypeModels(dbAssembly);
             postgresqlDatabase.Functions = BuildFunctionModels(dbAssembly);
+            PostgreSQLPostBuildProcessingHelper.AddFunctionsFromTriggersCode_And_RemoveFunctionsCodeFromTriggersCode_IfAny(postgresqlDatabase);
         }
 
         protected override void BuildAdditionalTableModelProperties(PostgreSQLTable tableModel, IBaseTable table)

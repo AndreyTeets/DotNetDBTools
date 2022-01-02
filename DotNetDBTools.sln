@@ -157,6 +157,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.Generation", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.Models", "src\DotNetDBTools.Models\DotNetDBTools.Models.csproj", "{DB7176F0-88E5-4885-B068-41E7B6751892}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "DotNetDBTools.RoslynUtilities", "src\DotNetDBTools.RoslynUtilities\DotNetDBTools.RoslynUtilities.shproj", "{D82B0851-C14A-45BD-A04A-80E7688AFC4A}"
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{6F28DB45-987D-4EBF-B44C-5B2DF6F617F2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.AnalyzersTests", "tests\DotNetDBTools.AnalyzersTests\DotNetDBTools.AnalyzersTests.csproj", "{F7D047DF-9C40-4D6B-B654-C34C14995F92}"
@@ -191,6 +193,11 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.UnitTests", "tests\DotNetDBTools.UnitTests\DotNetDBTools.UnitTests.csproj", "{F4863F2B-7A90-42A0-A23B-CBEC729EC3D3}"
 EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		src\DotNetDBTools.RoslynUtilities\DotNetDBTools.RoslynUtilities.projitems*{35980423-0df6-4d5f-a8bf-9d57ee14b5be}*SharedItemsImports = 5
+		src\DotNetDBTools.RoslynUtilities\DotNetDBTools.RoslynUtilities.projitems*{b2d848ba-9538-45e3-9f9d-35937cdecb7a}*SharedItemsImports = 5
+		src\DotNetDBTools.RoslynUtilities\DotNetDBTools.RoslynUtilities.projitems*{d82b0851-c14a-45bd-a04a-80e7688afc4a}*SharedItemsImports = 13
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -375,6 +382,7 @@ Global
 		{B2D848BA-9538-45E3-9F9D-35937CDECB7A} = {B7ABF1B7-9417-4762-8EE3-AE1548F3C2DB}
 		{3F28E9C7-FABC-483B-9EA6-8061BAA5B5D7} = {B7ABF1B7-9417-4762-8EE3-AE1548F3C2DB}
 		{DB7176F0-88E5-4885-B068-41E7B6751892} = {B7ABF1B7-9417-4762-8EE3-AE1548F3C2DB}
+		{D82B0851-C14A-45BD-A04A-80E7688AFC4A} = {B7ABF1B7-9417-4762-8EE3-AE1548F3C2DB}
 		{F7D047DF-9C40-4D6B-B654-C34C14995F92} = {6F28DB45-987D-4EBF-B44C-5B2DF6F617F2}
 		{907FEB7A-E784-45CF-A5F8-CF3320A1C126} = {6F28DB45-987D-4EBF-B44C-5B2DF6F617F2}
 		{F4863F2B-7A90-42A0-A23B-CBEC729EC3D3} = {6F28DB45-987D-4EBF-B44C-5B2DF6F617F2}

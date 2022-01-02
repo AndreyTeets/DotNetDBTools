@@ -38,10 +38,12 @@ namespace DotNetDBTools.IntegrationTests.PostgreSQL
                 .Replace("\r", "")
                 .Replace("\n", "")
                 .Replace(" ", "")
+                .Replace(";", "")
                 .Replace("'", "")
                 .Replace("::INTEGER", "")
                 .Replace("::NUMERIC", "")
-                .Replace("::TEXT", "");
+                .Replace("::TEXT", "")
+                .Replace("PUBLIC.", "");
         }
 
         protected override void CreateDatabase(string connectionString)

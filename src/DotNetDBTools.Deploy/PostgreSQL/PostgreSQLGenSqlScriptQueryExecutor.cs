@@ -18,7 +18,7 @@ namespace DotNetDBTools.Deploy.PostgreSQL
         protected override string CreateBeginTransactionText()
         {
             return
-@"DO $$
+@"DO $DNDBTGeneratedScriptTransactionBlock$
 BEGIN";
         }
 
@@ -26,7 +26,7 @@ BEGIN";
         {
             return
 @"END;
-$$";
+$DNDBTGeneratedScriptTransactionBlock$";
         }
 
         private static string ReplaceParameters(IQuery query)

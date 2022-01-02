@@ -21,19 +21,6 @@ $@"CREATE TABLE {table.Name}
 {GetTableDefinitionsText(table)}
 );";
 
-            foreach (Index index in table.Indexes)
-            {
-                string _ =
-$@"CREATE INDEX {index.Name}
-ON {table.Name} ({string.Join(", ", index.Columns)});";
-            }
-
-            foreach (Trigger trigger in table.Triggers)
-            {
-                string _ =
-$@"{trigger.CodePiece}";
-            }
-
             return query;
         }
 

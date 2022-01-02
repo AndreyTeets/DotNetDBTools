@@ -56,8 +56,8 @@ namespace DotNetDBTools.DefinitionParsing.Core
                     PrimaryKey = BuildPrimaryKeyModels(table),
                     UniqueConstraints = BuildUniqueConstraintModels(table),
                     CheckConstraints = BuildCheckConstraintModels(table),
-                    Indexes = new List<Index>(),
-                    Triggers = new List<Trigger>(),
+                    Indexes = BuildIndexModels(table),
+                    Triggers = BuildTriggerModels(table),
                     ForeignKeys = BuildForeignKeyModels(table),
                 };
                 BuildAdditionalTableModelProperties(tableModel, table);
@@ -190,6 +190,46 @@ namespace DotNetDBTools.DefinitionParsing.Core
         protected virtual void BuildAdditionalForeignKeyModelProperties(ForeignKey fkModel, BaseForeignKey fk, string tableName) { }
         protected abstract string GetOnUpdateActionName(BaseForeignKey fk);
         protected abstract string GetOnDeleteActionName(BaseForeignKey fk);
+
+        private List<Index> BuildIndexModels(IBaseTable table)
+            => table.GetType().GetPropertyOrFieldMembers()
+                .Where(x => typeof(BaseIndex).IsAssignableFrom(x.GetPropertyOrFieldType()))
+                .OrderBy(x => x.Name, StringComparer.Ordinal)
+                .Select(x =>
+                {
+                    BaseIndex index = (BaseIndex)x.GetPropertyOrFieldValue(table);
+                    Index indexModel = new()
+                    {
+                        ID = index.ID,
+                        Name = x.Name,
+                        Columns = index.Columns.ToList(),
+                        IncludeColumns = index.IncludeColumns?.ToList() ?? new List<string>(),
+                        Unique = index.Unique,
+                    };
+                    BuildAdditionalIndexModelProperties(indexModel, index, table.GetType().Name);
+                    return indexModel;
+                })
+                .ToList();
+        protected virtual void BuildAdditionalIndexModelProperties(Index indexModel, BaseIndex index, string tableName) { }
+
+        private List<Trigger> BuildTriggerModels(IBaseTable table)
+            => table.GetType().GetPropertyOrFieldMembers()
+                .Where(x => typeof(BaseTrigger).IsAssignableFrom(x.GetPropertyOrFieldType()))
+                .OrderBy(x => x.Name, StringComparer.Ordinal)
+                .Select(x =>
+                {
+                    BaseTrigger trigger = (BaseTrigger)x.GetPropertyOrFieldValue(table);
+                    Trigger triggerModel = new()
+                    {
+                        ID = trigger.ID,
+                        Name = x.Name,
+                        CodePiece = DbObjectCodeMapper.MapToCodePiece(trigger),
+                    };
+                    BuildAdditionalTriggerModelProperties(triggerModel, trigger, table.GetType().Name);
+                    return triggerModel;
+                })
+                .ToList();
+        protected virtual void BuildAdditionalTriggerModelProperties(Trigger triggerModel, BaseTrigger trigger, string tableName) { }
 
         protected static IEnumerable<TInterface> GetInstancesOfAllTypesImplementingInterface<TInterface>(Assembly dbAssembly)
         {

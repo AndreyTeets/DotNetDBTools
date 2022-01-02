@@ -20,6 +20,7 @@ DotNetDBTools.DescriptionSourceGenerator is a source generator of additional dat
     <ProjectReference Include="..\DotNetDBTools.Generation\DotNetDBTools.Generation.csproj" PrivateAssets="all" GeneratePathProperty="true" />
   </ItemGroup>
 
+  <Import Project="..\DotNetDBTools.RoslynUtilities\DotNetDBTools.RoslynUtilities.projitems" Label="Shared" />
   <Import Project="$(ProjectDir)..\..\build\targets\Analyzer.targets" />
 
 </Project>

@@ -1,3 +1,12 @@
+-- QUERY START: MySQLDropTriggerQuery
+DROP TRIGGER `TR_MyTable2_MyTrigger1`;
+-- QUERY END: MySQLDropTriggerQuery
+
+-- QUERY START: MySQLDeleteDNDBTSysInfoQuery
+DELETE FROM `DNDBTDbObjects`
+WHERE `ID` = 'ee64ffc3-5536-4624-beaf-bc3a61d06a1a';
+-- QUERY END: MySQLDeleteDNDBTSysInfoQuery
+
 -- QUERY START: GenericQuery
 DROP VIEW `MyView1`;
 -- QUERY END: GenericQuery
@@ -16,10 +25,27 @@ DELETE FROM `DNDBTDbObjects`
 WHERE `ID` = 'd11b2a53-32db-432f-bb6b-f91788844ba9';
 -- QUERY END: MySQLDeleteDNDBTSysInfoQuery
 
+-- QUERY START: MySQLDropIndexQuery
+DROP INDEX `UQ_MyTable1_MyColumn2` ON `MyTable1`;
+-- QUERY END: MySQLDropIndexQuery
+
+-- QUERY START: MySQLDeleteDNDBTSysInfoQuery
+DELETE FROM `DNDBTDbObjects`
+WHERE `ID` = 'f3f08522-26ee-4950-9135-22edf2e4e0cf';
+-- QUERY END: MySQLDeleteDNDBTSysInfoQuery
+
+-- QUERY START: MySQLDropIndexQuery
+DROP INDEX `IDX_MyTable2_MyIndex1` ON `MyTable2`;
+-- QUERY END: MySQLDropIndexQuery
+
+-- QUERY START: MySQLDeleteDNDBTSysInfoQuery
+DELETE FROM `DNDBTDbObjects`
+WHERE `ID` = '74390b3c-bc39-4860-a42e-12baa400f927';
+-- QUERY END: MySQLDeleteDNDBTSysInfoQuery
+
 -- QUERY START: MySQLAlterTableQuery
 RENAME TABLE `MyTable1` TO `MyTable1NewName`;
 ALTER TABLE `MyTable1NewName` DROP CONSTRAINT `CK_MyTable1_MyCheck1`;
-ALTER TABLE `MyTable1NewName` DROP CONSTRAINT `UQ_MyTable1_MyColumn2`;
 ALTER TABLE `MyTable1NewName` DROP PRIMARY KEY,
     MODIFY COLUMN `MyColumn3` INT NOT NULL;
 ALTER TABLE `MyTable1NewName` ALTER COLUMN `MyColumn2` DROP DEFAULT;
@@ -34,11 +60,6 @@ ALTER TABLE `MyTable1NewName` ADD CONSTRAINT `CK_MyTable1_MyCheck1` CHECK (MyCol
 -- QUERY START: MySQLDeleteDNDBTSysInfoQuery
 DELETE FROM `DNDBTDbObjects`
 WHERE `ID` = 'eb9c59b5-bc7e-49d7-adaa-f5600b6a19a2';
--- QUERY END: MySQLDeleteDNDBTSysInfoQuery
-
--- QUERY START: MySQLDeleteDNDBTSysInfoQuery
-DELETE FROM `DNDBTDbObjects`
-WHERE `ID` = 'f3f08522-26ee-4950-9135-22edf2e4e0cf';
 -- QUERY END: MySQLDeleteDNDBTSysInfoQuery
 
 -- QUERY START: MySQLDeleteDNDBTSysInfoQuery
@@ -169,8 +190,7 @@ VALUES
 CREATE TABLE `MyTable3`
 (
     `MyColumn1` BIGINT NOT NULL DEFAULT (333),
-    `MyColumn2` VARBINARY(9) NOT NULL,
-    CONSTRAINT `UQ_MyTable3_MyColumns12` UNIQUE (`MyColumn1`, `MyColumn2`)
+    `MyColumn2` VARBINARY(9) NOT NULL
 );
 -- QUERY END: MySQLCreateTableQuery
 
@@ -231,6 +251,11 @@ VALUES
 );
 -- QUERY END: MySQLInsertDNDBTSysInfoQuery
 
+-- QUERY START: MySQLCreateIndexQuery
+CREATE UNIQUE INDEX `UQ_MyTable3_MyColumns12`
+ON `MyTable3` (`MyColumn1`, `MyColumn2`);
+-- QUERY END: MySQLCreateIndexQuery
+
 -- QUERY START: MySQLInsertDNDBTSysInfoQuery
 INSERT INTO `DNDBTDbObjects`
 (
@@ -244,8 +269,32 @@ VALUES
 (
     'fd288e38-35ba-4bb1-ace3-597c99ef26c7',
     '474cd761-2522-4529-9d20-2b94115f9626',
-    'UniqueConstraint',
+    'Index',
     'UQ_MyTable3_MyColumns12',
+    NULL
+);
+-- QUERY END: MySQLInsertDNDBTSysInfoQuery
+
+-- QUERY START: MySQLCreateIndexQuery
+CREATE UNIQUE INDEX `IDX_MyTable2_MyIndex1`
+ON `MyTable2` (`MyColumn1NewName`, `MyColumn2`);
+-- QUERY END: MySQLCreateIndexQuery
+
+-- QUERY START: MySQLInsertDNDBTSysInfoQuery
+INSERT INTO `DNDBTDbObjects`
+(
+    `ID`,
+    `ParentID`,
+    `Type`,
+    `Name`,
+    `Code`
+)
+VALUES
+(
+    '74390b3c-bc39-4860-a42e-12baa400f927',
+    'bfb9030c-a8c3-4882-9c42-1c6ad025cf8f',
+    'Index',
+    'IDX_MyTable2_MyIndex1',
     NULL
 );
 -- QUERY END: MySQLInsertDNDBTSysInfoQuery
@@ -334,5 +383,42 @@ SELECT
 FROM MyTable1NewName t1
 LEFT JOIN MyTable2 t2
     ON t2.MyColumn1NewName = t1.MyColumn1;'
+);
+-- QUERY END: MySQLInsertDNDBTSysInfoQuery
+
+-- QUERY START: MySQLCreateTriggerQuery
+CREATE TRIGGER `TR_MyTable2_MyTrigger1`
+AFTER INSERT
+ON `MyTable2`
+FOR EACH ROW
+BEGIN
+    INSERT INTO `MyTable4`(`MyColumn1`)
+    VALUES (NEW.`MyColumn1NewName`);
+END;
+-- QUERY END: MySQLCreateTriggerQuery
+
+-- QUERY START: MySQLInsertDNDBTSysInfoQuery
+INSERT INTO `DNDBTDbObjects`
+(
+    `ID`,
+    `ParentID`,
+    `Type`,
+    `Name`,
+    `Code`
+)
+VALUES
+(
+    'ee64ffc3-5536-4624-beaf-bc3a61d06a1a',
+    'bfb9030c-a8c3-4882-9c42-1c6ad025cf8f',
+    'Trigger',
+    'TR_MyTable2_MyTrigger1',
+    'CREATE TRIGGER `TR_MyTable2_MyTrigger1`
+AFTER INSERT
+ON `MyTable2`
+FOR EACH ROW
+BEGIN
+    INSERT INTO `MyTable4`(`MyColumn1`)
+    VALUES (NEW.`MyColumn1NewName`);
+END;'
 );
 -- QUERY END: MySQLInsertDNDBTSysInfoQuery

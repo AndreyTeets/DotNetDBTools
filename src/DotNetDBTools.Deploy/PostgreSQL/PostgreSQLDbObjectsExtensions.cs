@@ -1,4 +1,5 @@
 ﻿using DotNetDBTools.Models.Core;
+using DotNetDBTools.Models.PostgreSQL;
 using DotNetDBTools.Models.PostgreSQL.UserDefinedTypes;
 
 namespace DotNetDBTools.Deploy.PostgreSQL
@@ -13,9 +14,8 @@ namespace DotNetDBTools.Deploy.PostgreSQL
                 return type.Name;
         }
 
-        public static string GetCode(this PostgreSQLDomainType type)
-        {
-            return (type.Default as CodePiece)?.Code;
-        }
+        public static string GetCode(this PostgreSQLDomainType type) => (type.Default as CodePiece)?.Code;
+        public static string GetCode(this PostgreSQLFunction func) => func.CodePiece.Code;
+        public static string GetCode(this PostgreSQLProcedure proc) => proc.CodePiece.Code;
     }
 }

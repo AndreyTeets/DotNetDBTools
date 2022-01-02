@@ -12,7 +12,9 @@ namespace DotNetDBTools.Analysis.PostgreSQL
     {
         public Database FromAgnostic(Database database)
         {
-            return ConvertToPostgreSQLModel((AgnosticDatabase)database);
+            PostgreSQLDatabase postgresqlDatabase = ConvertToPostgreSQLModel((AgnosticDatabase)database);
+            PostgreSQLPostBuildProcessingHelper.AddFunctionsFromTriggersCode_And_RemoveFunctionsCodeFromTriggersCode_IfAny(postgresqlDatabase);
+            return postgresqlDatabase;
         }
 
         private static PostgreSQLDatabase ConvertToPostgreSQLModel(AgnosticDatabase database)
@@ -32,7 +34,7 @@ namespace DotNetDBTools.Analysis.PostgreSQL
                 UniqueConstraints = table.UniqueConstraints,
                 CheckConstraints = table.CheckConstraints.Select(ck => { ck.CodePiece = ConvertCodePiece(ck.CodePiece); return ck; }).ToList(),
                 Indexes = table.Indexes,
-                Triggers = table.Triggers,
+                Triggers = table.Triggers.Select(trigger => { trigger.CodePiece = ConvertCodePiece(trigger.CodePiece); return trigger; }).ToList(),
                 ForeignKeys = table.ForeignKeys,
             };
 

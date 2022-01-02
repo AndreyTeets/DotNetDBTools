@@ -9,7 +9,7 @@ DotNetDBTools.DefinitionParsing is a library for internal use by other DotNetDBT
 
   <ItemGroup>
     <ProjectReference Include="..\DotNetDBTools.Definition\DotNetDBTools.Definition.csproj" />
-    <ProjectReference Include="..\DotNetDBTools.Models\DotNetDBTools.Models.csproj" />
+    <ProjectReference Include="..\DotNetDBTools.Analysis\DotNetDBTools.Analysis.csproj" />
   </ItemGroup>
 
 </Project>

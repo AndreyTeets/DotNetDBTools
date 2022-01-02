@@ -15,8 +15,8 @@ $@"SELECT
     t.typname AS ""{nameof(PostgreSQLColumnRecord.DataType)}"",
     t.typtype = 'b' AS ""{nameof(PostgreSQLColumnRecord.IsBaseDataType)}"",
     NOT a.attnotnull AS ""{nameof(PostgreSQLColumnRecord.Nullable)}"",
-    pg_get_serial_sequence('""' || n.nspname || '"".""' || c.relname || '""', a.attname) IS NOT NULL AS ""{nameof(PostgreSQLColumnRecord.Identity)}"",
-    pg_get_expr(d.adbin, d.adrelid) AS ""{nameof(PostgreSQLColumnRecord.Default)}"",
+    pg_catalog.pg_get_serial_sequence('""' || n.nspname || '"".""' || c.relname || '""', a.attname) IS NOT NULL AS ""{nameof(PostgreSQLColumnRecord.Identity)}"",
+    pg_catalog.pg_get_expr(d.adbin, d.adrelid) AS ""{nameof(PostgreSQLColumnRecord.Default)}"",
     a.atttypmod AS ""{nameof(PostgreSQLColumnRecord.Length)}""
 FROM pg_catalog.pg_class c
 INNER JOIN pg_catalog.pg_namespace n
@@ -28,7 +28,7 @@ INNER JOIN pg_catalog.pg_attribute a
 INNER JOIN pg_catalog.pg_type t
     ON t.oid = a.atttypid
 LEFT JOIN pg_catalog.pg_attrdef d
-    ON (d.adrelid,  d.adnum) = (a.attrelid, a.attnum)
+    ON (d.adrelid, d.adnum) = (a.attrelid, a.attnum)
 WHERE c.relkind = 'r'
     AND n.nspname NOT IN ('information_schema', 'pg_catalog')
     AND c.relname != '{DNDBTSysTables.DNDBTDbObjects}';";

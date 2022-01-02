@@ -113,6 +113,10 @@ VALUES
 -- QUERY END: SQLiteInsertDNDBTSysInfoQuery
 
 -- QUERY START: SQLiteAlterTableQuery
+DROP INDEX IDX_MyTable2_MyIndex1;
+
+DROP TRIGGER TR_MyTable2_MyTrigger1;
+
 CREATE TABLE _DNDBTTemp_MyTable2
 (
     MyColumn1NewName INTEGER PRIMARY KEY NOT NULL DEFAULT 333,
@@ -129,6 +133,18 @@ FROM MyTable2;
 DROP TABLE MyTable2;
 
 ALTER TABLE _DNDBTTemp_MyTable2 RENAME TO MyTable2;
+
+CREATE TRIGGER [TR_MyTable2_MyTrigger1]
+AFTER INSERT
+ON [MyTable2]
+FOR EACH ROW
+BEGIN
+    INSERT INTO [MyTable4]([MyColumn1])
+    VALUES(NEW.[MyColumn1NewName]);
+END;
+
+CREATE UNIQUE INDEX IDX_MyTable2_MyIndex1
+ON MyTable2 (MyColumn1NewName, MyColumn2);
 -- QUERY END: SQLiteAlterTableQuery
 
 -- QUERY START: SQLiteDeleteDNDBTSysInfoQuery
@@ -193,6 +209,16 @@ VALUES
 );
 -- QUERY END: SQLiteInsertDNDBTSysInfoQuery
 
+-- QUERY START: SQLiteDeleteDNDBTSysInfoQuery
+DELETE FROM DNDBTDbObjects
+WHERE ID = '74390b3c-bc39-4860-a42e-12baa400f927';
+-- QUERY END: SQLiteDeleteDNDBTSysInfoQuery
+
+-- QUERY START: SQLiteDeleteDNDBTSysInfoQuery
+DELETE FROM DNDBTDbObjects
+WHERE ID = 'ee64ffc3-5536-4624-beaf-bc3a61d06a1a';
+-- QUERY END: SQLiteDeleteDNDBTSysInfoQuery
+
 -- QUERY START: SQLiteInsertDNDBTSysInfoQuery
 INSERT INTO DNDBTDbObjects
 (
@@ -208,6 +234,51 @@ VALUES
     'bfb9030c-a8c3-4882-9c42-1c6ad025cf8f',
     'ForeignKey',
     'FK_MyTable2_MyColumns12_MyTable3_MyColumns12',
+    NULL
+);
+-- QUERY END: SQLiteInsertDNDBTSysInfoQuery
+
+-- QUERY START: SQLiteInsertDNDBTSysInfoQuery
+INSERT INTO DNDBTDbObjects
+(
+    ID,
+    ParentID,
+    Type,
+    Name,
+    Code
+)
+VALUES
+(
+    'ee64ffc3-5536-4624-beaf-bc3a61d06a1a',
+    'bfb9030c-a8c3-4882-9c42-1c6ad025cf8f',
+    'Trigger',
+    'TR_MyTable2_MyTrigger1',
+    'CREATE TRIGGER [TR_MyTable2_MyTrigger1]
+AFTER INSERT
+ON [MyTable2]
+FOR EACH ROW
+BEGIN
+    INSERT INTO [MyTable4]([MyColumn1])
+    VALUES(NEW.[MyColumn1NewName]);
+END;'
+);
+-- QUERY END: SQLiteInsertDNDBTSysInfoQuery
+
+-- QUERY START: SQLiteInsertDNDBTSysInfoQuery
+INSERT INTO DNDBTDbObjects
+(
+    ID,
+    ParentID,
+    Type,
+    Name,
+    Code
+)
+VALUES
+(
+    '74390b3c-bc39-4860-a42e-12baa400f927',
+    'bfb9030c-a8c3-4882-9c42-1c6ad025cf8f',
+    'Index',
+    'IDX_MyTable2_MyIndex1',
     NULL
 );
 -- QUERY END: SQLiteInsertDNDBTSysInfoQuery

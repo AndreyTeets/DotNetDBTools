@@ -18,6 +18,8 @@ namespace DotNetDBTools.Deploy.SQLite
         SQLiteGetPrimaryKeysFromDBMSSysInfoQuery,
         SQLiteGetUniqueConstraintsFromDBMSSysInfoQuery,
         SQLiteGetCheckConstraintsFromDBMSSysInfoQuery,
+        SQLiteGetIndexesFromDBMSSysInfoQuery,
+        SQLiteGetTriggersFromDBMSSysInfoQuery,
         SQLiteGetForeignKeysFromDBMSSysInfoQuery,
         SQLiteGetViewsFromDBMSSysInfoQuery,
         SQLiteGetAllDbObjectsFromDNDBTSysInfoQuery>

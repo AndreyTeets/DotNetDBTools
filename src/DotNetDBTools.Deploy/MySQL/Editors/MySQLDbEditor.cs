@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using DotNetDBTools.Analysis.Core;
-using DotNetDBTools.Deploy.Common.Editors;
+﻿using DotNetDBTools.Deploy.Common.Editors;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Editors;
 using DotNetDBTools.Deploy.Core.Queries;
@@ -17,12 +14,16 @@ namespace DotNetDBTools.Deploy.MySQL.Editors
         MySQLDropDNDBTSysTablesQuery>
     {
         private readonly ITableEditor _tableEditor;
+        private readonly IIndexEditor _indexEditor;
+        private readonly ITriggerEditor _triggerEditor;
         private readonly IForeignKeyEditor _foreignKeyEditor;
 
         public MySQLDbEditor(IQueryExecutor queryExecutor)
             : base(queryExecutor)
         {
             _tableEditor = new MySQLTableEditor(queryExecutor);
+            _indexEditor = new MySQLIndexEditor(queryExecutor);
+            _triggerEditor = new MySQLTriggerEditor(queryExecutor);
             _foreignKeyEditor = new MySQLForeignKeyEditor(queryExecutor);
         }
 
@@ -41,36 +42,34 @@ namespace DotNetDBTools.Deploy.MySQL.Editors
                     QueryExecutor.Execute(new MySQLInsertDNDBTSysInfoQuery(uc.ID, table.ID, DbObjectsTypes.UniqueConstraint, uc.Name));
                 foreach (CheckConstraint ck in table.CheckConstraints)
                     QueryExecutor.Execute(new MySQLInsertDNDBTSysInfoQuery(ck.ID, table.ID, DbObjectsTypes.CheckConstraint, ck.Name, ck.GetCode()));
-                foreach (Index index in table.Indexes)
-                    QueryExecutor.Execute(new MySQLInsertDNDBTSysInfoQuery(index.ID, table.ID, DbObjectsTypes.Index, index.Name));
-                foreach (Trigger trigger in table.Triggers)
-                    QueryExecutor.Execute(new MySQLInsertDNDBTSysInfoQuery(trigger.ID, table.ID, DbObjectsTypes.Trigger, trigger.Name));
+                foreach (Index idx in table.Indexes)
+                    QueryExecutor.Execute(new MySQLInsertDNDBTSysInfoQuery(idx.ID, table.ID, DbObjectsTypes.Index, idx.Name));
+                foreach (Trigger trg in table.Triggers)
+                    QueryExecutor.Execute(new MySQLInsertDNDBTSysInfoQuery(trg.ID, table.ID, DbObjectsTypes.Trigger, trg.Name, trg.GetCode()));
                 foreach (ForeignKey fk in table.ForeignKeys)
                     QueryExecutor.Execute(new MySQLInsertDNDBTSysInfoQuery(fk.ID, table.ID, DbObjectsTypes.ForeignKey, fk.Name));
             }
-            foreach (MySQLFunction function in db.Functions)
-                QueryExecutor.Execute(new MySQLInsertDNDBTSysInfoQuery(function.ID, null, DbObjectsTypes.Function, function.Name));
+            foreach (MySQLFunction func in db.Functions)
+                QueryExecutor.Execute(new MySQLInsertDNDBTSysInfoQuery(func.ID, null, DbObjectsTypes.Function, func.Name, func.GetCode()));
             foreach (MySQLView view in db.Views)
                 QueryExecutor.Execute(new MySQLInsertDNDBTSysInfoQuery(view.ID, null, DbObjectsTypes.View, view.Name, view.GetCode()));
-            foreach (MySQLProcedure procedure in db.Procedures)
-                QueryExecutor.Execute(new MySQLInsertDNDBTSysInfoQuery(procedure.ID, null, DbObjectsTypes.Procedure, procedure.Name));
+            foreach (MySQLProcedure proc in db.Procedures)
+                QueryExecutor.Execute(new MySQLInsertDNDBTSysInfoQuery(proc.ID, null, DbObjectsTypes.Procedure, proc.Name, proc.GetCode()));
         }
 
         public override void ApplyDatabaseDiff(DatabaseDiff databaseDiff)
         {
             MySQLDatabaseDiff dbDiff = (MySQLDatabaseDiff)databaseDiff;
 
-            Dictionary<Guid, Table> newDbFKToTableMap = ForeignKeysHelper.CreateFKToTableMap(dbDiff.NewDatabase.Tables);
-            Dictionary<Guid, Table> oldDbFKToTableMap = ForeignKeysHelper.CreateFKToTableMap(dbDiff.OldDatabase.Tables);
-
+            _triggerEditor.DropTriggers(dbDiff);
             foreach (MySQLProcedure procedure in dbDiff.ProceduresToDrop)
                 DropProcedure(procedure);
             foreach (MySQLView view in dbDiff.ViewsToDrop)
                 DropView(view);
             foreach (MySQLFunction function in dbDiff.FunctionsToDrop)
                 DropFunction(function);
-            foreach (ForeignKey fk in dbDiff.AllForeignKeysToDrop)
-                _foreignKeyEditor.DropForeignKey(fk, oldDbFKToTableMap);
+            _foreignKeyEditor.DropForeignKeys(dbDiff);
+            _indexEditor.DropIndexes(dbDiff);
             foreach (MySQLTable table in dbDiff.RemovedTables)
                 _tableEditor.DropTable(table);
 
@@ -79,26 +78,27 @@ namespace DotNetDBTools.Deploy.MySQL.Editors
 
             foreach (MySQLTable table in dbDiff.AddedTables)
                 _tableEditor.CreateTable(table);
-            foreach (ForeignKey fk in dbDiff.AllForeignKeysToCreate)
-                _foreignKeyEditor.CreateForeignKey(fk, newDbFKToTableMap);
+            _indexEditor.CreateIndexes(dbDiff);
+            _foreignKeyEditor.CreateForeignKeys(dbDiff);
             foreach (MySQLFunction function in dbDiff.FunctionsToCreate)
                 CreateFunction(function);
             foreach (MySQLView view in dbDiff.ViewsToCreate)
                 CreateView(view);
             foreach (MySQLProcedure procedure in dbDiff.ProceduresToCreate)
                 CreateProcedure(procedure);
+            _triggerEditor.CreateTriggers(dbDiff);
         }
 
-        private void CreateFunction(MySQLFunction function)
+        private void CreateFunction(MySQLFunction func)
         {
-            QueryExecutor.Execute(new GenericQuery($"{function.CodePiece}"));
-            QueryExecutor.Execute(new MySQLInsertDNDBTSysInfoQuery(function.ID, null, DbObjectsTypes.Function, function.Name));
+            QueryExecutor.Execute(new GenericQuery($"{func.GetCode()}"));
+            QueryExecutor.Execute(new MySQLInsertDNDBTSysInfoQuery(func.ID, null, DbObjectsTypes.Function, func.Name, func.GetCode()));
         }
 
-        private void DropFunction(MySQLFunction function)
+        private void DropFunction(MySQLFunction func)
         {
-            QueryExecutor.Execute(new GenericQuery($"DROP FUNCTION `{function.Name}`;"));
-            QueryExecutor.Execute(new MySQLDeleteDNDBTSysInfoQuery(function.ID));
+            QueryExecutor.Execute(new GenericQuery($"DROP FUNCTION `{func.Name}`;"));
+            QueryExecutor.Execute(new MySQLDeleteDNDBTSysInfoQuery(func.ID));
         }
 
         private void CreateView(MySQLView view)
@@ -113,16 +113,16 @@ namespace DotNetDBTools.Deploy.MySQL.Editors
             QueryExecutor.Execute(new MySQLDeleteDNDBTSysInfoQuery(view.ID));
         }
 
-        private void CreateProcedure(MySQLProcedure procedure)
+        private void CreateProcedure(MySQLProcedure proc)
         {
-            QueryExecutor.Execute(new GenericQuery($"{procedure.CodePiece}"));
-            QueryExecutor.Execute(new MySQLInsertDNDBTSysInfoQuery(procedure.ID, null, DbObjectsTypes.Procedure, procedure.Name));
+            QueryExecutor.Execute(new GenericQuery($"{proc.GetCode()}"));
+            QueryExecutor.Execute(new MySQLInsertDNDBTSysInfoQuery(proc.ID, null, DbObjectsTypes.Procedure, proc.Name, proc.GetCode()));
         }
 
-        private void DropProcedure(MySQLProcedure procedure)
+        private void DropProcedure(MySQLProcedure proc)
         {
-            QueryExecutor.Execute(new GenericQuery($"DROP PROCEDURE `{procedure.Name}`;"));
-            QueryExecutor.Execute(new MySQLDeleteDNDBTSysInfoQuery(procedure.ID));
+            QueryExecutor.Execute(new GenericQuery($"DROP PROCEDURE `{proc.Name}`;"));
+            QueryExecutor.Execute(new MySQLDeleteDNDBTSysInfoQuery(proc.ID));
         }
     }
 }

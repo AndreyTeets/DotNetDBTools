@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using DotNetDBTools.Analysis.Common;
 using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.PostgreSQL;
@@ -10,6 +11,7 @@ namespace DotNetDBTools.Analysis.PostgreSQL
     internal class PostgreSQLDiffCreator : DiffCreator
     {
         private readonly HashSet<string> _changedUserDefinedTypesNames = new();
+        private readonly HashSet<string> _functionsToCreateNames = new();
 
         public override DatabaseDiff CreateDatabaseDiff(Database newDatabase, Database oldDatabase)
         {
@@ -31,7 +33,12 @@ namespace DotNetDBTools.Analysis.PostgreSQL
             BuildRangeTypesDiff(databaseDiff, (PostgreSQLDatabase)newDatabase, (PostgreSQLDatabase)oldDatabase);
             FillChangedUserDefinedTypesNames(databaseDiff);
 
+            BuildFunctionsDiff(databaseDiff);
+            FillFunctionsToCreateNames(databaseDiff);
+
             BuildTablesDiff<PostgreSQLTableDiff>(databaseDiff, newDatabase, oldDatabase);
+            IndexesHelper.BuildAllDbIndexesToBeDroppedAndCreated(databaseDiff);
+            TriggersHelper.BuildAllDbTriggersToBeDroppedAndCreated(databaseDiff);
             ForeignKeysHelper.BuildAllForeignKeysToBeDroppedAndCreated(databaseDiff);
 
             BuildViewsDiff(databaseDiff);
@@ -48,6 +55,12 @@ namespace DotNetDBTools.Analysis.PostgreSQL
 
             if (newItem is Column newColumn &&
                 _changedUserDefinedTypesNames.Contains(newColumn.DataType.Name))
+            {
+                return true;
+            }
+
+            if (newItem is Trigger newTrigger &&
+                _functionsToCreateNames.Any(fName => newTrigger.CodePiece.Code.Contains($"{fName}")))
             {
                 return true;
             }
@@ -151,6 +164,25 @@ namespace DotNetDBTools.Analysis.PostgreSQL
             databaseDiff.ChangedRangeTypes = changedRangeTypes;
         }
 
+        private void BuildFunctionsDiff(DatabaseDiff dbDiff)
+        {
+            List<PostgreSQLFunction> funcsToCreate = null;
+            List<PostgreSQLFunction> funcsToDrop = null;
+            FillAddedAndRemovedItemsAndApplyActionToChangedItems(
+                ((PostgreSQLDatabase)dbDiff.NewDatabase).Functions,
+                ((PostgreSQLDatabase)dbDiff.OldDatabase).Functions,
+                ref funcsToCreate,
+                ref funcsToDrop,
+                (newFunc, oldFunc) =>
+                {
+                    funcsToCreate.Add(newFunc);
+                    funcsToDrop.Add(oldFunc);
+                });
+
+            ((PostgreSQLDatabaseDiff)dbDiff).FunctionsToCreate = funcsToCreate;
+            ((PostgreSQLDatabaseDiff)dbDiff).FunctionsToDrop = funcsToDrop;
+        }
+
         private void FillChangedUserDefinedTypesNames(PostgreSQLDatabaseDiff dbDiff)
         {
             _changedUserDefinedTypesNames.Clear();
@@ -162,6 +194,13 @@ namespace DotNetDBTools.Analysis.PostgreSQL
                 _changedUserDefinedTypesNames.Add(typeDiff.NewEnumType.Name);
             foreach (PostgreSQLRangeTypeDiff typeDiff in dbDiff.ChangedRangeTypes)
                 _changedUserDefinedTypesNames.Add(typeDiff.NewRangeType.Name);
+        }
+
+        private void FillFunctionsToCreateNames(PostgreSQLDatabaseDiff dbDiff)
+        {
+            _functionsToCreateNames.Clear();
+            foreach (PostgreSQLFunction func in dbDiff.FunctionsToCreate)
+                _functionsToCreateNames.Add(func.Name);
         }
     }
 }

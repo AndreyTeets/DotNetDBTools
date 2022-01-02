@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using DotNetDBTools.Analysis.Common;
 using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.MySQL;
@@ -22,6 +23,8 @@ namespace DotNetDBTools.Analysis.MySQL
             };
 
             BuildTablesDiff<MySQLTableDiff>(databaseDiff, newDatabase, oldDatabase);
+            IndexesHelper.BuildAllDbIndexesToBeDroppedAndCreated(databaseDiff);
+            TriggersHelper.BuildAllDbTriggersToBeDroppedAndCreated(databaseDiff);
             ForeignKeysHelper.BuildAllForeignKeysToBeDroppedAndCreated(databaseDiff);
 
             BuildViewsDiff(databaseDiff);

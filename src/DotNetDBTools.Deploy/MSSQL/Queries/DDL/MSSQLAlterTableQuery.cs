@@ -19,11 +19,6 @@ namespace DotNetDBTools.Deploy.MSSQL.Queries.DDL
             if (tableDiff.OldTable.Name != tableDiff.NewTable.Name)
                 sb.Append(Queries.RenameTable(tableDiff.OldTable.Name, tableDiff.NewTable.Name));
 
-            foreach (Trigger trigger in tableDiff.TriggersToDrop)
-                sb.Append(Queries.DropTrigger(trigger.Name));
-            foreach (Index index in tableDiff.IndexesToDrop)
-                sb.Append(Queries.DropIndex(index.Name));
-
             foreach (CheckConstraint ck in tableDiff.CheckConstraintsToDrop)
                 sb.Append(Queries.DropCheckConstraint(tableDiff.NewTable.Name, ck.Name));
             foreach (UniqueConstraint uc in tableDiff.UniqueConstraintsToDrop)
@@ -39,11 +34,6 @@ namespace DotNetDBTools.Deploy.MSSQL.Queries.DDL
                 sb.Append(Queries.AddUniqueConstraint(tableDiff.NewTable.Name, uc));
             foreach (CheckConstraint ck in tableDiff.CheckConstraintsToCreate)
                 sb.Append(Queries.AddCheckConstraint(tableDiff.NewTable.Name, ck));
-
-            foreach (Index index in tableDiff.IndexesToCreate)
-                sb.Append(Queries.CreateIndex(tableDiff.NewTable.Name, index));
-            foreach (Trigger trigger in tableDiff.TriggersToCreate)
-                sb.Append(Queries.CreateTrigger(trigger));
 
             return sb.ToString();
         }
@@ -135,25 +125,6 @@ ALTER TABLE {tableName} ADD CONSTRAINT {((MSSQLColumn)c).DefaultConstraintName} 
             public static string DropDefaultConstraint(string tableName, Column c) =>
 $@"
 ALTER TABLE [{tableName}] DROP CONSTRAINT {((MSSQLColumn)c).DefaultConstraintName};"
-                ;
-
-            public static string CreateIndex(string tableName, Index index) =>
-$@"
-CREATE INDEX {index.Name}
-ON {tableName} ({string.Join(", ", index.Columns)});"
-                ;
-            public static string DropIndex(string indexName) =>
-$@"
-DROP INDEX {indexName};"
-                ;
-
-            public static string CreateTrigger(Trigger trigger) =>
-$@"
-{trigger.CodePiece}"
-                ;
-            public static string DropTrigger(string triggerName) =>
-$@"
-DROP TRIGGER {triggerName};"
                 ;
         }
     }

@@ -1,6 +1,7 @@
 ﻿using System;
 using DotNetDBTools.Definition.PostgreSQL;
 using DotNetDBTools.Definition.PostgreSQL.DataTypes;
+using DotNetDBTools.SampleDBv2.PostgreSQL.Functions;
 
 namespace DotNetDBTools.SampleDB.PostgreSQL.Tables
 {
@@ -38,7 +39,12 @@ namespace DotNetDBTools.SampleDB.PostgreSQL.Tables
 
         public Trigger TR_MyTable2_MyTrigger1 = new("EE64FFC3-5536-4624-BEAF-BC3A61D06A1A")
         {
-            Code = $"CREATE TRIGGER {nameof(TR_MyTable2_MyTrigger1)} bla bla",
+            Code =
+@$"CREATE TRIGGER {nameof(TR_MyTable2_MyTrigger1).Quote()}
+AFTER INSERT
+ON {nameof(MyTable2).Quote()}
+FOR EACH ROW
+EXECUTE FUNCTION {nameof(TR_MyTable2_MyTrigger1_Handler).Quote()}();",
         };
 
         public Index IDX_MyTable2_MyIndex1 = new("74390B3C-BC39-4860-A42E-12BAA400F927")

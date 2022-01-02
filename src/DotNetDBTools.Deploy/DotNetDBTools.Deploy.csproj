@@ -12,7 +12,6 @@ DotNetDBTools.Deploy is a library that provides the means to manage databases de
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DotNetDBTools.Analysis\DotNetDBTools.Analysis.csproj" />
     <ProjectReference Include="..\DotNetDBTools.DefinitionParsing\DotNetDBTools.DefinitionParsing.csproj" />
     <ProjectReference Include="..\DotNetDBTools.Generation\DotNetDBTools.Generation.csproj" />
   </ItemGroup>

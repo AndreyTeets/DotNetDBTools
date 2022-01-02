@@ -1,4 +1,8 @@
-﻿using DotNetDBTools.Deploy.Core.Queries.DDL;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using DotNetDBTools.Deploy.Core;
+using DotNetDBTools.Deploy.Core.Queries.DDL;
 using DotNetDBTools.Models.Core;
 using static DotNetDBTools.Deploy.SQLite.SQLiteQueriesHelper;
 
@@ -11,26 +15,37 @@ namespace DotNetDBTools.Deploy.SQLite.Queries.DDL
 
         protected override string GetSql(Table table)
         {
-            string query =
+            List<string> createTriggerStatements = new();
+            foreach (Trigger trigger in table.Triggers)
+            {
+                createTriggerStatements.Add(
+$@"{trigger.GetCode()}");
+            }
+
+            List<string> createIndexStatements = new();
+            foreach (Index index in table.Indexes)
+            {
+                createIndexStatements.Add(
+$@"CREATE{GetUniqueStatement(index.Unique)} INDEX {index.Name}
+ON {table.Name} ({string.Join(", ", index.Columns)});");
+            }
+
+            string createTableStatement =
 $@"CREATE TABLE {table.Name}
 (
 {GetTableDefinitionsText(table)}
 );";
 
-            foreach (Index index in table.Indexes)
-            {
-                string _ =
-$@"CREATE INDEX {index.Name}
-ON {table.Name} ({string.Join(", ", index.Columns)});";
-            }
+            StringBuilder sb = new();
 
-            foreach (Trigger trigger in table.Triggers)
-            {
-                string _ =
-$@"{trigger.CodePiece}";
-            }
+            sb.Append(createTableStatement);
 
-            return query;
+            if (createTriggerStatements.Any())
+                sb.AppendLine().AppendLine().Append(string.Join("\n", createTriggerStatements));
+            if (createIndexStatements.Any())
+                sb.AppendLine().AppendLine().Append(string.Join("\n", createIndexStatements));
+
+            return sb.ToString();
         }
     }
 }

@@ -40,19 +40,11 @@ namespace DotNetDBTools.Deploy.Core.Editors
                 QueryExecutor.Execute(Create<TInsertDNDBTSysInfoQuery>(uc.ID, table.ID, DbObjectsTypes.UniqueConstraint, uc.Name));
             foreach (CheckConstraint ck in table.CheckConstraints)
                 QueryExecutor.Execute(Create<TInsertDNDBTSysInfoQuery>(ck.ID, table.ID, DbObjectsTypes.CheckConstraint, ck.Name, ck.GetCode()));
-            foreach (Index index in table.Indexes)
-                QueryExecutor.Execute(Create<TInsertDNDBTSysInfoQuery>(index.ID, table.ID, DbObjectsTypes.Index, index.Name));
-            foreach (Trigger trigger in table.Triggers)
-                QueryExecutor.Execute(Create<TInsertDNDBTSysInfoQuery>(trigger.ID, table.ID, DbObjectsTypes.Trigger, trigger.Name));
         }
 
         public virtual void DropTable(Table table)
         {
             QueryExecutor.Execute(Create<TDropTableQuery>(table));
-            foreach (Trigger trigger in table.Triggers)
-                QueryExecutor.Execute(Create<TDeleteDNDBTSysInfoQuery>(trigger.ID));
-            foreach (Index index in table.Indexes)
-                QueryExecutor.Execute(Create<TDeleteDNDBTSysInfoQuery>(index.ID));
             foreach (CheckConstraint ck in table.CheckConstraints)
                 QueryExecutor.Execute(Create<TDeleteDNDBTSysInfoQuery>(ck.ID));
             foreach (UniqueConstraint uc in table.UniqueConstraints)
@@ -69,10 +61,6 @@ namespace DotNetDBTools.Deploy.Core.Editors
         {
             QueryExecutor.Execute(Create<TAlterTableQuery>(tableDiff));
 
-            foreach (Trigger trigger in tableDiff.TriggersToDrop)
-                QueryExecutor.Execute(Create<TDeleteDNDBTSysInfoQuery>(trigger.ID));
-            foreach (Index index in tableDiff.IndexesToDrop)
-                QueryExecutor.Execute(Create<TDeleteDNDBTSysInfoQuery>(index.ID));
             foreach (CheckConstraint ck in tableDiff.CheckConstraintsToDrop)
                 QueryExecutor.Execute(Create<TDeleteDNDBTSysInfoQuery>(ck.ID));
             foreach (UniqueConstraint uc in tableDiff.UniqueConstraintsToDrop)
@@ -95,10 +83,6 @@ namespace DotNetDBTools.Deploy.Core.Editors
                 QueryExecutor.Execute(Create<TInsertDNDBTSysInfoQuery>(uc.ID, tableDiff.NewTable.ID, DbObjectsTypes.UniqueConstraint, uc.Name));
             foreach (CheckConstraint ck in tableDiff.CheckConstraintsToCreate)
                 QueryExecutor.Execute(Create<TInsertDNDBTSysInfoQuery>(ck.ID, tableDiff.NewTable.ID, DbObjectsTypes.CheckConstraint, ck.Name, ck.GetCode()));
-            foreach (Index index in tableDiff.IndexesToCreate)
-                QueryExecutor.Execute(Create<TInsertDNDBTSysInfoQuery>(index.ID, tableDiff.NewTable.ID, DbObjectsTypes.Index, index.Name));
-            foreach (Trigger trigger in tableDiff.TriggersToCreate)
-                QueryExecutor.Execute(Create<TInsertDNDBTSysInfoQuery>(trigger.ID, tableDiff.NewTable.ID, DbObjectsTypes.Trigger, trigger.Name));
         }
     }
 }

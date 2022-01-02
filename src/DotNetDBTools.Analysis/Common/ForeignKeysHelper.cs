@@ -3,21 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using DotNetDBTools.Models.Core;
 
-namespace DotNetDBTools.Analysis.Core
+namespace DotNetDBTools.Analysis.Common
 {
     public static class ForeignKeysHelper
     {
-        public static Dictionary<Guid, Table> CreateFKToTableMap(IEnumerable<Table> tables)
-        {
-            Dictionary<Guid, Table> fkToTableMap = new();
-            foreach (Table table in tables)
-            {
-                foreach (ForeignKey fk in table.ForeignKeys)
-                    fkToTableMap.Add(fk.ID, table);
-            }
-            return fkToTableMap;
-        }
-
         public static void BuildAllForeignKeysToBeDroppedAndCreated(DatabaseDiff databaseDiff)
         {
             HashSet<ForeignKey> allAddedForeignKeys = GetAllAddedForeignKeys(databaseDiff);

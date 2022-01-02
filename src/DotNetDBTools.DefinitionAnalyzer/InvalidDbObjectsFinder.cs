@@ -16,6 +16,8 @@ namespace DotNetDBTools.DefinitionAnalyzer
                 return GetInvalidFKLocation(compilation, invalidFKDbError);
             if (dbError is InvalidIdentityColumnDbError)
                 return Location.None;
+            if (dbError is InvalidTriggerCodeDbError)
+                return Location.None;
             else
                 throw new InvalidOperationException($"Invalid dbError type: '{dbError.GetType()}'");
         }

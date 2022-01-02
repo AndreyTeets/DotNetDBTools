@@ -13,6 +13,8 @@ namespace DotNetDBTools.Deploy.MySQL
         MySQLGetPrimaryKeysFromDBMSSysInfoQuery,
         MySQLGetUniqueConstraintsFromDBMSSysInfoQuery,
         MySQLGetCheckConstraintsFromDBMSSysInfoQuery,
+        MySQLGetIndexesFromDBMSSysInfoQuery,
+        MySQLGetTriggersFromDBMSSysInfoQuery,
         MySQLGetForeignKeysFromDBMSSysInfoQuery,
         MySQLGetViewsFromDBMSSysInfoQuery,
         MySQLGetAllDbObjectsFromDNDBTSysInfoQuery>

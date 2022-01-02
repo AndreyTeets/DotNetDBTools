@@ -8,6 +8,7 @@ namespace DotNetDBTools.Analysis.Agnostic
     {
         public override bool DbIsValid(Database database, out DbError dbError)
         {
+            // TODO Convert to all posstible/supported dbms kinds and analyze them?
             if (!HasNoBadTables(database, out dbError))
                 return false;
             return true;

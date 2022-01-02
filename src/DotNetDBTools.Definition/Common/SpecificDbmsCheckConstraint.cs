@@ -2,9 +2,9 @@
 
 namespace DotNetDBTools.Definition.Common
 {
-    public class SpecificDbmsCheckConstraint : BaseCheckConstraint
+    public abstract class SpecificDbmsCheckConstraint : BaseCheckConstraint
     {
-        public SpecificDbmsCheckConstraint(string id) : base(id) { }
+        protected SpecificDbmsCheckConstraint(string id) : base(id) { }
 
         public string Code { get; set; }
     }

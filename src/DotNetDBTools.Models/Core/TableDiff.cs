@@ -20,13 +20,13 @@ namespace DotNetDBTools.Models.Core
         public IEnumerable<CheckConstraint> CheckConstraintsToCreate { get; set; }
         public IEnumerable<CheckConstraint> CheckConstraintsToDrop { get; set; }
 
-        public IEnumerable<ForeignKey> ForeignKeysToCreate { get; set; }
-        public IEnumerable<ForeignKey> ForeignKeysToDrop { get; set; }
-
         public IEnumerable<Index> IndexesToCreate { get; set; }
         public IEnumerable<Index> IndexesToDrop { get; set; }
 
         public IEnumerable<Trigger> TriggersToCreate { get; set; }
         public IEnumerable<Trigger> TriggersToDrop { get; set; }
+
+        public IEnumerable<ForeignKey> ForeignKeysToCreate { get; set; }
+        public IEnumerable<ForeignKey> ForeignKeysToDrop { get; set; }
     }
 }

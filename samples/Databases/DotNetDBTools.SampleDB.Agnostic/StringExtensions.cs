@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Reflection;
 using DotNetDBTools.Definition.Agnostic;
 
 namespace DotNetDBTools.SampleDB.Agnostic
@@ -14,5 +16,18 @@ namespace DotNetDBTools.SampleDB.Agnostic
                 DbmsKind.SQLite => $@"[{identifier}]",
                 _ => throw new InvalidOperationException($"Unsupported dbmsKind for idintifier quoting: {dbmsKind}")
             };
+
+        public static string AsSqlResource(this string sqlResource, DbmsKind dbmsKind) =>
+            GetEmbeddedResourceAsString($"Sql.{dbmsKind}.{sqlResource}");
+
+        private static string GetEmbeddedResourceAsString(string resourceName)
+        {
+            Assembly assembly = Assembly.GetCallingAssembly();
+            Stream stream = assembly.GetManifestResourceStream($"{assembly.GetName().Name}.{resourceName}");
+            if (stream is null)
+                throw new Exception($"Failed to get embedded resource '{resourceName}'");
+            using StreamReader sr = new(stream);
+            return sr.ReadToEnd();
+        }
     }
 }

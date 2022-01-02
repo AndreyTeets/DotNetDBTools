@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using DotNetDBTools.Analysis.Common;
 using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.MSSQL;
@@ -26,6 +27,8 @@ namespace DotNetDBTools.Analysis.MSSQL
             BuildUserDefinedTypesDiff(databaseDiff, (MSSQLDatabase)newDatabase, (MSSQLDatabase)oldDatabase);
 
             BuildTablesDiff<MSSQLTableDiff>(databaseDiff, newDatabase, oldDatabase);
+            IndexesHelper.BuildAllDbIndexesToBeDroppedAndCreated(databaseDiff);
+            TriggersHelper.BuildAllDbTriggersToBeDroppedAndCreated(databaseDiff);
             ForeignKeysHelper.BuildAllForeignKeysToBeDroppedAndCreated(databaseDiff);
 
             BuildViewsDiff(databaseDiff);

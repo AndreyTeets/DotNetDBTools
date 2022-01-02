@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Reflection;
 using DotNetDBTools.DefinitionParsing;
 using DotNetDBTools.Generation;
 using DotNetDBTools.Models.Core;
+using DotNetDBTools.RoslynUtilities;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.Emit;
 
 namespace DotNetDBTools.DescriptionSourceGenerator
 {
@@ -22,7 +20,12 @@ namespace DotNetDBTools.DescriptionSourceGenerator
         {
             try
             {
-                Assembly dbAssembly = CompileInMemoryAnLoad(context.Compilation);
+                IEnumerable<ResourceDescription> resources = CompilationHelper.GetEmbeddedResourcesIfAny(
+                    context.AnalyzerConfigOptions.GlobalOptions,
+                    context.AnalyzerConfigOptions,
+                    context.AdditionalFiles);
+
+                Assembly dbAssembly = CompilationHelper.CompileInMemoryAnLoad(context.Compilation, resources);
                 Database database = DbDefinitionParser.CreateDatabaseModel(dbAssembly);
                 string dbDescriptionCode = DbDescriptionGenerator.GenerateDescription(database);
                 context.AddSource($"{database.Name}Description", dbDescriptionCode);
@@ -38,24 +41,6 @@ namespace DotNetDBTools.DescriptionSourceGenerator
                     isEnabledByDefault: true);
                 context.ReportDiagnostic(Diagnostic.Create(diagnosticDescriptor, Location.None));
             }
-        }
-
-        private static Assembly CompileInMemoryAnLoad(Compilation compilation, IEnumerable<ResourceDescription> resources = null)
-        {
-            using MemoryStream assemblyStream = new();
-            EmitResult result = compilation.Emit(assemblyStream, manifestResources: resources);
-            if (!result.Success)
-                throw new Exception(GetCompilationErrorString(result));
-            byte[] assemblyBytes = assemblyStream.ToArray();
-            Assembly assembly = Assembly.Load(assemblyBytes);
-            return assembly;
-        }
-
-        private static string GetCompilationErrorString(EmitResult result)
-        {
-            DiagnosticFormatter formatter = new();
-            List<string> errors = new(result.Diagnostics.Select(d => formatter.Format(d)));
-            return string.Join("\n", errors);
         }
     }
 }

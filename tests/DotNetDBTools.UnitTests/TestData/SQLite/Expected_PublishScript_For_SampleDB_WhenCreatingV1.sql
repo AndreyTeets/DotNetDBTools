@@ -193,6 +193,18 @@ CREATE TABLE MyTable2
     MyColumn1 INTEGER PRIMARY KEY NOT NULL DEFAULT 333,
     MyColumn2 BLOB NULL DEFAULT 0x000102
 );
+
+CREATE TRIGGER [TR_MyTable2_MyTrigger1]
+AFTER INSERT
+ON [MyTable2]
+FOR EACH ROW
+BEGIN
+    INSERT INTO [MyTable4]([MyColumn1])
+    VALUES(NEW.[MyColumn1]);
+END;
+
+CREATE UNIQUE INDEX IDX_MyTable2_MyIndex1
+ON MyTable2 (MyColumn1, MyColumn2);
 -- QUERY END: SQLiteCreateTableQuery
 
 -- QUERY START: SQLiteInsertDNDBTSysInfoQuery
@@ -267,6 +279,96 @@ VALUES
     'bfb9030c-a8c3-4882-9c42-1c6ad025cf8f',
     'PrimaryKey',
     'PK_MyTable2',
+    NULL
+);
+-- QUERY END: SQLiteInsertDNDBTSysInfoQuery
+
+-- QUERY START: SQLiteInsertDNDBTSysInfoQuery
+INSERT INTO DNDBTDbObjects
+(
+    ID,
+    ParentID,
+    Type,
+    Name,
+    Code
+)
+VALUES
+(
+    'ee64ffc3-5536-4624-beaf-bc3a61d06a1a',
+    'bfb9030c-a8c3-4882-9c42-1c6ad025cf8f',
+    'Trigger',
+    'TR_MyTable2_MyTrigger1',
+    'CREATE TRIGGER [TR_MyTable2_MyTrigger1]
+AFTER INSERT
+ON [MyTable2]
+FOR EACH ROW
+BEGIN
+    INSERT INTO [MyTable4]([MyColumn1])
+    VALUES(NEW.[MyColumn1]);
+END;'
+);
+-- QUERY END: SQLiteInsertDNDBTSysInfoQuery
+
+-- QUERY START: SQLiteInsertDNDBTSysInfoQuery
+INSERT INTO DNDBTDbObjects
+(
+    ID,
+    ParentID,
+    Type,
+    Name,
+    Code
+)
+VALUES
+(
+    '74390b3c-bc39-4860-a42e-12baa400f927',
+    'bfb9030c-a8c3-4882-9c42-1c6ad025cf8f',
+    'Index',
+    'IDX_MyTable2_MyIndex1',
+    NULL
+);
+-- QUERY END: SQLiteInsertDNDBTSysInfoQuery
+
+-- QUERY START: SQLiteCreateTableQuery
+CREATE TABLE MyTable4
+(
+    MyColumn1 INTEGER NOT NULL
+);
+-- QUERY END: SQLiteCreateTableQuery
+
+-- QUERY START: SQLiteInsertDNDBTSysInfoQuery
+INSERT INTO DNDBTDbObjects
+(
+    ID,
+    ParentID,
+    Type,
+    Name,
+    Code
+)
+VALUES
+(
+    'b12a6a37-7739-48e0-a9e1-499ae7d2a395',
+    NULL,
+    'Table',
+    'MyTable4',
+    NULL
+);
+-- QUERY END: SQLiteInsertDNDBTSysInfoQuery
+
+-- QUERY START: SQLiteInsertDNDBTSysInfoQuery
+INSERT INTO DNDBTDbObjects
+(
+    ID,
+    ParentID,
+    Type,
+    Name,
+    Code
+)
+VALUES
+(
+    'de0425b8-9f99-4d76-9a64-09e52f8b5d5a',
+    'b12a6a37-7739-48e0-a9e1-499ae7d2a395',
+    'Column',
+    'MyColumn1',
     NULL
 );
 -- QUERY END: SQLiteInsertDNDBTSysInfoQuery

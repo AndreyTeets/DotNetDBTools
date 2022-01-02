@@ -36,6 +36,14 @@ $@"    CONSTRAINT [{ck.Name}] {ck.GetCode()}"));
             return string.Join(",\n", tableDefinitions);
         }
 
+        public static string GetUniqueStatement(bool unique)
+        {
+            if (unique)
+                return " UNIQUE";
+            else
+                return "";
+        }
+
         private static string GetPrimaryKeyStatement(Column column, PrimaryKey pk)
         {
             string identityStatement = column.Identity ? " AUTOINCREMENT" : "";

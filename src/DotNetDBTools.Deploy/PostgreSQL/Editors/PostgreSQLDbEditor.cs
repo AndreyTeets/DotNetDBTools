@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.Deploy.Common.Editors;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Editors;
@@ -18,6 +16,8 @@ namespace DotNetDBTools.Deploy.PostgreSQL.Editors
         PostgreSQLDropDNDBTSysTablesQuery>
     {
         private readonly ITableEditor _tableEditor;
+        private readonly IIndexEditor _indexEditor;
+        private readonly ITriggerEditor _triggerEditor;
         private readonly IForeignKeyEditor _foreignKeyEditor;
         private readonly PostgreSQLUserDefinedTypesEditor _userDefinedTypesEditor;
 
@@ -25,6 +25,8 @@ namespace DotNetDBTools.Deploy.PostgreSQL.Editors
             : base(queryExecutor)
         {
             _tableEditor = new PostgreSQLTableEditor(queryExecutor);
+            _indexEditor = new PostgreSQLIndexEditor(queryExecutor);
+            _triggerEditor = new PostgreSQLTriggerEditor(queryExecutor);
             _foreignKeyEditor = new PostgreSQLForeignKeyEditor(queryExecutor);
             _userDefinedTypesEditor = new PostgreSQLUserDefinedTypesEditor(queryExecutor);
         }
@@ -56,19 +58,19 @@ namespace DotNetDBTools.Deploy.PostgreSQL.Editors
                     QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(uc.ID, table.ID, DbObjectsTypes.UniqueConstraint, uc.Name));
                 foreach (CheckConstraint ck in table.CheckConstraints)
                     QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(ck.ID, table.ID, DbObjectsTypes.CheckConstraint, ck.Name, ck.GetCode()));
-                foreach (Index index in table.Indexes)
-                    QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(index.ID, table.ID, DbObjectsTypes.Index, index.Name));
-                foreach (Trigger trigger in table.Triggers)
-                    QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(trigger.ID, table.ID, DbObjectsTypes.Trigger, trigger.Name));
+                foreach (Index idx in table.Indexes)
+                    QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(idx.ID, table.ID, DbObjectsTypes.Index, idx.Name));
+                foreach (Trigger trg in table.Triggers)
+                    QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(trg.ID, table.ID, DbObjectsTypes.Trigger, trg.Name, trg.GetCode()));
                 foreach (ForeignKey fk in table.ForeignKeys)
                     QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(fk.ID, table.ID, DbObjectsTypes.ForeignKey, fk.Name));
             }
-            foreach (PostgreSQLFunction function in db.Functions)
-                QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(function.ID, null, DbObjectsTypes.Function, function.Name));
+            foreach (PostgreSQLFunction func in db.Functions)
+                QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(func.ID, null, DbObjectsTypes.Function, func.Name, func.GetCode()));
             foreach (PostgreSQLView view in db.Views)
                 QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(view.ID, null, DbObjectsTypes.View, view.Name, view.GetCode()));
-            foreach (PostgreSQLProcedure procedure in db.Procedures)
-                QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(procedure.ID, null, DbObjectsTypes.Procedure, procedure.Name));
+            foreach (PostgreSQLProcedure proc in db.Procedures)
+                QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(proc.ID, null, DbObjectsTypes.Procedure, proc.Name, proc.GetCode()));
         }
 
         public override void ApplyDatabaseDiff(DatabaseDiff databaseDiff)
@@ -77,17 +79,15 @@ namespace DotNetDBTools.Deploy.PostgreSQL.Editors
             QueryExecutor.BeginTransaction();
             try
             {
-                Dictionary<Guid, Table> newDbFKToTableMap = ForeignKeysHelper.CreateFKToTableMap(dbDiff.NewDatabase.Tables);
-                Dictionary<Guid, Table> oldDbFKToTableMap = ForeignKeysHelper.CreateFKToTableMap(dbDiff.OldDatabase.Tables);
-
+                _triggerEditor.DropTriggers(dbDiff);
                 foreach (PostgreSQLProcedure procedure in dbDiff.ProceduresToDrop)
                     DropProcedure(procedure);
                 foreach (PostgreSQLView view in dbDiff.ViewsToDrop)
                     DropView(view);
                 foreach (PostgreSQLFunction function in dbDiff.FunctionsToDrop)
                     DropFunction(function);
-                foreach (ForeignKey fk in dbDiff.AllForeignKeysToDrop)
-                    _foreignKeyEditor.DropForeignKey(fk, oldDbFKToTableMap);
+                _foreignKeyEditor.DropForeignKeys(dbDiff);
+                _indexEditor.DropIndexes(dbDiff);
                 foreach (PostgreSQLTable table in dbDiff.RemovedTables)
                     _tableEditor.DropTable(table);
 
@@ -99,14 +99,15 @@ namespace DotNetDBTools.Deploy.PostgreSQL.Editors
 
                 foreach (PostgreSQLTable table in dbDiff.AddedTables)
                     _tableEditor.CreateTable(table);
-                foreach (ForeignKey fk in dbDiff.AllForeignKeysToCreate)
-                    _foreignKeyEditor.CreateForeignKey(fk, newDbFKToTableMap);
+                _indexEditor.CreateIndexes(dbDiff);
+                _foreignKeyEditor.CreateForeignKeys(dbDiff);
                 foreach (PostgreSQLFunction function in dbDiff.FunctionsToCreate)
                     CreateFunction(function);
                 foreach (PostgreSQLView view in dbDiff.ViewsToCreate)
                     CreateView(view);
                 foreach (PostgreSQLProcedure procedure in dbDiff.ProceduresToCreate)
                     CreateProcedure(procedure);
+                _triggerEditor.CreateTriggers(dbDiff);
             }
             catch (Exception)
             {
@@ -116,16 +117,16 @@ namespace DotNetDBTools.Deploy.PostgreSQL.Editors
             QueryExecutor.CommitTransaction();
         }
 
-        private void CreateFunction(PostgreSQLFunction function)
+        private void CreateFunction(PostgreSQLFunction func)
         {
-            QueryExecutor.Execute(new GenericQuery($"{function.CodePiece}"));
-            QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(function.ID, null, DbObjectsTypes.Function, function.Name));
+            QueryExecutor.Execute(new GenericQuery($"{func.GetCode()}"));
+            QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(func.ID, null, DbObjectsTypes.Function, func.Name, func.GetCode()));
         }
 
-        private void DropFunction(PostgreSQLFunction function)
+        private void DropFunction(PostgreSQLFunction func)
         {
-            QueryExecutor.Execute(new GenericQuery($@"DROP FUNCTION ""{function.Name}"";"));
-            QueryExecutor.Execute(new PostgreSQLDeleteDNDBTSysInfoQuery(function.ID));
+            QueryExecutor.Execute(new GenericQuery($@"DROP FUNCTION ""{func.Name}"";"));
+            QueryExecutor.Execute(new PostgreSQLDeleteDNDBTSysInfoQuery(func.ID));
         }
 
         private void CreateView(PostgreSQLView view)
@@ -140,16 +141,16 @@ namespace DotNetDBTools.Deploy.PostgreSQL.Editors
             QueryExecutor.Execute(new PostgreSQLDeleteDNDBTSysInfoQuery(view.ID));
         }
 
-        private void CreateProcedure(PostgreSQLProcedure procedure)
+        private void CreateProcedure(PostgreSQLProcedure proc)
         {
-            QueryExecutor.Execute(new GenericQuery($"{procedure.CodePiece}"));
-            QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(procedure.ID, null, DbObjectsTypes.Procedure, procedure.Name));
+            QueryExecutor.Execute(new GenericQuery($"{proc.GetCode()}"));
+            QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(proc.ID, null, DbObjectsTypes.Procedure, proc.Name, proc.GetCode()));
         }
 
-        private void DropProcedure(PostgreSQLProcedure procedure)
+        private void DropProcedure(PostgreSQLProcedure proc)
         {
-            QueryExecutor.Execute(new GenericQuery($@"DROP PROCEDURE ""{procedure.Name}"";"));
-            QueryExecutor.Execute(new PostgreSQLDeleteDNDBTSysInfoQuery(procedure.ID));
+            QueryExecutor.Execute(new GenericQuery($@"DROP PROCEDURE ""{proc.Name}"";"));
+            QueryExecutor.Execute(new PostgreSQLDeleteDNDBTSysInfoQuery(proc.ID));
         }
     }
 }

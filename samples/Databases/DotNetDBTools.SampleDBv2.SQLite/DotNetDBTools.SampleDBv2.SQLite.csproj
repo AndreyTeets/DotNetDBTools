@@ -18,6 +18,14 @@
     <ProjectReference Include="..\..\..\src\DotNetDBTools.DescriptionSourceGenerator\DotNetDBTools.DescriptionSourceGenerator.csproj" OutputItemType="Analyzer" PrivateAssets="all" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Include="Sql\**\*.sql">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="Category" />
+    <AdditionalFiles Include="@(EmbeddedResource)" Category="EmbeddedFile" />
+  </ItemGroup>
+
   <Target Name="CopyDbDllToSamplesOutput" AfterTargets="PostBuildEvent">
     <ItemGroup>
       <FilesToCopy Include="$(TargetDir)$(TargetName).dll" />

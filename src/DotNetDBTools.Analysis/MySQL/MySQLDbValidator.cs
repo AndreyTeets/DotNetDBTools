@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Text.RegularExpressions;
 using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.Analysis.Core.Errors;
 using DotNetDBTools.Models.Core;
@@ -25,7 +26,7 @@ namespace DotNetDBTools.Analysis.MySQL
             {
                 foreach (Trigger trigger in table.Triggers)
                 {
-                    if (!trigger.CodePiece.Code.Contains($"CREATE TRIGGER {trigger.Name} "))
+                    if (!Regex.IsMatch(trigger.CodePiece.Code, @$"CREATE TRIGGER `?{trigger.Name}`?"))
                     {
                         string errorMessage =
 $"Trigger '{trigger.Name}' in table '{table.Name}' has different name in it's creation code";

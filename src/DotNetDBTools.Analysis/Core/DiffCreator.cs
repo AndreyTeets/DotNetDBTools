@@ -67,6 +67,8 @@ namespace DotNetDBTools.Analysis.Core
             BuildPrimaryKeyDiff(tableDiff, newDbTable, oldDbTable);
             BuildUniqueConstraintsDiff(tableDiff, newDbTable, oldDbTable);
             BuildCheckConstraintsDiff(tableDiff, newDbTable, oldDbTable);
+            BuildIndexesDiff(tableDiff);
+            BuildTriggersDiff(tableDiff);
             BuildForeignKeysDiff(tableDiff, newDbTable, oldDbTable);
             return tableDiff;
         }
@@ -144,6 +146,42 @@ namespace DotNetDBTools.Analysis.Core
 
             tableDiff.CheckConstraintsToCreate = checkConstraintsToCreate;
             tableDiff.CheckConstraintsToDrop = checkConstraintsToDrop;
+        }
+
+        private void BuildIndexesDiff<TTableDiff>(TTableDiff tableDiff)
+            where TTableDiff : TableDiff, new()
+        {
+            List<Index> indexesToCreate = null;
+            List<Index> indexesToDrop = null;
+            FillAddedAndRemovedItemsAndApplyActionToChangedItems(
+                tableDiff.NewTable.Indexes, tableDiff.OldTable.Indexes,
+                ref indexesToCreate, ref indexesToDrop,
+                (newIndex, oldIndex) =>
+                {
+                    indexesToCreate.Add(newIndex);
+                    indexesToDrop.Add(oldIndex);
+                });
+
+            tableDiff.IndexesToCreate = indexesToCreate;
+            tableDiff.IndexesToDrop = indexesToDrop;
+        }
+
+        private void BuildTriggersDiff<TTableDiff>(TTableDiff tableDiff)
+            where TTableDiff : TableDiff, new()
+        {
+            List<Trigger> triggersToCreate = null;
+            List<Trigger> triggersToDrop = null;
+            FillAddedAndRemovedItemsAndApplyActionToChangedItems(
+                tableDiff.NewTable.Triggers, tableDiff.OldTable.Triggers,
+                ref triggersToCreate, ref triggersToDrop,
+                (newTrigger, oldTrigger) =>
+                {
+                    triggersToCreate.Add(newTrigger);
+                    triggersToDrop.Add(oldTrigger);
+                });
+
+            tableDiff.TriggersToCreate = triggersToCreate;
+            tableDiff.TriggersToDrop = triggersToDrop;
         }
 
         private void BuildForeignKeysDiff<TTableDiff>(TTableDiff tableDiff, Table newDbTable, Table oldDbTable)

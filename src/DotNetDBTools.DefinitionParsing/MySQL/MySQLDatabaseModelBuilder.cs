@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
+using DotNetDBTools.Analysis.MySQL;
 using DotNetDBTools.Definition.Core;
 using DotNetDBTools.Definition.MySQL;
 using DotNetDBTools.DefinitionParsing.Common;
@@ -25,6 +26,7 @@ namespace DotNetDBTools.DefinitionParsing.MySQL
         protected override void BuildAdditionalDbObjects(Database database, Assembly dbAssembly)
         {
             MySQLDatabase mysqlDatabase = (MySQLDatabase)database;
+            MySQLPostBuildProcessingHelper.ReplaceUniqueConstraintsWithUniqueIndexes(mysqlDatabase);
             mysqlDatabase.Functions = BuildFunctionModels(dbAssembly);
         }
 

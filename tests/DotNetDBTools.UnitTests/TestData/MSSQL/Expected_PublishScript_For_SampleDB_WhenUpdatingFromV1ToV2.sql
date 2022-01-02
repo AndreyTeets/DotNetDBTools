@@ -3,6 +3,15 @@ SET XACT_ABORT ON;
 BEGIN TRY;
     BEGIN TRANSACTION;
 
+-- QUERY START: MSSQLDropTriggerQuery
+EXEC sp_executesql N'DROP TRIGGER [TR_MyTable2_MyTrigger1];';
+-- QUERY END: MSSQLDropTriggerQuery
+
+-- QUERY START: MSSQLDeleteDNDBTSysInfoQuery
+EXEC sp_executesql N'DELETE FROM DNDBTDbObjects
+WHERE ID = ''ee64ffc3-5536-4624-beaf-bc3a61d06a1a'';';
+-- QUERY END: MSSQLDeleteDNDBTSysInfoQuery
+
 -- QUERY START: GenericQuery
 EXEC sp_executesql N'DROP VIEW MyView1;';
 -- QUERY END: GenericQuery
@@ -19,6 +28,15 @@ EXEC sp_executesql N'ALTER TABLE MyTable1 DROP CONSTRAINT FK_MyTable1_MyColumn1_
 -- QUERY START: MSSQLDeleteDNDBTSysInfoQuery
 EXEC sp_executesql N'DELETE FROM DNDBTDbObjects
 WHERE ID = ''d11b2a53-32db-432f-bb6b-f91788844ba9'';';
+-- QUERY END: MSSQLDeleteDNDBTSysInfoQuery
+
+-- QUERY START: MSSQLDropIndexQuery
+EXEC sp_executesql N'DROP INDEX [IDX_MyTable2_MyIndex1] ON [MyTable2];';
+-- QUERY END: MSSQLDropIndexQuery
+
+-- QUERY START: MSSQLDeleteDNDBTSysInfoQuery
+EXEC sp_executesql N'DELETE FROM DNDBTDbObjects
+WHERE ID = ''74390b3c-bc39-4860-a42e-12baa400f927'';';
 -- QUERY END: MSSQLDeleteDNDBTSysInfoQuery
 
 -- QUERY START: MSSQLRenameUserDefinedDataTypeQuery
@@ -401,6 +419,34 @@ VALUES
 );';
 -- QUERY END: MSSQLInsertDNDBTSysInfoQuery
 
+-- QUERY START: MSSQLCreateIndexQuery
+EXEC sp_executesql N'CREATE UNIQUE INDEX IDX_MyTable2_MyIndex1
+ON MyTable2 (MyColumn1NewName, MyColumn2);';
+-- QUERY END: MSSQLCreateIndexQuery
+
+-- QUERY START: MSSQLInsertDNDBTSysInfoQuery
+EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = ''74390b3c-bc39-4860-a42e-12baa400f927'';
+DECLARE @ParentID UNIQUEIDENTIFIER = ''bfb9030c-a8c3-4882-9c42-1c6ad025cf8f'';
+DECLARE @Name NVARCHAR(MAX) = ''IDX_MyTable2_MyIndex1'';
+DECLARE @Code NVARCHAR(MAX) = NULL;
+INSERT INTO DNDBTDbObjects
+(
+    ID,
+    ParentID,
+    Type,
+    Name,
+    Code
+)
+VALUES
+(
+    @ID,
+    @ParentID,
+    ''Index'',
+    @Name,
+    @Code
+);';
+-- QUERY END: MSSQLInsertDNDBTSysInfoQuery
+
 -- QUERY START: MSSQLCreateForeignKeyQuery
 EXEC sp_executesql N'ALTER TABLE MyTable1NewName ADD CONSTRAINT FK_MyTable1_MyColumn1_MyTable2_MyColumn1 FOREIGN KEY (MyColumn1)
     REFERENCES MyTable2 (MyColumn1NewName)
@@ -495,6 +541,47 @@ VALUES
     @ID,
     @ParentID,
     ''View'',
+    @Name,
+    @Code
+);';
+-- QUERY END: MSSQLInsertDNDBTSysInfoQuery
+
+-- QUERY START: MSSQLCreateTriggerQuery
+EXEC sp_executesql N'CREATE TRIGGER [TR_MyTable2_MyTrigger1]
+ON [MyTable2]
+AFTER INSERT
+AS
+BEGIN
+    INSERT INTO [MyTable4]([MyColumn1])
+    SELECT i.[MyColumn1NewName] FROM inserted i;
+END;';
+-- QUERY END: MSSQLCreateTriggerQuery
+
+-- QUERY START: MSSQLInsertDNDBTSysInfoQuery
+EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = ''ee64ffc3-5536-4624-beaf-bc3a61d06a1a'';
+DECLARE @ParentID UNIQUEIDENTIFIER = ''bfb9030c-a8c3-4882-9c42-1c6ad025cf8f'';
+DECLARE @Name NVARCHAR(MAX) = ''TR_MyTable2_MyTrigger1'';
+DECLARE @Code NVARCHAR(MAX) = ''CREATE TRIGGER [TR_MyTable2_MyTrigger1]
+ON [MyTable2]
+AFTER INSERT
+AS
+BEGIN
+    INSERT INTO [MyTable4]([MyColumn1])
+    SELECT i.[MyColumn1NewName] FROM inserted i;
+END;'';
+INSERT INTO DNDBTDbObjects
+(
+    ID,
+    ParentID,
+    Type,
+    Name,
+    Code
+)
+VALUES
+(
+    @ID,
+    @ParentID,
+    ''Trigger'',
     @Name,
     @Code
 );';

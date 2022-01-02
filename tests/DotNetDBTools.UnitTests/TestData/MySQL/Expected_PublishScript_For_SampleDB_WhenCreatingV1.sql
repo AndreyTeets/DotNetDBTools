@@ -6,7 +6,6 @@ CREATE TABLE `MyTable1`
     `MyColumn3` INT AUTO_INCREMENT NOT NULL,
     `MyColumn4` DECIMAL(19,2) NOT NULL DEFAULT 7.36,
     CONSTRAINT `PK_MyTable1` PRIMARY KEY (`MyColumn3`),
-    CONSTRAINT `UQ_MyTable1_MyColumn2` UNIQUE (`MyColumn2`),
     CONSTRAINT `CK_MyTable1_MyCheck1` CHECK (MyColumn4 >= 0)
 );
 -- QUERY END: MySQLCreateTableQuery
@@ -136,25 +135,6 @@ INSERT INTO `DNDBTDbObjects`
 )
 VALUES
 (
-    'f3f08522-26ee-4950-9135-22edf2e4e0cf',
-    '299675e6-4faa-4d0f-a36a-224306ba5bcb',
-    'UniqueConstraint',
-    'UQ_MyTable1_MyColumn2',
-    NULL
-);
--- QUERY END: MySQLInsertDNDBTSysInfoQuery
-
--- QUERY START: MySQLInsertDNDBTSysInfoQuery
-INSERT INTO `DNDBTDbObjects`
-(
-    `ID`,
-    `ParentID`,
-    `Type`,
-    `Name`,
-    `Code`
-)
-VALUES
-(
     'eb9c59b5-bc7e-49d7-adaa-f5600b6a19a2',
     '299675e6-4faa-4d0f-a36a-224306ba5bcb',
     'CheckConstraint',
@@ -249,6 +229,51 @@ VALUES
 -- QUERY END: MySQLInsertDNDBTSysInfoQuery
 
 -- QUERY START: MySQLCreateTableQuery
+CREATE TABLE `MyTable4`
+(
+    `MyColumn1` BIGINT NOT NULL
+);
+-- QUERY END: MySQLCreateTableQuery
+
+-- QUERY START: MySQLInsertDNDBTSysInfoQuery
+INSERT INTO `DNDBTDbObjects`
+(
+    `ID`,
+    `ParentID`,
+    `Type`,
+    `Name`,
+    `Code`
+)
+VALUES
+(
+    'b12a6a37-7739-48e0-a9e1-499ae7d2a395',
+    NULL,
+    'Table',
+    'MyTable4',
+    NULL
+);
+-- QUERY END: MySQLInsertDNDBTSysInfoQuery
+
+-- QUERY START: MySQLInsertDNDBTSysInfoQuery
+INSERT INTO `DNDBTDbObjects`
+(
+    `ID`,
+    `ParentID`,
+    `Type`,
+    `Name`,
+    `Code`
+)
+VALUES
+(
+    'de0425b8-9f99-4d76-9a64-09e52f8b5d5a',
+    'b12a6a37-7739-48e0-a9e1-499ae7d2a395',
+    'Column',
+    'MyColumn1',
+    NULL
+);
+-- QUERY END: MySQLInsertDNDBTSysInfoQuery
+
+-- QUERY START: MySQLCreateTableQuery
 CREATE TABLE `MyTable5`
 (
     `MyColumn1` INT NOT NULL DEFAULT (ABS(-15)),
@@ -313,6 +338,54 @@ VALUES
 );
 -- QUERY END: MySQLInsertDNDBTSysInfoQuery
 
+-- QUERY START: MySQLCreateIndexQuery
+CREATE UNIQUE INDEX `UQ_MyTable1_MyColumn2`
+ON `MyTable1` (`MyColumn2`);
+-- QUERY END: MySQLCreateIndexQuery
+
+-- QUERY START: MySQLInsertDNDBTSysInfoQuery
+INSERT INTO `DNDBTDbObjects`
+(
+    `ID`,
+    `ParentID`,
+    `Type`,
+    `Name`,
+    `Code`
+)
+VALUES
+(
+    'f3f08522-26ee-4950-9135-22edf2e4e0cf',
+    '299675e6-4faa-4d0f-a36a-224306ba5bcb',
+    'Index',
+    'UQ_MyTable1_MyColumn2',
+    NULL
+);
+-- QUERY END: MySQLInsertDNDBTSysInfoQuery
+
+-- QUERY START: MySQLCreateIndexQuery
+CREATE UNIQUE INDEX `IDX_MyTable2_MyIndex1`
+ON `MyTable2` (`MyColumn1`, `MyColumn2`);
+-- QUERY END: MySQLCreateIndexQuery
+
+-- QUERY START: MySQLInsertDNDBTSysInfoQuery
+INSERT INTO `DNDBTDbObjects`
+(
+    `ID`,
+    `ParentID`,
+    `Type`,
+    `Name`,
+    `Code`
+)
+VALUES
+(
+    '74390b3c-bc39-4860-a42e-12baa400f927',
+    'bfb9030c-a8c3-4882-9c42-1c6ad025cf8f',
+    'Index',
+    'IDX_MyTable2_MyIndex1',
+    NULL
+);
+-- QUERY END: MySQLInsertDNDBTSysInfoQuery
+
 -- QUERY START: MySQLCreateForeignKeyQuery
 ALTER TABLE `MyTable1` ADD CONSTRAINT `FK_MyTable1_MyColumn1_MyTable2_MyColumn1` FOREIGN KEY (`MyColumn1`)
     REFERENCES `MyTable2` (`MyColumn1`)
@@ -372,5 +445,42 @@ SELECT
 FROM MyTable1 t1
 LEFT JOIN MyTable2 t2
     ON t2.MyColumn1 = t1.MyColumn1;'
+);
+-- QUERY END: MySQLInsertDNDBTSysInfoQuery
+
+-- QUERY START: MySQLCreateTriggerQuery
+CREATE TRIGGER `TR_MyTable2_MyTrigger1`
+AFTER INSERT
+ON `MyTable2`
+FOR EACH ROW
+BEGIN
+    INSERT INTO `MyTable4`(`MyColumn1`)
+    VALUES (NEW.`MyColumn1`);
+END;
+-- QUERY END: MySQLCreateTriggerQuery
+
+-- QUERY START: MySQLInsertDNDBTSysInfoQuery
+INSERT INTO `DNDBTDbObjects`
+(
+    `ID`,
+    `ParentID`,
+    `Type`,
+    `Name`,
+    `Code`
+)
+VALUES
+(
+    'ee64ffc3-5536-4624-beaf-bc3a61d06a1a',
+    'bfb9030c-a8c3-4882-9c42-1c6ad025cf8f',
+    'Trigger',
+    'TR_MyTable2_MyTrigger1',
+    'CREATE TRIGGER `TR_MyTable2_MyTrigger1`
+AFTER INSERT
+ON `MyTable2`
+FOR EACH ROW
+BEGIN
+    INSERT INTO `MyTable4`(`MyColumn1`)
+    VALUES (NEW.`MyColumn1`);
+END;'
 );
 -- QUERY END: MySQLInsertDNDBTSysInfoQuery

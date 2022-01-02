@@ -32,7 +32,7 @@ namespace DotNetDBTools.Analysis.MSSQL
                 UniqueConstraints = table.UniqueConstraints,
                 CheckConstraints = table.CheckConstraints.Select(ck => { ck.CodePiece = ConvertCodePiece(ck.CodePiece); return ck; }).ToList(),
                 Indexes = table.Indexes,
-                Triggers = table.Triggers,
+                Triggers = table.Triggers.Select(trigger => { trigger.CodePiece = ConvertCodePiece(trigger.CodePiece); return trigger; }).ToList(),
                 ForeignKeys = table.ForeignKeys,
             };
 

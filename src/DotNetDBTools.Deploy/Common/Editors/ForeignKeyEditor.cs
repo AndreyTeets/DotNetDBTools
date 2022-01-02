@@ -26,16 +26,41 @@ namespace DotNetDBTools.Deploy.Common.Editors
             QueryExecutor = queryExecutor;
         }
 
-        public void CreateForeignKey(ForeignKey fk, Dictionary<Guid, Table> fkToTableMap)
+        public void CreateForeignKeys(DatabaseDiff dbDiff)
         {
-            QueryExecutor.Execute(Create<TCreateForeignKeyQuery>(fk, fkToTableMap[fk.ID].Name));
-            QueryExecutor.Execute(Create<TInsertDNDBTSysInfoQuery>(fk.ID, fkToTableMap[fk.ID].ID, DbObjectsTypes.ForeignKey, fk.Name));
+            Dictionary<Guid, Table> fkToTableMap = CreateFKToTableMap(dbDiff.NewDatabase.Tables);
+            foreach (ForeignKey fk in dbDiff.AllForeignKeysToCreate)
+                CreateForeignKey(fk, fkToTableMap[fk.ID]);
         }
 
-        public void DropForeignKey(ForeignKey fk, Dictionary<Guid, Table> fkToTableMap)
+        public void DropForeignKeys(DatabaseDiff dbDiff)
         {
-            QueryExecutor.Execute(Create<TDropForeignKeyQuery>(fk, fkToTableMap[fk.ID].Name));
+            Dictionary<Guid, Table> fkToTableMap = CreateFKToTableMap(dbDiff.OldDatabase.Tables);
+            foreach (ForeignKey fk in dbDiff.AllForeignKeysToDrop)
+                DropForeignKey(fk, fkToTableMap[fk.ID]);
+        }
+
+        public void CreateForeignKey(ForeignKey fk, Table table)
+        {
+            QueryExecutor.Execute(Create<TCreateForeignKeyQuery>(fk, table.Name));
+            QueryExecutor.Execute(Create<TInsertDNDBTSysInfoQuery>(fk.ID, table.ID, DbObjectsTypes.ForeignKey, fk.Name));
+        }
+
+        public void DropForeignKey(ForeignKey fk, Table table)
+        {
+            QueryExecutor.Execute(Create<TDropForeignKeyQuery>(fk, table.Name));
             QueryExecutor.Execute(Create<TDeleteDNDBTSysInfoQuery>(fk.ID));
+        }
+
+        private static Dictionary<Guid, Table> CreateFKToTableMap(IEnumerable<Table> tables)
+        {
+            Dictionary<Guid, Table> fkToTableMap = new();
+            foreach (Table table in tables)
+            {
+                foreach (ForeignKey fk in table.ForeignKeys)
+                    fkToTableMap.Add(fk.ID, table);
+            }
+            return fkToTableMap;
         }
     }
 }

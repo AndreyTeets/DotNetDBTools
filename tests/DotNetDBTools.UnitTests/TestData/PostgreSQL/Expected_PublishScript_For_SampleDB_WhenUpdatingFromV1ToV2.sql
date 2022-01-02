@@ -1,5 +1,14 @@
-DO $$
+DO $DNDBTGeneratedScriptTransactionBlock$
 BEGIN
+
+-- QUERY START: PostgreSQLDropTriggerQuery
+EXECUTE 'DROP TRIGGER "TR_MyTable2_MyTrigger1" ON "MyTable2";';
+-- QUERY END: PostgreSQLDropTriggerQuery
+
+-- QUERY START: PostgreSQLDeleteDNDBTSysInfoQuery
+EXECUTE 'DELETE FROM "DNDBTDbObjects"
+WHERE "ID" = ''ee64ffc3-5536-4624-beaf-bc3a61d06a1a'';';
+-- QUERY END: PostgreSQLDeleteDNDBTSysInfoQuery
 
 -- QUERY START: GenericQuery
 EXECUTE 'DROP VIEW "MyView1";';
@@ -10,6 +19,15 @@ EXECUTE 'DELETE FROM "DNDBTDbObjects"
 WHERE "ID" = ''e2569aae-d5da-4a77-b3cd-51adbdb272d9'';';
 -- QUERY END: PostgreSQLDeleteDNDBTSysInfoQuery
 
+-- QUERY START: GenericQuery
+EXECUTE 'DROP FUNCTION "TR_MyTable2_MyTrigger1_Handler";';
+-- QUERY END: GenericQuery
+
+-- QUERY START: PostgreSQLDeleteDNDBTSysInfoQuery
+EXECUTE 'DELETE FROM "DNDBTDbObjects"
+WHERE "ID" = ''8edd4469-e048-48bd-956e-a26113355f80'';';
+-- QUERY END: PostgreSQLDeleteDNDBTSysInfoQuery
+
 -- QUERY START: PostgreSQLDropForeignKeyQuery
 EXECUTE 'ALTER TABLE "MyTable1" DROP CONSTRAINT "FK_MyTable1_MyColumn1_MyTable2_MyColumn1";';
 -- QUERY END: PostgreSQLDropForeignKeyQuery
@@ -17,6 +35,15 @@ EXECUTE 'ALTER TABLE "MyTable1" DROP CONSTRAINT "FK_MyTable1_MyColumn1_MyTable2_
 -- QUERY START: PostgreSQLDeleteDNDBTSysInfoQuery
 EXECUTE 'DELETE FROM "DNDBTDbObjects"
 WHERE "ID" = ''d11b2a53-32db-432f-bb6b-f91788844ba9'';';
+-- QUERY END: PostgreSQLDeleteDNDBTSysInfoQuery
+
+-- QUERY START: PostgreSQLDropIndexQuery
+EXECUTE 'DROP INDEX "IDX_MyTable2_MyIndex1";';
+-- QUERY END: PostgreSQLDropIndexQuery
+
+-- QUERY START: PostgreSQLDeleteDNDBTSysInfoQuery
+EXECUTE 'DELETE FROM "DNDBTDbObjects"
+WHERE "ID" = ''74390b3c-bc39-4860-a42e-12baa400f927'';';
 -- QUERY END: PostgreSQLDeleteDNDBTSysInfoQuery
 
 -- QUERY START: PostgreSQLRenameTypeToTempQuery
@@ -516,6 +543,30 @@ VALUES
 );';
 -- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
 
+-- QUERY START: PostgreSQLCreateIndexQuery
+EXECUTE 'CREATE UNIQUE INDEX "IDX_MyTable2_MyIndex1"
+ON "MyTable2" ("MyColumn1NewName", "MyColumn2");';
+-- QUERY END: PostgreSQLCreateIndexQuery
+
+-- QUERY START: PostgreSQLInsertDNDBTSysInfoQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''74390b3c-bc39-4860-a42e-12baa400f927'',
+    ''bfb9030c-a8c3-4882-9c42-1c6ad025cf8f'',
+    ''Index'',
+    ''IDX_MyTable2_MyIndex1'',
+    NULL
+);';
+-- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
+
 -- QUERY START: PostgreSQLCreateForeignKeyQuery
 EXECUTE 'ALTER TABLE "MyTable1NewName" ADD CONSTRAINT "FK_MyTable1_MyColumn1_MyTable2_MyColumn1" FOREIGN KEY ("MyColumn1")
     REFERENCES "MyTable2" ("MyColumn1NewName")
@@ -567,6 +618,49 @@ VALUES
 -- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
 
 -- QUERY START: GenericQuery
+EXECUTE 'CREATE FUNCTION "TR_MyTable2_MyTrigger1_Handler"()
+RETURNS TRIGGER
+LANGUAGE PLPGSQL
+AS
+$FuncBody$
+BEGIN
+    INSERT INTO "MyTable4"("MyColumn1")
+    VALUES(NEW."MyColumn1NewName");
+    RETURN NULL;
+END;
+$FuncBody$;';
+-- QUERY END: GenericQuery
+
+-- QUERY START: PostgreSQLInsertDNDBTSysInfoQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''8edd4469-e048-48bd-956e-a26113355f80'',
+    NULL,
+    ''Function'',
+    ''TR_MyTable2_MyTrigger1_Handler'',
+    ''CREATE FUNCTION "TR_MyTable2_MyTrigger1_Handler"()
+RETURNS TRIGGER
+LANGUAGE PLPGSQL
+AS
+$FuncBody$
+BEGIN
+    INSERT INTO "MyTable4"("MyColumn1")
+    VALUES(NEW."MyColumn1NewName");
+    RETURN NULL;
+END;
+$FuncBody$;''
+);';
+-- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
+
+-- QUERY START: GenericQuery
 EXECUTE 'CREATE VIEW "MyView1" AS
 SELECT
     t1."MyColumn1",
@@ -603,5 +697,36 @@ LEFT JOIN "MyTable2" t2
 );';
 -- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
 
+-- QUERY START: PostgreSQLCreateTriggerQuery
+EXECUTE 'CREATE TRIGGER "TR_MyTable2_MyTrigger1"
+AFTER INSERT
+ON "MyTable2"
+FOR EACH ROW
+EXECUTE FUNCTION "TR_MyTable2_MyTrigger1_Handler"();';
+-- QUERY END: PostgreSQLCreateTriggerQuery
+
+-- QUERY START: PostgreSQLInsertDNDBTSysInfoQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''ee64ffc3-5536-4624-beaf-bc3a61d06a1a'',
+    ''bfb9030c-a8c3-4882-9c42-1c6ad025cf8f'',
+    ''Trigger'',
+    ''TR_MyTable2_MyTrigger1'',
+    ''CREATE TRIGGER "TR_MyTable2_MyTrigger1"
+AFTER INSERT
+ON "MyTable2"
+FOR EACH ROW
+EXECUTE FUNCTION "TR_MyTable2_MyTrigger1_Handler"();''
+);';
+-- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
+
 END;
-$$
+$DNDBTGeneratedScriptTransactionBlock$

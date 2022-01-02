@@ -12,7 +12,9 @@ namespace DotNetDBTools.Analysis.MySQL
     {
         public Database FromAgnostic(Database database)
         {
-            return ConvertToMySQLModel((AgnosticDatabase)database);
+            MySQLDatabase mysqlDatabase = ConvertToMySQLModel((AgnosticDatabase)database);
+            MySQLPostBuildProcessingHelper.ReplaceUniqueConstraintsWithUniqueIndexes(mysqlDatabase);
+            return mysqlDatabase;
         }
 
         private static MySQLDatabase ConvertToMySQLModel(AgnosticDatabase database)
@@ -32,7 +34,7 @@ namespace DotNetDBTools.Analysis.MySQL
                 UniqueConstraints = table.UniqueConstraints,
                 CheckConstraints = table.CheckConstraints.Select(ck => { ck.CodePiece = ConvertCodePiece(ck.CodePiece); return ck; }).ToList(),
                 Indexes = table.Indexes,
-                Triggers = table.Triggers,
+                Triggers = table.Triggers.Select(trigger => { trigger.CodePiece = ConvertCodePiece(trigger.CodePiece); return trigger; }).ToList(),
                 ForeignKeys = table.ForeignKeys,
             };
 

@@ -11,6 +11,7 @@ using static DotNetDBTools.Deploy.Core.Queries.DNDBTSysInfo.GetAllDbObjectsFromD
 using static DotNetDBTools.Deploy.PostgreSQL.Queries.DBMSSysInfo.PostgreSQLGetCompositeTypesFromDBMSSysInfoQuery;
 using static DotNetDBTools.Deploy.PostgreSQL.Queries.DBMSSysInfo.PostgreSQLGetDomainTypesFromDBMSSysInfoQuery;
 using static DotNetDBTools.Deploy.PostgreSQL.Queries.DBMSSysInfo.PostgreSQLGetEnumTypesFromDBMSSysInfoQuery;
+using static DotNetDBTools.Deploy.PostgreSQL.Queries.DBMSSysInfo.PostgreSQLGetFunctionsFromDBMSSysInfoQuery;
 using static DotNetDBTools.Deploy.PostgreSQL.Queries.DBMSSysInfo.PostgreSQLGetRangeTypesFromDBMSSysInfoQuery;
 
 namespace DotNetDBTools.Deploy.PostgreSQL
@@ -23,6 +24,8 @@ namespace DotNetDBTools.Deploy.PostgreSQL
         PostgreSQLGetPrimaryKeysFromDBMSSysInfoQuery,
         PostgreSQLGetUniqueConstraintsFromDBMSSysInfoQuery,
         PostgreSQLGetCheckConstraintsFromDBMSSysInfoQuery,
+        PostgreSQLGetIndexesFromDBMSSysInfoQuery,
+        PostgreSQLGetTriggersFromDBMSSysInfoQuery,
         PostgreSQLGetForeignKeysFromDBMSSysInfoQuery,
         PostgreSQLGetViewsFromDBMSSysInfoQuery,
         PostgreSQLGetAllDbObjectsFromDNDBTSysInfoQuery>
@@ -53,6 +56,12 @@ namespace DotNetDBTools.Deploy.PostgreSQL
                 type.ID = dbObjectIDsMap[$"{DbObjectsTypes.UserDefinedType}_{type.Name}_{null}"].ID;
             foreach (PostgreSQLRangeType type in postgresqlDatabase.RangeTypes)
                 type.ID = dbObjectIDsMap[$"{DbObjectsTypes.UserDefinedType}_{type.Name}_{null}"].ID;
+            foreach (PostgreSQLFunction func in postgresqlDatabase.Functions)
+            {
+                DNDBTInfo dndbtInfo = dbObjectIDsMap[$"{DbObjectsTypes.Function}_{func.Name}_{null}"];
+                func.ID = dndbtInfo.ID;
+                func.CodePiece.Code = dndbtInfo.Code;
+            }
         }
 
         protected override void BuildAdditionalDbObjects(Database database)
@@ -62,6 +71,7 @@ namespace DotNetDBTools.Deploy.PostgreSQL
             postgresqlDatabase.DomainTypes = BuildDomainTypes(new PostgreSQLGetDomainTypesFromDBMSSysInfoQuery());
             postgresqlDatabase.EnumTypes = BuildEnumTypes(new PostgreSQLGetEnumTypesFromDBMSSysInfoQuery());
             postgresqlDatabase.RangeTypes = BuildRangeTypes(new PostgreSQLGetRangeTypesFromDBMSSysInfoQuery());
+            postgresqlDatabase.Functions = BuildFunctions(new PostgreSQLGetFunctionsFromDBMSSysInfoQuery());
         }
 
         private List<PostgreSQLCompositeType> BuildCompositeTypes(PostgreSQLGetCompositeTypesFromDBMSSysInfoQuery query)
@@ -176,6 +186,23 @@ namespace DotNetDBTools.Deploy.PostgreSQL
                 typesList.Add(type);
             }
             return typesList;
+        }
+
+        private List<PostgreSQLFunction> BuildFunctions(PostgreSQLGetFunctionsFromDBMSSysInfoQuery query)
+        {
+            IEnumerable<FunctionRecord> funcRecordsList = QueryExecutor.Query<FunctionRecord>(query);
+            List<PostgreSQLFunction> funcsList = new();
+            foreach (FunctionRecord funcRecord in funcRecordsList)
+            {
+                PostgreSQLFunction func = new()
+                {
+                    ID = Guid.NewGuid(),
+                    Name = funcRecord.FunctionName,
+                    CodePiece = new CodePiece { Code = funcRecord.FunctionCode },
+                };
+                funcsList.Add(func);
+            }
+            return funcsList;
         }
     }
 }

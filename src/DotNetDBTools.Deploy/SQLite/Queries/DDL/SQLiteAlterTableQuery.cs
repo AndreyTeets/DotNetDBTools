@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Queries.DDL;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.SQLite;
@@ -16,19 +18,36 @@ namespace DotNetDBTools.Deploy.SQLite.Queries.DDL
 
         protected override string GetSql(TableDiff tableDiff)
         {
+            List<string> dropIndexStatements = new();
             foreach (Index index in tableDiff.IndexesToDrop)
             {
-                string _ =
-$@"DROP INDEX {index.Name};";
+                dropIndexStatements.Add(
+$@"DROP INDEX {index.Name};");
             }
 
+            List<string> dropTriggerStatements = new();
             foreach (Trigger trigger in tableDiff.TriggersToDrop)
             {
-                string _ =
-$@"DROP TRIGGER {trigger.Name};";
+                dropTriggerStatements.Add(
+$@"DROP TRIGGER {trigger.Name};");
             }
 
-            string query =
+            List<string> createTriggerStatements = new();
+            foreach (Trigger trigger in tableDiff.TriggersToCreate)
+            {
+                createTriggerStatements.Add(
+$@"{trigger.GetCode()}");
+            }
+
+            List<string> createIndexStatements = new();
+            foreach (Index index in tableDiff.IndexesToCreate)
+            {
+                createIndexStatements.Add(
+$@"CREATE{GetUniqueStatement(index.Unique)} INDEX {index.Name}
+ON {tableDiff.NewTable.Name} ({string.Join(", ", index.Columns)});");
+            }
+
+            string alterTableStatement =
 $@"CREATE TABLE {DNDBTTempPrefix}{tableDiff.NewTable.Name}
 (
 {GetTableDefinitionsText((SQLiteTable)tableDiff.NewTable)}
@@ -42,20 +61,21 @@ DROP TABLE {tableDiff.OldTable.Name};
 
 ALTER TABLE {DNDBTTempPrefix}{tableDiff.NewTable.Name} RENAME TO {tableDiff.NewTable.Name};";
 
-            foreach (Index index in tableDiff.IndexesToCreate)
-            {
-                string _ =
-$@"CREATE INDEX {index.Name}
-ON {tableDiff.NewTable.Name} ({string.Join(", ", index.Columns)});";
-            }
+            StringBuilder sb = new();
 
-            foreach (Trigger trigger in tableDiff.TriggersToCreate)
-            {
-                string _ =
-$@"{trigger.CodePiece}";
-            }
+            if (dropIndexStatements.Any())
+                sb.Append(string.Join("\n", dropIndexStatements)).AppendLine().AppendLine();
+            if (dropTriggerStatements.Any())
+                sb.Append(string.Join("\n", dropTriggerStatements)).AppendLine().AppendLine();
 
-            return query;
+            sb.Append(alterTableStatement);
+
+            if (createTriggerStatements.Any())
+                sb.AppendLine().AppendLine().Append(string.Join("\n", createTriggerStatements));
+            if (createIndexStatements.Any())
+                sb.AppendLine().AppendLine().Append(string.Join("\n", createIndexStatements));
+
+            return sb.ToString();
         }
 
         private static string GetChangedColumnsNewNamesText(TableDiff tableDiff)
