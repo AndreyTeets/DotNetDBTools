@@ -14,6 +14,7 @@ namespace DotNetDBTools.Analysis.PostgreSQL
         {
             PostgreSQLDatabase postgresqlDatabase = ConvertToPostgreSQLModel((AgnosticDatabase)database);
             PostgreSQLPostBuildProcessingHelper.AddFunctionsFromTriggersCode_And_RemoveFunctionsCodeFromTriggersCode_IfAny(postgresqlDatabase);
+            PostgreSQLDependenciesBuilder.BuildDependencies(postgresqlDatabase);
             return postgresqlDatabase;
         }
 

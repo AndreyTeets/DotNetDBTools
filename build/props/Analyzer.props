@@ -11,6 +11,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Antlr4.Runtime.Standard" Version="$(Antlr4RuntimeVersion)" PrivateAssets="all" GeneratePathProperty="true" />
+    <None Include="$(PKGAntlr4_Runtime_Standard)\lib\netstandard2.0\Antlr4.Runtime.Standard.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
     <None Include="$(OutputPath)\*.deps.json" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
     <None Include="$(OutputPath)\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
   </ItemGroup>

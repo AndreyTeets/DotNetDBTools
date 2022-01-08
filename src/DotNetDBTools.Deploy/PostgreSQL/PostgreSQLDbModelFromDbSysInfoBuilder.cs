@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DotNetDBTools.Analysis.PostgreSQL;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.PostgreSQL.Queries.DBMSSysInfo;
 using DotNetDBTools.Deploy.PostgreSQL.Queries.DNDBTSysInfo;
@@ -72,6 +73,7 @@ namespace DotNetDBTools.Deploy.PostgreSQL
             postgresqlDatabase.EnumTypes = BuildEnumTypes(new PostgreSQLGetEnumTypesFromDBMSSysInfoQuery());
             postgresqlDatabase.RangeTypes = BuildRangeTypes(new PostgreSQLGetRangeTypesFromDBMSSysInfoQuery());
             postgresqlDatabase.Functions = BuildFunctions(new PostgreSQLGetFunctionsFromDBMSSysInfoQuery());
+            PostgreSQLDependenciesBuilder.BuildDependencies(postgresqlDatabase);
         }
 
         private List<PostgreSQLCompositeType> BuildCompositeTypes(PostgreSQLGetCompositeTypesFromDBMSSysInfoQuery query)

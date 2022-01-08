@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>
+$(Description)
+DotNetDBTools.CodeParsing is a library for internal use by other DotNetDBTools.* packages.
+    </Description>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <NoWarn>3021</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Antlr4.Runtime.Standard" Version="$(Antlr4RuntimeVersion)" />
+    <PackageReference Include="Antlr4BuildTasks" Version="$(Antlr4BuildTasksVersion)" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Antlr4 Include="Grammars\**\*.g4">
+      <Listener>true</Listener>
+      <Visitor>true</Visitor>
+      <Error>true</Error>
+      <GAtn>false</GAtn>
+      <Package>DotNetDBTools.CodeParsing.Generated</Package>
+    </Antlr4>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="$(IntermediateOutputPath)\MSSQL*.cs" Link="Generated\MSSQL\%(Filename)%(Extension)" />
+    <None Include="$(IntermediateOutputPath)\MySQL*.cs" Link="Generated\MySQL\%(Filename)%(Extension)" />
+    <None Include="$(IntermediateOutputPath)\PostgreSQL*.cs" Link="Generated\PostgreSQL\%(Filename)%(Extension)" />
+    <None Include="$(IntermediateOutputPath)\SQLite*.cs" Link="Generated\SQLite\%(Filename)%(Extension)" />
+  </ItemGroup>
+
+</Project>

@@ -8,6 +8,7 @@ DotNetDBTools.Analysis is a library for internal use by other DotNetDBTools.* pa
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DotNetDBTools.CodeParsing\DotNetDBTools.CodeParsing.csproj" />
     <ProjectReference Include="..\DotNetDBTools.Models\DotNetDBTools.Models.csproj" />
   </ItemGroup>
 

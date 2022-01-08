@@ -5,6 +5,8 @@
     <DapperVersion>2.0.90</DapperVersion>
     <CodeAnalysisVersion>3.11.0</CodeAnalysisVersion>
     <CodeAnalysisAnalyzersVersion>3.3.2</CodeAnalysisAnalyzersVersion>
+    <Antlr4RuntimeVersion>4.9.3</Antlr4RuntimeVersion>
+    <Antlr4BuildTasksVersion>8.17.0</Antlr4BuildTasksVersion>
 
     <!--Tests system packages-->
     <TestSDKVersion>16.11.0</TestSDKVersion>

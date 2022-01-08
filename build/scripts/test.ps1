@@ -13,7 +13,7 @@ $testOptions = @(
     "-p:IncludeTestAssembly=false"
     "-p:SkipAutoProps=true"
     "-p:DeterministicReport=false"
-    "-p:Exclude=[DotNetDBTools.Sample*]*"
+    "-p:Exclude=[DotNetDBTools.Sample*]*%2c[DotNetDBTools.CodeParsing]DotNetDBTools.CodeParsing.Generated.*"
     "-p:CoverletOutput=../../tests/TestResults/"
     "-p:MergeWith=../../tests/TestResults/coverage.json"
 )

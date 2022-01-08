@@ -25,6 +25,12 @@ jobs:
         with:
           dotnet-version: '5.0.x'
 
+      - name: Setup Java SDK 17
+        uses: actions/setup-java@v2
+        with:
+          java-version: 17
+          distribution: temurin
+
       - name: Build
         shell: pwsh
         run: ./build/scripts/build.ps1

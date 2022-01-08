@@ -6,10 +6,12 @@
 
   <Target Name="GetDependencyTargetPaths" Condition="'$(UsePackagesInSampleApplications)'!='True'">
     <ItemGroup>
+      <TargetPathWithTargetPlatformMoniker Include="$(MSBuildProjectDirectory)\..\..\src\$(ProjectName)\bin\AnalyzerDebugRefAssemblies\DotNetDBTools.Analysis.dll" IncludeRuntimeDependency="false" />
+      <TargetPathWithTargetPlatformMoniker Include="$(PKGAntlr4_Runtime_Standard)\lib\netstandard2.0\Antlr4.Runtime.Standard.dll" IncludeRuntimeDependency="false" />
+      <TargetPathWithTargetPlatformMoniker Include="$(MSBuildProjectDirectory)\..\..\src\$(ProjectName)\bin\AnalyzerDebugRefAssemblies\DotNetDBTools.CodeParsing.dll" IncludeRuntimeDependency="false" />
       <TargetPathWithTargetPlatformMoniker Include="$(MSBuildProjectDirectory)\..\..\src\$(ProjectName)\bin\AnalyzerDebugRefAssemblies\DotNetDBTools.Definition.dll" IncludeRuntimeDependency="false" />
       <TargetPathWithTargetPlatformMoniker Include="$(MSBuildProjectDirectory)\..\..\src\$(ProjectName)\bin\AnalyzerDebugRefAssemblies\DotNetDBTools.DefinitionParsing.dll" IncludeRuntimeDependency="false" />
       <TargetPathWithTargetPlatformMoniker Include="$(MSBuildProjectDirectory)\..\..\src\$(ProjectName)\bin\AnalyzerDebugRefAssemblies\DotNetDBTools.Models.dll" IncludeRuntimeDependency="false" />
-      <TargetPathWithTargetPlatformMoniker Condition="'$(AssemblyName)'=='DotNetDBTools.DefinitionAnalyzer'" Include="$(MSBuildProjectDirectory)\..\..\src\$(ProjectName)\bin\AnalyzerDebugRefAssemblies\DotNetDBTools.Analysis.dll" IncludeRuntimeDependency="false" />
       <TargetPathWithTargetPlatformMoniker Condition="'$(AssemblyName)'=='DotNetDBTools.DescriptionSourceGenerator'" Include="$(MSBuildProjectDirectory)\..\..\src\$(ProjectName)\bin\AnalyzerDebugRefAssemblies\DotNetDBTools.Generation.dll" IncludeRuntimeDependency="false" />
     </ItemGroup>
   </Target>

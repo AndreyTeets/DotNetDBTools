@@ -2,6 +2,8 @@ bin/
 obj/
 .vs/
 .sonarqube/
+.antlr/
+.vscode/launch.json
 artifacts/
 TestResults/
 SamplesOutput/

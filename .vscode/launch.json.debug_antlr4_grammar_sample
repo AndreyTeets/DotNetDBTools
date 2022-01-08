@@ -1,0 +1,15 @@
+{
+    "version": "2.0.0",
+    "configurations": [
+        {
+            "name": "Debug ANTLR4 grammar",
+            "type": "antlr-debug",
+            "request": "launch",
+            "grammar": "src/DotNetDBTools.CodeParsing/Grammars/PostgreSQL/PostgreSQLParser.g4",
+            "input": "src/DotNetDBTools.CodeParsing/Grammars/PostgreSQL/.antlr/input.sql",
+            "startRule": "plpgsql_function",
+            "printParseTree": true,
+            "visualParseTree": true
+        }
+    ]
+}

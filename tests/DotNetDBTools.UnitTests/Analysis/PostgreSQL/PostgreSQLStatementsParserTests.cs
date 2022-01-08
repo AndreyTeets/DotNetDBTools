@@ -15,7 +15,7 @@ namespace DotNetDBTools.UnitTests.Analysis.PostgreSQL
         [Fact]
         public void ParseToStatementsList_GetsCorrectData()
         {
-            string statementsStr = File.ReadAllText(@$"{TestDataDir}/ComplexPostgreSQLStatements.sql").NormalizeLineEndings();
+            string statementsStr = File.ReadAllText(@$"{TestDataDir}/ComplexStatementsList.sql").NormalizeLineEndings();
             List<string> statementsList = PostgreSQLStatementsParser.ParseToStatementsList(statementsStr);
 
             statementsList.Count.Should().Be(3);

@@ -37,6 +37,7 @@ namespace DotNetDBTools.DefinitionParsing.PostgreSQL
             postgresqlDatabase.RangeTypes = BuildRangeTypeModels(dbAssembly);
             postgresqlDatabase.Functions = BuildFunctionModels(dbAssembly);
             PostgreSQLPostBuildProcessingHelper.AddFunctionsFromTriggersCode_And_RemoveFunctionsCodeFromTriggersCode_IfAny(postgresqlDatabase);
+            PostgreSQLDependenciesBuilder.BuildDependencies(postgresqlDatabase);
         }
 
         protected override void BuildAdditionalTableModelProperties(PostgreSQLTable tableModel, IBaseTable table)
