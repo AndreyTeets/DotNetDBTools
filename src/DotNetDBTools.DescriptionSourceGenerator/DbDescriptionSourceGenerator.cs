@@ -12,6 +12,14 @@ namespace DotNetDBTools.DescriptionSourceGenerator
     [Generator]
     internal class DbDescriptionSourceGenerator : ISourceGenerator
     {
+        private static readonly DiagnosticDescriptor s_diagnosticDescriptor = new(
+            id: "DNDBT_DSG_01",
+            title: "Failed to create database description",
+            messageFormat: "Failed to create database description: {0}",
+            category: "SourceGeneration",
+            defaultSeverity: DiagnosticSeverity.Error,
+            isEnabledByDefault: true);
+
         public void Initialize(GeneratorInitializationContext context)
         {
         }
@@ -32,14 +40,7 @@ namespace DotNetDBTools.DescriptionSourceGenerator
             }
             catch (Exception ex)
             {
-                DiagnosticDescriptor diagnosticDescriptor = new(
-                    id: "DNDBT_DSG_01",
-                    title: "Failed to create database description",
-                    messageFormat: $"Failed to create database description: {ex}",
-                    category: "SourceGeneration",
-                    defaultSeverity: DiagnosticSeverity.Error,
-                    isEnabledByDefault: true);
-                context.ReportDiagnostic(Diagnostic.Create(diagnosticDescriptor, Location.None));
+                context.ReportDiagnostic(Diagnostic.Create(s_diagnosticDescriptor, Location.None, ex.ToString()));
             }
         }
     }

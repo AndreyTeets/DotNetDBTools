@@ -330,6 +330,9 @@ dotnet_diagnostic.CA1310.severity = warning
 # CA1822: Make member static
 dotnet_diagnostic.CA1822.severity = suggestion
 
+# CS1591: Allow missing xml comments for public members
+dotnet_diagnostic.CS1591.severity = none
+
 # RS0016: Only enable if API files are present
 dotnet_public_api_analyzer.require_api_files = true
 

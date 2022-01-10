@@ -16,12 +16,12 @@ namespace DotNetDBTools.DefinitionAnalyzer
     internal class DbDefinitionAnalyzer : DiagnosticAnalyzer
     {
         private static readonly DiagnosticDescriptor s_diagnosticDescriptor = new(
-                id: "DNDBT_DA_01",
-                title: "Database should be valid",
-                messageFormat: "Database is invalid: {0}",
-                category: "DbAnalysis",
-                defaultSeverity: DiagnosticSeverity.Error,
-                isEnabledByDefault: true);
+            id: "DNDBT_DA_01",
+            title: "Database is invalid",
+            messageFormat: "Database is invalid: {0}",
+            category: "DbAnalysis",
+            defaultSeverity: DiagnosticSeverity.Error,
+            isEnabledByDefault: true);
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
             ImmutableArray.Create(s_diagnosticDescriptor);
