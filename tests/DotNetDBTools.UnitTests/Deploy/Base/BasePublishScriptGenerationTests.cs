@@ -22,8 +22,8 @@ namespace DotNetDBTools.UnitTests.Deploy.Base
         protected BasePublishScriptGenerationTests()
         {
             _deployManager = new TDeployManager();
-            _dbAssemblyV1 = TestDbAssembliesHelper.GetLoadedAssemblyByName(SampleDbV1AssemblyName);
-            _dbAssemblyV2 = TestDbAssembliesHelper.GetLoadedAssemblyByName(SampleDbV2AssemblyName);
+            _dbAssemblyV1 = TestDbAssembliesHelper.GetSampleDbAssembly(SampleDbV1AssemblyName);
+            _dbAssemblyV2 = TestDbAssembliesHelper.GetSampleDbAssembly(SampleDbV2AssemblyName);
         }
 
         [Fact]

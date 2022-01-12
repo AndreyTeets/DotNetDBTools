@@ -14,7 +14,7 @@ namespace DotNetDBTools.UnitTests.Description.Agnostic
         [Fact]
         public void Generate_Description_For_AgnosticSampleDB_CreatesCorrectDescription()
         {
-            Assembly dbAssembly = TestDbAssembliesHelper.GetLoadedAssemblyByName("DotNetDBTools.SampleDB.Agnostic");
+            Assembly dbAssembly = TestDbAssembliesHelper.GetSampleDbAssembly("DotNetDBTools.SampleDB.Agnostic");
             AgnosticDatabase database = (AgnosticDatabase)DbDefinitionParser.CreateDatabaseModel(dbAssembly);
             string actualDescriptionCode = AgnosticDescriptionGenerator.GenerateDescription(database);
             string expectedDescriptionCode = File.ReadAllText(@"TestData/Agnostic/Expected_Description_For_SampleDB.cs");

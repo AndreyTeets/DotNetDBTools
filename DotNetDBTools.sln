@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31229.75
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{0D76E2D5-E024-415E-9C28-D52600CCFE5E}"
 EndProject
@@ -199,6 +199,7 @@ Global
 		src\DotNetDBTools.RoslynUtilities\DotNetDBTools.RoslynUtilities.projitems*{35980423-0df6-4d5f-a8bf-9d57ee14b5be}*SharedItemsImports = 5
 		src\DotNetDBTools.RoslynUtilities\DotNetDBTools.RoslynUtilities.projitems*{b2d848ba-9538-45e3-9f9d-35937cdecb7a}*SharedItemsImports = 5
 		src\DotNetDBTools.RoslynUtilities\DotNetDBTools.RoslynUtilities.projitems*{d82b0851-c14a-45bd-a04a-80e7688afc4a}*SharedItemsImports = 13
+		src\DotNetDBTools.RoslynUtilities\DotNetDBTools.RoslynUtilities.projitems*{f4863f2b-7a90-42a0-a23b-cbec729ec3d3}*SharedItemsImports = 5
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

@@ -72,7 +72,7 @@ namespace DotNetDBTools.RoslynUtilities
                 byte[] assemblyBytes = assemblyStream.ToArray();
                 return Assembly.Load(assemblyBytes);
             }
-            else // NET SDK 6.0+
+            else // Analyzer in NET SDK 6.0+
             {
                 assemblyStream.Position = 0;
                 return GetAssemblyIfAlreadyLoadedInCurrentALCOrLoad(assemblyStream, assemblyName, currentALC);
