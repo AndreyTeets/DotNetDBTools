@@ -13,23 +13,25 @@ namespace DotNetDBTools.UnitTests.Deploy.SQLite
         private const string TestDataDir = "./TestData/SQLite";
         private static readonly List<string> s_definitionStatements = new()
         {
-            "[Col1] INTEGER NOT NULL DEFAULT 15",
-            "Col2 numeric NOT NULL DEFAULT 7.36",
+            "[Col1] INTEGER NOT NULL DEFAULT 15 unique",
+            "Col2 numeric DEFAULT 7.36",
             "`Col3` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL",
             "Col4 TEXT NOT NULL default 'CONSTRAINT CK_String_Check1 CHECK (Col3 >= 0),'",
+            "Col5 BLOB NOT NULL default (DATETIME('now'))",
+            "constraint PK_Table1 PRIMARY KEY ([Col1], `Col2`)",
             "constraint UQ_Table1_Col1 UNIQUE ( [Col1] )",
             "CONSTRAINT [UQ_Table1_Col2Col4] unique (Col2, \"Col4\")",
             "constraint FK_Table1_Col1_Table2_Col1 FOREIGN KEY (Col1)\n        REFERENCES Table2(`Col1`)\n        ON UPDATE NO ACTION ON DELETE CASCADE",
             "CONSTRAINT [FK_Table1_Col1Col2_Table2_Col2Col4] foreign KEY ( Col1, \"Col2\" ) REFERENCES Table2([Col2],Col4)",
             "constraint CK_Table1_Check1 CHECK ([Col2] != 'Col2 NUMERIC NOT NULL DEFAULT 7.36,')",
-            "CONSTRAINT [CK_Table1_Check2]\n        CHECK (Col4 = 'CONSTRAINT [CK_String_Check2] CHECK ( [Col3] >= 0 ),' AND f1(f2())=' quo''te g1(g2(g3)))' AND TRUE)",
+            "CHECK (Col4 = 'CONSTRAINT [CK_String_Check2] CHECK ( [Col3] >= 0 ),' AND f1(f2())=' quo''te g1(g2(g3)))' AND TRUE)",
             "CONSTRAINT `CK_Table1_Check3` check ( [Col3] >= 0 )",
         };
 
         [Fact]
         public void ParseToDefinitionStatements_GetsCorrectData()
         {
-            string tableDefinition = File.ReadAllText(@$"{TestDataDir}/ComplexSQLiteTableDefinition.sql").NormalizeLineEndings();
+            string tableDefinition = File.ReadAllText(@$"{TestDataDir}/CreateTable.sql").NormalizeLineEndings();
             List<string> definitionStatements = SQLiteTableDefinitionParser.ParseToDefinitionStatements(tableDefinition);
             definitionStatements.Should().BeEquivalentTo(s_definitionStatements, options => options.WithStrictOrdering());
         }
@@ -57,7 +59,7 @@ namespace DotNetDBTools.UnitTests.Deploy.SQLite
             checkConstraints[0].ckName.Should().Be("CK_Table1_Check1");
             checkConstraints[0].ckCode.Should().Be("CHECK ([Col2] != 'Col2 NUMERIC NOT NULL DEFAULT 7.36,')");
 
-            checkConstraints[1].ckName.Should().Be("CK_Table1_Check2");
+            checkConstraints[1].ckName.Should().Be("");
             checkConstraints[1].ckCode.Should().Be(
                 "CHECK (Col4 = 'CONSTRAINT [CK_String_Check2] CHECK ( [Col3] >= 0 ),' AND f1(f2())=' quo''te g1(g2(g3)))' AND TRUE)");
 

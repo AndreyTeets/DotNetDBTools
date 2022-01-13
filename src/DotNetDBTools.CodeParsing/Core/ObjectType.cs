@@ -4,6 +4,6 @@
     {
         Table,
         TableOrView,
-        Function
+        Function,
     }
 }

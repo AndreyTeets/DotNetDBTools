@@ -16,7 +16,7 @@ namespace DotNetDBTools.UnitTests.CodeParsing.PostgreSQL
         [Fact]
         public void SplitToStatements_GetsCorrectData()
         {
-            string input = File.ReadAllText(@$"{TestDataDir}/ComplexStatementsList.sql");
+            string input = File.ReadAllText(@$"{TestDataDir}/StatementsList.sql");
             PostgreSQLCodeParser parser = new();
             List<string> statements = parser.SplitToStatements(input);
 
@@ -45,7 +45,7 @@ namespace DotNetDBTools.UnitTests.CodeParsing.PostgreSQL
         [Fact]
         public void GetViewDependencies_GetsCorrectData()
         {
-            string input = File.ReadAllText(@$"{TestDataDir}/ComplexView.sql");
+            string input = File.ReadAllText(@$"{TestDataDir}/CreateView.sql");
             PostgreSQLCodeParser parser = new();
             List<Dependency> dependencies = parser.GetViewDependencies(input);
 
@@ -61,7 +61,7 @@ namespace DotNetDBTools.UnitTests.CodeParsing.PostgreSQL
         [Fact]
         public void GetFunctionDependencies_GetsCorrectData_FromSQLFunc()
         {
-            string input = File.ReadAllText(@$"{TestDataDir}/ComplexFunctionSQL.sql");
+            string input = File.ReadAllText(@$"{TestDataDir}/CreateSQLFunction.sql");
             PostgreSQLCodeParser parser = new();
             List<Dependency> dependencies = parser.GetFunctionDependencies(input);
 
@@ -77,7 +77,7 @@ namespace DotNetDBTools.UnitTests.CodeParsing.PostgreSQL
         [Fact]
         public void GetFunctionDependencies_GetsCorrectData_FromPLPGSQLFunc()
         {
-            string input = File.ReadAllText(@$"{TestDataDir}/ComplexFunctionPLPGSQL.sql");
+            string input = File.ReadAllText(@$"{TestDataDir}/CreatePLPGSQLFunction.sql");
             PostgreSQLCodeParser parser = new();
             List<Dependency> dependencies = parser.GetFunctionDependencies(input);
 

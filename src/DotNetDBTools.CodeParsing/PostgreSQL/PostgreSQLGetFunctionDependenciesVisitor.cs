@@ -3,6 +3,7 @@ using System.Linq;
 using Antlr4.Runtime.Misc;
 using DotNetDBTools.CodeParsing.Core;
 using DotNetDBTools.CodeParsing.Generated;
+using static DotNetDBTools.CodeParsing.Generated.PostgreSQLParser;
 
 namespace DotNetDBTools.CodeParsing.PostgreSQL
 {
@@ -12,14 +13,14 @@ namespace DotNetDBTools.CodeParsing.PostgreSQL
 
         public List<Dependency> GetDependencies() => _dependencies.ToList();
 
-        public override object VisitFunction_call([NotNull] PostgreSQLParser.Function_callContext context)
+        public override object VisitFunction_call([NotNull] Function_callContext context)
         {
             string functionName = Unquote(context.schema_qualified_name_nontype().GetText());
             _dependencies.Add(new Dependency { Type = ObjectType.Function, Name = functionName });
             return base.VisitFunction_call(context);
         }
 
-        public override object VisitFrom_primary([NotNull] PostgreSQLParser.From_primaryContext context)
+        public override object VisitFrom_primary([NotNull] From_primaryContext context)
         {
             if (context.schema_qualified_name() != null)
             {
@@ -29,7 +30,7 @@ namespace DotNetDBTools.CodeParsing.PostgreSQL
             return base.VisitFrom_primary(context);
         }
 
-        public override object VisitInsert_stmt_for_psql([NotNull] PostgreSQLParser.Insert_stmt_for_psqlContext context)
+        public override object VisitInsert_stmt_for_psql([NotNull] Insert_stmt_for_psqlContext context)
         {
             if (context.schema_qualified_name() != null)
             {

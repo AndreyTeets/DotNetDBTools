@@ -3,6 +3,7 @@ using System.Linq;
 using Antlr4.Runtime.Misc;
 using DotNetDBTools.CodeParsing.Core;
 using DotNetDBTools.CodeParsing.Generated;
+using static DotNetDBTools.CodeParsing.Generated.PostgreSQLParser;
 
 namespace DotNetDBTools.CodeParsing.PostgreSQL
 {
@@ -12,7 +13,7 @@ namespace DotNetDBTools.CodeParsing.PostgreSQL
 
         public List<Dependency> GetDependencies() => _dependencies.ToList();
 
-        public override object VisitFrom_primary([NotNull] PostgreSQLParser.From_primaryContext context)
+        public override object VisitFrom_primary([NotNull] From_primaryContext context)
         {
             if (context.schema_qualified_name() != null)
             {

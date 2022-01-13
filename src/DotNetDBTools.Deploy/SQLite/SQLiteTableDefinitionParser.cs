@@ -40,7 +40,7 @@ namespace DotNetDBTools.Deploy.SQLite
         public static List<(string ckName, string ckCode)> GetCheckConstraints(IEnumerable<string> definitionStatements)
         {
             List<(string ckName, string ckCode)> checkConstraints = new();
-            string pattern = @$"^(?: CONSTRAINT{WS1}(?<ckName>{Identifier}) )? {WS1}CHECK{WS0}\( (?<ckCode>.+) \)";
+            string pattern = @$"^(?: CONSTRAINT{WS1}(?<ckName>{Identifier}){WS1} )? CHECK{WS0}\( (?<ckCode>.+) \)";
             foreach (string statement in definitionStatements)
             {
                 Match match = Regex.Match(statement, pattern, s_regexOptions);
@@ -57,7 +57,7 @@ namespace DotNetDBTools.Deploy.SQLite
         public static string GetUniqueConstraintName(IEnumerable<string> definitionStatements, IEnumerable<string> columns)
         {
             string columnsListExpr = @$"{WS0}{string.Join(@$"{WS0},{WS0}", columns.Select(x => Quote(x)))}{WS0}";
-            string pattern = @$"^(?: CONSTRAINT{WS1}(?<ucName>{Identifier}) )? {WS1}UNIQUE{WS0}\( {columnsListExpr} \)";
+            string pattern = @$"^(?: CONSTRAINT{WS1}(?<ucName>{Identifier}){WS1} )? UNIQUE{WS0}\( {columnsListExpr} \)";
             foreach (string statement in definitionStatements)
             {
                 Match match = Regex.Match(statement, pattern, s_regexOptions);
@@ -72,7 +72,7 @@ namespace DotNetDBTools.Deploy.SQLite
         public static string GetForeignKeyConstraintName(IEnumerable<string> definitionStatements, IEnumerable<string> thisColumns)
         {
             string thisColumnsListExpr = @$"{WS0}{string.Join(@$"{WS0},{WS0}", thisColumns.Select(x => Quote(x)))}{WS0}";
-            string pattern = @$"^(?: CONSTRAINT{WS1}(?<fkName>{Identifier}) )? {WS1}FOREIGN{WS1}KEY{WS0}\( {thisColumnsListExpr} \)";
+            string pattern = @$"^(?: CONSTRAINT{WS1}(?<fkName>{Identifier}){WS1} )? FOREIGN{WS1}KEY{WS0}\( {thisColumnsListExpr} \)";
             foreach (string statement in definitionStatements)
             {
                 Match match = Regex.Match(statement, pattern, s_regexOptions);

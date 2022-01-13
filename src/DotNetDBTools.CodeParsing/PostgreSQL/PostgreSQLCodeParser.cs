@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using Antlr4.Runtime;
+﻿using System.Collections.Generic;
 using Antlr4.Runtime.Tree;
 using DotNetDBTools.CodeParsing.Core;
 using DotNetDBTools.CodeParsing.Generated;
 
 namespace DotNetDBTools.CodeParsing.PostgreSQL
 {
-    public class PostgreSQLCodeParser
+    public class PostgreSQLCodeParser : CodeParser<PostgreSQLParser, PostgreSQLLexer>
     {
-        private readonly ErrorListener _errorListener = new();
-
         public List<string> SplitToStatements(string input)
         {
             IParseTree parseTree = Parse(input, x => x.sql());
@@ -39,40 +35,6 @@ namespace DotNetDBTools.CodeParsing.PostgreSQL
             PostgreSQLGetViewDependenciesVisitor visitor = new();
             parseTree.Accept(visitor);
             return visitor.GetDependencies();
-        }
-
-        private IParseTree Parse(string input, Func<PostgreSQLParser, IParseTree> startRule)
-        {
-            PostgreSQLParser parser = CreateParser(input);
-            IParseTree parseTree = startRule(parser);
-            ProcessErrors();
-            return parseTree;
-        }
-
-        private void ProcessErrors()
-        {
-            List<string> errors = _errorListener.GetErrors();
-            if (errors.Count > 0)
-            {
-                string errorMsg = string.Join("\n", errors);
-                _errorListener.ClearErrors();
-                throw new ParseException(errorMsg);
-            }
-        }
-
-        private PostgreSQLParser CreateParser(string input)
-        {
-            ICharStream charStream = CharStreams.fromString(input);
-            Lexer lexer = new PostgreSQLLexer(charStream);
-            lexer.RemoveErrorListeners();
-            lexer.AddErrorListener(_errorListener);
-
-            ITokenStream tokenStream = new CommonTokenStream(lexer);
-            PostgreSQLParser parser = new(tokenStream);
-            parser.RemoveErrorListeners();
-            parser.AddErrorListener(_errorListener);
-
-            return parser;
         }
     }
 }

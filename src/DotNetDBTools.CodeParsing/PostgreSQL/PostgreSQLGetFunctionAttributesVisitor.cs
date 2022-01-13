@@ -1,5 +1,6 @@
 ﻿using Antlr4.Runtime.Misc;
 using DotNetDBTools.CodeParsing.Generated;
+using static DotNetDBTools.CodeParsing.Generated.PostgreSQLParser;
 
 namespace DotNetDBTools.CodeParsing.PostgreSQL
 {
@@ -8,7 +9,7 @@ namespace DotNetDBTools.CodeParsing.PostgreSQL
         public string FunctionLanguage { get; set; }
         public string FunctionBody { get; set; }
 
-        public override object VisitFunction_def([NotNull] PostgreSQLParser.Function_defContext context)
+        public override object VisitFunction_def([NotNull] Function_defContext context)
         {
             if (context.character_string(0).BeginDollarStringConstant() != null)
             {
@@ -27,7 +28,7 @@ namespace DotNetDBTools.CodeParsing.PostgreSQL
             return base.VisitFunction_def(context);
         }
 
-        public override object VisitFunction_actions_common([NotNull] PostgreSQLParser.Function_actions_commonContext context)
+        public override object VisitFunction_actions_common([NotNull] Function_actions_commonContext context)
         {
             if (context.LANGUAGE() != null)
             {
