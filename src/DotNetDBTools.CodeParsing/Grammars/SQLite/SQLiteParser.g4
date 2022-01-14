@@ -109,6 +109,7 @@ release_stmt:
 ;
 
 create_index_stmt:
+    ID_DECLARATION_COMMENT?
     CREATE_ UNIQUE_? INDEX_ (IF_ NOT_ EXISTS_)? (schema_name DOT)? index_name ON_ table_name OPEN_PAR
         indexed_column (COMMA indexed_column)* CLOSE_PAR (WHERE_ expr)?
 ;
@@ -117,6 +118,7 @@ indexed_column: (column_name | expr) (COLLATE_ collation_name)? asc_desc?
 ;
 
 create_table_stmt:
+    ID_DECLARATION_COMMENT?
     CREATE_ (TEMP_ | TEMPORARY_)? TABLE_ (IF_ NOT_ EXISTS_)? (
         schema_name DOT
     )? table_name (
@@ -128,7 +130,7 @@ create_table_stmt:
 ;
 
 column_def:
-    column_name type_name? column_constraint*
+    ID_DECLARATION_COMMENT? column_name type_name? column_constraint*
 ;
 
 type_name:
@@ -138,7 +140,8 @@ type_name:
     )?
 ;
 
-column_constraint: (CONSTRAINT_ name)? (
+column_constraint:
+    (CONSTRAINT_ name)? (
         (PRIMARY_ KEY_ asc_desc? conflict_clause? AUTOINCREMENT_?)
         | (NOT_ NULL_ | UNIQUE_) conflict_clause?
         | CHECK_ OPEN_PAR expr CLOSE_PAR
@@ -155,7 +158,9 @@ column_constraint: (CONSTRAINT_ name)? (
 signed_number: (PLUS | MINUS)? NUMERIC_LITERAL
 ;
 
-table_constraint: (CONSTRAINT_ name)? (
+table_constraint:
+    ID_DECLARATION_COMMENT?
+    (CONSTRAINT_ name)? (
         (PRIMARY_ KEY_ | UNIQUE_) OPEN_PAR indexed_column (
             COMMA indexed_column
         )* CLOSE_PAR conflict_clause?
@@ -196,6 +201,7 @@ conflict_clause:
 ;
 
 create_trigger_stmt:
+    ID_DECLARATION_COMMENT?
     CREATE_ (TEMP_ | TEMPORARY_)? TRIGGER_ (IF_ NOT_ EXISTS_)? (
         schema_name DOT
     )? trigger_name (BEFORE_ | AFTER_ | INSTEAD_ OF_)? (
@@ -208,6 +214,7 @@ create_trigger_stmt:
 ;
 
 create_view_stmt:
+    ID_DECLARATION_COMMENT?
     CREATE_ (TEMP_ | TEMPORARY_)? VIEW_ (IF_ NOT_ EXISTS_)? (
         schema_name DOT
     )? view_name (OPEN_PAR column_name (COMMA column_name)* CLOSE_PAR)? AS_ select_stmt

@@ -228,6 +228,7 @@ STRING_LITERAL: '\'' ( ~'\'' | '\'\'')* '\'';
 
 BLOB_LITERAL: X STRING_LITERAL;
 
+ID_DECLARATION_COMMENT: '--ID:#{' ~[\r\n]* '}#' (('\r'? '\n') | EOF);
 SINGLE_LINE_COMMENT: '--' ~[\r\n]* (('\r'? '\n') | EOF) -> channel(HIDDEN);
 
 MULTILINE_COMMENT: '/*' .*? '*/' -> channel(HIDDEN);

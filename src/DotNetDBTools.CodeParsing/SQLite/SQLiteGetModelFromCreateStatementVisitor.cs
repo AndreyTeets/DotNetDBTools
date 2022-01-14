@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
 using DotNetDBTools.CodeParsing.Core;
@@ -13,6 +14,7 @@ namespace DotNetDBTools.CodeParsing.SQLite
         public override ObjectInfo VisitCreate_table_stmt([NotNull] Create_table_stmtContext context)
         {
             TableInfo table = new();
+            table.ID = GetObjectID(context.ID_DECLARATION_COMMENT()?.GetText());
             table.Name = UnquoteIdentifier(context.table_name().GetText());
             foreach (Column_defContext columnCtx in context.column_def())
                 table.Columns.Add(GetTableColumnInfo(columnCtx));
@@ -24,6 +26,7 @@ namespace DotNetDBTools.CodeParsing.SQLite
         public override ObjectInfo VisitCreate_view_stmt([NotNull] Create_view_stmtContext context)
         {
             ViewInfo view = new();
+            view.ID = GetObjectID(context.ID_DECLARATION_COMMENT()?.GetText());
             view.Name = UnquoteIdentifier(context.view_name().GetText());
             view.Code = GetInitialText(context);
             return view;
@@ -32,6 +35,7 @@ namespace DotNetDBTools.CodeParsing.SQLite
         public override ObjectInfo VisitCreate_index_stmt([NotNull] Create_index_stmtContext context)
         {
             IndexInfo index = new();
+            index.ID = GetObjectID(context.ID_DECLARATION_COMMENT()?.GetText());
             index.Name = UnquoteIdentifier(context.index_name().GetText());
             index.Table = UnquoteIdentifier(context.table_name().GetText());
             if (context.UNIQUE_() != null)
@@ -44,6 +48,7 @@ namespace DotNetDBTools.CodeParsing.SQLite
         public override ObjectInfo VisitCreate_trigger_stmt([NotNull] Create_trigger_stmtContext context)
         {
             TriggerInfo trigger = new();
+            trigger.ID = GetObjectID(context.ID_DECLARATION_COMMENT()?.GetText());
             trigger.Name = UnquoteIdentifier(context.trigger_name().GetText());
             trigger.Table = UnquoteIdentifier(context.table_name().GetText());
             trigger.Code = GetInitialText(context);
@@ -53,6 +58,7 @@ namespace DotNetDBTools.CodeParsing.SQLite
         private static ColumnInfo GetTableColumnInfo(Column_defContext context)
         {
             ColumnInfo column = new();
+            column.ID = GetObjectID(context.ID_DECLARATION_COMMENT()?.GetText());
             column.Name = UnquoteIdentifier(context.column_name().GetText());
             column.DataType = UnquoteIdentifier(context.type_name().GetText());
             foreach (Column_constraintContext constraintCtx in context.column_constraint())
@@ -98,6 +104,7 @@ namespace DotNetDBTools.CodeParsing.SQLite
         private static ConstraintInfo GetTableConstraintInfo(Table_constraintContext context)
         {
             ConstraintInfo constraint = new();
+            constraint.ID = GetObjectID(context.ID_DECLARATION_COMMENT()?.GetText());
             if (context.name() != null)
                 constraint.Name = UnquoteIdentifier(context.name().GetText());
 
@@ -159,6 +166,21 @@ namespace DotNetDBTools.CodeParsing.SQLite
         {
             return context.Start.InputStream.GetText(
                 new Interval(context.Start.StartIndex, context.Stop.StopIndex));
+        }
+
+        private static Guid? GetObjectID(string idDeclarationComment)
+        {
+            if (idDeclarationComment is null)
+                return null;
+
+            string idDeclStr = idDeclarationComment.Trim();
+            int prefixLen = "--ID:#{".Length;
+            int postfixLen = "}#".Length;
+            string idStr = idDeclStr.Substring(prefixLen, idDeclStr.Length - prefixLen - postfixLen);
+            if (Guid.TryParse(idStr, out Guid id))
+                return id;
+            else
+                return null;
         }
 
         private static string UnquoteIdentifier(string quotedIdentifier)

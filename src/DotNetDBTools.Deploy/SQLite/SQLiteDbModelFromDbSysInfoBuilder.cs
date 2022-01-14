@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DotNetDBTools.CodeParsing.Core.Models;
+using DotNetDBTools.CodeParsing.SQLite;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.SQLite.Queries.DBMSSysInfo;
 using DotNetDBTools.Deploy.SQLite.Queries.DNDBTSysInfo;
@@ -33,44 +35,53 @@ namespace DotNetDBTools.Deploy.SQLite
             IEnumerable<TableRecord> tableRecords = QueryExecutor.Query<TableRecord>(query);
             foreach (TableRecord tableRecord in tableRecords)
             {
-                IEnumerable<string> definitionStatements = SQLiteTableDefinitionParser.ParseToDefinitionStatements(tableRecord.TableDefinition);
+                SQLiteCodeParser parser = new();
+                TableInfo tableInfo = (TableInfo)parser.GetModelFromCreateStatement(tableRecord.TableDefinition);
                 Table table = tables[tableRecord.TableName];
-                BuildTableCheckConstraints(table, definitionStatements);
-                BuildTableConstraintNames(table, definitionStatements);
-                ProcessTableIdentityColumnCandidateIfExist(table, definitionStatements);
+                BuildTableCheckConstraints(table, tableInfo);
+                BuildTableConstraintNames(table, tableInfo);
+                ProcessTableIdentityColumnCandidateIfExist(table, tableInfo);
             }
         }
 
-        private static void BuildTableCheckConstraints(Table table, IEnumerable<string> definitionStatements)
+        private static void BuildTableCheckConstraints(Table table, TableInfo tableInfo)
         {
-            foreach ((string ckName, string ckCode) in SQLiteTableDefinitionParser.GetCheckConstraints(definitionStatements))
+            foreach (ConstraintInfo ckInfo in tableInfo.Constraints.Where(x => x.Type == ConstraintType.Check))
             {
                 CheckConstraint ck = new()
                 {
                     ID = Guid.NewGuid(),
-                    Name = ckName,
-                    CodePiece = new CodePiece { Code = ckCode },
+                    Name = ckInfo.Name,
+                    CodePiece = new CodePiece { Code = ckInfo.Code },
                 };
                 ((List<CheckConstraint>)table.CheckConstraints).Add(ck);
             }
         }
 
-        private void BuildTableConstraintNames(Table table, IEnumerable<string> definitionStatements)
+        private void BuildTableConstraintNames(Table table, TableInfo tableInfo)
         {
+            Dictionary<string, string> uniqueConstraintColsToNameMap = new();
+            Dictionary<string, string> fkConstraintColsToNameMap = new();
+            foreach (ConstraintInfo ckInfo in tableInfo.Constraints.Where(x => x.Type == ConstraintType.Unique))
+                uniqueConstraintColsToNameMap.Add(CreateKeyFromColumns(ckInfo.Columns), ckInfo.Name);
+            foreach (ConstraintInfo fkInfo in tableInfo.Constraints.Where(x => x.Type == ConstraintType.ForeignKey))
+                fkConstraintColsToNameMap.Add(CreateKeyFromColumns(fkInfo.Columns), fkInfo.Name);
+
             foreach (UniqueConstraint uc in table.UniqueConstraints)
-                uc.Name = SQLiteTableDefinitionParser.GetUniqueConstraintName(definitionStatements, uc.Columns) ?? uc.Name;
+                uc.Name = uniqueConstraintColsToNameMap[CreateKeyFromColumns(uc.Columns)] ?? uc.Name;
             foreach (ForeignKey fk in table.ForeignKeys)
-                fk.Name = SQLiteTableDefinitionParser.GetForeignKeyConstraintName(definitionStatements, fk.ThisColumnNames) ?? fk.Name;
+                fk.Name = fkConstraintColsToNameMap[CreateKeyFromColumns(fk.ThisColumnNames)] ?? fk.Name;
+
+            static string CreateKeyFromColumns(IEnumerable<string> columns) => string.Join(",", columns);
         }
 
-        private void ProcessTableIdentityColumnCandidateIfExist(Table table, IEnumerable<string> definitionStatements)
+        private void ProcessTableIdentityColumnCandidateIfExist(Table table, TableInfo tableInfo)
         {
             Column column = table.Columns.FirstOrDefault(c => c.Identity == true);
             if (column is not null)
             {
-                bool hasAutoincrementKeyWord = definitionStatements
-                    .Any(x => x.IndexOf("AUTOINCREMENT", StringComparison.OrdinalIgnoreCase) > -1);
-                if (!hasAutoincrementKeyWord)
+                ColumnInfo columnInfo = tableInfo.Columns.Single(x => x.Name == column.Name);
+                if (columnInfo.Autoincrement == false)
                     column.Identity = false;
             }
         }

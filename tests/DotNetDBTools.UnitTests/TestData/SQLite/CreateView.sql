@@ -1,3 +1,4 @@
+--ID:#{3C36AE77-B7E4-40C3-824F-BD20DC270A14}#
 create VIEW "MyView1" AS
 SELECT
     t2."Col1" AS c1,
