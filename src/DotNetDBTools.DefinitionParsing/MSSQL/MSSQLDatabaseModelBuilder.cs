@@ -36,8 +36,10 @@ namespace DotNetDBTools.DefinitionParsing.MSSQL
                 : null;
         }
 
-        protected override string GetOnUpdateActionName(BaseForeignKey fk) => ((Definition.MSSQL.ForeignKey)fk).OnUpdate.ToString();
-        protected override string GetOnDeleteActionName(BaseForeignKey fk) => ((Definition.MSSQL.ForeignKey)fk).OnDelete.ToString();
+        protected override string GetOnUpdateActionName(BaseForeignKey fk) =>
+            MapFKActionNameFromDefinitionToModel(((Definition.MSSQL.ForeignKey)fk).OnUpdate.ToString());
+        protected override string GetOnDeleteActionName(BaseForeignKey fk) =>
+            MapFKActionNameFromDefinitionToModel(((Definition.MSSQL.ForeignKey)fk).OnDelete.ToString());
 
         private List<MSSQLUserDefinedType> BuildUserDefinedTypeModels(Assembly dbAssembly)
         {

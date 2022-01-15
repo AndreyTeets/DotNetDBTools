@@ -35,8 +35,10 @@ namespace DotNetDBTools.DefinitionParsing.MySQL
             pkModel.Name = $"PK_{tableName}";
         }
 
-        protected override string GetOnUpdateActionName(BaseForeignKey fk) => ((Definition.MySQL.ForeignKey)fk).OnUpdate.ToString();
-        protected override string GetOnDeleteActionName(BaseForeignKey fk) => ((Definition.MySQL.ForeignKey)fk).OnDelete.ToString();
+        protected override string GetOnUpdateActionName(BaseForeignKey fk) =>
+            MapFKActionNameFromDefinitionToModel(((Definition.MySQL.ForeignKey)fk).OnUpdate.ToString());
+        protected override string GetOnDeleteActionName(BaseForeignKey fk) =>
+            MapFKActionNameFromDefinitionToModel(((Definition.MySQL.ForeignKey)fk).OnDelete.ToString());
 
         private static List<MySQLFunction> BuildFunctionModels(Assembly dbAssembly)
         {

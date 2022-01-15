@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using DotNetDBTools.Analysis.PostgreSQL;
-using DotNetDBTools.UnitTests.Utilities;
+using DotNetDBTools.DefinitionParsing.Core;
 using FluentAssertions;
 using Xunit;
 

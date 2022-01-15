@@ -29,4 +29,4 @@ create TABLE "Table1"
     CHECK (Col4 = 'CONSTRAINT [CK_String_Check2] CHECK ( [Col3] >= 0 ),' AND f1(f2())=' quo''te g1(g2(g3)))' AND TRUE),
     --ID:#{A836AE77-B7E4-40C3-824F-BD20DC270A14}#
     CONSTRAINT `CK_Table1_Check3` check ( [Col3] >= 0 )
-);
+)

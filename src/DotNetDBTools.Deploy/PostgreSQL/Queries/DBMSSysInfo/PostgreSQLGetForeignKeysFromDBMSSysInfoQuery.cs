@@ -65,11 +65,11 @@ WHERE this_table.relkind = 'r'
             private static string MapUpdateActionName(string sqlActionName) =>
                 sqlActionName switch
                 {
-                    "a" => "NoAction",
-                    "r" => "Restrict",
-                    "c" => "Cascade",
-                    "d" => "SetDefault",
-                    "n" => "SetNull",
+                    "a" => ForeignKeyActions.NoAction,
+                    "r" => ForeignKeyActions.Restrict,
+                    "c" => ForeignKeyActions.Cascade,
+                    "d" => ForeignKeyActions.SetDefault,
+                    "n" => ForeignKeyActions.SetNull,
                     _ => throw new InvalidOperationException($"Invalid sqlActionName: '{sqlActionName}'")
                 };
         }

@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Reflection;
+using DotNetDBTools.DefinitionParsing.Core;
 using DotNetDBTools.Deploy;
 using DotNetDBTools.UnitTests.Utilities;
 using FluentAssertions;

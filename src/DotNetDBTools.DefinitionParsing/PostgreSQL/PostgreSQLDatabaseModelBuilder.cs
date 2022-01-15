@@ -46,8 +46,10 @@ namespace DotNetDBTools.DefinitionParsing.PostgreSQL
                 tableModel.OfType = typedTable.OfType;
         }
 
-        protected override string GetOnUpdateActionName(BaseForeignKey fk) => ((Definition.PostgreSQL.ForeignKey)fk).OnUpdate.ToString();
-        protected override string GetOnDeleteActionName(BaseForeignKey fk) => ((Definition.PostgreSQL.ForeignKey)fk).OnDelete.ToString();
+        protected override string GetOnUpdateActionName(BaseForeignKey fk) =>
+            MapFKActionNameFromDefinitionToModel(((Definition.PostgreSQL.ForeignKey)fk).OnUpdate.ToString());
+        protected override string GetOnDeleteActionName(BaseForeignKey fk) =>
+            MapFKActionNameFromDefinitionToModel(((Definition.PostgreSQL.ForeignKey)fk).OnDelete.ToString());
 
         private List<PostgreSQLCompositeType> BuildCompositeTypeModels(Assembly dbAssembly)
         {

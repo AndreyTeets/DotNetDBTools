@@ -17,7 +17,9 @@ namespace DotNetDBTools.DefinitionParsing.Agnostic
         {
         }
 
-        protected override string GetOnUpdateActionName(BaseForeignKey fk) => ((Definition.Agnostic.ForeignKey)fk).OnUpdate.ToString();
-        protected override string GetOnDeleteActionName(BaseForeignKey fk) => ((Definition.Agnostic.ForeignKey)fk).OnDelete.ToString();
+        protected override string GetOnUpdateActionName(BaseForeignKey fk) =>
+            MapFKActionNameFromDefinitionToModel(((Definition.Agnostic.ForeignKey)fk).OnUpdate.ToString());
+        protected override string GetOnDeleteActionName(BaseForeignKey fk) =>
+            MapFKActionNameFromDefinitionToModel(((Definition.Agnostic.ForeignKey)fk).OnDelete.ToString());
     }
 }

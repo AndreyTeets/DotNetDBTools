@@ -153,8 +153,8 @@ namespace DotNetDBTools.UnitTests.Analysis.Core
                         ThisColumnNames = new string[] { "C1", "C2" },
                         ReferencedTableName = "T2",
                         ReferencedTableColumnNames = new string[] { "C1", "C2" },
-                        OnUpdate = "NoAction",
-                        OnDelete = "SetNull",
+                        OnUpdate = "NO ACTION",
+                        OnDelete = "SET NULL",
                     }
                 },
             };

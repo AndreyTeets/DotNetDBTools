@@ -28,7 +28,9 @@ namespace DotNetDBTools.CodeParsing.SQLite
             ViewInfo view = new();
             view.ID = GetObjectID(context.ID_DECLARATION_COMMENT()?.GetText());
             view.Name = UnquoteIdentifier(context.view_name().GetText());
-            view.Code = GetInitialText(context);
+            view.Code = GetInitialText(context) + ";";
+            if (context.ID_DECLARATION_COMMENT() != null)
+                view.Code = view.Code.Remove(0, context.ID_DECLARATION_COMMENT().GetText().Length);
             return view;
         }
 
@@ -51,7 +53,9 @@ namespace DotNetDBTools.CodeParsing.SQLite
             trigger.ID = GetObjectID(context.ID_DECLARATION_COMMENT()?.GetText());
             trigger.Name = UnquoteIdentifier(context.trigger_name().GetText());
             trigger.Table = UnquoteIdentifier(context.table_name().GetText());
-            trigger.Code = GetInitialText(context);
+            trigger.Code = GetInitialText(context) + ";";
+            if (context.ID_DECLARATION_COMMENT() != null)
+                trigger.Code = trigger.Code.Remove(0, context.ID_DECLARATION_COMMENT().GetText().Length);
             return trigger;
         }
 

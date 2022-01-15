@@ -10,4 +10,4 @@ SELECT
     END AS c4
 FROM "MyTable2" t2
 INNER JOIN MyView3 v3 on v3.`Col1` = t2.Col1
-LEFT JOIN pragma_index_list(t2.Col2) ON TRUE
+LEFT JOIN pragma_index_list(t2.Col2) ON TRUE;

@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using DotNetDBTools.Deploy.Common.Queries.DDL;
 using DotNetDBTools.Models.Core;
-using static DotNetDBTools.Deploy.MySQL.MySQLQueriesHelper;
 
 namespace DotNetDBTools.Deploy.MySQL.Queries.DDL
 {
@@ -15,7 +14,7 @@ namespace DotNetDBTools.Deploy.MySQL.Queries.DDL
             string query =
 $@"ALTER TABLE `{tableName}` ADD CONSTRAINT `{fk.Name}` FOREIGN KEY ({string.Join(", ", fk.ThisColumnNames.Select(x => $@"`{x}`"))})
     REFERENCES `{fk.ReferencedTableName}` ({string.Join(", ", fk.ReferencedTableColumnNames.Select(x => $@"`{x}`"))})
-    ON UPDATE {MapActionName(fk.OnUpdate)} ON DELETE {MapActionName(fk.OnDelete)};";
+    ON UPDATE {fk.OnUpdate} ON DELETE {fk.OnDelete};";
 
             return query;
         }

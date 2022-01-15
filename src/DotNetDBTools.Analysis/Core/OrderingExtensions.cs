@@ -5,8 +5,14 @@ using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.Analysis.Core
 {
-    public static class TableOrderingExtensions
+    public static class OrderingExtensions
     {
+        public static List<TDbObject> OrderByName<TDbObject>(this IEnumerable<TDbObject> objects)
+            where TDbObject : DBObject
+        {
+            return objects.OrderBy(x => x.Name, StringComparer.Ordinal).ToList();
+        }
+
         public static IEnumerable<Table> PutReferencedLast(this IEnumerable<Table> tables)
         {
             if (!tables.Any())

@@ -28,7 +28,7 @@ $@"    CONSTRAINT {uc.Name} UNIQUE ({string.Join(", ", uc.Columns)})"));
             tableDefinitions.AddRange(table.ForeignKeys.Select(fk =>
 $@"    CONSTRAINT {fk.Name} FOREIGN KEY ({string.Join(", ", fk.ThisColumnNames)})
         REFERENCES {fk.ReferencedTableName}({string.Join(", ", fk.ReferencedTableColumnNames)})
-        ON UPDATE {MapActionName(fk.OnUpdate)} ON DELETE {MapActionName(fk.OnDelete)}"));
+        ON UPDATE {fk.OnUpdate} ON DELETE {fk.OnDelete}"));
 
             tableDefinitions.AddRange(table.CheckConstraints.Select(ck =>
 $@"    CONSTRAINT [{ck.Name}] {ck.GetCode()}"));
@@ -86,16 +86,5 @@ $@"    CONSTRAINT [{ck.Name}] {ck.GetCode()}"));
 
             static string ToHex(byte[] val) => $@"0x{BitConverter.ToString(val).Replace("-", "")}";
         }
-
-        public static string MapActionName(string modelActionName) =>
-            modelActionName switch
-            {
-                "NoAction" => "NO ACTION",
-                "Restrict" => "RESTRICT",
-                "Cascade" => "CASCADE",
-                "SetDefault" => "SET DEFAULT",
-                "SetNull" => "SET NULL",
-                _ => throw new InvalidOperationException($"Invalid modelActionName: '{modelActionName}'")
-            };
     }
 }

@@ -34,17 +34,6 @@ namespace DotNetDBTools.Deploy.PostgreSQL
             static string ToHex(byte[] val) => $@"'\x{BitConverter.ToString(val).Replace("-", "")}'";
         }
 
-        public static string MapActionName(string modelActionName) =>
-            modelActionName switch
-            {
-                "NoAction" => "NO ACTION",
-                "Restrict" => "RESTRICT",
-                "Cascade" => "CASCADE",
-                "SetDefault" => "SET DEFAULT",
-                "SetNull" => "SET NULL",
-                _ => throw new InvalidOperationException($"Invalid modelActionName: '{modelActionName}'")
-            };
-
         public static DataType CreateDataTypeModel(string dataType, string lengthStr, bool isBaseDataType)
         {
             if (!isBaseDataType)

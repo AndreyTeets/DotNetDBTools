@@ -1,4 +1,4 @@
-﻿namespace DotNetDBTools.UnitTests.Utilities
+﻿namespace DotNetDBTools.DefinitionParsing.Core
 {
     public static class StringExtensions
     {

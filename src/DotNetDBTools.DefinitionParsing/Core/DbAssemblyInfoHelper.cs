@@ -2,14 +2,49 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using DotNetDBTools.Definition;
 using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.DefinitionParsing.Core
 {
     internal static class DbAssemblyInfoHelper
     {
-        // TODO GetDbInfo (from assembly attributes?) instead of GetDbKind+GetDbName
-        public static DatabaseKind GetDbKind(Assembly dbAssembly)
+        public static (DefinitionKind, DatabaseKind) GetDbKind(Assembly dbAssembly)
+        {
+            DefinitionSettingsAttribute definitionSettings = dbAssembly
+                .GetCustomAttributes<DefinitionSettingsAttribute>()
+                .SingleOrDefault();
+
+            DefinitionKind definitionKind;
+            DatabaseKind databaseKind;
+            if (definitionSettings is not null)
+            {
+                definitionKind = definitionSettings.DefinitionKind;
+                databaseKind = definitionSettings.DefinitionKind switch
+                {
+                    DefinitionKind.CSharp => DeriveDbKindFromAssemblyTypes(dbAssembly),
+                    DefinitionKind.MSSQL => DatabaseKind.MSSQL,
+                    DefinitionKind.MySQL => DatabaseKind.MySQL,
+                    DefinitionKind.PostgreSQL => DatabaseKind.PostgreSQL,
+                    DefinitionKind.SQLite => DatabaseKind.SQLite,
+                    _ => throw new Exception($"Invalid definition kind: {definitionSettings.DefinitionKind}"),
+                };
+            }
+            else
+            {
+                definitionKind = DefinitionKind.CSharp;
+                databaseKind = DeriveDbKindFromAssemblyTypes(dbAssembly);
+            }
+
+            return (definitionKind, databaseKind);
+        }
+
+        public static string GetDbName(Assembly dbAssembly)
+        {
+            return dbAssembly.GetName().Name.Replace(".", "");
+        }
+
+        private static DatabaseKind DeriveDbKindFromAssemblyTypes(Assembly dbAssembly)
         {
             bool isAgnosticDb = IsAgnosticDb(dbAssembly);
             bool isMSSQLDb = IsMSSQLDb(dbAssembly);
@@ -34,11 +69,6 @@ namespace DotNetDBTools.DefinitionParsing.Core
                 return DatabaseKind.SQLite;
             else
                 throw new InvalidOperationException("Invalid dbAssembly: unknown DatabaseKind");
-        }
-
-        public static string GetDbName(Assembly dbAssembly)
-        {
-            return dbAssembly.GetName().Name.Replace(".", "");
         }
 
         private static bool IsAgnosticDb(Assembly dbAssembly)

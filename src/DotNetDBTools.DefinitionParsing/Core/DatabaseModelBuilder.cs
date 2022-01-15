@@ -190,6 +190,18 @@ namespace DotNetDBTools.DefinitionParsing.Core
         protected virtual void BuildAdditionalForeignKeyModelProperties(ForeignKey fkModel, BaseForeignKey fk, string tableName) { }
         protected abstract string GetOnUpdateActionName(BaseForeignKey fk);
         protected abstract string GetOnDeleteActionName(BaseForeignKey fk);
+        protected string MapFKActionNameFromDefinitionToModel(string fkDefinitionActionName)
+        {
+            return fkDefinitionActionName switch
+            {
+                "NoAction" => ForeignKeyActions.NoAction,
+                "Restrict" => ForeignKeyActions.Restrict,
+                "Cascade" => ForeignKeyActions.Cascade,
+                "SetDefault" => ForeignKeyActions.SetDefault,
+                "SetNull" => ForeignKeyActions.SetNull,
+                _ => throw new Exception($"Invalid foreign key definition action name '{fkDefinitionActionName}'"),
+            };
+        }
 
         private List<Index> BuildIndexModels(IBaseTable table)
             => table.GetType().GetPropertyOrFieldMembers()

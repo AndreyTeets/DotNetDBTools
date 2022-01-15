@@ -48,7 +48,7 @@ $"Trigger '{trigger.Name}' in table '{table.Name}' has different name in it's cr
             dbError = null;
             foreach (Table table in database.Tables)
             {
-                Column identityColumn = table.Columns.FirstOrDefault(c => c.Identity);
+                Column identityColumn = table.Columns.SingleOrDefault(c => c.Identity);
                 if (identityColumn is not null && table.PrimaryKey?.Columns.Any(c => c == identityColumn?.Name) != true)
                 {
                     string errorMessage =

@@ -66,7 +66,7 @@ namespace DotNetDBTools.UnitTests.Utilities
             string projectDir, string assemblyName)
         {
             List<ResourceDescription> resourcesList = new();
-            foreach (string filePath in Directory.EnumerateFiles($"{projectDir}/Sql", "*.sql", SearchOption.AllDirectories))
+            foreach (string filePath in Directory.EnumerateFiles(projectDir, "*.sql", SearchOption.AllDirectories))
             {
                 string relativeFilePath;
                 if (filePath.StartsWith(projectDir, StringComparison.OrdinalIgnoreCase))

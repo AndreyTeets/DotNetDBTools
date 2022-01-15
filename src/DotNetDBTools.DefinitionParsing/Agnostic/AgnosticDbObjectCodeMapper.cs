@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using DotNetDBTools.Definition.Agnostic;
 using DotNetDBTools.Definition.Core;
 using DotNetDBTools.DefinitionParsing.Core;
 using DotNetDBTools.Models.Core;
@@ -15,38 +16,31 @@ namespace DotNetDBTools.DefinitionParsing.Agnostic
                 Definition.Agnostic.CheckConstraint ck => new AgnosticCodePiece
                 {
                     Code = null,
-                    DbKindToCodeMap = new Dictionary<DatabaseKind, string>()
-                    {
-                        { DatabaseKind.MSSQL, ck.Code(Definition.Agnostic.DbmsKind.MSSQL) },
-                        { DatabaseKind.MySQL, ck.Code(Definition.Agnostic.DbmsKind.MySQL) },
-                        { DatabaseKind.PostgreSQL, ck.Code(Definition.Agnostic.DbmsKind.PostgreSQL) },
-                        { DatabaseKind.SQLite, ck.Code(Definition.Agnostic.DbmsKind.SQLite) },
-                    }
+                    DbKindToCodeMap = CreateDbKindToCodeMap(ck.Code),
                 },
                 Definition.Agnostic.Trigger trigger => new AgnosticCodePiece
                 {
                     Code = null,
-                    DbKindToCodeMap = new Dictionary<DatabaseKind, string>()
-                    {
-                        { DatabaseKind.MSSQL, trigger.Code(Definition.Agnostic.DbmsKind.MSSQL) },
-                        { DatabaseKind.MySQL, trigger.Code(Definition.Agnostic.DbmsKind.MySQL) },
-                        { DatabaseKind.PostgreSQL, trigger.Code(Definition.Agnostic.DbmsKind.PostgreSQL) },
-                        { DatabaseKind.SQLite, trigger.Code(Definition.Agnostic.DbmsKind.SQLite) },
-                    }
+                    DbKindToCodeMap = CreateDbKindToCodeMap(trigger.Code),
                 },
-                Definition.Agnostic.IView view => new AgnosticCodePiece
+                IView view => new AgnosticCodePiece
                 {
                     Code = null,
-                    DbKindToCodeMap = new Dictionary<DatabaseKind, string>()
-                    {
-                        { DatabaseKind.MSSQL, view.Code(Definition.Agnostic.DbmsKind.MSSQL) },
-                        { DatabaseKind.MySQL, view.Code(Definition.Agnostic.DbmsKind.MySQL) },
-                        { DatabaseKind.PostgreSQL, view.Code(Definition.Agnostic.DbmsKind.PostgreSQL) },
-                        { DatabaseKind.SQLite, view.Code(Definition.Agnostic.DbmsKind.SQLite) },
-                    }
+                    DbKindToCodeMap = CreateDbKindToCodeMap(view.Code),
                 },
                 _ => throw new InvalidOperationException($"Invalid dbObject for code mapping: {dbObject}"),
             };
+        }
+
+        private static Dictionary<DatabaseKind, string> CreateDbKindToCodeMap(Func<DbmsKind, string> getCodeFunc)
+        {
+            return new Dictionary<DatabaseKind, string>()
+                {
+                    { DatabaseKind.MSSQL, getCodeFunc(DbmsKind.MSSQL).NormalizeLineEndings() },
+                    { DatabaseKind.MySQL, getCodeFunc(DbmsKind.MySQL).NormalizeLineEndings() },
+                    { DatabaseKind.PostgreSQL, getCodeFunc(DbmsKind.PostgreSQL).NormalizeLineEndings() },
+                    { DatabaseKind.SQLite, getCodeFunc(DbmsKind.SQLite).NormalizeLineEndings() },
+                };
         }
     }
 }

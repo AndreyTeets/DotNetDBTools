@@ -18,7 +18,9 @@ namespace DotNetDBTools.DefinitionParsing.SQLite
         {
         }
 
-        protected override string GetOnUpdateActionName(BaseForeignKey fk) => ((Definition.SQLite.ForeignKey)fk).OnUpdate.ToString();
-        protected override string GetOnDeleteActionName(BaseForeignKey fk) => ((Definition.SQLite.ForeignKey)fk).OnDelete.ToString();
+        protected override string GetOnUpdateActionName(BaseForeignKey fk) =>
+            MapFKActionNameFromDefinitionToModel(((Definition.SQLite.ForeignKey)fk).OnUpdate.ToString());
+        protected override string GetOnDeleteActionName(BaseForeignKey fk) =>
+            MapFKActionNameFromDefinitionToModel(((Definition.SQLite.ForeignKey)fk).OnDelete.ToString());
     }
 }

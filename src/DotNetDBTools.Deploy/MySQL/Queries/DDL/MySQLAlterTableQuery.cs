@@ -26,7 +26,7 @@ namespace DotNetDBTools.Deploy.MySQL.Queries.DDL
 
             if (tableDiff.PrimaryKeyToDrop is not null)
             {
-                Column identityColumn = tableDiff.OldTable.Columns.FirstOrDefault(c => c.Identity);
+                Column identityColumn = tableDiff.OldTable.Columns.SingleOrDefault(c => c.Identity);
                 if (tableDiff.PrimaryKeyToDrop.Columns.Any(c => c == identityColumn?.Name))
                     sb.Append(Queries.DropPrimaryKeyAndColumnIdentityAttribute(tableDiff.NewTable.Name, identityColumn));
                 else

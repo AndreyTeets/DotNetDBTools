@@ -42,21 +42,10 @@ WHERE tc.CONSTRAINT_SCHEMA = (select DATABASE())
                     ID = Guid.NewGuid(),
                     Name = fkr.ForeignKeyName,
                     ReferencedTableName = fkr.ReferencedTableName,
-                    OnUpdate = MapUpdateActionName(fkr.OnUpdate),
-                    OnDelete = MapUpdateActionName(fkr.OnDelete),
+                    OnUpdate = fkr.OnUpdate,
+                    OnDelete = fkr.OnDelete,
                 };
             }
-
-            private static string MapUpdateActionName(string sqlActionName) =>
-                sqlActionName switch
-                {
-                    "NO ACTION" => "NoAction",
-                    "RESTRICT" => "Restrict",
-                    "CASCADE" => "Cascade",
-                    "SET DEFAULT" => "SetDefault",
-                    "SET NULL" => "SetNull",
-                    _ => throw new InvalidOperationException($"Invalid sqlActionName: '{sqlActionName}'")
-                };
         }
     }
 }

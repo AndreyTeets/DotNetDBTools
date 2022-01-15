@@ -52,10 +52,10 @@ WHERE thisTable.name != '{DNDBTSysTables.DNDBTDbObjects}';";
             private static string MapUpdateActionName(string sqlActionName) =>
                 sqlActionName switch
                 {
-                    "NO_ACTION" => "NoAction",
-                    "CASCADE" => "Cascade",
-                    "SET_DEFAULT" => "SetDefault",
-                    "SET_NULL" => "SetNull",
+                    "NO_ACTION" => ForeignKeyActions.NoAction,
+                    "CASCADE" => ForeignKeyActions.Cascade,
+                    "SET_DEFAULT" => ForeignKeyActions.SetDefault,
+                    "SET_NULL" => ForeignKeyActions.SetNull,
                     _ => throw new InvalidOperationException($"Invalid sqlActionName: '{sqlActionName}'")
                 };
         }

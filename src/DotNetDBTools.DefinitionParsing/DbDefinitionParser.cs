@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using DotNetDBTools.Definition;
 using DotNetDBTools.DefinitionParsing.Agnostic;
 using DotNetDBTools.DefinitionParsing.Core;
 using DotNetDBTools.DefinitionParsing.MSSQL;
@@ -20,7 +21,20 @@ namespace DotNetDBTools.DefinitionParsing
 
         public static Database CreateDatabaseModel(Assembly dbAssembly)
         {
-            DatabaseKind dbKind = DbAssemblyInfoHelper.GetDbKind(dbAssembly);
+            (DefinitionKind defKind, DatabaseKind dbKind) = DbAssemblyInfoHelper.GetDbKind(dbAssembly);
+            return defKind switch
+            {
+                DefinitionKind.CSharp => BuildDatabaseModelFromCSharpDefinition(dbAssembly, dbKind),
+                DefinitionKind.MSSQL => throw new NotImplementedException(),
+                DefinitionKind.MySQL => throw new NotImplementedException(),
+                DefinitionKind.PostgreSQL => throw new NotImplementedException(),
+                DefinitionKind.SQLite => new SQLiteDbModelFromSqlDefinitionBuilder().BuildDatabaseModel(dbAssembly),
+                _ => throw new InvalidOperationException($"Invalid defKind: {defKind}"),
+            };
+        }
+
+        private static Database BuildDatabaseModelFromCSharpDefinition(Assembly dbAssembly, DatabaseKind dbKind)
+        {
             return dbKind switch
             {
                 DatabaseKind.Agnostic => new AgnosticDatabaseModelBuilder().BuildDatabaseModel(dbAssembly),

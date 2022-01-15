@@ -77,7 +77,7 @@ namespace DotNetDBTools.Deploy.SQLite
 
         private void ProcessTableIdentityColumnCandidateIfExist(Table table, TableInfo tableInfo)
         {
-            Column column = table.Columns.FirstOrDefault(c => c.Identity == true);
+            Column column = table.Columns.SingleOrDefault(c => c.Identity == true);
             if (column is not null)
             {
                 ColumnInfo columnInfo = tableInfo.Columns.Single(x => x.Name == column.Name);

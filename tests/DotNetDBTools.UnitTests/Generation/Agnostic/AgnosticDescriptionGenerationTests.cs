@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Reflection;
 using DotNetDBTools.DefinitionParsing;
+using DotNetDBTools.DefinitionParsing.Core;
 using DotNetDBTools.Generation.Agnostic;
 using DotNetDBTools.Models.Agnostic;
 using DotNetDBTools.UnitTests.Utilities;

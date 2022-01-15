@@ -34,16 +34,6 @@ namespace DotNetDBTools.Deploy.MSSQL
             static string ToHex(byte[] val) => $@"0x{BitConverter.ToString(val).Replace("-", "")}";
         }
 
-        public static string MapActionName(string modelActionName) =>
-            modelActionName switch
-            {
-                "NoAction" => "NO ACTION",
-                "Cascade" => "CASCADE",
-                "SetDefault" => "SET DEFAULT",
-                "SetNull" => "SET NULL",
-                _ => throw new InvalidOperationException($"Invalid modelActionName: '{modelActionName}'")
-            };
-
         public static DataType CreateDataTypeModel(string dataType, int length, int precision, int scale)
         {
             switch (dataType)

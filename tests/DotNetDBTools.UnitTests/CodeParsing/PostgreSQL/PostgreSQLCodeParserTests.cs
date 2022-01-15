@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using DotNetDBTools.CodeParsing.Core;
 using DotNetDBTools.CodeParsing.PostgreSQL;
-using DotNetDBTools.UnitTests.Utilities;
+using DotNetDBTools.DefinitionParsing.Core;
 using FluentAssertions;
 using Xunit;
 
@@ -16,11 +15,10 @@ namespace DotNetDBTools.UnitTests.CodeParsing.PostgreSQL
         [Fact]
         public void SplitToStatements_GetsCorrectData()
         {
-            string input = File.ReadAllText(@$"{TestDataDir}/StatementsList.sql");
+            string input = File.ReadAllText(@$"{TestDataDir}/StatementsList.sql").NormalizeLineEndings();
             PostgreSQLCodeParser parser = new();
             List<string> statements = parser.SplitToStatements(input);
 
-            statements = statements.Select(x => x.NormalizeLineEndings()).ToList();
             statements.Count.Should().Be(3);
 
             statements[0].Should().StartWith("create TABLE \"Table1\"");

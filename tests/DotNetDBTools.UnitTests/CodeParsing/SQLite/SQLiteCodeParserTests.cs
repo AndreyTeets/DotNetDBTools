@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 using DotNetDBTools.CodeParsing.Core;
 using DotNetDBTools.CodeParsing.Core.Models;
 using DotNetDBTools.CodeParsing.SQLite;
+using DotNetDBTools.DefinitionParsing.Core;
 using FluentAssertions;
 using Xunit;
 
@@ -27,7 +29,7 @@ namespace DotNetDBTools.UnitTests.CodeParsing.SQLite
         [Fact]
         public void GetModelFromCreateStatement_ParsesViewCorrectly()
         {
-            string input = File.ReadAllText(@$"{TestDataDir}/CreateView.sql");
+            string input = File.ReadAllText(@$"{TestDataDir}/CreateView.sql").NormalizeLineEndings();
             SQLiteCodeParser parser = new();
             ViewInfo view = (ViewInfo)parser.GetModelFromCreateStatement(input);
 
@@ -49,7 +51,7 @@ namespace DotNetDBTools.UnitTests.CodeParsing.SQLite
         [Fact]
         public void GetModelFromCreateStatement_ParsesTriggerCorrectly()
         {
-            string input = File.ReadAllText(@$"{TestDataDir}/CreateTrigger.sql");
+            string input = File.ReadAllText(@$"{TestDataDir}/CreateTrigger.sql").NormalizeLineEndings();
             SQLiteCodeParser parser = new();
             TriggerInfo trigger = (TriggerInfo)parser.GetModelFromCreateStatement(input);
 
@@ -194,7 +196,7 @@ namespace DotNetDBTools.UnitTests.CodeParsing.SQLite
             {
                 ID = new Guid("3C36AE77-B7E4-40C3-824F-BD20DC270A14"),
                 Name = "MyView1",
-                Code = File.ReadAllText(@$"{TestDataDir}/CreateView.sql"),
+                Code = RemoveIdDeclarations(File.ReadAllText(@$"{TestDataDir}/CreateView.sql")).NormalizeLineEndings(),
             };
         }
 
@@ -217,8 +219,13 @@ namespace DotNetDBTools.UnitTests.CodeParsing.SQLite
                 ID = new Guid("2C36AE77-B7E4-40C3-824F-BD20DC270A14"),
                 Name = "TR_MyTable2_MyTrigger1",
                 Table = "MyTable2",
-                Code = File.ReadAllText(@$"{TestDataDir}/CreateTrigger.sql"),
+                Code = RemoveIdDeclarations(File.ReadAllText(@$"{TestDataDir}/CreateTrigger.sql")).NormalizeLineEndings(),
             };
+        }
+
+        private static string RemoveIdDeclarations(string input)
+        {
+            return Regex.Replace(input, @"--ID:#{[\w|-]{36}}#\r?\n", "");
         }
     }
 }
