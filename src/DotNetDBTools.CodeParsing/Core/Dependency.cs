@@ -2,7 +2,7 @@
 {
     public struct Dependency
     {
-        public ObjectType Type { get; set; }
+        public DependencyType Type { get; set; }
         public string Name { get; set; }
     }
 }

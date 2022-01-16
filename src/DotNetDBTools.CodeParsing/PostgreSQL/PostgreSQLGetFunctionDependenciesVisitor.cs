@@ -16,7 +16,7 @@ namespace DotNetDBTools.CodeParsing.PostgreSQL
         public override object VisitFunction_call([NotNull] Function_callContext context)
         {
             string functionName = Unquote(context.schema_qualified_name_nontype().GetText());
-            _dependencies.Add(new Dependency { Type = ObjectType.Function, Name = functionName });
+            _dependencies.Add(new Dependency { Type = DependencyType.Function, Name = functionName });
             return base.VisitFunction_call(context);
         }
 
@@ -25,7 +25,7 @@ namespace DotNetDBTools.CodeParsing.PostgreSQL
             if (context.schema_qualified_name() != null)
             {
                 string tableOrViewName = Unquote(context.schema_qualified_name().GetText());
-                _dependencies.Add(new Dependency { Type = ObjectType.TableOrView, Name = tableOrViewName });
+                _dependencies.Add(new Dependency { Type = DependencyType.TableOrView, Name = tableOrViewName });
             }
             return base.VisitFrom_primary(context);
         }
@@ -35,7 +35,7 @@ namespace DotNetDBTools.CodeParsing.PostgreSQL
             if (context.schema_qualified_name() != null)
             {
                 string tableName = Unquote(context.schema_qualified_name().GetText());
-                _dependencies.Add(new Dependency { Type = ObjectType.Table, Name = tableName });
+                _dependencies.Add(new Dependency { Type = DependencyType.Table, Name = tableName });
             }
             return base.VisitInsert_stmt_for_psql(context);
         }

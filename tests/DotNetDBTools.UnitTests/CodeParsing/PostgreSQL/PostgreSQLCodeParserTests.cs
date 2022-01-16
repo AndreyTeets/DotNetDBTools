@@ -49,9 +49,9 @@ namespace DotNetDBTools.UnitTests.CodeParsing.PostgreSQL
 
             List<Dependency> expectedDependencies = new()
             {
-                new Dependency { Type = ObjectType.TableOrView, Name = "MyTable2" },
-                new Dependency { Type = ObjectType.TableOrView, Name = "MyView3".ToLower() },
-                new Dependency { Type = ObjectType.Function, Name = "MyFunc4" },
+                new Dependency { Type = DependencyType.TableOrView, Name = "MyTable2" },
+                new Dependency { Type = DependencyType.TableOrView, Name = "MyView3".ToLower() },
+                new Dependency { Type = DependencyType.Function, Name = "MyFunc4" },
             };
             dependencies.Should().BeEquivalentTo(expectedDependencies);
         }
@@ -65,9 +65,9 @@ namespace DotNetDBTools.UnitTests.CodeParsing.PostgreSQL
 
             List<Dependency> expectedDependencies = new()
             {
-                new Dependency { Type = ObjectType.Table, Name = "MyTable1" },
-                new Dependency { Type = ObjectType.TableOrView, Name = "MyView2".ToLower() },
-                new Dependency { Type = ObjectType.Function, Name = "MyFunc3" },
+                new Dependency { Type = DependencyType.Table, Name = "MyTable1" },
+                new Dependency { Type = DependencyType.TableOrView, Name = "MyView2".ToLower() },
+                new Dependency { Type = DependencyType.Function, Name = "MyFunc3" },
             };
             dependencies.Should().BeEquivalentTo(expectedDependencies);
         }
@@ -81,15 +81,15 @@ namespace DotNetDBTools.UnitTests.CodeParsing.PostgreSQL
 
             List<Dependency> expectedDependencies = new()
             {
-                new Dependency { Type = ObjectType.Table, Name = "MyTable1" },
-                new Dependency { Type = ObjectType.Function, Name = "MyFunc2" },
-                new Dependency { Type = ObjectType.TableOrView, Name = "MyView3" },
-                new Dependency { Type = ObjectType.TableOrView, Name = "MyTable4" },
-                new Dependency { Type = ObjectType.TableOrView, Name = "MyView5".ToLower() },
-                new Dependency { Type = ObjectType.Table, Name = "MyTable6" },
-                new Dependency { Type = ObjectType.TableOrView, Name = "MyView7".ToLower() },
-                new Dependency { Type = ObjectType.Table, Name = "MyTable8" },
-                new Dependency { Type = ObjectType.Function, Name = "MyFunc9".ToLower() },
+                new Dependency { Type = DependencyType.Table, Name = "MyTable1" },
+                new Dependency { Type = DependencyType.Function, Name = "MyFunc2" },
+                new Dependency { Type = DependencyType.TableOrView, Name = "MyView3" },
+                new Dependency { Type = DependencyType.TableOrView, Name = "MyTable4" },
+                new Dependency { Type = DependencyType.TableOrView, Name = "MyView5".ToLower() },
+                new Dependency { Type = DependencyType.Table, Name = "MyTable6" },
+                new Dependency { Type = DependencyType.TableOrView, Name = "MyView7".ToLower() },
+                new Dependency { Type = DependencyType.Table, Name = "MyTable8" },
+                new Dependency { Type = DependencyType.Function, Name = "MyFunc9".ToLower() },
             };
             dependencies.Should().BeEquivalentTo(expectedDependencies);
         }

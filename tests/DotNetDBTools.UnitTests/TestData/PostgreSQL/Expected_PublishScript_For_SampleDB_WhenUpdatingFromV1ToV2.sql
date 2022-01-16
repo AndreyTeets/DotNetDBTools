@@ -11,21 +11,21 @@ WHERE "ID" = ''ee64ffc3-5536-4624-beaf-bc3a61d06a1a'';';
 -- QUERY END: PostgreSQLDeleteDNDBTSysInfoQuery
 
 -- QUERY START: GenericQuery
-EXECUTE 'DROP VIEW "MyView1";';
--- QUERY END: GenericQuery
-
--- QUERY START: PostgreSQLDeleteDNDBTSysInfoQuery
-EXECUTE 'DELETE FROM "DNDBTDbObjects"
-WHERE "ID" = ''e2569aae-d5da-4a77-b3cd-51adbdb272d9'';';
--- QUERY END: PostgreSQLDeleteDNDBTSysInfoQuery
-
--- QUERY START: GenericQuery
 EXECUTE 'DROP FUNCTION "TR_MyTable2_MyTrigger1_Handler";';
 -- QUERY END: GenericQuery
 
 -- QUERY START: PostgreSQLDeleteDNDBTSysInfoQuery
 EXECUTE 'DELETE FROM "DNDBTDbObjects"
 WHERE "ID" = ''8edd4469-e048-48bd-956e-a26113355f80'';';
+-- QUERY END: PostgreSQLDeleteDNDBTSysInfoQuery
+
+-- QUERY START: GenericQuery
+EXECUTE 'DROP VIEW "MyView1";';
+-- QUERY END: GenericQuery
+
+-- QUERY START: PostgreSQLDeleteDNDBTSysInfoQuery
+EXECUTE 'DELETE FROM "DNDBTDbObjects"
+WHERE "ID" = ''e2569aae-d5da-4a77-b3cd-51adbdb272d9'';';
 -- QUERY END: PostgreSQLDeleteDNDBTSysInfoQuery
 
 -- QUERY START: PostgreSQLDropForeignKeyQuery
@@ -56,6 +56,15 @@ WHERE "ID" = ''29bf2520-1d74-49ab-a602-14bd692371f2'';';
 -- QUERY END: PostgreSQLDeleteDNDBTSysInfoQuery
 
 -- QUERY START: PostgreSQLRenameTypeToTempQuery
+EXECUTE 'ALTER TYPE "MyEnumType1" RENAME TO "_DNDBTTemp_MyEnumType1";';
+-- QUERY END: PostgreSQLRenameTypeToTempQuery
+
+-- QUERY START: PostgreSQLDeleteDNDBTSysInfoQuery
+EXECUTE 'DELETE FROM "DNDBTDbObjects"
+WHERE "ID" = ''9286cc1d-f0a5-4046-adc0-b9ae298c6f91'';';
+-- QUERY END: PostgreSQLDeleteDNDBTSysInfoQuery
+
+-- QUERY START: PostgreSQLRenameTypeToTempQuery
 EXECUTE 'ALTER DOMAIN "MyDomain1" RENAME TO "_DNDBTTemp_MyDomain1";';
 -- QUERY END: PostgreSQLRenameTypeToTempQuery
 
@@ -72,15 +81,6 @@ WHERE "ID" = ''7a053cee-abcc-4993-8eea-12b87c5194e6'';';
 -- QUERY START: PostgreSQLDeleteDNDBTSysInfoQuery
 EXECUTE 'DELETE FROM "DNDBTDbObjects"
 WHERE "ID" = ''7905b7a8-cf45-4328-8a2b-00616d98235e'';';
--- QUERY END: PostgreSQLDeleteDNDBTSysInfoQuery
-
--- QUERY START: PostgreSQLRenameTypeToTempQuery
-EXECUTE 'ALTER TYPE "MyEnumType1" RENAME TO "_DNDBTTemp_MyEnumType1";';
--- QUERY END: PostgreSQLRenameTypeToTempQuery
-
--- QUERY START: PostgreSQLDeleteDNDBTSysInfoQuery
-EXECUTE 'DELETE FROM "DNDBTDbObjects"
-WHERE "ID" = ''9286cc1d-f0a5-4046-adc0-b9ae298c6f91'';';
 -- QUERY END: PostgreSQLDeleteDNDBTSysInfoQuery
 
 -- QUERY START: PostgreSQLRenameTypeToTempQuery
@@ -121,6 +121,34 @@ VALUES
     NULL,
     ''UserDefinedType'',
     ''MyCompositeType1'',
+    NULL
+);';
+-- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
+
+-- QUERY START: PostgreSQLCreateEnumTypeQuery
+EXECUTE 'CREATE TYPE "MyEnumType1" AS ENUM
+(
+    ''Label1'',
+    ''Label2'',
+    ''Label3''
+);';
+-- QUERY END: PostgreSQLCreateEnumTypeQuery
+
+-- QUERY START: PostgreSQLInsertDNDBTSysInfoQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''9286cc1d-f0a5-4046-adc0-b9ae298c6f91'',
+    NULL,
+    ''UserDefinedType'',
+    ''MyEnumType1'',
     NULL
 );';
 -- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
@@ -185,34 +213,6 @@ VALUES
     ''CheckConstraint'',
     ''MyDomain1_CK2'',
     ''CHECK (char_length(value) > 3)''
-);';
--- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
-
--- QUERY START: PostgreSQLCreateEnumTypeQuery
-EXECUTE 'CREATE TYPE "MyEnumType1" AS ENUM
-(
-    ''Label1'',
-    ''Label2'',
-    ''Label3''
-);';
--- QUERY END: PostgreSQLCreateEnumTypeQuery
-
--- QUERY START: PostgreSQLInsertDNDBTSysInfoQuery
-EXECUTE 'INSERT INTO "DNDBTDbObjects"
-(
-    "ID",
-    "ParentID",
-    "Type",
-    "Name",
-    "Code"
-)
-VALUES
-(
-    ''9286cc1d-f0a5-4046-adc0-b9ae298c6f91'',
-    NULL,
-    ''UserDefinedType'',
-    ''MyEnumType1'',
-    NULL
 );';
 -- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
 
@@ -442,22 +442,6 @@ EXECUTE 'UPDATE "DNDBTDbObjects" SET
 WHERE "ID" = ''c8b03b75-a8a2-47e0-bf5c-f3e4f1b8f500'';';
 -- QUERY END: PostgreSQLUpdateDNDBTSysInfoQuery
 
--- QUERY START: PostgreSQLDropTypeQuery
-EXECUTE 'DROP TYPE "_DNDBTTemp_MyCompositeType1";';
--- QUERY END: PostgreSQLDropTypeQuery
-
--- QUERY START: PostgreSQLDropTypeQuery
-EXECUTE 'DROP DOMAIN "_DNDBTTemp_MyDomain1";';
--- QUERY END: PostgreSQLDropTypeQuery
-
--- QUERY START: PostgreSQLDropTypeQuery
-EXECUTE 'DROP TYPE "_DNDBTTemp_MyEnumType1";';
--- QUERY END: PostgreSQLDropTypeQuery
-
--- QUERY START: PostgreSQLDropTypeQuery
-EXECUTE 'DROP TYPE "_DNDBTTemp_MyRangeType1";';
--- QUERY END: PostgreSQLDropTypeQuery
-
 -- QUERY START: PostgreSQLCreateTableQuery
 EXECUTE 'CREATE TABLE "MyTable3"
 (
@@ -542,6 +526,22 @@ VALUES
     NULL
 );';
 -- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
+
+-- QUERY START: PostgreSQLDropTypeQuery
+EXECUTE 'DROP TYPE "_DNDBTTemp_MyCompositeType1";';
+-- QUERY END: PostgreSQLDropTypeQuery
+
+-- QUERY START: PostgreSQLDropTypeQuery
+EXECUTE 'DROP TYPE "_DNDBTTemp_MyEnumType1";';
+-- QUERY END: PostgreSQLDropTypeQuery
+
+-- QUERY START: PostgreSQLDropTypeQuery
+EXECUTE 'DROP DOMAIN "_DNDBTTemp_MyDomain1";';
+-- QUERY END: PostgreSQLDropTypeQuery
+
+-- QUERY START: PostgreSQLDropTypeQuery
+EXECUTE 'DROP TYPE "_DNDBTTemp_MyRangeType1";';
+-- QUERY END: PostgreSQLDropTypeQuery
 
 -- QUERY START: PostgreSQLCreateIndexQuery
 EXECUTE 'CREATE UNIQUE INDEX "IDX_MyTable2_MyIndex1"

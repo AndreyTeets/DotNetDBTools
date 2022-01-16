@@ -1,6 +1,6 @@
 ﻿namespace DotNetDBTools.CodeParsing.Core
 {
-    public enum ObjectType
+    public enum DependencyType
     {
         Table,
         TableOrView,

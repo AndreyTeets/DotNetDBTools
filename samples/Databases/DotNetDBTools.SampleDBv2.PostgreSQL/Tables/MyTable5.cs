@@ -12,7 +12,7 @@ namespace DotNetDBTools.SampleDB.PostgreSQL.Tables
         public Column MyColumn1 = new("5309D66F-2030-402E-912E-5547BABAA072")
         {
             DataType = new IntDataType(),
-            Default = "ABS(-15)",
+            Default = @"""MyFunction1""(-25, 10)",
             DefaultIsFunction = true,
         };
 

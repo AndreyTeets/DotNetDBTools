@@ -2,18 +2,18 @@
 {
     internal enum DbObjectsTypes
     {
+        UserDefinedType,
         Table,
         Column,
         PrimaryKey,
         UniqueConstraint,
+        ForeignKey,
         CheckConstraint,
         Index,
         Trigger,
-        ForeignKey,
         View,
         Function,
         Procedure,
-        UserDefinedType,
         UserDefinedTableType,
     }
 }

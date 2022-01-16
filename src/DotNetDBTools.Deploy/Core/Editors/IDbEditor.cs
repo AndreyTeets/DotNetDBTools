@@ -8,6 +8,6 @@ namespace DotNetDBTools.Deploy.Core.Editors
         public void CreateDNDBTSysTables();
         public void DropDNDBTSysTables();
         public void PopulateDNDBTSysTables(Database database);
-        public void ApplyDatabaseDiff(DatabaseDiff databaseDiff);
+        public void ApplyDatabaseDiff(DatabaseDiff databaseDiff, DeployOptions options);
     }
 }

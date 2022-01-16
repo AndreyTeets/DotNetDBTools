@@ -64,7 +64,7 @@ namespace DotNetDBTools.Deploy.MSSQL.Editors
                 QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(proc.ID, null, DbObjectsTypes.Procedure, proc.Name, proc.GetCode()));
         }
 
-        public override void ApplyDatabaseDiff(DatabaseDiff databaseDiff)
+        public override void ApplyDatabaseDiff(DatabaseDiff databaseDiff, DeployOptions options)
         {
             MSSQLDatabaseDiff dbDiff = (MSSQLDatabaseDiff)databaseDiff;
             QueryExecutor.BeginTransaction();
@@ -81,8 +81,7 @@ namespace DotNetDBTools.Deploy.MSSQL.Editors
                     DropUserDefinedTableType(udtt);
                 _foreignKeyEditor.DropForeignKeys(dbDiff);
                 _indexEditor.DropIndexes(dbDiff);
-                foreach (MSSQLTable table in dbDiff.RemovedTables)
-                    _tableEditor.DropTable(table);
+                _tableEditor.DropTables(dbDiff);
 
                 foreach (MSSQLUserDefinedType udt in dbDiff.RemovedUserDefinedTypes.Concat(dbDiff.ChangedUserDefinedTypes.Select(x => x.OldUserDefinedType)))
                     RenameUserDefinedTypeToTempInDbAndInDbDiff(udt);
@@ -90,13 +89,11 @@ namespace DotNetDBTools.Deploy.MSSQL.Editors
                     CreateUserDefinedType(udt);
                 foreach (MSSQLUserDefinedTypeDiff udtDiff in dbDiff.ChangedUserDefinedTypes)
                     UseNewUDTInAllTables(udtDiff);
-                foreach (MSSQLTableDiff tableDiff in dbDiff.ChangedTables)
-                    _tableEditor.AlterTable(tableDiff);
+                _tableEditor.AlterTables(dbDiff);
                 foreach (MSSQLUserDefinedType udt in dbDiff.RemovedUserDefinedTypes.Concat(dbDiff.ChangedUserDefinedTypes.Select(x => x.OldUserDefinedType)))
                     DropUserDefinedType(udt);
 
-                foreach (MSSQLTable table in dbDiff.AddedTables)
-                    _tableEditor.CreateTable(table);
+                _tableEditor.CreateTables(dbDiff);
                 _indexEditor.CreateIndexes(dbDiff);
                 _foreignKeyEditor.CreateForeignKeys(dbDiff);
                 foreach (MSSQLUserDefinedTableType udtt in dbDiff.UserDefinedTableTypesToCreate)

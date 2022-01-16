@@ -15,34 +15,30 @@ namespace DotNetDBTools.Analysis.PostgreSQL
 
         public override DatabaseDiff CreateDatabaseDiff(Database newDatabase, Database oldDatabase)
         {
-            PostgreSQLDatabaseDiff databaseDiff = new()
+            PostgreSQLDatabaseDiff dbDiff = new()
             {
                 NewDatabase = newDatabase,
                 OldDatabase = oldDatabase,
-                ViewsToCreate = new List<PostgreSQLView>(),
-                ViewsToDrop = new List<PostgreSQLView>(),
-                FunctionsToCreate = new List<PostgreSQLFunction>(),
-                FunctionsToDrop = new List<PostgreSQLFunction>(),
                 ProceduresToCreate = new List<PostgreSQLProcedure>(),
                 ProceduresToDrop = new List<PostgreSQLProcedure>(),
             };
 
-            BuildCompositeTypesDiff(databaseDiff, (PostgreSQLDatabase)newDatabase, (PostgreSQLDatabase)oldDatabase);
-            BuildDomainTypesDiff(databaseDiff, (PostgreSQLDatabase)newDatabase, (PostgreSQLDatabase)oldDatabase);
-            BuildEnumTypesDiff(databaseDiff, (PostgreSQLDatabase)newDatabase, (PostgreSQLDatabase)oldDatabase);
-            BuildRangeTypesDiff(databaseDiff, (PostgreSQLDatabase)newDatabase, (PostgreSQLDatabase)oldDatabase);
-            FillChangedUserDefinedTypesNames(databaseDiff);
+            BuildCompositeTypesDiff(dbDiff, (PostgreSQLDatabase)newDatabase, (PostgreSQLDatabase)oldDatabase);
+            BuildDomainTypesDiff(dbDiff, (PostgreSQLDatabase)newDatabase, (PostgreSQLDatabase)oldDatabase);
+            BuildEnumTypesDiff(dbDiff, (PostgreSQLDatabase)newDatabase, (PostgreSQLDatabase)oldDatabase);
+            BuildRangeTypesDiff(dbDiff, (PostgreSQLDatabase)newDatabase, (PostgreSQLDatabase)oldDatabase);
+            FillChangedUserDefinedTypesNames(dbDiff);
 
-            BuildFunctionsDiff(databaseDiff);
-            FillFunctionsToCreateNames(databaseDiff);
+            BuildFunctionsDiff(dbDiff);
+            FillFunctionsToCreateNames(dbDiff);
 
-            BuildTablesDiff<PostgreSQLTableDiff>(databaseDiff, newDatabase, oldDatabase);
-            IndexesHelper.BuildAllDbIndexesToBeDroppedAndCreated(databaseDiff);
-            TriggersHelper.BuildAllDbTriggersToBeDroppedAndCreated(databaseDiff);
-            ForeignKeysHelper.BuildAllForeignKeysToBeDroppedAndCreated(databaseDiff);
+            BuildTablesDiff<PostgreSQLTableDiff>(dbDiff, newDatabase, oldDatabase);
+            IndexesHelper.BuildAllDbIndexesToBeDroppedAndCreated(dbDiff);
+            TriggersHelper.BuildAllDbTriggersToBeDroppedAndCreated(dbDiff);
+            ForeignKeysHelper.BuildAllForeignKeysToBeDroppedAndCreated(dbDiff);
 
-            BuildViewsDiff(databaseDiff);
-            return databaseDiff;
+            BuildViewsDiff(dbDiff);
+            return dbDiff;
         }
 
         protected override bool AdditionalItemsNonEqualityConditionIsTrue<TItem>(TItem newItem, TItem oldItem)

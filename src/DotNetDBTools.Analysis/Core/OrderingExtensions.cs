@@ -7,98 +7,93 @@ namespace DotNetDBTools.Analysis.Core
 {
     public static class OrderingExtensions
     {
-        public static List<TDbObject> OrderByName<TDbObject>(this IEnumerable<TDbObject> objects)
+        public static List<TDbObject> OrderByName<TDbObject>(this IEnumerable<TDbObject> dbObjects)
             where TDbObject : DBObject
         {
-            return objects.OrderBy(x => x.Name, StringComparer.Ordinal).ToList();
+            return dbObjects.OrderBy(x => x.Name, StringComparer.Ordinal).ToList();
         }
 
-        public static IEnumerable<Table> PutReferencedLast(this IEnumerable<Table> tables)
+        public static IEnumerable<DBObject> OrderByDependenciesLast(this IEnumerable<DBObject> dbObjects)
         {
-            if (!tables.Any())
-                return tables;
-            List<Table> orderedTables = new();
-            IEnumerable<IEnumerable<Table>> orderedGroups = GetOrderedGroups(tables);
-            foreach (IEnumerable<Table> group in orderedGroups)
-                orderedTables.AddRange(group);
-            return orderedTables;
+            if (!dbObjects.Any())
+                return dbObjects;
+            List<DBObject> orderedDbObjects = new();
+            IEnumerable<IEnumerable<DBObject>> orderedGroups = GetOrderedGroups(dbObjects);
+            foreach (IEnumerable<DBObject> group in orderedGroups)
+                orderedDbObjects.AddRange(group);
+            return orderedDbObjects;
         }
 
-        public static IEnumerable<Table> PutReferencedFirst(this IEnumerable<Table> tables)
+        public static IEnumerable<DBObject> OrderByDependenciesFirst(this IEnumerable<DBObject> dbObjects)
         {
-            if (!tables.Any())
-                return tables;
-            List<Table> orderedTables = new();
-            IEnumerable<IEnumerable<Table>> orderedGroups = GetOrderedGroups(tables);
-            foreach (IEnumerable<Table> group in orderedGroups.Reverse())
-                orderedTables.AddRange(group);
-            return orderedTables;
+            if (!dbObjects.Any())
+                return dbObjects;
+            List<DBObject> orderedDbObjects = new();
+            IEnumerable<IEnumerable<DBObject>> orderedGroups = GetOrderedGroups(dbObjects);
+            foreach (IEnumerable<DBObject> group in orderedGroups.Reverse())
+                orderedDbObjects.AddRange(group);
+            return orderedDbObjects;
         }
 
-        private static IEnumerable<IEnumerable<Table>> GetOrderedGroups(IEnumerable<Table> tables)
+        private static IEnumerable<IEnumerable<DBObject>> GetOrderedGroups(IEnumerable<DBObject> dbObjects)
         {
-            List<IEnumerable<Table>> orderedGroups = new();
-            HashSet<Table> uprocessedTables = new(tables);
-            HashSet<string> processedTables = new();
-            Dictionary<string, HashSet<string>> referencedByMap = CreateReferencedByMap(tables);
-            AddTablesUnreferencedByAnyOtherUnprocessedTable(orderedGroups, uprocessedTables, processedTables, referencedByMap);
+            List<IEnumerable<DBObject>> orderedGroups = new();
+            HashSet<DBObject> uprocessedDbObjects = new(dbObjects);
+            HashSet<Guid> processedDbObjects = new();
+            Dictionary<Guid, HashSet<Guid>> isDependencyOfMap = CreateIsDependencyOfMap(dbObjects);
+            AddDbObjectsThatAreNotDependencyOfAnyOtherUnprocessedDbObject(
+                orderedGroups, uprocessedDbObjects, processedDbObjects, isDependencyOfMap);
             return orderedGroups;
         }
 
-        private static void AddTablesUnreferencedByAnyOtherUnprocessedTable(
-            List<IEnumerable<Table>> orderedGroups,
-            HashSet<Table> uprocessedTables,
-            HashSet<string> processedTables,
-            Dictionary<string, HashSet<string>> referencedByMap)
+        private static void AddDbObjectsThatAreNotDependencyOfAnyOtherUnprocessedDbObject(
+            List<IEnumerable<DBObject>> orderedGroups,
+            HashSet<DBObject> uprocessedDbObjects,
+            HashSet<Guid> processedDbObjects,
+            Dictionary<Guid, HashSet<Guid>> isDependencyOfMap)
         {
-            IEnumerable<Table> tablesUnreferencedByAnyOtherUnprocessedTable = uprocessedTables.Where(table =>
-            {
-                bool tableIsReferencedByAnotherUnprocessedTable;
-                if (referencedByMap.TryGetValue(table.Name, out HashSet<string> referencingTables))
+            IEnumerable<DBObject> dbObjectsThatAreNotDependencyOfAnyOtherUnprocessedDbObject =
+                uprocessedDbObjects.Where(dbObject =>
                 {
-                    IEnumerable<string> uprocessedReferencingTables = referencingTables.Except(processedTables);
-                    tableIsReferencedByAnotherUnprocessedTable = uprocessedReferencingTables.Any();
-                }
-                else
-                {
-                    tableIsReferencedByAnotherUnprocessedTable = false;
-                }
-                return !tableIsReferencedByAnotherUnprocessedTable;
-            });
+                    bool dbObjectIsDependencyOfAnotherUnprocessedDbObject;
+                    if (isDependencyOfMap.TryGetValue(dbObject.ID, out HashSet<Guid> isDependencyOf))
+                        dbObjectIsDependencyOfAnotherUnprocessedDbObject = isDependencyOf.Except(processedDbObjects).Any();
+                    else
+                        dbObjectIsDependencyOfAnotherUnprocessedDbObject = false;
+                    return !dbObjectIsDependencyOfAnotherUnprocessedDbObject;
+                });
 
-            IEnumerable<Table> newProcessedGroup = tablesUnreferencedByAnyOtherUnprocessedTable
-                .OrderBy(table => table.Name, StringComparer.Ordinal)
+            IEnumerable<DBObject> newProcessedGroup = dbObjectsThatAreNotDependencyOfAnyOtherUnprocessedDbObject
+                .OrderBy(x => x.ID)
                 .ToList();
 
             if (!newProcessedGroup.Any())
-                throw new Exception("Invalid table references graph, probably with cyclic dependency");
+                throw new Exception("Invalid objects dependencies graph, probably with cyclic dependency");
 
             orderedGroups.Add(newProcessedGroup);
-            processedTables.UnionWith(newProcessedGroup.Select(table => table.Name));
-            uprocessedTables.ExceptWith(newProcessedGroup);
+            processedDbObjects.UnionWith(newProcessedGroup.Select(x => x.ID));
+            uprocessedDbObjects.ExceptWith(newProcessedGroup);
 
-            if (!uprocessedTables.Any())
+            if (!uprocessedDbObjects.Any())
                 return;
 
-            AddTablesUnreferencedByAnyOtherUnprocessedTable(orderedGroups, uprocessedTables, processedTables, referencedByMap);
+            AddDbObjectsThatAreNotDependencyOfAnyOtherUnprocessedDbObject(
+                orderedGroups, uprocessedDbObjects, processedDbObjects, isDependencyOfMap);
         }
 
-        private static Dictionary<string, HashSet<string>> CreateReferencedByMap(
-            IEnumerable<Table> tables)
+        private static Dictionary<Guid, HashSet<Guid>> CreateIsDependencyOfMap(IEnumerable<DBObject> dbObjects)
         {
-            Dictionary<string, HashSet<string>> referencedByMap = new();
-            foreach (Table table in tables)
+            Dictionary<Guid, HashSet<Guid>> isDependencyOfMap = new();
+            foreach (DBObject dbObject in dbObjects)
             {
-                IEnumerable<string> referencedTablesNames = table.ForeignKeys.Select(x => x.ReferencedTableName);
-                foreach (string referencedTableName in referencedTablesNames)
+                foreach (DBObject dep in dbObject.DependsOn)
                 {
-                    if (referencedByMap.ContainsKey(referencedTableName))
-                        referencedByMap[referencedTableName].Add(table.Name);
-                    else
-                        referencedByMap.Add(referencedTableName, new HashSet<string>() { table.Name });
+                    if (!isDependencyOfMap.ContainsKey(dep.ID))
+                        isDependencyOfMap.Add(dep.ID, new HashSet<Guid>());
+                    isDependencyOfMap[dep.ID].Add(dbObject.ID);
                 }
             }
-            return referencedByMap;
+            return isDependencyOfMap;
         }
     }
 }

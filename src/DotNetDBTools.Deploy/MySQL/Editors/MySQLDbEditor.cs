@@ -57,7 +57,7 @@ namespace DotNetDBTools.Deploy.MySQL.Editors
                 QueryExecutor.Execute(new MySQLInsertDNDBTSysInfoQuery(proc.ID, null, DbObjectsTypes.Procedure, proc.Name, proc.GetCode()));
         }
 
-        public override void ApplyDatabaseDiff(DatabaseDiff databaseDiff)
+        public override void ApplyDatabaseDiff(DatabaseDiff databaseDiff, DeployOptions options)
         {
             MySQLDatabaseDiff dbDiff = (MySQLDatabaseDiff)databaseDiff;
 
@@ -70,14 +70,9 @@ namespace DotNetDBTools.Deploy.MySQL.Editors
                 DropFunction(function);
             _foreignKeyEditor.DropForeignKeys(dbDiff);
             _indexEditor.DropIndexes(dbDiff);
-            foreach (MySQLTable table in dbDiff.RemovedTables)
-                _tableEditor.DropTable(table);
-
-            foreach (MySQLTableDiff tableDiff in dbDiff.ChangedTables)
-                _tableEditor.AlterTable(tableDiff);
-
-            foreach (MySQLTable table in dbDiff.AddedTables)
-                _tableEditor.CreateTable(table);
+            _tableEditor.DropTables(dbDiff);
+            _tableEditor.AlterTables(dbDiff);
+            _tableEditor.CreateTables(dbDiff);
             _indexEditor.CreateIndexes(dbDiff);
             _foreignKeyEditor.CreateForeignKeys(dbDiff);
             foreach (MySQLFunction function in dbDiff.FunctionsToCreate)

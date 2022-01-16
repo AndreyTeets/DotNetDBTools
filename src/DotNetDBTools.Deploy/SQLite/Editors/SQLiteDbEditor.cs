@@ -47,7 +47,7 @@ namespace DotNetDBTools.Deploy.SQLite.Editors
                 QueryExecutor.Execute(new SQLiteInsertDNDBTSysInfoQuery(view.ID, null, DbObjectsTypes.View, view.Name, view.GetCode()));
         }
 
-        public override void ApplyDatabaseDiff(DatabaseDiff databaseDiff)
+        public override void ApplyDatabaseDiff(DatabaseDiff databaseDiff, DeployOptions options)
         {
             SQLiteDatabaseDiff dbDiff = (SQLiteDatabaseDiff)databaseDiff;
             QueryExecutor.BeginTransaction();
@@ -55,12 +55,9 @@ namespace DotNetDBTools.Deploy.SQLite.Editors
             {
                 foreach (SQLiteView view in dbDiff.ViewsToDrop)
                     DropView(view);
-                foreach (SQLiteTable table in dbDiff.RemovedTables)
-                    _tableEditor.DropTable(table);
-                foreach (SQLiteTableDiff tableDiff in dbDiff.ChangedTables)
-                    _tableEditor.AlterTable(tableDiff);
-                foreach (SQLiteTable table in dbDiff.AddedTables)
-                    _tableEditor.CreateTable(table);
+                _tableEditor.DropTables(dbDiff);
+                _tableEditor.AlterTables(dbDiff);
+                _tableEditor.CreateTables(dbDiff);
                 foreach (SQLiteView view in dbDiff.ViewsToCreate)
                     CreateView(view);
             }

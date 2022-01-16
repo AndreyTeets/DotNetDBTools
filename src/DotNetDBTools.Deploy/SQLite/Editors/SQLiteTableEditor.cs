@@ -17,7 +17,7 @@ namespace DotNetDBTools.Deploy.SQLite.Editors
         public SQLiteTableEditor(IQueryExecutor queryExecutor)
             : base(queryExecutor) { }
 
-        public override void CreateTable(Table table)
+        protected override void CreateTable(Table table)
         {
             base.CreateTable(table);
             foreach (ForeignKey fk in table.ForeignKeys)
@@ -28,7 +28,7 @@ namespace DotNetDBTools.Deploy.SQLite.Editors
                 QueryExecutor.Execute(new SQLiteInsertDNDBTSysInfoQuery(idx.ID, table.ID, DbObjectsTypes.Index, idx.Name));
         }
 
-        public override void DropTable(Table table)
+        protected override void DropTable(Table table)
         {
             base.DropTable(table);
             foreach (Index idx in table.Indexes)
@@ -39,7 +39,7 @@ namespace DotNetDBTools.Deploy.SQLite.Editors
                 QueryExecutor.Execute(new SQLiteDeleteDNDBTSysInfoQuery(fk.ID));
         }
 
-        public override void AlterTable(TableDiff tableDiff)
+        protected override void AlterTable(TableDiff tableDiff)
         {
             base.AlterTable(tableDiff);
 

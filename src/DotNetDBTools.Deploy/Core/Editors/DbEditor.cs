@@ -35,6 +35,6 @@ namespace DotNetDBTools.Deploy.Core.Editors
         }
 
         public abstract void PopulateDNDBTSysTables(Database database);
-        public abstract void ApplyDatabaseDiff(DatabaseDiff databaseDiff);
+        public abstract void ApplyDatabaseDiff(DatabaseDiff databaseDiff, DeployOptions options);
     }
 }

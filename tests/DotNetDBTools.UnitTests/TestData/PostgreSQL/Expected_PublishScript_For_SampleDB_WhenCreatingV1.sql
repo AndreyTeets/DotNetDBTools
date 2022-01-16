@@ -28,6 +28,70 @@ VALUES
 );';
 -- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
 
+-- QUERY START: GenericQuery
+EXECUTE 'CREATE FUNCTION "MyFunction1"(a INT, b INT)
+RETURNS INT
+LANGUAGE SQL
+IMMUTABLE
+AS
+$FuncBody$
+SELECT a + b;
+$FuncBody$;';
+-- QUERY END: GenericQuery
+
+-- QUERY START: PostgreSQLInsertDNDBTSysInfoQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''63d3a414-2893-4462-b3f8-04633101263a'',
+    NULL,
+    ''Function'',
+    ''MyFunction1'',
+    ''CREATE FUNCTION "MyFunction1"(a INT, b INT)
+RETURNS INT
+LANGUAGE SQL
+IMMUTABLE
+AS
+$FuncBody$
+SELECT a + b;
+$FuncBody$;''
+);';
+-- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
+
+-- QUERY START: PostgreSQLCreateEnumTypeQuery
+EXECUTE 'CREATE TYPE "MyEnumType1" AS ENUM
+(
+    ''Label1'',
+    ''Label2''
+);';
+-- QUERY END: PostgreSQLCreateEnumTypeQuery
+
+-- QUERY START: PostgreSQLInsertDNDBTSysInfoQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''9286cc1d-f0a5-4046-adc0-b9ae298c6f91'',
+    NULL,
+    ''UserDefinedType'',
+    ''MyEnumType1'',
+    NULL
+);';
+-- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
+
 -- QUERY START: PostgreSQLCreateDomainTypeQuery
 EXECUTE 'CREATE DOMAIN "MyDomain1" AS VARCHAR(100)    NULL
     CONSTRAINT "MyDomain1_CK1" CHECK (value = lower(value))
@@ -88,33 +152,6 @@ VALUES
     ''CheckConstraint'',
     ''MyDomain1_CK2'',
     ''CHECK (char_length(value) > 3)''
-);';
--- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
-
--- QUERY START: PostgreSQLCreateEnumTypeQuery
-EXECUTE 'CREATE TYPE "MyEnumType1" AS ENUM
-(
-    ''Label1'',
-    ''Label2''
-);';
--- QUERY END: PostgreSQLCreateEnumTypeQuery
-
--- QUERY START: PostgreSQLInsertDNDBTSysInfoQuery
-EXECUTE 'INSERT INTO "DNDBTDbObjects"
-(
-    "ID",
-    "ParentID",
-    "Type",
-    "Name",
-    "Code"
-)
-VALUES
-(
-    ''9286cc1d-f0a5-4046-adc0-b9ae298c6f91'',
-    NULL,
-    ''UserDefinedType'',
-    ''MyEnumType1'',
-    NULL
 );';
 -- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
 
@@ -444,7 +481,7 @@ VALUES
 -- QUERY START: PostgreSQLCreateTableQuery
 EXECUTE 'CREATE TABLE "MyTable5"
 (
-    "MyColumn1" INT NOT NULL DEFAULT ABS(-15),
+    "MyColumn1" INT NOT NULL DEFAULT "MyFunction1"(-25, 10),
     "MyColumn2" "MyCompositeType1" NOT NULL,
     "MyColumn3" TIMESTAMPTZ(6) NULL,
     "MyColumn4" "MyDomain1" NOT NULL,
@@ -487,7 +524,7 @@ VALUES
     ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
     ''Column'',
     ''MyColumn1'',
-    ''ABS(-15)''
+    ''"MyFunction1"(-25, 10)''
 );';
 -- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
 
@@ -632,43 +669,6 @@ VALUES
     ''ForeignKey'',
     ''FK_MyTable1_MyColumn1_MyTable2_MyColumn1'',
     NULL
-);';
--- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
-
--- QUERY START: GenericQuery
-EXECUTE 'CREATE FUNCTION "MyFunction1"(a INT, b INT)
-RETURNS INT
-LANGUAGE SQL
-IMMUTABLE
-AS
-$FuncBody$
-SELECT a + b;
-$FuncBody$;';
--- QUERY END: GenericQuery
-
--- QUERY START: PostgreSQLInsertDNDBTSysInfoQuery
-EXECUTE 'INSERT INTO "DNDBTDbObjects"
-(
-    "ID",
-    "ParentID",
-    "Type",
-    "Name",
-    "Code"
-)
-VALUES
-(
-    ''63d3a414-2893-4462-b3f8-04633101263a'',
-    NULL,
-    ''Function'',
-    ''MyFunction1'',
-    ''CREATE FUNCTION "MyFunction1"(a INT, b INT)
-RETURNS INT
-LANGUAGE SQL
-IMMUTABLE
-AS
-$FuncBody$
-SELECT a + b;
-$FuncBody$;''
 );';
 -- QUERY END: PostgreSQLInsertDNDBTSysInfoQuery
 

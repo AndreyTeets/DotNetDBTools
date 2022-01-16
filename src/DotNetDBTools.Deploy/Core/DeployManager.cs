@@ -43,7 +43,7 @@ namespace DotNetDBTools.Deploy.Core
             ValidateDatabaseDiff(databaseDiff);
 
             IDbEditor dbEditor = _factory.CreateDbEditor(_factory.CreateQueryExecutor(connection));
-            dbEditor.ApplyDatabaseDiff(databaseDiff);
+            dbEditor.ApplyDatabaseDiff(databaseDiff, Options);
         }
 
         public void GeneratePublishScript(string dbAssemblyPath, DbConnection connection, string outputPath)
@@ -126,7 +126,7 @@ namespace DotNetDBTools.Deploy.Core
 
             IGenSqlScriptQueryExecutor genSqlScriptQueryExecutor = _factory.CreateGenSqlScriptQueryExecutor();
             IDbEditor dbEditor = _factory.CreateDbEditor(genSqlScriptQueryExecutor);
-            dbEditor.ApplyDatabaseDiff(databaseDiff);
+            dbEditor.ApplyDatabaseDiff(databaseDiff, Options);
             string generatedScript = genSqlScriptQueryExecutor.GetFinalScript();
 
             string fullPath = Path.GetFullPath(outputPath);

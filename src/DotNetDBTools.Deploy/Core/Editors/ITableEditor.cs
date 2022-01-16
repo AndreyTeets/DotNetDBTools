@@ -4,8 +4,8 @@ namespace DotNetDBTools.Deploy.Core.Editors
 {
     internal interface ITableEditor
     {
-        public void CreateTable(Table table);
-        public void DropTable(Table table);
-        public void AlterTable(TableDiff tableDiff);
+        public void CreateTables(DatabaseDiff dbDiff);
+        public void DropTables(DatabaseDiff dbDiff);
+        public void AlterTables(DatabaseDiff dbDiff);
     }
 }

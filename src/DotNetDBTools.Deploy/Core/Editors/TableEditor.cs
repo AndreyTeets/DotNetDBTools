@@ -27,7 +27,25 @@ namespace DotNetDBTools.Deploy.Core.Editors
             QueryExecutor = queryExecutor;
         }
 
-        public virtual void CreateTable(Table table)
+        public void CreateTables(DatabaseDiff dbDiff)
+        {
+            foreach (Table table in dbDiff.AddedTables)
+                CreateTable(table);
+        }
+
+        public void DropTables(DatabaseDiff dbDiff)
+        {
+            foreach (Table table in dbDiff.RemovedTables)
+                DropTable(table);
+        }
+
+        public void AlterTables(DatabaseDiff dbDiff)
+        {
+            foreach (TableDiff tableDiff in dbDiff.ChangedTables)
+                AlterTable(tableDiff);
+        }
+
+        protected virtual void CreateTable(Table table)
         {
             QueryExecutor.Execute(Create<TCreateTableQuery>(table));
             QueryExecutor.Execute(Create<TInsertDNDBTSysInfoQuery>(table.ID, null, DbObjectsTypes.Table, table.Name));
@@ -42,7 +60,7 @@ namespace DotNetDBTools.Deploy.Core.Editors
                 QueryExecutor.Execute(Create<TInsertDNDBTSysInfoQuery>(ck.ID, table.ID, DbObjectsTypes.CheckConstraint, ck.Name, ck.GetCode()));
         }
 
-        public virtual void DropTable(Table table)
+        protected virtual void DropTable(Table table)
         {
             QueryExecutor.Execute(Create<TDropTableQuery>(table));
             foreach (CheckConstraint ck in table.CheckConstraints)
@@ -57,7 +75,7 @@ namespace DotNetDBTools.Deploy.Core.Editors
             QueryExecutor.Execute(Create<TDeleteDNDBTSysInfoQuery>(table.ID));
         }
 
-        public virtual void AlterTable(TableDiff tableDiff)
+        protected virtual void AlterTable(TableDiff tableDiff)
         {
             QueryExecutor.Execute(Create<TAlterTableQuery>(tableDiff));
 
