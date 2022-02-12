@@ -7,8 +7,9 @@ namespace DotNetDBTools.SampleDB.Agnostic
 {
     public static class StringExtensions
     {
-        public static string Quote(this string identifier, DbmsKind dbmsKind) =>
-            dbmsKind switch
+        public static string Quote(this string identifier, DbmsKind dbmsKind)
+        {
+            return dbmsKind switch
             {
                 DbmsKind.MSSQL => $@"[{identifier}]",
                 DbmsKind.MySQL => $@"`{identifier}`",
@@ -16,9 +17,12 @@ namespace DotNetDBTools.SampleDB.Agnostic
                 DbmsKind.SQLite => $@"[{identifier}]",
                 _ => throw new InvalidOperationException($"Unsupported dbmsKind for idintifier quoting: {dbmsKind}")
             };
+        }
 
-        public static string AsSqlResource(this string sqlResource, DbmsKind dbmsKind) =>
-            GetEmbeddedResourceAsString($"Sql.{dbmsKind}.{sqlResource}");
+        public static string AsSqlResource(this string sqlResource, DbmsKind dbmsKind)
+        {
+            return GetEmbeddedResourceAsString($"Sql.{dbmsKind}.{sqlResource}");
+        }
 
         private static string GetEmbeddedResourceAsString(string resourceName)
         {

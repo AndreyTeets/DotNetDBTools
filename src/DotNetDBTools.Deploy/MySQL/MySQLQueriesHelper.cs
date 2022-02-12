@@ -12,12 +12,14 @@ internal static class MySQLQueriesHelper
         return column.Identity ? " AUTO_INCREMENT" : "";
     }
 
-    public static string GetNullabilityStatement(Column column) =>
-        column.Nullable switch
+    public static string GetNullabilityStatement(Column column)
+    {
+        return column.Nullable switch
         {
             true => "NULL",
             false => "NOT NULL",
         };
+    }
 
     public static string QuoteDefaultValue(object value)
     {

@@ -45,8 +45,10 @@ WHERE t.name != '{DNDBTSysTables.DNDBTDbObjects}';";
 
     public class MSSQLRecordsLoader : RecordsLoader
     {
-        public override IEnumerable<ColumnRecord> GetRecords(IQueryExecutor queryExecutor, GetColumnsFromDBMSSysInfoQuery query) =>
-            queryExecutor.Query<MSSQLColumnRecord>(query);
+        public override IEnumerable<ColumnRecord> GetRecords(IQueryExecutor queryExecutor, GetColumnsFromDBMSSysInfoQuery query)
+        {
+            return queryExecutor.Query<MSSQLColumnRecord>(query);
+        }
     }
 
     public class MSSQLRecordMapper : RecordMapper

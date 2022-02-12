@@ -45,8 +45,10 @@ WHERE c.relkind = 'r'
 
     public class PostgreSQLRecordsLoader : RecordsLoader
     {
-        public override IEnumerable<ColumnRecord> GetRecords(IQueryExecutor queryExecutor, GetColumnsFromDBMSSysInfoQuery query) =>
-            queryExecutor.Query<PostgreSQLColumnRecord>(query);
+        public override IEnumerable<ColumnRecord> GetRecords(IQueryExecutor queryExecutor, GetColumnsFromDBMSSysInfoQuery query)
+        {
+            return queryExecutor.Query<PostgreSQLColumnRecord>(query);
+        }
     }
 
     public class PostgreSQLRecordMapper : RecordMapper

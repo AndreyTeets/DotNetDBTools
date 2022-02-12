@@ -18,14 +18,17 @@ public class MySQLDbModelConverter : IDbModelConverter
     }
 
     private static MySQLDatabase ConvertToMySQLModel(AgnosticDatabase database)
-       => new(database.Name)
-       {
-           Tables = database.Tables.Select(x => ConvertToMySQLModel((AgnosticTable)x)).ToList(),
-           Views = database.Views.Select(x => ConvertToMySQLModel((AgnosticView)x)).ToList(),
-       };
+    {
+        return new(database.Name)
+        {
+            Tables = database.Tables.Select(x => ConvertToMySQLModel((AgnosticTable)x)).ToList(),
+            Views = database.Views.Select(x => ConvertToMySQLModel((AgnosticView)x)).ToList(),
+        };
+    }
 
     private static MySQLTable ConvertToMySQLModel(AgnosticTable table)
-        => new()
+    {
+        return new()
         {
             ID = table.ID,
             Name = table.Name,
@@ -37,22 +40,27 @@ public class MySQLDbModelConverter : IDbModelConverter
             Triggers = table.Triggers.Select(trigger => { trigger.CodePiece = ConvertCodePiece(trigger.CodePiece); return trigger; }).ToList(),
             ForeignKeys = table.ForeignKeys,
         };
+    }
 
     private static MySQLView ConvertToMySQLModel(AgnosticView view)
-        => new()
+    {
+        return new()
         {
             ID = view.ID,
             Name = view.Name,
             CodePiece = new CodePiece { Code = ((AgnosticCodePiece)view.CodePiece).DbKindToCodeMap[DatabaseKind.MySQL] },
         };
+    }
 
     private static PrimaryKey ConvertToMySQLModel(PrimaryKey pk, string tableName)
-        => new()
+    {
+        return new()
         {
             ID = pk.ID,
             Name = $"PK_{tableName}",
             Columns = pk.Columns,
         };
+    }
 
     private static IEnumerable<Column> ConvertToMySQLModel(IEnumerable<Column> columns)
     {

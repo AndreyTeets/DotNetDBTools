@@ -34,8 +34,10 @@ WHERE sm.type = 'table'
 
     public class SQLiteRecordsLoader : RecordsLoader
     {
-        public override IEnumerable<ColumnRecord> GetRecords(IQueryExecutor queryExecutor, GetColumnsFromDBMSSysInfoQuery query) =>
-            queryExecutor.Query<SQLiteColumnRecord>(query);
+        public override IEnumerable<ColumnRecord> GetRecords(IQueryExecutor queryExecutor, GetColumnsFromDBMSSysInfoQuery query)
+        {
+            return queryExecutor.Query<SQLiteColumnRecord>(query);
+        }
     }
 
     public class SQLiteRecordMapper : RecordMapper

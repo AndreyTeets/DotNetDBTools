@@ -62,8 +62,9 @@ WHERE this_table.relkind = 'r'
             };
         }
 
-        private static string MapUpdateActionName(string sqlActionName) =>
-            sqlActionName switch
+        private static string MapUpdateActionName(string sqlActionName)
+        {
+            return sqlActionName switch
             {
                 "a" => ForeignKeyActions.NoAction,
                 "r" => ForeignKeyActions.Restrict,
@@ -72,5 +73,6 @@ WHERE this_table.relkind = 'r'
                 "n" => ForeignKeyActions.SetNull,
                 _ => throw new InvalidOperationException($"Invalid sqlActionName: '{sqlActionName}'")
             };
+        }
     }
 }

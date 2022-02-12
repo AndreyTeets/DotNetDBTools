@@ -56,12 +56,14 @@ $@"    CONSTRAINT [{ck.Name}] {ck.GetCode()}"));
         return "";
     }
 
-    private static string GetNullabilityStatement(Column column) =>
-        column.Nullable switch
+    private static string GetNullabilityStatement(Column column)
+    {
+        return column.Nullable switch
         {
             true => "NULL",
             false => "NOT NULL",
         };
+    }
 
     private static string GetDefaultValStatement(Column column)
     {

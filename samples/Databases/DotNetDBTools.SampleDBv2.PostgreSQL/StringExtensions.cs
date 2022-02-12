@@ -6,11 +6,15 @@ namespace DotNetDBTools.SampleDB.PostgreSQL
 {
     public static class StringExtensions
     {
-        public static string Quote(this string identifier) =>
-            $@"""{identifier}""";
+        public static string Quote(this string identifier)
+        {
+            return $@"""{identifier}""";
+        }
 
-        public static string AsSqlResource(this string sqlResource) =>
-            GetEmbeddedResourceAsString($"Sql.{sqlResource}");
+        public static string AsSqlResource(this string sqlResource)
+        {
+            return GetEmbeddedResourceAsString($"Sql.{sqlResource}");
+        }
 
         private static string GetEmbeddedResourceAsString(string resourceName)
         {

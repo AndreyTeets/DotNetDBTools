@@ -28,7 +28,9 @@ FROM `{DNDBTSysTables.DNDBTDbObjects}`;";
 
     public class MySQLRecordsLoader : RecordsLoader
     {
-        public override IEnumerable<DNDBTDbObjectRecord> GetRecords(IQueryExecutor queryExecutor, GetAllDbObjectsFromDNDBTSysInfoQuery query) =>
-            queryExecutor.Query<MySQLDNDBTDbObjectRecord>(query);
+        public override IEnumerable<DNDBTDbObjectRecord> GetRecords(IQueryExecutor queryExecutor, GetAllDbObjectsFromDNDBTSysInfoQuery query)
+        {
+            return queryExecutor.Query<MySQLDNDBTDbObjectRecord>(query);
+        }
     }
 }

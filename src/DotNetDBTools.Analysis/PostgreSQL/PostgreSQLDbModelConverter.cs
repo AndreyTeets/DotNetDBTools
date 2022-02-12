@@ -19,14 +19,17 @@ public class PostgreSQLDbModelConverter : IDbModelConverter
     }
 
     private static PostgreSQLDatabase ConvertToPostgreSQLModel(AgnosticDatabase database)
-       => new(database.Name)
-       {
-           Tables = database.Tables.Select(x => ConvertToPostgreSQLModel((AgnosticTable)x)).ToList(),
-           Views = database.Views.Select(x => ConvertToPostgreSQLModel((AgnosticView)x)).ToList(),
-       };
+    {
+        return new(database.Name)
+        {
+            Tables = database.Tables.Select(x => ConvertToPostgreSQLModel((AgnosticTable)x)).ToList(),
+            Views = database.Views.Select(x => ConvertToPostgreSQLModel((AgnosticView)x)).ToList(),
+        };
+    }
 
     private static PostgreSQLTable ConvertToPostgreSQLModel(AgnosticTable table)
-        => new()
+    {
+        return new()
         {
             ID = table.ID,
             Name = table.Name,
@@ -38,14 +41,17 @@ public class PostgreSQLDbModelConverter : IDbModelConverter
             Triggers = table.Triggers.Select(trigger => { trigger.CodePiece = ConvertCodePiece(trigger.CodePiece); return trigger; }).ToList(),
             ForeignKeys = table.ForeignKeys,
         };
+    }
 
     private static PostgreSQLView ConvertToPostgreSQLModel(AgnosticView view)
-        => new()
+    {
+        return new()
         {
             ID = view.ID,
             Name = view.Name,
             CodePiece = new CodePiece { Code = ((AgnosticCodePiece)view.CodePiece).DbKindToCodeMap[DatabaseKind.PostgreSQL] },
         };
+    }
 
     private static IEnumerable<Column> ConvertToPostgreSQLModel(IEnumerable<Column> columns)
     {

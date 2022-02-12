@@ -28,7 +28,9 @@ FROM {DNDBTSysTables.DNDBTDbObjects};";
 
     public class MSSQLRecordsLoader : RecordsLoader
     {
-        public override IEnumerable<DNDBTDbObjectRecord> GetRecords(IQueryExecutor queryExecutor, GetAllDbObjectsFromDNDBTSysInfoQuery query) =>
-            queryExecutor.Query<MSSQLDNDBTDbObjectRecord>(query);
+        public override IEnumerable<DNDBTDbObjectRecord> GetRecords(IQueryExecutor queryExecutor, GetAllDbObjectsFromDNDBTSysInfoQuery query)
+        {
+            return queryExecutor.Query<MSSQLDNDBTDbObjectRecord>(query);
+        }
     }
 }

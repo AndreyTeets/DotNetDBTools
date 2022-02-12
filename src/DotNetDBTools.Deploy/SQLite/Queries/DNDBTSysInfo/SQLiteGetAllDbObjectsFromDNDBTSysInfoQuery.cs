@@ -28,7 +28,9 @@ FROM {DNDBTSysTables.DNDBTDbObjects};";
 
     public class SQLiteRecordsLoader : RecordsLoader
     {
-        public override IEnumerable<DNDBTDbObjectRecord> GetRecords(IQueryExecutor queryExecutor, GetAllDbObjectsFromDNDBTSysInfoQuery query) =>
-            queryExecutor.Query<SQLiteDNDBTDbObjectRecord>(query);
+        public override IEnumerable<DNDBTDbObjectRecord> GetRecords(IQueryExecutor queryExecutor, GetAllDbObjectsFromDNDBTSysInfoQuery query)
+        {
+            return queryExecutor.Query<SQLiteDNDBTDbObjectRecord>(query);
+        }
     }
 }

@@ -162,8 +162,9 @@ internal class PostgreSQLDbModelFromCSharpDefinitionBuilder : DbModelFromCSharpD
         }
         return typeModelsList;
 
-        string GetDefaultSubtypeOperatorClass(DataType subtype) =>
-            subtype.Name switch
+        string GetDefaultSubtypeOperatorClass(DataType subtype)
+        {
+            return subtype.Name switch
             {
                 PostgreSQLDataTypeNames.SMALLINT => "int2_ops",
                 PostgreSQLDataTypeNames.INT => "int4_ops",
@@ -187,12 +188,16 @@ internal class PostgreSQLDbModelFromCSharpDefinitionBuilder : DbModelFromCSharpD
                 PostgreSQLDataTypeNames.VARBIT => "varbit_ops",
                 _ => null,
             };
-        string GetDefaultCollation(IDataType subType) =>
-            subType switch
+        }
+
+        string GetDefaultCollation(IDataType subType)
+        {
+            return subType switch
             {
                 StringDataType => "default",
                 _ => null,
             };
+        }
     }
 
     private static List<PostgreSQLFunction> BuildFunctionModels(Assembly dbAssembly)

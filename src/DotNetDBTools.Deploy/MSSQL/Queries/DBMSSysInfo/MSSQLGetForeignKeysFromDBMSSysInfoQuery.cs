@@ -49,8 +49,9 @@ WHERE thisTable.name != '{DNDBTSysTables.DNDBTDbObjects}';";
             };
         }
 
-        private static string MapUpdateActionName(string sqlActionName) =>
-            sqlActionName switch
+        private static string MapUpdateActionName(string sqlActionName)
+        {
+            return sqlActionName switch
             {
                 "NO_ACTION" => ForeignKeyActions.NoAction,
                 "CASCADE" => ForeignKeyActions.Cascade,
@@ -58,5 +59,6 @@ WHERE thisTable.name != '{DNDBTSysTables.DNDBTDbObjects}';";
                 "SET_NULL" => ForeignKeyActions.SetNull,
                 _ => throw new InvalidOperationException($"Invalid sqlActionName: '{sqlActionName}'")
             };
+        }
     }
 }

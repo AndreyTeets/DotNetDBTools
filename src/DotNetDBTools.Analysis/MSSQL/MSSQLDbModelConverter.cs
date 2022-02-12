@@ -16,14 +16,17 @@ public class MSSQLDbModelConverter : IDbModelConverter
     }
 
     private static MSSQLDatabase ConvertToMSSQLModel(AgnosticDatabase database)
-       => new(database.Name)
-       {
-           Tables = database.Tables.Select(x => ConvertToMSSQLModel((AgnosticTable)x)).ToList(),
-           Views = database.Views.Select(x => ConvertToMSSQLModel((AgnosticView)x)).ToList(),
-       };
+    {
+        return new(database.Name)
+        {
+            Tables = database.Tables.Select(x => ConvertToMSSQLModel((AgnosticTable)x)).ToList(),
+            Views = database.Views.Select(x => ConvertToMSSQLModel((AgnosticView)x)).ToList(),
+        };
+    }
 
     private static MSSQLTable ConvertToMSSQLModel(AgnosticTable table)
-        => new()
+    {
+        return new()
         {
             ID = table.ID,
             Name = table.Name,
@@ -35,14 +38,17 @@ public class MSSQLDbModelConverter : IDbModelConverter
             Triggers = table.Triggers.Select(trigger => { trigger.CodePiece = ConvertCodePiece(trigger.CodePiece); return trigger; }).ToList(),
             ForeignKeys = table.ForeignKeys,
         };
+    }
 
     private static MSSQLView ConvertToMSSQLModel(AgnosticView view)
-        => new()
+    {
+        return new()
         {
             ID = view.ID,
             Name = view.Name,
             CodePiece = new CodePiece { Code = ((AgnosticCodePiece)view.CodePiece).DbKindToCodeMap[DatabaseKind.MSSQL] },
         };
+    }
 
     private static IEnumerable<Column> ConvertToMSSQLModel(IEnumerable<Column> columns, string tableName)
     {

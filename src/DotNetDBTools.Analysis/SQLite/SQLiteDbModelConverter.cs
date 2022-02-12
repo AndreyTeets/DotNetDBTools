@@ -16,14 +16,17 @@ public class SQLiteDbModelConverter : IDbModelConverter
     }
 
     private static SQLiteDatabase ConvertToSQLiteModel(AgnosticDatabase database)
-       => new(database.Name)
-       {
-           Tables = database.Tables.Select(x => ConvertToSQLiteModel((AgnosticTable)x)).ToList(),
-           Views = database.Views.Select(x => ConvertToSQLiteModel((AgnosticView)x)).ToList(),
-       };
+    {
+        return new(database.Name)
+        {
+            Tables = database.Tables.Select(x => ConvertToSQLiteModel((AgnosticTable)x)).ToList(),
+            Views = database.Views.Select(x => ConvertToSQLiteModel((AgnosticView)x)).ToList(),
+        };
+    }
 
     private static SQLiteTable ConvertToSQLiteModel(AgnosticTable table)
-        => new()
+    {
+        return new()
         {
             ID = table.ID,
             Name = table.Name,
@@ -35,14 +38,17 @@ public class SQLiteDbModelConverter : IDbModelConverter
             Triggers = table.Triggers.Select(trigger => { trigger.CodePiece = ConvertCodePiece(trigger.CodePiece); return trigger; }).ToList(),
             ForeignKeys = table.ForeignKeys,
         };
+    }
 
     private static SQLiteView ConvertToSQLiteModel(AgnosticView view)
-        => new()
+    {
+        return new()
         {
             ID = view.ID,
             Name = view.Name,
             CodePiece = new CodePiece { Code = ((AgnosticCodePiece)view.CodePiece).DbKindToCodeMap[DatabaseKind.SQLite] },
         };
+    }
 
     private static IEnumerable<Column> ConvertToSQLiteModel(IEnumerable<Column> columns)
     {

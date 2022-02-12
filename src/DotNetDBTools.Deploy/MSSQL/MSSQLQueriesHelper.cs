@@ -12,12 +12,14 @@ internal static class MSSQLQueriesHelper
         return column.Identity ? " IDENTITY" : "";
     }
 
-    public static string GetNullabilityStatement(Column column) =>
-        column.Nullable switch
+    public static string GetNullabilityStatement(Column column)
+    {
+        return column.Nullable switch
         {
             true => "NULL",
             false => "NOT NULL",
         };
+    }
 
     public static string QuoteDefaultValue(object value)
     {

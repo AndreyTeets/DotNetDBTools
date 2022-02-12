@@ -40,8 +40,10 @@ WHERE t.TABLE_SCHEMA = (select DATABASE())
 
     public class MySQLRecordsLoader : RecordsLoader
     {
-        public override IEnumerable<ColumnRecord> GetRecords(IQueryExecutor queryExecutor, GetColumnsFromDBMSSysInfoQuery query) =>
-            queryExecutor.Query<MySQLColumnRecord>(query);
+        public override IEnumerable<ColumnRecord> GetRecords(IQueryExecutor queryExecutor, GetColumnsFromDBMSSysInfoQuery query)
+        {
+            return queryExecutor.Query<MySQLColumnRecord>(query);
+        }
     }
 
     public class MySQLRecordMapper : RecordMapper

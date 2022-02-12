@@ -87,7 +87,8 @@ internal abstract class DbModelFromCSharpDefinitionBuilder<
     protected virtual void BuildAdditionalViewModelProperties(TView viewModel, IBaseView view) { }
 
     private List<TColumn> BuildColumnModels(IBaseTable table)
-        => table.GetType().GetPropertyOrFieldMembers()
+    {
+        return table.GetType().GetPropertyOrFieldMembers()
             .Where(x => typeof(BaseColumn).IsAssignableFrom(x.GetPropertyOrFieldType()))
             .OrderBy(x => x.Name, StringComparer.Ordinal)
             .Select(x =>
@@ -107,10 +108,13 @@ internal abstract class DbModelFromCSharpDefinitionBuilder<
                 return columnModel;
             })
             .ToList();
+    }
+
     protected virtual void BuildAdditionalColumnModelProperties(TColumn columnModel, BaseColumn column, string tableName) { }
 
     private PrimaryKey BuildPrimaryKeyModels(IBaseTable table)
-        => table.GetType().GetPropertyOrFieldMembers()
+    {
+        return table.GetType().GetPropertyOrFieldMembers()
             .Where(x => typeof(BasePrimaryKey).IsAssignableFrom(x.GetPropertyOrFieldType()))
             .OrderBy(x => x.Name, StringComparer.Ordinal)
             .Select(x =>
@@ -126,10 +130,13 @@ internal abstract class DbModelFromCSharpDefinitionBuilder<
                 return pkModel;
             })
             .SingleOrDefault();
+    }
+
     protected virtual void BuildAdditionalPrimaryKeyModelProperties(PrimaryKey pkModel, BasePrimaryKey pk, string tableName) { }
 
     private List<UniqueConstraint> BuildUniqueConstraintModels(IBaseTable table)
-        => table.GetType().GetPropertyOrFieldMembers()
+    {
+        return table.GetType().GetPropertyOrFieldMembers()
             .Where(x => typeof(BaseUniqueConstraint).IsAssignableFrom(x.GetPropertyOrFieldType()))
             .OrderBy(x => x.Name, StringComparer.Ordinal)
             .Select(x =>
@@ -145,10 +152,13 @@ internal abstract class DbModelFromCSharpDefinitionBuilder<
                 return ucModel;
             })
             .ToList();
+    }
+
     protected virtual void BuildAdditionalUniqueConstraintModelProperties(UniqueConstraint ucModel, BaseUniqueConstraint uc, string tableName) { }
 
     private List<CheckConstraint> BuildCheckConstraintModels(IBaseTable table)
-        => table.GetType().GetPropertyOrFieldMembers()
+    {
+        return table.GetType().GetPropertyOrFieldMembers()
             .Where(x => typeof(BaseCheckConstraint).IsAssignableFrom(x.GetPropertyOrFieldType()))
             .OrderBy(x => x.Name, StringComparer.Ordinal)
             .Select(x =>
@@ -164,10 +174,13 @@ internal abstract class DbModelFromCSharpDefinitionBuilder<
                 return ckModel;
             })
             .ToList();
+    }
+
     protected virtual void BuildAdditionalCheckConstraintModelProperties(CheckConstraint ckModel, BaseCheckConstraint ck, string tableName) { }
 
     private List<ForeignKey> BuildForeignKeyModels(IBaseTable table)
-        => table.GetType().GetPropertyOrFieldMembers()
+    {
+        return table.GetType().GetPropertyOrFieldMembers()
             .Where(x => typeof(BaseForeignKey).IsAssignableFrom(x.GetPropertyOrFieldType()))
             .OrderBy(x => x.Name, StringComparer.Ordinal)
             .Select(x =>
@@ -187,6 +200,8 @@ internal abstract class DbModelFromCSharpDefinitionBuilder<
                 return fkModel;
             })
             .ToList();
+    }
+
     protected virtual void BuildAdditionalForeignKeyModelProperties(ForeignKey fkModel, BaseForeignKey fk, string tableName) { }
     protected abstract string GetOnUpdateActionName(BaseForeignKey fk);
     protected abstract string GetOnDeleteActionName(BaseForeignKey fk);
@@ -204,7 +219,8 @@ internal abstract class DbModelFromCSharpDefinitionBuilder<
     }
 
     private List<Index> BuildIndexModels(IBaseTable table)
-        => table.GetType().GetPropertyOrFieldMembers()
+    {
+        return table.GetType().GetPropertyOrFieldMembers()
             .Where(x => typeof(BaseIndex).IsAssignableFrom(x.GetPropertyOrFieldType()))
             .OrderBy(x => x.Name, StringComparer.Ordinal)
             .Select(x =>
@@ -222,10 +238,13 @@ internal abstract class DbModelFromCSharpDefinitionBuilder<
                 return indexModel;
             })
             .ToList();
+    }
+
     protected virtual void BuildAdditionalIndexModelProperties(Index indexModel, BaseIndex index, string tableName) { }
 
     private List<Trigger> BuildTriggerModels(IBaseTable table)
-        => table.GetType().GetPropertyOrFieldMembers()
+    {
+        return table.GetType().GetPropertyOrFieldMembers()
             .Where(x => typeof(BaseTrigger).IsAssignableFrom(x.GetPropertyOrFieldType()))
             .OrderBy(x => x.Name, StringComparer.Ordinal)
             .Select(x =>
@@ -241,6 +260,8 @@ internal abstract class DbModelFromCSharpDefinitionBuilder<
                 return triggerModel;
             })
             .ToList();
+    }
+
     protected virtual void BuildAdditionalTriggerModelProperties(Trigger triggerModel, BaseTrigger trigger, string tableName) { }
 
     protected static IEnumerable<TInterface> GetInstancesOfAllTypesImplementingInterface<TInterface>(Assembly dbAssembly)
