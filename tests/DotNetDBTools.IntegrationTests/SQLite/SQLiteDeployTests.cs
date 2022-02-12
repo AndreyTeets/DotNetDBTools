@@ -1,5 +1,4 @@
 ﻿using System.Data.Common;
-using System.IO;
 using DotNetDBTools.Analysis.SQLite;
 using DotNetDBTools.Deploy;
 using DotNetDBTools.Deploy.Core;
@@ -43,16 +42,16 @@ public class SQLiteDeployTests : BaseDeployTests<
 
     protected override void CreateDatabase(string connectionString)
     {
+        SqliteConnectionStringBuilder connectionStringBuilder = new(connectionString);
+        string dbFilePath = connectionStringBuilder.DataSource;
+        SQLiteDatabaseHelper.CreateDatabase(dbFilePath);
     }
 
     protected override void DropDatabaseIfExists(string connectionString)
     {
         SqliteConnectionStringBuilder connectionStringBuilder = new(connectionString);
         string dbFilePath = connectionStringBuilder.DataSource;
-
-        if (File.Exists(dbFilePath))
-            File.Delete(dbFilePath);
-        Directory.CreateDirectory(Path.GetDirectoryName(dbFilePath));
+        SQLiteDatabaseHelper.DropDatabaseIfExists(dbFilePath);
     }
 
     protected override string CreateConnectionString(string testName)

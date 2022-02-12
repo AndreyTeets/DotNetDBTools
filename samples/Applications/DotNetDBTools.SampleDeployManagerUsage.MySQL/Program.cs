@@ -5,7 +5,7 @@ using Dapper;
 using DotNetDBTools.Deploy;
 using MySqlConnector;
 
-namespace DotNetDBTools.SampleDeployTool.MySQL
+namespace DotNetDBTools.SampleDeployManagerUsage.MySQL
 {
     public static class Program
     {

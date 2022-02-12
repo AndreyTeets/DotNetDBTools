@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Common;
 using System.IO;
 using DotNetDBTools.Deploy;
 using DotNetDBTools.SampleBusinessLogicLib.Agnostic;
@@ -12,33 +13,48 @@ namespace DotNetDBTools.SampleSelfUpdatingApp.SQLite
         private const string RepoRoot = "../../../../../..";
         private static readonly string s_samplesOutputDir = $"{RepoRoot}/SamplesOutput";
 
-        private static readonly string s_agnosticConnectionString = $"DataSource={s_samplesOutputDir}/sqlite_databases/AgnosticSampleDB_SelfUpdatingApp.db;Mode=ReadWriteCreate;";
+        private static readonly string s_connectionString = $"DataSource={s_samplesOutputDir}/sqlite_databases/AgnosticSampleDB_SelfUpdatingApp.db;Mode=ReadWriteCreate;";
 
         public static void Main()
         {
-            DropDatabaseIfExists(s_agnosticConnectionString);
+            CreateAndRegisterDatabaseIfDoesntExist(s_connectionString);
 
-            Console.WriteLine("Creating new AgnosticSampleDB_SelfUpdatingApp v2 from dbAssembly file...");
-            using SqliteConnection connection = new(s_agnosticConnectionString);
-            DeployAgnosticSampleDB(connection);
+            using SqliteConnection connection = new(s_connectionString);
+            PublishAgnosticSampleDBv2(connection);
 
             SqliteCompiler compiler = new();
             SampleBusinessLogic.ReadWriteSomeData(connection, compiler);
         }
 
-        private static void DeployAgnosticSampleDB(SqliteConnection connection)
+        private static void PublishAgnosticSampleDBv2(DbConnection connection)
         {
+            Console.WriteLine("Publishing DotNetDBTools.SampleDBv2.Agnostic from referenced assembly");
             SQLiteDeployManager deployManager = new(new DeployOptions());
-            deployManager.RegisterAsDNDBT(connection);
             deployManager.PublishDatabase(typeof(SampleDB.Agnostic.Tables.MyTable3).Assembly, connection);
         }
 
-        private static void DropDatabaseIfExists(string connectionString)
+        private static void CreateAndRegisterDatabaseIfDoesntExist(string connectionString)
+        {
+            if (!DatabaseExists(connectionString))
+            {
+                Console.WriteLine("Database doesn't exist. Creating new empty database and registering it as DNDBT.");
+                CreateDatabase(connectionString);
+                using SqliteConnection connection = new(connectionString);
+                new SQLiteDeployManager(new DeployOptions()).RegisterAsDNDBT(connection);
+            }
+        }
+
+        private static bool DatabaseExists(string connectionString)
         {
             SqliteConnectionStringBuilder connectionStringBuilder = new(connectionString);
             string dbFilePath = connectionStringBuilder.DataSource;
-            if (File.Exists(dbFilePath))
-                File.Delete(dbFilePath);
+            return File.Exists(dbFilePath);
+        }
+
+        private static void CreateDatabase(string connectionString)
+        {
+            SqliteConnectionStringBuilder connectionStringBuilder = new(connectionString);
+            string dbFilePath = connectionStringBuilder.DataSource;
             Directory.CreateDirectory(Path.GetDirectoryName(dbFilePath));
         }
     }

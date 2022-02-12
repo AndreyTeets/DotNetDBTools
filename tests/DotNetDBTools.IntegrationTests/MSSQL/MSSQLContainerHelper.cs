@@ -7,26 +7,26 @@ namespace DotNetDBTools.IntegrationTests.MSSQL;
 
 public class MSSQLContainerHelper
 {
-    private const string MsSqlImage = "mcr.microsoft.com/mssql/server";
-    private const string MsSqlImageTag = "2019-CU13-ubuntu-20.04";
-    private const string MsSqlContainerName = "DotNetDBTools_IntegrationTests_MSSQL";
-    private const string MsSqlServerPassword = "Strong(!)Passw0rd";
-    private const int MsSqlServerHostPort = 5005;
+    private const string MSSQLImage = "mcr.microsoft.com/mssql/server";
+    private const string MSSQLImageTag = "2019-CU13-ubuntu-20.04";
+    private const string MSSQLContainerName = "DotNetDBTools_IntegrationTests_MSSQL";
+    private const string MSSQLServerPassword = "Strong(!)Passw0rd";
+    private const int MSSQLServerHostPort = 5005;
 
-    public static string MsSqlContainerConnectionString =>
+    public static string MSSQLContainerConnectionString =>
         new SqlConnectionStringBuilder()
         {
-            DataSource = $"localhost,{MsSqlServerHostPort}",
+            DataSource = $"localhost,{MSSQLServerHostPort}",
             IntegratedSecurity = false,
             UserID = "SA",
-            Password = MsSqlServerPassword,
+            Password = MSSQLServerPassword,
         }.ConnectionString;
 
     public static async Task InitContainer()
     {
-        await DockerRunner.StopAndRemoveContainerIfExistsAndNotRunningOrOld(MsSqlContainerName, oldMinutes: 60);
+        await DockerRunner.StopAndRemoveContainerIfExistsAndNotRunningOrOld(MSSQLContainerName, oldMinutes: 60);
         await CreateAndStartMsSqlContainerIfNotExists();
-        using SqlConnection connection = new(MsSqlContainerConnectionString);
+        using SqlConnection connection = new(MSSQLContainerConnectionString);
         await DbAvailabilityChecker.WaitUntilDatabaseAvailableAsync(connection, timeoutSeconds: 60);
     }
 
@@ -35,17 +35,17 @@ public class MSSQLContainerHelper
         List<string> envVariables = new()
         {
             "ACCEPT_EULA=Y",
-            $"SA_PASSWORD={MsSqlServerPassword}",
+            $"SA_PASSWORD={MSSQLServerPassword}",
         };
 
         Dictionary<string, string> portRedirects = new()
         {
-            { "1433/tcp", MsSqlServerHostPort.ToString() },
+            { "1433/tcp", MSSQLServerHostPort.ToString() },
         };
 
         await DockerRunner.CreateAndStartContainerIfNotExists(
-            MsSqlContainerName,
-            $"{MsSqlImage}:{MsSqlImageTag}",
+            MSSQLContainerName,
+            $"{MSSQLImage}:{MSSQLImageTag}",
             envVariables,
             portRedirects);
     }

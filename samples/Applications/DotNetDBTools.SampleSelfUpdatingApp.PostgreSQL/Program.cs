@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Common;
 using Dapper;
 using DotNetDBTools.Deploy;
 using DotNetDBTools.SampleBusinessLogicLib.Agnostic;
@@ -13,51 +14,60 @@ namespace DotNetDBTools.SampleSelfUpdatingApp.PostgreSQL
         private const string PostgreSQLServerHostPort = "5007";
         private const string DatabaseName = "AgnosticSampleDB_SelfUpdatingApp";
 
-        private static readonly string s_agnosticConnectionString = $"Host=localhost;Port={PostgreSQLServerHostPort};Database={DatabaseName};Username=postgres;Password={PostgreSQLServerPassword}";
+        private static readonly string s_connectionString = $"Host=localhost;Port={PostgreSQLServerHostPort};Database={DatabaseName};Username=postgres;Password={PostgreSQLServerPassword}";
 
         public static void Main()
         {
-            DropDatabaseIfExists(s_agnosticConnectionString);
-            CreateDatabase(s_agnosticConnectionString);
+            CreateAndRegisterDatabaseIfDoesntExist(s_connectionString);
 
-            Console.WriteLine("Creating new AgnosticSampleDB_SelfUpdatingApp v2 from dbAssembly file...");
-            using NpgsqlConnection connection = new(s_agnosticConnectionString);
-            DeployAgnosticSampleDB(connection);
+            using NpgsqlConnection connection = new(s_connectionString);
+            PublishAgnosticSampleDBv2(connection);
 
             PostgresCompiler compiler = new();
             SampleBusinessLogic.ReadWriteSomeData(connection, compiler);
         }
 
-        private static void DeployAgnosticSampleDB(NpgsqlConnection connection)
+        private static void PublishAgnosticSampleDBv2(DbConnection connection)
         {
+            Console.WriteLine("Publishing DotNetDBTools.SampleDBv2.Agnostic from referenced assembly");
             PostgreSQLDeployManager deployManager = new(new DeployOptions());
-            deployManager.RegisterAsDNDBT(connection);
             deployManager.PublishDatabase(typeof(SampleDB.Agnostic.Tables.MyTable3).Assembly, connection);
+        }
+
+        private static void CreateAndRegisterDatabaseIfDoesntExist(string connectionString)
+        {
+            if (!DatabaseExists(connectionString))
+            {
+                Console.WriteLine("Database doesn't exist. Creating new empty database and registering it as DNDBT.");
+                CreateDatabase(connectionString);
+                using NpgsqlConnection connection = new(connectionString);
+                new PostgreSQLDeployManager(new DeployOptions()).RegisterAsDNDBT(connection);
+            }
+        }
+
+        private static bool DatabaseExists(string connectionString)
+        {
+            (string databaseName, string connectionStringWithoutDb) = GetDbNameAndConnStringWithoutDb(connectionString);
+            using NpgsqlConnection connection = new(connectionStringWithoutDb);
+            return connection.ExecuteScalar<bool>(
+$@"SELECT TRUE FROM pg_catalog.pg_database WHERE datname = '{databaseName}';");
         }
 
         private static void CreateDatabase(string connectionString)
         {
-            NpgsqlConnectionStringBuilder connectionStringBuilder = new(connectionString);
-            string databaseName = connectionStringBuilder.Database;
-            connectionStringBuilder.Database = string.Empty;
-            string connectionStringWithoutDb = connectionStringBuilder.ConnectionString;
-
+            (string databaseName, string connectionStringWithoutDb) = GetDbNameAndConnStringWithoutDb(connectionString);
             using NpgsqlConnection connection = new(connectionStringWithoutDb);
             connection.Execute(
 $@"CREATE DATABASE ""{databaseName}"";");
         }
 
-        private static void DropDatabaseIfExists(string connectionString)
+        private static (string, string) GetDbNameAndConnStringWithoutDb(string connectionString)
         {
             NpgsqlConnectionStringBuilder connectionStringBuilder = new(connectionString);
             string databaseName = connectionStringBuilder.Database;
             connectionStringBuilder.Database = string.Empty;
             string connectionStringWithoutDb = connectionStringBuilder.ConnectionString;
-
-            using NpgsqlConnection connection = new(connectionStringWithoutDb);
-            connection.Execute(
-$@"SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = '{databaseName}';
-DROP DATABASE IF EXISTS ""{databaseName}"";");
+            return (databaseName, connectionStringWithoutDb);
         }
     }
 }

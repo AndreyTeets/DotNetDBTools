@@ -1,6 +1,5 @@
 ﻿using System.Data.Common;
 using System.Text.RegularExpressions;
-using Dapper;
 using DotNetDBTools.Analysis.MySQL;
 using DotNetDBTools.Deploy;
 using DotNetDBTools.Deploy.Core;
@@ -54,20 +53,14 @@ public class MySQLDeployTests : BaseDeployTests<
     {
         MySqlConnectionStringBuilder connectionStringBuilder = new(connectionString);
         string databaseName = connectionStringBuilder.Database;
-
-        using MySqlConnection connection = new(ConnectionStringWithoutDb);
-        connection.Execute(
-$@"CREATE DATABASE `{databaseName}`;");
+        MySQLDatabaseHelper.CreateDatabase(ConnectionStringWithoutDb, databaseName);
     }
 
     protected override void DropDatabaseIfExists(string connectionString)
     {
         MySqlConnectionStringBuilder connectionStringBuilder = new(connectionString);
         string databaseName = connectionStringBuilder.Database;
-
-        using MySqlConnection connection = new(ConnectionStringWithoutDb);
-        connection.Execute(
-$@"DROP DATABASE IF EXISTS `{databaseName}`;");
+        MySQLDatabaseHelper.DropDatabaseIfExists(ConnectionStringWithoutDb, databaseName);
     }
 
     protected override string CreateConnectionString(string testName)

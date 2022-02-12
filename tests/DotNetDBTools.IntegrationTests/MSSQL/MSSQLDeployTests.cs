@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Data.Common;
 using System.Data.SqlClient;
-using Dapper;
 using DotNetDBTools.Analysis.MSSQL;
 using DotNetDBTools.Deploy;
 using DotNetDBTools.Deploy.Core;
@@ -26,7 +25,7 @@ public class MSSQLDeployTests : BaseDeployTests<
     protected override string AgnosticSampleDbAssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDB.Agnostic.dll";
     protected override string SpecificDBMSSampleDbAssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDB.MSSQL.dll";
 
-    private static string ConnectionStringWithoutDb => MSSQLContainerHelper.MsSqlContainerConnectionString;
+    private static string ConnectionStringWithoutDb => MSSQLContainerHelper.MSSQLContainerConnectionString;
 
     protected override EquivalencyAssertionOptions<MSSQLDatabase> AddAdditionalDbModelEquivalenceyOptions(
         EquivalencyAssertionOptions<MSSQLDatabase> options)
@@ -50,28 +49,16 @@ public class MSSQLDeployTests : BaseDeployTests<
     {
         SqlConnectionStringBuilder connectionStringBuilder = new(connectionString);
         string databaseName = connectionStringBuilder.InitialCatalog;
-
-        using SqlConnection connection = new(ConnectionStringWithoutDb);
         using IDisposable _ = ExclusiveExecutionScope.CreateScope(nameof(MSSQLContainerHelper));
-        connection.Execute(
-$@"CREATE DATABASE {databaseName};");
+        MSSQLDatabaseHelper.CreateDatabase(ConnectionStringWithoutDb, databaseName);
     }
 
     protected override void DropDatabaseIfExists(string connectionString)
     {
         SqlConnectionStringBuilder connectionStringBuilder = new(connectionString);
         string databaseName = connectionStringBuilder.InitialCatalog;
-
-        using SqlConnection connection = new(ConnectionStringWithoutDb);
         using IDisposable _ = ExclusiveExecutionScope.CreateScope(nameof(MSSQLContainerHelper));
-        connection.Execute(
-$@"IF EXISTS (SELECT * FROM [sys].[databases] WHERE [name] = '{databaseName}')
-BEGIN
-    ALTER DATABASE {databaseName}
-    SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
-
-    DROP DATABASE {databaseName};
-END;");
+        MSSQLDatabaseHelper.DropDatabaseIfExists(ConnectionStringWithoutDb, databaseName);
     }
 
     protected override string CreateConnectionString(string testName)

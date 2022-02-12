@@ -5,7 +5,7 @@ using Dapper;
 using DotNetDBTools.Deploy;
 using Microsoft.Data.Sqlite;
 
-namespace DotNetDBTools.SampleDeployTool.SQLite
+namespace DotNetDBTools.SampleDeployManagerUsage.SQLite
 {
     public static class Program
     {

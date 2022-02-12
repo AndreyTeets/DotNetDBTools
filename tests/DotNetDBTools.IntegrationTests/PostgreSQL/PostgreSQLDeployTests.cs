@@ -1,5 +1,4 @@
 ﻿using System.Data.Common;
-using Dapper;
 using DotNetDBTools.Analysis.PostgreSQL;
 using DotNetDBTools.Deploy;
 using DotNetDBTools.Deploy.Core;
@@ -50,21 +49,14 @@ public class PostgreSQLDeployTests : BaseDeployTests<
     {
         NpgsqlConnectionStringBuilder connectionStringBuilder = new(connectionString);
         string databaseName = connectionStringBuilder.Database;
-
-        using NpgsqlConnection connection = new(ConnectionStringWithoutDb);
-        connection.Execute(
-$@"CREATE DATABASE ""{databaseName}"";");
+        PostgreSQLDatabaseHelper.CreateDatabase(ConnectionStringWithoutDb, databaseName);
     }
 
     protected override void DropDatabaseIfExists(string connectionString)
     {
         NpgsqlConnectionStringBuilder connectionStringBuilder = new(connectionString);
         string databaseName = connectionStringBuilder.Database;
-
-        using NpgsqlConnection connection = new(ConnectionStringWithoutDb);
-        connection.Execute(
-$@"SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = '{databaseName}';
-DROP DATABASE IF EXISTS ""{databaseName}"";");
+        PostgreSQLDatabaseHelper.DropDatabaseIfExists(ConnectionStringWithoutDb, databaseName);
     }
 
     protected override string CreateConnectionString(string testName)

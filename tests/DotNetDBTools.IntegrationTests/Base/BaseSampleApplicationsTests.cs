@@ -8,7 +8,7 @@ namespace DotNetDBTools.IntegrationTests.Base;
 public abstract class BaseSampleApplicationsTests
 {
     protected abstract string SyncScopeName { get; }
-    protected abstract string SampleDeployToolAssemblyPath { get; }
+    protected abstract string SampleDeployManagerUsageAssemblyPath { get; }
     protected abstract string SampleBusinessLogicOnlyAppAssemblyPath { get; }
     protected abstract string SampleSelfUpdatingAppAssemblyPath { get; }
 
@@ -17,7 +17,7 @@ public abstract class BaseSampleApplicationsTests
     {
         using IDisposable _ = ExclusiveExecutionScope.CreateScope(SyncScopeName);
 
-        (int exitCodeDeploy, string outputDeploy) = ProcessRunner.RunProcess(SampleDeployToolAssemblyPath);
+        (int exitCodeDeploy, string outputDeploy) = ProcessRunner.RunProcess(SampleDeployManagerUsageAssemblyPath);
         exitCodeDeploy.Should().Be(0, $"process output: '{outputDeploy}'");
 
         (int exitCodeApplication, string outputApplication) = ProcessRunner.RunProcess(SampleBusinessLogicOnlyAppAssemblyPath);
@@ -29,7 +29,11 @@ public abstract class BaseSampleApplicationsTests
     {
         using IDisposable _ = ExclusiveExecutionScope.CreateScope(SyncScopeName);
 
+        DropSelfUpdatingAppDatabaseIfExists();
+
         (int exitCodeApplication, string outputApplication) = ProcessRunner.RunProcess(SampleSelfUpdatingAppAssemblyPath);
         exitCodeApplication.Should().Be(0, $"process output: '{outputApplication}'");
     }
+
+    protected abstract void DropSelfUpdatingAppDatabaseIfExists();
 }

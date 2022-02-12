@@ -5,7 +5,7 @@ using Dapper;
 using DotNetDBTools.Deploy;
 using Npgsql;
 
-namespace DotNetDBTools.SampleDeployTool.PostgreSQL
+namespace DotNetDBTools.SampleDeployManagerUsage.PostgreSQL
 {
     public static class Program
     {

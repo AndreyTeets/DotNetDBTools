@@ -5,7 +5,7 @@ using System.Reflection;
 using Dapper;
 using DotNetDBTools.Deploy;
 
-namespace DotNetDBTools.SampleDeployTool.MSSQL
+namespace DotNetDBTools.SampleDeployManagerUsage.MSSQL
 {
     public static class Program
     {
