@@ -39,11 +39,11 @@ public abstract class DeployManager<TDatabase> : IDeployManager
     {
         Database newDatabase = CreateDatabaseModelFromDbAssembly(dbAssembly);
         Database oldDatabase = GetDatabaseModelFromRegisteredDb(connection);
-        DatabaseDiff databaseDiff = AnalysisHelper.CreateDatabaseDiff(newDatabase, oldDatabase);
-        ValidateDatabaseDiff(databaseDiff);
+        DatabaseDiff dbDiff = AnalysisHelper.CreateDatabaseDiff(newDatabase, oldDatabase);
+        ValidateDatabaseDiff(dbDiff);
 
         IDbEditor dbEditor = _factory.CreateDbEditor(_factory.CreateQueryExecutor(connection));
-        dbEditor.ApplyDatabaseDiff(databaseDiff, Options);
+        dbEditor.ApplyDatabaseDiff(dbDiff, Options);
     }
 
     public void GeneratePublishScript(string dbAssemblyPath, DbConnection connection, string outputPath)
@@ -121,12 +121,12 @@ public abstract class DeployManager<TDatabase> : IDeployManager
 
     private void GeneratePublishScript(Database newDatabase, Database oldDatabase, string outputPath)
     {
-        DatabaseDiff databaseDiff = AnalysisHelper.CreateDatabaseDiff(newDatabase, oldDatabase);
-        ValidateDatabaseDiff(databaseDiff);
+        DatabaseDiff dbDiff = AnalysisHelper.CreateDatabaseDiff(newDatabase, oldDatabase);
+        ValidateDatabaseDiff(dbDiff);
 
         IGenSqlScriptQueryExecutor genSqlScriptQueryExecutor = _factory.CreateGenSqlScriptQueryExecutor();
         IDbEditor dbEditor = _factory.CreateDbEditor(genSqlScriptQueryExecutor);
-        dbEditor.ApplyDatabaseDiff(databaseDiff, Options);
+        dbEditor.ApplyDatabaseDiff(dbDiff, Options);
         string generatedScript = genSqlScriptQueryExecutor.GetFinalScript();
 
         string fullPath = Path.GetFullPath(outputPath);
@@ -157,9 +157,9 @@ public abstract class DeployManager<TDatabase> : IDeployManager
             throw new InvalidOperationException("Database is not registered");
     }
 
-    private void ValidateDatabaseDiff(DatabaseDiff databaseDiff)
+    private void ValidateDatabaseDiff(DatabaseDiff dbDiff)
     {
-        if (!Options.AllowDataLoss && AnalysisHelper.LeadsToDataLoss(databaseDiff))
+        if (!Options.AllowDataLoss && AnalysisHelper.LeadsToDataLoss(dbDiff))
             throw new Exception("Update would lead to data loss and it's not allowed.");
     }
 }

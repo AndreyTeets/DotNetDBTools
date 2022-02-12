@@ -10,7 +10,7 @@ internal class MSSQLDiffCreator : DiffCreator
 {
     public override DatabaseDiff CreateDatabaseDiff(Database newDatabase, Database oldDatabase)
     {
-        MSSQLDatabaseDiff databaseDiff = new()
+        MSSQLDatabaseDiff dbDiff = new()
         {
             NewDatabase = newDatabase,
             OldDatabase = oldDatabase,
@@ -24,25 +24,24 @@ internal class MSSQLDiffCreator : DiffCreator
             ProceduresToDrop = new List<MSSQLProcedure>(),
         };
 
-        BuildUserDefinedTypesDiff(databaseDiff, (MSSQLDatabase)newDatabase, (MSSQLDatabase)oldDatabase);
+        BuildUserDefinedTypesDiff(dbDiff);
 
-        BuildTablesDiff<MSSQLTableDiff>(databaseDiff, newDatabase, oldDatabase);
-        IndexesHelper.BuildAllDbIndexesToBeDroppedAndCreated(databaseDiff);
-        TriggersHelper.BuildAllDbTriggersToBeDroppedAndCreated(databaseDiff);
-        ForeignKeysHelper.BuildAllForeignKeysToBeDroppedAndCreated(databaseDiff);
+        BuildTablesDiff<MSSQLTableDiff>(dbDiff);
+        IndexesHelper.BuildAllDbIndexesToBeDroppedAndCreated(dbDiff);
+        TriggersHelper.BuildAllDbTriggersToBeDroppedAndCreated(dbDiff);
+        ForeignKeysHelper.BuildAllForeignKeysToBeDroppedAndCreated(dbDiff);
 
-        BuildViewsDiff(databaseDiff);
-        return databaseDiff;
+        BuildViewsDiff(dbDiff);
+        return dbDiff;
     }
 
-    private void BuildUserDefinedTypesDiff(
-        MSSQLDatabaseDiff databaseDiff, MSSQLDatabase newDatabase, MSSQLDatabase oldDatabase)
+    private void BuildUserDefinedTypesDiff(MSSQLDatabaseDiff dbDiff)
     {
         List<MSSQLUserDefinedType> addedUserDefinedTypes = null;
         List<MSSQLUserDefinedType> removedUserDefinedTypes = null;
         List<MSSQLUserDefinedTypeDiff> changedUserDefinedTypes = new();
         FillAddedAndRemovedItemsAndApplyActionToChangedItems(
-            newDatabase.UserDefinedTypes, oldDatabase.UserDefinedTypes,
+            ((MSSQLDatabase)dbDiff.NewDatabase).UserDefinedTypes, ((MSSQLDatabase)dbDiff.OldDatabase).UserDefinedTypes,
             ref addedUserDefinedTypes, ref removedUserDefinedTypes,
             (newType, oldType) =>
             {
@@ -54,8 +53,8 @@ internal class MSSQLDiffCreator : DiffCreator
                 changedUserDefinedTypes.Add(udtDiff);
             });
 
-        databaseDiff.AddedUserDefinedTypes = addedUserDefinedTypes;
-        databaseDiff.RemovedUserDefinedTypes = removedUserDefinedTypes;
-        databaseDiff.ChangedUserDefinedTypes = changedUserDefinedTypes;
+        dbDiff.AddedUserDefinedTypes = addedUserDefinedTypes;
+        dbDiff.RemovedUserDefinedTypes = removedUserDefinedTypes;
+        dbDiff.ChangedUserDefinedTypes = changedUserDefinedTypes;
     }
 }

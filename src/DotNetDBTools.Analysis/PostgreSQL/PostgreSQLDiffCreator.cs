@@ -23,16 +23,16 @@ internal class PostgreSQLDiffCreator : DiffCreator
             ProceduresToDrop = new List<PostgreSQLProcedure>(),
         };
 
-        BuildCompositeTypesDiff(dbDiff, (PostgreSQLDatabase)newDatabase, (PostgreSQLDatabase)oldDatabase);
-        BuildDomainTypesDiff(dbDiff, (PostgreSQLDatabase)newDatabase, (PostgreSQLDatabase)oldDatabase);
-        BuildEnumTypesDiff(dbDiff, (PostgreSQLDatabase)newDatabase, (PostgreSQLDatabase)oldDatabase);
-        BuildRangeTypesDiff(dbDiff, (PostgreSQLDatabase)newDatabase, (PostgreSQLDatabase)oldDatabase);
+        BuildCompositeTypesDiff(dbDiff);
+        BuildDomainTypesDiff(dbDiff);
+        BuildEnumTypesDiff(dbDiff);
+        BuildRangeTypesDiff(dbDiff);
         FillChangedUserDefinedTypesNames(dbDiff);
 
         BuildFunctionsDiff(dbDiff);
         FillFunctionsToCreateNames(dbDiff);
 
-        BuildTablesDiff<PostgreSQLTableDiff>(dbDiff, newDatabase, oldDatabase);
+        BuildTablesDiff<PostgreSQLTableDiff>(dbDiff);
         IndexesHelper.BuildAllDbIndexesToBeDroppedAndCreated(dbDiff);
         TriggersHelper.BuildAllDbTriggersToBeDroppedAndCreated(dbDiff);
         ForeignKeysHelper.BuildAllForeignKeysToBeDroppedAndCreated(dbDiff);
@@ -64,14 +64,13 @@ internal class PostgreSQLDiffCreator : DiffCreator
         return false;
     }
 
-    private void BuildCompositeTypesDiff(
-        PostgreSQLDatabaseDiff databaseDiff, PostgreSQLDatabase newDatabase, PostgreSQLDatabase oldDatabase)
+    private void BuildCompositeTypesDiff(PostgreSQLDatabaseDiff dbDiff)
     {
         List<PostgreSQLCompositeType> addedTypes = null;
         List<PostgreSQLCompositeType> removedTypes = null;
         List<PostgreSQLCompositeTypeDiff> changedTypes = new();
         FillAddedAndRemovedItemsAndApplyActionToChangedItems(
-            newDatabase.CompositeTypes, oldDatabase.CompositeTypes,
+            ((PostgreSQLDatabase)dbDiff.NewDatabase).CompositeTypes, ((PostgreSQLDatabase)dbDiff.OldDatabase).CompositeTypes,
             ref addedTypes, ref removedTypes,
             (newType, oldType) =>
             {
@@ -83,19 +82,18 @@ internal class PostgreSQLDiffCreator : DiffCreator
                 changedTypes.Add(typeDiff);
             });
 
-        databaseDiff.AddedCompositeTypes = addedTypes;
-        databaseDiff.RemovedCompositeTypes = removedTypes;
-        databaseDiff.ChangedCompositeTypes = changedTypes;
+        dbDiff.AddedCompositeTypes = addedTypes;
+        dbDiff.RemovedCompositeTypes = removedTypes;
+        dbDiff.ChangedCompositeTypes = changedTypes;
     }
 
-    private void BuildDomainTypesDiff(
-        PostgreSQLDatabaseDiff databaseDiff, PostgreSQLDatabase newDatabase, PostgreSQLDatabase oldDatabase)
+    private void BuildDomainTypesDiff(PostgreSQLDatabaseDiff dbDiff)
     {
         List<PostgreSQLDomainType> addedTypes = null;
         List<PostgreSQLDomainType> removedTypes = null;
         List<PostgreSQLDomainTypeDiff> changedTypes = new();
         FillAddedAndRemovedItemsAndApplyActionToChangedItems(
-            newDatabase.DomainTypes, oldDatabase.DomainTypes,
+            ((PostgreSQLDatabase)dbDiff.NewDatabase).DomainTypes, ((PostgreSQLDatabase)dbDiff.OldDatabase).DomainTypes,
             ref addedTypes, ref removedTypes,
             (newType, oldType) =>
             {
@@ -107,19 +105,18 @@ internal class PostgreSQLDiffCreator : DiffCreator
                 changedTypes.Add(typeDiff);
             });
 
-        databaseDiff.AddedDomainTypes = addedTypes;
-        databaseDiff.RemovedDomainTypes = removedTypes;
-        databaseDiff.ChangedDomainTypes = changedTypes;
+        dbDiff.AddedDomainTypes = addedTypes;
+        dbDiff.RemovedDomainTypes = removedTypes;
+        dbDiff.ChangedDomainTypes = changedTypes;
     }
 
-    private void BuildEnumTypesDiff(
-        PostgreSQLDatabaseDiff databaseDiff, PostgreSQLDatabase newDatabase, PostgreSQLDatabase oldDatabase)
+    private void BuildEnumTypesDiff(PostgreSQLDatabaseDiff dbDiff)
     {
         List<PostgreSQLEnumType> addedEnumTypes = null;
         List<PostgreSQLEnumType> removedEnumTypes = null;
         List<PostgreSQLEnumTypeDiff> changedEnumTypes = new();
         FillAddedAndRemovedItemsAndApplyActionToChangedItems(
-            newDatabase.EnumTypes, oldDatabase.EnumTypes,
+            ((PostgreSQLDatabase)dbDiff.NewDatabase).EnumTypes, ((PostgreSQLDatabase)dbDiff.OldDatabase).EnumTypes,
             ref addedEnumTypes, ref removedEnumTypes,
             (newType, oldType) =>
             {
@@ -131,19 +128,18 @@ internal class PostgreSQLDiffCreator : DiffCreator
                 changedEnumTypes.Add(typeDiff);
             });
 
-        databaseDiff.AddedEnumTypes = addedEnumTypes;
-        databaseDiff.RemovedEnumTypes = removedEnumTypes;
-        databaseDiff.ChangedEnumTypes = changedEnumTypes;
+        dbDiff.AddedEnumTypes = addedEnumTypes;
+        dbDiff.RemovedEnumTypes = removedEnumTypes;
+        dbDiff.ChangedEnumTypes = changedEnumTypes;
     }
 
-    private void BuildRangeTypesDiff(
-        PostgreSQLDatabaseDiff databaseDiff, PostgreSQLDatabase newDatabase, PostgreSQLDatabase oldDatabase)
+    private void BuildRangeTypesDiff(PostgreSQLDatabaseDiff dbDiff)
     {
         List<PostgreSQLRangeType> addedRangeTypes = null;
         List<PostgreSQLRangeType> removedRangeTypes = null;
         List<PostgreSQLRangeTypeDiff> changedRangeTypes = new();
         FillAddedAndRemovedItemsAndApplyActionToChangedItems(
-            newDatabase.RangeTypes, oldDatabase.RangeTypes,
+            ((PostgreSQLDatabase)dbDiff.NewDatabase).RangeTypes, ((PostgreSQLDatabase)dbDiff.OldDatabase).RangeTypes,
             ref addedRangeTypes, ref removedRangeTypes,
             (newType, oldType) =>
             {
@@ -155,9 +151,9 @@ internal class PostgreSQLDiffCreator : DiffCreator
                 changedRangeTypes.Add(typeDiff);
             });
 
-        databaseDiff.AddedRangeTypes = addedRangeTypes;
-        databaseDiff.RemovedRangeTypes = removedRangeTypes;
-        databaseDiff.ChangedRangeTypes = changedRangeTypes;
+        dbDiff.AddedRangeTypes = addedRangeTypes;
+        dbDiff.RemovedRangeTypes = removedRangeTypes;
+        dbDiff.ChangedRangeTypes = changedRangeTypes;
     }
 
     private void BuildFunctionsDiff(DatabaseDiff dbDiff)

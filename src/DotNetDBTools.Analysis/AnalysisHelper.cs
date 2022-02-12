@@ -37,11 +37,11 @@ public static class AnalysisHelper
         };
     }
 
-    public static bool LeadsToDataLoss(DatabaseDiff databaseDiff)
+    public static bool LeadsToDataLoss(DatabaseDiff dbDiff)
     {
-        if (databaseDiff.RemovedTables.Any())
+        if (dbDiff.RemovedTables.Any())
             return true;
-        foreach (TableDiff tableDiff in databaseDiff.ChangedTables)
+        foreach (TableDiff tableDiff in dbDiff.ChangedTables)
         {
             if (tableDiff.RemovedColumns.Any())
                 return true;

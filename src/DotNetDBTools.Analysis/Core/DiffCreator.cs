@@ -11,14 +11,14 @@ internal abstract class DiffCreator
 
     public abstract DatabaseDiff CreateDatabaseDiff(Database newDatabase, Database oldDatabase);
 
-    protected void BuildTablesDiff<TTableDiff>(DatabaseDiff databaseDiff, Database newDatabase, Database oldDatabase)
+    protected void BuildTablesDiff<TTableDiff>(DatabaseDiff dbDiff)
         where TTableDiff : TableDiff, new()
     {
         List<Table> addedTables = null;
         List<Table> removedTables = null;
         List<TableDiff> changedTables = new();
         FillAddedAndRemovedItemsAndApplyActionToChangedItems(
-            newDatabase.Tables, oldDatabase.Tables,
+            dbDiff.NewDatabase.Tables, dbDiff.OldDatabase.Tables,
             ref addedTables, ref removedTables,
             (newTable, oldTable) =>
             {
@@ -26,9 +26,9 @@ internal abstract class DiffCreator
                 changedTables.Add(tableDiff);
             });
 
-        databaseDiff.AddedTables = addedTables;
-        databaseDiff.RemovedTables = removedTables;
-        databaseDiff.ChangedTables = changedTables;
+        dbDiff.AddedTables = addedTables;
+        dbDiff.RemovedTables = removedTables;
+        dbDiff.ChangedTables = changedTables;
     }
 
     protected void BuildViewsDiff(DatabaseDiff dbDiff)

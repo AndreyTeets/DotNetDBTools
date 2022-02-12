@@ -10,7 +10,7 @@ internal class MySQLDiffCreator : DiffCreator
 {
     public override DatabaseDiff CreateDatabaseDiff(Database newDatabase, Database oldDatabase)
     {
-        MySQLDatabaseDiff databaseDiff = new()
+        MySQLDatabaseDiff dbDiff = new()
         {
             NewDatabase = newDatabase,
             OldDatabase = oldDatabase,
@@ -22,12 +22,12 @@ internal class MySQLDiffCreator : DiffCreator
             ProceduresToDrop = new List<MySQLProcedure>(),
         };
 
-        BuildTablesDiff<MySQLTableDiff>(databaseDiff, newDatabase, oldDatabase);
-        IndexesHelper.BuildAllDbIndexesToBeDroppedAndCreated(databaseDiff);
-        TriggersHelper.BuildAllDbTriggersToBeDroppedAndCreated(databaseDiff);
-        ForeignKeysHelper.BuildAllForeignKeysToBeDroppedAndCreated(databaseDiff);
+        BuildTablesDiff<MySQLTableDiff>(dbDiff);
+        IndexesHelper.BuildAllDbIndexesToBeDroppedAndCreated(dbDiff);
+        TriggersHelper.BuildAllDbTriggersToBeDroppedAndCreated(dbDiff);
+        ForeignKeysHelper.BuildAllForeignKeysToBeDroppedAndCreated(dbDiff);
 
-        BuildViewsDiff(databaseDiff);
-        return databaseDiff;
+        BuildViewsDiff(dbDiff);
+        return dbDiff;
     }
 }

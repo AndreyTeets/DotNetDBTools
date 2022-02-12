@@ -9,7 +9,7 @@ internal class SQLiteDiffCreator : DiffCreator
 {
     public override DatabaseDiff CreateDatabaseDiff(Database newDatabase, Database oldDatabase)
     {
-        SQLiteDatabaseDiff databaseDiff = new()
+        SQLiteDatabaseDiff dbDiff = new()
         {
             NewDatabase = newDatabase,
             OldDatabase = oldDatabase,
@@ -17,8 +17,8 @@ internal class SQLiteDiffCreator : DiffCreator
             ViewsToDrop = new List<SQLiteView>(),
         };
 
-        BuildTablesDiff<SQLiteTableDiff>(databaseDiff, newDatabase, oldDatabase);
-        BuildViewsDiff(databaseDiff);
-        return databaseDiff;
+        BuildTablesDiff<SQLiteTableDiff>(dbDiff);
+        BuildViewsDiff(dbDiff);
+        return dbDiff;
     }
 }
