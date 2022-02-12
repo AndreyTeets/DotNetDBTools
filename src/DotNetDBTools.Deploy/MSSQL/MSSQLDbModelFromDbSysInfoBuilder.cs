@@ -30,7 +30,7 @@ namespace DotNetDBTools.Deploy.MSSQL
         {
             MSSQLDatabase mssqlDatabase = (MSSQLDatabase)database;
             foreach (MSSQLUserDefinedType udt in mssqlDatabase.UserDefinedTypes)
-                udt.ID = dbObjectIDsMap[$"{DbObjectsTypes.UserDefinedType}_{udt.Name}_{null}"].ID;
+                udt.ID = dbObjectIDsMap[$"{DbObjectType.UserDefinedType}_{udt.Name}_{null}"].ID;
         }
 
         protected override void BuildAdditionalDbObjects(Database database)

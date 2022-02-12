@@ -13,10 +13,10 @@ namespace DotNetDBTools.Deploy.MSSQL.Queries.DNDBTSysInfo
         private const string NameParameterName = "@Name";
         private const string CodeParameterName = "@Code";
 
-        public MSSQLInsertDNDBTSysInfoQuery(Guid objectID, Guid? parentObjectID, DbObjectsTypes objectType, string objectName, string objectCode = null)
+        public MSSQLInsertDNDBTSysInfoQuery(Guid objectID, Guid? parentObjectID, DbObjectType objectType, string objectName, string objectCode = null)
             : base(objectID, parentObjectID, objectType, objectName, objectCode) { }
 
-        protected override string GetSql(DbObjectsTypes objectType)
+        protected override string GetSql(DbObjectType objectType)
         {
             string query =
 $@"INSERT INTO {DNDBTSysTables.DNDBTDbObjects}

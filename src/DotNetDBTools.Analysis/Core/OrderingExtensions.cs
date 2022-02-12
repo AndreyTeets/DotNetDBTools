@@ -8,37 +8,37 @@ namespace DotNetDBTools.Analysis.Core
     public static class OrderingExtensions
     {
         public static List<TDbObject> OrderByName<TDbObject>(this IEnumerable<TDbObject> dbObjects)
-            where TDbObject : DBObject
+            where TDbObject : DbObject
         {
             return dbObjects.OrderBy(x => x.Name, StringComparer.Ordinal).ToList();
         }
 
-        public static IEnumerable<DBObject> OrderByDependenciesLast(this IEnumerable<DBObject> dbObjects)
+        public static IEnumerable<DbObject> OrderByDependenciesLast(this IEnumerable<DbObject> dbObjects)
         {
             if (!dbObjects.Any())
                 return dbObjects;
-            List<DBObject> orderedDbObjects = new();
-            IEnumerable<IEnumerable<DBObject>> orderedGroups = GetOrderedGroups(dbObjects);
-            foreach (IEnumerable<DBObject> group in orderedGroups)
+            List<DbObject> orderedDbObjects = new();
+            IEnumerable<IEnumerable<DbObject>> orderedGroups = GetOrderedGroups(dbObjects);
+            foreach (IEnumerable<DbObject> group in orderedGroups)
                 orderedDbObjects.AddRange(group);
             return orderedDbObjects;
         }
 
-        public static IEnumerable<DBObject> OrderByDependenciesFirst(this IEnumerable<DBObject> dbObjects)
+        public static IEnumerable<DbObject> OrderByDependenciesFirst(this IEnumerable<DbObject> dbObjects)
         {
             if (!dbObjects.Any())
                 return dbObjects;
-            List<DBObject> orderedDbObjects = new();
-            IEnumerable<IEnumerable<DBObject>> orderedGroups = GetOrderedGroups(dbObjects);
-            foreach (IEnumerable<DBObject> group in orderedGroups.Reverse())
+            List<DbObject> orderedDbObjects = new();
+            IEnumerable<IEnumerable<DbObject>> orderedGroups = GetOrderedGroups(dbObjects);
+            foreach (IEnumerable<DbObject> group in orderedGroups.Reverse())
                 orderedDbObjects.AddRange(group);
             return orderedDbObjects;
         }
 
-        private static IEnumerable<IEnumerable<DBObject>> GetOrderedGroups(IEnumerable<DBObject> dbObjects)
+        private static IEnumerable<IEnumerable<DbObject>> GetOrderedGroups(IEnumerable<DbObject> dbObjects)
         {
-            List<IEnumerable<DBObject>> orderedGroups = new();
-            HashSet<DBObject> uprocessedDbObjects = new(dbObjects);
+            List<IEnumerable<DbObject>> orderedGroups = new();
+            HashSet<DbObject> uprocessedDbObjects = new(dbObjects);
             HashSet<Guid> processedDbObjects = new();
             Dictionary<Guid, HashSet<Guid>> isDependencyOfMap = CreateIsDependencyOfMap(dbObjects);
             AddDbObjectsThatAreNotDependencyOfAnyOtherUnprocessedDbObject(
@@ -47,12 +47,12 @@ namespace DotNetDBTools.Analysis.Core
         }
 
         private static void AddDbObjectsThatAreNotDependencyOfAnyOtherUnprocessedDbObject(
-            List<IEnumerable<DBObject>> orderedGroups,
-            HashSet<DBObject> uprocessedDbObjects,
+            List<IEnumerable<DbObject>> orderedGroups,
+            HashSet<DbObject> uprocessedDbObjects,
             HashSet<Guid> processedDbObjects,
             Dictionary<Guid, HashSet<Guid>> isDependencyOfMap)
         {
-            IEnumerable<DBObject> dbObjectsThatAreNotDependencyOfAnyOtherUnprocessedDbObject =
+            IEnumerable<DbObject> dbObjectsThatAreNotDependencyOfAnyOtherUnprocessedDbObject =
                 uprocessedDbObjects.Where(dbObject =>
                 {
                     bool dbObjectIsDependencyOfAnotherUnprocessedDbObject;
@@ -63,7 +63,7 @@ namespace DotNetDBTools.Analysis.Core
                     return !dbObjectIsDependencyOfAnotherUnprocessedDbObject;
                 });
 
-            IEnumerable<DBObject> newProcessedGroup = dbObjectsThatAreNotDependencyOfAnyOtherUnprocessedDbObject
+            IEnumerable<DbObject> newProcessedGroup = dbObjectsThatAreNotDependencyOfAnyOtherUnprocessedDbObject
                 .OrderBy(x => x.ID)
                 .ToList();
 
@@ -81,12 +81,12 @@ namespace DotNetDBTools.Analysis.Core
                 orderedGroups, uprocessedDbObjects, processedDbObjects, isDependencyOfMap);
         }
 
-        private static Dictionary<Guid, HashSet<Guid>> CreateIsDependencyOfMap(IEnumerable<DBObject> dbObjects)
+        private static Dictionary<Guid, HashSet<Guid>> CreateIsDependencyOfMap(IEnumerable<DbObject> dbObjects)
         {
             Dictionary<Guid, HashSet<Guid>> isDependencyOfMap = new();
-            foreach (DBObject dbObject in dbObjects)
+            foreach (DbObject dbObject in dbObjects)
             {
-                foreach (DBObject dep in dbObject.DependsOn)
+                foreach (DbObject dep in dbObject.DependsOn)
                 {
                     if (!isDependencyOfMap.ContainsKey(dep.ID))
                         isDependencyOfMap.Add(dep.ID, new HashSet<Guid>());

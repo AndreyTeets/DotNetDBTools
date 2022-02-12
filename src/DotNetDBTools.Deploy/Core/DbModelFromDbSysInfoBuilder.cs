@@ -80,40 +80,40 @@ namespace DotNetDBTools.Deploy.Core
 
             foreach (Table table in database.Tables)
             {
-                table.ID = dbObjectIDsMap[$"{DbObjectsTypes.Table}_{table.Name}_{null}"].ID;
+                table.ID = dbObjectIDsMap[$"{DbObjectType.Table}_{table.Name}_{null}"].ID;
                 foreach (Column column in table.Columns)
                 {
-                    DNDBTInfo dndbtInfo = dbObjectIDsMap[$"{DbObjectsTypes.Column}_{column.Name}_{table.ID}"];
+                    DNDBTInfo dndbtInfo = dbObjectIDsMap[$"{DbObjectType.Column}_{column.Name}_{table.ID}"];
                     column.ID = dndbtInfo.ID;
                     if (column.Default is CodePiece codePiece)
                         codePiece.Code = dndbtInfo.Code;
                 }
 
                 if (table.PrimaryKey is not null)
-                    table.PrimaryKey.ID = dbObjectIDsMap[$"{DbObjectsTypes.PrimaryKey}_{table.PrimaryKey.Name}_{table.ID}"].ID;
+                    table.PrimaryKey.ID = dbObjectIDsMap[$"{DbObjectType.PrimaryKey}_{table.PrimaryKey.Name}_{table.ID}"].ID;
                 foreach (UniqueConstraint uc in table.UniqueConstraints)
-                    uc.ID = dbObjectIDsMap[$"{DbObjectsTypes.UniqueConstraint}_{uc.Name}_{table.ID}"].ID;
+                    uc.ID = dbObjectIDsMap[$"{DbObjectType.UniqueConstraint}_{uc.Name}_{table.ID}"].ID;
                 foreach (CheckConstraint ck in table.CheckConstraints)
                 {
-                    DNDBTInfo dndbtInfoCK = dbObjectIDsMap[$"{DbObjectsTypes.CheckConstraint}_{ck.Name}_{table.ID}"];
+                    DNDBTInfo dndbtInfoCK = dbObjectIDsMap[$"{DbObjectType.CheckConstraint}_{ck.Name}_{table.ID}"];
                     ck.ID = dndbtInfoCK.ID;
                     ck.CodePiece.Code = dndbtInfoCK.Code;
                 }
                 foreach (Index idx in table.Indexes)
-                    idx.ID = dbObjectIDsMap[$"{DbObjectsTypes.Index}_{idx.Name}_{table.ID}"].ID;
+                    idx.ID = dbObjectIDsMap[$"{DbObjectType.Index}_{idx.Name}_{table.ID}"].ID;
                 foreach (Trigger trg in table.Triggers)
                 {
-                    DNDBTInfo dndbtInfoTRG = dbObjectIDsMap[$"{DbObjectsTypes.Trigger}_{trg.Name}_{table.ID}"];
+                    DNDBTInfo dndbtInfoTRG = dbObjectIDsMap[$"{DbObjectType.Trigger}_{trg.Name}_{table.ID}"];
                     trg.ID = dndbtInfoTRG.ID;
                     trg.CodePiece.Code = dndbtInfoTRG.Code;
                 }
                 foreach (ForeignKey fk in table.ForeignKeys)
-                    fk.ID = dbObjectIDsMap[$"{DbObjectsTypes.ForeignKey}_{fk.Name}_{table.ID}"].ID;
+                    fk.ID = dbObjectIDsMap[$"{DbObjectType.ForeignKey}_{fk.Name}_{table.ID}"].ID;
             }
 
             foreach (View view in database.Views)
             {
-                DNDBTInfo dndbtInfo = dbObjectIDsMap[$"{DbObjectsTypes.View}_{view.Name}_{null}"];
+                DNDBTInfo dndbtInfo = dbObjectIDsMap[$"{DbObjectType.View}_{view.Name}_{null}"];
                 view.ID = dndbtInfo.ID;
                 view.CodePiece.Code = dndbtInfo.Code;
             }

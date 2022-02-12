@@ -2,7 +2,7 @@
 
 namespace DotNetDBTools.Models.PostgreSQL
 {
-    public class PostgreSQLProcedure : DBObject
+    public class PostgreSQLProcedure : DbObject
     {
         public CodePiece CodePiece { get; set; }
     }

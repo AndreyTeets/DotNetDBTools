@@ -4,7 +4,7 @@ using DotNetDBTools.Models.Agnostic;
 
 namespace DotNetDBTools.DefinitionParsing.Agnostic
 {
-    internal class AgnosticDatabaseModelBuilder : DatabaseModelBuilder<
+    internal class AgnosticDatabaseModelBuilder : DbModelFromCSharpDefinitionBuilder<
         AgnosticDatabase,
         AgnosticTable,
         AgnosticView,

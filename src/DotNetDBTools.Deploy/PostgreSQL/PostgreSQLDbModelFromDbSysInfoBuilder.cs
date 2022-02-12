@@ -38,28 +38,28 @@ namespace DotNetDBTools.Deploy.PostgreSQL
         {
             PostgreSQLDatabase postgresqlDatabase = (PostgreSQLDatabase)database;
             foreach (PostgreSQLCompositeType type in postgresqlDatabase.CompositeTypes)
-                type.ID = dbObjectIDsMap[$"{DbObjectsTypes.UserDefinedType}_{type.Name}_{null}"].ID;
+                type.ID = dbObjectIDsMap[$"{DbObjectType.UserDefinedType}_{type.Name}_{null}"].ID;
             foreach (PostgreSQLDomainType type in postgresqlDatabase.DomainTypes)
             {
-                DNDBTInfo dndbtInfo = dbObjectIDsMap[$"{DbObjectsTypes.UserDefinedType}_{type.Name}_{null}"];
+                DNDBTInfo dndbtInfo = dbObjectIDsMap[$"{DbObjectType.UserDefinedType}_{type.Name}_{null}"];
                 type.ID = dndbtInfo.ID;
                 if (type.Default is CodePiece codePiece)
                     codePiece.Code = dndbtInfo.Code;
 
                 foreach (CheckConstraint ck in type.CheckConstraints)
                 {
-                    DNDBTInfo dndbtInfoCK = dbObjectIDsMap[$"{DbObjectsTypes.CheckConstraint}_{ck.Name}_{type.ID}"];
+                    DNDBTInfo dndbtInfoCK = dbObjectIDsMap[$"{DbObjectType.CheckConstraint}_{ck.Name}_{type.ID}"];
                     ck.ID = dndbtInfoCK.ID;
                     ck.CodePiece.Code = dndbtInfoCK.Code;
                 }
             }
             foreach (PostgreSQLEnumType type in postgresqlDatabase.EnumTypes)
-                type.ID = dbObjectIDsMap[$"{DbObjectsTypes.UserDefinedType}_{type.Name}_{null}"].ID;
+                type.ID = dbObjectIDsMap[$"{DbObjectType.UserDefinedType}_{type.Name}_{null}"].ID;
             foreach (PostgreSQLRangeType type in postgresqlDatabase.RangeTypes)
-                type.ID = dbObjectIDsMap[$"{DbObjectsTypes.UserDefinedType}_{type.Name}_{null}"].ID;
+                type.ID = dbObjectIDsMap[$"{DbObjectType.UserDefinedType}_{type.Name}_{null}"].ID;
             foreach (PostgreSQLFunction func in postgresqlDatabase.Functions)
             {
-                DNDBTInfo dndbtInfo = dbObjectIDsMap[$"{DbObjectsTypes.Function}_{func.Name}_{null}"];
+                DNDBTInfo dndbtInfo = dbObjectIDsMap[$"{DbObjectType.Function}_{func.Name}_{null}"];
                 func.ID = dndbtInfo.ID;
                 func.CodePiece.Code = dndbtInfo.Code;
             }

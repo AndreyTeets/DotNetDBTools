@@ -43,7 +43,7 @@ namespace DotNetDBTools.Deploy.Common.Editors
         private void CreateIndex(Index index, Table table)
         {
             QueryExecutor.Execute(Create<TCreateIndexQuery>(index, table));
-            QueryExecutor.Execute(Create<TInsertDNDBTSysInfoQuery>(index.ID, table.ID, DbObjectsTypes.Index, index.Name));
+            QueryExecutor.Execute(Create<TInsertDNDBTSysInfoQuery>(index.ID, table.ID, DbObjectType.Index, index.Name));
         }
 
         private void DropIndex(Index index, Table table)

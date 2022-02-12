@@ -43,7 +43,7 @@ namespace DotNetDBTools.Deploy.Common.Editors
         public void CreateForeignKey(ForeignKey fk, Table table)
         {
             QueryExecutor.Execute(Create<TCreateForeignKeyQuery>(fk, table.Name));
-            QueryExecutor.Execute(Create<TInsertDNDBTSysInfoQuery>(fk.ID, table.ID, DbObjectsTypes.ForeignKey, fk.Name));
+            QueryExecutor.Execute(Create<TInsertDNDBTSysInfoQuery>(fk.ID, table.ID, DbObjectType.ForeignKey, fk.Name));
         }
 
         public void DropForeignKey(ForeignKey fk, Table table)

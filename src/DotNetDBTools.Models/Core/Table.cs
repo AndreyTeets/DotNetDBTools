@@ -2,7 +2,7 @@
 
 namespace DotNetDBTools.Models.Core
 {
-    public abstract class Table : DBObject
+    public abstract class Table : DbObject
     {
         public IEnumerable<Column> Columns { get; set; }
         public PrimaryKey PrimaryKey { get; set; }

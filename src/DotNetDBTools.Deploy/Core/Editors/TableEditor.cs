@@ -48,16 +48,16 @@ namespace DotNetDBTools.Deploy.Core.Editors
         protected virtual void CreateTable(Table table)
         {
             QueryExecutor.Execute(Create<TCreateTableQuery>(table));
-            QueryExecutor.Execute(Create<TInsertDNDBTSysInfoQuery>(table.ID, null, DbObjectsTypes.Table, table.Name));
+            QueryExecutor.Execute(Create<TInsertDNDBTSysInfoQuery>(table.ID, null, DbObjectType.Table, table.Name));
             foreach (Column c in table.Columns)
-                QueryExecutor.Execute(Create<TInsertDNDBTSysInfoQuery>(c.ID, table.ID, DbObjectsTypes.Column, c.Name, c.GetCode()));
+                QueryExecutor.Execute(Create<TInsertDNDBTSysInfoQuery>(c.ID, table.ID, DbObjectType.Column, c.Name, c.GetCode()));
             PrimaryKey pk = table.PrimaryKey;
             if (pk is not null)
-                QueryExecutor.Execute(Create<TInsertDNDBTSysInfoQuery>(pk.ID, table.ID, DbObjectsTypes.PrimaryKey, pk.Name));
+                QueryExecutor.Execute(Create<TInsertDNDBTSysInfoQuery>(pk.ID, table.ID, DbObjectType.PrimaryKey, pk.Name));
             foreach (UniqueConstraint uc in table.UniqueConstraints)
-                QueryExecutor.Execute(Create<TInsertDNDBTSysInfoQuery>(uc.ID, table.ID, DbObjectsTypes.UniqueConstraint, uc.Name));
+                QueryExecutor.Execute(Create<TInsertDNDBTSysInfoQuery>(uc.ID, table.ID, DbObjectType.UniqueConstraint, uc.Name));
             foreach (CheckConstraint ck in table.CheckConstraints)
-                QueryExecutor.Execute(Create<TInsertDNDBTSysInfoQuery>(ck.ID, table.ID, DbObjectsTypes.CheckConstraint, ck.Name, ck.GetCode()));
+                QueryExecutor.Execute(Create<TInsertDNDBTSysInfoQuery>(ck.ID, table.ID, DbObjectType.CheckConstraint, ck.Name, ck.GetCode()));
         }
 
         protected virtual void DropTable(Table table)
@@ -93,14 +93,14 @@ namespace DotNetDBTools.Deploy.Core.Editors
                 QueryExecutor.Execute(Create<TUpdateDNDBTSysInfoQuery>(cDiff.NewColumn.ID, cDiff.NewColumn.Name, cDiff.NewColumn.GetCode()));
 
             foreach (Column c in tableDiff.AddedColumns)
-                QueryExecutor.Execute(Create<TInsertDNDBTSysInfoQuery>(c.ID, tableDiff.NewTable.ID, DbObjectsTypes.Column, c.Name, c.GetCode()));
+                QueryExecutor.Execute(Create<TInsertDNDBTSysInfoQuery>(c.ID, tableDiff.NewTable.ID, DbObjectType.Column, c.Name, c.GetCode()));
             PrimaryKey pk = tableDiff.PrimaryKeyToCreate;
             if (pk is not null)
-                QueryExecutor.Execute(Create<TInsertDNDBTSysInfoQuery>(pk.ID, tableDiff.NewTable.ID, DbObjectsTypes.PrimaryKey, pk.Name));
+                QueryExecutor.Execute(Create<TInsertDNDBTSysInfoQuery>(pk.ID, tableDiff.NewTable.ID, DbObjectType.PrimaryKey, pk.Name));
             foreach (UniqueConstraint uc in tableDiff.UniqueConstraintsToCreate)
-                QueryExecutor.Execute(Create<TInsertDNDBTSysInfoQuery>(uc.ID, tableDiff.NewTable.ID, DbObjectsTypes.UniqueConstraint, uc.Name));
+                QueryExecutor.Execute(Create<TInsertDNDBTSysInfoQuery>(uc.ID, tableDiff.NewTable.ID, DbObjectType.UniqueConstraint, uc.Name));
             foreach (CheckConstraint ck in tableDiff.CheckConstraintsToCreate)
-                QueryExecutor.Execute(Create<TInsertDNDBTSysInfoQuery>(ck.ID, tableDiff.NewTable.ID, DbObjectsTypes.CheckConstraint, ck.Name, ck.GetCode()));
+                QueryExecutor.Execute(Create<TInsertDNDBTSysInfoQuery>(ck.ID, tableDiff.NewTable.ID, DbObjectType.CheckConstraint, ck.Name, ck.GetCode()));
         }
     }
 }

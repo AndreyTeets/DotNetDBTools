@@ -38,10 +38,10 @@ namespace DotNetDBTools.DefinitionParsing
             return dbKind switch
             {
                 DatabaseKind.Agnostic => new AgnosticDatabaseModelBuilder().BuildDatabaseModel(dbAssembly),
-                DatabaseKind.MSSQL => new MSSQLDatabaseModelBuilder().BuildDatabaseModel(dbAssembly),
-                DatabaseKind.MySQL => new MySQLDatabaseModelBuilder().BuildDatabaseModel(dbAssembly),
-                DatabaseKind.PostgreSQL => new PostgreSQLDatabaseModelBuilder().BuildDatabaseModel(dbAssembly),
-                DatabaseKind.SQLite => new SQLiteDatabaseModelBuilder().BuildDatabaseModel(dbAssembly),
+                DatabaseKind.MSSQL => new MSSQLDbModelFromCSharpDefinitionBuilder().BuildDatabaseModel(dbAssembly),
+                DatabaseKind.MySQL => new MySQLDbModelFromCSharpDefinitionBuilder().BuildDatabaseModel(dbAssembly),
+                DatabaseKind.PostgreSQL => new PostgreSQLDbModelFromCSharpDefinitionBuilder().BuildDatabaseModel(dbAssembly),
+                DatabaseKind.SQLite => new SQLiteDbModelFromCSharpDefinitionBuilder().BuildDatabaseModel(dbAssembly),
                 _ => throw new InvalidOperationException($"Invalid dbKind: {dbKind}"),
             };
         }

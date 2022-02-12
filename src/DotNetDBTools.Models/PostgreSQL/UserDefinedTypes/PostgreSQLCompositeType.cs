@@ -3,7 +3,7 @@ using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.Models.PostgreSQL.UserDefinedTypes
 {
-    public class PostgreSQLCompositeType : DBObject
+    public class PostgreSQLCompositeType : DbObject
     {
         public IEnumerable<PostgreSQLCompositeTypeAttribute> Attributes { get; set; }
     }

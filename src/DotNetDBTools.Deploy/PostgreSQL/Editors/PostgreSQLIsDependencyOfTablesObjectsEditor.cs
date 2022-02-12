@@ -23,61 +23,61 @@ namespace DotNetDBTools.Deploy.PostgreSQL.Editors
 
         public void Rename_RemovedOrChanged_ObjectsThatTablesDependOn_ToTemp_InDbAndInDbDiff(PostgreSQLDatabaseDiff dbDiff)
         {
-            foreach (DBObject dbObject in GetOrderedByDependenciesObjectsToDrop(dbDiff))
+            foreach (DbObject dbObject in GetOrderedByDependenciesObjectsToDrop(dbDiff))
                 RenameDbObjectToTempInDbAndInDbDiff(dbObject);
         }
 
         public void Create_AddedOrChanged_ObjectsThatTablesDependOn(PostgreSQLDatabaseDiff dbDiff)
         {
-            foreach (DBObject dbObject in GetOrderedByDependenciesObjectsToCreate(dbDiff))
+            foreach (DbObject dbObject in GetOrderedByDependenciesObjectsToCreate(dbDiff))
                 CreateDbObject(dbObject);
         }
 
         public void Drop_RemovedOrChanged_ObjectsThatTablesDependOn(PostgreSQLDatabaseDiff dbDiff)
         {
-            foreach (DBObject dbObject in GetOrderedByDependenciesObjectsToDrop(dbDiff))
+            foreach (DbObject dbObject in GetOrderedByDependenciesObjectsToDrop(dbDiff))
                 DropDbObject(dbObject);
         }
 
-        private static IEnumerable<DBObject> GetOrderedByDependenciesObjectsToCreate(PostgreSQLDatabaseDiff dbDiff)
+        private static IEnumerable<DbObject> GetOrderedByDependenciesObjectsToCreate(PostgreSQLDatabaseDiff dbDiff)
         {
-            return dbDiff.FunctionsToCreate.Where(x => x.IsSimple).Select(x => (DBObject)x)
-                .Concat(dbDiff.AddedCompositeTypes.Select(x => (DBObject)x))
-                .Concat(dbDiff.ChangedCompositeTypes.Select(x => (DBObject)x.NewCompositeType))
-                .Concat(dbDiff.AddedDomainTypes.Select(x => (DBObject)x))
-                .Concat(dbDiff.ChangedDomainTypes.Select(x => (DBObject)x.NewDomainType))
-                .Concat(dbDiff.AddedEnumTypes.Select(x => (DBObject)x))
-                .Concat(dbDiff.ChangedEnumTypes.Select(x => (DBObject)x.NewEnumType))
-                .Concat(dbDiff.AddedRangeTypes.Select(x => (DBObject)x))
-                .Concat(dbDiff.ChangedRangeTypes.Select(x => (DBObject)x.NewRangeType))
+            return dbDiff.FunctionsToCreate.Where(x => x.IsSimple).Select(x => (DbObject)x)
+                .Concat(dbDiff.AddedCompositeTypes.Select(x => (DbObject)x))
+                .Concat(dbDiff.ChangedCompositeTypes.Select(x => (DbObject)x.NewCompositeType))
+                .Concat(dbDiff.AddedDomainTypes.Select(x => (DbObject)x))
+                .Concat(dbDiff.ChangedDomainTypes.Select(x => (DbObject)x.NewDomainType))
+                .Concat(dbDiff.AddedEnumTypes.Select(x => (DbObject)x))
+                .Concat(dbDiff.ChangedEnumTypes.Select(x => (DbObject)x.NewEnumType))
+                .Concat(dbDiff.AddedRangeTypes.Select(x => (DbObject)x))
+                .Concat(dbDiff.ChangedRangeTypes.Select(x => (DbObject)x.NewRangeType))
                 .OrderByDependenciesFirst();
         }
 
-        private static IEnumerable<DBObject> GetOrderedByDependenciesObjectsToDrop(PostgreSQLDatabaseDiff dbDiff)
+        private static IEnumerable<DbObject> GetOrderedByDependenciesObjectsToDrop(PostgreSQLDatabaseDiff dbDiff)
         {
-            return dbDiff.FunctionsToDrop.Where(x => x.IsSimple).Select(x => (DBObject)x)
-                .Concat(dbDiff.RemovedCompositeTypes.Select(x => (DBObject)x))
-                .Concat(dbDiff.ChangedCompositeTypes.Select(x => (DBObject)x.OldCompositeType))
-                .Concat(dbDiff.RemovedDomainTypes.Select(x => (DBObject)x))
-                .Concat(dbDiff.ChangedDomainTypes.Select(x => (DBObject)x.OldDomainType))
-                .Concat(dbDiff.RemovedEnumTypes.Select(x => (DBObject)x))
-                .Concat(dbDiff.ChangedEnumTypes.Select(x => (DBObject)x.OldEnumType))
-                .Concat(dbDiff.RemovedRangeTypes.Select(x => (DBObject)x))
-                .Concat(dbDiff.ChangedRangeTypes.Select(x => (DBObject)x.OldRangeType))
+            return dbDiff.FunctionsToDrop.Where(x => x.IsSimple).Select(x => (DbObject)x)
+                .Concat(dbDiff.RemovedCompositeTypes.Select(x => (DbObject)x))
+                .Concat(dbDiff.ChangedCompositeTypes.Select(x => (DbObject)x.OldCompositeType))
+                .Concat(dbDiff.RemovedDomainTypes.Select(x => (DbObject)x))
+                .Concat(dbDiff.ChangedDomainTypes.Select(x => (DbObject)x.OldDomainType))
+                .Concat(dbDiff.RemovedEnumTypes.Select(x => (DbObject)x))
+                .Concat(dbDiff.ChangedEnumTypes.Select(x => (DbObject)x.OldEnumType))
+                .Concat(dbDiff.RemovedRangeTypes.Select(x => (DbObject)x))
+                .Concat(dbDiff.ChangedRangeTypes.Select(x => (DbObject)x.OldRangeType))
                 .OrderByDependenciesLast();
         }
 
-        private void RenameDbObjectToTempInDbAndInDbDiff(DBObject dbObject)
+        private void RenameDbObjectToTempInDbAndInDbDiff(DbObject dbObject)
         {
             if (dbObject is PostgreSQLFunction func)
                 RenameFunctionToTempInDbAndInDbDiff(func);
-            else if (dbObject is DBObject type)
+            else if (dbObject is DbObject type)
                 RenameTypeToTempInDbAndInDbDiff(type);
             else
                 throw new InvalidOperationException($"Invalid dbObject type to rename to temp {dbObject.GetType()}");
         }
 
-        private void CreateDbObject(DBObject dbObject)
+        private void CreateDbObject(DbObject dbObject)
         {
             if (dbObject is PostgreSQLFunction func)
                 CreateFunction(func);
@@ -93,11 +93,11 @@ namespace DotNetDBTools.Deploy.PostgreSQL.Editors
                 throw new InvalidOperationException($"Invalid dbObject type to create {dbObject.GetType()}");
         }
 
-        private void DropDbObject(DBObject dbObject)
+        private void DropDbObject(DbObject dbObject)
         {
             if (dbObject is PostgreSQLFunction func)
                 DropFunction(func);
-            else if (dbObject is DBObject type)
+            else if (dbObject is DbObject type)
                 DropType(type);
             else
                 throw new InvalidOperationException($"Invalid dbObject type to drop {dbObject.GetType()}");
@@ -110,7 +110,7 @@ namespace DotNetDBTools.Deploy.PostgreSQL.Editors
             QueryExecutor.Execute(new PostgreSQLDeleteDNDBTSysInfoQuery(func.ID));
         }
 
-        private void RenameTypeToTempInDbAndInDbDiff(DBObject type)
+        private void RenameTypeToTempInDbAndInDbDiff(DbObject type)
         {
             QueryExecutor.Execute(new PostgreSQLRenameTypeToTempQuery(type));
             type.Name = $"_DNDBTTemp_{type.Name}";
@@ -126,33 +126,33 @@ namespace DotNetDBTools.Deploy.PostgreSQL.Editors
         private void CreateFunction(PostgreSQLFunction func)
         {
             QueryExecutor.Execute(new GenericQuery($"{func.GetCode()}"));
-            QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(func.ID, null, DbObjectsTypes.Function, func.Name, func.GetCode()));
+            QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(func.ID, null, DbObjectType.Function, func.Name, func.GetCode()));
         }
 
         private void CreateCompositeType(PostgreSQLCompositeType type)
         {
             QueryExecutor.Execute(new PostgreSQLCreateCompositeTypeQuery(type));
-            QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(type.ID, null, DbObjectsTypes.UserDefinedType, type.Name));
+            QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(type.ID, null, DbObjectType.UserDefinedType, type.Name));
         }
 
         private void CreateDomainType(PostgreSQLDomainType type)
         {
             QueryExecutor.Execute(new PostgreSQLCreateDomainTypeQuery(type));
-            QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(type.ID, null, DbObjectsTypes.UserDefinedType, type.Name));
+            QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(type.ID, null, DbObjectType.UserDefinedType, type.Name));
             foreach (CheckConstraint ck in type.CheckConstraints)
-                QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(ck.ID, type.ID, DbObjectsTypes.CheckConstraint, ck.Name, ck.GetCode()));
+                QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(ck.ID, type.ID, DbObjectType.CheckConstraint, ck.Name, ck.GetCode()));
         }
 
         private void CreateEnumType(PostgreSQLEnumType type)
         {
             QueryExecutor.Execute(new PostgreSQLCreateEnumTypeQuery(type));
-            QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(type.ID, null, DbObjectsTypes.UserDefinedType, type.Name));
+            QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(type.ID, null, DbObjectType.UserDefinedType, type.Name));
         }
 
         private void CreateRangeType(PostgreSQLRangeType type)
         {
             QueryExecutor.Execute(new PostgreSQLCreateRangeTypeQuery(type));
-            QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(type.ID, null, DbObjectsTypes.UserDefinedType, type.Name));
+            QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(type.ID, null, DbObjectType.UserDefinedType, type.Name));
         }
 
         private void DropFunction(PostgreSQLFunction func)
@@ -161,7 +161,7 @@ namespace DotNetDBTools.Deploy.PostgreSQL.Editors
             QueryExecutor.Execute(new PostgreSQLDeleteDNDBTSysInfoQuery(func.ID));
         }
 
-        private void DropType(DBObject type)
+        private void DropType(DbObject type)
         {
             QueryExecutor.Execute(new PostgreSQLDropTypeQuery(type));
         }

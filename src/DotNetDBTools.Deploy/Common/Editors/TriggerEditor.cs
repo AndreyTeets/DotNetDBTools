@@ -43,7 +43,7 @@ namespace DotNetDBTools.Deploy.Common.Editors
         private void CreateTrigger(Trigger trg, Table table)
         {
             QueryExecutor.Execute(Create<TCreateTriggerQuery>(trg));
-            QueryExecutor.Execute(Create<TInsertDNDBTSysInfoQuery>(trg.ID, table.ID, DbObjectsTypes.Trigger, trg.Name, trg.GetCode()));
+            QueryExecutor.Execute(Create<TInsertDNDBTSysInfoQuery>(trg.ID, table.ID, DbObjectType.Trigger, trg.Name, trg.GetCode()));
         }
 
         private void DropTrigger(Trigger trg, Table table)

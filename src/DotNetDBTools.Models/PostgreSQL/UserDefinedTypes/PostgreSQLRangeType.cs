@@ -2,7 +2,7 @@
 
 namespace DotNetDBTools.Models.PostgreSQL.UserDefinedTypes
 {
-    public class PostgreSQLRangeType : DBObject
+    public class PostgreSQLRangeType : DbObject
     {
         public DataType Subtype { get; set; }
         public string SubtypeOperatorClass { get; set; }

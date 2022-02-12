@@ -1,6 +1,6 @@
 ﻿namespace DotNetDBTools.Deploy.Core
 {
-    internal enum DbObjectsTypes
+    internal enum DbObjectType
     {
         UserDefinedType,
         Table,

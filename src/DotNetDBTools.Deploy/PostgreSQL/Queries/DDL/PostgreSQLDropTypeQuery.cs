@@ -13,12 +13,12 @@ namespace DotNetDBTools.Deploy.PostgreSQL.Queries.DDL
 
         private readonly string _sql;
 
-        public PostgreSQLDropTypeQuery(DBObject type)
+        public PostgreSQLDropTypeQuery(DbObject type)
         {
             _sql = GetSql(type);
         }
 
-        private static string GetSql(DBObject type)
+        private static string GetSql(DbObject type)
         {
             switch (type)
             {

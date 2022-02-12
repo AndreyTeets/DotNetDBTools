@@ -7,7 +7,7 @@ using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.DefinitionParsing.Core
 {
-    internal abstract class DatabaseModelBuilder<
+    internal abstract class DbModelFromCSharpDefinitionBuilder<
         TDatabase,
         TTable,
         TView,
@@ -21,7 +21,7 @@ namespace DotNetDBTools.DefinitionParsing.Core
         protected readonly IDbObjectCodeMapper DbObjectCodeMapper;
         protected readonly IDefaultValueMapper DefaultValueMapper;
 
-        protected DatabaseModelBuilder(
+        protected DbModelFromCSharpDefinitionBuilder(
             IDataTypeMapper dataTypeMapper,
             IDbObjectCodeMapper dbObjectCodeMapper,
             IDefaultValueMapper defaultValueMapper)

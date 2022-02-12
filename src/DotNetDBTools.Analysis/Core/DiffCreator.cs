@@ -209,7 +209,7 @@ namespace DotNetDBTools.Analysis.Core
             ref List<TItem> removedItems,
             Action<TItem, TItem> changedItemFoundAction)
             where TCollection : IEnumerable<TItem>
-            where TItem : DBObject
+            where TItem : DbObject
         {
             HashSet<Guid> newCollectionItemIDs = new(newCollection.Select(x => x.ID));
             Dictionary<Guid, TItem> oldCollectionItemIDToItemMap = oldCollection.ToDictionary(x => x.ID, x => x);

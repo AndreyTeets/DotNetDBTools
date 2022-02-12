@@ -34,34 +34,34 @@ namespace DotNetDBTools.Deploy.MSSQL.Editors
         {
             MSSQLDatabase db = (MSSQLDatabase)database;
             foreach (MSSQLUserDefinedType udt in db.UserDefinedTypes)
-                QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(udt.ID, null, DbObjectsTypes.UserDefinedType, udt.Name));
+                QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(udt.ID, null, DbObjectType.UserDefinedType, udt.Name));
             foreach (MSSQLTable table in db.Tables)
             {
-                QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(table.ID, null, DbObjectsTypes.Table, table.Name));
+                QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(table.ID, null, DbObjectType.Table, table.Name));
                 foreach (Column c in table.Columns)
-                    QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(c.ID, table.ID, DbObjectsTypes.Column, c.Name, c.GetCode()));
+                    QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(c.ID, table.ID, DbObjectType.Column, c.Name, c.GetCode()));
                 PrimaryKey pk = table.PrimaryKey;
                 if (pk is not null)
-                    QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(pk.ID, table.ID, DbObjectsTypes.PrimaryKey, pk.Name));
+                    QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(pk.ID, table.ID, DbObjectType.PrimaryKey, pk.Name));
                 foreach (UniqueConstraint uc in table.UniqueConstraints)
-                    QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(uc.ID, table.ID, DbObjectsTypes.UniqueConstraint, uc.Name));
+                    QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(uc.ID, table.ID, DbObjectType.UniqueConstraint, uc.Name));
                 foreach (CheckConstraint ck in table.CheckConstraints)
-                    QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(ck.ID, table.ID, DbObjectsTypes.CheckConstraint, ck.Name, ck.GetCode()));
+                    QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(ck.ID, table.ID, DbObjectType.CheckConstraint, ck.Name, ck.GetCode()));
                 foreach (Index idx in table.Indexes)
-                    QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(idx.ID, table.ID, DbObjectsTypes.Index, idx.Name));
+                    QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(idx.ID, table.ID, DbObjectType.Index, idx.Name));
                 foreach (Trigger trg in table.Triggers)
-                    QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(trg.ID, table.ID, DbObjectsTypes.Trigger, trg.Name, trg.GetCode()));
+                    QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(trg.ID, table.ID, DbObjectType.Trigger, trg.Name, trg.GetCode()));
                 foreach (ForeignKey fk in table.ForeignKeys)
-                    QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(fk.ID, table.ID, DbObjectsTypes.ForeignKey, fk.Name));
+                    QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(fk.ID, table.ID, DbObjectType.ForeignKey, fk.Name));
             }
             foreach (MSSQLUserDefinedTableType udtt in db.UserDefinedTableTypes)
-                QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(udtt.ID, null, DbObjectsTypes.UserDefinedTableType, udtt.Name));
+                QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(udtt.ID, null, DbObjectType.UserDefinedTableType, udtt.Name));
             foreach (MSSQLFunction func in db.Functions)
-                QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(func.ID, null, DbObjectsTypes.Function, func.Name, func.GetCode()));
+                QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(func.ID, null, DbObjectType.Function, func.Name, func.GetCode()));
             foreach (MSSQLView view in db.Views)
-                QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(view.ID, null, DbObjectsTypes.View, view.Name, view.GetCode()));
+                QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(view.ID, null, DbObjectType.View, view.Name, view.GetCode()));
             foreach (MSSQLProcedure proc in db.Procedures)
-                QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(proc.ID, null, DbObjectsTypes.Procedure, proc.Name, proc.GetCode()));
+                QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(proc.ID, null, DbObjectType.Procedure, proc.Name, proc.GetCode()));
         }
 
         public override void ApplyDatabaseDiff(DatabaseDiff databaseDiff, DeployOptions options)
@@ -124,7 +124,7 @@ namespace DotNetDBTools.Deploy.MSSQL.Editors
         private void CreateUserDefinedType(MSSQLUserDefinedType udt)
         {
             QueryExecutor.Execute(new MSSQLCreateTypeQuery(udt));
-            QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(udt.ID, null, DbObjectsTypes.UserDefinedType, udt.Name));
+            QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(udt.ID, null, DbObjectType.UserDefinedType, udt.Name));
         }
 
         private void DropUserDefinedType(MSSQLUserDefinedType udt)
@@ -140,7 +140,7 @@ namespace DotNetDBTools.Deploy.MSSQL.Editors
         private void CreateUserDefinedTableType(MSSQLUserDefinedTableType udtt)
         {
             //QueryExecutor.Execute(new CreateTableQuery(udtt));
-            QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(udtt.ID, null, DbObjectsTypes.UserDefinedTableType, udtt.Name));
+            QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(udtt.ID, null, DbObjectType.UserDefinedTableType, udtt.Name));
         }
 
         private void DropUserDefinedTableType(MSSQLUserDefinedTableType udtt)
@@ -152,7 +152,7 @@ namespace DotNetDBTools.Deploy.MSSQL.Editors
         private void CreateFunction(MSSQLFunction func)
         {
             QueryExecutor.Execute(new GenericQuery($"{func.GetCode()}"));
-            QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(func.ID, null, DbObjectsTypes.Function, func.Name, func.GetCode()));
+            QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(func.ID, null, DbObjectType.Function, func.Name, func.GetCode()));
         }
 
         private void DropFunction(MSSQLFunction func)
@@ -164,7 +164,7 @@ namespace DotNetDBTools.Deploy.MSSQL.Editors
         private void CreateView(MSSQLView view)
         {
             QueryExecutor.Execute(new GenericQuery($"{view.GetCode()}"));
-            QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(view.ID, null, DbObjectsTypes.View, view.Name, view.GetCode()));
+            QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(view.ID, null, DbObjectType.View, view.Name, view.GetCode()));
         }
 
         private void DropView(MSSQLView view)
@@ -176,7 +176,7 @@ namespace DotNetDBTools.Deploy.MSSQL.Editors
         private void CreateProcedure(MSSQLProcedure proc)
         {
             QueryExecutor.Execute(new GenericQuery($"{proc.GetCode()}"));
-            QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(proc.ID, null, DbObjectsTypes.Procedure, proc.Name, proc.GetCode()));
+            QueryExecutor.Execute(new MSSQLInsertDNDBTSysInfoQuery(proc.ID, null, DbObjectType.Procedure, proc.Name, proc.GetCode()));
         }
 
         private void DropProcedure(MSSQLProcedure proc)

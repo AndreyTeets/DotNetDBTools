@@ -2,7 +2,7 @@
 
 namespace DotNetDBTools.Models.Core
 {
-    public class ForeignKey : DBObject
+    public class ForeignKey : DbObject
     {
         public IEnumerable<string> ThisColumnNames { get; set; }
         public string ReferencedTableName { get; set; }

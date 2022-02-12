@@ -2,7 +2,7 @@
 
 namespace DotNetDBTools.Models.MySQL
 {
-    public class MySQLProcedure : DBObject
+    public class MySQLProcedure : DbObject
     {
         public CodePiece CodePiece { get; set; }
     }

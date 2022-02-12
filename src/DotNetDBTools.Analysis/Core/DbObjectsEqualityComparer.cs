@@ -7,9 +7,9 @@ using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.Analysis.Core
 {
-    internal class DbObjectsEqualityComparer : IEqualityComparer<DBObject>
+    internal class DbObjectsEqualityComparer : IEqualityComparer<DbObject>
     {
-        public bool Equals(DBObject x, DBObject y)
+        public bool Equals(DbObject x, DbObject y)
         {
             if (x is null && y is null)
                 return true;
@@ -19,7 +19,7 @@ namespace DotNetDBTools.Analysis.Core
             return HaveEqualPropertiesRecursive(x, y);
         }
 
-        public int GetHashCode(DBObject obj)
+        public int GetHashCode(DbObject obj)
         {
             return obj.GetHashCode();
         }

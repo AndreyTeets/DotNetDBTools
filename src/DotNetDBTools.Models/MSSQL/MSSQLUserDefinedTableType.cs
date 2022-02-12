@@ -3,7 +3,7 @@ using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.Models.MSSQL
 {
-    public class MSSQLUserDefinedTableType : DBObject
+    public class MSSQLUserDefinedTableType : DbObject
     {
         public IEnumerable<Column> Columns { get; set; }
         public PrimaryKey PrimaryKey { get; set; }

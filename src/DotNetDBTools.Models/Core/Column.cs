@@ -1,6 +1,6 @@
 ﻿namespace DotNetDBTools.Models.Core
 {
-    public class Column : DBObject
+    public class Column : DbObject
     {
         public DataType DataType { get; set; }
         public bool Nullable { get; set; }

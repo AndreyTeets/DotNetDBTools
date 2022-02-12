@@ -31,7 +31,7 @@ namespace DotNetDBTools.Deploy.PostgreSQL.Editors
         {
             _indexEditor.CreateIndexes(dbDiff);
             _foreignKeyEditor.CreateForeignKeys(dbDiff);
-            foreach (DBObject dbObject in GetOrderedByDependenciesObjectsToCreate(dbDiff))
+            foreach (DbObject dbObject in GetOrderedByDependenciesObjectsToCreate(dbDiff))
                 CreateDbObject(dbObject);
             _triggerEditor.CreateTriggers(dbDiff);
         }
@@ -39,29 +39,29 @@ namespace DotNetDBTools.Deploy.PostgreSQL.Editors
         public void DropObjectsThatDependOnTables(PostgreSQLDatabaseDiff dbDiff)
         {
             _triggerEditor.DropTriggers(dbDiff);
-            foreach (DBObject dbObject in GetOrderedByDependenciesObjectsToDrop(dbDiff))
+            foreach (DbObject dbObject in GetOrderedByDependenciesObjectsToDrop(dbDiff))
                 DropDbObject(dbObject);
             _foreignKeyEditor.DropForeignKeys(dbDiff);
             _indexEditor.DropIndexes(dbDiff);
         }
 
-        private static IEnumerable<DBObject> GetOrderedByDependenciesObjectsToCreate(PostgreSQLDatabaseDiff dbDiff)
+        private static IEnumerable<DbObject> GetOrderedByDependenciesObjectsToCreate(PostgreSQLDatabaseDiff dbDiff)
         {
-            return dbDiff.FunctionsToCreate.Where(x => !x.IsSimple).Select(x => (DBObject)x)
-                .Concat(dbDiff.ViewsToCreate.Select(x => (DBObject)x))
-                .Concat(dbDiff.ProceduresToCreate.Select(x => (DBObject)x))
+            return dbDiff.FunctionsToCreate.Where(x => !x.IsSimple).Select(x => (DbObject)x)
+                .Concat(dbDiff.ViewsToCreate.Select(x => (DbObject)x))
+                .Concat(dbDiff.ProceduresToCreate.Select(x => (DbObject)x))
                 .OrderByDependenciesFirst();
         }
 
-        private static IEnumerable<DBObject> GetOrderedByDependenciesObjectsToDrop(PostgreSQLDatabaseDiff dbDiff)
+        private static IEnumerable<DbObject> GetOrderedByDependenciesObjectsToDrop(PostgreSQLDatabaseDiff dbDiff)
         {
-            return dbDiff.FunctionsToDrop.Where(x => !x.IsSimple).Select(x => (DBObject)x)
-                .Concat(dbDiff.ViewsToDrop.Select(x => (DBObject)x))
-                .Concat(dbDiff.ProceduresToDrop.Select(x => (DBObject)x))
+            return dbDiff.FunctionsToDrop.Where(x => !x.IsSimple).Select(x => (DbObject)x)
+                .Concat(dbDiff.ViewsToDrop.Select(x => (DbObject)x))
+                .Concat(dbDiff.ProceduresToDrop.Select(x => (DbObject)x))
                 .OrderByDependenciesLast();
         }
 
-        private void CreateDbObject(DBObject dbObject)
+        private void CreateDbObject(DbObject dbObject)
         {
             if (dbObject is PostgreSQLView view)
                 CreateView(view);
@@ -73,7 +73,7 @@ namespace DotNetDBTools.Deploy.PostgreSQL.Editors
                 throw new InvalidOperationException($"Invalid dbObject type to create {dbObject.GetType()}");
         }
 
-        private void DropDbObject(DBObject dbObject)
+        private void DropDbObject(DbObject dbObject)
         {
             if (dbObject is PostgreSQLView view)
                 DropView(view);
@@ -88,7 +88,7 @@ namespace DotNetDBTools.Deploy.PostgreSQL.Editors
         private void CreateView(PostgreSQLView view)
         {
             QueryExecutor.Execute(new GenericQuery($"{view.GetCode()}"));
-            QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(view.ID, null, DbObjectsTypes.View, view.Name, view.GetCode()));
+            QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(view.ID, null, DbObjectType.View, view.Name, view.GetCode()));
         }
 
         private void DropView(PostgreSQLView view)
@@ -100,7 +100,7 @@ namespace DotNetDBTools.Deploy.PostgreSQL.Editors
         private void CreateFunction(PostgreSQLFunction func)
         {
             QueryExecutor.Execute(new GenericQuery($"{func.GetCode()}"));
-            QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(func.ID, null, DbObjectsTypes.Function, func.Name, func.GetCode()));
+            QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(func.ID, null, DbObjectType.Function, func.Name, func.GetCode()));
         }
 
         private void DropFunction(PostgreSQLFunction func)
@@ -112,7 +112,7 @@ namespace DotNetDBTools.Deploy.PostgreSQL.Editors
         private void CreateProcedure(PostgreSQLProcedure proc)
         {
             QueryExecutor.Execute(new GenericQuery($"{proc.GetCode()}"));
-            QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(proc.ID, null, DbObjectsTypes.Procedure, proc.Name, proc.GetCode()));
+            QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(proc.ID, null, DbObjectType.Procedure, proc.Name, proc.GetCode()));
         }
 
         private void DropProcedure(PostgreSQLProcedure proc)

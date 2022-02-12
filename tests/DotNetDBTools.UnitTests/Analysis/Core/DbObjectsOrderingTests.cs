@@ -13,18 +13,18 @@ namespace DotNetDBTools.UnitTests.Analysis.Core
         [Fact]
         public void OrderByDependencies_ProduceCorrectResultOnValidNonEmptyInput()
         {
-            DBObject x01 = CreateTestDbObject("01", new DBObject[] { });
-            DBObject x02 = CreateTestDbObject("02", new DBObject[] { });
-            DBObject x03 = CreateTestDbObject("03", new DBObject[] { });
-            DBObject x04 = CreateTestDbObject("04", new DBObject[] { });
-            DBObject x05 = CreateTestDbObject("05", new DBObject[] { });
-            DBObject x07 = CreateTestDbObject("07", new DBObject[] { x02, x03 });
-            DBObject x08 = CreateTestDbObject("08", new DBObject[] { x05 });
-            DBObject x09 = CreateTestDbObject("09", new DBObject[] { x07 });
-            DBObject x10 = CreateTestDbObject("10", new DBObject[] { x09 });
-            DBObject x11 = CreateTestDbObject("11", new DBObject[] { x09 });
-            DBObject x06 = CreateTestDbObject("06", new DBObject[] { x01, x02, x07, x09, x10 });
-            List<DBObject> dbObjects = new() { x01, x02, x03, x04, x05, x06, x07, x08, x09, x10, x11 };
+            DbObject x01 = CreateTestDbObject("01", new DbObject[] { });
+            DbObject x02 = CreateTestDbObject("02", new DbObject[] { });
+            DbObject x03 = CreateTestDbObject("03", new DbObject[] { });
+            DbObject x04 = CreateTestDbObject("04", new DbObject[] { });
+            DbObject x05 = CreateTestDbObject("05", new DbObject[] { });
+            DbObject x07 = CreateTestDbObject("07", new DbObject[] { x02, x03 });
+            DbObject x08 = CreateTestDbObject("08", new DbObject[] { x05 });
+            DbObject x09 = CreateTestDbObject("09", new DbObject[] { x07 });
+            DbObject x10 = CreateTestDbObject("10", new DbObject[] { x09 });
+            DbObject x11 = CreateTestDbObject("11", new DbObject[] { x09 });
+            DbObject x06 = CreateTestDbObject("06", new DbObject[] { x01, x02, x07, x09, x10 });
+            List<DbObject> dbObjects = new() { x01, x02, x03, x04, x05, x06, x07, x08, x09, x10, x11 };
 
             string[] expectedDependenciesFirstOrder = new string[]
             {
@@ -53,7 +53,7 @@ namespace DotNetDBTools.UnitTests.Analysis.Core
         [Fact]
         public void OrderByDependencies_ProduceCorrectResultOnEmptyInput()
         {
-            IEnumerable<DBObject> dbObjects = new List<DBObject>();
+            IEnumerable<DbObject> dbObjects = new List<DbObject>();
 
             string[] expectedDependenciesFirstOrder = new string[] { };
             string[] expectedDependenciesLastOrder = new string[] { };
@@ -68,18 +68,18 @@ namespace DotNetDBTools.UnitTests.Analysis.Core
         [Fact]
         public void OrderByDependencies_ThrowOnInvalidInput()
         {
-            DBObject x01 = CreateTestDbObject("01", new DBObject[] { });
-            DBObject x02 = CreateTestDbObject("02", new DBObject[] { x01 });
-            DBObject x03 = CreateTestDbObject("03", new DBObject[] { x02 });
+            DbObject x01 = CreateTestDbObject("01", new DbObject[] { });
+            DbObject x02 = CreateTestDbObject("02", new DbObject[] { x01 });
+            DbObject x03 = CreateTestDbObject("03", new DbObject[] { x02 });
             x01.DependsOn.Add(x03);
-            List<DBObject> dbObjects = new() { x01, x02, x03 };
+            List<DbObject> dbObjects = new() { x01, x02, x03 };
 
             string expectedExceptionMessageWildcard = "Invalid objects dependencies graph*";
             dbObjects.Invoking(x => x.OrderByDependenciesFirst()).Should().Throw<Exception>().WithMessage(expectedExceptionMessageWildcard);
             dbObjects.Invoking(x => x.OrderByDependenciesLast()).Should().Throw<Exception>().WithMessage(expectedExceptionMessageWildcard);
         }
 
-        private static DBObject CreateTestDbObject(string num, DBObject[] dependsOn)
+        private static DbObject CreateTestDbObject(string num, DbObject[] dependsOn)
         {
             return new TestDbObject()
             {
@@ -89,6 +89,6 @@ namespace DotNetDBTools.UnitTests.Analysis.Core
             };
         }
 
-        private class TestDbObject : DBObject { }
+        private class TestDbObject : DbObject { }
     }
 }

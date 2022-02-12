@@ -13,12 +13,12 @@ namespace DotNetDBTools.Deploy.PostgreSQL.Queries.DDL
 
         private readonly string _sql;
 
-        public PostgreSQLRenameTypeToTempQuery(DBObject type)
+        public PostgreSQLRenameTypeToTempQuery(DbObject type)
         {
             _sql = GetSql(type);
         }
 
-        private static string GetSql(DBObject type)
+        private static string GetSql(DbObject type)
         {
             string tempPrefix = "_DNDBTTemp_";
             switch (type)

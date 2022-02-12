@@ -27,7 +27,7 @@ namespace DotNetDBTools.Analysis.PostgreSQL
             PostgreSQLCodeParser parser = new();
             foreach (PostgreSQLView view in database.Views)
             {
-                view.DependsOn = new List<DBObject>();
+                view.DependsOn = new List<DbObject>();
                 List<Dependency> dependencies = ExecuteParsingFunc(
                     () => parser.GetViewDependencies(view.CodePiece.Code),
                     $"Error while parsing view '{view.Name}' code");
@@ -37,7 +37,7 @@ namespace DotNetDBTools.Analysis.PostgreSQL
             }
             foreach (PostgreSQLFunction func in database.Functions)
             {
-                func.DependsOn = new List<DBObject>();
+                func.DependsOn = new List<DbObject>();
                 List<Dependency> dependencies = ExecuteParsingFunc(
                     () => parser.GetFunctionDependencies(func.CodePiece.Code),
                     $"Error while parsing function '{func.Name}' code");
@@ -47,27 +47,27 @@ namespace DotNetDBTools.Analysis.PostgreSQL
             }
             foreach (PostgreSQLProcedure proc in database.Procedures)
             {
-                proc.DependsOn = new List<DBObject>();
+                proc.DependsOn = new List<DbObject>();
             }
 
             foreach (PostgreSQLCompositeType type in database.CompositeTypes)
             {
-                type.DependsOn = new List<DBObject>();
+                type.DependsOn = new List<DbObject>();
             }
             foreach (PostgreSQLDomainType type in database.DomainTypes)
             {
-                type.DependsOn = new List<DBObject>();
+                type.DependsOn = new List<DbObject>();
             }
             foreach (PostgreSQLEnumType type in database.EnumTypes)
             {
-                type.DependsOn = new List<DBObject>();
+                type.DependsOn = new List<DbObject>();
             }
             foreach (PostgreSQLRangeType type in database.RangeTypes)
             {
-                type.DependsOn = new List<DBObject>();
+                type.DependsOn = new List<DbObject>();
             }
 
-            void AddDependency(List<DBObject> dependencies, Dependency dep, string referencingObjectName)
+            void AddDependency(List<DbObject> dependencies, Dependency dep, string referencingObjectName)
             {
                 if (dep.Type == DependencyType.Table)
                 {
@@ -101,32 +101,32 @@ namespace DotNetDBTools.Analysis.PostgreSQL
 
         private static void Build_IsDependencyOf_Property_ForAllObjects(PostgreSQLDatabase database)
         {
-            IEnumerable<DBObject> dbObjectsWithDependencies =
-                database.Views.Select(x => (DBObject)x)
-                .Concat(database.Functions.Select(x => (DBObject)x))
-                .Concat(database.Procedures.Select(x => (DBObject)x))
-                .Concat(database.CompositeTypes.Select(x => (DBObject)x))
-                .Concat(database.DomainTypes.Select(x => (DBObject)x))
-                .Concat(database.EnumTypes.Select(x => (DBObject)x))
-                .Concat(database.RangeTypes.Select(x => (DBObject)x));
+            IEnumerable<DbObject> dbObjectsWithDependencies =
+                database.Views.Select(x => (DbObject)x)
+                .Concat(database.Functions.Select(x => (DbObject)x))
+                .Concat(database.Procedures.Select(x => (DbObject)x))
+                .Concat(database.CompositeTypes.Select(x => (DbObject)x))
+                .Concat(database.DomainTypes.Select(x => (DbObject)x))
+                .Concat(database.EnumTypes.Select(x => (DbObject)x))
+                .Concat(database.RangeTypes.Select(x => (DbObject)x));
 
-            Dictionary<Guid, List<DBObject>> isDependencyOfMap = new();
-            foreach (DBObject dbObject in dbObjectsWithDependencies)
+            Dictionary<Guid, List<DbObject>> isDependencyOfMap = new();
+            foreach (DbObject dbObject in dbObjectsWithDependencies)
             {
-                foreach (DBObject dep in dbObject.DependsOn)
+                foreach (DbObject dep in dbObject.DependsOn)
                 {
                     if (!isDependencyOfMap.ContainsKey(dep.ID))
-                        isDependencyOfMap[dep.ID] = new List<DBObject>();
+                        isDependencyOfMap[dep.ID] = new List<DbObject>();
                     isDependencyOfMap[dep.ID].Add(dbObject);
                 }
             }
 
-            foreach (DBObject dbObject in dbObjectsWithDependencies)
+            foreach (DbObject dbObject in dbObjectsWithDependencies)
             {
                 if (isDependencyOfMap.ContainsKey(dbObject.ID))
                     dbObject.IsDependencyOf = isDependencyOfMap[dbObject.ID];
                 else
-                    dbObject.IsDependencyOf = new List<DBObject>();
+                    dbObject.IsDependencyOf = new List<DbObject>();
             }
         }
 
@@ -136,9 +136,9 @@ namespace DotNetDBTools.Analysis.PostgreSQL
                 func.IsSimple = !ObjectDependsOnTablesTransitively(func);
         }
 
-        private static bool ObjectDependsOnTablesTransitively(DBObject dbObject)
+        private static bool ObjectDependsOnTablesTransitively(DbObject dbObject)
         {
-            foreach (DBObject dep in dbObject.DependsOn)
+            foreach (DbObject dep in dbObject.DependsOn)
             {
                 if (ObjectIsTableOrDependsOnTables(dep))
                     return true;
@@ -148,7 +148,7 @@ namespace DotNetDBTools.Analysis.PostgreSQL
             return false;
         }
 
-        private static bool ObjectIsTableOrDependsOnTables(DBObject dbObject)
+        private static bool ObjectIsTableOrDependsOnTables(DbObject dbObject)
         {
             if (dbObject is Table || dbObject is View || dbObject is PostgreSQLProcedure)
                 return true;

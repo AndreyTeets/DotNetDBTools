@@ -5,13 +5,13 @@ using DotNetDBTools.Models.SQLite;
 
 namespace DotNetDBTools.DefinitionParsing.SQLite
 {
-    internal class SQLiteDatabaseModelBuilder : DatabaseModelBuilder<
+    internal class SQLiteDbModelFromCSharpDefinitionBuilder : DbModelFromCSharpDefinitionBuilder<
         SQLiteDatabase,
         SQLiteTable,
         SQLiteView,
         Models.Core.Column>
     {
-        public SQLiteDatabaseModelBuilder() : base(
+        public SQLiteDbModelFromCSharpDefinitionBuilder() : base(
             new SQLiteDataTypeMapper(),
             new SpecificDbmsDbObjectCodeMapper(),
             new SQLiteDefaultValueMapper())
