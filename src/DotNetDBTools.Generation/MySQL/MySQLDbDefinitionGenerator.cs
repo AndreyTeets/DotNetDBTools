@@ -2,20 +2,19 @@
 using DotNetDBTools.Generation.Core;
 using DotNetDBTools.Models.MySQL;
 
-namespace DotNetDBTools.Generation.MySQL
+namespace DotNetDBTools.Generation.MySQL;
+
+internal static class MySQLDefinitionGenerator
 {
-    internal static class MySQLDefinitionGenerator
+    public static IEnumerable<DefinitionSourceFile> GenerateDefinition(MySQLDatabase database)
     {
-        public static IEnumerable<DefinitionSourceFile> GenerateDefinition(MySQLDatabase database)
+        return new List<DefinitionSourceFile>()
         {
-            return new List<DefinitionSourceFile>()
+            new DefinitionSourceFile()
             {
-                new DefinitionSourceFile()
-                {
-                    RelativePath = "Tables/Table1.cs",
-                    SourceText = database.Name,
-                }
-            };
-        }
+                RelativePath = "Tables/Table1.cs",
+                SourceText = database.Name,
+            }
+        };
     }
 }

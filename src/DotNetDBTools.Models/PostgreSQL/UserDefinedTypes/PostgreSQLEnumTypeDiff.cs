@@ -1,8 +1,7 @@
-﻿namespace DotNetDBTools.Models.PostgreSQL.UserDefinedTypes
+﻿namespace DotNetDBTools.Models.PostgreSQL.UserDefinedTypes;
+
+public class PostgreSQLEnumTypeDiff
 {
-    public class PostgreSQLEnumTypeDiff
-    {
-        public PostgreSQLEnumType NewEnumType { get; set; }
-        public PostgreSQLEnumType OldEnumType { get; set; }
-    }
+    public PostgreSQLEnumType NewEnumType { get; set; }
+    public PostgreSQLEnumType OldEnumType { get; set; }
 }

@@ -1,10 +1,9 @@
-﻿namespace DotNetDBTools.Definition.Agnostic
+﻿namespace DotNetDBTools.Definition.Agnostic;
+
+public enum DbmsKind
 {
-    public enum DbmsKind
-    {
-        MSSQL,
-        MySQL,
-        PostgreSQL,
-        SQLite,
-    }
+    MSSQL,
+    MySQL,
+    PostgreSQL,
+    SQLite,
 }

@@ -6,11 +6,11 @@ using DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.SQLite;
 
-namespace DotNetDBTools.Deploy.SQLite.Queries.DBMSSysInfo
+namespace DotNetDBTools.Deploy.SQLite.Queries.DBMSSysInfo;
+
+internal class SQLiteGetColumnsFromDBMSSysInfoQuery : GetColumnsFromDBMSSysInfoQuery
 {
-    internal class SQLiteGetColumnsFromDBMSSysInfoQuery : GetColumnsFromDBMSSysInfoQuery
-    {
-        public override string Sql =>
+    public override string Sql =>
 $@"SELECT
     sm.name AS {nameof(SQLiteColumnRecord.TableName)},
     ti.name AS {nameof(SQLiteColumnRecord.ColumnName)},
@@ -24,88 +24,87 @@ WHERE sm.type = 'table'
     AND sm.name != 'sqlite_sequence'
     AND sm.name != '{DNDBTSysTables.DNDBTDbObjects}';";
 
-        public override RecordsLoader Loader => new SQLiteRecordsLoader();
-        public override RecordMapper Mapper => new SQLiteRecordMapper();
+    public override RecordsLoader Loader => new SQLiteRecordsLoader();
+    public override RecordMapper Mapper => new SQLiteRecordMapper();
 
-        public class SQLiteColumnRecord : ColumnRecord
+    public class SQLiteColumnRecord : ColumnRecord
+    {
+        public bool IsIdentityCandidate { get; set; }
+    }
+
+    public class SQLiteRecordsLoader : RecordsLoader
+    {
+        public override IEnumerable<ColumnRecord> GetRecords(IQueryExecutor queryExecutor, GetColumnsFromDBMSSysInfoQuery query) =>
+            queryExecutor.Query<SQLiteColumnRecord>(query);
+    }
+
+    public class SQLiteRecordMapper : RecordMapper
+    {
+        public override Column MapToColumnModel(ColumnRecord builderColumnRecord)
         {
-            public bool IsIdentityCandidate { get; set; }
+            SQLiteColumnRecord columnRecord = (SQLiteColumnRecord)builderColumnRecord;
+            DataType dataType = ParseDataType(columnRecord);
+            return new Column()
+            {
+                ID = Guid.NewGuid(),
+                Name = columnRecord.ColumnName,
+                DataType = ParseDataType(columnRecord),
+                Nullable = columnRecord.Nullable,
+                Identity = columnRecord.IsIdentityCandidate,
+                Default = ParseDefault(dataType, columnRecord.Default),
+            };
         }
 
-        public class SQLiteRecordsLoader : RecordsLoader
+        private static DataType ParseDataType(SQLiteColumnRecord columnRecord)
         {
-            public override IEnumerable<ColumnRecord> GetRecords(IQueryExecutor queryExecutor, GetColumnsFromDBMSSysInfoQuery query) =>
-                queryExecutor.Query<SQLiteColumnRecord>(query);
+            string dataType = columnRecord.DataType.ToUpper();
+            switch (dataType)
+            {
+                case SQLiteDataTypeNames.INTEGER:
+                case SQLiteDataTypeNames.REAL:
+                case SQLiteDataTypeNames.NUMERIC:
+                case SQLiteDataTypeNames.TEXT:
+                case SQLiteDataTypeNames.BLOB:
+                    return new DataType { Name = dataType };
+                default:
+                    throw new InvalidOperationException($"Invalid column record datatype: {columnRecord.DataType}");
+            }
         }
 
-        public class SQLiteRecordMapper : RecordMapper
+        private static object ParseDefault(DataType dataType, string valueFromDBMSSysTable)
         {
-            public override Column MapToColumnModel(ColumnRecord builderColumnRecord)
+            if (valueFromDBMSSysTable is null)
+                return null;
+            string value = valueFromDBMSSysTable;
+
+            if (IsFunction(value))
+                return new CodePiece() { Code = value };
+
+            string baseDataType = dataType.Name;
+            switch (baseDataType)
             {
-                SQLiteColumnRecord columnRecord = (SQLiteColumnRecord)builderColumnRecord;
-                DataType dataType = ParseDataType(columnRecord);
-                return new Column()
-                {
-                    ID = Guid.NewGuid(),
-                    Name = columnRecord.ColumnName,
-                    DataType = ParseDataType(columnRecord),
-                    Nullable = columnRecord.Nullable,
-                    Identity = columnRecord.IsIdentityCandidate,
-                    Default = ParseDefault(dataType, columnRecord.Default),
-                };
+                case SQLiteDataTypeNames.INTEGER:
+                    return long.Parse(value);
+                case SQLiteDataTypeNames.NUMERIC:
+                    return decimal.Parse(value, CultureInfo.InvariantCulture);
+                case SQLiteDataTypeNames.TEXT:
+                    return TrimOuterQuotes(value);
+                case SQLiteDataTypeNames.BLOB:
+                    return ToByteArray(value);
+                default:
+                    throw new InvalidOperationException($"Invalid default value [{valueFromDBMSSysTable}] for data type [{dataType.Name}]");
             }
 
-            private static DataType ParseDataType(SQLiteColumnRecord columnRecord)
+            static bool IsFunction(string val) => val.Contains("(") && val.Contains(")") && !val.StartsWith("'", StringComparison.Ordinal);
+            static string TrimOuterQuotes(string val) => val.Substring(1, val.Length - 2);
+            static byte[] ToByteArray(string val)
             {
-                string dataType = columnRecord.DataType.ToUpper();
-                switch (dataType)
-                {
-                    case SQLiteDataTypeNames.INTEGER:
-                    case SQLiteDataTypeNames.REAL:
-                    case SQLiteDataTypeNames.NUMERIC:
-                    case SQLiteDataTypeNames.TEXT:
-                    case SQLiteDataTypeNames.BLOB:
-                        return new DataType { Name = dataType };
-                    default:
-                        throw new InvalidOperationException($"Invalid column record datatype: {columnRecord.DataType}");
-                }
-            }
-
-            private static object ParseDefault(DataType dataType, string valueFromDBMSSysTable)
-            {
-                if (valueFromDBMSSysTable is null)
-                    return null;
-                string value = valueFromDBMSSysTable;
-
-                if (IsFunction(value))
-                    return new CodePiece() { Code = value };
-
-                string baseDataType = dataType.Name;
-                switch (baseDataType)
-                {
-                    case SQLiteDataTypeNames.INTEGER:
-                        return long.Parse(value);
-                    case SQLiteDataTypeNames.NUMERIC:
-                        return decimal.Parse(value, CultureInfo.InvariantCulture);
-                    case SQLiteDataTypeNames.TEXT:
-                        return TrimOuterQuotes(value);
-                    case SQLiteDataTypeNames.BLOB:
-                        return ToByteArray(value);
-                    default:
-                        throw new InvalidOperationException($"Invalid default value [{valueFromDBMSSysTable}] for data type [{dataType.Name}]");
-                }
-
-                static bool IsFunction(string val) => val.Contains("(") && val.Contains(")") && !val.StartsWith("'", StringComparison.Ordinal);
-                static string TrimOuterQuotes(string val) => val.Substring(1, val.Length - 2);
-                static byte[] ToByteArray(string val)
-                {
-                    string hex = val.Substring(2, val.Length - 2);
-                    int numChars = hex.Length;
-                    byte[] bytes = new byte[numChars / 2];
-                    for (int i = 0; i < numChars; i += 2)
-                        bytes[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
-                    return bytes;
-                }
+                string hex = val.Substring(2, val.Length - 2);
+                int numChars = hex.Length;
+                byte[] bytes = new byte[numChars / 2];
+                for (int i = 0; i < numChars; i += 2)
+                    bytes[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
+                return bytes;
             }
         }
     }

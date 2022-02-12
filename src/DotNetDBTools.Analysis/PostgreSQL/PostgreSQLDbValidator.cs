@@ -3,41 +3,40 @@ using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.Analysis.Core.Errors;
 using DotNetDBTools.Models.Core;
 
-namespace DotNetDBTools.Analysis.PostgreSQL
-{
-    internal class PostgreSQLDbValidator : DbValidator
-    {
-        public override bool DbIsValid(Database database, out DbError dbError)
-        {
-            if (!HasNoBadTables(database, out dbError))
-                return false;
-            if (!TriggersCodeIsValid(database, out dbError))
-                return false;
-            return true;
-        }
+namespace DotNetDBTools.Analysis.PostgreSQL;
 
-        private static bool TriggersCodeIsValid(Database database, out DbError dbError)
+internal class PostgreSQLDbValidator : DbValidator
+{
+    public override bool DbIsValid(Database database, out DbError dbError)
+    {
+        if (!HasNoBadTables(database, out dbError))
+            return false;
+        if (!TriggersCodeIsValid(database, out dbError))
+            return false;
+        return true;
+    }
+
+    private static bool TriggersCodeIsValid(Database database, out DbError dbError)
+    {
+        dbError = null;
+        foreach (Table table in database.Tables)
         {
-            dbError = null;
-            foreach (Table table in database.Tables)
+            foreach (Trigger trigger in table.Triggers)
             {
-                foreach (Trigger trigger in table.Triggers)
+                if (!Regex.IsMatch(trigger.CodePiece.Code, @$"CREATE TRIGGER ""?{trigger.Name}""?"))
                 {
-                    if (!Regex.IsMatch(trigger.CodePiece.Code, @$"CREATE TRIGGER ""?{trigger.Name}""?"))
-                    {
-                        string errorMessage =
+                    string errorMessage =
 $"Trigger '{trigger.Name}' in table '{table.Name}' has different name in it's creation code";
 
-                        dbError = new InvalidTriggerCodeDbError(
-                            errorMessage: errorMessage,
-                            tableName: table.Name,
-                            triggerName: trigger.Name);
+                    dbError = new InvalidTriggerCodeDbError(
+                        errorMessage: errorMessage,
+                        tableName: table.Name,
+                        triggerName: trigger.Name);
 
-                        return false;
-                    }
+                    return false;
                 }
             }
-            return true;
         }
+        return true;
     }
 }

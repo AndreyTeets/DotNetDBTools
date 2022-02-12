@@ -131,7 +131,7 @@ csharp_style_prefer_switch_expression=true:suggestion
 csharp_style_prefer_pattern_matching=true:silent
 csharp_style_prefer_not_pattern=true:suggestion
 csharp_style_unused_value_expression_statement_preference=discard_variable:silent
-csharp_style_namespace_declarations=block_scoped:warning
+csharp_style_namespace_declarations=file_scoped:warning
 
 csharp_prefer_simple_default_expression=true:suggestion
 csharp_prefer_simple_using_statement=true:suggestion
@@ -328,6 +328,9 @@ dotnet_diagnostic.IDE0060.severity=warning
 
 # IDE0065: 'using' directive placement
 dotnet_diagnostic.IDE0065.severity=warning
+
+# IDE0161: Convert to file-scoped namespace
+dotnet_diagnostic.IDE0161.severity = warning
 
 # IDE1006: Naming rule violation
 dotnet_diagnostic.IDE1006.severity=warning

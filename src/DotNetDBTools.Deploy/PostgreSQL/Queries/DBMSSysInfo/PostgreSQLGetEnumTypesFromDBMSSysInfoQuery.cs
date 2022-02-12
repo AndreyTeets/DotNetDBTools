@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using DotNetDBTools.Deploy.Core;
 
-namespace DotNetDBTools.Deploy.PostgreSQL.Queries.DBMSSysInfo
+namespace DotNetDBTools.Deploy.PostgreSQL.Queries.DBMSSysInfo;
+
+internal class PostgreSQLGetEnumTypesFromDBMSSysInfoQuery : IQuery
 {
-    internal class PostgreSQLGetEnumTypesFromDBMSSysInfoQuery : IQuery
-    {
-        public string Sql =>
+    public string Sql =>
 $@"SELECT
     t.typname AS ""{nameof(EnumTypeRecord.TypeName)}"",
     e.enumlabel AS ""{nameof(EnumTypeRecord.LabelName)}""
@@ -17,12 +17,11 @@ INNER JOIN pg_catalog.pg_enum e
 WHERE t.typtype = 'e'
     AND n.nspname NOT IN ('information_schema', 'pg_catalog');";
 
-        public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
+    public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
 
-        public class EnumTypeRecord
-        {
-            public string TypeName { get; set; }
-            public string LabelName { get; set; }
-        }
+    public class EnumTypeRecord
+    {
+        public string TypeName { get; set; }
+        public string LabelName { get; set; }
     }
 }

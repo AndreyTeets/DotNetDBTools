@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using DotNetDBTools.Deploy.Core;
 
-namespace DotNetDBTools.Deploy.PostgreSQL.Queries.DBMSSysInfo
+namespace DotNetDBTools.Deploy.PostgreSQL.Queries.DBMSSysInfo;
+
+internal class PostgreSQLGetRangeTypesFromDBMSSysInfoQuery : IQuery
 {
-    internal class PostgreSQLGetRangeTypesFromDBMSSysInfoQuery : IQuery
-    {
-        public string Sql =>
+    public string Sql =>
 $@"SELECT
     t.typname AS ""{nameof(RangeTypeRecord.TypeName)}"",
     rst.typname AS ""{nameof(RangeTypeRecord.SubtypeName)}"",
@@ -31,18 +31,17 @@ LEFT JOIN pg_catalog.pg_collation cl
 WHERE t.typtype = 'r'
     AND n.nspname NOT IN ('information_schema', 'pg_catalog');";
 
-        public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
+    public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
 
-        public class RangeTypeRecord
-        {
-            public string TypeName { get; set; }
-            public string SubtypeName { get; set; }
-            public bool SubtypeIsBaseDataType { get; set; }
-            public string SubtypeOperatorClass { get; set; }
-            public string Collation { get; set; }
-            public string CanonicalFunction { get; set; }
-            public string SubtypeDiff { get; set; }
-            public string MultirangeTypeName { get; set; }
-        }
+    public class RangeTypeRecord
+    {
+        public string TypeName { get; set; }
+        public string SubtypeName { get; set; }
+        public bool SubtypeIsBaseDataType { get; set; }
+        public string SubtypeOperatorClass { get; set; }
+        public string Collation { get; set; }
+        public string CanonicalFunction { get; set; }
+        public string SubtypeDiff { get; set; }
+        public string MultirangeTypeName { get; set; }
     }
 }

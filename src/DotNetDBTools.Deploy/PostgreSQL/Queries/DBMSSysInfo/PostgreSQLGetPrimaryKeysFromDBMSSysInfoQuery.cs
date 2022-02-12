@@ -3,11 +3,11 @@ using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo;
 using DotNetDBTools.Models.Core;
 
-namespace DotNetDBTools.Deploy.PostgreSQL.Queries.DBMSSysInfo
+namespace DotNetDBTools.Deploy.PostgreSQL.Queries.DBMSSysInfo;
+
+internal class PostgreSQLGetPrimaryKeysFromDBMSSysInfoQuery : GetPrimaryKeysFromDBMSSysInfoQuery
 {
-    internal class PostgreSQLGetPrimaryKeysFromDBMSSysInfoQuery : GetPrimaryKeysFromDBMSSysInfoQuery
-    {
-        public override string Sql =>
+    public override string Sql =>
 $@"SELECT
     t.relname AS ""{nameof(PrimaryKeyRecord.TableName)}"",
     c.conname AS ""{nameof(PrimaryKeyRecord.ConstraintName)}"",
@@ -31,18 +31,17 @@ WHERE t.relkind = 'r'
     AND n.nspname NOT IN ('information_schema', 'pg_catalog')
     AND t.relname != '{DNDBTSysTables.DNDBTDbObjects}';";
 
-        public override RecordMapper Mapper => new PostgreSQLRecordMapper();
+    public override RecordMapper Mapper => new PostgreSQLRecordMapper();
 
-        public class PostgreSQLRecordMapper : RecordMapper
+    public class PostgreSQLRecordMapper : RecordMapper
+    {
+        public override PrimaryKey MapExceptColumnsToPrimaryKeyModel(PrimaryKeyRecord pkr)
         {
-            public override PrimaryKey MapExceptColumnsToPrimaryKeyModel(PrimaryKeyRecord pkr)
+            return new PrimaryKey()
             {
-                return new PrimaryKey()
-                {
-                    ID = Guid.NewGuid(),
-                    Name = pkr.ConstraintName,
-                };
-            }
+                ID = Guid.NewGuid(),
+                Name = pkr.ConstraintName,
+            };
         }
     }
 }

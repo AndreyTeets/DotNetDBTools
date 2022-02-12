@@ -1,11 +1,11 @@
 ﻿using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Queries;
 
-namespace DotNetDBTools.Deploy.MySQL.Queries.DNDBTSysInfo
+namespace DotNetDBTools.Deploy.MySQL.Queries.DNDBTSysInfo;
+
+internal class MySQLCreateDNDBTSysTablesQuery : SqlTextOnlyQuery
 {
-    internal class MySQLCreateDNDBTSysTablesQuery : SqlTextOnlyQuery
-    {
-        public override string Sql =>
+    public override string Sql =>
 $@"CREATE TABLE `{DNDBTSysTables.DNDBTDbObjects}`
 (
     `{DNDBTSysTables.DNDBTDbObjects.ID}` CHAR(36) PRIMARY KEY,
@@ -14,5 +14,4 @@ $@"CREATE TABLE `{DNDBTSysTables.DNDBTDbObjects}`
     `{DNDBTSysTables.DNDBTDbObjects.Name}` VARCHAR(256) NOT NULL,
     `{DNDBTSysTables.DNDBTDbObjects.Code}` MEDIUMTEXT NULL
 );";
-    }
 }

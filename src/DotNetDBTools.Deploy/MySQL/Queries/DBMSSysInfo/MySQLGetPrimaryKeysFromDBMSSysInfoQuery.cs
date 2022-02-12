@@ -3,11 +3,11 @@ using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo;
 using DotNetDBTools.Models.Core;
 
-namespace DotNetDBTools.Deploy.MySQL.Queries.DBMSSysInfo
+namespace DotNetDBTools.Deploy.MySQL.Queries.DBMSSysInfo;
+
+internal class MySQLGetPrimaryKeysFromDBMSSysInfoQuery : GetPrimaryKeysFromDBMSSysInfoQuery
 {
-    internal class MySQLGetPrimaryKeysFromDBMSSysInfoQuery : GetPrimaryKeysFromDBMSSysInfoQuery
-    {
-        public override string Sql =>
+    public override string Sql =>
 $@"SELECT
     tc.TABLE_NAME AS {nameof(PrimaryKeyRecord.TableName)},
     CONCAT('PK_', tc.TABLE_NAME) AS {nameof(PrimaryKeyRecord.ConstraintName)},
@@ -22,18 +22,17 @@ WHERE tc.CONSTRAINT_SCHEMA = (select DATABASE())
     AND tc.CONSTRAINT_TYPE = 'PRIMARY KEY'
     AND tc.TABLE_NAME != '{DNDBTSysTables.DNDBTDbObjects}';";
 
-        public override RecordMapper Mapper => new MySQLRecordMapper();
+    public override RecordMapper Mapper => new MySQLRecordMapper();
 
-        public class MySQLRecordMapper : RecordMapper
+    public class MySQLRecordMapper : RecordMapper
+    {
+        public override PrimaryKey MapExceptColumnsToPrimaryKeyModel(PrimaryKeyRecord pkr)
         {
-            public override PrimaryKey MapExceptColumnsToPrimaryKeyModel(PrimaryKeyRecord pkr)
+            return new PrimaryKey()
             {
-                return new PrimaryKey()
-                {
-                    ID = Guid.NewGuid(),
-                    Name = pkr.ConstraintName,
-                };
-            }
+                ID = Guid.NewGuid(),
+                Name = pkr.ConstraintName,
+            };
         }
     }
 }

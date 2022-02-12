@@ -1,8 +1,7 @@
 ﻿using DotNetDBTools.Definition.Core;
 
-namespace DotNetDBTools.Definition.PostgreSQL
+namespace DotNetDBTools.Definition.PostgreSQL;
+
+public interface ITable : IBaseTable
 {
-    public interface ITable : IBaseTable
-    {
-    }
 }

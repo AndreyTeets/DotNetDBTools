@@ -12,32 +12,31 @@ using DotNetDBTools.Models.MySQL;
 using DotNetDBTools.Models.PostgreSQL;
 using DotNetDBTools.Models.SQLite;
 
-namespace DotNetDBTools.Generation
-{
-    public static class DbDefinitionGenerator
-    {
-        public static void GenerateDefinition(Database database, string outputDirectory)
-        {
-            IEnumerable<DefinitionSourceFile> definitionSourceFiles = GenerateDefinition(database);
-            foreach (DefinitionSourceFile file in definitionSourceFiles)
-            {
-                string fullPath = Path.GetFullPath(Path.Combine(outputDirectory, file.RelativePath));
-                Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
-                File.WriteAllText(fullPath, file.SourceText);
-            }
-        }
+namespace DotNetDBTools.Generation;
 
-        public static IEnumerable<DefinitionSourceFile> GenerateDefinition(Database database)
+public static class DbDefinitionGenerator
+{
+    public static void GenerateDefinition(Database database, string outputDirectory)
+    {
+        IEnumerable<DefinitionSourceFile> definitionSourceFiles = GenerateDefinition(database);
+        foreach (DefinitionSourceFile file in definitionSourceFiles)
         {
-            IEnumerable<DefinitionSourceFile> definitionSourceFiles = database.Kind switch
-            {
-                DatabaseKind.MSSQL => MSSQLDefinitionGenerator.GenerateDefinition((MSSQLDatabase)database),
-                DatabaseKind.MySQL => MySQLDefinitionGenerator.GenerateDefinition((MySQLDatabase)database),
-                DatabaseKind.PostgreSQL => PostgreSQLDefinitionGenerator.GenerateDefinition((PostgreSQLDatabase)database),
-                DatabaseKind.SQLite => SQLiteDefinitionGenerator.GenerateDefinition((SQLiteDatabase)database),
-                _ => throw new InvalidOperationException($"Invalid dbKind: {database.Kind}"),
-            };
-            return definitionSourceFiles;
+            string fullPath = Path.GetFullPath(Path.Combine(outputDirectory, file.RelativePath));
+            Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
+            File.WriteAllText(fullPath, file.SourceText);
         }
+    }
+
+    public static IEnumerable<DefinitionSourceFile> GenerateDefinition(Database database)
+    {
+        IEnumerable<DefinitionSourceFile> definitionSourceFiles = database.Kind switch
+        {
+            DatabaseKind.MSSQL => MSSQLDefinitionGenerator.GenerateDefinition((MSSQLDatabase)database),
+            DatabaseKind.MySQL => MySQLDefinitionGenerator.GenerateDefinition((MySQLDatabase)database),
+            DatabaseKind.PostgreSQL => PostgreSQLDefinitionGenerator.GenerateDefinition((PostgreSQLDatabase)database),
+            DatabaseKind.SQLite => SQLiteDefinitionGenerator.GenerateDefinition((SQLiteDatabase)database),
+            _ => throw new InvalidOperationException($"Invalid dbKind: {database.Kind}"),
+        };
+        return definitionSourceFiles;
     }
 }

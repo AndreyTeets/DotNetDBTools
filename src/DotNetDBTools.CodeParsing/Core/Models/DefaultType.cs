@@ -1,9 +1,8 @@
-﻿namespace DotNetDBTools.CodeParsing.Core.Models
+﻿namespace DotNetDBTools.CodeParsing.Core.Models;
+
+public enum DefaultType
 {
-    public enum DefaultType
-    {
-        Number,
-        String,
-        Function,
-    }
+    Number,
+    String,
+    Function,
 }

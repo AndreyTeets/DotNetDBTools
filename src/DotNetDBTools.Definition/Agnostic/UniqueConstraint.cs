@@ -1,9 +1,8 @@
 ﻿using DotNetDBTools.Definition.Core;
 
-namespace DotNetDBTools.Definition.Agnostic
+namespace DotNetDBTools.Definition.Agnostic;
+
+public class UniqueConstraint : BaseUniqueConstraint
 {
-    public class UniqueConstraint : BaseUniqueConstraint
-    {
-        public UniqueConstraint(string id) : base(id) { }
-    }
+    public UniqueConstraint(string id) : base(id) { }
 }

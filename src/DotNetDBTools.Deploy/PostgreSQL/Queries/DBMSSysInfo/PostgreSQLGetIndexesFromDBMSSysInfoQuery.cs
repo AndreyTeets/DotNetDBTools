@@ -3,11 +3,11 @@ using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo;
 using DotNetDBTools.Models.Core;
 
-namespace DotNetDBTools.Deploy.PostgreSQL.Queries.DBMSSysInfo
+namespace DotNetDBTools.Deploy.PostgreSQL.Queries.DBMSSysInfo;
+
+internal class PostgreSQLGetIndexesFromDBMSSysInfoQuery : GetIndexesFromDBMSSysInfoQuery
 {
-    internal class PostgreSQLGetIndexesFromDBMSSysInfoQuery : GetIndexesFromDBMSSysInfoQuery
-    {
-        public override string Sql =>
+    public override string Sql =>
 $@"SELECT
     t.relname AS ""{nameof(IndexRecord.TableName)}"",
     c.relname AS ""{nameof(IndexRecord.IndexName)}"",
@@ -41,19 +41,18 @@ WHERE n.nspname NOT IN ('information_schema', 'pg_catalog', 'pg_toast')
     AND pc.oid IS NULL
     AND t.relname != '{DNDBTSysTables.DNDBTDbObjects}';";
 
-        public override RecordMapper Mapper => new PostgreSQLRecordMapper();
+    public override RecordMapper Mapper => new PostgreSQLRecordMapper();
 
-        public class PostgreSQLRecordMapper : RecordMapper
+    public class PostgreSQLRecordMapper : RecordMapper
+    {
+        public override Index MapExceptColumnsToIndexModel(IndexRecord indexRecord)
         {
-            public override Index MapExceptColumnsToIndexModel(IndexRecord indexRecord)
+            return new()
             {
-                return new()
-                {
-                    ID = Guid.NewGuid(),
-                    Name = indexRecord.IndexName,
-                    Unique = indexRecord.IsUnique,
-                };
-            }
+                ID = Guid.NewGuid(),
+                Name = indexRecord.IndexName,
+                Unique = indexRecord.IsUnique,
+            };
         }
     }
 }

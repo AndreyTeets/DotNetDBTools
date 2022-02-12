@@ -1,10 +1,9 @@
 ﻿using DotNetDBTools.Models.Core;
 
-namespace DotNetDBTools.Deploy.Common.Editors
+namespace DotNetDBTools.Deploy.Common.Editors;
+
+internal interface IIndexEditor
 {
-    internal interface IIndexEditor
-    {
-        public void CreateIndexes(DatabaseDiff dbDiff);
-        public void DropIndexes(DatabaseDiff dbDiff);
-    }
+    public void CreateIndexes(DatabaseDiff dbDiff);
+    public void DropIndexes(DatabaseDiff dbDiff);
 }

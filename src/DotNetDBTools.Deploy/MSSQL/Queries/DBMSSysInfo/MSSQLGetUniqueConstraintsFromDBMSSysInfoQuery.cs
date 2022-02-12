@@ -3,11 +3,11 @@ using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo;
 using DotNetDBTools.Models.Core;
 
-namespace DotNetDBTools.Deploy.MSSQL.Queries.DBMSSysInfo
+namespace DotNetDBTools.Deploy.MSSQL.Queries.DBMSSysInfo;
+
+internal class MSSQLGetUniqueConstraintsFromDBMSSysInfoQuery : GetUniqueConstraintsFromDBMSSysInfoQuery
 {
-    internal class MSSQLGetUniqueConstraintsFromDBMSSysInfoQuery : GetUniqueConstraintsFromDBMSSysInfoQuery
-    {
-        public override string Sql =>
+    public override string Sql =>
 $@"SELECT
     t.name AS {nameof(UniqueConstraintRecord.TableName)},
     i.name AS {nameof(UniqueConstraintRecord.ConstraintName)},
@@ -25,18 +25,17 @@ INNER JOIN sys.index_columns ic
 WHERE i.is_unique_constraint = 1
     AND t.name != '{DNDBTSysTables.DNDBTDbObjects}';";
 
-        public override RecordMapper Mapper => new MSSQLRecordMapper();
+    public override RecordMapper Mapper => new MSSQLRecordMapper();
 
-        public class MSSQLRecordMapper : RecordMapper
+    public class MSSQLRecordMapper : RecordMapper
+    {
+        public override UniqueConstraint MapExceptColumnsToUniqueConstraintModel(UniqueConstraintRecord ucr)
         {
-            public override UniqueConstraint MapExceptColumnsToUniqueConstraintModel(UniqueConstraintRecord ucr)
+            return new UniqueConstraint()
             {
-                return new UniqueConstraint()
-                {
-                    ID = Guid.NewGuid(),
-                    Name = ucr.ConstraintName,
-                };
-            }
+                ID = Guid.NewGuid(),
+                Name = ucr.ConstraintName,
+            };
         }
     }
 }

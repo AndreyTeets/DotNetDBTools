@@ -1,7 +1,6 @@
-﻿namespace DotNetDBTools.Deploy
+﻿namespace DotNetDBTools.Deploy;
+
+public class DeployOptions
 {
-    public class DeployOptions
-    {
-        public bool AllowDataLoss { get; set; } = false;
-    }
+    public bool AllowDataLoss { get; set; } = false;
 }

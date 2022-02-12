@@ -3,11 +3,11 @@ using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo;
 using DotNetDBTools.Models.Core;
 
-namespace DotNetDBTools.Deploy.PostgreSQL.Queries.DBMSSysInfo
+namespace DotNetDBTools.Deploy.PostgreSQL.Queries.DBMSSysInfo;
+
+internal class PostgreSQLGetCheckConstraintsFromDBMSSysInfoQuery : GetCheckConstraintsFromDBMSSysInfoQuery
 {
-    internal class PostgreSQLGetCheckConstraintsFromDBMSSysInfoQuery : GetCheckConstraintsFromDBMSSysInfoQuery
-    {
-        public override string Sql =>
+    public override string Sql =>
 $@"SELECT
     t.relname AS ""{nameof(CheckConstraintRecord.TableName)}"",
     c.conname AS ""{nameof(CheckConstraintRecord.ConstraintName)}"",
@@ -22,19 +22,18 @@ WHERE t.relkind = 'r'
     AND n.nspname NOT IN ('information_schema', 'pg_catalog')
     AND t.relname != '{DNDBTSysTables.DNDBTDbObjects}';";
 
-        public override RecordMapper Mapper => new PostgreSQLRecordMapper();
+    public override RecordMapper Mapper => new PostgreSQLRecordMapper();
 
-        public class PostgreSQLRecordMapper : RecordMapper
+    public class PostgreSQLRecordMapper : RecordMapper
+    {
+        public override CheckConstraint MapToCheckConstraintModel(CheckConstraintRecord ckr)
         {
-            public override CheckConstraint MapToCheckConstraintModel(CheckConstraintRecord ckr)
+            return new CheckConstraint()
             {
-                return new CheckConstraint()
-                {
-                    ID = Guid.NewGuid(),
-                    Name = ckr.ConstraintName,
-                    CodePiece = new CodePiece { Code = ckr.ConstraintCode },
-                };
-            }
+                ID = Guid.NewGuid(),
+                Name = ckr.ConstraintName,
+                CodePiece = new CodePiece { Code = ckr.ConstraintCode },
+            };
         }
     }
 }

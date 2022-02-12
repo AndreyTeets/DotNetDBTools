@@ -1,11 +1,10 @@
-﻿namespace DotNetDBTools.Definition.SQLite
+﻿namespace DotNetDBTools.Definition.SQLite;
+
+public enum ForeignKeyActions
 {
-    public enum ForeignKeyActions
-    {
-        NoAction,
-        Restrict,
-        Cascade,
-        SetNull,
-        SetDefault,
-    }
+    NoAction,
+    Restrict,
+    Cascade,
+    SetNull,
+    SetDefault,
 }

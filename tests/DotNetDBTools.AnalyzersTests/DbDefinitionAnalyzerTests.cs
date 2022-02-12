@@ -3,14 +3,14 @@ using Microsoft.CodeAnalysis.Testing;
 using Xunit;
 using Verify = DotNetDBTools.AnalyzersTests.DbDefinitionAnalyzerVerifier<DotNetDBTools.DefinitionAnalyzer.DbDefinitionAnalyzer>;
 
-namespace DotNetDBTools.AnalyzersTests
+namespace DotNetDBTools.AnalyzersTests;
+
+public class DbDefinitionAnalyzerTests
 {
-    public class DbDefinitionAnalyzerTests
+    [Fact]
+    public async Task DbDefinitionAnalyzer_DoesntReportOnGoodDbCode_And_ReportsErrorOnBadDbCode()
     {
-        [Fact]
-        public async Task DbDefinitionAnalyzer_DoesntReportOnGoodDbCode_And_ReportsErrorOnBadDbCode()
-        {
-            string goodDbCode =
+        string goodDbCode =
 @"using System;
 using DotNetDBTools.Definition.Core;
 using DotNetDBTools.Definition.MSSQL;
@@ -66,20 +66,19 @@ namespace SampleTestCode
 }
 ";
 
-            await Verify.VerifyAnalyzerAsync(goodDbCode);
+        await Verify.VerifyAnalyzerAsync(goodDbCode);
 
-            string badDbCode = goodDbCode.Replace(
-                "ReferencedTable = nameof(TestTable2),",
-                "ReferencedTable = \"NonExistentTableName\",");
+        string badDbCode = goodDbCode.Replace(
+            "ReferencedTable = nameof(TestTable2),",
+            "ReferencedTable = \"NonExistentTableName\",");
 
-            string expectedErrorMessage =
+        string expectedErrorMessage =
 "Couldn't find table 'NonExistentTableName' referenced by foreign key 'FK_TestName1' in table 'TestTable1'";
 
-            DiagnosticResult expected = DiagnosticResult
-                .CompilerError("DNDBT_DA_01")
-                .WithArguments(expectedErrorMessage)
-                .WithLocation(0);
-            await Verify.VerifyAnalyzerAsync(badDbCode, expected);
-        }
+        DiagnosticResult expected = DiagnosticResult
+            .CompilerError("DNDBT_DA_01")
+            .WithArguments(expectedErrorMessage)
+            .WithLocation(0);
+        await Verify.VerifyAnalyzerAsync(badDbCode, expected);
     }
 }

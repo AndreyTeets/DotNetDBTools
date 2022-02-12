@@ -1,7 +1,6 @@
-﻿namespace DotNetDBTools.Models.Core
+﻿namespace DotNetDBTools.Models.Core;
+
+public class CheckConstraint : DbObject
 {
-    public class CheckConstraint : DbObject
-    {
-        public CodePiece CodePiece { get; set; }
-    }
+    public CodePiece CodePiece { get; set; }
 }

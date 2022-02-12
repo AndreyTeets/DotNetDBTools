@@ -12,57 +12,56 @@ using Microsoft.Data.Sqlite;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static DotNetDBTools.IntegrationTests.Constants;
 
-namespace DotNetDBTools.IntegrationTests.SQLite
+namespace DotNetDBTools.IntegrationTests.SQLite;
+
+[TestClass]
+public class SQLiteDeployTests : BaseDeployTests<
+    SQLiteDatabase,
+    SqliteConnection,
+    SQLiteDbModelConverter,
+    SQLiteDeployManager>
 {
-    [TestClass]
-    public class SQLiteDeployTests : BaseDeployTests<
-        SQLiteDatabase,
-        SqliteConnection,
-        SQLiteDbModelConverter,
-        SQLiteDeployManager>
+    protected override string AgnosticSampleDbAssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDB.Agnostic.dll";
+    protected override string SpecificDBMSSampleDbAssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDB.SQLite.dll";
+
+    private const string DbFilesFolder = @"./tmp";
+
+    protected override EquivalencyAssertionOptions<SQLiteDatabase> AddAdditionalDbModelEquivalenceyOptions(
+        EquivalencyAssertionOptions<SQLiteDatabase> options)
     {
-        protected override string AgnosticSampleDbAssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDB.Agnostic.dll";
-        protected override string SpecificDBMSSampleDbAssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDB.SQLite.dll";
+        return options;
+    }
 
-        private const string DbFilesFolder = @"./tmp";
+    protected override string GetNormalizedCodeFromCodePiece(CodePiece codePiece)
+    {
+        return codePiece.Code.ToUpper()
+            .Replace("\r", "")
+            .Replace("\n", "")
+            .Replace(" ", "")
+            .Replace(";", "");
+    }
 
-        protected override EquivalencyAssertionOptions<SQLiteDatabase> AddAdditionalDbModelEquivalenceyOptions(
-            EquivalencyAssertionOptions<SQLiteDatabase> options)
-        {
-            return options;
-        }
+    protected override void CreateDatabase(string connectionString)
+    {
+    }
 
-        protected override string GetNormalizedCodeFromCodePiece(CodePiece codePiece)
-        {
-            return codePiece.Code.ToUpper()
-                .Replace("\r", "")
-                .Replace("\n", "")
-                .Replace(" ", "")
-                .Replace(";", "");
-        }
+    protected override void DropDatabaseIfExists(string connectionString)
+    {
+        SqliteConnectionStringBuilder connectionStringBuilder = new(connectionString);
+        string dbFilePath = connectionStringBuilder.DataSource;
 
-        protected override void CreateDatabase(string connectionString)
-        {
-        }
+        if (File.Exists(dbFilePath))
+            File.Delete(dbFilePath);
+        Directory.CreateDirectory(Path.GetDirectoryName(dbFilePath));
+    }
 
-        protected override void DropDatabaseIfExists(string connectionString)
-        {
-            SqliteConnectionStringBuilder connectionStringBuilder = new(connectionString);
-            string dbFilePath = connectionStringBuilder.DataSource;
+    protected override string CreateConnectionString(string testName)
+    {
+        return $@"DataSource={DbFilesFolder}/{testName}.db;Mode=ReadWriteCreate;";
+    }
 
-            if (File.Exists(dbFilePath))
-                File.Delete(dbFilePath);
-            Directory.CreateDirectory(Path.GetDirectoryName(dbFilePath));
-        }
-
-        protected override string CreateConnectionString(string testName)
-        {
-            return $@"DataSource={DbFilesFolder}/{testName}.db;Mode=ReadWriteCreate;";
-        }
-
-        private protected override IDbModelFromDbSysInfoBuilder CreateDbModelFromDbSysInfoBuilder(DbConnection connection)
-        {
-            return new SQLiteDbModelFromDbSysInfoBuilder(new SQLiteQueryExecutor(connection));
-        }
+    private protected override IDbModelFromDbSysInfoBuilder CreateDbModelFromDbSysInfoBuilder(DbConnection connection)
+    {
+        return new SQLiteDbModelFromDbSysInfoBuilder(new SQLiteQueryExecutor(connection));
     }
 }

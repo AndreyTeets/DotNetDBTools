@@ -1,8 +1,7 @@
 ﻿using DotNetDBTools.Models.Core;
 
-namespace DotNetDBTools.Models.MySQL
+namespace DotNetDBTools.Models.MySQL;
+
+public class MySQLView : View
 {
-    public class MySQLView : View
-    {
-    }
 }

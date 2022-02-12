@@ -7,41 +7,40 @@ using DotNetDBTools.Models.Core;
 using DotNetDBTools.RoslynUtilities;
 using Microsoft.CodeAnalysis;
 
-namespace DotNetDBTools.DescriptionSourceGenerator
+namespace DotNetDBTools.DescriptionSourceGenerator;
+
+[Generator]
+internal class DbDescriptionSourceGenerator : ISourceGenerator
 {
-    [Generator]
-    internal class DbDescriptionSourceGenerator : ISourceGenerator
+    private static readonly DiagnosticDescriptor s_diagnosticDescriptor = new(
+        id: "DNDBT_DSG_01",
+        title: "Failed to create database description",
+        messageFormat: "Failed to create database description: {0}",
+        category: "SourceGeneration",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true);
+
+    public void Initialize(GeneratorInitializationContext context)
     {
-        private static readonly DiagnosticDescriptor s_diagnosticDescriptor = new(
-            id: "DNDBT_DSG_01",
-            title: "Failed to create database description",
-            messageFormat: "Failed to create database description: {0}",
-            category: "SourceGeneration",
-            defaultSeverity: DiagnosticSeverity.Error,
-            isEnabledByDefault: true);
+    }
 
-        public void Initialize(GeneratorInitializationContext context)
+    public void Execute(GeneratorExecutionContext context)
+    {
+        try
         {
+            IEnumerable<ResourceDescription> resources = CompilationHelper.GetEmbeddedResourcesIfAny(
+                context.AnalyzerConfigOptions.GlobalOptions,
+                context.AnalyzerConfigOptions,
+                context.AdditionalFiles);
+
+            Assembly dbAssembly = CompilationHelper.CompileInMemoryAnLoad(context.Compilation, resources);
+            Database database = DbDefinitionParser.CreateDatabaseModel(dbAssembly);
+            string dbDescriptionCode = DbDescriptionGenerator.GenerateDescription(database);
+            context.AddSource($"{database.Name}Description", dbDescriptionCode);
         }
-
-        public void Execute(GeneratorExecutionContext context)
+        catch (Exception ex)
         {
-            try
-            {
-                IEnumerable<ResourceDescription> resources = CompilationHelper.GetEmbeddedResourcesIfAny(
-                    context.AnalyzerConfigOptions.GlobalOptions,
-                    context.AnalyzerConfigOptions,
-                    context.AdditionalFiles);
-
-                Assembly dbAssembly = CompilationHelper.CompileInMemoryAnLoad(context.Compilation, resources);
-                Database database = DbDefinitionParser.CreateDatabaseModel(dbAssembly);
-                string dbDescriptionCode = DbDescriptionGenerator.GenerateDescription(database);
-                context.AddSource($"{database.Name}Description", dbDescriptionCode);
-            }
-            catch (Exception ex)
-            {
-                context.ReportDiagnostic(Diagnostic.Create(s_diagnosticDescriptor, Location.None, ex.ToString()));
-            }
+            context.ReportDiagnostic(Diagnostic.Create(s_diagnosticDescriptor, Location.None, ex.ToString()));
         }
     }
 }

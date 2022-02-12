@@ -2,14 +2,13 @@
 using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.Deploy.Core.Editors;
 
-namespace DotNetDBTools.Deploy.Core
+namespace DotNetDBTools.Deploy.Core;
+
+internal interface IFactory
 {
-    internal interface IFactory
-    {
-        public IQueryExecutor CreateQueryExecutor(DbConnection connection);
-        public IGenSqlScriptQueryExecutor CreateGenSqlScriptQueryExecutor();
-        public IDbModelConverter CreateDbModelConverter();
-        public IDbEditor CreateDbEditor(IQueryExecutor queryExecutor);
-        public IDbModelFromDbSysInfoBuilder CreateDbModelFromDbSysInfoBuilder(IQueryExecutor queryExecutor);
-    }
+    public IQueryExecutor CreateQueryExecutor(DbConnection connection);
+    public IGenSqlScriptQueryExecutor CreateGenSqlScriptQueryExecutor();
+    public IDbModelConverter CreateDbModelConverter();
+    public IDbEditor CreateDbEditor(IQueryExecutor queryExecutor);
+    public IDbModelFromDbSysInfoBuilder CreateDbModelFromDbSysInfoBuilder(IQueryExecutor queryExecutor);
 }

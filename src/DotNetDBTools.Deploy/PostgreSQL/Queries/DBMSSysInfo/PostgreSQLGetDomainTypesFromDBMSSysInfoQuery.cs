@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using DotNetDBTools.Deploy.Core;
 
-namespace DotNetDBTools.Deploy.PostgreSQL.Queries.DBMSSysInfo
+namespace DotNetDBTools.Deploy.PostgreSQL.Queries.DBMSSysInfo;
+
+internal class PostgreSQLGetDomainTypesFromDBMSSysInfoQuery : IQuery
 {
-    internal class PostgreSQLGetDomainTypesFromDBMSSysInfoQuery : IQuery
-    {
-        public string Sql =>
+    public string Sql =>
 $@"SELECT
     t.typname AS ""{nameof(DomainTypeRecord.TypeName)}"",
     bt.typname AS ""{nameof(DomainTypeRecord.UnderlyingTypeName)}"",
@@ -31,18 +31,17 @@ LEFT JOIN LATERAL (
 WHERE t.typtype = 'd'
     AND n.nspname NOT IN ('information_schema', 'pg_catalog');";
 
-        public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
+    public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
 
-        public class DomainTypeRecord
-        {
-            public string TypeName { get; set; }
-            public string UnderlyingTypeName { get; set; }
-            public string UnderlyingTypeLength { get; set; }
-            public bool UnderlyingTypeIsBaseDataType { get; set; }
-            public string Default { get; set; }
-            public bool Nullable { get; set; }
-            public string CheckConstrantName { get; set; }
-            public string CheckConstrantCode { get; set; }
-        }
+    public class DomainTypeRecord
+    {
+        public string TypeName { get; set; }
+        public string UnderlyingTypeName { get; set; }
+        public string UnderlyingTypeLength { get; set; }
+        public bool UnderlyingTypeIsBaseDataType { get; set; }
+        public string Default { get; set; }
+        public bool Nullable { get; set; }
+        public string CheckConstrantName { get; set; }
+        public string CheckConstrantCode { get; set; }
     }
 }

@@ -1,8 +1,7 @@
 ﻿using DotNetDBTools.Models.Core;
 
-namespace DotNetDBTools.Models.Agnostic
+namespace DotNetDBTools.Models.Agnostic;
+
+public class AgnosticView : View
 {
-    public class AgnosticView : View
-    {
-    }
 }

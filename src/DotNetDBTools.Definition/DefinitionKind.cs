@@ -1,11 +1,10 @@
-﻿namespace DotNetDBTools.Definition
+﻿namespace DotNetDBTools.Definition;
+
+public enum DefinitionKind
 {
-    public enum DefinitionKind
-    {
-        CSharp,
-        MSSQL,
-        MySQL,
-        PostgreSQL,
-        SQLite,
-    }
+    CSharp,
+    MSSQL,
+    MySQL,
+    PostgreSQL,
+    SQLite,
 }

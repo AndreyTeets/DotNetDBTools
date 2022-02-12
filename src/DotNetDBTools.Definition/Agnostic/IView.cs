@@ -1,10 +1,9 @@
 ﻿using System;
 using DotNetDBTools.Definition.Core;
 
-namespace DotNetDBTools.Definition.Agnostic
+namespace DotNetDBTools.Definition.Agnostic;
+
+public interface IView : IBaseView
 {
-    public interface IView : IBaseView
-    {
-        public Func<DbmsKind, string> Code { get; }
-    }
+    public Func<DbmsKind, string> Code { get; }
 }

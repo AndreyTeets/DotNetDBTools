@@ -1,11 +1,10 @@
 ﻿using DotNetDBTools.Definition.Core;
 
-namespace DotNetDBTools.Definition.SQLite.DataTypes
+namespace DotNetDBTools.Definition.SQLite.DataTypes;
+
+/// <summary>
+/// Column is declared with 'BLOB' affinity.
+/// </summary>
+public class GuidDataType : IDataType
 {
-    /// <summary>
-    /// Column is declared with 'BLOB' affinity.
-    /// </summary>
-    public class GuidDataType : IDataType
-    {
-    }
 }

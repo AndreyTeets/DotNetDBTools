@@ -3,50 +3,49 @@ using System.Threading.Tasks;
 using DotNetDBTools.IntegrationTests.Utilities;
 using Npgsql;
 
-namespace DotNetDBTools.IntegrationTests.PostgreSQL
+namespace DotNetDBTools.IntegrationTests.PostgreSQL;
+
+public class PostgreSQLContainerHelper
 {
-    public class PostgreSQLContainerHelper
+    private const string PostgreSQLImage = "postgres";
+    private const string PostgreSQLImageTag = "14.1-alpine3.14";
+    private const string PostgreSQLContainerName = "DotNetDBTools_IntegrationTests_PostgreSQL";
+    private const string PostgreSQLServerPassword = "Strong(!)Passw0rd";
+    private const int PostgreSQLServerHostPort = 5007;
+
+    public static string PostgreSQLContainerConnectionString =>
+        new NpgsqlConnectionStringBuilder()
+        {
+            Host = "localhost",
+            Port = PostgreSQLServerHostPort,
+            Username = "postgres",
+            Password = PostgreSQLServerPassword,
+        }.ConnectionString;
+
+    public static async Task InitContainer()
     {
-        private const string PostgreSQLImage = "postgres";
-        private const string PostgreSQLImageTag = "14.1-alpine3.14";
-        private const string PostgreSQLContainerName = "DotNetDBTools_IntegrationTests_PostgreSQL";
-        private const string PostgreSQLServerPassword = "Strong(!)Passw0rd";
-        private const int PostgreSQLServerHostPort = 5007;
+        await DockerRunner.StopAndRemoveContainerIfExistsAndNotRunningOrOld(PostgreSQLContainerName, oldMinutes: 60);
+        await CreateAndStartPostgreSQLContainerIfNotExists();
+        using NpgsqlConnection connection = new(PostgreSQLContainerConnectionString);
+        await DbAvailabilityChecker.WaitUntilDatabaseAvailableAsync(connection, timeoutSeconds: 60);
+    }
 
-        public static string PostgreSQLContainerConnectionString =>
-            new NpgsqlConnectionStringBuilder()
-            {
-                Host = "localhost",
-                Port = PostgreSQLServerHostPort,
-                Username = "postgres",
-                Password = PostgreSQLServerPassword,
-            }.ConnectionString;
-
-        public static async Task InitContainer()
+    private static async Task CreateAndStartPostgreSQLContainerIfNotExists()
+    {
+        List<string> envVariables = new()
         {
-            await DockerRunner.StopAndRemoveContainerIfExistsAndNotRunningOrOld(PostgreSQLContainerName, oldMinutes: 60);
-            await CreateAndStartPostgreSQLContainerIfNotExists();
-            using NpgsqlConnection connection = new(PostgreSQLContainerConnectionString);
-            await DbAvailabilityChecker.WaitUntilDatabaseAvailableAsync(connection, timeoutSeconds: 60);
-        }
+            $"POSTGRES_PASSWORD={PostgreSQLServerPassword}",
+        };
 
-        private static async Task CreateAndStartPostgreSQLContainerIfNotExists()
+        Dictionary<string, string> portRedirects = new()
         {
-            List<string> envVariables = new()
-            {
-                $"POSTGRES_PASSWORD={PostgreSQLServerPassword}",
-            };
+            { "5432/tcp", PostgreSQLServerHostPort.ToString() },
+        };
 
-            Dictionary<string, string> portRedirects = new()
-            {
-                { "5432/tcp", PostgreSQLServerHostPort.ToString() },
-            };
-
-            await DockerRunner.CreateAndStartContainerIfNotExists(
-                PostgreSQLContainerName,
-                $"{PostgreSQLImage}:{PostgreSQLImageTag}",
-                envVariables,
-                portRedirects);
-        }
+        await DockerRunner.CreateAndStartContainerIfNotExists(
+            PostgreSQLContainerName,
+            $"{PostgreSQLImage}:{PostgreSQLImageTag}",
+            envVariables,
+            portRedirects);
     }
 }

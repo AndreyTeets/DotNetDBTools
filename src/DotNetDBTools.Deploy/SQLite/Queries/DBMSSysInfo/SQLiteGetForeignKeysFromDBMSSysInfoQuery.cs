@@ -3,11 +3,11 @@ using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo;
 using DotNetDBTools.Models.Core;
 
-namespace DotNetDBTools.Deploy.SQLite.Queries.DBMSSysInfo
+namespace DotNetDBTools.Deploy.SQLite.Queries.DBMSSysInfo;
+
+internal class SQLiteGetForeignKeysFromDBMSSysInfoQuery : GetForeignKeysFromDBMSSysInfoQuery
 {
-    internal class SQLiteGetForeignKeysFromDBMSSysInfoQuery : GetForeignKeysFromDBMSSysInfoQuery
-    {
-        public override string Sql =>
+    public override string Sql =>
 $@"SELECT
     sm.name AS {nameof(ForeignKeyRecord.ThisTableName)},
     'FK_' || sm.name || '_' || fkl.[table] || '_' || fkl.id AS {nameof(ForeignKeyRecord.ForeignKeyName)},
@@ -24,21 +24,20 @@ WHERE sm.type = 'table'
     AND sm.name != 'sqlite_sequence'
     AND sm.name != '{DNDBTSysTables.DNDBTDbObjects}';";
 
-        public override RecordMapper Mapper => new MySQLRecordMapper();
+    public override RecordMapper Mapper => new MySQLRecordMapper();
 
-        public class MySQLRecordMapper : RecordMapper
+    public class MySQLRecordMapper : RecordMapper
+    {
+        public override ForeignKey MapExceptColumnsToForeignKeyModel(ForeignKeyRecord fkr)
         {
-            public override ForeignKey MapExceptColumnsToForeignKeyModel(ForeignKeyRecord fkr)
+            return new ForeignKey()
             {
-                return new ForeignKey()
-                {
-                    ID = Guid.NewGuid(),
-                    Name = fkr.ForeignKeyName,
-                    ReferencedTableName = fkr.ReferencedTableName,
-                    OnUpdate = fkr.OnUpdate,
-                    OnDelete = fkr.OnDelete,
-                };
-            }
+                ID = Guid.NewGuid(),
+                Name = fkr.ForeignKeyName,
+                ReferencedTableName = fkr.ReferencedTableName,
+                OnUpdate = fkr.OnUpdate,
+                OnDelete = fkr.OnDelete,
+            };
         }
     }
 }

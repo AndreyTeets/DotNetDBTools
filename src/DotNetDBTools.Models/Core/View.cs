@@ -1,7 +1,6 @@
-﻿namespace DotNetDBTools.Models.Core
+﻿namespace DotNetDBTools.Models.Core;
+
+public abstract class View : DbObject
 {
-    public abstract class View : DbObject
-    {
-        public CodePiece CodePiece { get; set; }
-    }
+    public CodePiece CodePiece { get; set; }
 }

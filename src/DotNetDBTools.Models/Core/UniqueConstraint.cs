@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace DotNetDBTools.Models.Core
+namespace DotNetDBTools.Models.Core;
+
+public class UniqueConstraint : DbObject
 {
-    public class UniqueConstraint : DbObject
-    {
-        public IEnumerable<string> Columns { get; set; }
-    }
+    public IEnumerable<string> Columns { get; set; }
 }

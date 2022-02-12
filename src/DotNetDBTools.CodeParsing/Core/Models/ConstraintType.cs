@@ -1,10 +1,9 @@
-﻿namespace DotNetDBTools.CodeParsing.Core.Models
+﻿namespace DotNetDBTools.CodeParsing.Core.Models;
+
+public enum ConstraintType
 {
-    public enum ConstraintType
-    {
-        Check,
-        PrimaryKey,
-        Unique,
-        ForeignKey,
-    }
+    Check,
+    PrimaryKey,
+    Unique,
+    ForeignKey,
 }

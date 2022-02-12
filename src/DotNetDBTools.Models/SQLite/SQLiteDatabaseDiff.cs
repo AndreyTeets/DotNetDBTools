@@ -1,8 +1,7 @@
 ﻿using DotNetDBTools.Models.Core;
 
-namespace DotNetDBTools.Models.SQLite
+namespace DotNetDBTools.Models.SQLite;
+
+public class SQLiteDatabaseDiff : DatabaseDiff
 {
-    public class SQLiteDatabaseDiff : DatabaseDiff
-    {
-    }
 }

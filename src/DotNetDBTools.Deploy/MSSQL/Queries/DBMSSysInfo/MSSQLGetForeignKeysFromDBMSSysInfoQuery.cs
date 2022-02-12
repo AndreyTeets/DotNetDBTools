@@ -3,11 +3,11 @@ using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo;
 using DotNetDBTools.Models.Core;
 
-namespace DotNetDBTools.Deploy.MSSQL.Queries.DBMSSysInfo
+namespace DotNetDBTools.Deploy.MSSQL.Queries.DBMSSysInfo;
+
+internal class MSSQLGetForeignKeysFromDBMSSysInfoQuery : GetForeignKeysFromDBMSSysInfoQuery
 {
-    internal class MSSQLGetForeignKeysFromDBMSSysInfoQuery : GetForeignKeysFromDBMSSysInfoQuery
-    {
-        public override string Sql =>
+    public override string Sql =>
 $@"SELECT
     thisTable.name AS {nameof(ForeignKeyRecord.ThisTableName)},
     foreignKey.name AS {nameof(ForeignKeyRecord.ForeignKeyName)},
@@ -33,31 +33,30 @@ INNER JOIN sys.columns referencedColumns
         AND referencedColumns.column_id = fkColumnsMap.referenced_column_id
 WHERE thisTable.name != '{DNDBTSysTables.DNDBTDbObjects}';";
 
-        public override RecordMapper Mapper => new MSSQLRecordMapper();
+    public override RecordMapper Mapper => new MSSQLRecordMapper();
 
-        public class MSSQLRecordMapper : RecordMapper
+    public class MSSQLRecordMapper : RecordMapper
+    {
+        public override ForeignKey MapExceptColumnsToForeignKeyModel(ForeignKeyRecord fkr)
         {
-            public override ForeignKey MapExceptColumnsToForeignKeyModel(ForeignKeyRecord fkr)
+            return new ForeignKey()
             {
-                return new ForeignKey()
-                {
-                    ID = Guid.NewGuid(),
-                    Name = fkr.ForeignKeyName,
-                    ReferencedTableName = fkr.ReferencedTableName,
-                    OnUpdate = MapUpdateActionName(fkr.OnUpdate),
-                    OnDelete = MapUpdateActionName(fkr.OnDelete),
-                };
-            }
-
-            private static string MapUpdateActionName(string sqlActionName) =>
-                sqlActionName switch
-                {
-                    "NO_ACTION" => ForeignKeyActions.NoAction,
-                    "CASCADE" => ForeignKeyActions.Cascade,
-                    "SET_DEFAULT" => ForeignKeyActions.SetDefault,
-                    "SET_NULL" => ForeignKeyActions.SetNull,
-                    _ => throw new InvalidOperationException($"Invalid sqlActionName: '{sqlActionName}'")
-                };
+                ID = Guid.NewGuid(),
+                Name = fkr.ForeignKeyName,
+                ReferencedTableName = fkr.ReferencedTableName,
+                OnUpdate = MapUpdateActionName(fkr.OnUpdate),
+                OnDelete = MapUpdateActionName(fkr.OnDelete),
+            };
         }
+
+        private static string MapUpdateActionName(string sqlActionName) =>
+            sqlActionName switch
+            {
+                "NO_ACTION" => ForeignKeyActions.NoAction,
+                "CASCADE" => ForeignKeyActions.Cascade,
+                "SET_DEFAULT" => ForeignKeyActions.SetDefault,
+                "SET_NULL" => ForeignKeyActions.SetNull,
+                _ => throw new InvalidOperationException($"Invalid sqlActionName: '{sqlActionName}'")
+            };
     }
 }

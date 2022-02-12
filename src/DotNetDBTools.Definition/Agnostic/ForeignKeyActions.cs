@@ -1,10 +1,9 @@
-﻿namespace DotNetDBTools.Definition.Agnostic
+﻿namespace DotNetDBTools.Definition.Agnostic;
+
+public enum ForeignKeyActions
 {
-    public enum ForeignKeyActions
-    {
-        NoAction,
-        Cascade,
-        SetNull,
-        SetDefault,
-    }
+    NoAction,
+    Cascade,
+    SetNull,
+    SetDefault,
 }

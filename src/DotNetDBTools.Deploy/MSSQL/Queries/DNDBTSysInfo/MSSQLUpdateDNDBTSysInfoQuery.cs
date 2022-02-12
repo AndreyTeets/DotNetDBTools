@@ -4,36 +4,35 @@ using System.Data;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Queries.DNDBTSysInfo;
 
-namespace DotNetDBTools.Deploy.MSSQL.Queries.DNDBTSysInfo
+namespace DotNetDBTools.Deploy.MSSQL.Queries.DNDBTSysInfo;
+
+internal class MSSQLUpdateDNDBTSysInfoQuery : UpdateDNDBTSysInfoQuery
 {
-    internal class MSSQLUpdateDNDBTSysInfoQuery : UpdateDNDBTSysInfoQuery
+    private const string IDParameterName = "@ID";
+    private const string NameParameterName = "@Name";
+    private const string CodeParameterName = "@Code";
+
+    public MSSQLUpdateDNDBTSysInfoQuery(Guid objectID, string objectName, string objectCode = null)
+        : base(objectID, objectName, objectCode) { }
+
+    protected override string GetSql()
     {
-        private const string IDParameterName = "@ID";
-        private const string NameParameterName = "@Name";
-        private const string CodeParameterName = "@Code";
-
-        public MSSQLUpdateDNDBTSysInfoQuery(Guid objectID, string objectName, string objectCode = null)
-            : base(objectID, objectName, objectCode) { }
-
-        protected override string GetSql()
-        {
-            string query =
+        string query =
 $@"UPDATE {DNDBTSysTables.DNDBTDbObjects} SET
     {DNDBTSysTables.DNDBTDbObjects.Name} = {NameParameterName},
     {DNDBTSysTables.DNDBTDbObjects.Code} = {CodeParameterName}
 WHERE {DNDBTSysTables.DNDBTDbObjects.ID} = {IDParameterName};";
 
-            return query;
-        }
+        return query;
+    }
 
-        protected override List<QueryParameter> GetParameters(Guid objectID, string objectName, string objectCode)
+    protected override List<QueryParameter> GetParameters(Guid objectID, string objectName, string objectCode)
+    {
+        return new List<QueryParameter>
         {
-            return new List<QueryParameter>
-            {
-                new QueryParameter(IDParameterName, objectID, DbType.Guid),
-                new QueryParameter(NameParameterName, objectName, DbType.String),
-                new QueryParameter(CodeParameterName, objectCode, DbType.String),
-            };
-        }
+            new QueryParameter(IDParameterName, objectID, DbType.Guid),
+            new QueryParameter(NameParameterName, objectName, DbType.String),
+            new QueryParameter(CodeParameterName, objectCode, DbType.String),
+        };
     }
 }

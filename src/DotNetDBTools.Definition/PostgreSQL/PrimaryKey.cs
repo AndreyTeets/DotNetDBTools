@@ -1,9 +1,8 @@
 ﻿using DotNetDBTools.Definition.Core;
 
-namespace DotNetDBTools.Definition.PostgreSQL
+namespace DotNetDBTools.Definition.PostgreSQL;
+
+public class PrimaryKey : BasePrimaryKey
 {
-    public class PrimaryKey : BasePrimaryKey
-    {
-        public PrimaryKey(string id) : base(id) { }
-    }
+    public PrimaryKey(string id) : base(id) { }
 }

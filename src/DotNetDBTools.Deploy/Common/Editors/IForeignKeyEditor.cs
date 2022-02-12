@@ -1,10 +1,9 @@
 ﻿using DotNetDBTools.Models.Core;
 
-namespace DotNetDBTools.Deploy.Common.Editors
+namespace DotNetDBTools.Deploy.Common.Editors;
+
+internal interface IForeignKeyEditor
 {
-    internal interface IForeignKeyEditor
-    {
-        public void CreateForeignKeys(DatabaseDiff dbDiff);
-        public void DropForeignKeys(DatabaseDiff dbDiff);
-    }
+    public void CreateForeignKeys(DatabaseDiff dbDiff);
+    public void DropForeignKeys(DatabaseDiff dbDiff);
 }

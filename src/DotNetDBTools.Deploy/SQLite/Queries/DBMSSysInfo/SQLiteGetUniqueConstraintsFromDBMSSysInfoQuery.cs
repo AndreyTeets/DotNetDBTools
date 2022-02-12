@@ -3,11 +3,11 @@ using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo;
 using DotNetDBTools.Models.Core;
 
-namespace DotNetDBTools.Deploy.SQLite.Queries.DBMSSysInfo
+namespace DotNetDBTools.Deploy.SQLite.Queries.DBMSSysInfo;
+
+internal class SQLiteGetUniqueConstraintsFromDBMSSysInfoQuery : GetUniqueConstraintsFromDBMSSysInfoQuery
 {
-    internal class SQLiteGetUniqueConstraintsFromDBMSSysInfoQuery : GetUniqueConstraintsFromDBMSSysInfoQuery
-    {
-        public override string Sql =>
+    public override string Sql =>
 $@"SELECT
     sm.name AS {nameof(UniqueConstraintRecord.TableName)},
     'UQ_' || sm.name || '_' || il.seq AS {nameof(UniqueConstraintRecord.ConstraintName)},
@@ -21,18 +21,17 @@ WHERE sm.type = 'table'
     AND sm.name != '{DNDBTSysTables.DNDBTDbObjects}'
     AND il.origin = 'u';";
 
-        public override RecordMapper Mapper => new SQLiteRecordMapper();
+    public override RecordMapper Mapper => new SQLiteRecordMapper();
 
-        public class SQLiteRecordMapper : RecordMapper
+    public class SQLiteRecordMapper : RecordMapper
+    {
+        public override UniqueConstraint MapExceptColumnsToUniqueConstraintModel(UniqueConstraintRecord ucr)
         {
-            public override UniqueConstraint MapExceptColumnsToUniqueConstraintModel(UniqueConstraintRecord ucr)
+            return new UniqueConstraint()
             {
-                return new UniqueConstraint()
-                {
-                    ID = Guid.NewGuid(),
-                    Name = ucr.ConstraintName,
-                };
-            }
+                ID = Guid.NewGuid(),
+                Name = ucr.ConstraintName,
+            };
         }
     }
 }

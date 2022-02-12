@@ -59,6 +59,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{05DDD811-9
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{97630F4B-ECF7-493A-BB47-00B09CD6207C}"
+	ProjectSection(SolutionItems) = preProject
+		samples\.editorconfig = samples\.editorconfig
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Applications", "Applications", "{FB42EE55-D632-413B-8FBC-9EE6F37C5125}"
 EndProject

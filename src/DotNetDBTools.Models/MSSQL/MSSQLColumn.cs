@@ -1,9 +1,8 @@
 ﻿using DotNetDBTools.Models.Core;
 
-namespace DotNetDBTools.Models.MSSQL
+namespace DotNetDBTools.Models.MSSQL;
+
+public class MSSQLColumn : Column
 {
-    public class MSSQLColumn : Column
-    {
-        public string DefaultConstraintName { get; set; }
-    }
+    public string DefaultConstraintName { get; set; }
 }

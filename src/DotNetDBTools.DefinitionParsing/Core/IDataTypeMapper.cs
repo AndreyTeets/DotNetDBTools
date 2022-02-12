@@ -1,10 +1,9 @@
 ﻿using DotNetDBTools.Definition.Core;
 using DotNetDBTools.Models.Core;
 
-namespace DotNetDBTools.DefinitionParsing.Core
+namespace DotNetDBTools.DefinitionParsing.Core;
+
+internal interface IDataTypeMapper
 {
-    internal interface IDataTypeMapper
-    {
-        public DataType MapToDataTypeModel(IDataType dataType);
-    }
+    public DataType MapToDataTypeModel(IDataType dataType);
 }

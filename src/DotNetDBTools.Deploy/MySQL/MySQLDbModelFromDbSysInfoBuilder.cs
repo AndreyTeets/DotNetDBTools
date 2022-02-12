@@ -3,23 +3,22 @@ using DotNetDBTools.Deploy.MySQL.Queries.DBMSSysInfo;
 using DotNetDBTools.Deploy.MySQL.Queries.DNDBTSysInfo;
 using DotNetDBTools.Models.MySQL;
 
-namespace DotNetDBTools.Deploy.MySQL
+namespace DotNetDBTools.Deploy.MySQL;
+
+internal class MySQLDbModelFromDbSysInfoBuilder : DbModelFromDbSysInfoBuilder<
+    MySQLDatabase,
+    MySQLTable,
+    MySQLView,
+    MySQLGetColumnsFromDBMSSysInfoQuery,
+    MySQLGetPrimaryKeysFromDBMSSysInfoQuery,
+    MySQLGetUniqueConstraintsFromDBMSSysInfoQuery,
+    MySQLGetCheckConstraintsFromDBMSSysInfoQuery,
+    MySQLGetIndexesFromDBMSSysInfoQuery,
+    MySQLGetTriggersFromDBMSSysInfoQuery,
+    MySQLGetForeignKeysFromDBMSSysInfoQuery,
+    MySQLGetViewsFromDBMSSysInfoQuery,
+    MySQLGetAllDbObjectsFromDNDBTSysInfoQuery>
 {
-    internal class MySQLDbModelFromDbSysInfoBuilder : DbModelFromDbSysInfoBuilder<
-        MySQLDatabase,
-        MySQLTable,
-        MySQLView,
-        MySQLGetColumnsFromDBMSSysInfoQuery,
-        MySQLGetPrimaryKeysFromDBMSSysInfoQuery,
-        MySQLGetUniqueConstraintsFromDBMSSysInfoQuery,
-        MySQLGetCheckConstraintsFromDBMSSysInfoQuery,
-        MySQLGetIndexesFromDBMSSysInfoQuery,
-        MySQLGetTriggersFromDBMSSysInfoQuery,
-        MySQLGetForeignKeysFromDBMSSysInfoQuery,
-        MySQLGetViewsFromDBMSSysInfoQuery,
-        MySQLGetAllDbObjectsFromDNDBTSysInfoQuery>
-    {
-        public MySQLDbModelFromDbSysInfoBuilder(IQueryExecutor queryExecutor)
-            : base(queryExecutor) { }
-    }
+    public MySQLDbModelFromDbSysInfoBuilder(IQueryExecutor queryExecutor)
+        : base(queryExecutor) { }
 }

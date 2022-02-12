@@ -1,7 +1,6 @@
-﻿namespace DotNetDBTools.Deploy.Core
+﻿namespace DotNetDBTools.Deploy.Core;
+
+internal interface IGenSqlScriptQueryExecutor : IQueryExecutor
 {
-    internal interface IGenSqlScriptQueryExecutor : IQueryExecutor
-    {
-        public string GetFinalScript();
-    }
+    public string GetFinalScript();
 }

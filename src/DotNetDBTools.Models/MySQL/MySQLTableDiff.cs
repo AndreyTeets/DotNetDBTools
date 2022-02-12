@@ -1,8 +1,7 @@
 ﻿using DotNetDBTools.Models.Core;
 
-namespace DotNetDBTools.Models.MySQL
+namespace DotNetDBTools.Models.MySQL;
+
+public class MySQLTableDiff : TableDiff
 {
-    public class MySQLTableDiff : TableDiff
-    {
-    }
 }

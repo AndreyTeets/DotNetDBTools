@@ -1,11 +1,10 @@
 ﻿using DotNetDBTools.Definition.Core;
 
-namespace DotNetDBTools.Definition.MySQL.DataTypes
+namespace DotNetDBTools.Definition.MySQL.DataTypes;
+
+/// <summary>
+/// Column is declared as 'JSON'.
+/// </summary>
+public class JsonDataType : IDataType
 {
-    /// <summary>
-    /// Column is declared as 'JSON'.
-    /// </summary>
-    public class JsonDataType : IDataType
-    {
-    }
 }

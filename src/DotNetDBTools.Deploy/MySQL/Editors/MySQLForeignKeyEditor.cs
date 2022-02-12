@@ -3,15 +3,14 @@ using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.MySQL.Queries.DDL;
 using DotNetDBTools.Deploy.MySQL.Queries.DNDBTSysInfo;
 
-namespace DotNetDBTools.Deploy.MySQL.Editors
+namespace DotNetDBTools.Deploy.MySQL.Editors;
+
+internal class MySQLForeignKeyEditor : ForeignKeyEditor<
+    MySQLInsertDNDBTSysInfoQuery,
+    MySQLDeleteDNDBTSysInfoQuery,
+    MySQLCreateForeignKeyQuery,
+    MySQLDropForeignKeyQuery>
 {
-    internal class MySQLForeignKeyEditor : ForeignKeyEditor<
-        MySQLInsertDNDBTSysInfoQuery,
-        MySQLDeleteDNDBTSysInfoQuery,
-        MySQLCreateForeignKeyQuery,
-        MySQLDropForeignKeyQuery>
-    {
-        public MySQLForeignKeyEditor(IQueryExecutor queryExecutor)
-            : base(queryExecutor) { }
-    }
+    public MySQLForeignKeyEditor(IQueryExecutor queryExecutor)
+        : base(queryExecutor) { }
 }

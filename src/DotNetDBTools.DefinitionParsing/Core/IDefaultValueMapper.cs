@@ -1,9 +1,8 @@
 ﻿using DotNetDBTools.Definition.Core;
 
-namespace DotNetDBTools.DefinitionParsing.Core
+namespace DotNetDBTools.DefinitionParsing.Core;
+
+internal interface IDefaultValueMapper
 {
-    internal interface IDefaultValueMapper
-    {
-        public object MapDefaultValue(BaseColumn column);
-    }
+    public object MapDefaultValue(BaseColumn column);
 }

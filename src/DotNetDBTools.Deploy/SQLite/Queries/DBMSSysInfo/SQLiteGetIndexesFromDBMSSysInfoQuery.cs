@@ -3,11 +3,11 @@ using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo;
 using DotNetDBTools.Models.Core;
 
-namespace DotNetDBTools.Deploy.SQLite.Queries.DBMSSysInfo
+namespace DotNetDBTools.Deploy.SQLite.Queries.DBMSSysInfo;
+
+internal class SQLiteGetIndexesFromDBMSSysInfoQuery : GetIndexesFromDBMSSysInfoQuery
 {
-    internal class SQLiteGetIndexesFromDBMSSysInfoQuery : GetIndexesFromDBMSSysInfoQuery
-    {
-        public override string Sql =>
+    public override string Sql =>
 $@"SELECT
     sm.name AS {nameof(IndexRecord.TableName)},
     il.name AS {nameof(IndexRecord.IndexName)},
@@ -23,19 +23,18 @@ WHERE sm.type = 'table'
     AND sm.name != '{DNDBTSysTables.DNDBTDbObjects}'
     AND il.origin = 'c';";
 
-        public override RecordMapper Mapper => new SQLiteRecordMapper();
+    public override RecordMapper Mapper => new SQLiteRecordMapper();
 
-        public class SQLiteRecordMapper : RecordMapper
+    public class SQLiteRecordMapper : RecordMapper
+    {
+        public override Index MapExceptColumnsToIndexModel(IndexRecord indexRecord)
         {
-            public override Index MapExceptColumnsToIndexModel(IndexRecord indexRecord)
+            return new()
             {
-                return new()
-                {
-                    ID = Guid.NewGuid(),
-                    Name = indexRecord.IndexName,
-                    Unique = indexRecord.IsUnique,
-                };
-            }
+                ID = Guid.NewGuid(),
+                Name = indexRecord.IndexName,
+                Unique = indexRecord.IsUnique,
+            };
         }
     }
 }

@@ -1,8 +1,7 @@
 ﻿using DotNetDBTools.Models.Core;
 
-namespace DotNetDBTools.Models.MSSQL
+namespace DotNetDBTools.Models.MSSQL;
+
+public class MSSQLView : View
 {
-    public class MSSQLView : View
-    {
-    }
 }

@@ -2,20 +2,19 @@
 using DotNetDBTools.Generation.Core;
 using DotNetDBTools.Models.PostgreSQL;
 
-namespace DotNetDBTools.Generation.PostgreSQL
+namespace DotNetDBTools.Generation.PostgreSQL;
+
+internal static class PostgreSQLDefinitionGenerator
 {
-    internal static class PostgreSQLDefinitionGenerator
+    public static IEnumerable<DefinitionSourceFile> GenerateDefinition(PostgreSQLDatabase database)
     {
-        public static IEnumerable<DefinitionSourceFile> GenerateDefinition(PostgreSQLDatabase database)
+        return new List<DefinitionSourceFile>()
         {
-            return new List<DefinitionSourceFile>()
+            new DefinitionSourceFile()
             {
-                new DefinitionSourceFile()
-                {
-                    RelativePath = "Tables/Table1.cs",
-                    SourceText = database.Name,
-                }
-            };
-        }
+                RelativePath = "Tables/Table1.cs",
+                SourceText = database.Name,
+            }
+        };
     }
 }

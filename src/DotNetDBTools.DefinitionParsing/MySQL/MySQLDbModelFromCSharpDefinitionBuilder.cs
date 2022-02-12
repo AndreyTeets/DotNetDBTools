@@ -8,53 +8,52 @@ using DotNetDBTools.DefinitionParsing.Core;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.MySQL;
 
-namespace DotNetDBTools.DefinitionParsing.MySQL
+namespace DotNetDBTools.DefinitionParsing.MySQL;
+
+internal class MySQLDbModelFromCSharpDefinitionBuilder : DbModelFromCSharpDefinitionBuilder<
+    MySQLDatabase,
+    MySQLTable,
+    MySQLView,
+    Models.Core.Column>
 {
-    internal class MySQLDbModelFromCSharpDefinitionBuilder : DbModelFromCSharpDefinitionBuilder<
-        MySQLDatabase,
-        MySQLTable,
-        MySQLView,
-        Models.Core.Column>
+    public MySQLDbModelFromCSharpDefinitionBuilder() : base(
+        new MySQLDataTypeMapper(),
+        new SpecificDbmsDbObjectCodeMapper(),
+        new MySQLDefaultValueMapper())
     {
-        public MySQLDbModelFromCSharpDefinitionBuilder() : base(
-            new MySQLDataTypeMapper(),
-            new SpecificDbmsDbObjectCodeMapper(),
-            new MySQLDefaultValueMapper())
-        {
-        }
+    }
 
-        protected override void BuildAdditionalDbObjects(Database database, Assembly dbAssembly)
-        {
-            MySQLDatabase mysqlDatabase = (MySQLDatabase)database;
-            MySQLPostBuildProcessingHelper.ReplaceUniqueConstraintsWithUniqueIndexes(mysqlDatabase);
-            mysqlDatabase.Functions = BuildFunctionModels(dbAssembly);
-        }
+    protected override void BuildAdditionalDbObjects(Database database, Assembly dbAssembly)
+    {
+        MySQLDatabase mysqlDatabase = (MySQLDatabase)database;
+        MySQLPostBuildProcessingHelper.ReplaceUniqueConstraintsWithUniqueIndexes(mysqlDatabase);
+        mysqlDatabase.Functions = BuildFunctionModels(dbAssembly);
+    }
 
-        protected override void BuildAdditionalPrimaryKeyModelProperties(Models.Core.PrimaryKey pkModel, BasePrimaryKey pk, string tableName)
-        {
-            pkModel.Name = $"PK_{tableName}";
-        }
+    protected override void BuildAdditionalPrimaryKeyModelProperties(Models.Core.PrimaryKey pkModel, BasePrimaryKey pk, string tableName)
+    {
+        pkModel.Name = $"PK_{tableName}";
+    }
 
-        protected override string GetOnUpdateActionName(BaseForeignKey fk) =>
-            MapFKActionNameFromDefinitionToModel(((Definition.MySQL.ForeignKey)fk).OnUpdate.ToString());
-        protected override string GetOnDeleteActionName(BaseForeignKey fk) =>
-            MapFKActionNameFromDefinitionToModel(((Definition.MySQL.ForeignKey)fk).OnDelete.ToString());
+    protected override string GetOnUpdateActionName(BaseForeignKey fk) =>
+        MapFKActionNameFromDefinitionToModel(((Definition.MySQL.ForeignKey)fk).OnUpdate.ToString());
+    protected override string GetOnDeleteActionName(BaseForeignKey fk) =>
+        MapFKActionNameFromDefinitionToModel(((Definition.MySQL.ForeignKey)fk).OnDelete.ToString());
 
-        private static List<MySQLFunction> BuildFunctionModels(Assembly dbAssembly)
+    private static List<MySQLFunction> BuildFunctionModels(Assembly dbAssembly)
+    {
+        IEnumerable<IFunction> functions = GetInstancesOfAllTypesImplementingInterface<IFunction>(dbAssembly);
+        List<MySQLFunction> functionModels = new();
+        foreach (IFunction function in functions)
         {
-            IEnumerable<IFunction> functions = GetInstancesOfAllTypesImplementingInterface<IFunction>(dbAssembly);
-            List<MySQLFunction> functionModels = new();
-            foreach (IFunction function in functions)
+            MySQLFunction functionModel = new()
             {
-                MySQLFunction functionModel = new()
-                {
-                    ID = function.ID,
-                    Name = function.GetType().Name,
-                    CodePiece = new CodePiece { Code = function.Code },
-                };
-                functionModels.Add(functionModel);
-            }
-            return functionModels;
+                ID = function.ID,
+                Name = function.GetType().Name,
+                CodePiece = new CodePiece { Code = function.Code },
+            };
+            functionModels.Add(functionModel);
         }
+        return functionModels;
     }
 }

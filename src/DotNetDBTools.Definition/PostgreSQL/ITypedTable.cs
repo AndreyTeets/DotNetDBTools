@@ -1,7 +1,6 @@
-﻿namespace DotNetDBTools.Definition.PostgreSQL
+﻿namespace DotNetDBTools.Definition.PostgreSQL;
+
+public interface ITypedTable : ITable
 {
-    public interface ITypedTable : ITable
-    {
-        public string OfType { get; }
-    }
+    public string OfType { get; }
 }

@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using DotNetDBTools.Deploy.Core;
 
-namespace DotNetDBTools.Deploy.SQLite.Queries.DBMSSysInfo
+namespace DotNetDBTools.Deploy.SQLite.Queries.DBMSSysInfo;
+
+internal class SQLiteGetTablesDefinitionsFromDBMSSysInfoQuery : IQuery
 {
-    internal class SQLiteGetTablesDefinitionsFromDBMSSysInfoQuery : IQuery
-    {
-        public string Sql =>
+    public string Sql =>
 $@"SELECT
     sm.name AS {nameof(TableRecord.TableName)},
     sm.sql AS {nameof(TableRecord.TableDefinition)}
@@ -14,12 +14,11 @@ WHERE sm.type = 'table'
     AND sm.name != 'sqlite_sequence'
     AND sm.name != '{DNDBTSysTables.DNDBTDbObjects}';";
 
-        public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
+    public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
 
-        public class TableRecord
-        {
-            public string TableName { get; set; }
-            public string TableDefinition { get; set; }
-        }
+    public class TableRecord
+    {
+        public string TableName { get; set; }
+        public string TableDefinition { get; set; }
     }
 }

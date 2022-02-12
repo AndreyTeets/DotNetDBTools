@@ -1,9 +1,8 @@
 ﻿using DotNetDBTools.Definition.Core;
 
-namespace DotNetDBTools.Definition.MSSQL
+namespace DotNetDBTools.Definition.MSSQL;
+
+public class Index : BaseIndex
 {
-    public class Index : BaseIndex
-    {
-        public Index(string id) : base(id) { }
-    }
+    public Index(string id) : base(id) { }
 }

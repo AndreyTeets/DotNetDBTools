@@ -1,9 +1,8 @@
 ﻿using DotNetDBTools.Models.Core;
 
-namespace DotNetDBTools.Models.MSSQL
+namespace DotNetDBTools.Models.MSSQL;
+
+public class MSSQLProcedure : DbObject
 {
-    public class MSSQLProcedure : DbObject
-    {
-        public CodePiece CodePiece { get; set; }
-    }
+    public CodePiece CodePiece { get; set; }
 }

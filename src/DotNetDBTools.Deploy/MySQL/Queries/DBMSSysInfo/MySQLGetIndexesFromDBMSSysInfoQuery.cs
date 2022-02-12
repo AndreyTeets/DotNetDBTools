@@ -3,11 +3,11 @@ using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo;
 using DotNetDBTools.Models.Core;
 
-namespace DotNetDBTools.Deploy.MySQL.Queries.DBMSSysInfo
+namespace DotNetDBTools.Deploy.MySQL.Queries.DBMSSysInfo;
+
+internal class MySQLGetIndexesFromDBMSSysInfoQuery : GetIndexesFromDBMSSysInfoQuery
 {
-    internal class MySQLGetIndexesFromDBMSSysInfoQuery : GetIndexesFromDBMSSysInfoQuery
-    {
-        public override string Sql =>
+    public override string Sql =>
 $@"SELECT
     s.TABLE_NAME AS {nameof(IndexRecord.TableName)},
     s.INDEX_NAME AS {nameof(IndexRecord.IndexName)},
@@ -24,19 +24,18 @@ WHERE s.TABLE_SCHEMA = (select DATABASE())
     AND (tc.CONSTRAINT_TYPE = 'UNIQUE' OR tc.CONSTRAINT_TYPE IS NULL)
     AND s.TABLE_NAME != '{DNDBTSysTables.DNDBTDbObjects}';";
 
-        public override RecordMapper Mapper => new MySQLRecordMapper();
+    public override RecordMapper Mapper => new MySQLRecordMapper();
 
-        public class MySQLRecordMapper : RecordMapper
+    public class MySQLRecordMapper : RecordMapper
+    {
+        public override Index MapExceptColumnsToIndexModel(IndexRecord indexRecord)
         {
-            public override Index MapExceptColumnsToIndexModel(IndexRecord indexRecord)
+            return new()
             {
-                return new()
-                {
-                    ID = Guid.NewGuid(),
-                    Name = indexRecord.IndexName,
-                    Unique = indexRecord.IsUnique,
-                };
-            }
+                ID = Guid.NewGuid(),
+                Name = indexRecord.IndexName,
+                Unique = indexRecord.IsUnique,
+            };
         }
     }
 }

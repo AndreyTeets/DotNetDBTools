@@ -1,9 +1,8 @@
 ﻿using DotNetDBTools.Definition.Common;
 
-namespace DotNetDBTools.Definition.MySQL
+namespace DotNetDBTools.Definition.MySQL;
+
+public class Trigger : SpecificDbmsTrigger
 {
-    public class Trigger : SpecificDbmsTrigger
-    {
-        public Trigger(string id) : base(id) { }
-    }
+    public Trigger(string id) : base(id) { }
 }

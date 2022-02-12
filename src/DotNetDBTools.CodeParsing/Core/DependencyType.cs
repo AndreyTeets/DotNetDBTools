@@ -1,9 +1,8 @@
-﻿namespace DotNetDBTools.CodeParsing.Core
+﻿namespace DotNetDBTools.CodeParsing.Core;
+
+public enum DependencyType
 {
-    public enum DependencyType
-    {
-        Table,
-        TableOrView,
-        Function,
-    }
+    Table,
+    TableOrView,
+    Function,
 }

@@ -1,8 +1,7 @@
 ﻿using DotNetDBTools.Definition.Common;
 
-namespace DotNetDBTools.Definition.MySQL
+namespace DotNetDBTools.Definition.MySQL;
+
+public interface IView : ISpecificDbmsView
 {
-    public interface IView : ISpecificDbmsView
-    {
-    }
 }

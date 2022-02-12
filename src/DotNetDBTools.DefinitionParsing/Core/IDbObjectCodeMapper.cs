@@ -1,10 +1,9 @@
 ﻿using DotNetDBTools.Definition.Core;
 using DotNetDBTools.Models.Core;
 
-namespace DotNetDBTools.DefinitionParsing.Core
+namespace DotNetDBTools.DefinitionParsing.Core;
+
+internal interface IDbObjectCodeMapper
 {
-    internal interface IDbObjectCodeMapper
-    {
-        public CodePiece MapToCodePiece(IDbObject dbObject);
-    }
+    public CodePiece MapToCodePiece(IDbObject dbObject);
 }

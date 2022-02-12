@@ -1,9 +1,8 @@
 ﻿using DotNetDBTools.Definition.Common;
 
-namespace DotNetDBTools.Definition.PostgreSQL
+namespace DotNetDBTools.Definition.PostgreSQL;
+
+public class CheckConstraint : SpecificDbmsCheckConstraint
 {
-    public class CheckConstraint : SpecificDbmsCheckConstraint
-    {
-        public CheckConstraint(string id) : base(id) { }
-    }
+    public CheckConstraint(string id) : base(id) { }
 }

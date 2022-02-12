@@ -6,92 +6,91 @@ using DotNetDBTools.DefinitionParsing.Core;
 using FluentAssertions;
 using Xunit;
 
-namespace DotNetDBTools.UnitTests.CodeParsing.PostgreSQL
+namespace DotNetDBTools.UnitTests.CodeParsing.PostgreSQL;
+
+public class PostgreSQLCodeParserTests
 {
-    public class PostgreSQLCodeParserTests
+    private const string TestDataDir = "./TestData/PostgreSQL";
+
+    [Fact]
+    public void SplitToStatements_GetsCorrectData()
     {
-        private const string TestDataDir = "./TestData/PostgreSQL";
+        string input = File.ReadAllText(@$"{TestDataDir}/StatementsList.sql").NormalizeLineEndings();
+        PostgreSQLCodeParser parser = new();
+        List<string> statements = parser.SplitToStatements(input);
 
-        [Fact]
-        public void SplitToStatements_GetsCorrectData()
+        statements.Count.Should().Be(3);
+
+        statements[0].Should().StartWith("create TABLE \"Table1\"");
+        statements[0].Should().EndWith("( \"Col3\" >= 0 )\n)");
+
+        statements[1].Should().StartWith("CREATE FUNCTION \"TR_MyTa");
+        statements[1].Should().EndWith("END;\n$FuncBody$");
+
+        statements[2].Should().StartWith("CREATE TRIGGER \"TR_MyTable2_MyTrigger1\"");
+        statements[2].Should().EndWith("EXECUTE FUNCTION \"TR_MyTable2_MyTrigger1_Handler\"()");
+    }
+
+    [Fact]
+    public void SplitToStatements_ThrowsOnMalformedInput()
+    {
+        string input = "some trash input";
+        PostgreSQLCodeParser parser = new();
+        FluentActions.Invoking(() => parser.SplitToStatements(input))
+            .Should().Throw<ParseException>().WithMessage($"ParserError(line=1,pos=0): mismatched input 'some' *");
+    }
+
+    [Fact]
+    public void GetViewDependencies_GetsCorrectData()
+    {
+        string input = File.ReadAllText(@$"{TestDataDir}/CreateView.sql");
+        PostgreSQLCodeParser parser = new();
+        List<Dependency> dependencies = parser.GetViewDependencies(input);
+
+        List<Dependency> expectedDependencies = new()
         {
-            string input = File.ReadAllText(@$"{TestDataDir}/StatementsList.sql").NormalizeLineEndings();
-            PostgreSQLCodeParser parser = new();
-            List<string> statements = parser.SplitToStatements(input);
+            new Dependency { Type = DependencyType.TableOrView, Name = "MyTable2" },
+            new Dependency { Type = DependencyType.TableOrView, Name = "MyView3".ToLower() },
+            new Dependency { Type = DependencyType.Function, Name = "MyFunc4" },
+        };
+        dependencies.Should().BeEquivalentTo(expectedDependencies);
+    }
 
-            statements.Count.Should().Be(3);
+    [Fact]
+    public void GetFunctionDependencies_GetsCorrectData_FromSQLFunc()
+    {
+        string input = File.ReadAllText(@$"{TestDataDir}/CreateSQLFunction.sql");
+        PostgreSQLCodeParser parser = new();
+        List<Dependency> dependencies = parser.GetFunctionDependencies(input);
 
-            statements[0].Should().StartWith("create TABLE \"Table1\"");
-            statements[0].Should().EndWith("( \"Col3\" >= 0 )\n)");
-
-            statements[1].Should().StartWith("CREATE FUNCTION \"TR_MyTa");
-            statements[1].Should().EndWith("END;\n$FuncBody$");
-
-            statements[2].Should().StartWith("CREATE TRIGGER \"TR_MyTable2_MyTrigger1\"");
-            statements[2].Should().EndWith("EXECUTE FUNCTION \"TR_MyTable2_MyTrigger1_Handler\"()");
-        }
-
-        [Fact]
-        public void SplitToStatements_ThrowsOnMalformedInput()
+        List<Dependency> expectedDependencies = new()
         {
-            string input = "some trash input";
-            PostgreSQLCodeParser parser = new();
-            FluentActions.Invoking(() => parser.SplitToStatements(input))
-                .Should().Throw<ParseException>().WithMessage($"ParserError(line=1,pos=0): mismatched input 'some' *");
-        }
+            new Dependency { Type = DependencyType.Table, Name = "MyTable1" },
+            new Dependency { Type = DependencyType.TableOrView, Name = "MyView2".ToLower() },
+            new Dependency { Type = DependencyType.Function, Name = "MyFunc3" },
+        };
+        dependencies.Should().BeEquivalentTo(expectedDependencies);
+    }
 
-        [Fact]
-        public void GetViewDependencies_GetsCorrectData()
+    [Fact]
+    public void GetFunctionDependencies_GetsCorrectData_FromPLPGSQLFunc()
+    {
+        string input = File.ReadAllText(@$"{TestDataDir}/CreatePLPGSQLFunction.sql");
+        PostgreSQLCodeParser parser = new();
+        List<Dependency> dependencies = parser.GetFunctionDependencies(input);
+
+        List<Dependency> expectedDependencies = new()
         {
-            string input = File.ReadAllText(@$"{TestDataDir}/CreateView.sql");
-            PostgreSQLCodeParser parser = new();
-            List<Dependency> dependencies = parser.GetViewDependencies(input);
-
-            List<Dependency> expectedDependencies = new()
-            {
-                new Dependency { Type = DependencyType.TableOrView, Name = "MyTable2" },
-                new Dependency { Type = DependencyType.TableOrView, Name = "MyView3".ToLower() },
-                new Dependency { Type = DependencyType.Function, Name = "MyFunc4" },
-            };
-            dependencies.Should().BeEquivalentTo(expectedDependencies);
-        }
-
-        [Fact]
-        public void GetFunctionDependencies_GetsCorrectData_FromSQLFunc()
-        {
-            string input = File.ReadAllText(@$"{TestDataDir}/CreateSQLFunction.sql");
-            PostgreSQLCodeParser parser = new();
-            List<Dependency> dependencies = parser.GetFunctionDependencies(input);
-
-            List<Dependency> expectedDependencies = new()
-            {
-                new Dependency { Type = DependencyType.Table, Name = "MyTable1" },
-                new Dependency { Type = DependencyType.TableOrView, Name = "MyView2".ToLower() },
-                new Dependency { Type = DependencyType.Function, Name = "MyFunc3" },
-            };
-            dependencies.Should().BeEquivalentTo(expectedDependencies);
-        }
-
-        [Fact]
-        public void GetFunctionDependencies_GetsCorrectData_FromPLPGSQLFunc()
-        {
-            string input = File.ReadAllText(@$"{TestDataDir}/CreatePLPGSQLFunction.sql");
-            PostgreSQLCodeParser parser = new();
-            List<Dependency> dependencies = parser.GetFunctionDependencies(input);
-
-            List<Dependency> expectedDependencies = new()
-            {
-                new Dependency { Type = DependencyType.Table, Name = "MyTable1" },
-                new Dependency { Type = DependencyType.Function, Name = "MyFunc2" },
-                new Dependency { Type = DependencyType.TableOrView, Name = "MyView3" },
-                new Dependency { Type = DependencyType.TableOrView, Name = "MyTable4" },
-                new Dependency { Type = DependencyType.TableOrView, Name = "MyView5".ToLower() },
-                new Dependency { Type = DependencyType.Table, Name = "MyTable6" },
-                new Dependency { Type = DependencyType.TableOrView, Name = "MyView7".ToLower() },
-                new Dependency { Type = DependencyType.Table, Name = "MyTable8" },
-                new Dependency { Type = DependencyType.Function, Name = "MyFunc9".ToLower() },
-            };
-            dependencies.Should().BeEquivalentTo(expectedDependencies);
-        }
+            new Dependency { Type = DependencyType.Table, Name = "MyTable1" },
+            new Dependency { Type = DependencyType.Function, Name = "MyFunc2" },
+            new Dependency { Type = DependencyType.TableOrView, Name = "MyView3" },
+            new Dependency { Type = DependencyType.TableOrView, Name = "MyTable4" },
+            new Dependency { Type = DependencyType.TableOrView, Name = "MyView5".ToLower() },
+            new Dependency { Type = DependencyType.Table, Name = "MyTable6" },
+            new Dependency { Type = DependencyType.TableOrView, Name = "MyView7".ToLower() },
+            new Dependency { Type = DependencyType.Table, Name = "MyTable8" },
+            new Dependency { Type = DependencyType.Function, Name = "MyFunc9".ToLower() },
+        };
+        dependencies.Should().BeEquivalentTo(expectedDependencies);
     }
 }

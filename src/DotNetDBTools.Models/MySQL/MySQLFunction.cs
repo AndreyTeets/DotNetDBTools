@@ -1,9 +1,8 @@
 ﻿using DotNetDBTools.Models.Core;
 
-namespace DotNetDBTools.Models.MySQL
+namespace DotNetDBTools.Models.MySQL;
+
+public class MySQLFunction : DbObject
 {
-    public class MySQLFunction : DbObject
-    {
-        public CodePiece CodePiece { get; set; }
-    }
+    public CodePiece CodePiece { get; set; }
 }

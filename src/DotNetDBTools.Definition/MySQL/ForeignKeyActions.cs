@@ -1,11 +1,10 @@
-﻿namespace DotNetDBTools.Definition.MySQL
+﻿namespace DotNetDBTools.Definition.MySQL;
+
+public enum ForeignKeyActions
 {
-    public enum ForeignKeyActions
-    {
-        NoAction,
-        Restrict,
-        Cascade,
-        SetNull,
-        SetDefault,
-    }
+    NoAction,
+    Restrict,
+    Cascade,
+    SetNull,
+    SetDefault,
 }

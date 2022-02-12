@@ -1,20 +1,19 @@
 ﻿using DotNetDBTools.Definition.Core;
 
-namespace DotNetDBTools.Definition.MSSQL.DataTypes
-{
-    /// <summary>
-    /// Column is declared as 'DECIMAL(Precision, Scale)'.
-    /// </summary>
-    public class DecimalDataType : IDataType
-    {
-        /// <remarks>
-        /// Default value is 19.
-        /// </remarks>
-        public byte Precision { get; set; } = 19;
+namespace DotNetDBTools.Definition.MSSQL.DataTypes;
 
-        /// <remarks>
-        /// Default value is 2.
-        /// </remarks>
-        public byte Scale { get; set; } = 2;
-    }
+/// <summary>
+/// Column is declared as 'DECIMAL(Precision, Scale)'.
+/// </summary>
+public class DecimalDataType : IDataType
+{
+    /// <remarks>
+    /// Default value is 19.
+    /// </remarks>
+    public byte Precision { get; set; } = 19;
+
+    /// <remarks>
+    /// Default value is 2.
+    /// </remarks>
+    public byte Scale { get; set; } = 2;
 }

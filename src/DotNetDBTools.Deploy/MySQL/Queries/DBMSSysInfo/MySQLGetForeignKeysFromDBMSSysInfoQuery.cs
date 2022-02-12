@@ -3,11 +3,11 @@ using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo;
 using DotNetDBTools.Models.Core;
 
-namespace DotNetDBTools.Deploy.MySQL.Queries.DBMSSysInfo
+namespace DotNetDBTools.Deploy.MySQL.Queries.DBMSSysInfo;
+
+internal class MySQLGetForeignKeysFromDBMSSysInfoQuery : GetForeignKeysFromDBMSSysInfoQuery
 {
-    internal class MySQLGetForeignKeysFromDBMSSysInfoQuery : GetForeignKeysFromDBMSSysInfoQuery
-    {
-        public override string Sql =>
+    public override string Sql =>
 $@"SELECT
     tc.TABLE_NAME AS {nameof(ForeignKeyRecord.ThisTableName)},
     tc.CONSTRAINT_NAME AS {nameof(ForeignKeyRecord.ForeignKeyName)},
@@ -31,21 +31,20 @@ WHERE tc.CONSTRAINT_SCHEMA = (select DATABASE())
     AND tc.CONSTRAINT_TYPE = 'FOREIGN KEY'
     AND tc.TABLE_NAME != '{DNDBTSysTables.DNDBTDbObjects}';";
 
-        public override RecordMapper Mapper => new MySQLRecordMapper();
+    public override RecordMapper Mapper => new MySQLRecordMapper();
 
-        public class MySQLRecordMapper : RecordMapper
+    public class MySQLRecordMapper : RecordMapper
+    {
+        public override ForeignKey MapExceptColumnsToForeignKeyModel(ForeignKeyRecord fkr)
         {
-            public override ForeignKey MapExceptColumnsToForeignKeyModel(ForeignKeyRecord fkr)
+            return new ForeignKey()
             {
-                return new ForeignKey()
-                {
-                    ID = Guid.NewGuid(),
-                    Name = fkr.ForeignKeyName,
-                    ReferencedTableName = fkr.ReferencedTableName,
-                    OnUpdate = fkr.OnUpdate,
-                    OnDelete = fkr.OnDelete,
-                };
-            }
+                ID = Guid.NewGuid(),
+                Name = fkr.ForeignKeyName,
+                ReferencedTableName = fkr.ReferencedTableName,
+                OnUpdate = fkr.OnUpdate,
+                OnDelete = fkr.OnDelete,
+            };
         }
     }
 }

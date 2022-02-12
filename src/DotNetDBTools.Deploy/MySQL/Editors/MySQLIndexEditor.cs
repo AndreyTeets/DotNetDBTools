@@ -3,15 +3,14 @@ using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.MySQL.Queries.DDL;
 using DotNetDBTools.Deploy.MySQL.Queries.DNDBTSysInfo;
 
-namespace DotNetDBTools.Deploy.MySQL.Editors
+namespace DotNetDBTools.Deploy.MySQL.Editors;
+
+internal class MySQLIndexEditor : IndexEditor<
+    MySQLInsertDNDBTSysInfoQuery,
+    MySQLDeleteDNDBTSysInfoQuery,
+    MySQLCreateIndexQuery,
+    MySQLDropIndexQuery>
 {
-    internal class MySQLIndexEditor : IndexEditor<
-        MySQLInsertDNDBTSysInfoQuery,
-        MySQLDeleteDNDBTSysInfoQuery,
-        MySQLCreateIndexQuery,
-        MySQLDropIndexQuery>
-    {
-        public MySQLIndexEditor(IQueryExecutor queryExecutor)
-            : base(queryExecutor) { }
-    }
+    public MySQLIndexEditor(IQueryExecutor queryExecutor)
+        : base(queryExecutor) { }
 }

@@ -3,17 +3,16 @@ using DotNetDBTools.Deploy.Core.Editors;
 using DotNetDBTools.Deploy.MSSQL.Queries.DDL;
 using DotNetDBTools.Deploy.MSSQL.Queries.DNDBTSysInfo;
 
-namespace DotNetDBTools.Deploy.MSSQL.Editors
+namespace DotNetDBTools.Deploy.MSSQL.Editors;
+
+internal class MSSQLTableEditor : TableEditor<
+    MSSQLInsertDNDBTSysInfoQuery,
+    MSSQLDeleteDNDBTSysInfoQuery,
+    MSSQLUpdateDNDBTSysInfoQuery,
+    MSSQLCreateTableQuery,
+    MSSQLDropTableQuery,
+    MSSQLAlterTableQuery>
 {
-    internal class MSSQLTableEditor : TableEditor<
-        MSSQLInsertDNDBTSysInfoQuery,
-        MSSQLDeleteDNDBTSysInfoQuery,
-        MSSQLUpdateDNDBTSysInfoQuery,
-        MSSQLCreateTableQuery,
-        MSSQLDropTableQuery,
-        MSSQLAlterTableQuery>
-    {
-        public MSSQLTableEditor(IQueryExecutor queryExecutor)
-            : base(queryExecutor) { }
-    }
+    public MSSQLTableEditor(IQueryExecutor queryExecutor)
+        : base(queryExecutor) { }
 }

@@ -1,10 +1,9 @@
 ﻿using DotNetDBTools.Models.Core;
 
-namespace DotNetDBTools.Deploy.Core
+namespace DotNetDBTools.Deploy.Core;
+
+internal interface IDbModelFromDbSysInfoBuilder
 {
-    internal interface IDbModelFromDbSysInfoBuilder
-    {
-        public Database GetDatabaseModelFromDNDBTSysInfo();
-        public Database GenerateDatabaseModelFromDBMSSysInfo();
-    }
+    public Database GetDatabaseModelFromDNDBTSysInfo();
+    public Database GenerateDatabaseModelFromDBMSSysInfo();
 }

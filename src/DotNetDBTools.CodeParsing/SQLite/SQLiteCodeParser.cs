@@ -3,15 +3,14 @@ using DotNetDBTools.CodeParsing.Core;
 using DotNetDBTools.CodeParsing.Core.Models;
 using DotNetDBTools.CodeParsing.Generated;
 
-namespace DotNetDBTools.CodeParsing.SQLite
+namespace DotNetDBTools.CodeParsing.SQLite;
+
+public class SQLiteCodeParser : CodeParser<SQLiteParser, SQLiteLexer>
 {
-    public class SQLiteCodeParser : CodeParser<SQLiteParser, SQLiteLexer>
+    public ObjectInfo GetModelFromCreateStatement(string input)
     {
-        public ObjectInfo GetModelFromCreateStatement(string input)
-        {
-            IParseTree parseTree = Parse(input, x => x.sql_stmt());
-            SQLiteGetModelFromCreateStatementVisitor visitor = new();
-            return visitor.Visit(parseTree);
-        }
+        IParseTree parseTree = Parse(input, x => x.sql_stmt());
+        SQLiteGetModelFromCreateStatementVisitor visitor = new();
+        return visitor.Visit(parseTree);
     }
 }

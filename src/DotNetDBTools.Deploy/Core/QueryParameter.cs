@@ -1,18 +1,17 @@
 ﻿using System.Data;
 
-namespace DotNetDBTools.Deploy.Core
-{
-    internal class QueryParameter
-    {
-        public string Name { get; private set; }
-        public object Value { get; private set; }
-        public DbType Type { get; private set; }
+namespace DotNetDBTools.Deploy.Core;
 
-        public QueryParameter(string name, object value, DbType type)
-        {
-            Name = name;
-            Value = value;
-            Type = type;
-        }
+internal class QueryParameter
+{
+    public string Name { get; private set; }
+    public object Value { get; private set; }
+    public DbType Type { get; private set; }
+
+    public QueryParameter(string name, object value, DbType type)
+    {
+        Name = name;
+        Value = value;
+        Type = type;
     }
 }

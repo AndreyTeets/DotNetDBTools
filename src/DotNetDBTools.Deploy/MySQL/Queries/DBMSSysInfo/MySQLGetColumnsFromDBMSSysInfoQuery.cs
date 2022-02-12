@@ -6,11 +6,11 @@ using DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.MySQL;
 
-namespace DotNetDBTools.Deploy.MySQL.Queries.DBMSSysInfo
+namespace DotNetDBTools.Deploy.MySQL.Queries.DBMSSysInfo;
+
+internal class MySQLGetColumnsFromDBMSSysInfoQuery : GetColumnsFromDBMSSysInfoQuery
 {
-    internal class MySQLGetColumnsFromDBMSSysInfoQuery : GetColumnsFromDBMSSysInfoQuery
-    {
-        public override string Sql =>
+    public override string Sql =>
 $@"SELECT
     c.TABLE_NAME AS {nameof(MySQLColumnRecord.TableName)},
     c.COLUMN_NAME AS {nameof(MySQLColumnRecord.ColumnName)},
@@ -28,96 +28,95 @@ WHERE t.TABLE_SCHEMA = (select DATABASE())
     AND t.TABLE_TYPE = 'BASE TABLE'
     AND t.TABLE_NAME != '{DNDBTSysTables.DNDBTDbObjects}';";
 
-        public override RecordsLoader Loader => new MySQLRecordsLoader();
-        public override RecordMapper Mapper => new MySQLRecordMapper();
+    public override RecordsLoader Loader => new MySQLRecordsLoader();
+    public override RecordMapper Mapper => new MySQLRecordMapper();
 
-        public class MySQLColumnRecord : ColumnRecord
+    public class MySQLColumnRecord : ColumnRecord
+    {
+        public string FullDataType { get; set; }
+        public bool Identity { get; set; }
+        public bool DefaultIsFunction { get; set; }
+    }
+
+    public class MySQLRecordsLoader : RecordsLoader
+    {
+        public override IEnumerable<ColumnRecord> GetRecords(IQueryExecutor queryExecutor, GetColumnsFromDBMSSysInfoQuery query) =>
+            queryExecutor.Query<MySQLColumnRecord>(query);
+    }
+
+    public class MySQLRecordMapper : RecordMapper
+    {
+        public override Column MapToColumnModel(ColumnRecord builderColumnRecord)
         {
-            public string FullDataType { get; set; }
-            public bool Identity { get; set; }
-            public bool DefaultIsFunction { get; set; }
+            MySQLColumnRecord columnRecord = (MySQLColumnRecord)builderColumnRecord;
+            DataType dataType = ParseDataType(columnRecord);
+            return new Column()
+            {
+                ID = Guid.NewGuid(),
+                Name = columnRecord.ColumnName,
+                DataType = dataType,
+                Nullable = columnRecord.Nullable,
+                Identity = columnRecord.Identity,
+                Default = ParseDefault(dataType, columnRecord),
+            };
         }
 
-        public class MySQLRecordsLoader : RecordsLoader
+        private static DataType ParseDataType(MySQLColumnRecord columnRecord)
         {
-            public override IEnumerable<ColumnRecord> GetRecords(IQueryExecutor queryExecutor, GetColumnsFromDBMSSysInfoQuery query) =>
-                queryExecutor.Query<MySQLColumnRecord>(query);
+            string dataType = columnRecord.DataType.ToUpper();
+            string fullDataType = columnRecord.FullDataType.ToUpper();
+            DataType dataTypeModel = MySQLQueriesHelper.CreateDataTypeModel(dataType, fullDataType);
+            return dataTypeModel;
         }
 
-        public class MySQLRecordMapper : RecordMapper
+        private static object ParseDefault(DataType dataType, MySQLColumnRecord columnRecord)
         {
-            public override Column MapToColumnModel(ColumnRecord builderColumnRecord)
+            string value = columnRecord.Default;
+            if (value is null)
+                return null;
+
+            if (IsFunction(value))
+                return new CodePiece() { Code = value };
+
+            string baseDataType = dataType.Name.Split('(')[0];
+            switch (baseDataType)
             {
-                MySQLColumnRecord columnRecord = (MySQLColumnRecord)builderColumnRecord;
-                DataType dataType = ParseDataType(columnRecord);
-                return new Column()
-                {
-                    ID = Guid.NewGuid(),
-                    Name = columnRecord.ColumnName,
-                    DataType = dataType,
-                    Nullable = columnRecord.Nullable,
-                    Identity = columnRecord.Identity,
-                    Default = ParseDefault(dataType, columnRecord),
-                };
+                case MySQLDataTypeNames.TINYINT:
+                case MySQLDataTypeNames.SMALLINT:
+                case MySQLDataTypeNames.MEDIUMINT:
+                case MySQLDataTypeNames.INT:
+                case MySQLDataTypeNames.BIGINT:
+                    return long.Parse(value);
+                case MySQLDataTypeNames.DECIMAL:
+                    return decimal.Parse(value, CultureInfo.InvariantCulture);
+                case MySQLDataTypeNames.CHAR:
+                case MySQLDataTypeNames.VARCHAR:
+                case MySQLDataTypeNames.TINYTEXT:
+                case MySQLDataTypeNames.TEXT:
+                case MySQLDataTypeNames.MEDIUMTEXT:
+                case MySQLDataTypeNames.LONGTEXT:
+                    return TrimOuterQuotesIfExist(value.Replace("_utf8mb4", ""));
+                case MySQLDataTypeNames.BINARY:
+                case MySQLDataTypeNames.VARBINARY:
+                case MySQLDataTypeNames.TINYBLOB:
+                case MySQLDataTypeNames.BLOB:
+                case MySQLDataTypeNames.MEDIUMBLOB:
+                case MySQLDataTypeNames.LONGBLOB:
+                    return ToByteArray(value);
+                default:
+                    throw new InvalidOperationException($"Invalid default value [{value}] for data type [{dataType.Name}]");
             }
 
-            private static DataType ParseDataType(MySQLColumnRecord columnRecord)
+            bool IsFunction(string val) => val.Contains("(") && val.Contains(")") && columnRecord.DefaultIsFunction;
+            static string TrimOuterQuotesIfExist(string val) => val.Contains(@"\'") ? val.Substring(2, val.Length - 4) : val;
+            static byte[] ToByteArray(string val)
             {
-                string dataType = columnRecord.DataType.ToUpper();
-                string fullDataType = columnRecord.FullDataType.ToUpper();
-                DataType dataTypeModel = MySQLQueriesHelper.CreateDataTypeModel(dataType, fullDataType);
-                return dataTypeModel;
-            }
-
-            private static object ParseDefault(DataType dataType, MySQLColumnRecord columnRecord)
-            {
-                string value = columnRecord.Default;
-                if (value is null)
-                    return null;
-
-                if (IsFunction(value))
-                    return new CodePiece() { Code = value };
-
-                string baseDataType = dataType.Name.Split('(')[0];
-                switch (baseDataType)
-                {
-                    case MySQLDataTypeNames.TINYINT:
-                    case MySQLDataTypeNames.SMALLINT:
-                    case MySQLDataTypeNames.MEDIUMINT:
-                    case MySQLDataTypeNames.INT:
-                    case MySQLDataTypeNames.BIGINT:
-                        return long.Parse(value);
-                    case MySQLDataTypeNames.DECIMAL:
-                        return decimal.Parse(value, CultureInfo.InvariantCulture);
-                    case MySQLDataTypeNames.CHAR:
-                    case MySQLDataTypeNames.VARCHAR:
-                    case MySQLDataTypeNames.TINYTEXT:
-                    case MySQLDataTypeNames.TEXT:
-                    case MySQLDataTypeNames.MEDIUMTEXT:
-                    case MySQLDataTypeNames.LONGTEXT:
-                        return TrimOuterQuotesIfExist(value.Replace("_utf8mb4", ""));
-                    case MySQLDataTypeNames.BINARY:
-                    case MySQLDataTypeNames.VARBINARY:
-                    case MySQLDataTypeNames.TINYBLOB:
-                    case MySQLDataTypeNames.BLOB:
-                    case MySQLDataTypeNames.MEDIUMBLOB:
-                    case MySQLDataTypeNames.LONGBLOB:
-                        return ToByteArray(value);
-                    default:
-                        throw new InvalidOperationException($"Invalid default value [{value}] for data type [{dataType.Name}]");
-                }
-
-                bool IsFunction(string val) => val.Contains("(") && val.Contains(")") && columnRecord.DefaultIsFunction;
-                static string TrimOuterQuotesIfExist(string val) => val.Contains(@"\'") ? val.Substring(2, val.Length - 4) : val;
-                static byte[] ToByteArray(string val)
-                {
-                    string hex = val.Substring(2, val.Length - 2);
-                    int numChars = hex.Length;
-                    byte[] bytes = new byte[numChars / 2];
-                    for (int i = 0; i < numChars; i += 2)
-                        bytes[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
-                    return bytes;
-                }
+                string hex = val.Substring(2, val.Length - 2);
+                int numChars = hex.Length;
+                byte[] bytes = new byte[numChars / 2];
+                for (int i = 0; i < numChars; i += 2)
+                    bytes[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
+                return bytes;
             }
         }
     }

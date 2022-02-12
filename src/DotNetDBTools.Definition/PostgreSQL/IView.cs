@@ -1,8 +1,7 @@
 ﻿using DotNetDBTools.Definition.Common;
 
-namespace DotNetDBTools.Definition.PostgreSQL
+namespace DotNetDBTools.Definition.PostgreSQL;
+
+public interface IView : ISpecificDbmsView
 {
-    public interface IView : ISpecificDbmsView
-    {
-    }
 }

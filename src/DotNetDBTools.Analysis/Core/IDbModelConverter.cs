@@ -1,9 +1,8 @@
 ﻿using DotNetDBTools.Models.Core;
 
-namespace DotNetDBTools.Analysis.Core
+namespace DotNetDBTools.Analysis.Core;
+
+public interface IDbModelConverter
 {
-    public interface IDbModelConverter
-    {
-        Database FromAgnostic(Database database);
-    }
+    Database FromAgnostic(Database database);
 }

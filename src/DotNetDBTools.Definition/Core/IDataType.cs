@@ -1,6 +1,5 @@
-﻿namespace DotNetDBTools.Definition.Core
+﻿namespace DotNetDBTools.Definition.Core;
+
+public interface IDataType
 {
-    public interface IDataType
-    {
-    }
 }

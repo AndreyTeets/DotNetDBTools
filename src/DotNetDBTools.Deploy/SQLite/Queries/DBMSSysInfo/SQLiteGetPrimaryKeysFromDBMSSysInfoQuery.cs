@@ -3,11 +3,11 @@ using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo;
 using DotNetDBTools.Models.Core;
 
-namespace DotNetDBTools.Deploy.SQLite.Queries.DBMSSysInfo
+namespace DotNetDBTools.Deploy.SQLite.Queries.DBMSSysInfo;
+
+internal class SQLiteGetPrimaryKeysFromDBMSSysInfoQuery : GetPrimaryKeysFromDBMSSysInfoQuery
 {
-    internal class SQLiteGetPrimaryKeysFromDBMSSysInfoQuery : GetPrimaryKeysFromDBMSSysInfoQuery
-    {
-        public override string Sql =>
+    public override string Sql =>
 $@"SELECT
     sm.name AS {nameof(PrimaryKeyRecord.TableName)},
     'PK_' || sm.name AS {nameof(PrimaryKeyRecord.ConstraintName)},
@@ -34,18 +34,17 @@ WHERE sm.type = 'table'
     AND ti.pk = 1
     AND lower(ti.type) = 'integer';";
 
-        public override RecordMapper Mapper => new SQLiteRecordMapper();
+    public override RecordMapper Mapper => new SQLiteRecordMapper();
 
-        public class SQLiteRecordMapper : RecordMapper
+    public class SQLiteRecordMapper : RecordMapper
+    {
+        public override PrimaryKey MapExceptColumnsToPrimaryKeyModel(PrimaryKeyRecord pkr)
         {
-            public override PrimaryKey MapExceptColumnsToPrimaryKeyModel(PrimaryKeyRecord pkr)
+            return new PrimaryKey()
             {
-                return new PrimaryKey()
-                {
-                    ID = Guid.NewGuid(),
-                    Name = pkr.ConstraintName,
-                };
-            }
+                ID = Guid.NewGuid(),
+                Name = pkr.ConstraintName,
+            };
         }
     }
 }

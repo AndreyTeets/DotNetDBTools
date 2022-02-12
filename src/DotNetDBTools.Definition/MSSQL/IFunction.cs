@@ -1,9 +1,8 @@
 ﻿using DotNetDBTools.Definition.Core;
 
-namespace DotNetDBTools.Definition.MSSQL
+namespace DotNetDBTools.Definition.MSSQL;
+
+public interface IFunction : IDbObject
 {
-    public interface IFunction : IDbObject
-    {
-        public string Code { get; }
-    }
+    public string Code { get; }
 }

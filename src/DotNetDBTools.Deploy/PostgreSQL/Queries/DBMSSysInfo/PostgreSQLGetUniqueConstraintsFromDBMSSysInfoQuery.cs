@@ -3,11 +3,11 @@ using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo;
 using DotNetDBTools.Models.Core;
 
-namespace DotNetDBTools.Deploy.PostgreSQL.Queries.DBMSSysInfo
+namespace DotNetDBTools.Deploy.PostgreSQL.Queries.DBMSSysInfo;
+
+internal class PostgreSQLGetUniqueConstraintsFromDBMSSysInfoQuery : GetUniqueConstraintsFromDBMSSysInfoQuery
 {
-    internal class PostgreSQLGetUniqueConstraintsFromDBMSSysInfoQuery : GetUniqueConstraintsFromDBMSSysInfoQuery
-    {
-        public override string Sql =>
+    public override string Sql =>
 $@"SELECT
     t.relname AS ""{nameof(UniqueConstraintRecord.TableName)}"",
     c.conname AS ""{nameof(UniqueConstraintRecord.ConstraintName)}"",
@@ -31,18 +31,17 @@ WHERE t.relkind = 'r'
     AND n.nspname NOT IN ('information_schema', 'pg_catalog')
     AND t.relname != '{DNDBTSysTables.DNDBTDbObjects}';";
 
-        public override RecordMapper Mapper => new PostgreSQLRecordMapper();
+    public override RecordMapper Mapper => new PostgreSQLRecordMapper();
 
-        public class PostgreSQLRecordMapper : RecordMapper
+    public class PostgreSQLRecordMapper : RecordMapper
+    {
+        public override UniqueConstraint MapExceptColumnsToUniqueConstraintModel(UniqueConstraintRecord ucr)
         {
-            public override UniqueConstraint MapExceptColumnsToUniqueConstraintModel(UniqueConstraintRecord ucr)
+            return new UniqueConstraint()
             {
-                return new UniqueConstraint()
-                {
-                    ID = Guid.NewGuid(),
-                    Name = ucr.ConstraintName,
-                };
-            }
+                ID = Guid.NewGuid(),
+                Name = ucr.ConstraintName,
+            };
         }
     }
 }

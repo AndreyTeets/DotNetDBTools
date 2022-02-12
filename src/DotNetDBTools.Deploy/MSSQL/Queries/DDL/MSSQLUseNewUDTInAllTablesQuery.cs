@@ -2,25 +2,25 @@
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Models.MSSQL;
 
-namespace DotNetDBTools.Deploy.MSSQL.Queries.DDL
+namespace DotNetDBTools.Deploy.MSSQL.Queries.DDL;
+
+internal class MSSQLUseNewUDTInAllTablesQuery : IQuery
 {
-    internal class MSSQLUseNewUDTInAllTablesQuery : IQuery
+    public string Sql => _sql;
+    public IEnumerable<QueryParameter> Parameters => _parameters;
+
+    private readonly string _sql;
+    private readonly List<QueryParameter> _parameters;
+
+    public MSSQLUseNewUDTInAllTablesQuery(MSSQLUserDefinedTypeDiff udtDiff)
     {
-        public string Sql => _sql;
-        public IEnumerable<QueryParameter> Parameters => _parameters;
+        _sql = GetSql(udtDiff);
+        _parameters = new List<QueryParameter>();
+    }
 
-        private readonly string _sql;
-        private readonly List<QueryParameter> _parameters;
-
-        public MSSQLUseNewUDTInAllTablesQuery(MSSQLUserDefinedTypeDiff udtDiff)
-        {
-            _sql = GetSql(udtDiff);
-            _parameters = new List<QueryParameter>();
-        }
-
-        private static string GetSql(MSSQLUserDefinedTypeDiff udtDiff)
-        {
-            string query =
+    private static string GetSql(MSSQLUserDefinedTypeDiff udtDiff)
+    {
+        string query =
 $@"DECLARE @SqlText NVARCHAR(MAX) =
 (
     SELECT STUFF ((
@@ -73,7 +73,6 @@ $@"DECLARE @SqlText NVARCHAR(MAX) =
 );
 EXEC (@SqlText);";
 
-            return query;
-        }
+        return query;
     }
 }

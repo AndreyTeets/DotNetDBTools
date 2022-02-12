@@ -3,15 +3,14 @@ using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.MySQL.Queries.DDL;
 using DotNetDBTools.Deploy.MySQL.Queries.DNDBTSysInfo;
 
-namespace DotNetDBTools.Deploy.MySQL.Editors
+namespace DotNetDBTools.Deploy.MySQL.Editors;
+
+internal class MySQLTriggerEditor : TriggerEditor<
+    MySQLInsertDNDBTSysInfoQuery,
+    MySQLDeleteDNDBTSysInfoQuery,
+    MySQLCreateTriggerQuery,
+    MySQLDropTriggerQuery>
 {
-    internal class MySQLTriggerEditor : TriggerEditor<
-        MySQLInsertDNDBTSysInfoQuery,
-        MySQLDeleteDNDBTSysInfoQuery,
-        MySQLCreateTriggerQuery,
-        MySQLDropTriggerQuery>
-    {
-        public MySQLTriggerEditor(IQueryExecutor queryExecutor)
-            : base(queryExecutor) { }
-    }
+    public MySQLTriggerEditor(IQueryExecutor queryExecutor)
+        : base(queryExecutor) { }
 }

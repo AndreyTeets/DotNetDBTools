@@ -3,50 +3,49 @@ using System.Threading.Tasks;
 using DotNetDBTools.IntegrationTests.Utilities;
 using MySqlConnector;
 
-namespace DotNetDBTools.IntegrationTests.MySQL
+namespace DotNetDBTools.IntegrationTests.MySQL;
+
+public class MySQLContainerHelper
 {
-    public class MySQLContainerHelper
+    private const string MySQLImage = "mysql";
+    private const string MySQLImageTag = "8.0.27";
+    private const string MySQLContainerName = "DotNetDBTools_IntegrationTests_MySQL";
+    private const string MySQLServerPassword = "Strong(!)Passw0rd";
+    private const int MySQLServerHostPort = 5006;
+
+    public static string MySQLContainerConnectionString =>
+        new MySqlConnectionStringBuilder()
+        {
+            Server = "localhost",
+            Port = MySQLServerHostPort,
+            UserID = "root",
+            Password = MySQLServerPassword,
+        }.ConnectionString;
+
+    public static async Task InitContainer()
     {
-        private const string MySQLImage = "mysql";
-        private const string MySQLImageTag = "8.0.27";
-        private const string MySQLContainerName = "DotNetDBTools_IntegrationTests_MySQL";
-        private const string MySQLServerPassword = "Strong(!)Passw0rd";
-        private const int MySQLServerHostPort = 5006;
+        await DockerRunner.StopAndRemoveContainerIfExistsAndNotRunningOrOld(MySQLContainerName, oldMinutes: 60);
+        await CreateAndStartMySQLContainerIfNotExists();
+        using MySqlConnection connection = new(MySQLContainerConnectionString);
+        await DbAvailabilityChecker.WaitUntilDatabaseAvailableAsync(connection, timeoutSeconds: 60);
+    }
 
-        public static string MySQLContainerConnectionString =>
-            new MySqlConnectionStringBuilder()
-            {
-                Server = "localhost",
-                Port = MySQLServerHostPort,
-                UserID = "root",
-                Password = MySQLServerPassword,
-            }.ConnectionString;
-
-        public static async Task InitContainer()
+    private static async Task CreateAndStartMySQLContainerIfNotExists()
+    {
+        List<string> envVariables = new()
         {
-            await DockerRunner.StopAndRemoveContainerIfExistsAndNotRunningOrOld(MySQLContainerName, oldMinutes: 60);
-            await CreateAndStartMySQLContainerIfNotExists();
-            using MySqlConnection connection = new(MySQLContainerConnectionString);
-            await DbAvailabilityChecker.WaitUntilDatabaseAvailableAsync(connection, timeoutSeconds: 60);
-        }
+            $"MYSQL_ROOT_PASSWORD={MySQLServerPassword}",
+        };
 
-        private static async Task CreateAndStartMySQLContainerIfNotExists()
+        Dictionary<string, string> portRedirects = new()
         {
-            List<string> envVariables = new()
-            {
-                $"MYSQL_ROOT_PASSWORD={MySQLServerPassword}",
-            };
+            { "3306/tcp", MySQLServerHostPort.ToString() },
+        };
 
-            Dictionary<string, string> portRedirects = new()
-            {
-                { "3306/tcp", MySQLServerHostPort.ToString() },
-            };
-
-            await DockerRunner.CreateAndStartContainerIfNotExists(
-                MySQLContainerName,
-                $"{MySQLImage}:{MySQLImageTag}",
-                envVariables,
-                portRedirects);
-        }
+        await DockerRunner.CreateAndStartContainerIfNotExists(
+            MySQLContainerName,
+            $"{MySQLImage}:{MySQLImageTag}",
+            envVariables,
+            portRedirects);
     }
 }

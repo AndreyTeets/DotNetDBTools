@@ -1,9 +1,8 @@
 ﻿using DotNetDBTools.Definition.Core;
 
-namespace DotNetDBTools.Definition.SQLite
+namespace DotNetDBTools.Definition.SQLite;
+
+public class Column : BaseColumn
 {
-    public class Column : BaseColumn
-    {
-        public Column(string id) : base(id) { }
-    }
+    public Column(string id) : base(id) { }
 }

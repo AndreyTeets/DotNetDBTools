@@ -4,11 +4,11 @@ using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo;
 using DotNetDBTools.Models.Core;
 
-namespace DotNetDBTools.Deploy.PostgreSQL.Queries.DBMSSysInfo
+namespace DotNetDBTools.Deploy.PostgreSQL.Queries.DBMSSysInfo;
+
+internal class PostgreSQLGetColumnsFromDBMSSysInfoQuery : GetColumnsFromDBMSSysInfoQuery
 {
-    internal class PostgreSQLGetColumnsFromDBMSSysInfoQuery : GetColumnsFromDBMSSysInfoQuery
-    {
-        public override string Sql =>
+    public override string Sql =>
 $@"SELECT
     c.relname AS ""{nameof(PostgreSQLColumnRecord.TableName)}"",
     a.attname AS ""{nameof(PostgreSQLColumnRecord.ColumnName)}"",
@@ -33,41 +33,40 @@ WHERE c.relkind = 'r'
     AND n.nspname NOT IN ('information_schema', 'pg_catalog')
     AND c.relname != '{DNDBTSysTables.DNDBTDbObjects}';";
 
-        public override RecordsLoader Loader => new PostgreSQLRecordsLoader();
-        public override RecordMapper Mapper => new PostgreSQLRecordMapper();
+    public override RecordsLoader Loader => new PostgreSQLRecordsLoader();
+    public override RecordMapper Mapper => new PostgreSQLRecordMapper();
 
-        public class PostgreSQLColumnRecord : ColumnRecord
-        {
-            public bool IsBaseDataType { get; set; }
-            public bool Identity { get; set; }
-            public string Length { get; set; }
-        }
+    public class PostgreSQLColumnRecord : ColumnRecord
+    {
+        public bool IsBaseDataType { get; set; }
+        public bool Identity { get; set; }
+        public string Length { get; set; }
+    }
 
-        public class PostgreSQLRecordsLoader : RecordsLoader
-        {
-            public override IEnumerable<ColumnRecord> GetRecords(IQueryExecutor queryExecutor, GetColumnsFromDBMSSysInfoQuery query) =>
-                queryExecutor.Query<PostgreSQLColumnRecord>(query);
-        }
+    public class PostgreSQLRecordsLoader : RecordsLoader
+    {
+        public override IEnumerable<ColumnRecord> GetRecords(IQueryExecutor queryExecutor, GetColumnsFromDBMSSysInfoQuery query) =>
+            queryExecutor.Query<PostgreSQLColumnRecord>(query);
+    }
 
-        public class PostgreSQLRecordMapper : RecordMapper
+    public class PostgreSQLRecordMapper : RecordMapper
+    {
+        public override Column MapToColumnModel(ColumnRecord builderColumnRecord)
         {
-            public override Column MapToColumnModel(ColumnRecord builderColumnRecord)
+            PostgreSQLColumnRecord columnRecord = (PostgreSQLColumnRecord)builderColumnRecord;
+            DataType dataType = PostgreSQLQueriesHelper.CreateDataTypeModel(
+                columnRecord.DataType,
+                columnRecord.Length,
+                columnRecord.IsBaseDataType);
+            return new Column()
             {
-                PostgreSQLColumnRecord columnRecord = (PostgreSQLColumnRecord)builderColumnRecord;
-                DataType dataType = PostgreSQLQueriesHelper.CreateDataTypeModel(
-                    columnRecord.DataType,
-                    columnRecord.Length,
-                    columnRecord.IsBaseDataType);
-                return new Column()
-                {
-                    ID = Guid.NewGuid(),
-                    Name = columnRecord.ColumnName,
-                    DataType = dataType,
-                    Nullable = columnRecord.Nullable,
-                    Identity = columnRecord.Identity,
-                    Default = PostgreSQLQueriesHelper.ParseDefault(dataType, columnRecord.Default),
-                };
-            }
+                ID = Guid.NewGuid(),
+                Name = columnRecord.ColumnName,
+                DataType = dataType,
+                Nullable = columnRecord.Nullable,
+                Identity = columnRecord.Identity,
+                Default = PostgreSQLQueriesHelper.ParseDefault(dataType, columnRecord.Default),
+            };
         }
     }
 }

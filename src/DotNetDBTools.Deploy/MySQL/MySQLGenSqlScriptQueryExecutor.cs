@@ -4,45 +4,44 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using DotNetDBTools.Deploy.Core;
 
-namespace DotNetDBTools.Deploy.MySQL
+namespace DotNetDBTools.Deploy.MySQL;
+
+internal class MySQLGenSqlScriptQueryExecutor : GenSqlScriptQueryExecutor
 {
-    internal class MySQLGenSqlScriptQueryExecutor : GenSqlScriptQueryExecutor
+    protected override string CreateQueryText(IQuery query)
     {
-        protected override string CreateQueryText(IQuery query)
-        {
-            string queryWithParametersReplacedWithValues = ReplaceParameters(query);
-            return queryWithParametersReplacedWithValues;
-        }
+        string queryWithParametersReplacedWithValues = ReplaceParameters(query);
+        return queryWithParametersReplacedWithValues;
+    }
 
-        protected override string CreateBeginTransactionText()
-        {
-            return "";
-        }
+    protected override string CreateBeginTransactionText()
+    {
+        return "";
+    }
 
-        protected override string CreateCommitTransactionText()
-        {
-            return "";
-        }
+    protected override string CreateCommitTransactionText()
+    {
+        return "";
+    }
 
-        private static string ReplaceParameters(IQuery query)
+    private static string ReplaceParameters(IQuery query)
+    {
+        string pattern = @"(@.+?)([\s|,|;|$])";
+        string result = Regex.Replace(query.Sql, pattern, match =>
         {
-            string pattern = @"(@.+?)([\s|,|;|$])";
-            string result = Regex.Replace(query.Sql, pattern, match =>
-            {
-                return Quote(query.Parameters.Single(x => x.Name == match.Groups[1].Value)) + match.Groups[2].Value;
-            });
-            return result;
-        }
+            return Quote(query.Parameters.Single(x => x.Name == match.Groups[1].Value)) + match.Groups[2].Value;
+        });
+        return result;
+    }
 
-        private static string Quote(QueryParameter queryParameter)
+    private static string Quote(QueryParameter queryParameter)
+    {
+        if (queryParameter.Value is null)
+            return "NULL";
+        return queryParameter.Type switch
         {
-            if (queryParameter.Value is null)
-                return "NULL";
-            return queryParameter.Type switch
-            {
-                DbType.String => $"'{queryParameter.Value}'",
-                _ => throw new InvalidOperationException($"Invalid query parameter type: '{queryParameter.Type}'")
-            };
-        }
+            DbType.String => $"'{queryParameter.Value}'",
+            _ => throw new InvalidOperationException($"Invalid query parameter type: '{queryParameter.Type}'")
+        };
     }
 }

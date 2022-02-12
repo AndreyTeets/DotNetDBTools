@@ -1,9 +1,8 @@
 ﻿using DotNetDBTools.Definition.Core;
 
-namespace DotNetDBTools.Definition.Common
+namespace DotNetDBTools.Definition.Common;
+
+public interface ISpecificDbmsView : IBaseView
 {
-    public interface ISpecificDbmsView : IBaseView
-    {
-        public string Code { get; }
-    }
+    public string Code { get; }
 }

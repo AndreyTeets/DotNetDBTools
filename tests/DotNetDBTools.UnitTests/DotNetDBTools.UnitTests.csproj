@@ -20,10 +20,10 @@
   <Import Project="..\..\src\DotNetDBTools.RoslynUtilities\DotNetDBTools.RoslynUtilities.projitems" Label="Shared" />
 
   <ItemGroup>
-    <Content Include="TestData\**" />
-    <Content Update="TestData\**">
+    <None Include="TestData\**" />
+    <None Update="TestData\**">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    </None>
   </ItemGroup>
 
 </Project>

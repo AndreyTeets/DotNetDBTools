@@ -1,8 +1,7 @@
-﻿namespace DotNetDBTools.Models.PostgreSQL.UserDefinedTypes
+﻿namespace DotNetDBTools.Models.PostgreSQL.UserDefinedTypes;
+
+public class PostgreSQLCompositeTypeDiff
 {
-    public class PostgreSQLCompositeTypeDiff
-    {
-        public PostgreSQLCompositeType NewCompositeType { get; set; }
-        public PostgreSQLCompositeType OldCompositeType { get; set; }
-    }
+    public PostgreSQLCompositeType NewCompositeType { get; set; }
+    public PostgreSQLCompositeType OldCompositeType { get; set; }
 }

@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Queries.DNDBTSysInfo;
 
-namespace DotNetDBTools.Deploy.MSSQL.Queries.DNDBTSysInfo
+namespace DotNetDBTools.Deploy.MSSQL.Queries.DNDBTSysInfo;
+
+internal class MSSQLGetAllDbObjectsFromDNDBTSysInfoQuery : GetAllDbObjectsFromDNDBTSysInfoQuery
 {
-    internal class MSSQLGetAllDbObjectsFromDNDBTSysInfoQuery : GetAllDbObjectsFromDNDBTSysInfoQuery
-    {
-        public override string Sql =>
+    public override string Sql =>
 $@"SELECT
     {DNDBTSysTables.DNDBTDbObjects.ID},
     {DNDBTSysTables.DNDBTDbObjects.ParentID},
@@ -16,20 +16,19 @@ $@"SELECT
     {DNDBTSysTables.DNDBTDbObjects.Code}
 FROM {DNDBTSysTables.DNDBTDbObjects};";
 
-        public override RecordsLoader Loader => new MSSQLRecordsLoader();
+    public override RecordsLoader Loader => new MSSQLRecordsLoader();
 
-        public class MSSQLDNDBTDbObjectRecord : DNDBTDbObjectRecord
-        {
-            public Guid ID { get; set; }
-            public Guid? ParentID { get; set; }
-            public override Guid GetID() => ID;
-            public override Guid? GetParentID() => ParentID;
-        }
+    public class MSSQLDNDBTDbObjectRecord : DNDBTDbObjectRecord
+    {
+        public Guid ID { get; set; }
+        public Guid? ParentID { get; set; }
+        public override Guid GetID() => ID;
+        public override Guid? GetParentID() => ParentID;
+    }
 
-        public class MSSQLRecordsLoader : RecordsLoader
-        {
-            public override IEnumerable<DNDBTDbObjectRecord> GetRecords(IQueryExecutor queryExecutor, GetAllDbObjectsFromDNDBTSysInfoQuery query) =>
-                queryExecutor.Query<MSSQLDNDBTDbObjectRecord>(query);
-        }
+    public class MSSQLRecordsLoader : RecordsLoader
+    {
+        public override IEnumerable<DNDBTDbObjectRecord> GetRecords(IQueryExecutor queryExecutor, GetAllDbObjectsFromDNDBTSysInfoQuery query) =>
+            queryExecutor.Query<MSSQLDNDBTDbObjectRecord>(query);
     }
 }

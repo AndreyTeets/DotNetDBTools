@@ -1,10 +1,9 @@
-﻿namespace DotNetDBTools.DefinitionParsing.Core
+﻿namespace DotNetDBTools.DefinitionParsing.Core;
+
+public static class StringExtensions
 {
-    public static class StringExtensions
+    public static string NormalizeLineEndings(this string value)
     {
-        public static string NormalizeLineEndings(this string value)
-        {
-            return value.Replace("\r\n", "\n").Trim();
-        }
+        return value.Replace("\r\n", "\n").Trim();
     }
 }

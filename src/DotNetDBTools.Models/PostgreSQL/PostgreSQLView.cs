@@ -1,8 +1,7 @@
 ﻿using DotNetDBTools.Models.Core;
 
-namespace DotNetDBTools.Models.PostgreSQL
+namespace DotNetDBTools.Models.PostgreSQL;
+
+public class PostgreSQLView : View
 {
-    public class PostgreSQLView : View
-    {
-    }
 }

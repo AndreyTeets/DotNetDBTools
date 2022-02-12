@@ -9,41 +9,40 @@ using DotNetDBTools.DefinitionParsing.PostgreSQL;
 using DotNetDBTools.DefinitionParsing.SQLite;
 using DotNetDBTools.Models.Core;
 
-namespace DotNetDBTools.DefinitionParsing
+namespace DotNetDBTools.DefinitionParsing;
+
+public static class DbDefinitionParser
 {
-    public static class DbDefinitionParser
+    public static Database CreateDatabaseModel(string dbAssemblyPath)
     {
-        public static Database CreateDatabaseModel(string dbAssemblyPath)
-        {
-            Assembly dbAssembly = AssemblyLoader.LoadDbAssemblyFromDll(dbAssemblyPath);
-            return CreateDatabaseModel(dbAssembly);
-        }
+        Assembly dbAssembly = AssemblyLoader.LoadDbAssemblyFromDll(dbAssemblyPath);
+        return CreateDatabaseModel(dbAssembly);
+    }
 
-        public static Database CreateDatabaseModel(Assembly dbAssembly)
+    public static Database CreateDatabaseModel(Assembly dbAssembly)
+    {
+        (DefinitionKind defKind, DatabaseKind dbKind) = DbAssemblyInfoHelper.GetDbKind(dbAssembly);
+        return defKind switch
         {
-            (DefinitionKind defKind, DatabaseKind dbKind) = DbAssemblyInfoHelper.GetDbKind(dbAssembly);
-            return defKind switch
-            {
-                DefinitionKind.CSharp => BuildDatabaseModelFromCSharpDefinition(dbAssembly, dbKind),
-                DefinitionKind.MSSQL => throw new NotImplementedException(),
-                DefinitionKind.MySQL => throw new NotImplementedException(),
-                DefinitionKind.PostgreSQL => throw new NotImplementedException(),
-                DefinitionKind.SQLite => new SQLiteDbModelFromSqlDefinitionBuilder().BuildDatabaseModel(dbAssembly),
-                _ => throw new InvalidOperationException($"Invalid defKind: {defKind}"),
-            };
-        }
+            DefinitionKind.CSharp => BuildDatabaseModelFromCSharpDefinition(dbAssembly, dbKind),
+            DefinitionKind.MSSQL => throw new NotImplementedException(),
+            DefinitionKind.MySQL => throw new NotImplementedException(),
+            DefinitionKind.PostgreSQL => throw new NotImplementedException(),
+            DefinitionKind.SQLite => new SQLiteDbModelFromSqlDefinitionBuilder().BuildDatabaseModel(dbAssembly),
+            _ => throw new InvalidOperationException($"Invalid defKind: {defKind}"),
+        };
+    }
 
-        private static Database BuildDatabaseModelFromCSharpDefinition(Assembly dbAssembly, DatabaseKind dbKind)
+    private static Database BuildDatabaseModelFromCSharpDefinition(Assembly dbAssembly, DatabaseKind dbKind)
+    {
+        return dbKind switch
         {
-            return dbKind switch
-            {
-                DatabaseKind.Agnostic => new AgnosticDatabaseModelBuilder().BuildDatabaseModel(dbAssembly),
-                DatabaseKind.MSSQL => new MSSQLDbModelFromCSharpDefinitionBuilder().BuildDatabaseModel(dbAssembly),
-                DatabaseKind.MySQL => new MySQLDbModelFromCSharpDefinitionBuilder().BuildDatabaseModel(dbAssembly),
-                DatabaseKind.PostgreSQL => new PostgreSQLDbModelFromCSharpDefinitionBuilder().BuildDatabaseModel(dbAssembly),
-                DatabaseKind.SQLite => new SQLiteDbModelFromCSharpDefinitionBuilder().BuildDatabaseModel(dbAssembly),
-                _ => throw new InvalidOperationException($"Invalid dbKind: {dbKind}"),
-            };
-        }
+            DatabaseKind.Agnostic => new AgnosticDatabaseModelBuilder().BuildDatabaseModel(dbAssembly),
+            DatabaseKind.MSSQL => new MSSQLDbModelFromCSharpDefinitionBuilder().BuildDatabaseModel(dbAssembly),
+            DatabaseKind.MySQL => new MySQLDbModelFromCSharpDefinitionBuilder().BuildDatabaseModel(dbAssembly),
+            DatabaseKind.PostgreSQL => new PostgreSQLDbModelFromCSharpDefinitionBuilder().BuildDatabaseModel(dbAssembly),
+            DatabaseKind.SQLite => new SQLiteDbModelFromCSharpDefinitionBuilder().BuildDatabaseModel(dbAssembly),
+            _ => throw new InvalidOperationException($"Invalid dbKind: {dbKind}"),
+        };
     }
 }

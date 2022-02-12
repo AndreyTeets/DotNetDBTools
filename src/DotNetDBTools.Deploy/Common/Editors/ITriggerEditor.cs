@@ -1,10 +1,9 @@
 ﻿using DotNetDBTools.Models.Core;
 
-namespace DotNetDBTools.Deploy.Common.Editors
+namespace DotNetDBTools.Deploy.Common.Editors;
+
+internal interface ITriggerEditor
 {
-    internal interface ITriggerEditor
-    {
-        public void CreateTriggers(DatabaseDiff dbDiff);
-        public void DropTriggers(DatabaseDiff dbDiff);
-    }
+    public void CreateTriggers(DatabaseDiff dbDiff);
+    public void DropTriggers(DatabaseDiff dbDiff);
 }

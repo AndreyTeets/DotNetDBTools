@@ -1,11 +1,10 @@
-﻿namespace DotNetDBTools.Models.Core
+﻿namespace DotNetDBTools.Models.Core;
+
+public enum DatabaseKind
 {
-    public enum DatabaseKind
-    {
-        Agnostic,
-        MSSQL,
-        MySQL,
-        PostgreSQL,
-        SQLite,
-    }
+    Agnostic,
+    MSSQL,
+    MySQL,
+    PostgreSQL,
+    SQLite,
 }

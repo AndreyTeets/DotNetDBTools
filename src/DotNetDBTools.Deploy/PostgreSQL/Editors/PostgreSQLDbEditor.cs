@@ -6,114 +6,113 @@ using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.PostgreSQL;
 using DotNetDBTools.Models.PostgreSQL.UserDefinedTypes;
 
-namespace DotNetDBTools.Deploy.PostgreSQL.Editors
+namespace DotNetDBTools.Deploy.PostgreSQL.Editors;
+
+internal class PostgreSQLDbEditor : DbEditor<
+    PostgreSQLCheckDNDBTSysTablesExistQuery,
+    PostgreSQLCreateDNDBTSysTablesQuery,
+    PostgreSQLDropDNDBTSysTablesQuery>
 {
-    internal class PostgreSQLDbEditor : DbEditor<
-        PostgreSQLCheckDNDBTSysTablesExistQuery,
-        PostgreSQLCreateDNDBTSysTablesQuery,
-        PostgreSQLDropDNDBTSysTablesQuery>
+    private readonly ITableEditor _tableEditor;
+    private readonly PostgreSQLIsDependencyOfTablesObjectsEditor _isDependencyOfTablesObjectsEditor;
+    private readonly PostgreSQLDependsOnTablesObjectsEditor _dependsOnTablesObjectsEditor;
+
+    public PostgreSQLDbEditor(IQueryExecutor queryExecutor)
+        : base(queryExecutor)
     {
-        private readonly ITableEditor _tableEditor;
-        private readonly PostgreSQLIsDependencyOfTablesObjectsEditor _isDependencyOfTablesObjectsEditor;
-        private readonly PostgreSQLDependsOnTablesObjectsEditor _dependsOnTablesObjectsEditor;
+        _tableEditor = new PostgreSQLTableEditor(queryExecutor);
+        _isDependencyOfTablesObjectsEditor = new PostgreSQLIsDependencyOfTablesObjectsEditor(queryExecutor);
+        _dependsOnTablesObjectsEditor = new PostgreSQLDependsOnTablesObjectsEditor(queryExecutor);
+    }
 
-        public PostgreSQLDbEditor(IQueryExecutor queryExecutor)
-            : base(queryExecutor)
+    public override void PopulateDNDBTSysTables(Database database)
+    {
+        PostgreSQLDatabase db = (PostgreSQLDatabase)database;
+        InsertUserDefinedTypesInfos(db);
+        InsertTablesInfos(db);
+        InsertViewsFunctionsProceduresInfos(db);
+    }
+
+    public override void ApplyDatabaseDiff(DatabaseDiff databaseDiff, DeployOptions options)
+    {
+        PostgreSQLDatabaseDiff dbDiff = (PostgreSQLDatabaseDiff)databaseDiff;
+        QueryExecutor.BeginTransaction();
+        try
         {
-            _tableEditor = new PostgreSQLTableEditor(queryExecutor);
-            _isDependencyOfTablesObjectsEditor = new PostgreSQLIsDependencyOfTablesObjectsEditor(queryExecutor);
-            _dependsOnTablesObjectsEditor = new PostgreSQLDependsOnTablesObjectsEditor(queryExecutor);
+            ApplyDatabaseDiff(dbDiff);
         }
-
-        public override void PopulateDNDBTSysTables(Database database)
+        catch (Exception)
         {
-            PostgreSQLDatabase db = (PostgreSQLDatabase)database;
-            InsertUserDefinedTypesInfos(db);
-            InsertTablesInfos(db);
-            InsertViewsFunctionsProceduresInfos(db);
+            QueryExecutor.RollbackTransaction();
+            throw;
         }
+        QueryExecutor.CommitTransaction();
+    }
 
-        public override void ApplyDatabaseDiff(DatabaseDiff databaseDiff, DeployOptions options)
+    private void ApplyDatabaseDiff(PostgreSQLDatabaseDiff dbDiff)
+    {
+        _dependsOnTablesObjectsEditor.DropObjectsThatDependOnTables(dbDiff);
+
+        _isDependencyOfTablesObjectsEditor.Rename_RemovedOrChanged_ObjectsThatTablesDependOn_ToTemp_InDbAndInDbDiff(dbDiff);
+        _isDependencyOfTablesObjectsEditor.Create_AddedOrChanged_ObjectsThatTablesDependOn(dbDiff);
+
+        _tableEditor.DropTables(dbDiff);
+        _tableEditor.AlterTables(dbDiff);
+        _tableEditor.CreateTables(dbDiff);
+
+        _isDependencyOfTablesObjectsEditor.Drop_RemovedOrChanged_ObjectsThatTablesDependOn(dbDiff);
+
+        _dependsOnTablesObjectsEditor.CreateObjectsThatDependOnTables(dbDiff);
+    }
+
+    private void InsertUserDefinedTypesInfos(PostgreSQLDatabase db)
+    {
+        foreach (PostgreSQLCompositeType type in db.CompositeTypes)
+            QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(type.ID, null, DbObjectType.UserDefinedType, type.Name));
+        foreach (PostgreSQLDomainType type in db.DomainTypes)
         {
-            PostgreSQLDatabaseDiff dbDiff = (PostgreSQLDatabaseDiff)databaseDiff;
-            QueryExecutor.BeginTransaction();
-            try
-            {
-                ApplyDatabaseDiff(dbDiff);
-            }
-            catch (Exception)
-            {
-                QueryExecutor.RollbackTransaction();
-                throw;
-            }
-            QueryExecutor.CommitTransaction();
+            QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(type.ID, null, DbObjectType.UserDefinedType, type.Name, type.GetCode()));
+            foreach (CheckConstraint ck in type.CheckConstraints)
+                QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(ck.ID, type.ID, DbObjectType.CheckConstraint, ck.Name, ck.GetCode()));
         }
+        foreach (PostgreSQLEnumType type in db.EnumTypes)
+            QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(type.ID, null, DbObjectType.UserDefinedType, type.Name));
+        foreach (PostgreSQLRangeType type in db.RangeTypes)
+            QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(type.ID, null, DbObjectType.UserDefinedType, type.Name));
+    }
 
-        private void ApplyDatabaseDiff(PostgreSQLDatabaseDiff dbDiff)
+    private void InsertTablesInfos(PostgreSQLDatabase db)
+    {
+        foreach (PostgreSQLTable table in db.Tables)
         {
-            _dependsOnTablesObjectsEditor.DropObjectsThatDependOnTables(dbDiff);
+            QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(table.ID, null, DbObjectType.Table, table.Name));
+            foreach (Column c in table.Columns)
+                QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(c.ID, table.ID, DbObjectType.Column, c.Name, c.GetCode()));
 
-            _isDependencyOfTablesObjectsEditor.Rename_RemovedOrChanged_ObjectsThatTablesDependOn_ToTemp_InDbAndInDbDiff(dbDiff);
-            _isDependencyOfTablesObjectsEditor.Create_AddedOrChanged_ObjectsThatTablesDependOn(dbDiff);
+            PrimaryKey pk = table.PrimaryKey;
+            if (pk is not null)
+                QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(pk.ID, table.ID, DbObjectType.PrimaryKey, pk.Name));
 
-            _tableEditor.DropTables(dbDiff);
-            _tableEditor.AlterTables(dbDiff);
-            _tableEditor.CreateTables(dbDiff);
-
-            _isDependencyOfTablesObjectsEditor.Drop_RemovedOrChanged_ObjectsThatTablesDependOn(dbDiff);
-
-            _dependsOnTablesObjectsEditor.CreateObjectsThatDependOnTables(dbDiff);
+            foreach (UniqueConstraint uc in table.UniqueConstraints)
+                QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(uc.ID, table.ID, DbObjectType.UniqueConstraint, uc.Name));
+            foreach (ForeignKey fk in table.ForeignKeys)
+                QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(fk.ID, table.ID, DbObjectType.ForeignKey, fk.Name));
+            foreach (CheckConstraint ck in table.CheckConstraints)
+                QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(ck.ID, table.ID, DbObjectType.CheckConstraint, ck.Name, ck.GetCode()));
+            foreach (Index idx in table.Indexes)
+                QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(idx.ID, table.ID, DbObjectType.Index, idx.Name));
+            foreach (Trigger trg in table.Triggers)
+                QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(trg.ID, table.ID, DbObjectType.Trigger, trg.Name, trg.GetCode()));
         }
+    }
 
-        private void InsertUserDefinedTypesInfos(PostgreSQLDatabase db)
-        {
-            foreach (PostgreSQLCompositeType type in db.CompositeTypes)
-                QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(type.ID, null, DbObjectType.UserDefinedType, type.Name));
-            foreach (PostgreSQLDomainType type in db.DomainTypes)
-            {
-                QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(type.ID, null, DbObjectType.UserDefinedType, type.Name, type.GetCode()));
-                foreach (CheckConstraint ck in type.CheckConstraints)
-                    QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(ck.ID, type.ID, DbObjectType.CheckConstraint, ck.Name, ck.GetCode()));
-            }
-            foreach (PostgreSQLEnumType type in db.EnumTypes)
-                QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(type.ID, null, DbObjectType.UserDefinedType, type.Name));
-            foreach (PostgreSQLRangeType type in db.RangeTypes)
-                QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(type.ID, null, DbObjectType.UserDefinedType, type.Name));
-        }
-
-        private void InsertTablesInfos(PostgreSQLDatabase db)
-        {
-            foreach (PostgreSQLTable table in db.Tables)
-            {
-                QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(table.ID, null, DbObjectType.Table, table.Name));
-                foreach (Column c in table.Columns)
-                    QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(c.ID, table.ID, DbObjectType.Column, c.Name, c.GetCode()));
-
-                PrimaryKey pk = table.PrimaryKey;
-                if (pk is not null)
-                    QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(pk.ID, table.ID, DbObjectType.PrimaryKey, pk.Name));
-
-                foreach (UniqueConstraint uc in table.UniqueConstraints)
-                    QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(uc.ID, table.ID, DbObjectType.UniqueConstraint, uc.Name));
-                foreach (ForeignKey fk in table.ForeignKeys)
-                    QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(fk.ID, table.ID, DbObjectType.ForeignKey, fk.Name));
-                foreach (CheckConstraint ck in table.CheckConstraints)
-                    QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(ck.ID, table.ID, DbObjectType.CheckConstraint, ck.Name, ck.GetCode()));
-                foreach (Index idx in table.Indexes)
-                    QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(idx.ID, table.ID, DbObjectType.Index, idx.Name));
-                foreach (Trigger trg in table.Triggers)
-                    QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(trg.ID, table.ID, DbObjectType.Trigger, trg.Name, trg.GetCode()));
-            }
-        }
-
-        private void InsertViewsFunctionsProceduresInfos(PostgreSQLDatabase db)
-        {
-            foreach (PostgreSQLView view in db.Views)
-                QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(view.ID, null, DbObjectType.View, view.Name, view.GetCode()));
-            foreach (PostgreSQLFunction func in db.Functions)
-                QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(func.ID, null, DbObjectType.Function, func.Name, func.GetCode()));
-            foreach (PostgreSQLProcedure proc in db.Procedures)
-                QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(proc.ID, null, DbObjectType.Procedure, proc.Name, proc.GetCode()));
-        }
+    private void InsertViewsFunctionsProceduresInfos(PostgreSQLDatabase db)
+    {
+        foreach (PostgreSQLView view in db.Views)
+            QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(view.ID, null, DbObjectType.View, view.Name, view.GetCode()));
+        foreach (PostgreSQLFunction func in db.Functions)
+            QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(func.ID, null, DbObjectType.Function, func.Name, func.GetCode()));
+        foreach (PostgreSQLProcedure proc in db.Procedures)
+            QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(proc.ID, null, DbObjectType.Procedure, proc.Name, proc.GetCode()));
     }
 }

@@ -1,11 +1,11 @@
 ﻿using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Queries;
 
-namespace DotNetDBTools.Deploy.SQLite.Queries.DNDBTSysInfo
+namespace DotNetDBTools.Deploy.SQLite.Queries.DNDBTSysInfo;
+
+internal class SQLiteCreateDNDBTSysTablesQuery : SqlTextOnlyQuery
 {
-    internal class SQLiteCreateDNDBTSysTablesQuery : SqlTextOnlyQuery
-    {
-        public override string Sql =>
+    public override string Sql =>
 $@"CREATE TABLE {DNDBTSysTables.DNDBTDbObjects}
 (
     {DNDBTSysTables.DNDBTDbObjects.ID} BLOB PRIMARY KEY,
@@ -14,5 +14,4 @@ $@"CREATE TABLE {DNDBTSysTables.DNDBTDbObjects}
     {DNDBTSysTables.DNDBTDbObjects.Name} TEXT NOT NULL,
     {DNDBTSysTables.DNDBTDbObjects.Code} TEXT NULL
 ) WITHOUT ROWID;";
-    }
 }

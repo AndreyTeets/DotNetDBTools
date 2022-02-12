@@ -5,33 +5,32 @@ using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Editors;
 using DotNetDBTools.Deploy.MSSQL.Editors;
 
-namespace DotNetDBTools.Deploy.MSSQL
+namespace DotNetDBTools.Deploy.MSSQL;
+
+internal class MSSQLFactory : IFactory
 {
-    internal class MSSQLFactory : IFactory
+    public IQueryExecutor CreateQueryExecutor(DbConnection connection)
     {
-        public IQueryExecutor CreateQueryExecutor(DbConnection connection)
-        {
-            return new MSSQLQueryExecutor(connection);
-        }
+        return new MSSQLQueryExecutor(connection);
+    }
 
-        public IGenSqlScriptQueryExecutor CreateGenSqlScriptQueryExecutor()
-        {
-            return new MSSQLGenSqlScriptQueryExecutor();
-        }
+    public IGenSqlScriptQueryExecutor CreateGenSqlScriptQueryExecutor()
+    {
+        return new MSSQLGenSqlScriptQueryExecutor();
+    }
 
-        public IDbModelConverter CreateDbModelConverter()
-        {
-            return new MSSQLDbModelConverter();
-        }
+    public IDbModelConverter CreateDbModelConverter()
+    {
+        return new MSSQLDbModelConverter();
+    }
 
-        public IDbEditor CreateDbEditor(IQueryExecutor queryExecutor)
-        {
-            return new MSSQLDbEditor(queryExecutor);
-        }
+    public IDbEditor CreateDbEditor(IQueryExecutor queryExecutor)
+    {
+        return new MSSQLDbEditor(queryExecutor);
+    }
 
-        public IDbModelFromDbSysInfoBuilder CreateDbModelFromDbSysInfoBuilder(IQueryExecutor queryExecutor)
-        {
-            return new MSSQLDbModelFromDbSysInfoBuilder(queryExecutor);
-        }
+    public IDbModelFromDbSysInfoBuilder CreateDbModelFromDbSysInfoBuilder(IQueryExecutor queryExecutor)
+    {
+        return new MSSQLDbModelFromDbSysInfoBuilder(queryExecutor);
     }
 }

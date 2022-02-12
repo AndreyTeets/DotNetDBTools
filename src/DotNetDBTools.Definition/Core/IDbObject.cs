@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace DotNetDBTools.Definition.Core
+namespace DotNetDBTools.Definition.Core;
+
+public interface IDbObject
 {
-    public interface IDbObject
-    {
-        public Guid ID { get; }
-    }
+    public Guid ID { get; }
 }

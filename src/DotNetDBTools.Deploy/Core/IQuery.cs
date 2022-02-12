@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 
-namespace DotNetDBTools.Deploy.Core
+namespace DotNetDBTools.Deploy.Core;
+
+internal interface IQuery
 {
-    internal interface IQuery
-    {
-        public string Sql { get; }
-        public IEnumerable<QueryParameter> Parameters { get; }
-    }
+    public string Sql { get; }
+    public IEnumerable<QueryParameter> Parameters { get; }
 }

@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Models.MSSQL;
 
-namespace DotNetDBTools.Deploy.MSSQL.Queries.DBMSSysInfo
+namespace DotNetDBTools.Deploy.MSSQL.Queries.DBMSSysInfo;
+
+internal class MSSQLGetTypesFromDBMSSysInfoQuery : IQuery
 {
-    internal class MSSQLGetTypesFromDBMSSysInfoQuery : IQuery
-    {
-        public string Sql =>
+    public string Sql =>
 $@"SELECT
     t.name AS {nameof(UserDefinedTypeRecord.Name)},
     t.is_nullable AS {nameof(UserDefinedTypeRecord.Nullable)},
@@ -21,35 +21,34 @@ INNER JOIN sys.types st
 WHERE t.is_user_defined = 1
     AND t.is_table_type = 0;";
 
-        public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
-        public RecordMapper Mapper => new();
+    public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
+    public RecordMapper Mapper => new();
 
-        public class UserDefinedTypeRecord
-        {
-            public string Name { get; set; }
-            public bool Nullable { get; set; }
-            public string UnderlyingDataTypeName { get; set; }
-            public int UnderlyingDataTypeLength { get; set; }
-            public int UnderlyingDataTypePrecision { get; set; }
-            public int UnderlyingDataTypeScale { get; set; }
-        }
+    public class UserDefinedTypeRecord
+    {
+        public string Name { get; set; }
+        public bool Nullable { get; set; }
+        public string UnderlyingDataTypeName { get; set; }
+        public int UnderlyingDataTypeLength { get; set; }
+        public int UnderlyingDataTypePrecision { get; set; }
+        public int UnderlyingDataTypeScale { get; set; }
+    }
 
-        public class RecordMapper
+    public class RecordMapper
+    {
+        public MSSQLUserDefinedType MapToMSSQLUserDefinedTypeModel(UserDefinedTypeRecord userDefinedTypeRecord)
         {
-            public MSSQLUserDefinedType MapToMSSQLUserDefinedTypeModel(UserDefinedTypeRecord userDefinedTypeRecord)
+            return new MSSQLUserDefinedType()
             {
-                return new MSSQLUserDefinedType()
-                {
-                    ID = Guid.NewGuid(),
-                    Name = userDefinedTypeRecord.Name,
-                    Nullable = userDefinedTypeRecord.Nullable,
-                    UnderlyingDataType = MSSQLQueriesHelper.CreateDataTypeModel(
-                        userDefinedTypeRecord.UnderlyingDataTypeName.ToUpper(),
-                        userDefinedTypeRecord.UnderlyingDataTypeLength,
-                        userDefinedTypeRecord.UnderlyingDataTypePrecision,
-                        userDefinedTypeRecord.UnderlyingDataTypeScale),
-                };
-            }
+                ID = Guid.NewGuid(),
+                Name = userDefinedTypeRecord.Name,
+                Nullable = userDefinedTypeRecord.Nullable,
+                UnderlyingDataType = MSSQLQueriesHelper.CreateDataTypeModel(
+                    userDefinedTypeRecord.UnderlyingDataTypeName.ToUpper(),
+                    userDefinedTypeRecord.UnderlyingDataTypeLength,
+                    userDefinedTypeRecord.UnderlyingDataTypePrecision,
+                    userDefinedTypeRecord.UnderlyingDataTypeScale),
+            };
         }
     }
 }

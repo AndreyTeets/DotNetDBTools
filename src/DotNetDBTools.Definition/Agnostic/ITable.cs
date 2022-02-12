@@ -1,8 +1,7 @@
 ﻿using DotNetDBTools.Definition.Core;
 
-namespace DotNetDBTools.Definition.Agnostic
+namespace DotNetDBTools.Definition.Agnostic;
+
+public interface ITable : IBaseTable
 {
-    public interface ITable : IBaseTable
-    {
-    }
 }

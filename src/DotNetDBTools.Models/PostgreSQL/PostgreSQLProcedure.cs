@@ -1,9 +1,8 @@
 ﻿using DotNetDBTools.Models.Core;
 
-namespace DotNetDBTools.Models.PostgreSQL
+namespace DotNetDBTools.Models.PostgreSQL;
+
+public class PostgreSQLProcedure : DbObject
 {
-    public class PostgreSQLProcedure : DbObject
-    {
-        public CodePiece CodePiece { get; set; }
-    }
+    public CodePiece CodePiece { get; set; }
 }

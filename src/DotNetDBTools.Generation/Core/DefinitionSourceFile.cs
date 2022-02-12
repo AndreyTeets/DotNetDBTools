@@ -1,8 +1,7 @@
-﻿namespace DotNetDBTools.Generation.Core
+﻿namespace DotNetDBTools.Generation.Core;
+
+public class DefinitionSourceFile
 {
-    public class DefinitionSourceFile
-    {
-        public string RelativePath { get; set; }
-        public string SourceText { get; set; }
-    }
+    public string RelativePath { get; set; }
+    public string SourceText { get; set; }
 }

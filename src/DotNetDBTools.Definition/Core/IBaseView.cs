@@ -1,6 +1,5 @@
-﻿namespace DotNetDBTools.Definition.Core
+﻿namespace DotNetDBTools.Definition.Core;
+
+public interface IBaseView : IDbObject
 {
-    public interface IBaseView : IDbObject
-    {
-    }
 }

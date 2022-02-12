@@ -1,8 +1,7 @@
-﻿namespace DotNetDBTools.CodeParsing.Core
+﻿namespace DotNetDBTools.CodeParsing.Core;
+
+public struct Dependency
 {
-    public struct Dependency
-    {
-        public DependencyType Type { get; set; }
-        public string Name { get; set; }
-    }
+    public DependencyType Type { get; set; }
+    public string Name { get; set; }
 }

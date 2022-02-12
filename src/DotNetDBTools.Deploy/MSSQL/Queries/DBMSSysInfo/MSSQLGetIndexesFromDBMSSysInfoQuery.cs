@@ -2,11 +2,11 @@
 using DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo;
 using DotNetDBTools.Models.Core;
 
-namespace DotNetDBTools.Deploy.MSSQL.Queries.DBMSSysInfo
+namespace DotNetDBTools.Deploy.MSSQL.Queries.DBMSSysInfo;
+
+internal class MSSQLGetIndexesFromDBMSSysInfoQuery : GetIndexesFromDBMSSysInfoQuery
 {
-    internal class MSSQLGetIndexesFromDBMSSysInfoQuery : GetIndexesFromDBMSSysInfoQuery
-    {
-        public override string Sql =>
+    public override string Sql =>
 $@"SELECT
     t.name AS {nameof(IndexRecord.TableName)},
     i.name AS {nameof(IndexRecord.IndexName)},
@@ -30,19 +30,18 @@ WHERE i.is_primary_key = 0
      AND i.is_unique_constraint = 0
      AND t.is_ms_shipped = 0;";
 
-        public override RecordMapper Mapper => new MSSQLRecordMapper();
+    public override RecordMapper Mapper => new MSSQLRecordMapper();
 
-        public class MSSQLRecordMapper : RecordMapper
+    public class MSSQLRecordMapper : RecordMapper
+    {
+        public override Index MapExceptColumnsToIndexModel(IndexRecord indexRecord)
         {
-            public override Index MapExceptColumnsToIndexModel(IndexRecord indexRecord)
+            return new()
             {
-                return new()
-                {
-                    ID = Guid.NewGuid(),
-                    Name = indexRecord.IndexName,
-                    Unique = indexRecord.IsUnique,
-                };
-            }
+                ID = Guid.NewGuid(),
+                Name = indexRecord.IndexName,
+                Unique = indexRecord.IsUnique,
+            };
         }
     }
 }

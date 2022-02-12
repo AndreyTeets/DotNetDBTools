@@ -1,11 +1,11 @@
 ﻿using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Queries;
 
-namespace DotNetDBTools.Deploy.MSSQL.Queries.DNDBTSysInfo
+namespace DotNetDBTools.Deploy.MSSQL.Queries.DNDBTSysInfo;
+
+internal class MSSQLCreateDNDBTSysTablesQuery : SqlTextOnlyQuery
 {
-    internal class MSSQLCreateDNDBTSysTablesQuery : SqlTextOnlyQuery
-    {
-        public override string Sql =>
+    public override string Sql =>
 $@"CREATE TABLE {DNDBTSysTables.DNDBTDbObjects}
 (
     {DNDBTSysTables.DNDBTDbObjects.ID} UNIQUEIDENTIFIER PRIMARY KEY,
@@ -14,5 +14,4 @@ $@"CREATE TABLE {DNDBTSysTables.DNDBTDbObjects}
     {DNDBTSysTables.DNDBTDbObjects.Name} NVARCHAR(256) NOT NULL,
     {DNDBTSysTables.DNDBTDbObjects.Code} NVARCHAR(MAX) NULL
 );";
-    }
 }

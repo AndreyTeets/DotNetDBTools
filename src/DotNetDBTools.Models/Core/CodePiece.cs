@@ -1,7 +1,6 @@
-﻿namespace DotNetDBTools.Models.Core
+﻿namespace DotNetDBTools.Models.Core;
+
+public class CodePiece
 {
-    public class CodePiece
-    {
-        public string Code { get; set; }
-    }
+    public string Code { get; set; }
 }

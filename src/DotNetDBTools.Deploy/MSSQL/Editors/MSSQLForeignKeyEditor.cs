@@ -3,15 +3,14 @@ using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.MSSQL.Queries.DDL;
 using DotNetDBTools.Deploy.MSSQL.Queries.DNDBTSysInfo;
 
-namespace DotNetDBTools.Deploy.MSSQL.Editors
+namespace DotNetDBTools.Deploy.MSSQL.Editors;
+
+internal class MSSQLForeignKeyEditor : ForeignKeyEditor<
+    MSSQLInsertDNDBTSysInfoQuery,
+    MSSQLDeleteDNDBTSysInfoQuery,
+    MSSQLCreateForeignKeyQuery,
+    MSSQLDropForeignKeyQuery>
 {
-    internal class MSSQLForeignKeyEditor : ForeignKeyEditor<
-        MSSQLInsertDNDBTSysInfoQuery,
-        MSSQLDeleteDNDBTSysInfoQuery,
-        MSSQLCreateForeignKeyQuery,
-        MSSQLDropForeignKeyQuery>
-    {
-        public MSSQLForeignKeyEditor(IQueryExecutor queryExecutor)
-            : base(queryExecutor) { }
-    }
+    public MSSQLForeignKeyEditor(IQueryExecutor queryExecutor)
+        : base(queryExecutor) { }
 }

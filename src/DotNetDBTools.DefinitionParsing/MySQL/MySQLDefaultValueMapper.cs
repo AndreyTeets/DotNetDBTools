@@ -4,30 +4,29 @@ using DotNetDBTools.Definition.MySQL.DataTypes;
 using DotNetDBTools.DefinitionParsing.Core;
 using DotNetDBTools.Models.Core;
 
-namespace DotNetDBTools.DefinitionParsing.MySQL
-{
-    internal class MySQLDefaultValueMapper : IDefaultValueMapper
-    {
-        public object MapDefaultValue(BaseColumn column)
-        {
-            object value = column.Default;
-            if (value is null)
-                return null;
-            if (column.DefaultIsFunction)
-                return new CodePiece() { Code = (string)value };
-            return MapByColumnDataType(column.DataType, value);
-        }
+namespace DotNetDBTools.DefinitionParsing.MySQL;
 
-        private static object MapByColumnDataType(IDataType dataType, object value)
+internal class MySQLDefaultValueMapper : IDefaultValueMapper
+{
+    public object MapDefaultValue(BaseColumn column)
+    {
+        object value = column.Default;
+        if (value is null)
+            return null;
+        if (column.DefaultIsFunction)
+            return new CodePiece() { Code = (string)value };
+        return MapByColumnDataType(column.DataType, value);
+    }
+
+    private static object MapByColumnDataType(IDataType dataType, object value)
+    {
+        return dataType switch
         {
-            return dataType switch
-            {
-                StringDataType => (string)value,
-                IntDataType => (long)(int)value,
-                DecimalDataType => (decimal)value,
-                BinaryDataType => (byte[])value,
-                _ => throw new InvalidOperationException($"Invalid default value type: '{value.GetType()}' for a column with type '{dataType.GetType()}'"),
-            };
-        }
+            StringDataType => (string)value,
+            IntDataType => (long)(int)value,
+            DecimalDataType => (decimal)value,
+            BinaryDataType => (byte[])value,
+            _ => throw new InvalidOperationException($"Invalid default value type: '{value.GetType()}' for a column with type '{dataType.GetType()}'"),
+        };
     }
 }

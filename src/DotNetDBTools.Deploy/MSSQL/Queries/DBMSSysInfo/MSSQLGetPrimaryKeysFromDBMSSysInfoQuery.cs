@@ -3,11 +3,11 @@ using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo;
 using DotNetDBTools.Models.Core;
 
-namespace DotNetDBTools.Deploy.MSSQL.Queries.DBMSSysInfo
+namespace DotNetDBTools.Deploy.MSSQL.Queries.DBMSSysInfo;
+
+internal class MSSQLGetPrimaryKeysFromDBMSSysInfoQuery : GetPrimaryKeysFromDBMSSysInfoQuery
 {
-    internal class MSSQLGetPrimaryKeysFromDBMSSysInfoQuery : GetPrimaryKeysFromDBMSSysInfoQuery
-    {
-        public override string Sql =>
+    public override string Sql =>
 $@"SELECT
     t.name AS {nameof(PrimaryKeyRecord.TableName)},
     i.name AS {nameof(PrimaryKeyRecord.ConstraintName)},
@@ -25,18 +25,17 @@ INNER JOIN sys.index_columns ic
 WHERE i.is_primary_key = 1
     AND t.name != '{DNDBTSysTables.DNDBTDbObjects}';";
 
-        public override RecordMapper Mapper => new MSSQLRecordMapper();
+    public override RecordMapper Mapper => new MSSQLRecordMapper();
 
-        public class MSSQLRecordMapper : RecordMapper
+    public class MSSQLRecordMapper : RecordMapper
+    {
+        public override PrimaryKey MapExceptColumnsToPrimaryKeyModel(PrimaryKeyRecord pkr)
         {
-            public override PrimaryKey MapExceptColumnsToPrimaryKeyModel(PrimaryKeyRecord pkr)
+            return new PrimaryKey()
             {
-                return new PrimaryKey()
-                {
-                    ID = Guid.NewGuid(),
-                    Name = pkr.ConstraintName,
-                };
-            }
+                ID = Guid.NewGuid(),
+                Name = pkr.ConstraintName,
+            };
         }
     }
 }

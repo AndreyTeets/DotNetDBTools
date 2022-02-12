@@ -1,10 +1,9 @@
-﻿namespace DotNetDBTools.Models.Core
+﻿namespace DotNetDBTools.Models.Core;
+
+public class Column : DbObject
 {
-    public class Column : DbObject
-    {
-        public DataType DataType { get; set; }
-        public bool Nullable { get; set; }
-        public bool Identity { get; set; }
-        public object Default { get; set; }
-    }
+    public DataType DataType { get; set; }
+    public bool Nullable { get; set; }
+    public bool Identity { get; set; }
+    public object Default { get; set; }
 }

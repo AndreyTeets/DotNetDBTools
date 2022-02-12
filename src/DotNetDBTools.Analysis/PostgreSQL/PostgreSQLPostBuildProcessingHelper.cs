@@ -3,30 +3,29 @@ using System.Collections.Generic;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.PostgreSQL;
 
-namespace DotNetDBTools.Analysis.PostgreSQL
+namespace DotNetDBTools.Analysis.PostgreSQL;
+
+public static class PostgreSQLPostBuildProcessingHelper
 {
-    public static class PostgreSQLPostBuildProcessingHelper
+    public static void AddFunctionsFromTriggersCode_And_RemoveFunctionsCodeFromTriggersCode_IfAny(PostgreSQLDatabase database)
     {
-        public static void AddFunctionsFromTriggersCode_And_RemoveFunctionsCodeFromTriggersCode_IfAny(PostgreSQLDatabase database)
+        foreach (Table table in database.Tables)
         {
-            foreach (Table table in database.Tables)
+            foreach (Trigger trg in table.Triggers)
             {
-                foreach (Trigger trg in table.Triggers)
+                List<string> statements = PostgreSQLStatementsParser.ParseToStatementsList(trg.CodePiece.Code);
+                if (statements.Count == 1)
+                    continue;
+
+                if (statements.Count == 2)
                 {
-                    List<string> statements = PostgreSQLStatementsParser.ParseToStatementsList(trg.CodePiece.Code);
-                    if (statements.Count == 1)
-                        continue;
-
-                    if (statements.Count == 2)
-                    {
-                        PostgreSQLFunction func = PostgreSQLObjectsFromCodeParser.ParseFunction(statements[0]);
-                        ((List<PostgreSQLFunction>)database.Functions).Add(func);
-                        trg.CodePiece.Code = statements[1];
-                        continue;
-                    }
-
-                    throw new Exception($"Found invalid count({statements.Count}) of statements in trigger code [{trg.CodePiece.Code}]");
+                    PostgreSQLFunction func = PostgreSQLObjectsFromCodeParser.ParseFunction(statements[0]);
+                    ((List<PostgreSQLFunction>)database.Functions).Add(func);
+                    trg.CodePiece.Code = statements[1];
+                    continue;
                 }
+
+                throw new Exception($"Found invalid count({statements.Count}) of statements in trigger code [{trg.CodePiece.Code}]");
             }
         }
     }

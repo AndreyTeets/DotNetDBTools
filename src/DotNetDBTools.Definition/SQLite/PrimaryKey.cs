@@ -1,9 +1,8 @@
 ﻿using DotNetDBTools.Definition.Core;
 
-namespace DotNetDBTools.Definition.SQLite
+namespace DotNetDBTools.Definition.SQLite;
+
+public class PrimaryKey : BasePrimaryKey
 {
-    public class PrimaryKey : BasePrimaryKey
-    {
-        public PrimaryKey(string id) : base(id) { }
-    }
+    public PrimaryKey(string id) : base(id) { }
 }

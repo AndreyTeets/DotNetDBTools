@@ -1,10 +1,9 @@
-﻿namespace DotNetDBTools.Definition.MSSQL
+﻿namespace DotNetDBTools.Definition.MSSQL;
+
+public enum ForeignKeyActions
 {
-    public enum ForeignKeyActions
-    {
-        NoAction,
-        Cascade,
-        SetNull,
-        SetDefault,
-    }
+    NoAction,
+    Cascade,
+    SetNull,
+    SetDefault,
 }

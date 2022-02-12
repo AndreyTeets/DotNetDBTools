@@ -1,11 +1,10 @@
 ﻿using DotNetDBTools.Definition.Core;
 
-namespace DotNetDBTools.Definition.SQLite.DataTypes
+namespace DotNetDBTools.Definition.SQLite.DataTypes;
+
+/// <summary>
+/// Column is declared with 'TEXT' affinity.
+/// </summary>
+public class StringDataType : IDataType
 {
-    /// <summary>
-    /// Column is declared with 'TEXT' affinity.
-    /// </summary>
-    public class StringDataType : IDataType
-    {
-    }
 }

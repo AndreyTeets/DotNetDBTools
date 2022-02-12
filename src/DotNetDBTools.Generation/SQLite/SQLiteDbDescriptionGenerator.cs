@@ -1,13 +1,12 @@
 ﻿using DotNetDBTools.Generation.Core;
 using DotNetDBTools.Models.SQLite;
 
-namespace DotNetDBTools.Generation.SQLite
+namespace DotNetDBTools.Generation.SQLite;
+
+internal static class SQLiteDescriptionGenerator
 {
-    internal static class SQLiteDescriptionGenerator
+    public static string GenerateDescription(SQLiteDatabase database)
     {
-        public static string GenerateDescription(SQLiteDatabase database)
-        {
-            return TablesDescriptionGenerator.GenerateTablesDescription(database);
-        }
+        return TablesDescriptionGenerator.GenerateTablesDescription(database);
     }
 }

@@ -2,20 +2,19 @@
 using DotNetDBTools.Generation.Core;
 using DotNetDBTools.Models.MSSQL;
 
-namespace DotNetDBTools.Generation.MSSQL
+namespace DotNetDBTools.Generation.MSSQL;
+
+internal static class MSSQLDefinitionGenerator
 {
-    internal static class MSSQLDefinitionGenerator
+    public static IEnumerable<DefinitionSourceFile> GenerateDefinition(MSSQLDatabase database)
     {
-        public static IEnumerable<DefinitionSourceFile> GenerateDefinition(MSSQLDatabase database)
+        return new List<DefinitionSourceFile>()
         {
-            return new List<DefinitionSourceFile>()
+            new DefinitionSourceFile()
             {
-                new DefinitionSourceFile()
-                {
-                    RelativePath = "Tables/Table1.cs",
-                    SourceText = database.Name,
-                }
-            };
-        }
+                RelativePath = "Tables/Table1.cs",
+                SourceText = database.Name,
+            }
+        };
     }
 }

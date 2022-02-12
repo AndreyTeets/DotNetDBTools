@@ -1,8 +1,7 @@
 ﻿using DotNetDBTools.Definition.Core;
 
-namespace DotNetDBTools.Definition.SQLite
+namespace DotNetDBTools.Definition.SQLite;
+
+public interface ITable : IBaseTable
 {
-    public interface ITable : IBaseTable
-    {
-    }
 }
