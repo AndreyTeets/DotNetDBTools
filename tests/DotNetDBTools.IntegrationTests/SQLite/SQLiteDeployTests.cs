@@ -40,23 +40,22 @@ public class SQLiteDeployTests : BaseDeployTests<
             .Replace(";", "");
     }
 
-    protected override void CreateDatabase(string connectionString)
+    protected override void CreateDatabase(string testName)
     {
-        SqliteConnectionStringBuilder connectionStringBuilder = new(connectionString);
-        string dbFilePath = connectionStringBuilder.DataSource;
-        SQLiteDatabaseHelper.CreateDatabase(dbFilePath);
+        string databaseName = testName;
+        SQLiteDatabaseHelper.CreateDatabase(DbFilesFolder, databaseName);
     }
 
-    protected override void DropDatabaseIfExists(string connectionString)
+    protected override void DropDatabaseIfExists(string testName)
     {
-        SqliteConnectionStringBuilder connectionStringBuilder = new(connectionString);
-        string dbFilePath = connectionStringBuilder.DataSource;
-        SQLiteDatabaseHelper.DropDatabaseIfExists(dbFilePath);
+        string databaseName = testName;
+        SQLiteDatabaseHelper.DropDatabaseIfExists(DbFilesFolder, databaseName);
     }
 
     protected override string CreateConnectionString(string testName)
     {
-        return $@"DataSource={DbFilesFolder}/{testName}.db;Mode=ReadWriteCreate;";
+        string databaseName = testName;
+        return SQLiteDatabaseHelper.CreateConnectionString(DbFilesFolder, databaseName);
     }
 
     private protected override IDbModelFromDbSysInfoBuilder CreateDbModelFromDbSysInfoBuilder(DbConnection connection)

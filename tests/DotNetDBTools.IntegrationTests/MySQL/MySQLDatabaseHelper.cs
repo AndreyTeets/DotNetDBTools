@@ -18,4 +18,11 @@ $@"CREATE DATABASE `{databaseName}`;");
         connection.Execute(
 $@"DROP DATABASE IF EXISTS `{databaseName}`;");
     }
+
+    public static string CreateConnectionString(string connectionStringWithoutDb, string databaseName)
+    {
+        MySqlConnectionStringBuilder connectionStringBuilder = new(connectionStringWithoutDb);
+        connectionStringBuilder.Database = databaseName;
+        return connectionStringBuilder.ConnectionString;
+    }
 }

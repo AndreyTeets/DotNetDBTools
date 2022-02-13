@@ -6,7 +6,7 @@ namespace DotNetDBTools.IntegrationTests.Utilities;
 
 public static class ProcessRunner
 {
-    public static (int, string) RunProcess(string filePath)
+    public static (int, string) RunProcess(string filePath, string args)
     {
         string fullFilePath = Path.GetFullPath(filePath);
 
@@ -19,6 +19,9 @@ public static class ProcessRunner
         startInfo.RedirectStandardInput = true;
         startInfo.UseShellExecute = false;
         startInfo.CreateNoWindow = true;
+
+        if (args is not null)
+            startInfo.Arguments += $" {args}";
 
         using Process process = new();
         process.StartInfo = startInfo;

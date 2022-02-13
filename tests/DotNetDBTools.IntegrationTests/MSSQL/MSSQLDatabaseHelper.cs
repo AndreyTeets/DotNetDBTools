@@ -24,4 +24,11 @@ BEGIN
     DROP DATABASE {databaseName};
 END;");
     }
+
+    public static string CreateConnectionString(string connectionStringWithoutDb, string databaseName)
+    {
+        SqlConnectionStringBuilder connectionStringBuilder = new(connectionStringWithoutDb);
+        connectionStringBuilder.InitialCatalog = databaseName;
+        return connectionStringBuilder.ConnectionString;
+    }
 }

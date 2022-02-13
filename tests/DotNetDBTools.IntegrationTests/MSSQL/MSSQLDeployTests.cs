@@ -45,18 +45,16 @@ public class MSSQLDeployTests : BaseDeployTests<
             .Replace(")", "");
     }
 
-    protected override void CreateDatabase(string connectionString)
+    protected override void CreateDatabase(string testName)
     {
-        SqlConnectionStringBuilder connectionStringBuilder = new(connectionString);
-        string databaseName = connectionStringBuilder.InitialCatalog;
+        string databaseName = testName;
         using IDisposable _ = ExclusiveExecutionScope.CreateScope(nameof(MSSQLContainerHelper));
         MSSQLDatabaseHelper.CreateDatabase(ConnectionStringWithoutDb, databaseName);
     }
 
-    protected override void DropDatabaseIfExists(string connectionString)
+    protected override void DropDatabaseIfExists(string testName)
     {
-        SqlConnectionStringBuilder connectionStringBuilder = new(connectionString);
-        string databaseName = connectionStringBuilder.InitialCatalog;
+        string databaseName = testName;
         using IDisposable _ = ExclusiveExecutionScope.CreateScope(nameof(MSSQLContainerHelper));
         MSSQLDatabaseHelper.DropDatabaseIfExists(ConnectionStringWithoutDb, databaseName);
     }
@@ -64,10 +62,7 @@ public class MSSQLDeployTests : BaseDeployTests<
     protected override string CreateConnectionString(string testName)
     {
         string databaseName = testName;
-        SqlConnectionStringBuilder connectionStringBuilder = new(ConnectionStringWithoutDb);
-        connectionStringBuilder.InitialCatalog = databaseName;
-        string connectionString = connectionStringBuilder.ConnectionString;
-        return connectionString;
+        return MSSQLDatabaseHelper.CreateConnectionString(ConnectionStringWithoutDb, databaseName);
     }
 
     private protected override IDbModelFromDbSysInfoBuilder CreateDbModelFromDbSysInfoBuilder(DbConnection connection)

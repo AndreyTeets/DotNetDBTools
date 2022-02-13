@@ -22,6 +22,7 @@
     <DockerDotNetVersion>3.125.5</DockerDotNetVersion>
 
     <!--Samples and tests packages-->
+    <CommandLineUtilsVersion>4.0.1</CommandLineUtilsVersion>
     <SqlClientVersion>4.8.2</SqlClientVersion>
     <MySqlConnectorVersion>1.3.12</MySqlConnectorVersion>
     <NpgsqlVersion>5.0.10</NpgsqlVersion>

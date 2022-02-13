@@ -49,27 +49,22 @@ public class MySQLDeployTests : BaseDeployTests<
         return res;
     }
 
-    protected override void CreateDatabase(string connectionString)
+    protected override void CreateDatabase(string testName)
     {
-        MySqlConnectionStringBuilder connectionStringBuilder = new(connectionString);
-        string databaseName = connectionStringBuilder.Database;
+        string databaseName = MangleDbNameIfTooLong(testName);
         MySQLDatabaseHelper.CreateDatabase(ConnectionStringWithoutDb, databaseName);
     }
 
-    protected override void DropDatabaseIfExists(string connectionString)
+    protected override void DropDatabaseIfExists(string testName)
     {
-        MySqlConnectionStringBuilder connectionStringBuilder = new(connectionString);
-        string databaseName = connectionStringBuilder.Database;
+        string databaseName = MangleDbNameIfTooLong(testName);
         MySQLDatabaseHelper.DropDatabaseIfExists(ConnectionStringWithoutDb, databaseName);
     }
 
     protected override string CreateConnectionString(string testName)
     {
         string databaseName = MangleDbNameIfTooLong(testName);
-        MySqlConnectionStringBuilder connectionStringBuilder = new(ConnectionStringWithoutDb);
-        connectionStringBuilder.Database = databaseName;
-        string connectionString = connectionStringBuilder.ConnectionString;
-        return connectionString;
+        return MySQLDatabaseHelper.CreateConnectionString(ConnectionStringWithoutDb, databaseName);
     }
 
     private protected override IDbModelFromDbSysInfoBuilder CreateDbModelFromDbSysInfoBuilder(DbConnection connection)

@@ -19,4 +19,11 @@ $@"CREATE DATABASE ""{databaseName}"";");
 $@"SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = '{databaseName}';
 DROP DATABASE IF EXISTS ""{databaseName}"";");
     }
+
+    public static string CreateConnectionString(string connectionStringWithoutDb, string databaseName)
+    {
+        NpgsqlConnectionStringBuilder connectionStringBuilder = new(connectionStringWithoutDb);
+        connectionStringBuilder.Database = databaseName;
+        return connectionStringBuilder.ConnectionString;
+    }
 }

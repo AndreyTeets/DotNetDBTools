@@ -24,7 +24,6 @@ public abstract class BaseDeployTests<TDatabase, TDbConnection, TDbModelConverte
     protected abstract string AgnosticSampleDbAssemblyPath { get; }
     protected abstract string SpecificDBMSSampleDbAssemblyPath { get; }
 
-    private string ConnectionString => CreateConnectionString(TestContext.TestName);
     private TDeployManager _deployManager;
     private TDbConnection _connection;
     private IDbModelFromDbSysInfoBuilder _dbModelFromDbSysInfoBuilder;
@@ -32,12 +31,12 @@ public abstract class BaseDeployTests<TDatabase, TDbConnection, TDbModelConverte
     [TestInitialize]
     public void TestInitialize()
     {
-        DropDatabaseIfExists(ConnectionString);
-        CreateDatabase(ConnectionString);
+        DropDatabaseIfExists(TestContext.TestName);
+        CreateDatabase(TestContext.TestName);
 
         _deployManager = new();
         _connection = new();
-        _connection.ConnectionString = ConnectionString;
+        _connection.ConnectionString = CreateConnectionString(TestContext.TestName);
         _dbModelFromDbSysInfoBuilder = CreateDbModelFromDbSysInfoBuilder(_connection);
     }
 
@@ -135,8 +134,8 @@ public abstract class BaseDeployTests<TDatabase, TDbConnection, TDbModelConverte
     protected abstract EquivalencyAssertionOptions<TDatabase> AddAdditionalDbModelEquivalenceyOptions(
         EquivalencyAssertionOptions<TDatabase> options);
     protected abstract string GetNormalizedCodeFromCodePiece(CodePiece codePiece);
-    protected abstract void CreateDatabase(string connectionString);
-    protected abstract void DropDatabaseIfExists(string connectionString);
+    protected abstract void CreateDatabase(string testName);
+    protected abstract void DropDatabaseIfExists(string testName);
     protected abstract string CreateConnectionString(string testName);
     private protected abstract IDbModelFromDbSysInfoBuilder CreateDbModelFromDbSysInfoBuilder(DbConnection connection);
 

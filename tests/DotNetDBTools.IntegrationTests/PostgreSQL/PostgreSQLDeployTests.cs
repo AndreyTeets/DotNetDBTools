@@ -45,27 +45,22 @@ public class PostgreSQLDeployTests : BaseDeployTests<
             .Replace("PUBLIC.", "");
     }
 
-    protected override void CreateDatabase(string connectionString)
+    protected override void CreateDatabase(string testName)
     {
-        NpgsqlConnectionStringBuilder connectionStringBuilder = new(connectionString);
-        string databaseName = connectionStringBuilder.Database;
+        string databaseName = testName;
         PostgreSQLDatabaseHelper.CreateDatabase(ConnectionStringWithoutDb, databaseName);
     }
 
-    protected override void DropDatabaseIfExists(string connectionString)
+    protected override void DropDatabaseIfExists(string testName)
     {
-        NpgsqlConnectionStringBuilder connectionStringBuilder = new(connectionString);
-        string databaseName = connectionStringBuilder.Database;
+        string databaseName = testName;
         PostgreSQLDatabaseHelper.DropDatabaseIfExists(ConnectionStringWithoutDb, databaseName);
     }
 
     protected override string CreateConnectionString(string testName)
     {
         string databaseName = testName;
-        NpgsqlConnectionStringBuilder connectionStringBuilder = new(ConnectionStringWithoutDb);
-        connectionStringBuilder.Database = databaseName;
-        string connectionString = connectionStringBuilder.ConnectionString;
-        return connectionString;
+        return PostgreSQLDatabaseHelper.CreateConnectionString(ConnectionStringWithoutDb, databaseName);
     }
 
     private protected override IDbModelFromDbSysInfoBuilder CreateDbModelFromDbSysInfoBuilder(DbConnection connection)

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "DotNetDBTools.DeployTool": {
+      "commandName": "Project",
+      "commandLineArgs": "scriptnew --dbms=postgresql --out=../../../../../../SamplesOutput/new.sql --asm=../../../../../../SamplesOutput/DotNetDBTools.SampleDB.Agnostic.dll"
+    }
+  }
+}
