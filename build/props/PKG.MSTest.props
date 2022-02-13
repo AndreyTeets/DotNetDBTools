@@ -1,8 +1,0 @@
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-
-  <ItemGroup>
-    <PackageReference Include="MSTest.TestAdapter" Version="$(MSTestVersion)" />
-    <PackageReference Include="MSTest.TestFramework" Version="$(MSTestVersion)" />
-  </ItemGroup>
-
-</Project>

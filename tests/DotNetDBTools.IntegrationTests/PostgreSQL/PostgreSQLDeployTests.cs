@@ -7,13 +7,11 @@ using DotNetDBTools.IntegrationTests.Base;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.PostgreSQL;
 using FluentAssertions.Equivalency;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Npgsql;
 using static DotNetDBTools.IntegrationTests.Constants;
 
 namespace DotNetDBTools.IntegrationTests.PostgreSQL;
 
-[TestClass]
 public class PostgreSQLDeployTests : BaseDeployTests<
     PostgreSQLDatabase,
     NpgsqlConnection,

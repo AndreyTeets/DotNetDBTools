@@ -9,18 +9,17 @@ using DotNetDBTools.Models.Agnostic;
 using DotNetDBTools.Models.Core;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace DotNetDBTools.IntegrationTests.Base;
 
+[TestFixture]
 public abstract class BaseDeployTests<TDatabase, TDbConnection, TDbModelConverter, TDeployManager>
     where TDatabase : Database
     where TDbConnection : DbConnection, new()
     where TDbModelConverter : IDbModelConverter, new()
     where TDeployManager : IDeployManager, new()
 {
-    public TestContext TestContext { get; set; }
-
     protected abstract string AgnosticSampleDbAssemblyPath { get; }
     protected abstract string SpecificDBMSSampleDbAssemblyPath { get; }
 
@@ -28,25 +27,25 @@ public abstract class BaseDeployTests<TDatabase, TDbConnection, TDbModelConverte
     private TDbConnection _connection;
     private IDbModelFromDbSysInfoBuilder _dbModelFromDbSysInfoBuilder;
 
-    [TestInitialize]
-    public void TestInitialize()
+    [SetUp]
+    public void SetUp()
     {
-        DropDatabaseIfExists(TestContext.TestName);
-        CreateDatabase(TestContext.TestName);
+        DropDatabaseIfExists(TestContext.CurrentContext.Test.Name);
+        CreateDatabase(TestContext.CurrentContext.Test.Name);
 
         _deployManager = new();
         _connection = new();
-        _connection.ConnectionString = CreateConnectionString(TestContext.TestName);
+        _connection.ConnectionString = CreateConnectionString(TestContext.CurrentContext.Test.Name);
         _dbModelFromDbSysInfoBuilder = CreateDbModelFromDbSysInfoBuilder(_connection);
     }
 
-    [TestCleanup]
-    public void TestCleanup()
+    [TearDown]
+    public void TearDown()
     {
         _connection?.Dispose();
     }
 
-    [TestMethod]
+    [Test]
     public void Publish_AgnosticSampleDB_CreatesDbFromZero_And_UpdatesItAgain_WithoutErrors()
     {
         _deployManager.RegisterAsDNDBT(_connection);
@@ -54,7 +53,7 @@ public abstract class BaseDeployTests<TDatabase, TDbConnection, TDbModelConverte
         _deployManager.PublishDatabase(AgnosticSampleDbAssemblyPath, _connection);
     }
 
-    [TestMethod]
+    [Test]
     public void AgnosticSampleDB_DbModelFromDNDBTSysInfo_IsEquivalentTo_DbModelFromDbAssembly()
     {
         _deployManager.RegisterAsDNDBT(_connection);
@@ -67,7 +66,7 @@ public abstract class BaseDeployTests<TDatabase, TDbConnection, TDbModelConverte
         AssertDbModelEquivalence(dbModelFromDbAssembly, dbModelFromDNDBTSysInfo, CompareMode.None);
     }
 
-    [TestMethod]
+    [Test]
     public void AgnosticSampleDB_DbModelFromDBMSSysInfo_IsEquivalentTo_DbModelFromDbAssembly()
     {
         _deployManager.RegisterAsDNDBT(_connection);
@@ -81,7 +80,7 @@ public abstract class BaseDeployTests<TDatabase, TDbConnection, TDbModelConverte
         AssertDbModelEquivalence(dbModelFromDbAssembly, dbModelFromDBMSSysInfo, CompareMode.IgnoreIDsAndNormalizeCodePieces);
     }
 
-    [TestMethod]
+    [Test]
     public void Publish_SpecificDBMSSampleDB_CreatesDbFromZero_And_UpdatesItAgain_WithoutErrors()
     {
         _deployManager.RegisterAsDNDBT(_connection);
@@ -89,7 +88,7 @@ public abstract class BaseDeployTests<TDatabase, TDbConnection, TDbModelConverte
         _deployManager.PublishDatabase(SpecificDBMSSampleDbAssemblyPath, _connection);
     }
 
-    [TestMethod]
+    [Test]
     public void SpecificDBMSSampleDB_DbModelFromDNDBTSysInfo_IsEquivalentTo_DbModelFromDbAssembly()
     {
         _deployManager.RegisterAsDNDBT(_connection);
@@ -101,7 +100,7 @@ public abstract class BaseDeployTests<TDatabase, TDbConnection, TDbModelConverte
         AssertDbModelEquivalence(dbModelFromDbAssembly, dbModelFromDNDBTSysInfo, CompareMode.None);
     }
 
-    [TestMethod]
+    [Test]
     public void SpecificDBMSSampleDB_DbModelFromDBMSSysInfo_IsEquivalentTo_DbModelFromDbAssembly()
     {
         _deployManager.RegisterAsDNDBT(_connection);

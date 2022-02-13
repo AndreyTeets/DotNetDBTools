@@ -2,10 +2,11 @@
 using System.IO;
 using DotNetDBTools.IntegrationTests.Utilities;
 using FluentAssertions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace DotNetDBTools.IntegrationTests.Base;
 
+[TestFixture]
 public abstract class BaseSampleApplicationsTests
 {
     protected abstract string SyncScopeName { get; }
@@ -20,7 +21,7 @@ public abstract class BaseSampleApplicationsTests
     protected abstract string SampleBusinessLogicOnlyAppAssemblyPath { get; }
     protected abstract string SampleSelfUpdatingAppAssemblyPath { get; }
 
-    [TestMethod]
+    [Test]
     public void DeployTool_Runs_WithoutErrors()
     {
         string dtPath = DeployToolAssemblyPath;
@@ -48,7 +49,7 @@ public abstract class BaseSampleApplicationsTests
         Exec(dtPath, $"unregister --dbms={DtDbms} \"--cs={DtCs}\"");
     }
 
-    [TestMethod]
+    [Test]
     public void SampleDeployManagerUsage_And_SampleBusinessLogicOnlyApp_Run_WithoutErrors()
     {
         using IDisposable _ = ExclusiveExecutionScope.CreateScope(SyncScopeName);
@@ -57,7 +58,7 @@ public abstract class BaseSampleApplicationsTests
         Exec(SampleBusinessLogicOnlyAppAssemblyPath);
     }
 
-    [TestMethod]
+    [Test]
     public void SampleSelfUpdatingApp_Runs_WithoutErrors()
     {
         using IDisposable _ = ExclusiveExecutionScope.CreateScope(SyncScopeName);

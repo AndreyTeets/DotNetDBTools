@@ -2,31 +2,32 @@
 
   <PropertyGroup>
     <!--Source packages-->
-    <DapperVersion>2.0.90</DapperVersion>
+    <DapperVersion>2.0.123</DapperVersion>
     <SystemRuntimeLoaderVersion>4.3.0</SystemRuntimeLoaderVersion>
-    <CodeAnalysisVersion>3.11.0</CodeAnalysisVersion>
-    <CodeAnalysisAnalyzersVersion>3.3.2</CodeAnalysisAnalyzersVersion>
+    <CodeAnalysisVersion>4.0.1</CodeAnalysisVersion>
+    <CodeAnalysisAnalyzersVersion>3.3.3</CodeAnalysisAnalyzersVersion>
     <Antlr4RuntimeVersion>4.9.3</Antlr4RuntimeVersion>
     <Antlr4BuildTasksVersion>8.17.0</Antlr4BuildTasksVersion>
 
     <!--Tests system packages-->
-    <TestSDKVersion>16.11.0</TestSDKVersion>
-    <MSTestVersion>2.2.3</MSTestVersion>
+    <TestSDKVersion>17.0.0</TestSDKVersion>
+    <NUnitVersion>3.13.2</NUnitVersion>
+    <NUnitAdapterVersion>4.2.1</NUnitAdapterVersion>
     <XUnitVersion>2.4.1</XUnitVersion>
     <XUnitVSRunnerVersion>2.4.3</XUnitVSRunnerVersion>
-    <CoverletVersion>3.1.0</CoverletVersion>
+    <CoverletVersion>3.1.2</CoverletVersion>
 
     <!--Tests packages-->
-    <FluentAssertionsVersion>6.1.0</FluentAssertionsVersion>
-    <CodeAnalysisTestingVersion>1.1.0</CodeAnalysisTestingVersion>
+    <FluentAssertionsVersion>6.5.1</FluentAssertionsVersion>
+    <CodeAnalysisTestingVersion>1.1.1</CodeAnalysisTestingVersion>
     <DockerDotNetVersion>3.125.5</DockerDotNetVersion>
 
     <!--Samples and tests packages-->
     <CommandLineUtilsVersion>4.0.1</CommandLineUtilsVersion>
-    <SqlClientVersion>4.8.2</SqlClientVersion>
-    <MySqlConnectorVersion>1.3.12</MySqlConnectorVersion>
-    <NpgsqlVersion>5.0.10</NpgsqlVersion>
-    <SqliteVersion>5.0.9</SqliteVersion>
+    <SqlClientVersion>4.8.3</SqlClientVersion>
+    <MySqlConnectorVersion>2.1.6</MySqlConnectorVersion>
+    <NpgsqlVersion>6.0.3</NpgsqlVersion>
+    <SqliteVersion>6.0.2</SqliteVersion>
     <SqlKataVersion>2.3.7</SqlKataVersion>
   </PropertyGroup>
 

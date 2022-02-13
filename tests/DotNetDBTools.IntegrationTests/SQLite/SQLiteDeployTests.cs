@@ -8,12 +8,10 @@ using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.SQLite;
 using FluentAssertions.Equivalency;
 using Microsoft.Data.Sqlite;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static DotNetDBTools.IntegrationTests.Constants;
 
 namespace DotNetDBTools.IntegrationTests.SQLite;
 
-[TestClass]
 public class SQLiteDeployTests : BaseDeployTests<
     SQLiteDatabase,
     SqliteConnection,

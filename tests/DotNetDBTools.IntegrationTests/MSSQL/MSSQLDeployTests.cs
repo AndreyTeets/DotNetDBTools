@@ -10,12 +10,10 @@ using DotNetDBTools.IntegrationTests.Utilities;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.MSSQL;
 using FluentAssertions.Equivalency;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static DotNetDBTools.IntegrationTests.Constants;
 
 namespace DotNetDBTools.IntegrationTests.MSSQL;
 
-[TestClass]
 public class MSSQLDeployTests : BaseDeployTests<
     MSSQLDatabase,
     SqlConnection,

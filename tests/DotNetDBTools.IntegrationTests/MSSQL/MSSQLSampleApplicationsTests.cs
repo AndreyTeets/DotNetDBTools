@@ -1,12 +1,10 @@
 ﻿using System.Data.SqlClient;
 using Dapper;
 using DotNetDBTools.IntegrationTests.Base;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static DotNetDBTools.IntegrationTests.Constants;
 
 namespace DotNetDBTools.IntegrationTests.MSSQL;
 
-[TestClass]
 public class MSSQLSampleApplicationsTests : BaseSampleApplicationsTests
 {
     protected override string SyncScopeName => nameof(MSSQLContainerHelper);

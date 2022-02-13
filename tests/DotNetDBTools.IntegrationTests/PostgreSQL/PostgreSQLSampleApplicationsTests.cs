@@ -1,12 +1,10 @@
 ﻿using Dapper;
 using DotNetDBTools.IntegrationTests.Base;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Npgsql;
 using static DotNetDBTools.IntegrationTests.Constants;
 
 namespace DotNetDBTools.IntegrationTests.PostgreSQL;
 
-[TestClass]
 public class PostgreSQLSampleApplicationsTests : BaseSampleApplicationsTests
 {
     protected override string SyncScopeName => null;

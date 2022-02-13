@@ -1,12 +1,10 @@
 ﻿using Dapper;
 using DotNetDBTools.IntegrationTests.Base;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MySqlConnector;
 using static DotNetDBTools.IntegrationTests.Constants;
 
 namespace DotNetDBTools.IntegrationTests.MySQL;
 
-[TestClass]
 public class MySQLSampleApplicationsTests : BaseSampleApplicationsTests
 {
     protected override string SyncScopeName => null;

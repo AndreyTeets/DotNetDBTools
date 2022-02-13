@@ -1,12 +1,10 @@
 ﻿using Dapper;
 using DotNetDBTools.IntegrationTests.Base;
 using Microsoft.Data.Sqlite;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static DotNetDBTools.IntegrationTests.Constants;
 
 namespace DotNetDBTools.IntegrationTests.SQLite;
 
-[TestClass]
 public class SQLiteSampleApplicationsTests : BaseSampleApplicationsTests
 {
     protected override string SyncScopeName => null;

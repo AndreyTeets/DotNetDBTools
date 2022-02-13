@@ -8,13 +8,12 @@ using DotNetDBTools.IntegrationTests.Base;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.MySQL;
 using FluentAssertions.Equivalency;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MySqlConnector;
+using NUnit.Framework;
 using static DotNetDBTools.IntegrationTests.Constants;
 
 namespace DotNetDBTools.IntegrationTests.MySQL;
 
-[TestClass]
 public class MySQLDeployTests : BaseDeployTests<
     MySQLDatabase,
     MySqlConnection,
@@ -42,7 +41,7 @@ public class MySQLDeployTests : BaseDeployTests<
             .Replace("`", "")
             .Replace("(", "")
             .Replace(")", "")
-            .Replace($"{MangleDbNameIfTooLong(TestContext.TestName).ToUpper()}.", "");
+            .Replace($"{MangleDbNameIfTooLong(TestContext.CurrentContext.Test.Name).ToUpper()}.", "");
         string identifier = @"[\w|\d|_]+";
         res = Regex.Replace(res, $"AS{identifier},", ",");
         res = Regex.Replace(res, $"AS{identifier}FROM", "FROM");
