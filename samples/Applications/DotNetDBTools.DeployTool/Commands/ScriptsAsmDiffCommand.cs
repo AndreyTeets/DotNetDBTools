@@ -9,10 +9,14 @@ internal class ScriptsAsmDiffCommand : BaseCommand
         string newDbAssemblyPath,
         string oldDbAssemblyPath,
         string outputPath,
-        bool allowDataLoss)
+        bool allowDataLoss,
+        bool ddlOnly)
     {
         IDeployManager deployManager = CreateDeployManager(dbms);
         deployManager.Options.AllowDataLoss = allowDataLoss;
-        deployManager.GeneratePublishScript(newDbAssemblyPath, oldDbAssemblyPath, outputPath);
+        if (ddlOnly)
+            deployManager.GenerateDDLOnlyPublishScript(newDbAssemblyPath, oldDbAssemblyPath, outputPath);
+        else
+            deployManager.GeneratePublishScript(newDbAssemblyPath, oldDbAssemblyPath, outputPath);
     }
 }

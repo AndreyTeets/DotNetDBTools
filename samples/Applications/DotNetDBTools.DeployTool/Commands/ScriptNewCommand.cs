@@ -7,9 +7,13 @@ internal class ScriptNewCommand : BaseCommand
     public void Execute(
         Dbms dbms,
         string dbAssemblyPath,
-        string outputPath)
+        string outputPath,
+        bool ddlOnly)
     {
         IDeployManager deployManager = CreateDeployManager(dbms);
-        deployManager.GeneratePublishScript(dbAssemblyPath, outputPath);
+        if (ddlOnly)
+            deployManager.GenerateDDLOnlyPublishScript(dbAssemblyPath, outputPath);
+        else
+            deployManager.GeneratePublishScript(dbAssemblyPath, outputPath);
     }
 }

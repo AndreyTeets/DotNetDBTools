@@ -24,7 +24,9 @@ namespace DotNetDBTools.SampleDeployManagerUsage.SQLite
         private static readonly string s_agnosticGeneratedPublishToEmptyScriptPath = $"{s_samplesOutputDir}/sqlite_generated/AgnosticGeneratedPublishToEmptyScript.sql";
         private static readonly string s_agnosticGeneratedPublishToExistingScriptPath = $"{s_samplesOutputDir}/sqlite_generated/AgnosticGeneratedPublishToExistingScript.sql";
         private static readonly string s_agnosticGeneratedPublishFromV1ToV2ScriptPath = $"{s_samplesOutputDir}/sqlite_generated/AgnosticGeneratedPublishFromV1ToV2Script.sql";
+        private static readonly string s_agnosticGeneratedDDLOnlyPublishFromV1ToV2ScriptPath = $"{s_samplesOutputDir}/sqlite_generated/AgnosticGeneratedDDLOnlyPublishFromV1ToV2Script.sql";
         private static readonly string s_agnosticGeneratedPublishFromV2ToV1ScriptPath = $"{s_samplesOutputDir}/sqlite_generated/AgnosticGeneratedPublishFromV2ToV1Script.sql";
+        private static readonly string s_agnosticGeneratedDDLOnlyPublishFromV2ToV1ScriptPath = $"{s_samplesOutputDir}/sqlite_generated/AgnosticGeneratedDDLOnlyPublishFromV2ToV1Script.sql";
         private static readonly string s_agnosticGeneratedDefinitionFromUnregisteredDir = $"{s_samplesOutputDir}/sqlite_generated/AgnosticGeneratedDefinitionFromUnregistered";
         private static readonly string s_agnosticGeneratedDefinitionFromRegisteredDir = $"{s_samplesOutputDir}/sqlite_generated/AgnosticGeneratedDefinitionFromRegistered";
         private static readonly string s_agnosticGeneratedPublishRecreateScriptPath = $"{s_samplesOutputDir}/sqlite_generated/AgnosticGeneratedPublishRecreateScript.sql";
@@ -32,8 +34,10 @@ namespace DotNetDBTools.SampleDeployManagerUsage.SQLite
         private static readonly string s_sqliteGeneratedPublishToEmptyScriptPath = $"{s_samplesOutputDir}/sqlite_generated/SQLiteGeneratedPublishToEmptyScript.sql";
         private static readonly string s_sqliteGeneratedPublishToExistingScriptPath = $"{s_samplesOutputDir}/sqlite_generated/SQLiteGeneratedPublishToExistingScript.sql";
         private static readonly string s_sqliteGeneratedPublishFromV1ToV2ScriptPath = $"{s_samplesOutputDir}/sqlite_generated/SQLiteGeneratedPublishFromV1ToV2Script.sql";
+        private static readonly string s_sqliteGeneratedDDLOnlyPublishFromV1ToV2ScriptPath = $"{s_samplesOutputDir}/sqlite_generated/SQLiteGeneratedDDLOnlyPublishFromV1ToV2Script.sql";
         private static readonly string s_sqliteGeneratedPublishFromV1ToV2SqlDefScriptPath = $"{s_samplesOutputDir}/sqlite_generated/SQLiteGeneratedPublishFromV1ToV2SqlDefScript.sql";
         private static readonly string s_sqliteGeneratedPublishFromV2ToV1ScriptPath = $"{s_samplesOutputDir}/sqlite_generated/SQLiteGeneratedPublishFromV2ToV1Script.sql";
+        private static readonly string s_sqliteGeneratedDDLOnlyPublishFromV2ToV1ScriptPath = $"{s_samplesOutputDir}/sqlite_generated/SQLiteGeneratedDDLOnlyPublishFromV2ToV1Script.sql";
         private static readonly string s_sqliteGeneratedDefinitionFromUnregisteredDir = $"{s_samplesOutputDir}/sqlite_generated/SQLiteGeneratedDefinitionFromUnregistered";
         private static readonly string s_sqliteGeneratedDefinitionFromRegisteredDir = $"{s_samplesOutputDir}/sqlite_generated/SQLiteGeneratedDefinitionFromRegistered";
         private static readonly string s_sqliteGeneratedPublishRecreateScriptPath = $"{s_samplesOutputDir}/sqlite_generated/SQLiteGeneratedPublishRecreateScript.sql";
@@ -47,6 +51,9 @@ namespace DotNetDBTools.SampleDeployManagerUsage.SQLite
         private static void RunAgnosticSampleDBDeployExamples()
         {
             DropDatabaseIfExists(s_agnosticConnectionString);
+
+            Assembly dbAssembly = Assembly.Load(File.ReadAllBytes(s_agnosticDbAssemblyPath));
+            Assembly dbAssemblyV2 = Assembly.Load(File.ReadAllBytes(s_agnosticDbV2AssemblyPath));
 
             IDeployManager deployManager = new SQLiteDeployManager(new DeployOptions());
             IDeployManager dmDataLoss = new SQLiteDeployManager(new DeployOptions { AllowDataLoss = true });
@@ -66,8 +73,6 @@ namespace DotNetDBTools.SampleDeployManagerUsage.SQLite
             deployManager.PublishDatabase(s_agnosticDbAssemblyPath, connection);
 
             Console.WriteLine("Generating script to update(from v1 to v2) AgnosticSampleDB from the corresponding assembly files...");
-            Assembly dbAssembly = Assembly.Load(File.ReadAllBytes(s_agnosticDbAssemblyPath));
-            Assembly dbAssemblyV2 = Assembly.Load(File.ReadAllBytes(s_agnosticDbV2AssemblyPath));
             dmDataLoss.GeneratePublishScript(dbAssemblyV2, dbAssembly, s_agnosticGeneratedPublishFromV1ToV2ScriptPath);
             Console.WriteLine("Updating(from v1 to v2) existing AgnosticSampleDB from dbAssembly v2 file...");
             dmDataLoss.PublishDatabase(s_agnosticDbV2AssemblyPath, connection);
@@ -81,6 +86,16 @@ namespace DotNetDBTools.SampleDeployManagerUsage.SQLite
             deployManager.UnregisterAsDNDBT(connection);
             Console.WriteLine("Generating definition from existing unregistered AgnosticSampleDB...");
             deployManager.GenerateDefinition(connection, s_agnosticGeneratedDefinitionFromUnregisteredDir);
+
+            Console.WriteLine("Generating ddl-only script to update(from v1 to v2) AgnosticSampleDB from the corresponding assembly files...");
+            dmDataLoss.GenerateDDLOnlyPublishScript(dbAssemblyV2, dbAssembly, s_agnosticGeneratedDDLOnlyPublishFromV1ToV2ScriptPath);
+            Console.WriteLine("Updating(from v1 to v2) AgnosticSampleDB using previously generated ddl-only script...");
+            connection.Execute(File.ReadAllText(s_agnosticGeneratedDDLOnlyPublishFromV1ToV2ScriptPath));
+
+            Console.WriteLine("Generating ddl-only script to update(rollback from v2 to v1) AgnosticSampleDB from the corresponding assembly files...");
+            dmDataLoss.GenerateDDLOnlyPublishScript(dbAssembly, dbAssemblyV2, s_agnosticGeneratedDDLOnlyPublishFromV2ToV1ScriptPath);
+            Console.WriteLine("Updating(rollback from v2 to v1) AgnosticSampleDB using previously generated ddl-only script...");
+            connection.Execute(File.ReadAllText(s_agnosticGeneratedDDLOnlyPublishFromV2ToV1ScriptPath));
 
             Console.WriteLine("Registiring(=generating and adding new DNDBT system information to DB) AgnosticSampleDB...");
             deployManager.RegisterAsDNDBT(connection);
@@ -97,6 +112,9 @@ namespace DotNetDBTools.SampleDeployManagerUsage.SQLite
         private static void RunSQLiteSampleDBDeployExamples()
         {
             DropDatabaseIfExists(s_sqliteConnectionString);
+
+            Assembly dbAssembly = Assembly.Load(File.ReadAllBytes(s_sqliteDbAssemblyPath));
+            Assembly dbAssemblyV2 = Assembly.Load(File.ReadAllBytes(s_sqliteDbV2AssemblyPath));
 
             IDeployManager deployManager = new SQLiteDeployManager(new DeployOptions());
             IDeployManager dmDataLoss = new SQLiteDeployManager(new DeployOptions { AllowDataLoss = true });
@@ -116,8 +134,6 @@ namespace DotNetDBTools.SampleDeployManagerUsage.SQLite
             deployManager.PublishDatabase(s_sqliteDbAssemblyPath, connection);
 
             Console.WriteLine("Generating script to update(from v1 to v2) SQLiteSampleDB from the corresponding assembly files...");
-            Assembly dbAssembly = Assembly.Load(File.ReadAllBytes(s_sqliteDbAssemblyPath));
-            Assembly dbAssemblyV2 = Assembly.Load(File.ReadAllBytes(s_sqliteDbV2AssemblyPath));
             dmDataLoss.GeneratePublishScript(dbAssemblyV2, dbAssembly, s_sqliteGeneratedPublishFromV1ToV2ScriptPath);
             dmDataLoss.GeneratePublishScript(s_sqliteDbV2SqlDefAssemblyPath, s_sqliteDbAssemblyPath, s_sqliteGeneratedPublishFromV1ToV2SqlDefScriptPath);
             Console.WriteLine("Updating(from v1 to v2) existing SQLiteSampleDB from dbAssembly v2 file...");
@@ -132,6 +148,16 @@ namespace DotNetDBTools.SampleDeployManagerUsage.SQLite
             deployManager.UnregisterAsDNDBT(connection);
             Console.WriteLine("Generating definition from existing unregistered SQLiteSampleDB...");
             deployManager.GenerateDefinition(connection, s_sqliteGeneratedDefinitionFromUnregisteredDir);
+
+            Console.WriteLine("Generating ddl-only script to update(from v1 to v2) SQLiteSampleDB from the corresponding assembly files...");
+            dmDataLoss.GenerateDDLOnlyPublishScript(dbAssemblyV2, dbAssembly, s_sqliteGeneratedDDLOnlyPublishFromV1ToV2ScriptPath);
+            Console.WriteLine("Updating(from v1 to v2) SQLiteSampleDB using previously generated ddl-only script...");
+            connection.Execute(File.ReadAllText(s_sqliteGeneratedDDLOnlyPublishFromV1ToV2ScriptPath));
+
+            Console.WriteLine("Generating ddl-only script to update(rollback from v2 to v1) SQLiteSampleDB from the corresponding assembly files...");
+            dmDataLoss.GenerateDDLOnlyPublishScript(dbAssembly, dbAssemblyV2, s_sqliteGeneratedDDLOnlyPublishFromV2ToV1ScriptPath);
+            Console.WriteLine("Updating(rollback from v2 to v1) SQLiteSampleDB using previously generated ddl-only script...");
+            connection.Execute(File.ReadAllText(s_sqliteGeneratedDDLOnlyPublishFromV2ToV1ScriptPath));
 
             Console.WriteLine("Registiring(=generating and adding new DNDBT system information to DB) SQLiteSampleDB...");
             deployManager.RegisterAsDNDBT(connection);

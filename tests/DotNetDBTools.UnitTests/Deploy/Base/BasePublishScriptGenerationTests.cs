@@ -52,7 +52,20 @@ public abstract class BasePublishScriptGenerationTests<TDeployManager>
     }
 
     [Fact]
-    public void Generate_PublishScript_For_SampleDB_CreatesCorrectScript_WhenExistingDbIsEqual()
+    public void Generate_DDLOnlyPublishScript_For_SampleDB_CreatesCorrectScript_WhenUpdatingFromV2ToV1()
+    {
+        _deployManager.Options = new DeployOptions { AllowDataLoss = true };
+
+        string outputPath = @$"{ActualFilesDir}/Actual_DDLOnlyPublishScript_For_SampleDB_WhenUpdatingFromV2ToV1.sql";
+        _deployManager.GenerateDDLOnlyPublishScript(_dbAssemblyV1, _dbAssemblyV2, outputPath);
+
+        string actualScript = File.ReadAllText(outputPath);
+        string expectedScript = File.ReadAllText(@$"{ExpectedFilesDir}/Expected_DDLOnlyPublishScript_For_SampleDB_WhenUpdatingFromV2ToV1.sql");
+        actualScript.NormalizeLineEndings().Should().Be(expectedScript.NormalizeLineEndings());
+    }
+
+    [Fact]
+    public void Generate_PublishScript_For_SampleDB_CreatesEmptyScript_WhenExistingDbIsEqual()
     {
         string outputPath1 = @$"{ActualFilesDir}/ActualPublishScript_For_SampleDB_WhenUpdatingFromV1ToV1.sql";
         _deployManager.GeneratePublishScript(_dbAssemblyV1, _dbAssemblyV1, outputPath1);

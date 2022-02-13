@@ -29,12 +29,29 @@ public abstract class DeployManager<TDatabase> : IDeployManager
         _dbModelConverter = _factory.CreateDbModelConverter();
     }
 
+    public void RegisterAsDNDBT(DbConnection connection)
+    {
+        IQueryExecutor queryExecutor = _factory.CreateQueryExecutor(connection);
+        IDbEditor dbEditor = _factory.CreateDbEditor(queryExecutor);
+        IDbModelFromDbSysInfoBuilder dbModelFromDbSysInfoBuilder = _factory.CreateDbModelFromDbSysInfoBuilder(queryExecutor);
+
+        if (dbEditor.DNDBTSysTablesExist())
+            throw new InvalidOperationException("Database is already registered");
+        Database oldDatabase = dbModelFromDbSysInfoBuilder.GenerateDatabaseModelFromDBMSSysInfo();
+        dbEditor.CreateDNDBTSysTables();
+        dbEditor.PopulateDNDBTSysTables(oldDatabase);
+    }
+    public void UnregisterAsDNDBT(DbConnection connection)
+    {
+        IDbEditor dbEditor = _factory.CreateDbEditor(_factory.CreateQueryExecutor(connection));
+        dbEditor.DropDNDBTSysTables();
+    }
+
     public void PublishDatabase(string dbAssemblyPath, DbConnection connection)
     {
         Assembly dbAssembly = AssemblyLoader.LoadDbAssemblyFromDll(dbAssemblyPath);
         PublishDatabase(dbAssembly, connection);
     }
-
     public void PublishDatabase(Assembly dbAssembly, DbConnection connection)
     {
         Database newDatabase = CreateDatabaseModelFromDbAssembly(dbAssembly);
@@ -51,12 +68,11 @@ public abstract class DeployManager<TDatabase> : IDeployManager
         Assembly newDbAssembly = AssemblyLoader.LoadDbAssemblyFromDll(dbAssemblyPath);
         GeneratePublishScript(newDbAssembly, connection, outputPath);
     }
-
     public void GeneratePublishScript(Assembly dbAssembly, DbConnection connection, string outputPath)
     {
         Database newDatabase = CreateDatabaseModelFromDbAssembly(dbAssembly);
         Database oldDatabase = GetDatabaseModelFromRegisteredDb(connection);
-        GeneratePublishScript(newDatabase, oldDatabase, outputPath);
+        GeneratePublishScriptImpl(newDatabase, oldDatabase, outputPath, ddlOnly: false);
     }
 
     public void GeneratePublishScript(string dbAssemblyPath, string outputPath)
@@ -64,12 +80,11 @@ public abstract class DeployManager<TDatabase> : IDeployManager
         Assembly dbAssembly = AssemblyLoader.LoadDbAssemblyFromDll(dbAssemblyPath);
         GeneratePublishScript(dbAssembly, outputPath);
     }
-
     public void GeneratePublishScript(Assembly dbAssembly, string outputPath)
     {
         Database newDatabase = CreateDatabaseModelFromDbAssembly(dbAssembly);
         Database oldDatabase = new TDatabase();
-        GeneratePublishScript(newDatabase, oldDatabase, outputPath);
+        GeneratePublishScriptImpl(newDatabase, oldDatabase, outputPath, ddlOnly: false);
     }
 
     public void GeneratePublishScript(string newDbAssemblyPath, string oldDbAssemblyPath, string outputPath)
@@ -78,31 +93,36 @@ public abstract class DeployManager<TDatabase> : IDeployManager
         Assembly oldDbAssembly = AssemblyLoader.LoadDbAssemblyFromDll(oldDbAssemblyPath);
         GeneratePublishScript(newDbAssembly, oldDbAssembly, outputPath);
     }
-
     public void GeneratePublishScript(Assembly newDbAssembly, Assembly oldDbAssembly, string outputPath)
     {
         Database newDatabase = CreateDatabaseModelFromDbAssembly(newDbAssembly);
         Database oldDatabase = CreateDatabaseModelFromDbAssembly(oldDbAssembly);
-        GeneratePublishScript(newDatabase, oldDatabase, outputPath);
+        GeneratePublishScriptImpl(newDatabase, oldDatabase, outputPath, ddlOnly: false);
     }
 
-    public void RegisterAsDNDBT(DbConnection connection)
+    public void GenerateDDLOnlyPublishScript(string dbAssemblyPath, string outputPath)
     {
-        IQueryExecutor queryExecutor = _factory.CreateQueryExecutor(connection);
-        IDbEditor dbEditor = _factory.CreateDbEditor(queryExecutor);
-        IDbModelFromDbSysInfoBuilder dbModelFromDbSysInfoBuilder = _factory.CreateDbModelFromDbSysInfoBuilder(queryExecutor);
-
-        if (dbEditor.DNDBTSysTablesExist())
-            throw new InvalidOperationException("Database is already registered");
-        Database oldDatabase = dbModelFromDbSysInfoBuilder.GenerateDatabaseModelFromDBMSSysInfo();
-        dbEditor.CreateDNDBTSysTables();
-        dbEditor.PopulateDNDBTSysTables(oldDatabase);
+        Assembly dbAssembly = AssemblyLoader.LoadDbAssemblyFromDll(dbAssemblyPath);
+        GenerateDDLOnlyPublishScript(dbAssembly, outputPath);
+    }
+    public void GenerateDDLOnlyPublishScript(Assembly dbAssembly, string outputPath)
+    {
+        Database newDatabase = CreateDatabaseModelFromDbAssembly(dbAssembly);
+        Database oldDatabase = new TDatabase();
+        GeneratePublishScriptImpl(newDatabase, oldDatabase, outputPath, ddlOnly: true);
     }
 
-    public void UnregisterAsDNDBT(DbConnection connection)
+    public void GenerateDDLOnlyPublishScript(string newDbAssemblyPath, string oldDbAssemblyPath, string outputPath)
     {
-        IDbEditor dbEditor = _factory.CreateDbEditor(_factory.CreateQueryExecutor(connection));
-        dbEditor.DropDNDBTSysTables();
+        Assembly newDbAssembly = AssemblyLoader.LoadDbAssemblyFromDll(newDbAssemblyPath);
+        Assembly oldDbAssembly = AssemblyLoader.LoadDbAssemblyFromDll(oldDbAssemblyPath);
+        GenerateDDLOnlyPublishScript(newDbAssembly, oldDbAssembly, outputPath);
+    }
+    public void GenerateDDLOnlyPublishScript(Assembly newDbAssembly, Assembly oldDbAssembly, string outputPath)
+    {
+        Database newDatabase = CreateDatabaseModelFromDbAssembly(newDbAssembly);
+        Database oldDatabase = CreateDatabaseModelFromDbAssembly(oldDbAssembly);
+        GeneratePublishScriptImpl(newDatabase, oldDatabase, outputPath, ddlOnly: true);
     }
 
     public void GenerateDefinition(DbConnection connection, string outputDirectory)
@@ -119,12 +139,14 @@ public abstract class DeployManager<TDatabase> : IDeployManager
         DbDefinitionGenerator.GenerateDefinition(database, outputDirectory);
     }
 
-    private void GeneratePublishScript(Database newDatabase, Database oldDatabase, string outputPath)
+    private void GeneratePublishScriptImpl(Database newDatabase, Database oldDatabase, string outputPath, bool ddlOnly)
     {
         DatabaseDiff dbDiff = AnalysisHelper.CreateDatabaseDiff(newDatabase, oldDatabase);
         ValidateDatabaseDiff(dbDiff);
 
         IGenSqlScriptQueryExecutor genSqlScriptQueryExecutor = _factory.CreateGenSqlScriptQueryExecutor();
+        genSqlScriptQueryExecutor.DDLOnly = ddlOnly;
+
         IDbEditor dbEditor = _factory.CreateDbEditor(genSqlScriptQueryExecutor);
         dbEditor.ApplyDatabaseDiff(dbDiff, Options);
         string generatedScript = genSqlScriptQueryExecutor.GetFinalScript();

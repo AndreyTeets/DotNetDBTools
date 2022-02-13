@@ -73,8 +73,18 @@ internal class OptionsBuilder
     public CommandOption<bool> AddLossOption(CommandLineApplication app)
     {
         CommandOption<bool> option = app.Option<bool>(
-            "--loss <AllowDataLoss>",
+            "--loss",
             "Optional. Allow data loss during update.",
+            CommandOptionType.SingleOrNoValue);
+
+        return option;
+    }
+
+    public CommandOption<bool> AddDdlonlyOption(CommandLineApplication app)
+    {
+        CommandOption<bool> option = app.Option<bool>(
+            "--ddlonly",
+            "Optional. Include only DDL changes into script (and skip DNDBT system info changes).",
             CommandOptionType.SingleOrNoValue);
 
         return option;

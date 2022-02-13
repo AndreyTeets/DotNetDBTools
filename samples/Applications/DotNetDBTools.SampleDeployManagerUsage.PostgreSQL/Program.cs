@@ -28,7 +28,9 @@ namespace DotNetDBTools.SampleDeployManagerUsage.PostgreSQL
         private static readonly string s_agnosticGeneratedPublishToEmptyScriptPath = $"{s_samplesOutputDir}/postgresql_generated/AgnosticGeneratedPublishToEmptyScript.sql";
         private static readonly string s_agnosticGeneratedPublishToExistingScriptPath = $"{s_samplesOutputDir}/postgresql_generated/AgnosticGeneratedPublishToExistingScript.sql";
         private static readonly string s_agnosticGeneratedPublishFromV1ToV2ScriptPath = $"{s_samplesOutputDir}/postgresql_generated/AgnosticGeneratedPublishFromV1ToV2Script.sql";
+        private static readonly string s_agnosticGeneratedDDLOnlyPublishFromV1ToV2ScriptPath = $"{s_samplesOutputDir}/postgresql_generated/AgnosticGeneratedDDLOnlyPublishFromV1ToV2Script.sql";
         private static readonly string s_agnosticGeneratedPublishFromV2ToV1ScriptPath = $"{s_samplesOutputDir}/postgresql_generated/AgnosticGeneratedPublishFromV2ToV1Script.sql";
+        private static readonly string s_agnosticGeneratedDDLOnlyPublishFromV2ToV1ScriptPath = $"{s_samplesOutputDir}/postgresql_generated/AgnosticGeneratedDDLOnlyPublishFromV2ToV1Script.sql";
         private static readonly string s_agnosticGeneratedDefinitionFromUnregisteredDir = $"{s_samplesOutputDir}/postgresql_generated/AgnosticGeneratedDefinitionFromUnregistered";
         private static readonly string s_agnosticGeneratedDefinitionFromRegisteredDir = $"{s_samplesOutputDir}/postgresql_generated/AgnosticGeneratedDefinitionFromRegistered";
         private static readonly string s_agnosticGeneratedPublishRecreateScriptPath = $"{s_samplesOutputDir}/postgresql_generated/AgnosticGeneratedPublishRecreateScript.sql";
@@ -36,7 +38,9 @@ namespace DotNetDBTools.SampleDeployManagerUsage.PostgreSQL
         private static readonly string s_postgresqlGeneratedPublishToEmptyScriptPath = $"{s_samplesOutputDir}/postgresql_generated/PostgreSQLGeneratedPublishToEmptyScript.sql";
         private static readonly string s_postgresqlGeneratedPublishToExistingScriptPath = $"{s_samplesOutputDir}/postgresql_generated/PostgreSQLGeneratedPublishToExistingScript.sql";
         private static readonly string s_postgresqlGeneratedPublishFromV1ToV2ScriptPath = $"{s_samplesOutputDir}/postgresql_generated/PostgreSQLGeneratedPublishFromV1ToV2Script.sql";
+        private static readonly string s_postgresqlGeneratedDDLOnlyPublishFromV1ToV2ScriptPath = $"{s_samplesOutputDir}/postgresql_generated/PostgreSQLGeneratedDDLOnlyPublishFromV1ToV2Script.sql";
         private static readonly string s_postgresqlGeneratedPublishFromV2ToV1ScriptPath = $"{s_samplesOutputDir}/postgresql_generated/PostgreSQLGeneratedPublishFromV2ToV1Script.sql";
+        private static readonly string s_postgresqlGeneratedDDLOnlyPublishFromV2ToV1ScriptPath = $"{s_samplesOutputDir}/postgresql_generated/PostgreSQLGeneratedDDLOnlyPublishFromV2ToV1Script.sql";
         private static readonly string s_postgresqlGeneratedDefinitionFromUnregisteredDir = $"{s_samplesOutputDir}/postgresql_generated/PostgreSQLGeneratedDefinitionFromUnregistered";
         private static readonly string s_postgresqlGeneratedDefinitionFromRegisteredDir = $"{s_samplesOutputDir}/postgresql_generated/PostgreSQLGeneratedDefinitionFromRegistered";
         private static readonly string s_postgresqlGeneratedPublishRecreateScriptPath = $"{s_samplesOutputDir}/postgresql_generated/PostgreSQLGeneratedPublishRecreateScript.sql";
@@ -51,6 +55,9 @@ namespace DotNetDBTools.SampleDeployManagerUsage.PostgreSQL
         {
             DropDatabaseIfExists(s_agnosticConnectionString);
             CreateDatabase(s_agnosticConnectionString);
+
+            Assembly dbAssembly = Assembly.Load(File.ReadAllBytes(s_agnosticDbAssemblyPath));
+            Assembly dbAssemblyV2 = Assembly.Load(File.ReadAllBytes(s_agnosticDbV2AssemblyPath));
 
             IDeployManager deployManager = new PostgreSQLDeployManager(new DeployOptions());
             IDeployManager dmDataLoss = new PostgreSQLDeployManager(new DeployOptions { AllowDataLoss = true });
@@ -70,8 +77,6 @@ namespace DotNetDBTools.SampleDeployManagerUsage.PostgreSQL
             deployManager.PublishDatabase(s_agnosticDbAssemblyPath, connection);
 
             Console.WriteLine("Generating script to update(from v1 to v2) AgnosticSampleDB from the corresponding assembly files...");
-            Assembly dbAssembly = Assembly.Load(File.ReadAllBytes(s_agnosticDbAssemblyPath));
-            Assembly dbAssemblyV2 = Assembly.Load(File.ReadAllBytes(s_agnosticDbV2AssemblyPath));
             dmDataLoss.GeneratePublishScript(dbAssemblyV2, dbAssembly, s_agnosticGeneratedPublishFromV1ToV2ScriptPath);
             Console.WriteLine("Updating(from v1 to v2) existing AgnosticSampleDB from dbAssembly v2 file...");
             dmDataLoss.PublishDatabase(s_agnosticDbV2AssemblyPath, connection);
@@ -85,6 +90,16 @@ namespace DotNetDBTools.SampleDeployManagerUsage.PostgreSQL
             deployManager.UnregisterAsDNDBT(connection);
             Console.WriteLine("Generating definition from existing unregistered AgnosticSampleDB...");
             deployManager.GenerateDefinition(connection, s_agnosticGeneratedDefinitionFromUnregisteredDir);
+
+            Console.WriteLine("Generating ddl-only script to update(from v1 to v2) AgnosticSampleDB from the corresponding assembly files...");
+            dmDataLoss.GenerateDDLOnlyPublishScript(dbAssemblyV2, dbAssembly, s_agnosticGeneratedDDLOnlyPublishFromV1ToV2ScriptPath);
+            Console.WriteLine("Updating(from v1 to v2) AgnosticSampleDB using previously generated ddl-only script...");
+            connection.Execute(File.ReadAllText(s_agnosticGeneratedDDLOnlyPublishFromV1ToV2ScriptPath));
+
+            Console.WriteLine("Generating ddl-only script to update(rollback from v2 to v1) AgnosticSampleDB from the corresponding assembly files...");
+            dmDataLoss.GenerateDDLOnlyPublishScript(dbAssembly, dbAssemblyV2, s_agnosticGeneratedDDLOnlyPublishFromV2ToV1ScriptPath);
+            Console.WriteLine("Updating(rollback from v2 to v1) AgnosticSampleDB using previously generated ddl-only script...");
+            connection.Execute(File.ReadAllText(s_agnosticGeneratedDDLOnlyPublishFromV2ToV1ScriptPath));
 
             Console.WriteLine("Registiring(=generating and adding new DNDBT system information to DB) AgnosticSampleDB...");
             deployManager.RegisterAsDNDBT(connection);
@@ -102,6 +117,9 @@ namespace DotNetDBTools.SampleDeployManagerUsage.PostgreSQL
         {
             DropDatabaseIfExists(s_postgresqlConnectionString);
             CreateDatabase(s_postgresqlConnectionString);
+
+            Assembly dbAssembly = Assembly.Load(File.ReadAllBytes(s_postgresqlDbAssemblyPath));
+            Assembly dbAssemblyV2 = Assembly.Load(File.ReadAllBytes(s_postgresqlDbV2AssemblyPath));
 
             IDeployManager deployManager = new PostgreSQLDeployManager(new DeployOptions());
             IDeployManager dmDataLoss = new PostgreSQLDeployManager(new DeployOptions { AllowDataLoss = true });
@@ -121,8 +139,6 @@ namespace DotNetDBTools.SampleDeployManagerUsage.PostgreSQL
             deployManager.PublishDatabase(s_postgresqlDbAssemblyPath, connection);
 
             Console.WriteLine("Generating script to update(from v1 to v2) PostgreSQLSampleDB from the corresponding assembly files...");
-            Assembly dbAssembly = Assembly.Load(File.ReadAllBytes(s_postgresqlDbAssemblyPath));
-            Assembly dbAssemblyV2 = Assembly.Load(File.ReadAllBytes(s_postgresqlDbV2AssemblyPath));
             dmDataLoss.GeneratePublishScript(dbAssemblyV2, dbAssembly, s_postgresqlGeneratedPublishFromV1ToV2ScriptPath);
             Console.WriteLine("Updating(from v1 to v2) existing PostgreSQLSampleDB from dbAssembly v2 file...");
             dmDataLoss.PublishDatabase(s_postgresqlDbV2AssemblyPath, connection);
@@ -136,6 +152,16 @@ namespace DotNetDBTools.SampleDeployManagerUsage.PostgreSQL
             deployManager.UnregisterAsDNDBT(connection);
             Console.WriteLine("Generating definition from existing unregistered PostgreSQLSampleDB...");
             deployManager.GenerateDefinition(connection, s_postgresqlGeneratedDefinitionFromUnregisteredDir);
+
+            Console.WriteLine("Generating ddl-only script to update(from v1 to v2) PostgreSQLSampleDB from the corresponding assembly files...");
+            dmDataLoss.GenerateDDLOnlyPublishScript(dbAssemblyV2, dbAssembly, s_postgresqlGeneratedDDLOnlyPublishFromV1ToV2ScriptPath);
+            Console.WriteLine("Updating(from v1 to v2) PostgreSQLSampleDB using previously generated ddl-only script...");
+            connection.Execute(File.ReadAllText(s_postgresqlGeneratedDDLOnlyPublishFromV1ToV2ScriptPath));
+
+            Console.WriteLine("Generating ddl-only script to update(rollback from v2 to v1) PostgreSQLSampleDB from the corresponding assembly files...");
+            dmDataLoss.GenerateDDLOnlyPublishScript(dbAssembly, dbAssemblyV2, s_postgresqlGeneratedDDLOnlyPublishFromV2ToV1ScriptPath);
+            Console.WriteLine("Updating(rollback from v2 to v1) PostgreSQLSampleDB using previously generated ddl-only script...");
+            connection.Execute(File.ReadAllText(s_postgresqlGeneratedDDLOnlyPublishFromV2ToV1ScriptPath));
 
             Console.WriteLine("Registiring(=generating and adding new DNDBT system information to DB) PostgreSQLSampleDB...");
             deployManager.RegisterAsDNDBT(connection);
