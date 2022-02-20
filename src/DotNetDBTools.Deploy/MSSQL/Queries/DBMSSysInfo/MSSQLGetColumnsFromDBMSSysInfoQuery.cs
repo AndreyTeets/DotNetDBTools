@@ -28,7 +28,7 @@ INNER JOIN sys.columns c
     ON c.object_id = t.object_id
 LEFT JOIN sys.default_constraints dc
     ON dc.object_id = c.default_object_id
-WHERE t.name != '{DNDBTSysTables.DNDBTDbObjects}';";
+WHERE t.name NOT IN ({DNDBTSysTables.AllTablesForInClause});";
 
     public override RecordsLoader Loader => new MSSQLRecordsLoader();
     public override RecordMapper Mapper => new MSSQLRecordMapper();

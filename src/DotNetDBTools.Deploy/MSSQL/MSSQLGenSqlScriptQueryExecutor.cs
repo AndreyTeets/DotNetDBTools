@@ -49,6 +49,7 @@ END CATCH;";
         {
             DbType.String => "NVARCHAR(MAX)",
             DbType.Guid => "UNIQUEIDENTIFIER",
+            DbType.Int64 => "BIGINT",
             _ => throw new InvalidOperationException($"Invalid query parameter type: '{queryParameter.Type}'")
         };
     }
@@ -60,6 +61,7 @@ END CATCH;";
         return queryParameter.Type switch
         {
             DbType.String or DbType.Guid => $"N'{queryParameter.Value.ToString().Replace("'", "''")}'",
+            DbType.Int64 => $"{queryParameter.Value}",
             _ => throw new InvalidOperationException($"Invalid query parameter type: '{queryParameter.Type}'")
         };
     }

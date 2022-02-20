@@ -22,7 +22,7 @@ FROM sqlite_master sm
 INNER JOIN pragma_foreign_key_list(sm.name) fkl
 WHERE sm.type = 'table'
     AND sm.name != 'sqlite_sequence'
-    AND sm.name != '{DNDBTSysTables.DNDBTDbObjects}';";
+    AND sm.name NOT IN ({DNDBTSysTables.AllTablesForInClause});";
 
     public override RecordMapper Mapper => new MySQLRecordMapper();
 

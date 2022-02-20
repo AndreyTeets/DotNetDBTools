@@ -31,7 +31,7 @@ INNER JOIN sys.columns thisColumns
 INNER JOIN sys.columns referencedColumns
     ON referencedColumns.object_id = foreignKey.referenced_object_id
         AND referencedColumns.column_id = fkColumnsMap.referenced_column_id
-WHERE thisTable.name != '{DNDBTSysTables.DNDBTDbObjects}';";
+WHERE thisTable.name NOT IN ({DNDBTSysTables.AllTablesForInClause});";
 
     public override RecordMapper Mapper => new MSSQLRecordMapper();
 

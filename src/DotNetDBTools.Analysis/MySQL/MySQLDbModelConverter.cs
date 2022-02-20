@@ -8,25 +8,30 @@ using DotNetDBTools.Models.MySQL;
 
 namespace DotNetDBTools.Analysis.MySQL;
 
-public class MySQLDbModelConverter : IDbModelConverter
+public class MySQLDbModelConverter : DbModelConverter
 {
-    public Database FromAgnostic(Database database)
+    public MySQLDbModelConverter()
+        : base(DatabaseKind.MySQL) { }
+
+    public override Database FromAgnostic(Database database)
     {
         MySQLDatabase mysqlDatabase = ConvertToMySQLModel((AgnosticDatabase)database);
         MySQLPostBuildProcessingHelper.ReplaceUniqueConstraintsWithUniqueIndexes(mysqlDatabase);
         return mysqlDatabase;
     }
 
-    private static MySQLDatabase ConvertToMySQLModel(AgnosticDatabase database)
+    private MySQLDatabase ConvertToMySQLModel(AgnosticDatabase database)
     {
         return new(database.Name)
         {
+            Version = database.Version,
             Tables = database.Tables.Select(x => ConvertToMySQLModel((AgnosticTable)x)).ToList(),
             Views = database.Views.Select(x => ConvertToMySQLModel((AgnosticView)x)).ToList(),
+            Scripts = database.Scripts.Select(x => ConvertScript(x)).ToList(),
         };
     }
 
-    private static MySQLTable ConvertToMySQLModel(AgnosticTable table)
+    private MySQLTable ConvertToMySQLModel(AgnosticTable table)
     {
         return new()
         {
@@ -42,7 +47,7 @@ public class MySQLDbModelConverter : IDbModelConverter
         };
     }
 
-    private static MySQLView ConvertToMySQLModel(AgnosticView view)
+    private MySQLView ConvertToMySQLModel(AgnosticView view)
     {
         return new()
         {
@@ -52,7 +57,7 @@ public class MySQLDbModelConverter : IDbModelConverter
         };
     }
 
-    private static PrimaryKey ConvertToMySQLModel(PrimaryKey pk, string tableName)
+    private PrimaryKey ConvertToMySQLModel(PrimaryKey pk, string tableName)
     {
         return new()
         {
@@ -62,7 +67,7 @@ public class MySQLDbModelConverter : IDbModelConverter
         };
     }
 
-    private static IEnumerable<Column> ConvertToMySQLModel(IEnumerable<Column> columns)
+    private IEnumerable<Column> ConvertToMySQLModel(IEnumerable<Column> columns)
     {
         foreach (Column column in columns)
         {
@@ -87,7 +92,7 @@ public class MySQLDbModelConverter : IDbModelConverter
         return columns;
     }
 
-    private static DataType ConvertIntSqlType(AgnosticDataType dataType)
+    private DataType ConvertIntSqlType(AgnosticDataType dataType)
     {
         return dataType.Size switch
         {
@@ -99,7 +104,7 @@ public class MySQLDbModelConverter : IDbModelConverter
         };
     }
 
-    private static DataType ConvertRealSqlType(AgnosticDataType dataType)
+    private DataType ConvertRealSqlType(AgnosticDataType dataType)
     {
         if (dataType.IsDoublePrecision)
             return new DataType { Name = MySQLDataTypeNames.DOUBLE };
@@ -107,12 +112,12 @@ public class MySQLDbModelConverter : IDbModelConverter
             return new DataType { Name = MySQLDataTypeNames.FLOAT };
     }
 
-    private static DataType ConvertDecimalSqlType(AgnosticDataType dataType)
+    private DataType ConvertDecimalSqlType(AgnosticDataType dataType)
     {
         return new DataType { Name = $"{MySQLDataTypeNames.DECIMAL}({dataType.Precision},{dataType.Scale})" };
     }
 
-    private static DataType ConvertStringSqlType(AgnosticDataType dataType)
+    private DataType ConvertStringSqlType(AgnosticDataType dataType)
     {
         int maxAllowedLength = dataType.IsFixedLength ? 255 : 65535;
         if (dataType.Length > maxAllowedLength ||
@@ -126,7 +131,7 @@ public class MySQLDbModelConverter : IDbModelConverter
         return new DataType { Name = $"{stringTypeName}({lengthStr})" };
     }
 
-    private static DataType ConvertBinarySqlType(AgnosticDataType dataType)
+    private DataType ConvertBinarySqlType(AgnosticDataType dataType)
     {
         int maxAllowedLength = dataType.IsFixedLength ? 255 : 65535;
         if (dataType.Length > maxAllowedLength ||
@@ -140,16 +145,11 @@ public class MySQLDbModelConverter : IDbModelConverter
         return new DataType { Name = $"{binaryTypeName}({lengthStr})" };
     }
 
-    private static DataType ConvertDateTimeSqlType(AgnosticDataType dataType)
+    private DataType ConvertDateTimeSqlType(AgnosticDataType dataType)
     {
         if (dataType.IsWithTimeZone)
             return new DataType { Name = MySQLDataTypeNames.TIMESTAMP };
         else
             return new DataType { Name = MySQLDataTypeNames.DATETIME };
-    }
-
-    private static CodePiece ConvertCodePiece(CodePiece codePiece)
-    {
-        return new CodePiece { Code = ((AgnosticCodePiece)codePiece).DbKindToCodeMap[DatabaseKind.MySQL] };
     }
 }

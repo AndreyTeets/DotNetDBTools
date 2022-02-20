@@ -22,7 +22,7 @@ FROM sqlite_master sm
 INNER JOIN pragma_table_info(sm.name) ti
 WHERE sm.type = 'table'
     AND sm.name != 'sqlite_sequence'
-    AND sm.name != '{DNDBTSysTables.DNDBTDbObjects}';";
+    AND sm.name NOT IN ({DNDBTSysTables.AllTablesForInClause});";
 
     public override RecordsLoader Loader => new SQLiteRecordsLoader();
     public override RecordMapper Mapper => new SQLiteRecordMapper();

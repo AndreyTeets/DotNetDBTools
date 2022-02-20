@@ -28,6 +28,7 @@ internal class MySQLDiffCreator : DiffCreator
         ForeignKeysHelper.BuildAllForeignKeysToBeDroppedAndCreated(dbDiff);
 
         BuildViewsDiff(dbDiff);
+        BuildScriptsDiff(dbDiff);
         return dbDiff;
     }
 }

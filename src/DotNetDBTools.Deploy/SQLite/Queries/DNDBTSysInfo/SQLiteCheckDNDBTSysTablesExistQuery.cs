@@ -9,5 +9,6 @@ internal class SQLiteCheckDNDBTSysTablesExistQuery : SqlTextOnlyQuery
 $@"SELECT
     true
 FROM sqlite_master
-WHERE type = 'table' AND name = '{DNDBTSysTables.DNDBTDbObjects}';";
+WHERE type = 'table' AND name IN ({DNDBTSysTables.AllTablesForInClause})
+LIMIT 1;";
 }

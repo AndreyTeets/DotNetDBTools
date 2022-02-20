@@ -15,6 +15,7 @@ public class PostgreSQLDatabase : Database
         Name = name;
         Tables = new List<PostgreSQLTable>();
         Views = new List<PostgreSQLView>();
+        Scripts = new List<Script>();
         CompositeTypes = new List<PostgreSQLCompositeType>();
         DomainTypes = new List<PostgreSQLDomainType>();
         EnumTypes = new List<PostgreSQLEnumType>();

@@ -12,7 +12,7 @@ $@"SELECT
 FROM sqlite_master sm
 WHERE sm.type = 'table'
     AND sm.name != 'sqlite_sequence'
-    AND sm.name != '{DNDBTSysTables.DNDBTDbObjects}';";
+    AND sm.name NOT IN ({DNDBTSysTables.AllTablesForInClause});";
 
     public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
 

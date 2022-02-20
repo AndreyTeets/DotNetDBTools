@@ -32,6 +32,7 @@ internal class MSSQLDiffCreator : DiffCreator
         ForeignKeysHelper.BuildAllForeignKeysToBeDroppedAndCreated(dbDiff);
 
         BuildViewsDiff(dbDiff);
+        BuildScriptsDiff(dbDiff);
         return dbDiff;
     }
 

@@ -2,6 +2,51 @@ PRAGMA foreign_keys=off;
 BEGIN TRANSACTION;
 
 -- QUERY START: GenericQuery
+DROP TABLE IF EXISTS [_MyTable2];
+
+CREATE TABLE [_MyTable2]
+(
+    [MyColumn1] INTEGER NOT NULL PRIMARY KEY,
+    [MyColumn2] BLOB
+);
+
+INSERT INTO [_MyTable2] ([MyColumn1], [MyColumn2])
+SELECT [MyColumn1], [MyColumn2] FROM [MyTable2];
+-- QUERY END: GenericQuery
+
+-- QUERY START: SQLiteInsertDNDBTScriptExecutionRecordQuery
+INSERT INTO [DNDBTScriptExecutions]
+(
+    [ID],
+    [Type],
+    [Name],
+    [Code],
+    [MinDbVersionToExecute],
+    [MaxDbVersionToExecute],
+    [ExecutedOnDbVersion]
+)
+VALUES
+(
+    '7f72f0df-4eda-4063-99d8-99c1f37819d2',
+    'BeforePublishOnce',
+    'SaveRecreatedColumnsData',
+    'DROP TABLE IF EXISTS [_MyTable2];
+
+CREATE TABLE [_MyTable2]
+(
+    [MyColumn1] INTEGER NOT NULL PRIMARY KEY,
+    [MyColumn2] BLOB
+);
+
+INSERT INTO [_MyTable2] ([MyColumn1], [MyColumn2])
+SELECT [MyColumn1], [MyColumn2] FROM [MyTable2];',
+    1,
+    1,
+    1
+);
+-- QUERY END: SQLiteInsertDNDBTScriptExecutionRecordQuery
+
+-- QUERY START: GenericQuery
 DROP VIEW MyView1;
 -- QUERY END: GenericQuery
 
@@ -404,5 +449,59 @@ LEFT JOIN MyTable2 t2
     ON t2.MyColumn1NewName = t1.MyColumn1;'
 );
 -- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: GenericQuery
+CREATE TABLE IF NOT EXISTS [_MyTable2]
+(
+    [MyColumn1] INTEGER NOT NULL PRIMARY KEY,
+    [MyColumn2] BLOB
+);
+
+UPDATE [MyTable2] SET
+    [MyColumn2] = [t].[MyColumn2]
+FROM [_MyTable2] AS [t]
+WHERE [MyTable2].[MyColumn1NewName] = [t].[MyColumn1];
+
+DROP TABLE [_MyTable2];
+-- QUERY END: GenericQuery
+
+-- QUERY START: SQLiteInsertDNDBTScriptExecutionRecordQuery
+INSERT INTO [DNDBTScriptExecutions]
+(
+    [ID],
+    [Type],
+    [Name],
+    [Code],
+    [MinDbVersionToExecute],
+    [MaxDbVersionToExecute],
+    [ExecutedOnDbVersion]
+)
+VALUES
+(
+    '8ccaf36e-e587-466e-86f7-45c0061ae521',
+    'AfterPublishOnce',
+    'RestoreRecreatedColumnsData',
+    'CREATE TABLE IF NOT EXISTS [_MyTable2]
+(
+    [MyColumn1] INTEGER NOT NULL PRIMARY KEY,
+    [MyColumn2] BLOB
+);
+
+UPDATE [MyTable2] SET
+    [MyColumn2] = [t].[MyColumn2]
+FROM [_MyTable2] AS [t]
+WHERE [MyTable2].[MyColumn1NewName] = [t].[MyColumn1];
+
+DROP TABLE [_MyTable2];',
+    1,
+    1,
+    1
+);
+-- QUERY END: SQLiteInsertDNDBTScriptExecutionRecordQuery
+
+-- QUERY START: SQLiteUpdateDNDBTDbAttributesRecordQuery
+UPDATE [DNDBTDbAttributes] SET
+    [Version] = 2;
+-- QUERY END: SQLiteUpdateDNDBTDbAttributesRecordQuery
 
 COMMIT TRANSACTION;

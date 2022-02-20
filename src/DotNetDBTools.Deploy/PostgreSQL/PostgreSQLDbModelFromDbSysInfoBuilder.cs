@@ -29,7 +29,9 @@ internal class PostgreSQLDbModelFromDbSysInfoBuilder : DbModelFromDbSysInfoBuild
     PostgreSQLGetTriggersFromDBMSSysInfoQuery,
     PostgreSQLGetForeignKeysFromDBMSSysInfoQuery,
     PostgreSQLGetViewsFromDBMSSysInfoQuery,
-    PostgreSQLGetDNDBTDbObjectRecordsQuery>
+    PostgreSQLGetDNDBTDbAttributesRecordQuery,
+    PostgreSQLGetDNDBTDbObjectRecordsQuery,
+    PostgreSQLGetDNDBTScriptExecutionRecordsQuery>
 {
     public PostgreSQLDbModelFromDbSysInfoBuilder(IQueryExecutor queryExecutor)
         : base(queryExecutor) { }

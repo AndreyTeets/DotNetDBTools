@@ -16,6 +16,7 @@ internal class MSSQLDbEditor : DbEditor<
     MSSQLCreateDNDBTSysTablesQuery,
     MSSQLDropDNDBTSysTablesQuery>
 {
+    private readonly IScriptExecutor _scriptExecutor;
     private readonly ITableEditor _tableEditor;
     private readonly IIndexEditor _indexEditor;
     private readonly ITriggerEditor _triggerEditor;
@@ -24,6 +25,7 @@ internal class MSSQLDbEditor : DbEditor<
     public MSSQLDbEditor(IQueryExecutor queryExecutor)
         : base(queryExecutor)
     {
+        _scriptExecutor = new MSSQLScriptExecutor(queryExecutor);
         _tableEditor = new MSSQLTableEditor(queryExecutor);
         _indexEditor = new MSSQLIndexEditor(queryExecutor);
         _triggerEditor = new MSSQLTriggerEditor(queryExecutor);
@@ -62,6 +64,8 @@ internal class MSSQLDbEditor : DbEditor<
             QueryExecutor.Execute(new MSSQLInsertDNDBTDbObjectRecordQuery(view.ID, null, DbObjectType.View, view.Name, view.GetCode()));
         foreach (MSSQLProcedure proc in db.Procedures)
             QueryExecutor.Execute(new MSSQLInsertDNDBTDbObjectRecordQuery(proc.ID, null, DbObjectType.Procedure, proc.Name, proc.GetCode()));
+
+        QueryExecutor.Execute(new MSSQLInsertDNDBTDbAttributesRecordQuery(database));
     }
 
     public override void ApplyDatabaseDiff(DatabaseDiff databaseDiff, DeployOptions options)
@@ -70,6 +74,9 @@ internal class MSSQLDbEditor : DbEditor<
         QueryExecutor.BeginTransaction();
         try
         {
+            _scriptExecutor.DeleteRemovedScriptsExecutionRecords(dbDiff);
+            _scriptExecutor.ExecuteScripts(dbDiff, ScriptKind.BeforePublishOnce);
+
             _triggerEditor.DropTriggers(dbDiff);
             foreach (MSSQLProcedure procedure in dbDiff.ProceduresToDrop)
                 DropProcedure(procedure);
@@ -105,6 +112,11 @@ internal class MSSQLDbEditor : DbEditor<
             foreach (MSSQLProcedure procedure in dbDiff.ProceduresToCreate)
                 CreateProcedure(procedure);
             _triggerEditor.CreateTriggers(dbDiff);
+
+            _scriptExecutor.ExecuteScripts(dbDiff, ScriptKind.AfterPublishOnce);
+
+            if (dbDiff.NewDatabase.Version != dbDiff.OldDatabase.Version)
+                QueryExecutor.Execute(new MSSQLUpdateDNDBTDbAttributesRecordQuery(dbDiff.NewDatabase));
         }
         catch (Exception)
         {

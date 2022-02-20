@@ -28,6 +28,11 @@ internal class AgnosticDbObjectCodeMapper : IDbObjectCodeMapper
                 Code = null,
                 DbKindToCodeMap = CreateDbKindToCodeMap(view.Code),
             },
+            IScript script => new AgnosticCodePiece
+            {
+                Code = null,
+                DbKindToCodeMap = CreateDbKindToCodeMap(script.Code),
+            },
             _ => throw new InvalidOperationException($"Invalid dbObject for code mapping: {dbObject}"),
         };
     }

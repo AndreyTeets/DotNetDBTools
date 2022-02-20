@@ -23,7 +23,7 @@ INNER JOIN sys.index_columns ic
         AND ic.index_id = i.index_id
         AND ic.column_id = c.column_id
 WHERE i.is_unique_constraint = 1
-    AND t.name != '{DNDBTSysTables.DNDBTDbObjects}';";
+    AND t.name NOT IN ({DNDBTSysTables.AllTablesForInClause});";
 
     public override RecordMapper Mapper => new MSSQLRecordMapper();
 

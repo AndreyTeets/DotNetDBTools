@@ -621,6 +621,64 @@ VALUES
 );';
 -- QUERY END: MSSQLInsertDNDBTDbObjectRecordQuery
 
+-- QUERY START: GenericQuery
+EXEC sp_executesql N'INSERT INTO [MyTable4]([MyColumn1])
+SELECT * FROM
+(
+    SELECT 1
+    UNION ALL
+    SELECT 2
+    UNION ALL
+    SELECT 3
+) t(Col1)
+WHERE NOT EXISTS (SELECT COUNT(*) FROM [MyTable4]);';
+-- QUERY END: GenericQuery
+
+-- QUERY START: MSSQLInsertDNDBTScriptExecutionRecordQuery
+EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''100d624a-01aa-4730-b86f-f991ac3ed936'';
+DECLARE @Type NVARCHAR(MAX) = N''AfterPublishOnce'';
+DECLARE @Name NVARCHAR(MAX) = N''InsertSomeInitialData'';
+DECLARE @Code NVARCHAR(MAX) = N''INSERT INTO [MyTable4]([MyColumn1])
+SELECT * FROM
+(
+    SELECT 1
+    UNION ALL
+    SELECT 2
+    UNION ALL
+    SELECT 3
+) t(Col1)
+WHERE NOT EXISTS (SELECT COUNT(*) FROM [MyTable4]);'';
+DECLARE @MinDbVersionToExecute BIGINT = 0;
+DECLARE @MaxDbVersionToExecute BIGINT = 9223372036854775807;
+DECLARE @ExecutedOnDbVersion BIGINT = 0;
+INSERT INTO [DNDBTScriptExecutions]
+(
+    [ID],
+    [Type],
+    [Name],
+    [Code],
+    [MinDbVersionToExecute],
+    [MaxDbVersionToExecute],
+    [ExecutedOnDbVersion]
+)
+VALUES
+(
+    @ID,
+    @Type,
+    @Name,
+    @Code,
+    @MinDbVersionToExecute,
+    @MaxDbVersionToExecute,
+    @ExecutedOnDbVersion
+);';
+-- QUERY END: MSSQLInsertDNDBTScriptExecutionRecordQuery
+
+-- QUERY START: MSSQLUpdateDNDBTDbAttributesRecordQuery
+EXEC sp_executesql N'DECLARE @Version BIGINT = 1;
+UPDATE [DNDBTDbAttributes] SET
+    [Version] = @Version;';
+-- QUERY END: MSSQLUpdateDNDBTDbAttributesRecordQuery
+
     COMMIT TRANSACTION;
 END TRY
 BEGIN CATCH;

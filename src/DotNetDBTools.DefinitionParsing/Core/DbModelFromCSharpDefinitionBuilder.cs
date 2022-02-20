@@ -35,8 +35,10 @@ internal abstract class DbModelFromCSharpDefinitionBuilder<
     {
         TDatabase database = new();
         database.Name = DbAssemblyInfoHelper.GetDbName(dbAssembly);
+        database.Version = DbAssemblyInfoHelper.GetDbVersion(dbAssembly);
         database.Tables = BuildTableModels(dbAssembly);
         database.Views = BuildViewModels(dbAssembly);
+        database.Scripts = BuildScriptModels(dbAssembly);
         BuildAdditionalDbObjects(database, dbAssembly);
         return database;
     }
@@ -85,6 +87,26 @@ internal abstract class DbModelFromCSharpDefinitionBuilder<
         return viewModels;
     }
     protected virtual void BuildAdditionalViewModelProperties(TView viewModel, IBaseView view) { }
+
+    private List<Script> BuildScriptModels(Assembly dbAssembly)
+    {
+        IEnumerable<IBaseScript> scripts = GetInstancesOfAllTypesImplementingInterface<IBaseScript>(dbAssembly);
+        List<Script> scriptModels = new();
+        foreach (IBaseScript script in scripts)
+        {
+            Script scriptModel = new()
+            {
+                ID = script.ID,
+                Name = script.GetType().Name,
+                Kind = (ScriptKind)Enum.Parse(typeof(ScriptKind), script.Type.ToString()),
+                MinDbVersionToExecute = script.MinDbVersionToExecute,
+                MaxDbVersionToExecute = script.MaxDbVersionToExecute,
+                CodePiece = DbObjectCodeMapper.MapToCodePiece(script),
+            };
+            scriptModels.Add(scriptModel);
+        }
+        return scriptModels;
+    }
 
     private List<TColumn> BuildColumnModels(IBaseTable table)
     {

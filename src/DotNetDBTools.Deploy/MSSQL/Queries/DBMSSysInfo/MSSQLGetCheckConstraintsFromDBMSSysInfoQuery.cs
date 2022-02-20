@@ -15,7 +15,7 @@ $@"SELECT
 FROM sys.tables t
 INNER JOIN sys.check_constraints cc
       ON cc.parent_object_id = t.object_id
-WHERE t.name != '{DNDBTSysTables.DNDBTDbObjects}';";
+WHERE t.name NOT IN ({DNDBTSysTables.AllTablesForInClause});";
 
     public override RecordMapper Mapper => new MSSQLRecordMapper();
 

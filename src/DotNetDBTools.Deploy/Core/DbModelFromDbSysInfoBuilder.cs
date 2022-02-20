@@ -12,7 +12,9 @@ using static DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo.GetPrimaryKeysFromDBM
 using static DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo.GetTriggersFromDBMSSysInfoQuery;
 using static DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo.GetUniqueConstraintsFromDBMSSysInfoQuery;
 using static DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo.GetViewsFromDBMSSysInfoQuery;
+using static DotNetDBTools.Deploy.Core.Queries.DNDBTSysInfo.GetDNDBTDbAttributesRecordQuery;
 using static DotNetDBTools.Deploy.Core.Queries.DNDBTSysInfo.GetDNDBTDbObjectRecordsQuery;
+using static DotNetDBTools.Deploy.Core.Queries.DNDBTSysInfo.GetDNDBTScriptExecutionRecordsQuery;
 
 namespace DotNetDBTools.Deploy.Core;
 
@@ -28,7 +30,9 @@ internal abstract class DbModelFromDbSysInfoBuilder<
     TGetTriggersFromDBMSSysInfoQuery,
     TGetForeignKeysFromDBMSSysInfoQuery,
     TGetViewsFromDBMSSysInfoQuery,
-    TGetDbObjectRecordsFromDNDBTSysInfoQuery>
+    TGetDbAttributesRecordFromDNDBTSysInfoQuery,
+    TGetDbObjectRecordsFromDNDBTSysInfoQuery,
+    TGetScriptExecutionRecordsFromDNDBTSysInfoQuery>
     : IDbModelFromDbSysInfoBuilder
     where TDatabase : Database, new()
     where TTable : Table, new()
@@ -41,7 +45,9 @@ internal abstract class DbModelFromDbSysInfoBuilder<
     where TGetForeignKeysFromDBMSSysInfoQuery : GetForeignKeysFromDBMSSysInfoQuery, new()
     where TGetTriggersFromDBMSSysInfoQuery : GetTriggersFromDBMSSysInfoQuery, new()
     where TGetViewsFromDBMSSysInfoQuery : GetViewsFromDBMSSysInfoQuery, new()
+    where TGetDbAttributesRecordFromDNDBTSysInfoQuery : GetDNDBTDbAttributesRecordQuery, new()
     where TGetDbObjectRecordsFromDNDBTSysInfoQuery : GetDNDBTDbObjectRecordsQuery, new()
+    where TGetScriptExecutionRecordsFromDNDBTSysInfoQuery : GetDNDBTScriptExecutionRecordsQuery, new()
 {
     protected readonly IQueryExecutor QueryExecutor;
 
@@ -54,6 +60,8 @@ internal abstract class DbModelFromDbSysInfoBuilder<
     {
         Database database = GenerateDatabaseModelFromDBMSSysInfo();
         ReplaceDbModelObjectsIDsAndCodeWithDNDBTSysInfo(database);
+        PopulateScriptsFromDNDBTSysInfo(database);
+        PopulateDbAttributesFromDNDBTSysInfo(database);
         return database;
     }
 
@@ -121,6 +129,32 @@ internal abstract class DbModelFromDbSysInfoBuilder<
         ReplaceAdditionalDbModelObjectsIDsAndCodeWithDNDBTSysInfo(database, dbObjectIDsMap);
     }
     protected virtual void ReplaceAdditionalDbModelObjectsIDsAndCodeWithDNDBTSysInfo(Database database, Dictionary<string, DNDBTInfo> dbObjectIDsMap) { }
+
+    private void PopulateScriptsFromDNDBTSysInfo(Database database)
+    {
+        TGetScriptExecutionRecordsFromDNDBTSysInfoQuery query = new();
+        IEnumerable<ScriptRecord> scriptRecords = query.Loader.GetRecords(QueryExecutor, query);
+        foreach (ScriptRecord scriptRecord in scriptRecords)
+        {
+            Script script = new()
+            {
+                ID = scriptRecord.GetID(),
+                Name = scriptRecord.Name,
+                Kind = (ScriptKind)Enum.Parse(typeof(ScriptKind), scriptRecord.Type),
+                MinDbVersionToExecute = scriptRecord.MinDbVersionToExecute,
+                MaxDbVersionToExecute = scriptRecord.MaxDbVersionToExecute,
+                CodePiece = new CodePiece { Code = scriptRecord.Code },
+            };
+            ((List<Script>)database.Scripts).Add(script);
+        }
+    }
+
+    private void PopulateDbAttributesFromDNDBTSysInfo(Database database)
+    {
+        TGetDbAttributesRecordFromDNDBTSysInfoQuery query = new();
+        DNDBTDbAttributesRecord dbAttributesRecord = QueryExecutor.QuerySingleOrDefault<DNDBTDbAttributesRecord>(query);
+        database.Version = dbAttributesRecord.Version;
+    }
 
     private IEnumerable<Table> BuildTables()
     {

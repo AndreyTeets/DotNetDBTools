@@ -6,5 +6,5 @@ namespace DotNetDBTools.Deploy.MySQL.Queries.DNDBTSysInfo;
 internal class MySQLCheckDNDBTSysTablesExistQuery : SqlTextOnlyQuery
 {
     public override string Sql =>
-$@"SELECT TRUE FROM information_schema.tables WHERE TABLE_SCHEMA = (SELECT DATABASE()) AND TABLE_NAME = '{DNDBTSysTables.DNDBTDbObjects}' LIMIT 1;";
+$@"SELECT TRUE FROM information_schema.tables WHERE TABLE_SCHEMA = (SELECT DATABASE()) AND TABLE_NAME IN ({DNDBTSysTables.AllTablesForInClause}) LIMIT 1;";
 }

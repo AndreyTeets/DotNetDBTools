@@ -21,7 +21,9 @@ internal class MSSQLDbModelFromDbSysInfoBuilder : DbModelFromDbSysInfoBuilder<
     MSSQLGetTriggersFromDBMSSysInfoQuery,
     MSSQLGetForeignKeysFromDBMSSysInfoQuery,
     MSSQLGetViewsFromDBMSSysInfoQuery,
-    MSSQLGetDNDBTDbObjectRecordsQuery>
+    MSSQLGetDNDBTDbAttributesRecordQuery,
+    MSSQLGetDNDBTDbObjectRecordsQuery,
+    MSSQLGetDNDBTScriptExecutionRecordsQuery>
 {
     public MSSQLDbModelFromDbSysInfoBuilder(IQueryExecutor queryExecutor)
         : base(queryExecutor) { }

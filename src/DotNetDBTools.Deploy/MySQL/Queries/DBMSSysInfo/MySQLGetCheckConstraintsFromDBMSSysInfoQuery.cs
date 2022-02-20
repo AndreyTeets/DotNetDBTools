@@ -18,7 +18,7 @@ INNER JOIN INFORMATION_SCHEMA.CHECK_CONSTRAINTS cc
         AND cc.CONSTRAINT_NAME = tc.CONSTRAINT_NAME
 WHERE tc.CONSTRAINT_SCHEMA = (select DATABASE())
     AND tc.CONSTRAINT_TYPE = 'CHECK'
-    AND tc.TABLE_NAME != '{DNDBTSysTables.DNDBTDbObjects}';";
+    AND tc.TABLE_NAME NOT IN ({DNDBTSysTables.AllTablesForInClause});";
 
     public override RecordMapper Mapper => new MySQLRecordMapper();
 

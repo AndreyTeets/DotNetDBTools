@@ -14,6 +14,7 @@ public class MSSQLDatabase : Database
         Name = name;
         Tables = new List<MSSQLTable>();
         Views = new List<MSSQLView>();
+        Scripts = new List<Script>();
         UserDefinedTypes = new List<MSSQLUserDefinedType>();
         UserDefinedTableTypes = new List<MSSQLUserDefinedTableType>();
         Functions = new List<MSSQLFunction>();

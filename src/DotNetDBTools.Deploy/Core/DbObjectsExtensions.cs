@@ -8,4 +8,5 @@ internal static class DbObjectsExtensions
     public static string GetCode(this CheckConstraint ck) => ck.CodePiece.Code;
     public static string GetCode(this Trigger trg) => trg.CodePiece.Code;
     public static string GetCode(this View view) => view.CodePiece.Code;
+    public static string GetCode(this Script script) => script.CodePiece.Code;
 }

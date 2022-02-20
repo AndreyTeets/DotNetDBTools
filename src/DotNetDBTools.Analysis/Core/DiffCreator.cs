@@ -48,6 +48,19 @@ internal abstract class DiffCreator
         dbDiff.ViewsToDrop = viewsToDrop;
     }
 
+    protected void BuildScriptsDiff(DatabaseDiff dbDiff)
+    {
+        List<Script> addedScripts = null;
+        List<Script> removedScripts = null;
+        FillAddedAndRemovedItemsAndApplyActionToChangedItems(
+            dbDiff.NewDatabase.Scripts, dbDiff.OldDatabase.Scripts,
+            ref addedScripts, ref removedScripts,
+            (newView, oldView) => { });
+
+        dbDiff.AddedScripts = addedScripts;
+        dbDiff.RemovedScripts = removedScripts;
+    }
+
     private TTableDiff CreateTableDiff<TTableDiff>(Table newDbTable, Table oldDbTable)
         where TTableDiff : TableDiff, new()
     {

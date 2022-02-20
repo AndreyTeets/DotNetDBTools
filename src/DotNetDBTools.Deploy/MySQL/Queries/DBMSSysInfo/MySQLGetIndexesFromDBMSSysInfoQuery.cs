@@ -22,7 +22,7 @@ LEFT JOIN INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc
         AND tc.CONSTRAINT_NAME = s.INDEX_NAME
 WHERE s.TABLE_SCHEMA = (select DATABASE())
     AND (tc.CONSTRAINT_TYPE = 'UNIQUE' OR tc.CONSTRAINT_TYPE IS NULL)
-    AND s.TABLE_NAME != '{DNDBTSysTables.DNDBTDbObjects}';";
+    AND s.TABLE_NAME NOT IN ({DNDBTSysTables.AllTablesForInClause});";
 
     public override RecordMapper Mapper => new MySQLRecordMapper();
 

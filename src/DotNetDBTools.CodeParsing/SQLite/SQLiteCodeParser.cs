@@ -9,6 +9,8 @@ public class SQLiteCodeParser : CodeParser<SQLiteParser, SQLiteLexer>
 {
     public ObjectInfo GetModelFromCreateStatement(string input)
     {
+        if (ScriptDeclarationParser.TryParseScriptInfo(input, out ScriptInfo scriptInfo))
+            return scriptInfo;
         IParseTree parseTree = Parse(input, x => x.sql_stmt());
         SQLiteGetModelFromCreateStatementVisitor visitor = new();
         return visitor.Visit(parseTree);

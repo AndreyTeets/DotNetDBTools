@@ -8,23 +8,28 @@ using DotNetDBTools.Models.SQLite;
 
 namespace DotNetDBTools.Analysis.SQLite;
 
-public class SQLiteDbModelConverter : IDbModelConverter
+public class SQLiteDbModelConverter : DbModelConverter
 {
-    public Database FromAgnostic(Database database)
+    public SQLiteDbModelConverter()
+        : base(DatabaseKind.SQLite) { }
+
+    public override Database FromAgnostic(Database database)
     {
         return ConvertToSQLiteModel((AgnosticDatabase)database);
     }
 
-    private static SQLiteDatabase ConvertToSQLiteModel(AgnosticDatabase database)
+    private SQLiteDatabase ConvertToSQLiteModel(AgnosticDatabase database)
     {
         return new(database.Name)
         {
+            Version = database.Version,
             Tables = database.Tables.Select(x => ConvertToSQLiteModel((AgnosticTable)x)).ToList(),
             Views = database.Views.Select(x => ConvertToSQLiteModel((AgnosticView)x)).ToList(),
+            Scripts = database.Scripts.Select(x => ConvertScript(x)).ToList(),
         };
     }
 
-    private static SQLiteTable ConvertToSQLiteModel(AgnosticTable table)
+    private SQLiteTable ConvertToSQLiteModel(AgnosticTable table)
     {
         return new()
         {
@@ -40,7 +45,7 @@ public class SQLiteDbModelConverter : IDbModelConverter
         };
     }
 
-    private static SQLiteView ConvertToSQLiteModel(AgnosticView view)
+    private SQLiteView ConvertToSQLiteModel(AgnosticView view)
     {
         return new()
         {
@@ -50,7 +55,7 @@ public class SQLiteDbModelConverter : IDbModelConverter
         };
     }
 
-    private static IEnumerable<Column> ConvertToSQLiteModel(IEnumerable<Column> columns)
+    private IEnumerable<Column> ConvertToSQLiteModel(IEnumerable<Column> columns)
     {
         foreach (Column column in columns)
         {
@@ -73,10 +78,5 @@ public class SQLiteDbModelConverter : IDbModelConverter
             };
         }
         return columns;
-    }
-
-    private static CodePiece ConvertCodePiece(CodePiece codePiece)
-    {
-        return new CodePiece { Code = ((AgnosticCodePiece)codePiece).DbKindToCodeMap[DatabaseKind.SQLite] };
     }
 }

@@ -19,6 +19,7 @@ internal class SQLiteDiffCreator : DiffCreator
 
         BuildTablesDiff<SQLiteTableDiff>(dbDiff);
         BuildViewsDiff(dbDiff);
+        BuildScriptsDiff(dbDiff);
         return dbDiff;
     }
 }

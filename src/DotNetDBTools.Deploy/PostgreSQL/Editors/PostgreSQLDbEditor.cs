@@ -13,6 +13,7 @@ internal class PostgreSQLDbEditor : DbEditor<
     PostgreSQLCreateDNDBTSysTablesQuery,
     PostgreSQLDropDNDBTSysTablesQuery>
 {
+    private readonly IScriptExecutor _scriptExecutor;
     private readonly ITableEditor _tableEditor;
     private readonly PostgreSQLIsDependencyOfTablesObjectsEditor _isDependencyOfTablesObjectsEditor;
     private readonly PostgreSQLDependsOnTablesObjectsEditor _dependsOnTablesObjectsEditor;
@@ -20,6 +21,7 @@ internal class PostgreSQLDbEditor : DbEditor<
     public PostgreSQLDbEditor(IQueryExecutor queryExecutor)
         : base(queryExecutor)
     {
+        _scriptExecutor = new PostgreSQLScriptExecutor(queryExecutor);
         _tableEditor = new PostgreSQLTableEditor(queryExecutor);
         _isDependencyOfTablesObjectsEditor = new PostgreSQLIsDependencyOfTablesObjectsEditor(queryExecutor);
         _dependsOnTablesObjectsEditor = new PostgreSQLDependsOnTablesObjectsEditor(queryExecutor);
@@ -31,6 +33,7 @@ internal class PostgreSQLDbEditor : DbEditor<
         InsertUserDefinedTypesInfos(db);
         InsertTablesInfos(db);
         InsertViewsFunctionsProceduresInfos(db);
+        QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbAttributesRecordQuery(database));
     }
 
     public override void ApplyDatabaseDiff(DatabaseDiff databaseDiff, DeployOptions options)
@@ -51,6 +54,9 @@ internal class PostgreSQLDbEditor : DbEditor<
 
     private void ApplyDatabaseDiff(PostgreSQLDatabaseDiff dbDiff)
     {
+        _scriptExecutor.DeleteRemovedScriptsExecutionRecords(dbDiff);
+        _scriptExecutor.ExecuteScripts(dbDiff, ScriptKind.BeforePublishOnce);
+
         _dependsOnTablesObjectsEditor.DropObjectsThatDependOnTables(dbDiff);
 
         _isDependencyOfTablesObjectsEditor.Rename_RemovedOrChanged_ObjectsThatTablesDependOn_ToTemp_InDbAndInDbDiff(dbDiff);
@@ -63,6 +69,11 @@ internal class PostgreSQLDbEditor : DbEditor<
         _isDependencyOfTablesObjectsEditor.Drop_RemovedOrChanged_ObjectsThatTablesDependOn(dbDiff);
 
         _dependsOnTablesObjectsEditor.CreateObjectsThatDependOnTables(dbDiff);
+
+        _scriptExecutor.ExecuteScripts(dbDiff, ScriptKind.AfterPublishOnce);
+
+        if (dbDiff.NewDatabase.Version != dbDiff.OldDatabase.Version)
+            QueryExecutor.Execute(new PostgreSQLUpdateDNDBTDbAttributesRecordQuery(dbDiff.NewDatabase));
     }
 
     private void InsertUserDefinedTypesInfos(PostgreSQLDatabase db)

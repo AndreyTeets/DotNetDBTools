@@ -31,7 +31,7 @@ LEFT JOIN pg_catalog.pg_attrdef d
     ON (d.adrelid, d.adnum) = (a.attrelid, a.attnum)
 WHERE c.relkind = 'r'
     AND n.nspname NOT IN ('information_schema', 'pg_catalog')
-    AND c.relname != '{DNDBTSysTables.DNDBTDbObjects}';";
+    AND c.relname NOT IN ({DNDBTSysTables.AllTablesForInClause});";
 
     public override RecordsLoader Loader => new PostgreSQLRecordsLoader();
     public override RecordMapper Mapper => new PostgreSQLRecordMapper();

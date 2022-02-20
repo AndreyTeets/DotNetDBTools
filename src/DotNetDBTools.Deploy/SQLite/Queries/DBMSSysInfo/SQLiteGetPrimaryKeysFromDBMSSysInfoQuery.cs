@@ -18,7 +18,7 @@ INNER JOIN pragma_index_list(sm.name) il
 INNER JOIN pragma_index_info(il.name) ii
 WHERE sm.type = 'table'
     AND sm.name != 'sqlite_sequence'
-    AND sm.name != '{DNDBTSysTables.DNDBTDbObjects}'
+    AND sm.name NOT IN ({DNDBTSysTables.AllTablesForInClause})
     AND il.origin = 'pk'
 UNION
 SELECT
@@ -30,7 +30,7 @@ FROM sqlite_master sm
 INNER JOIN pragma_table_info(sm.name) ti
 WHERE sm.type = 'table'
     AND sm.name != 'sqlite_sequence'
-    AND sm.name != '{DNDBTSysTables.DNDBTDbObjects}'
+    AND sm.name NOT IN ({DNDBTSysTables.AllTablesForInClause})
     AND ti.pk = 1
     AND lower(ti.type) = 'integer';";
 

@@ -1,6 +1,51 @@
 DO $DNDBTGeneratedScriptTransactionBlock$
 BEGIN
 
+-- QUERY START: GenericQuery
+EXECUTE 'DROP TABLE IF EXISTS "_MyTable2";
+
+CREATE TABLE "_MyTable2"
+(
+    "MyColumn1" BIGINT NOT NULL PRIMARY KEY,
+    "MyColumn2" BYTEA
+);
+
+INSERT INTO "_MyTable2" ("MyColumn1", "MyColumn2")
+SELECT "MyColumn1", "MyColumn2" FROM "MyTable2";';
+-- QUERY END: GenericQuery
+
+-- QUERY START: PostgreSQLInsertDNDBTScriptExecutionRecordQuery
+EXECUTE 'INSERT INTO "DNDBTScriptExecutions"
+(
+    "ID",
+    "Type",
+    "Name",
+    "Code",
+    "MinDbVersionToExecute",
+    "MaxDbVersionToExecute",
+    "ExecutedOnDbVersion"
+)
+VALUES
+(
+    ''7f72f0df-4eda-4063-99d8-99c1f37819d2'',
+    ''BeforePublishOnce'',
+    ''SaveRecreatedColumnsData'',
+    ''DROP TABLE IF EXISTS "_MyTable2";
+
+CREATE TABLE "_MyTable2"
+(
+    "MyColumn1" BIGINT NOT NULL PRIMARY KEY,
+    "MyColumn2" BYTEA
+);
+
+INSERT INTO "_MyTable2" ("MyColumn1", "MyColumn2")
+SELECT "MyColumn1", "MyColumn2" FROM "MyTable2";'',
+    1,
+    1,
+    1
+);';
+-- QUERY END: PostgreSQLInsertDNDBTScriptExecutionRecordQuery
+
 -- QUERY START: PostgreSQLDropTriggerQuery
 EXECUTE 'DROP TRIGGER "TR_MyTable2_MyTrigger1" ON "MyTable2";';
 -- QUERY END: PostgreSQLDropTriggerQuery
@@ -727,6 +772,66 @@ FOR EACH ROW
 EXECUTE FUNCTION "TR_MyTable2_MyTrigger1_Handler"();''
 );';
 -- QUERY END: PostgreSQLInsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: GenericQuery
+EXECUTE 'DO $Block$
+BEGIN
+
+IF EXISTS (SELECT TRUE FROM "information_schema"."tables" WHERE "table_name" = ''_MyTable2'')
+THEN
+    UPDATE "MyTable2" SET
+        "MyColumn2" = "t"."MyColumn2"
+    FROM "_MyTable2" AS "t"
+    WHERE "MyTable2"."MyColumn1NewName" = "t"."MyColumn1";
+
+    DROP TABLE "_MyTable2";
+END IF;
+
+END;
+$Block$';
+-- QUERY END: GenericQuery
+
+-- QUERY START: PostgreSQLInsertDNDBTScriptExecutionRecordQuery
+EXECUTE 'INSERT INTO "DNDBTScriptExecutions"
+(
+    "ID",
+    "Type",
+    "Name",
+    "Code",
+    "MinDbVersionToExecute",
+    "MaxDbVersionToExecute",
+    "ExecutedOnDbVersion"
+)
+VALUES
+(
+    ''8ccaf36e-e587-466e-86f7-45c0061ae521'',
+    ''AfterPublishOnce'',
+    ''RestoreRecreatedColumnsData'',
+    ''DO $Block$
+BEGIN
+
+IF EXISTS (SELECT TRUE FROM "information_schema"."tables" WHERE "table_name" = ''''_MyTable2'''')
+THEN
+    UPDATE "MyTable2" SET
+        "MyColumn2" = "t"."MyColumn2"
+    FROM "_MyTable2" AS "t"
+    WHERE "MyTable2"."MyColumn1NewName" = "t"."MyColumn1";
+
+    DROP TABLE "_MyTable2";
+END IF;
+
+END;
+$Block$'',
+    1,
+    1,
+    1
+);';
+-- QUERY END: PostgreSQLInsertDNDBTScriptExecutionRecordQuery
+
+-- QUERY START: PostgreSQLUpdateDNDBTDbAttributesRecordQuery
+EXECUTE 'UPDATE "DNDBTDbAttributes" SET
+    "Version" = 2;';
+-- QUERY END: PostgreSQLUpdateDNDBTDbAttributesRecordQuery
 
 END;
 $DNDBTGeneratedScriptTransactionBlock$

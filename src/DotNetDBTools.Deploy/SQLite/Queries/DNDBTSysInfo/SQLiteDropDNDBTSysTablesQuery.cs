@@ -6,5 +6,7 @@ namespace DotNetDBTools.Deploy.SQLite.Queries.DNDBTSysInfo;
 internal class SQLiteDropDNDBTSysTablesQuery : SqlTextOnlyQuery
 {
     public override string Sql =>
-$@"DROP TABLE {DNDBTSysTables.DNDBTDbObjects};";
+$@"DROP TABLE [{DNDBTSysTables.DNDBTDbAttributes}];
+DROP TABLE [{DNDBTSysTables.DNDBTDbObjects}];
+DROP TABLE [{DNDBTSysTables.DNDBTScriptExecutions}];";
 }

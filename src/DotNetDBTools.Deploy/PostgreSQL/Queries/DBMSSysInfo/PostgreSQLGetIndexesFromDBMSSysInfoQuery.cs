@@ -39,7 +39,7 @@ LEFT JOIN pg_catalog.pg_constraint pc
 WHERE n.nspname NOT IN ('information_schema', 'pg_catalog', 'pg_toast')
     AND i.indisprimary = FALSE
     AND pc.oid IS NULL
-    AND t.relname != '{DNDBTSysTables.DNDBTDbObjects}';";
+    AND t.relname NOT IN ({DNDBTSysTables.AllTablesForInClause});";
 
     public override RecordMapper Mapper => new PostgreSQLRecordMapper();
 

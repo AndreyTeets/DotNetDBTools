@@ -38,6 +38,7 @@ internal class PostgreSQLDiffCreator : DiffCreator
         ForeignKeysHelper.BuildAllForeignKeysToBeDroppedAndCreated(dbDiff);
 
         BuildViewsDiff(dbDiff);
+        BuildScriptsDiff(dbDiff);
         return dbDiff;
     }
 

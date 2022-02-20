@@ -13,11 +13,13 @@ internal class SQLiteDbEditor : DbEditor<
     SQLiteCreateDNDBTSysTablesQuery,
     SQLiteDropDNDBTSysTablesQuery>
 {
+    private readonly IScriptExecutor _scriptExecutor;
     private readonly ITableEditor _tableEditor;
 
     public SQLiteDbEditor(IQueryExecutor queryExecutor)
         : base(queryExecutor)
     {
+        _scriptExecutor = new SQLiteScriptExecutor(queryExecutor);
         _tableEditor = new SQLiteTableEditor(queryExecutor);
     }
 
@@ -45,6 +47,8 @@ internal class SQLiteDbEditor : DbEditor<
         }
         foreach (SQLiteView view in db.Views)
             QueryExecutor.Execute(new SQLiteInsertDNDBTDbObjectRecordQuery(view.ID, null, DbObjectType.View, view.Name, view.GetCode()));
+
+        QueryExecutor.Execute(new SQLiteInsertDNDBTDbAttributesRecordQuery(database));
     }
 
     public override void ApplyDatabaseDiff(DatabaseDiff databaseDiff, DeployOptions options)
@@ -53,6 +57,9 @@ internal class SQLiteDbEditor : DbEditor<
         QueryExecutor.BeginTransaction();
         try
         {
+            _scriptExecutor.DeleteRemovedScriptsExecutionRecords(dbDiff);
+            _scriptExecutor.ExecuteScripts(dbDiff, ScriptKind.BeforePublishOnce);
+
             foreach (SQLiteView view in dbDiff.ViewsToDrop)
                 DropView(view);
             _tableEditor.DropTables(dbDiff);
@@ -60,6 +67,11 @@ internal class SQLiteDbEditor : DbEditor<
             _tableEditor.CreateTables(dbDiff);
             foreach (SQLiteView view in dbDiff.ViewsToCreate)
                 CreateView(view);
+
+            _scriptExecutor.ExecuteScripts(dbDiff, ScriptKind.AfterPublishOnce);
+
+            if (dbDiff.NewDatabase.Version != dbDiff.OldDatabase.Version)
+                QueryExecutor.Execute(new SQLiteUpdateDNDBTDbAttributesRecordQuery(dbDiff.NewDatabase));
         }
         catch (Exception)
         {

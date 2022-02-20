@@ -24,7 +24,9 @@ internal class SQLiteDbModelFromDbSysInfoBuilder : DbModelFromDbSysInfoBuilder<
     SQLiteGetTriggersFromDBMSSysInfoQuery,
     SQLiteGetForeignKeysFromDBMSSysInfoQuery,
     SQLiteGetViewsFromDBMSSysInfoQuery,
-    SQLiteGetDNDBTDbObjectRecordsQuery>
+    SQLiteGetDNDBTDbAttributesRecordQuery,
+    SQLiteGetDNDBTDbObjectRecordsQuery,
+    SQLiteGetDNDBTScriptExecutionRecordsQuery>
 {
     public SQLiteDbModelFromDbSysInfoBuilder(IQueryExecutor queryExecutor)
         : base(queryExecutor) { }

@@ -14,6 +14,7 @@ public class MySQLDatabase : Database
         Name = name;
         Tables = new List<MySQLTable>();
         Views = new List<MySQLView>();
+        Scripts = new List<Script>();
         Functions = new List<MySQLFunction>();
         Procedures = new List<MySQLProcedure>();
     }

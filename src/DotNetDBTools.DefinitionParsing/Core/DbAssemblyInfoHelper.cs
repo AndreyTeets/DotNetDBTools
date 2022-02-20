@@ -11,23 +11,23 @@ internal static class DbAssemblyInfoHelper
 {
     public static (DefinitionKind, DatabaseKind) GetDbKind(Assembly dbAssembly)
     {
-        DefinitionSettingsAttribute definitionSettings = dbAssembly
-            .GetCustomAttributes<DefinitionSettingsAttribute>()
+        DatabaseSettingsAttribute dbSettings = dbAssembly
+            .GetCustomAttributes<DatabaseSettingsAttribute>()
             .SingleOrDefault();
 
         DefinitionKind definitionKind;
         DatabaseKind databaseKind;
-        if (definitionSettings is not null)
+        if (dbSettings is not null)
         {
-            definitionKind = definitionSettings.DefinitionKind;
-            databaseKind = definitionSettings.DefinitionKind switch
+            definitionKind = dbSettings.DefinitionKind;
+            databaseKind = dbSettings.DefinitionKind switch
             {
                 DefinitionKind.CSharp => DeriveDbKindFromAssemblyTypes(dbAssembly),
                 DefinitionKind.MSSQL => DatabaseKind.MSSQL,
                 DefinitionKind.MySQL => DatabaseKind.MySQL,
                 DefinitionKind.PostgreSQL => DatabaseKind.PostgreSQL,
                 DefinitionKind.SQLite => DatabaseKind.SQLite,
-                _ => throw new Exception($"Invalid definition kind: {definitionSettings.DefinitionKind}"),
+                _ => throw new Exception($"Invalid definition kind: {dbSettings.DefinitionKind}"),
             };
         }
         else
@@ -42,6 +42,14 @@ internal static class DbAssemblyInfoHelper
     public static string GetDbName(Assembly dbAssembly)
     {
         return dbAssembly.GetName().Name.Replace(".", "");
+    }
+
+    public static long GetDbVersion(Assembly dbAssembly)
+    {
+        DatabaseSettingsAttribute dbSettings = dbAssembly
+            .GetCustomAttributes<DatabaseSettingsAttribute>()
+            .SingleOrDefault();
+        return dbSettings?.DatabaseVersion ?? 1;
     }
 
     private static DatabaseKind DeriveDbKindFromAssemblyTypes(Assembly dbAssembly)

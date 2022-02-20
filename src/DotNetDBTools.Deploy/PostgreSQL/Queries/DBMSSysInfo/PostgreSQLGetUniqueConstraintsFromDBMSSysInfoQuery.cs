@@ -29,7 +29,7 @@ INNER JOIN pg_catalog.pg_attribute a
 WHERE t.relkind = 'r'
     AND c.contype = 'u'
     AND n.nspname NOT IN ('information_schema', 'pg_catalog')
-    AND t.relname != '{DNDBTSysTables.DNDBTDbObjects}';";
+    AND t.relname NOT IN ({DNDBTSysTables.AllTablesForInClause});";
 
     public override RecordMapper Mapper => new PostgreSQLRecordMapper();
 

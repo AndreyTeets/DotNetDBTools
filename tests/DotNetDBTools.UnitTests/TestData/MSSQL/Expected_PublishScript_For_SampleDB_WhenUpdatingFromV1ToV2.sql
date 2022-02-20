@@ -3,6 +3,60 @@ SET XACT_ABORT ON;
 BEGIN TRY;
     BEGIN TRANSACTION;
 
+-- QUERY START: GenericQuery
+EXEC sp_executesql N'IF EXISTS (SELECT * FROM [sysobjects] WHERE [name]=''_MyTable2'' AND [xtype]=''U'')
+    DROP TABLE [_MyTable2];
+
+CREATE TABLE [_MyTable2]
+(
+    [MyColumn1] BIGINT NOT NULL PRIMARY KEY,
+    [MyColumn2] VARBINARY(22)
+);
+
+INSERT INTO [_MyTable2] ([MyColumn1], [MyColumn2])
+SELECT [MyColumn1], [MyColumn2] FROM [MyTable2];';
+-- QUERY END: GenericQuery
+
+-- QUERY START: MSSQLInsertDNDBTScriptExecutionRecordQuery
+EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''7f72f0df-4eda-4063-99d8-99c1f37819d2'';
+DECLARE @Type NVARCHAR(MAX) = N''BeforePublishOnce'';
+DECLARE @Name NVARCHAR(MAX) = N''SaveRecreatedColumnsData'';
+DECLARE @Code NVARCHAR(MAX) = N''IF EXISTS (SELECT * FROM [sysobjects] WHERE [name]=''''_MyTable2'''' AND [xtype]=''''U'''')
+    DROP TABLE [_MyTable2];
+
+CREATE TABLE [_MyTable2]
+(
+    [MyColumn1] BIGINT NOT NULL PRIMARY KEY,
+    [MyColumn2] VARBINARY(22)
+);
+
+INSERT INTO [_MyTable2] ([MyColumn1], [MyColumn2])
+SELECT [MyColumn1], [MyColumn2] FROM [MyTable2];'';
+DECLARE @MinDbVersionToExecute BIGINT = 1;
+DECLARE @MaxDbVersionToExecute BIGINT = 1;
+DECLARE @ExecutedOnDbVersion BIGINT = 1;
+INSERT INTO [DNDBTScriptExecutions]
+(
+    [ID],
+    [Type],
+    [Name],
+    [Code],
+    [MinDbVersionToExecute],
+    [MaxDbVersionToExecute],
+    [ExecutedOnDbVersion]
+)
+VALUES
+(
+    @ID,
+    @Type,
+    @Name,
+    @Code,
+    @MinDbVersionToExecute,
+    @MaxDbVersionToExecute,
+    @ExecutedOnDbVersion
+);';
+-- QUERY END: MSSQLInsertDNDBTScriptExecutionRecordQuery
+
 -- QUERY START: MSSQLDropTriggerQuery
 EXEC sp_executesql N'DROP TRIGGER [TR_MyTable2_MyTrigger1];';
 -- QUERY END: MSSQLDropTriggerQuery
@@ -586,6 +640,62 @@ VALUES
     @Code
 );';
 -- QUERY END: MSSQLInsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: GenericQuery
+EXEC sp_executesql N'IF OBJECT_ID(''_MyTable2'', ''U'') IS NOT NULL
+BEGIN
+    UPDATE [MyTable2] SET
+        [MyColumn2] = [t].[MyColumn2]
+    FROM [_MyTable2] AS [t]
+    WHERE [MyTable2].[MyColumn1NewName] = [t].[MyColumn1];
+
+    DROP TABLE [_MyTable2];
+END;';
+-- QUERY END: GenericQuery
+
+-- QUERY START: MSSQLInsertDNDBTScriptExecutionRecordQuery
+EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''8ccaf36e-e587-466e-86f7-45c0061ae521'';
+DECLARE @Type NVARCHAR(MAX) = N''AfterPublishOnce'';
+DECLARE @Name NVARCHAR(MAX) = N''RestoreRecreatedColumnsData'';
+DECLARE @Code NVARCHAR(MAX) = N''IF OBJECT_ID(''''_MyTable2'''', ''''U'''') IS NOT NULL
+BEGIN
+    UPDATE [MyTable2] SET
+        [MyColumn2] = [t].[MyColumn2]
+    FROM [_MyTable2] AS [t]
+    WHERE [MyTable2].[MyColumn1NewName] = [t].[MyColumn1];
+
+    DROP TABLE [_MyTable2];
+END;'';
+DECLARE @MinDbVersionToExecute BIGINT = 1;
+DECLARE @MaxDbVersionToExecute BIGINT = 1;
+DECLARE @ExecutedOnDbVersion BIGINT = 1;
+INSERT INTO [DNDBTScriptExecutions]
+(
+    [ID],
+    [Type],
+    [Name],
+    [Code],
+    [MinDbVersionToExecute],
+    [MaxDbVersionToExecute],
+    [ExecutedOnDbVersion]
+)
+VALUES
+(
+    @ID,
+    @Type,
+    @Name,
+    @Code,
+    @MinDbVersionToExecute,
+    @MaxDbVersionToExecute,
+    @ExecutedOnDbVersion
+);';
+-- QUERY END: MSSQLInsertDNDBTScriptExecutionRecordQuery
+
+-- QUERY START: MSSQLUpdateDNDBTDbAttributesRecordQuery
+EXEC sp_executesql N'DECLARE @Version BIGINT = 2;
+UPDATE [DNDBTDbAttributes] SET
+    [Version] = @Version;';
+-- QUERY END: MSSQLUpdateDNDBTDbAttributesRecordQuery
 
     COMMIT TRANSACTION;
 END TRY

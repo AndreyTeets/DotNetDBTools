@@ -8,23 +8,28 @@ using DotNetDBTools.Models.MSSQL;
 
 namespace DotNetDBTools.Analysis.MSSQL;
 
-public class MSSQLDbModelConverter : IDbModelConverter
+public class MSSQLDbModelConverter : DbModelConverter
 {
-    public Database FromAgnostic(Database database)
+    public MSSQLDbModelConverter()
+        : base(DatabaseKind.MSSQL) { }
+
+    public override Database FromAgnostic(Database database)
     {
         return ConvertToMSSQLModel((AgnosticDatabase)database);
     }
 
-    private static MSSQLDatabase ConvertToMSSQLModel(AgnosticDatabase database)
+    private MSSQLDatabase ConvertToMSSQLModel(AgnosticDatabase database)
     {
         return new(database.Name)
         {
+            Version = database.Version,
             Tables = database.Tables.Select(x => ConvertToMSSQLModel((AgnosticTable)x)).ToList(),
             Views = database.Views.Select(x => ConvertToMSSQLModel((AgnosticView)x)).ToList(),
+            Scripts = database.Scripts.Select(x => ConvertScript(x)).ToList(),
         };
     }
 
-    private static MSSQLTable ConvertToMSSQLModel(AgnosticTable table)
+    private MSSQLTable ConvertToMSSQLModel(AgnosticTable table)
     {
         return new()
         {
@@ -50,7 +55,7 @@ public class MSSQLDbModelConverter : IDbModelConverter
         };
     }
 
-    private static IEnumerable<Column> ConvertToMSSQLModel(IEnumerable<Column> columns, string tableName)
+    private IEnumerable<Column> ConvertToMSSQLModel(IEnumerable<Column> columns, string tableName)
     {
         List<Column> mssqlColumns = new();
         foreach (Column column in columns)
@@ -90,7 +95,7 @@ public class MSSQLDbModelConverter : IDbModelConverter
         return mssqlColumns;
     }
 
-    private static DataType ConvertIntSqlType(AgnosticDataType dataType)
+    private DataType ConvertIntSqlType(AgnosticDataType dataType)
     {
         return dataType.Size switch
         {
@@ -102,7 +107,7 @@ public class MSSQLDbModelConverter : IDbModelConverter
         };
     }
 
-    private static DataType ConvertRealSqlType(AgnosticDataType dataType)
+    private DataType ConvertRealSqlType(AgnosticDataType dataType)
     {
         if (dataType.IsDoublePrecision)
             return new DataType { Name = MSSQLDataTypeNames.REAL };
@@ -110,12 +115,12 @@ public class MSSQLDbModelConverter : IDbModelConverter
             return new DataType { Name = MSSQLDataTypeNames.FLOAT };
     }
 
-    private static DataType ConvertDecimalSqlType(AgnosticDataType dataType)
+    private DataType ConvertDecimalSqlType(AgnosticDataType dataType)
     {
         return new DataType { Name = $"{MSSQLDataTypeNames.DECIMAL}({dataType.Precision}, {dataType.Scale})" };
     }
 
-    private static DataType ConvertStringSqlType(AgnosticDataType dataType)
+    private DataType ConvertStringSqlType(AgnosticDataType dataType)
     {
         string stringTypeName = dataType.IsFixedLength ? MSSQLDataTypeNames.NCHAR : MSSQLDataTypeNames.NVARCHAR;
 
@@ -131,7 +136,7 @@ public class MSSQLDbModelConverter : IDbModelConverter
         return new DataType { Name = $"{stringTypeName}({lengthStr})" };
     }
 
-    private static DataType ConvertBinarySqlType(AgnosticDataType dataType)
+    private DataType ConvertBinarySqlType(AgnosticDataType dataType)
     {
         string binaryTypeName = dataType.IsFixedLength ? MSSQLDataTypeNames.BINARY : MSSQLDataTypeNames.VARBINARY;
 
@@ -147,16 +152,11 @@ public class MSSQLDbModelConverter : IDbModelConverter
         return new DataType { Name = $"{binaryTypeName}({lengthStr})" };
     }
 
-    private static DataType ConvertDateTimeSqlType(AgnosticDataType dataType)
+    private DataType ConvertDateTimeSqlType(AgnosticDataType dataType)
     {
         if (dataType.IsWithTimeZone)
             return new DataType { Name = MSSQLDataTypeNames.DATETIMEOFFSET };
         else
             return new DataType { Name = MSSQLDataTypeNames.DATETIME2 };
-    }
-
-    private static CodePiece ConvertCodePiece(CodePiece codePiece)
-    {
-        return new CodePiece { Code = ((AgnosticCodePiece)codePiece).DbKindToCodeMap[DatabaseKind.MSSQL] };
     }
 }

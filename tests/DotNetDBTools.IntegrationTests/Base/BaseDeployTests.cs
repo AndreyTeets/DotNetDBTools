@@ -77,7 +77,7 @@ public abstract class BaseDeployTests<TDatabase, TDbConnection, TDbModelConverte
             (AgnosticDatabase)DbDefinitionParser.CreateDatabaseModel(AgnosticSampleDbAssemblyPath));
         TDatabase dbModelFromDBMSSysInfo = (TDatabase)_dbModelFromDbSysInfoBuilder.GenerateDatabaseModelFromDBMSSysInfo();
 
-        AssertDbModelEquivalence(dbModelFromDbAssembly, dbModelFromDBMSSysInfo, CompareMode.IgnoreIDsAndNormalizeCodePieces);
+        AssertDbModelEquivalence(dbModelFromDbAssembly, dbModelFromDBMSSysInfo, CompareMode.IgnoreAllDNDBTSysInfoSpecific);
     }
 
     [Test]
@@ -110,7 +110,7 @@ public abstract class BaseDeployTests<TDatabase, TDbConnection, TDbModelConverte
         TDatabase dbModelFromDbAssembly = (TDatabase)DbDefinitionParser.CreateDatabaseModel(SpecificDBMSSampleDbAssemblyPath);
         TDatabase dbModelFromDBMSSysInfo = (TDatabase)_dbModelFromDbSysInfoBuilder.GenerateDatabaseModelFromDBMSSysInfo();
 
-        AssertDbModelEquivalence(dbModelFromDbAssembly, dbModelFromDBMSSysInfo, CompareMode.IgnoreIDsAndNormalizeCodePieces);
+        AssertDbModelEquivalence(dbModelFromDbAssembly, dbModelFromDBMSSysInfo, CompareMode.IgnoreAllDNDBTSysInfoSpecific);
     }
 
     private void AssertDbModelEquivalence(TDatabase dbModelFromDbAssembly, TDatabase dbModelFromDBMSSysInfo, CompareMode compareMode)
@@ -124,6 +124,12 @@ public abstract class BaseDeployTests<TDatabase, TDbConnection, TDbModelConverte
 
             if (compareMode.HasFlag(CompareMode.NormalizeCodePieces))
                 configuredOptions = configuredOptions.Using(new CodePieceComparer(GetNormalizedCodeFromCodePiece));
+
+            if (compareMode.HasFlag(CompareMode.IgnoreScripts))
+                configuredOptions = configuredOptions.Excluding(database => database.Scripts);
+
+            if (compareMode.HasFlag(CompareMode.IgnoreDbAttributes))
+                configuredOptions = configuredOptions.Excluding(database => database.Version);
 
             configuredOptions = AddAdditionalDbModelEquivalenceyOptions(configuredOptions);
             return configuredOptions;
@@ -143,7 +149,9 @@ public abstract class BaseDeployTests<TDatabase, TDbConnection, TDbModelConverte
         None = 0,
         IgnoreIDs = 1,
         NormalizeCodePieces = 2,
-        IgnoreIDsAndNormalizeCodePieces = 1 | 2,
+        IgnoreScripts = 4,
+        IgnoreDbAttributes = 8,
+        IgnoreAllDNDBTSysInfoSpecific = 1 | 2 | 4 | 8,
     }
 
     private class CodePieceComparer : IEqualityComparer<CodePiece>

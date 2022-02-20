@@ -1,3 +1,48 @@
+-- QUERY START: GenericQuery
+DROP TABLE IF EXISTS `_MyTable2`;
+
+CREATE TABLE `_MyTable2`
+(
+    `MyColumn1` BIGINT NOT NULL PRIMARY KEY,
+    `MyColumn2` VARBINARY(22)
+);
+
+INSERT INTO `_MyTable2` (`MyColumn1`, `MyColumn2`)
+SELECT `MyColumn1`, `MyColumn2` FROM `MyTable2`;
+-- QUERY END: GenericQuery
+
+-- QUERY START: MySQLInsertDNDBTScriptExecutionRecordQuery
+INSERT INTO `DNDBTScriptExecutions`
+(
+    `ID`,
+    `Type`,
+    `Name`,
+    `Code`,
+    `MinDbVersionToExecute`,
+    `MaxDbVersionToExecute`,
+    `ExecutedOnDbVersion`
+)
+VALUES
+(
+    '7f72f0df-4eda-4063-99d8-99c1f37819d2',
+    'BeforePublishOnce',
+    'SaveRecreatedColumnsData',
+    'DROP TABLE IF EXISTS `_MyTable2`;
+
+CREATE TABLE `_MyTable2`
+(
+    `MyColumn1` BIGINT NOT NULL PRIMARY KEY,
+    `MyColumn2` VARBINARY(22)
+);
+
+INSERT INTO `_MyTable2` (`MyColumn1`, `MyColumn2`)
+SELECT `MyColumn1`, `MyColumn2` FROM `MyTable2`;',
+    1,
+    1,
+    1
+);
+-- QUERY END: MySQLInsertDNDBTScriptExecutionRecordQuery
+
 -- QUERY START: MySQLDropTriggerQuery
 DROP TRIGGER `TR_MyTable2_MyTrigger1`;
 -- QUERY END: MySQLDropTriggerQuery
@@ -422,3 +467,57 @@ BEGIN
 END;'
 );
 -- QUERY END: MySQLInsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: GenericQuery
+CREATE TABLE IF NOT EXISTS `_MyTable2`
+(
+    `MyColumn1` BIGINT NOT NULL PRIMARY KEY,
+    `MyColumn2` VARBINARY(22)
+);
+
+UPDATE `MyTable2`
+INNER JOIN `_MyTable2` AS `t`
+    ON `t`.`MyColumn1` = `MyTable2`.`MyColumn1NewName`
+SET `MyTable2`.`MyColumn2` = `t`.`MyColumn2`;
+
+DROP TABLE `_MyTable2`;
+-- QUERY END: GenericQuery
+
+-- QUERY START: MySQLInsertDNDBTScriptExecutionRecordQuery
+INSERT INTO `DNDBTScriptExecutions`
+(
+    `ID`,
+    `Type`,
+    `Name`,
+    `Code`,
+    `MinDbVersionToExecute`,
+    `MaxDbVersionToExecute`,
+    `ExecutedOnDbVersion`
+)
+VALUES
+(
+    '8ccaf36e-e587-466e-86f7-45c0061ae521',
+    'AfterPublishOnce',
+    'RestoreRecreatedColumnsData',
+    'CREATE TABLE IF NOT EXISTS `_MyTable2`
+(
+    `MyColumn1` BIGINT NOT NULL PRIMARY KEY,
+    `MyColumn2` VARBINARY(22)
+);
+
+UPDATE `MyTable2`
+INNER JOIN `_MyTable2` AS `t`
+    ON `t`.`MyColumn1` = `MyTable2`.`MyColumn1NewName`
+SET `MyTable2`.`MyColumn2` = `t`.`MyColumn2`;
+
+DROP TABLE `_MyTable2`;',
+    1,
+    1,
+    1
+);
+-- QUERY END: MySQLInsertDNDBTScriptExecutionRecordQuery
+
+-- QUERY START: MySQLUpdateDNDBTDbAttributesRecordQuery
+UPDATE `DNDBTDbAttributes` SET
+    `Version` = 2;
+-- QUERY END: MySQLUpdateDNDBTDbAttributesRecordQuery

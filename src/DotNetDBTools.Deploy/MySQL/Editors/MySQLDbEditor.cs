@@ -13,6 +13,7 @@ internal class MySQLDbEditor : DbEditor<
     MySQLCreateDNDBTSysTablesQuery,
     MySQLDropDNDBTSysTablesQuery>
 {
+    private readonly IScriptExecutor _scriptExecutor;
     private readonly ITableEditor _tableEditor;
     private readonly IIndexEditor _indexEditor;
     private readonly ITriggerEditor _triggerEditor;
@@ -21,6 +22,7 @@ internal class MySQLDbEditor : DbEditor<
     public MySQLDbEditor(IQueryExecutor queryExecutor)
         : base(queryExecutor)
     {
+        _scriptExecutor = new MySQLScriptExecutor(queryExecutor);
         _tableEditor = new MySQLTableEditor(queryExecutor);
         _indexEditor = new MySQLIndexEditor(queryExecutor);
         _triggerEditor = new MySQLTriggerEditor(queryExecutor);
@@ -55,11 +57,16 @@ internal class MySQLDbEditor : DbEditor<
             QueryExecutor.Execute(new MySQLInsertDNDBTDbObjectRecordQuery(view.ID, null, DbObjectType.View, view.Name, view.GetCode()));
         foreach (MySQLProcedure proc in db.Procedures)
             QueryExecutor.Execute(new MySQLInsertDNDBTDbObjectRecordQuery(proc.ID, null, DbObjectType.Procedure, proc.Name, proc.GetCode()));
+
+        QueryExecutor.Execute(new MySQLInsertDNDBTDbAttributesRecordQuery(database));
     }
 
     public override void ApplyDatabaseDiff(DatabaseDiff databaseDiff, DeployOptions options)
     {
         MySQLDatabaseDiff dbDiff = (MySQLDatabaseDiff)databaseDiff;
+
+        _scriptExecutor.DeleteRemovedScriptsExecutionRecords(dbDiff);
+        _scriptExecutor.ExecuteScripts(dbDiff, ScriptKind.BeforePublishOnce);
 
         _triggerEditor.DropTriggers(dbDiff);
         foreach (MySQLProcedure procedure in dbDiff.ProceduresToDrop)
@@ -82,6 +89,11 @@ internal class MySQLDbEditor : DbEditor<
         foreach (MySQLProcedure procedure in dbDiff.ProceduresToCreate)
             CreateProcedure(procedure);
         _triggerEditor.CreateTriggers(dbDiff);
+
+        _scriptExecutor.ExecuteScripts(dbDiff, ScriptKind.AfterPublishOnce);
+
+        if (dbDiff.NewDatabase.Version != dbDiff.OldDatabase.Version)
+            QueryExecutor.Execute(new MySQLUpdateDNDBTDbAttributesRecordQuery(dbDiff.NewDatabase));
     }
 
     private void CreateFunction(MySQLFunction func)

@@ -783,5 +783,55 @@ EXECUTE FUNCTION "TR_MyTable2_MyTrigger1_Handler"();''
 );';
 -- QUERY END: PostgreSQLInsertDNDBTDbObjectRecordQuery
 
+-- QUERY START: GenericQuery
+EXECUTE 'INSERT INTO "MyTable4"("MyColumn1")
+SELECT * FROM
+(
+    SELECT 1
+    UNION ALL
+    SELECT 2
+    UNION ALL
+    SELECT 3
+) t
+WHERE NOT EXISTS (SELECT COUNT(*) FROM "MyTable4");';
+-- QUERY END: GenericQuery
+
+-- QUERY START: PostgreSQLInsertDNDBTScriptExecutionRecordQuery
+EXECUTE 'INSERT INTO "DNDBTScriptExecutions"
+(
+    "ID",
+    "Type",
+    "Name",
+    "Code",
+    "MinDbVersionToExecute",
+    "MaxDbVersionToExecute",
+    "ExecutedOnDbVersion"
+)
+VALUES
+(
+    ''100d624a-01aa-4730-b86f-f991ac3ed936'',
+    ''AfterPublishOnce'',
+    ''InsertSomeInitialData'',
+    ''INSERT INTO "MyTable4"("MyColumn1")
+SELECT * FROM
+(
+    SELECT 1
+    UNION ALL
+    SELECT 2
+    UNION ALL
+    SELECT 3
+) t
+WHERE NOT EXISTS (SELECT COUNT(*) FROM "MyTable4");'',
+    0,
+    9223372036854775807,
+    0
+);';
+-- QUERY END: PostgreSQLInsertDNDBTScriptExecutionRecordQuery
+
+-- QUERY START: PostgreSQLUpdateDNDBTDbAttributesRecordQuery
+EXECUTE 'UPDATE "DNDBTDbAttributes" SET
+    "Version" = 1;';
+-- QUERY END: PostgreSQLUpdateDNDBTDbAttributesRecordQuery
+
 END;
 $DNDBTGeneratedScriptTransactionBlock$

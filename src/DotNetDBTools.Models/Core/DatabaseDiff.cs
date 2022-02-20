@@ -22,4 +22,7 @@ public abstract class DatabaseDiff
 
     public IEnumerable<ForeignKey> AllForeignKeysToCreate { get; set; }
     public IEnumerable<ForeignKey> AllForeignKeysToDrop { get; set; }
+
+    public IEnumerable<Script> AddedScripts { get; set; }
+    public IEnumerable<Script> RemovedScripts { get; set; }
 }

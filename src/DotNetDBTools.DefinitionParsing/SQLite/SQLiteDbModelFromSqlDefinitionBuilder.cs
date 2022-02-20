@@ -21,10 +21,12 @@ internal class SQLiteDbModelFromSqlDefinitionBuilder
     {
         SQLiteDatabase database = new();
         database.Name = DbAssemblyInfoHelper.GetDbName(dbAssembly);
+        database.Version = DbAssemblyInfoHelper.GetDbVersion(dbAssembly);
 
         List<ObjectInfo> dbObjects = ParseDbObjectsFromEmbeddedSqlFiles(dbAssembly);
         database.Tables = BuildTableModels(dbObjects.Where(x => x is TableInfo).Select(x => (TableInfo)x));
         database.Views = BuildViewModels(dbObjects.Where(x => x is ViewInfo).Select(x => (ViewInfo)x));
+        database.Scripts = BuildScriptModels(dbObjects.Where(x => x is ScriptInfo).Select(x => (ScriptInfo)x));
 
         Dictionary<string, Table> tableNameToTableMap = database.Tables.ToDictionary(x => x.Name, x => x);
         BuildTablesIndexes(tableNameToTableMap, dbObjects.Where(x => x is IndexInfo).Select(x => (IndexInfo)x));
@@ -93,6 +95,28 @@ internal class SQLiteDbModelFromSqlDefinitionBuilder
             viewModels.Add(viewModel);
         }
         return viewModels.OrderByName();
+    }
+
+    private List<Script> BuildScriptModels(IEnumerable<ScriptInfo> scripts)
+    {
+        List<Script> scriptModels = new();
+        foreach (ScriptInfo script in scripts)
+        {
+            if (!script.ID.HasValue)
+                throw new Exception($"ID is not declared for script '{script.Name}'");
+
+            Script scriptModel = new()
+            {
+                ID = script.ID.Value,
+                Name = script.Name,
+                Kind = (ScriptKind)Enum.Parse(typeof(ScriptKind), script.Type.ToString()),
+                MinDbVersionToExecute = script.MinDbVersionToExecute,
+                MaxDbVersionToExecute = script.MaxDbVersionToExecute,
+                CodePiece = new CodePiece { Code = script.Code.NormalizeLineEndings() },
+            };
+            scriptModels.Add(scriptModel);
+        }
+        return scriptModels.OrderByName();
     }
 
     private List<Column> BuildColumnModels(TableInfo table)

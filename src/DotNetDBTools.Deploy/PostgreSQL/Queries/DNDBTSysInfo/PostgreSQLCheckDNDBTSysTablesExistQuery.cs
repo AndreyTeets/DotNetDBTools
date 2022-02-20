@@ -6,5 +6,5 @@ namespace DotNetDBTools.Deploy.PostgreSQL.Queries.DNDBTSysInfo;
 internal class PostgreSQLCheckDNDBTSysTablesExistQuery : SqlTextOnlyQuery
 {
     public override string Sql =>
-$@"SELECT TRUE FROM pg_catalog.pg_class WHERE relname = '{DNDBTSysTables.DNDBTDbObjects}' LIMIT 1;";
+$@"SELECT TRUE FROM pg_catalog.pg_class WHERE relname IN ({DNDBTSysTables.AllTablesForInClause}) LIMIT 1;";
 }

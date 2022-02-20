@@ -26,7 +26,7 @@ INNER JOIN INFORMATION_SCHEMA.COLUMNS c
         AND c.TABLE_NAME = t.TABLE_NAME
 WHERE t.TABLE_SCHEMA = (select DATABASE())
     AND t.TABLE_TYPE = 'BASE TABLE'
-    AND t.TABLE_NAME != '{DNDBTSysTables.DNDBTDbObjects}';";
+    AND t.TABLE_NAME NOT IN ({DNDBTSysTables.AllTablesForInClause});";
 
     public override RecordsLoader Loader => new MySQLRecordsLoader();
     public override RecordMapper Mapper => new MySQLRecordMapper();

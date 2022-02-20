@@ -8,9 +8,12 @@ using DotNetDBTools.Models.PostgreSQL;
 
 namespace DotNetDBTools.Analysis.PostgreSQL;
 
-public class PostgreSQLDbModelConverter : IDbModelConverter
+public class PostgreSQLDbModelConverter : DbModelConverter
 {
-    public Database FromAgnostic(Database database)
+    public PostgreSQLDbModelConverter()
+        : base(DatabaseKind.PostgreSQL) { }
+
+    public override Database FromAgnostic(Database database)
     {
         PostgreSQLDatabase postgresqlDatabase = ConvertToPostgreSQLModel((AgnosticDatabase)database);
         PostgreSQLPostBuildProcessingHelper.AddFunctionsFromTriggersCode_And_RemoveFunctionsCodeFromTriggersCode_IfAny(postgresqlDatabase);
@@ -18,16 +21,18 @@ public class PostgreSQLDbModelConverter : IDbModelConverter
         return postgresqlDatabase;
     }
 
-    private static PostgreSQLDatabase ConvertToPostgreSQLModel(AgnosticDatabase database)
+    private PostgreSQLDatabase ConvertToPostgreSQLModel(AgnosticDatabase database)
     {
         return new(database.Name)
         {
+            Version = database.Version,
             Tables = database.Tables.Select(x => ConvertToPostgreSQLModel((AgnosticTable)x)).ToList(),
             Views = database.Views.Select(x => ConvertToPostgreSQLModel((AgnosticView)x)).ToList(),
+            Scripts = database.Scripts.Select(x => ConvertScript(x)).ToList(),
         };
     }
 
-    private static PostgreSQLTable ConvertToPostgreSQLModel(AgnosticTable table)
+    private PostgreSQLTable ConvertToPostgreSQLModel(AgnosticTable table)
     {
         return new()
         {
@@ -43,7 +48,7 @@ public class PostgreSQLDbModelConverter : IDbModelConverter
         };
     }
 
-    private static PostgreSQLView ConvertToPostgreSQLModel(AgnosticView view)
+    private PostgreSQLView ConvertToPostgreSQLModel(AgnosticView view)
     {
         return new()
         {
@@ -53,7 +58,7 @@ public class PostgreSQLDbModelConverter : IDbModelConverter
         };
     }
 
-    private static IEnumerable<Column> ConvertToPostgreSQLModel(IEnumerable<Column> columns)
+    private IEnumerable<Column> ConvertToPostgreSQLModel(IEnumerable<Column> columns)
     {
         foreach (Column column in columns)
         {
@@ -78,7 +83,7 @@ public class PostgreSQLDbModelConverter : IDbModelConverter
         return columns;
     }
 
-    private static DataType ConvertIntSqlType(AgnosticDataType dataType)
+    private DataType ConvertIntSqlType(AgnosticDataType dataType)
     {
         return dataType.Size switch
         {
@@ -90,7 +95,7 @@ public class PostgreSQLDbModelConverter : IDbModelConverter
         };
     }
 
-    private static DataType ConvertRealSqlType(AgnosticDataType dataType)
+    private DataType ConvertRealSqlType(AgnosticDataType dataType)
     {
         if (dataType.IsDoublePrecision)
             return new DataType { Name = PostgreSQLDataTypeNames.FLOAT8 };
@@ -98,19 +103,19 @@ public class PostgreSQLDbModelConverter : IDbModelConverter
             return new DataType { Name = PostgreSQLDataTypeNames.FLOAT4 };
     }
 
-    private static DataType ConvertDecimalSqlType(AgnosticDataType dataType)
+    private DataType ConvertDecimalSqlType(AgnosticDataType dataType)
     {
         return new DataType { Name = $"{PostgreSQLDataTypeNames.DECIMAL}({dataType.Precision}, {dataType.Scale})" };
     }
 
-    private static DataType ConvertStringSqlType(AgnosticDataType dataType)
+    private DataType ConvertStringSqlType(AgnosticDataType dataType)
     {
         string stringTypeName = dataType.IsFixedLength ? PostgreSQLDataTypeNames.CHAR : PostgreSQLDataTypeNames.VARCHAR;
         string lengthStr = dataType.Length.ToString();
         return new DataType { Name = $"{stringTypeName}({lengthStr})" };
     }
 
-    private static DataType ConvertTimeSqlType(AgnosticDataType dataType)
+    private DataType ConvertTimeSqlType(AgnosticDataType dataType)
     {
         if (dataType.IsWithTimeZone)
             return new DataType { Name = PostgreSQLDataTypeNames.TIMETZ };
@@ -118,16 +123,11 @@ public class PostgreSQLDbModelConverter : IDbModelConverter
             return new DataType { Name = PostgreSQLDataTypeNames.TIME };
     }
 
-    private static DataType ConvertDateTimeSqlType(AgnosticDataType dataType)
+    private DataType ConvertDateTimeSqlType(AgnosticDataType dataType)
     {
         if (dataType.IsWithTimeZone)
             return new DataType { Name = PostgreSQLDataTypeNames.TIMESTAMPTZ };
         else
             return new DataType { Name = PostgreSQLDataTypeNames.TIMESTAMP };
-    }
-
-    private static CodePiece ConvertCodePiece(CodePiece codePiece)
-    {
-        return new CodePiece { Code = ((AgnosticCodePiece)codePiece).DbKindToCodeMap[DatabaseKind.PostgreSQL] };
     }
 }

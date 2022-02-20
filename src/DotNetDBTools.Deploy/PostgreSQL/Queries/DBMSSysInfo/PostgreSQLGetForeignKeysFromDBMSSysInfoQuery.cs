@@ -44,7 +44,7 @@ INNER JOIN pg_catalog.pg_attribute referenced_columns
 WHERE this_table.relkind = 'r'
     AND this_table_constraint.contype = 'f'
     AND this_table_ns.nspname NOT IN ('information_schema', 'pg_catalog')
-    AND this_table.relname != '{DNDBTSysTables.DNDBTDbObjects}';";
+    AND this_table.relname NOT IN ({DNDBTSysTables.AllTablesForInClause});";
 
     public override RecordMapper Mapper => new PostgreSQLRecordMapper();
 

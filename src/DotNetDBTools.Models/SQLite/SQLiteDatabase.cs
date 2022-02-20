@@ -14,5 +14,6 @@ public class SQLiteDatabase : Database
         Name = name;
         Tables = new List<SQLiteTable>();
         Views = new List<SQLiteView>();
+        Scripts = new List<Script>();
     }
 }

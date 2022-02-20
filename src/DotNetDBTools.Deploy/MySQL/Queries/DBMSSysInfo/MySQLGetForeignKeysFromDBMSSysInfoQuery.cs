@@ -29,7 +29,7 @@ INNER JOIN INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS rc
         AND rc.CONSTRAINT_NAME = tc.CONSTRAINT_NAME
 WHERE tc.CONSTRAINT_SCHEMA = (select DATABASE())
     AND tc.CONSTRAINT_TYPE = 'FOREIGN KEY'
-    AND tc.TABLE_NAME != '{DNDBTSysTables.DNDBTDbObjects}';";
+    AND tc.TABLE_NAME NOT IN ({DNDBTSysTables.AllTablesForInClause});";
 
     public override RecordMapper Mapper => new MySQLRecordMapper();
 

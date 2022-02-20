@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using DotNetDBTools.Analysis.Agnostic;
+using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.Analysis.Core.Errors;
 using DotNetDBTools.Analysis.MSSQL;
 using DotNetDBTools.Analysis.MySQL;
@@ -47,5 +48,10 @@ public static class AnalysisHelper
                 return true;
         }
         return false;
+    }
+
+    public static bool DiffIsEmpty(DatabaseDiff dbDiff)
+    {
+        return DiffAnalyzer.IsEmpty(dbDiff);
     }
 }
