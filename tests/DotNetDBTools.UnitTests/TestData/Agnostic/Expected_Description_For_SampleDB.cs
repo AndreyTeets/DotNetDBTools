@@ -2,6 +2,11 @@
 {
     public static class DotNetDBToolsSampleDBAgnosticTables
     {
+        public static readonly MyTable1Description MyTable1 = new();
+        public static readonly MyTable2Description MyTable2 = new();
+        public static readonly MyTable4Description MyTable4 = new();
+        public static readonly MyTable5Description MyTable5 = new();
+
         public class MyTable1Description
         {
             public readonly string MyColumn1 = nameof(MyColumn1);
@@ -35,10 +40,5 @@
             public override string ToString() => nameof(MyTable5);
             public static implicit operator string(MyTable5Description description) => description.ToString();
         }
-
-        public static readonly MyTable1Description MyTable1 = new();
-        public static readonly MyTable2Description MyTable2 = new();
-        public static readonly MyTable4Description MyTable4 = new();
-        public static readonly MyTable5Description MyTable5 = new();
     }
 }

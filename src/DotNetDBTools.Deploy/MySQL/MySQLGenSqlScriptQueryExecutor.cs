@@ -40,7 +40,7 @@ internal class MySQLGenSqlScriptQueryExecutor : GenSqlScriptQueryExecutor
             return "NULL";
         return queryParameter.Type switch
         {
-            DbType.String => $"'{queryParameter.Value}'",
+            DbType.String => $"'{queryParameter.Value.ToString().Replace("'", "''")}'",
             _ => throw new InvalidOperationException($"Invalid query parameter type: '{queryParameter.Type}'")
         };
     }

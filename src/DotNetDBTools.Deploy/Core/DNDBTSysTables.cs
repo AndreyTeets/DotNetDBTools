@@ -2,6 +2,8 @@
 
 internal static class DNDBTSysTables
 {
+    public static readonly DNDBTDbObjectsTableDescription DNDBTDbObjects = new();
+
     public class DNDBTDbObjectsTableDescription
     {
         public readonly string ID = nameof(ID);
@@ -13,6 +15,4 @@ internal static class DNDBTSysTables
         public override string ToString() => nameof(DNDBTDbObjects);
         public static implicit operator string(DNDBTDbObjectsTableDescription description) => description.ToString();
     }
-
-    public static readonly DNDBTDbObjectsTableDescription DNDBTDbObjects = new();
 }

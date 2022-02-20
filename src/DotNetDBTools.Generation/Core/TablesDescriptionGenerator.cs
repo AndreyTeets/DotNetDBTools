@@ -44,9 +44,9 @@ $@"namespace {database.Name}Description
 {{
     public static class {database.Name}Tables
     {{
-{string.Join("\n", tableDescriptionDefinitions)}
-
 {string.Join("\n", tableDeclarations)}
+
+{string.Join("\n", tableDescriptionDefinitions)}
     }}
 }}";
 

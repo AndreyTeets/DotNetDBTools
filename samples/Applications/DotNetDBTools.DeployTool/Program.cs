@@ -70,7 +70,7 @@ app.Command("scriptupdate", cmd =>
 
 app.Command("scriptnew", cmd =>
 {
-    cmd.Description = "Create script for updating empty (but registered) database to dbAssembly.";
+    cmd.Description = "Create script for updating empty database to dbAssembly.";
     CommandOption<Dbms> dbmsOption = optionsBuilder.AddDbmsOption(cmd);
     CommandOption<string> asmOption = optionsBuilder.AddAsmOption(cmd);
     CommandOption<string> outOption = optionsBuilder.AddOutOption(cmd);

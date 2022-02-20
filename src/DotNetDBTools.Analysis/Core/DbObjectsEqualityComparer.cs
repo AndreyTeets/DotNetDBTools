@@ -78,9 +78,9 @@ internal class DbObjectsEqualityComparer : IEqualityComparer<DbObject>
         return true;
     }
 
-    private static IEnumerable<PropertyInfo> GetProperties(Type parentType)
+    private static IEnumerable<PropertyInfo> GetProperties(Type type)
     {
-        return parentType
+        return type
             .GetProperties(BindingFlags.Public | BindingFlags.Instance)
             .Where(x => x.CanRead && x.Name != "SyncRoot" && x.GetIndexParameters().Length == 0 &&
                 x.Module.Assembly.FullName == typeof(Database).Assembly.FullName);

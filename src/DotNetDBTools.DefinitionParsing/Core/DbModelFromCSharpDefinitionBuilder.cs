@@ -42,7 +42,7 @@ internal abstract class DbModelFromCSharpDefinitionBuilder<
     }
     protected virtual void BuildAdditionalDbObjects(Database database, Assembly dbAssembly) { }
 
-    protected List<TTable> BuildTableModels(Assembly dbAssembly)
+    private List<TTable> BuildTableModels(Assembly dbAssembly)
     {
         IEnumerable<IBaseTable> tables = GetInstancesOfAllTypesImplementingInterface<IBaseTable>(dbAssembly);
         List<TTable> tableModels = new();
@@ -67,7 +67,7 @@ internal abstract class DbModelFromCSharpDefinitionBuilder<
     }
     protected virtual void BuildAdditionalTableModelProperties(TTable tableModel, IBaseTable table) { }
 
-    protected List<TView> BuildViewModels(Assembly dbAssembly)
+    private List<TView> BuildViewModels(Assembly dbAssembly)
     {
         IEnumerable<IBaseView> views = GetInstancesOfAllTypesImplementingInterface<IBaseView>(dbAssembly);
         List<TView> viewModels = new();
@@ -109,7 +109,6 @@ internal abstract class DbModelFromCSharpDefinitionBuilder<
             })
             .ToList();
     }
-
     protected virtual void BuildAdditionalColumnModelProperties(TColumn columnModel, BaseColumn column, string tableName) { }
 
     private PrimaryKey BuildPrimaryKeyModels(IBaseTable table)
@@ -131,7 +130,6 @@ internal abstract class DbModelFromCSharpDefinitionBuilder<
             })
             .SingleOrDefault();
     }
-
     protected virtual void BuildAdditionalPrimaryKeyModelProperties(PrimaryKey pkModel, BasePrimaryKey pk, string tableName) { }
 
     private List<UniqueConstraint> BuildUniqueConstraintModels(IBaseTable table)
@@ -153,7 +151,6 @@ internal abstract class DbModelFromCSharpDefinitionBuilder<
             })
             .ToList();
     }
-
     protected virtual void BuildAdditionalUniqueConstraintModelProperties(UniqueConstraint ucModel, BaseUniqueConstraint uc, string tableName) { }
 
     private List<CheckConstraint> BuildCheckConstraintModels(IBaseTable table)
@@ -175,7 +172,6 @@ internal abstract class DbModelFromCSharpDefinitionBuilder<
             })
             .ToList();
     }
-
     protected virtual void BuildAdditionalCheckConstraintModelProperties(CheckConstraint ckModel, BaseCheckConstraint ck, string tableName) { }
 
     private List<ForeignKey> BuildForeignKeyModels(IBaseTable table)
@@ -239,7 +235,6 @@ internal abstract class DbModelFromCSharpDefinitionBuilder<
             })
             .ToList();
     }
-
     protected virtual void BuildAdditionalIndexModelProperties(Index indexModel, BaseIndex index, string tableName) { }
 
     private List<Trigger> BuildTriggerModels(IBaseTable table)
@@ -261,7 +256,6 @@ internal abstract class DbModelFromCSharpDefinitionBuilder<
             })
             .ToList();
     }
-
     protected virtual void BuildAdditionalTriggerModelProperties(Trigger triggerModel, BaseTrigger trigger, string tableName) { }
 
     protected static IEnumerable<TInterface> GetInstancesOfAllTypesImplementingInterface<TInterface>(Assembly dbAssembly)

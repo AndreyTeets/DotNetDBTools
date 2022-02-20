@@ -45,7 +45,7 @@ $DNDBTGeneratedScriptTransactionBlock$";
             return "NULL";
         return queryParameter.Type switch
         {
-            DbType.String or DbType.Guid => $"'{queryParameter.Value}'",
+            DbType.String or DbType.Guid => $"'{queryParameter.Value.ToString().Replace("'", "''")}'",
             _ => throw new InvalidOperationException($"Invalid query parameter type: '{queryParameter.Type}'")
         };
     }
