@@ -4,28 +4,28 @@ using System.Data;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Queries.DNDBTSysInfo;
 
-namespace DotNetDBTools.Deploy.SQLite.Queries.DNDBTSysInfo;
+namespace DotNetDBTools.Deploy.MySQL.Queries.DNDBTSysInfo;
 
-internal class SQLiteInsertDNDBTSysInfoQuery : InsertDNDBTSysInfoQuery
+internal class MySQLInsertDNDBTDbObjectRecordQuery : InsertDNDBTDbObjectRecordQuery
 {
     private const string IDParameterName = "@ID";
     private const string ParentIDParameterName = "@ParentID";
     private const string NameParameterName = "@Name";
     private const string CodeParameterName = "@Code";
 
-    public SQLiteInsertDNDBTSysInfoQuery(Guid objectID, Guid? parentObjectID, DbObjectType objectType, string objectName, string objectCode = null)
+    public MySQLInsertDNDBTDbObjectRecordQuery(Guid objectID, Guid? parentObjectID, DbObjectType objectType, string objectName, string objectCode = null)
         : base(objectID, parentObjectID, objectType, objectName, objectCode) { }
 
     protected override string GetSql(DbObjectType objectType)
     {
         string query =
-$@"INSERT INTO {DNDBTSysTables.DNDBTDbObjects}
+$@"INSERT INTO `{DNDBTSysTables.DNDBTDbObjects}`
 (
-    {DNDBTSysTables.DNDBTDbObjects.ID},
-    {DNDBTSysTables.DNDBTDbObjects.ParentID},
-    {DNDBTSysTables.DNDBTDbObjects.Type},
-    {DNDBTSysTables.DNDBTDbObjects.Name},
-    {DNDBTSysTables.DNDBTDbObjects.Code}
+    `{DNDBTSysTables.DNDBTDbObjects.ID}`,
+    `{DNDBTSysTables.DNDBTDbObjects.ParentID}`,
+    `{DNDBTSysTables.DNDBTDbObjects.Type}`,
+    `{DNDBTSysTables.DNDBTDbObjects.Name}`,
+    `{DNDBTSysTables.DNDBTDbObjects.Code}`
 )
 VALUES
 (

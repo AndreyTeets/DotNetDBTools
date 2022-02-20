@@ -74,14 +74,14 @@ app.Command("scriptnew", cmd =>
     CommandOption<Dbms> dbmsOption = optionsBuilder.AddDbmsOption(cmd);
     CommandOption<string> asmOption = optionsBuilder.AddAsmOption(cmd);
     CommandOption<string> outOption = optionsBuilder.AddOutOption(cmd);
-    CommandOption<bool> ddlonlyOption = optionsBuilder.AddDdlonlyOption(cmd);
+    CommandOption<bool> noDNDBTInfoOption = optionsBuilder.AddNoDNDBTInfoOption(cmd);
     cmd.OnExecute(() =>
     {
         new ScriptNewCommand().Execute(
             dbmsOption.ParsedValue,
             asmOption.ParsedValue,
             outOption.ParsedValue,
-            ddlonlyOption.ParsedValue);
+            noDNDBTInfoOption.ParsedValue);
     });
 });
 
@@ -93,7 +93,7 @@ app.Command("scriptasmdiff", cmd =>
     CommandOption<string> oldasmOption = optionsBuilder.AddOldasmOption(cmd);
     CommandOption<string> outOption = optionsBuilder.AddOutOption(cmd);
     CommandOption<bool> lossOption = optionsBuilder.AddLossOption(cmd);
-    CommandOption<bool> ddlonlyOption = optionsBuilder.AddDdlonlyOption(cmd);
+    CommandOption<bool> noDNDBTInfoOption = optionsBuilder.AddNoDNDBTInfoOption(cmd);
     cmd.OnExecute(() =>
     {
         new ScriptsAsmDiffCommand().Execute(
@@ -102,7 +102,7 @@ app.Command("scriptasmdiff", cmd =>
             oldasmOption.ParsedValue,
             outOption.ParsedValue,
             lossOption.ParsedValue,
-            ddlonlyOption.ParsedValue);
+            noDNDBTInfoOption.ParsedValue);
     });
 });
 

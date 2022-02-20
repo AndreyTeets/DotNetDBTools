@@ -12,7 +12,7 @@ using static DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo.GetPrimaryKeysFromDBM
 using static DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo.GetTriggersFromDBMSSysInfoQuery;
 using static DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo.GetUniqueConstraintsFromDBMSSysInfoQuery;
 using static DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo.GetViewsFromDBMSSysInfoQuery;
-using static DotNetDBTools.Deploy.Core.Queries.DNDBTSysInfo.GetAllDbObjectsFromDNDBTSysInfoQuery;
+using static DotNetDBTools.Deploy.Core.Queries.DNDBTSysInfo.GetDNDBTDbObjectRecordsQuery;
 
 namespace DotNetDBTools.Deploy.Core;
 
@@ -28,7 +28,7 @@ internal abstract class DbModelFromDbSysInfoBuilder<
     TGetTriggersFromDBMSSysInfoQuery,
     TGetForeignKeysFromDBMSSysInfoQuery,
     TGetViewsFromDBMSSysInfoQuery,
-    TGetAllDbObjectsFromDNDBTSysInfoQuery>
+    TGetDbObjectRecordsFromDNDBTSysInfoQuery>
     : IDbModelFromDbSysInfoBuilder
     where TDatabase : Database, new()
     where TTable : Table, new()
@@ -41,7 +41,7 @@ internal abstract class DbModelFromDbSysInfoBuilder<
     where TGetForeignKeysFromDBMSSysInfoQuery : GetForeignKeysFromDBMSSysInfoQuery, new()
     where TGetTriggersFromDBMSSysInfoQuery : GetTriggersFromDBMSSysInfoQuery, new()
     where TGetViewsFromDBMSSysInfoQuery : GetViewsFromDBMSSysInfoQuery, new()
-    where TGetAllDbObjectsFromDNDBTSysInfoQuery : GetAllDbObjectsFromDNDBTSysInfoQuery, new()
+    where TGetDbObjectRecordsFromDNDBTSysInfoQuery : GetDNDBTDbObjectRecordsQuery, new()
 {
     protected readonly IQueryExecutor QueryExecutor;
 
@@ -69,7 +69,7 @@ internal abstract class DbModelFromDbSysInfoBuilder<
 
     private void ReplaceDbModelObjectsIDsAndCodeWithDNDBTSysInfo(Database database)
     {
-        TGetAllDbObjectsFromDNDBTSysInfoQuery query = new();
+        TGetDbObjectRecordsFromDNDBTSysInfoQuery query = new();
         IEnumerable<DNDBTDbObjectRecord> dbObjectRecords = query.Loader.GetRecords(QueryExecutor, query);
         Dictionary<string, DNDBTInfo> dbObjectIDsMap = new();
         foreach (DNDBTDbObjectRecord dbObjRec in dbObjectRecords)

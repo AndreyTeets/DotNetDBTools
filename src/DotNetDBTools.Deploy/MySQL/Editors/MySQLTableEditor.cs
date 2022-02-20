@@ -6,9 +6,9 @@ using DotNetDBTools.Deploy.MySQL.Queries.DNDBTSysInfo;
 namespace DotNetDBTools.Deploy.MySQL.Editors;
 
 internal class MySQLTableEditor : TableEditor<
-    MySQLInsertDNDBTSysInfoQuery,
-    MySQLDeleteDNDBTSysInfoQuery,
-    MySQLUpdateDNDBTSysInfoQuery,
+    MySQLInsertDNDBTDbObjectRecordQuery,
+    MySQLDeleteDNDBTDbObjectRecordQuery,
+    MySQLUpdateDNDBTDbObjectRecordQuery,
     MySQLCreateTableQuery,
     MySQLDropTableQuery,
     MySQLAlterTableQuery>

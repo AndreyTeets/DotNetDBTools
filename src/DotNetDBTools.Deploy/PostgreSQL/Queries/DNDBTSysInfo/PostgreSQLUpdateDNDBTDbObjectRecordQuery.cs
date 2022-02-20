@@ -6,13 +6,13 @@ using DotNetDBTools.Deploy.Core.Queries.DNDBTSysInfo;
 
 namespace DotNetDBTools.Deploy.PostgreSQL.Queries.DNDBTSysInfo;
 
-internal class PostgreSQLUpdateDNDBTSysInfoQuery : UpdateDNDBTSysInfoQuery
+internal class PostgreSQLUpdateDNDBTDbObjectRecordQuery : UpdateDNDBTDbObjectRecordQuery
 {
     private const string IDParameterName = "@ID";
     private const string NameParameterName = "@Name";
     private const string CodeParameterName = "@Code";
 
-    public PostgreSQLUpdateDNDBTSysInfoQuery(Guid objectID, string objectName, string objectCode = null)
+    public PostgreSQLUpdateDNDBTDbObjectRecordQuery(Guid objectID, string objectName, string objectCode = null)
         : base(objectID, objectName, objectCode) { }
 
     protected override string GetSql()

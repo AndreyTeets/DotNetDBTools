@@ -4,9 +4,9 @@ using DotNetDBTools.Deploy.Core.Queries.DNDBTSysInfo;
 
 namespace DotNetDBTools.Deploy.PostgreSQL.Queries.DNDBTSysInfo;
 
-internal class PostgreSQLDeleteDNDBTSysInfoQuery : DeleteDNDBTSysInfoQuery
+internal class PostgreSQLDeleteDNDBTDbObjectRecordQuery : DeleteDNDBTDbObjectRecordQuery
 {
-    public PostgreSQLDeleteDNDBTSysInfoQuery(Guid objectID)
+    public PostgreSQLDeleteDNDBTDbObjectRecordQuery(Guid objectID)
         : base(objectID) { }
 
     protected override string GetSql(Guid objectID)

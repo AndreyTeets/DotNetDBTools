@@ -6,8 +6,8 @@ using DotNetDBTools.Deploy.MySQL.Queries.DNDBTSysInfo;
 namespace DotNetDBTools.Deploy.MySQL.Editors;
 
 internal class MySQLTriggerEditor : TriggerEditor<
-    MySQLInsertDNDBTSysInfoQuery,
-    MySQLDeleteDNDBTSysInfoQuery,
+    MySQLInsertDNDBTDbObjectRecordQuery,
+    MySQLDeleteDNDBTDbObjectRecordQuery,
     MySQLCreateTriggerQuery,
     MySQLDropTriggerQuery>
 {

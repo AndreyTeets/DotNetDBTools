@@ -23,22 +23,22 @@ public interface IDeployManager
     public void GeneratePublishScript(Assembly newDbAssembly, Assembly oldDbAssembly, string outputPath);
 
     /// <summary>
-    /// Include only DDL changes into script (and skip DNDBT system info changes).
+    /// Do not include DNDBT system info changes in script.
     /// </summary>
-    public void GenerateDDLOnlyPublishScript(string dbAssemblyPath, string outputPath);
+    public void GenerateNoDNDBTInfoPublishScript(string dbAssemblyPath, string outputPath);
     /// <summary>
-    /// Include only DDL changes into script (and skip DNDBT system info changes).
+    /// Do not include DNDBT system info changes in script.
     /// </summary>
-    public void GenerateDDLOnlyPublishScript(Assembly dbAssembly, string outputPath);
+    public void GenerateNoDNDBTInfoPublishScript(Assembly dbAssembly, string outputPath);
 
     /// <summary>
-    /// Include only DDL changes into script (and skip DNDBT system info changes).
+    /// Do not include DNDBT system info changes in script.
     /// </summary>
-    public void GenerateDDLOnlyPublishScript(string newDbAssemblyPath, string oldDbAssemblyPath, string outputPath);
+    public void GenerateNoDNDBTInfoPublishScript(string newDbAssemblyPath, string oldDbAssemblyPath, string outputPath);
     /// <summary>
-    /// Include only DDL changes into script (and skip DNDBT system info changes).
+    /// Do not include DNDBT system info changes in script.
     /// </summary>
-    public void GenerateDDLOnlyPublishScript(Assembly newDbAssembly, Assembly oldDbAssembly, string outputPath);
+    public void GenerateNoDNDBTInfoPublishScript(Assembly newDbAssembly, Assembly oldDbAssembly, string outputPath);
 
     public void GenerateDefinition(DbConnection connection, string outputDirectory);
 }

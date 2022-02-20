@@ -52,15 +52,15 @@ public abstract class BasePublishScriptGenerationTests<TDeployManager>
     }
 
     [Fact]
-    public void Generate_DDLOnlyPublishScript_For_SampleDB_CreatesCorrectScript_WhenUpdatingFromV2ToV1()
+    public void Generate_NoDNDBTInfoPublishScript_For_SampleDB_CreatesCorrectScript_WhenUpdatingFromV2ToV1()
     {
         _deployManager.Options = new DeployOptions { AllowDataLoss = true };
 
-        string outputPath = @$"{ActualFilesDir}/Actual_DDLOnlyPublishScript_For_SampleDB_WhenUpdatingFromV2ToV1.sql";
-        _deployManager.GenerateDDLOnlyPublishScript(_dbAssemblyV1, _dbAssemblyV2, outputPath);
+        string outputPath = @$"{ActualFilesDir}/Actual_NoDNDBTInfoPublishScript_For_SampleDB_WhenUpdatingFromV2ToV1.sql";
+        _deployManager.GenerateNoDNDBTInfoPublishScript(_dbAssemblyV1, _dbAssemblyV2, outputPath);
 
         string actualScript = File.ReadAllText(outputPath);
-        string expectedScript = File.ReadAllText(@$"{ExpectedFilesDir}/Expected_DDLOnlyPublishScript_For_SampleDB_WhenUpdatingFromV2ToV1.sql");
+        string expectedScript = File.ReadAllText(@$"{ExpectedFilesDir}/Expected_NoDNDBTInfoPublishScript_For_SampleDB_WhenUpdatingFromV2ToV1.sql");
         actualScript.NormalizeLineEndings().Should().Be(expectedScript.NormalizeLineEndings());
     }
 

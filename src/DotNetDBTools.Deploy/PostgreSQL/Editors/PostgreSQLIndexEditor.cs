@@ -6,8 +6,8 @@ using DotNetDBTools.Deploy.PostgreSQL.Queries.DNDBTSysInfo;
 namespace DotNetDBTools.Deploy.PostgreSQL.Editors;
 
 internal class PostgreSQLIndexEditor : IndexEditor<
-    PostgreSQLInsertDNDBTSysInfoQuery,
-    PostgreSQLDeleteDNDBTSysInfoQuery,
+    PostgreSQLInsertDNDBTDbObjectRecordQuery,
+    PostgreSQLDeleteDNDBTDbObjectRecordQuery,
     PostgreSQLCreateIndexQuery,
     PostgreSQLDropIndexQuery>
 {

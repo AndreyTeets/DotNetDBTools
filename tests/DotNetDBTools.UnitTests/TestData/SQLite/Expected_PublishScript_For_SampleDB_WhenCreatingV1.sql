@@ -16,7 +16,7 @@ CREATE TABLE MyTable1
 );
 -- QUERY END: SQLiteCreateTableQuery
 
--- QUERY START: SQLiteInsertDNDBTSysInfoQuery
+-- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
 INSERT INTO DNDBTDbObjects
 (
     ID,
@@ -33,9 +33,9 @@ VALUES
     'MyTable1',
     NULL
 );
--- QUERY END: SQLiteInsertDNDBTSysInfoQuery
+-- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteInsertDNDBTSysInfoQuery
+-- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
 INSERT INTO DNDBTDbObjects
 (
     ID,
@@ -52,9 +52,9 @@ VALUES
     'MyColumn1',
     NULL
 );
--- QUERY END: SQLiteInsertDNDBTSysInfoQuery
+-- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteInsertDNDBTSysInfoQuery
+-- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
 INSERT INTO DNDBTDbObjects
 (
     ID,
@@ -71,9 +71,9 @@ VALUES
     'MyColumn2',
     NULL
 );
--- QUERY END: SQLiteInsertDNDBTSysInfoQuery
+-- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteInsertDNDBTSysInfoQuery
+-- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
 INSERT INTO DNDBTDbObjects
 (
     ID,
@@ -90,9 +90,9 @@ VALUES
     'MyColumn3',
     NULL
 );
--- QUERY END: SQLiteInsertDNDBTSysInfoQuery
+-- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteInsertDNDBTSysInfoQuery
+-- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
 INSERT INTO DNDBTDbObjects
 (
     ID,
@@ -109,9 +109,9 @@ VALUES
     'MyColumn4',
     NULL
 );
--- QUERY END: SQLiteInsertDNDBTSysInfoQuery
+-- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteInsertDNDBTSysInfoQuery
+-- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
 INSERT INTO DNDBTDbObjects
 (
     ID,
@@ -128,9 +128,9 @@ VALUES
     'PK_MyTable1',
     NULL
 );
--- QUERY END: SQLiteInsertDNDBTSysInfoQuery
+-- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteInsertDNDBTSysInfoQuery
+-- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
 INSERT INTO DNDBTDbObjects
 (
     ID,
@@ -147,9 +147,9 @@ VALUES
     'UQ_MyTable1_MyColumn2',
     NULL
 );
--- QUERY END: SQLiteInsertDNDBTSysInfoQuery
+-- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteInsertDNDBTSysInfoQuery
+-- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
 INSERT INTO DNDBTDbObjects
 (
     ID,
@@ -166,9 +166,9 @@ VALUES
     'CK_MyTable1_MyCheck1',
     'CHECK (MyColumn4 >= 0)'
 );
--- QUERY END: SQLiteInsertDNDBTSysInfoQuery
+-- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteInsertDNDBTSysInfoQuery
+-- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
 INSERT INTO DNDBTDbObjects
 (
     ID,
@@ -185,7 +185,7 @@ VALUES
     'FK_MyTable1_MyColumn1_MyTable2_MyColumn1',
     NULL
 );
--- QUERY END: SQLiteInsertDNDBTSysInfoQuery
+-- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
 
 -- QUERY START: SQLiteCreateTableQuery
 CREATE TABLE MyTable2
@@ -207,7 +207,7 @@ CREATE UNIQUE INDEX IDX_MyTable2_MyIndex1
 ON MyTable2 (MyColumn1, MyColumn2);
 -- QUERY END: SQLiteCreateTableQuery
 
--- QUERY START: SQLiteInsertDNDBTSysInfoQuery
+-- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
 INSERT INTO DNDBTDbObjects
 (
     ID,
@@ -224,9 +224,9 @@ VALUES
     'MyTable2',
     NULL
 );
--- QUERY END: SQLiteInsertDNDBTSysInfoQuery
+-- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteInsertDNDBTSysInfoQuery
+-- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
 INSERT INTO DNDBTDbObjects
 (
     ID,
@@ -243,9 +243,9 @@ VALUES
     'MyColumn1',
     NULL
 );
--- QUERY END: SQLiteInsertDNDBTSysInfoQuery
+-- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteInsertDNDBTSysInfoQuery
+-- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
 INSERT INTO DNDBTDbObjects
 (
     ID,
@@ -262,9 +262,9 @@ VALUES
     'MyColumn2',
     NULL
 );
--- QUERY END: SQLiteInsertDNDBTSysInfoQuery
+-- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteInsertDNDBTSysInfoQuery
+-- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
 INSERT INTO DNDBTDbObjects
 (
     ID,
@@ -281,9 +281,9 @@ VALUES
     'PK_MyTable2',
     NULL
 );
--- QUERY END: SQLiteInsertDNDBTSysInfoQuery
+-- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteInsertDNDBTSysInfoQuery
+-- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
 INSERT INTO DNDBTDbObjects
 (
     ID,
@@ -307,9 +307,9 @@ BEGIN
     VALUES(NEW.[MyColumn1]);
 END;'
 );
--- QUERY END: SQLiteInsertDNDBTSysInfoQuery
+-- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteInsertDNDBTSysInfoQuery
+-- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
 INSERT INTO DNDBTDbObjects
 (
     ID,
@@ -326,7 +326,7 @@ VALUES
     'IDX_MyTable2_MyIndex1',
     NULL
 );
--- QUERY END: SQLiteInsertDNDBTSysInfoQuery
+-- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
 
 -- QUERY START: SQLiteCreateTableQuery
 CREATE TABLE MyTable4
@@ -335,7 +335,7 @@ CREATE TABLE MyTable4
 );
 -- QUERY END: SQLiteCreateTableQuery
 
--- QUERY START: SQLiteInsertDNDBTSysInfoQuery
+-- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
 INSERT INTO DNDBTDbObjects
 (
     ID,
@@ -352,9 +352,9 @@ VALUES
     'MyTable4',
     NULL
 );
--- QUERY END: SQLiteInsertDNDBTSysInfoQuery
+-- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteInsertDNDBTSysInfoQuery
+-- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
 INSERT INTO DNDBTDbObjects
 (
     ID,
@@ -371,7 +371,7 @@ VALUES
     'MyColumn1',
     NULL
 );
--- QUERY END: SQLiteInsertDNDBTSysInfoQuery
+-- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
 
 -- QUERY START: SQLiteCreateTableQuery
 CREATE TABLE MyTable5
@@ -381,7 +381,7 @@ CREATE TABLE MyTable5
 );
 -- QUERY END: SQLiteCreateTableQuery
 
--- QUERY START: SQLiteInsertDNDBTSysInfoQuery
+-- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
 INSERT INTO DNDBTDbObjects
 (
     ID,
@@ -398,9 +398,9 @@ VALUES
     'MyTable5',
     NULL
 );
--- QUERY END: SQLiteInsertDNDBTSysInfoQuery
+-- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteInsertDNDBTSysInfoQuery
+-- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
 INSERT INTO DNDBTDbObjects
 (
     ID,
@@ -417,9 +417,9 @@ VALUES
     'MyColumn1',
     'ABS(-15)'
 );
--- QUERY END: SQLiteInsertDNDBTSysInfoQuery
+-- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteInsertDNDBTSysInfoQuery
+-- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
 INSERT INTO DNDBTDbObjects
 (
     ID,
@@ -436,7 +436,7 @@ VALUES
     'MyColumn3',
     NULL
 );
--- QUERY END: SQLiteInsertDNDBTSysInfoQuery
+-- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
 
 -- QUERY START: GenericQuery
 CREATE VIEW MyView1 AS
@@ -449,7 +449,7 @@ LEFT JOIN MyTable2 t2
     ON t2.MyColumn1 = t1.MyColumn1;
 -- QUERY END: GenericQuery
 
--- QUERY START: SQLiteInsertDNDBTSysInfoQuery
+-- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
 INSERT INTO DNDBTDbObjects
 (
     ID,
@@ -473,6 +473,6 @@ FROM MyTable1 t1
 LEFT JOIN MyTable2 t2
     ON t2.MyColumn1 = t1.MyColumn1;'
 );
--- QUERY END: SQLiteInsertDNDBTSysInfoQuery
+-- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
 
 COMMIT TRANSACTION;

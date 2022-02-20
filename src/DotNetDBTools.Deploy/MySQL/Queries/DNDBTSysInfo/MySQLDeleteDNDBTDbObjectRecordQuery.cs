@@ -4,9 +4,9 @@ using DotNetDBTools.Deploy.Core.Queries.DNDBTSysInfo;
 
 namespace DotNetDBTools.Deploy.MySQL.Queries.DNDBTSysInfo;
 
-internal class MySQLDeleteDNDBTSysInfoQuery : DeleteDNDBTSysInfoQuery
+internal class MySQLDeleteDNDBTDbObjectRecordQuery : DeleteDNDBTDbObjectRecordQuery
 {
-    public MySQLDeleteDNDBTSysInfoQuery(Guid objectID)
+    public MySQLDeleteDNDBTDbObjectRecordQuery(Guid objectID)
         : base(objectID) { }
 
     protected override string GetSql(Guid objectID)

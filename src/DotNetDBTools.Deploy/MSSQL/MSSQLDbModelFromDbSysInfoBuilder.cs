@@ -4,7 +4,7 @@ using DotNetDBTools.Deploy.MSSQL.Queries.DBMSSysInfo;
 using DotNetDBTools.Deploy.MSSQL.Queries.DNDBTSysInfo;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.MSSQL;
-using static DotNetDBTools.Deploy.Core.Queries.DNDBTSysInfo.GetAllDbObjectsFromDNDBTSysInfoQuery;
+using static DotNetDBTools.Deploy.Core.Queries.DNDBTSysInfo.GetDNDBTDbObjectRecordsQuery;
 using static DotNetDBTools.Deploy.MSSQL.Queries.DBMSSysInfo.MSSQLGetTypesFromDBMSSysInfoQuery;
 
 namespace DotNetDBTools.Deploy.MSSQL;
@@ -21,7 +21,7 @@ internal class MSSQLDbModelFromDbSysInfoBuilder : DbModelFromDbSysInfoBuilder<
     MSSQLGetTriggersFromDBMSSysInfoQuery,
     MSSQLGetForeignKeysFromDBMSSysInfoQuery,
     MSSQLGetViewsFromDBMSSysInfoQuery,
-    MSSQLGetAllDbObjectsFromDNDBTSysInfoQuery>
+    MSSQLGetDNDBTDbObjectRecordsQuery>
 {
     public MSSQLDbModelFromDbSysInfoBuilder(IQueryExecutor queryExecutor)
         : base(queryExecutor) { }

@@ -9,13 +9,13 @@ using static DotNetDBTools.Deploy.Core.InstanceCreator;
 namespace DotNetDBTools.Deploy.Common.Editors;
 
 internal abstract class ForeignKeyEditor<
-    TInsertDNDBTSysInfoQuery,
-    TDeleteDNDBTSysInfoQuery,
+    TInsertDNDBTDbObjectRecordQuery,
+    TDeleteDNDBTDbObjectRecordQuery,
     TCreateForeignKeyQuery,
     TDropForeignKeyQuery>
     : IForeignKeyEditor
-    where TInsertDNDBTSysInfoQuery : InsertDNDBTSysInfoQuery
-    where TDeleteDNDBTSysInfoQuery : DeleteDNDBTSysInfoQuery
+    where TInsertDNDBTDbObjectRecordQuery : InsertDNDBTDbObjectRecordQuery
+    where TDeleteDNDBTDbObjectRecordQuery : DeleteDNDBTDbObjectRecordQuery
     where TCreateForeignKeyQuery : CreateForeignKeyQuery
     where TDropForeignKeyQuery : DropForeignKeyQuery
 {
@@ -43,13 +43,13 @@ internal abstract class ForeignKeyEditor<
     public void CreateForeignKey(ForeignKey fk, Table table)
     {
         QueryExecutor.Execute(Create<TCreateForeignKeyQuery>(fk, table.Name));
-        QueryExecutor.Execute(Create<TInsertDNDBTSysInfoQuery>(fk.ID, table.ID, DbObjectType.ForeignKey, fk.Name));
+        QueryExecutor.Execute(Create<TInsertDNDBTDbObjectRecordQuery>(fk.ID, table.ID, DbObjectType.ForeignKey, fk.Name));
     }
 
     public void DropForeignKey(ForeignKey fk, Table table)
     {
         QueryExecutor.Execute(Create<TDropForeignKeyQuery>(fk, table.Name));
-        QueryExecutor.Execute(Create<TDeleteDNDBTSysInfoQuery>(fk.ID));
+        QueryExecutor.Execute(Create<TDeleteDNDBTDbObjectRecordQuery>(fk.ID));
     }
 
     private static Dictionary<Guid, Table> CreateFKToTableMap(IEnumerable<Table> tables)

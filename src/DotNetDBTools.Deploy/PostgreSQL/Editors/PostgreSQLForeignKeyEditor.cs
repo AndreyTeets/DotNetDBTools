@@ -6,8 +6,8 @@ using DotNetDBTools.Deploy.PostgreSQL.Queries.DNDBTSysInfo;
 namespace DotNetDBTools.Deploy.PostgreSQL.Editors;
 
 internal class PostgreSQLForeignKeyEditor : ForeignKeyEditor<
-    PostgreSQLInsertDNDBTSysInfoQuery,
-    PostgreSQLDeleteDNDBTSysInfoQuery,
+    PostgreSQLInsertDNDBTDbObjectRecordQuery,
+    PostgreSQLDeleteDNDBTDbObjectRecordQuery,
     PostgreSQLCreateForeignKeyQuery,
     PostgreSQLDropForeignKeyQuery>
 {

@@ -80,11 +80,11 @@ internal class OptionsBuilder
         return option;
     }
 
-    public CommandOption<bool> AddDdlonlyOption(CommandLineApplication app)
+    public CommandOption<bool> AddNoDNDBTInfoOption(CommandLineApplication app)
     {
         CommandOption<bool> option = app.Option<bool>(
-            "--ddlonly",
-            "Optional. Include only DDL changes into script (and skip DNDBT system info changes).",
+            "--no-dndbt-info",
+            "Optional. Do not include DNDBT system info changes in script.",
             CommandOptionType.SingleOrNoValue);
 
         return option;

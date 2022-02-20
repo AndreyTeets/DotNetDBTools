@@ -6,9 +6,9 @@ using DotNetDBTools.Deploy.PostgreSQL.Queries.DNDBTSysInfo;
 namespace DotNetDBTools.Deploy.PostgreSQL.Editors;
 
 internal class PostgreSQLTableEditor : TableEditor<
-    PostgreSQLInsertDNDBTSysInfoQuery,
-    PostgreSQLDeleteDNDBTSysInfoQuery,
-    PostgreSQLUpdateDNDBTSysInfoQuery,
+    PostgreSQLInsertDNDBTDbObjectRecordQuery,
+    PostgreSQLDeleteDNDBTDbObjectRecordQuery,
+    PostgreSQLUpdateDNDBTDbObjectRecordQuery,
     PostgreSQLCreateTableQuery,
     PostgreSQLDropTableQuery,
     PostgreSQLAlterTableQuery>

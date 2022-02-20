@@ -6,8 +6,8 @@ using DotNetDBTools.Deploy.MSSQL.Queries.DNDBTSysInfo;
 namespace DotNetDBTools.Deploy.MSSQL.Editors;
 
 internal class MSSQLTriggerEditor : TriggerEditor<
-    MSSQLInsertDNDBTSysInfoQuery,
-    MSSQLDeleteDNDBTSysInfoQuery,
+    MSSQLInsertDNDBTDbObjectRecordQuery,
+    MSSQLDeleteDNDBTDbObjectRecordQuery,
     MSSQLCreateTriggerQuery,
     MSSQLDropTriggerQuery>
 {

@@ -9,13 +9,13 @@ using static DotNetDBTools.Deploy.Core.InstanceCreator;
 namespace DotNetDBTools.Deploy.Common.Editors;
 
 internal abstract class TriggerEditor<
-    TInsertDNDBTSysInfoQuery,
-    TDeleteDNDBTSysInfoQuery,
+    TInsertDNDBTDbObjectRecordQuery,
+    TDeleteDNDBTDbObjectRecordQuery,
     TCreateTriggerQuery,
     TDropTriggerQuery>
     : ITriggerEditor
-    where TInsertDNDBTSysInfoQuery : InsertDNDBTSysInfoQuery
-    where TDeleteDNDBTSysInfoQuery : DeleteDNDBTSysInfoQuery
+    where TInsertDNDBTDbObjectRecordQuery : InsertDNDBTDbObjectRecordQuery
+    where TDeleteDNDBTDbObjectRecordQuery : DeleteDNDBTDbObjectRecordQuery
     where TCreateTriggerQuery : CreateTriggerQuery
     where TDropTriggerQuery : DropTriggerQuery
 {
@@ -43,13 +43,13 @@ internal abstract class TriggerEditor<
     private void CreateTrigger(Trigger trg, Table table)
     {
         QueryExecutor.Execute(Create<TCreateTriggerQuery>(trg));
-        QueryExecutor.Execute(Create<TInsertDNDBTSysInfoQuery>(trg.ID, table.ID, DbObjectType.Trigger, trg.Name, trg.GetCode()));
+        QueryExecutor.Execute(Create<TInsertDNDBTDbObjectRecordQuery>(trg.ID, table.ID, DbObjectType.Trigger, trg.Name, trg.GetCode()));
     }
 
     private void DropTrigger(Trigger trg, Table table)
     {
         QueryExecutor.Execute(Create<TDropTriggerQuery>(trg, table));
-        QueryExecutor.Execute(Create<TDeleteDNDBTSysInfoQuery>(trg.ID));
+        QueryExecutor.Execute(Create<TDeleteDNDBTDbObjectRecordQuery>(trg.ID));
     }
 
     private static Dictionary<Guid, Table> CreateTriggerToTableMap(IEnumerable<Table> tables)

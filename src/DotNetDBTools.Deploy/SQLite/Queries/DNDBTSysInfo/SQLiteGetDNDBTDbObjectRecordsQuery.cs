@@ -5,7 +5,7 @@ using DotNetDBTools.Deploy.Core.Queries.DNDBTSysInfo;
 
 namespace DotNetDBTools.Deploy.SQLite.Queries.DNDBTSysInfo;
 
-internal class SQLiteGetAllDbObjectsFromDNDBTSysInfoQuery : GetAllDbObjectsFromDNDBTSysInfoQuery
+internal class SQLiteGetDNDBTDbObjectRecordsQuery : GetDNDBTDbObjectRecordsQuery
 {
     public override string Sql =>
 $@"SELECT
@@ -28,7 +28,7 @@ FROM {DNDBTSysTables.DNDBTDbObjects};";
 
     public class SQLiteRecordsLoader : RecordsLoader
     {
-        public override IEnumerable<DNDBTDbObjectRecord> GetRecords(IQueryExecutor queryExecutor, GetAllDbObjectsFromDNDBTSysInfoQuery query)
+        public override IEnumerable<DNDBTDbObjectRecord> GetRecords(IQueryExecutor queryExecutor, GetDNDBTDbObjectRecordsQuery query)
         {
             return queryExecutor.Query<SQLiteDNDBTDbObjectRecord>(query);
         }

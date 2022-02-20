@@ -88,36 +88,36 @@ internal class PostgreSQLDependsOnTablesObjectsEditor
     private void CreateView(PostgreSQLView view)
     {
         QueryExecutor.Execute(new GenericQuery($"{view.GetCode()}"));
-        QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(view.ID, null, DbObjectType.View, view.Name, view.GetCode()));
+        QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(view.ID, null, DbObjectType.View, view.Name, view.GetCode()));
     }
 
     private void DropView(PostgreSQLView view)
     {
         QueryExecutor.Execute(new GenericQuery($@"DROP VIEW ""{view.Name}"";"));
-        QueryExecutor.Execute(new PostgreSQLDeleteDNDBTSysInfoQuery(view.ID));
+        QueryExecutor.Execute(new PostgreSQLDeleteDNDBTDbObjectRecordQuery(view.ID));
     }
 
     private void CreateFunction(PostgreSQLFunction func)
     {
         QueryExecutor.Execute(new GenericQuery($"{func.GetCode()}"));
-        QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(func.ID, null, DbObjectType.Function, func.Name, func.GetCode()));
+        QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(func.ID, null, DbObjectType.Function, func.Name, func.GetCode()));
     }
 
     private void DropFunction(PostgreSQLFunction func)
     {
         QueryExecutor.Execute(new GenericQuery($@"DROP FUNCTION ""{func.Name}"";"));
-        QueryExecutor.Execute(new PostgreSQLDeleteDNDBTSysInfoQuery(func.ID));
+        QueryExecutor.Execute(new PostgreSQLDeleteDNDBTDbObjectRecordQuery(func.ID));
     }
 
     private void CreateProcedure(PostgreSQLProcedure proc)
     {
         QueryExecutor.Execute(new GenericQuery($"{proc.GetCode()}"));
-        QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(proc.ID, null, DbObjectType.Procedure, proc.Name, proc.GetCode()));
+        QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(proc.ID, null, DbObjectType.Procedure, proc.Name, proc.GetCode()));
     }
 
     private void DropProcedure(PostgreSQLProcedure proc)
     {
         QueryExecutor.Execute(new GenericQuery($@"DROP PROCEDURE ""{proc.Name}"";"));
-        QueryExecutor.Execute(new PostgreSQLDeleteDNDBTSysInfoQuery(proc.ID));
+        QueryExecutor.Execute(new PostgreSQLDeleteDNDBTDbObjectRecordQuery(proc.ID));
     }
 }

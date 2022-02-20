@@ -6,13 +6,13 @@ using DotNetDBTools.Deploy.Core.Queries.DNDBTSysInfo;
 
 namespace DotNetDBTools.Deploy.SQLite.Queries.DNDBTSysInfo;
 
-internal class SQLiteUpdateDNDBTSysInfoQuery : UpdateDNDBTSysInfoQuery
+internal class SQLiteUpdateDNDBTDbObjectRecordQuery : UpdateDNDBTDbObjectRecordQuery
 {
     private const string IDParameterName = "@ID";
     private const string NameParameterName = "@Name";
     private const string CodeParameterName = "@Code";
 
-    public SQLiteUpdateDNDBTSysInfoQuery(Guid objectID, string objectName, string objectCode = null)
+    public SQLiteUpdateDNDBTDbObjectRecordQuery(Guid objectID, string objectName, string objectCode = null)
         : base(objectID, objectName, objectCode) { }
 
     protected override string GetSql()

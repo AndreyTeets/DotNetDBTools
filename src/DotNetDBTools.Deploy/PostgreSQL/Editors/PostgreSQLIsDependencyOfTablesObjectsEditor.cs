@@ -107,58 +107,58 @@ internal class PostgreSQLIsDependencyOfTablesObjectsEditor
     {
         QueryExecutor.Execute(new PostgreSQLRenameFunctionToTempQuery(func));
         func.Name = $"_DNDBTTemp_{func.Name}";
-        QueryExecutor.Execute(new PostgreSQLDeleteDNDBTSysInfoQuery(func.ID));
+        QueryExecutor.Execute(new PostgreSQLDeleteDNDBTDbObjectRecordQuery(func.ID));
     }
 
     private void RenameTypeToTempInDbAndInDbDiff(DbObject type)
     {
         QueryExecutor.Execute(new PostgreSQLRenameTypeToTempQuery(type));
         type.Name = $"_DNDBTTemp_{type.Name}";
-        QueryExecutor.Execute(new PostgreSQLDeleteDNDBTSysInfoQuery(type.ID));
+        QueryExecutor.Execute(new PostgreSQLDeleteDNDBTDbObjectRecordQuery(type.ID));
 
         if (type is PostgreSQLDomainType domainType)
         {
             foreach (CheckConstraint ck in domainType.CheckConstraints)
-                QueryExecutor.Execute(new PostgreSQLDeleteDNDBTSysInfoQuery(ck.ID));
+                QueryExecutor.Execute(new PostgreSQLDeleteDNDBTDbObjectRecordQuery(ck.ID));
         }
     }
 
     private void CreateFunction(PostgreSQLFunction func)
     {
         QueryExecutor.Execute(new GenericQuery($"{func.GetCode()}"));
-        QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(func.ID, null, DbObjectType.Function, func.Name, func.GetCode()));
+        QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(func.ID, null, DbObjectType.Function, func.Name, func.GetCode()));
     }
 
     private void CreateCompositeType(PostgreSQLCompositeType type)
     {
         QueryExecutor.Execute(new PostgreSQLCreateCompositeTypeQuery(type));
-        QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(type.ID, null, DbObjectType.UserDefinedType, type.Name));
+        QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(type.ID, null, DbObjectType.UserDefinedType, type.Name));
     }
 
     private void CreateDomainType(PostgreSQLDomainType type)
     {
         QueryExecutor.Execute(new PostgreSQLCreateDomainTypeQuery(type));
-        QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(type.ID, null, DbObjectType.UserDefinedType, type.Name));
+        QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(type.ID, null, DbObjectType.UserDefinedType, type.Name));
         foreach (CheckConstraint ck in type.CheckConstraints)
-            QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(ck.ID, type.ID, DbObjectType.CheckConstraint, ck.Name, ck.GetCode()));
+            QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(ck.ID, type.ID, DbObjectType.CheckConstraint, ck.Name, ck.GetCode()));
     }
 
     private void CreateEnumType(PostgreSQLEnumType type)
     {
         QueryExecutor.Execute(new PostgreSQLCreateEnumTypeQuery(type));
-        QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(type.ID, null, DbObjectType.UserDefinedType, type.Name));
+        QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(type.ID, null, DbObjectType.UserDefinedType, type.Name));
     }
 
     private void CreateRangeType(PostgreSQLRangeType type)
     {
         QueryExecutor.Execute(new PostgreSQLCreateRangeTypeQuery(type));
-        QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(type.ID, null, DbObjectType.UserDefinedType, type.Name));
+        QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(type.ID, null, DbObjectType.UserDefinedType, type.Name));
     }
 
     private void DropFunction(PostgreSQLFunction func)
     {
         QueryExecutor.Execute(new GenericQuery($@"DROP FUNCTION ""{func.Name}"";"));
-        QueryExecutor.Execute(new PostgreSQLDeleteDNDBTSysInfoQuery(func.ID));
+        QueryExecutor.Execute(new PostgreSQLDeleteDNDBTDbObjectRecordQuery(func.ID));
     }
 
     private void DropType(DbObject type)

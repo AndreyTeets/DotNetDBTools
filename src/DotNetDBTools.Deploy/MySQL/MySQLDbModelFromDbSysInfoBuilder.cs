@@ -17,7 +17,7 @@ internal class MySQLDbModelFromDbSysInfoBuilder : DbModelFromDbSysInfoBuilder<
     MySQLGetTriggersFromDBMSSysInfoQuery,
     MySQLGetForeignKeysFromDBMSSysInfoQuery,
     MySQLGetViewsFromDBMSSysInfoQuery,
-    MySQLGetAllDbObjectsFromDNDBTSysInfoQuery>
+    MySQLGetDNDBTDbObjectRecordsQuery>
 {
     public MySQLDbModelFromDbSysInfoBuilder(IQueryExecutor queryExecutor)
         : base(queryExecutor) { }

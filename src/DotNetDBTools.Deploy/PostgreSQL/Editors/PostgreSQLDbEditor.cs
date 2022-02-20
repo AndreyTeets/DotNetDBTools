@@ -68,51 +68,51 @@ internal class PostgreSQLDbEditor : DbEditor<
     private void InsertUserDefinedTypesInfos(PostgreSQLDatabase db)
     {
         foreach (PostgreSQLCompositeType type in db.CompositeTypes)
-            QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(type.ID, null, DbObjectType.UserDefinedType, type.Name));
+            QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(type.ID, null, DbObjectType.UserDefinedType, type.Name));
         foreach (PostgreSQLDomainType type in db.DomainTypes)
         {
-            QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(type.ID, null, DbObjectType.UserDefinedType, type.Name, type.GetCode()));
+            QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(type.ID, null, DbObjectType.UserDefinedType, type.Name, type.GetCode()));
             foreach (CheckConstraint ck in type.CheckConstraints)
-                QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(ck.ID, type.ID, DbObjectType.CheckConstraint, ck.Name, ck.GetCode()));
+                QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(ck.ID, type.ID, DbObjectType.CheckConstraint, ck.Name, ck.GetCode()));
         }
         foreach (PostgreSQLEnumType type in db.EnumTypes)
-            QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(type.ID, null, DbObjectType.UserDefinedType, type.Name));
+            QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(type.ID, null, DbObjectType.UserDefinedType, type.Name));
         foreach (PostgreSQLRangeType type in db.RangeTypes)
-            QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(type.ID, null, DbObjectType.UserDefinedType, type.Name));
+            QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(type.ID, null, DbObjectType.UserDefinedType, type.Name));
     }
 
     private void InsertTablesInfos(PostgreSQLDatabase db)
     {
         foreach (PostgreSQLTable table in db.Tables)
         {
-            QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(table.ID, null, DbObjectType.Table, table.Name));
+            QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(table.ID, null, DbObjectType.Table, table.Name));
             foreach (Column c in table.Columns)
-                QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(c.ID, table.ID, DbObjectType.Column, c.Name, c.GetCode()));
+                QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(c.ID, table.ID, DbObjectType.Column, c.Name, c.GetCode()));
 
             PrimaryKey pk = table.PrimaryKey;
             if (pk is not null)
-                QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(pk.ID, table.ID, DbObjectType.PrimaryKey, pk.Name));
+                QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(pk.ID, table.ID, DbObjectType.PrimaryKey, pk.Name));
 
             foreach (UniqueConstraint uc in table.UniqueConstraints)
-                QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(uc.ID, table.ID, DbObjectType.UniqueConstraint, uc.Name));
+                QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(uc.ID, table.ID, DbObjectType.UniqueConstraint, uc.Name));
             foreach (ForeignKey fk in table.ForeignKeys)
-                QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(fk.ID, table.ID, DbObjectType.ForeignKey, fk.Name));
+                QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(fk.ID, table.ID, DbObjectType.ForeignKey, fk.Name));
             foreach (CheckConstraint ck in table.CheckConstraints)
-                QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(ck.ID, table.ID, DbObjectType.CheckConstraint, ck.Name, ck.GetCode()));
+                QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(ck.ID, table.ID, DbObjectType.CheckConstraint, ck.Name, ck.GetCode()));
             foreach (Index idx in table.Indexes)
-                QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(idx.ID, table.ID, DbObjectType.Index, idx.Name));
+                QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(idx.ID, table.ID, DbObjectType.Index, idx.Name));
             foreach (Trigger trg in table.Triggers)
-                QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(trg.ID, table.ID, DbObjectType.Trigger, trg.Name, trg.GetCode()));
+                QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(trg.ID, table.ID, DbObjectType.Trigger, trg.Name, trg.GetCode()));
         }
     }
 
     private void InsertViewsFunctionsProceduresInfos(PostgreSQLDatabase db)
     {
         foreach (PostgreSQLView view in db.Views)
-            QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(view.ID, null, DbObjectType.View, view.Name, view.GetCode()));
+            QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(view.ID, null, DbObjectType.View, view.Name, view.GetCode()));
         foreach (PostgreSQLFunction func in db.Functions)
-            QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(func.ID, null, DbObjectType.Function, func.Name, func.GetCode()));
+            QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(func.ID, null, DbObjectType.Function, func.Name, func.GetCode()));
         foreach (PostgreSQLProcedure proc in db.Procedures)
-            QueryExecutor.Execute(new PostgreSQLInsertDNDBTSysInfoQuery(proc.ID, null, DbObjectType.Procedure, proc.Name, proc.GetCode()));
+            QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(proc.ID, null, DbObjectType.Procedure, proc.Name, proc.GetCode()));
     }
 }

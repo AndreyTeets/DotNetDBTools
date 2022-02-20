@@ -2,46 +2,46 @@
 DROP TRIGGER `TR_MyTable2_MyTrigger1`;
 -- QUERY END: MySQLDropTriggerQuery
 
--- QUERY START: MySQLDeleteDNDBTSysInfoQuery
+-- QUERY START: MySQLDeleteDNDBTDbObjectRecordQuery
 DELETE FROM `DNDBTDbObjects`
 WHERE `ID` = 'ee64ffc3-5536-4624-beaf-bc3a61d06a1a';
--- QUERY END: MySQLDeleteDNDBTSysInfoQuery
+-- QUERY END: MySQLDeleteDNDBTDbObjectRecordQuery
 
 -- QUERY START: GenericQuery
 DROP VIEW `MyView1`;
 -- QUERY END: GenericQuery
 
--- QUERY START: MySQLDeleteDNDBTSysInfoQuery
+-- QUERY START: MySQLDeleteDNDBTDbObjectRecordQuery
 DELETE FROM `DNDBTDbObjects`
 WHERE `ID` = 'e2569aae-d5da-4a77-b3cd-51adbdb272d9';
--- QUERY END: MySQLDeleteDNDBTSysInfoQuery
+-- QUERY END: MySQLDeleteDNDBTDbObjectRecordQuery
 
 -- QUERY START: MySQLDropForeignKeyQuery
 ALTER TABLE `MyTable1` DROP CONSTRAINT `FK_MyTable1_MyColumn1_MyTable2_MyColumn1`;
 -- QUERY END: MySQLDropForeignKeyQuery
 
--- QUERY START: MySQLDeleteDNDBTSysInfoQuery
+-- QUERY START: MySQLDeleteDNDBTDbObjectRecordQuery
 DELETE FROM `DNDBTDbObjects`
 WHERE `ID` = 'd11b2a53-32db-432f-bb6b-f91788844ba9';
--- QUERY END: MySQLDeleteDNDBTSysInfoQuery
+-- QUERY END: MySQLDeleteDNDBTDbObjectRecordQuery
 
 -- QUERY START: MySQLDropIndexQuery
 DROP INDEX `UQ_MyTable1_MyColumn2` ON `MyTable1`;
 -- QUERY END: MySQLDropIndexQuery
 
--- QUERY START: MySQLDeleteDNDBTSysInfoQuery
+-- QUERY START: MySQLDeleteDNDBTDbObjectRecordQuery
 DELETE FROM `DNDBTDbObjects`
 WHERE `ID` = 'f3f08522-26ee-4950-9135-22edf2e4e0cf';
--- QUERY END: MySQLDeleteDNDBTSysInfoQuery
+-- QUERY END: MySQLDeleteDNDBTDbObjectRecordQuery
 
 -- QUERY START: MySQLDropIndexQuery
 DROP INDEX `IDX_MyTable2_MyIndex1` ON `MyTable2`;
 -- QUERY END: MySQLDropIndexQuery
 
--- QUERY START: MySQLDeleteDNDBTSysInfoQuery
+-- QUERY START: MySQLDeleteDNDBTDbObjectRecordQuery
 DELETE FROM `DNDBTDbObjects`
 WHERE `ID` = '74390b3c-bc39-4860-a42e-12baa400f927';
--- QUERY END: MySQLDeleteDNDBTSysInfoQuery
+-- QUERY END: MySQLDeleteDNDBTDbObjectRecordQuery
 
 -- QUERY START: MySQLAlterTableQuery
 RENAME TABLE `MyTable1` TO `MyTable1NewName`;
@@ -57,41 +57,41 @@ ALTER TABLE `MyTable1NewName` ALTER COLUMN `MyColumn1` SET DEFAULT (15);
 ALTER TABLE `MyTable1NewName` ADD CONSTRAINT `CK_MyTable1_MyCheck1` CHECK (MyColumn4 >= 1);
 -- QUERY END: MySQLAlterTableQuery
 
--- QUERY START: MySQLDeleteDNDBTSysInfoQuery
+-- QUERY START: MySQLDeleteDNDBTDbObjectRecordQuery
 DELETE FROM `DNDBTDbObjects`
 WHERE `ID` = 'eb9c59b5-bc7e-49d7-adaa-f5600b6a19a2';
--- QUERY END: MySQLDeleteDNDBTSysInfoQuery
+-- QUERY END: MySQLDeleteDNDBTDbObjectRecordQuery
 
--- QUERY START: MySQLDeleteDNDBTSysInfoQuery
+-- QUERY START: MySQLDeleteDNDBTDbObjectRecordQuery
 DELETE FROM `DNDBTDbObjects`
 WHERE `ID` = '37a45def-f4a0-4be7-8bfb-8fbed4a7d705';
--- QUERY END: MySQLDeleteDNDBTSysInfoQuery
+-- QUERY END: MySQLDeleteDNDBTDbObjectRecordQuery
 
--- QUERY START: MySQLDeleteDNDBTSysInfoQuery
+-- QUERY START: MySQLDeleteDNDBTDbObjectRecordQuery
 DELETE FROM `DNDBTDbObjects`
 WHERE `ID` = 'fe68ee3d-09d0-40ac-93f9-5e441fbb4f70';
--- QUERY END: MySQLDeleteDNDBTSysInfoQuery
+-- QUERY END: MySQLDeleteDNDBTDbObjectRecordQuery
 
--- QUERY START: MySQLDeleteDNDBTSysInfoQuery
+-- QUERY START: MySQLDeleteDNDBTDbObjectRecordQuery
 DELETE FROM `DNDBTDbObjects`
 WHERE `ID` = '6e95de30-e01a-4fb4-b8b7-8f0c40bb682c';
--- QUERY END: MySQLDeleteDNDBTSysInfoQuery
+-- QUERY END: MySQLDeleteDNDBTDbObjectRecordQuery
 
--- QUERY START: MySQLUpdateDNDBTSysInfoQuery
+-- QUERY START: MySQLUpdateDNDBTDbObjectRecordQuery
 UPDATE `DNDBTDbObjects` SET
     `Name` = 'MyTable1NewName',
     `Code` = NULL
 WHERE `ID` = '299675e6-4faa-4d0f-a36a-224306ba5bcb';
--- QUERY END: MySQLUpdateDNDBTSysInfoQuery
+-- QUERY END: MySQLUpdateDNDBTDbObjectRecordQuery
 
--- QUERY START: MySQLUpdateDNDBTSysInfoQuery
+-- QUERY START: MySQLUpdateDNDBTDbObjectRecordQuery
 UPDATE `DNDBTDbObjects` SET
     `Name` = 'MyColumn1',
     `Code` = NULL
 WHERE `ID` = 'a2f2a4de-1337-4594-ae41-72ed4d05f317';
--- QUERY END: MySQLUpdateDNDBTSysInfoQuery
+-- QUERY END: MySQLUpdateDNDBTDbObjectRecordQuery
 
--- QUERY START: MySQLInsertDNDBTSysInfoQuery
+-- QUERY START: MySQLInsertDNDBTDbObjectRecordQuery
 INSERT INTO `DNDBTDbObjects`
 (
     `ID`,
@@ -108,7 +108,7 @@ VALUES
     'CK_MyTable1_MyCheck1',
     'CHECK (MyColumn4 >= 1)'
 );
--- QUERY END: MySQLInsertDNDBTSysInfoQuery
+-- QUERY END: MySQLInsertDNDBTDbObjectRecordQuery
 
 -- QUERY START: MySQLAlterTableQuery
 
@@ -124,31 +124,31 @@ ALTER TABLE `MyTable2` ALTER COLUMN `MyColumn2` SET DEFAULT (0x000102);
 ALTER TABLE `MyTable2` ADD PRIMARY KEY (`MyColumn1NewName`);
 -- QUERY END: MySQLAlterTableQuery
 
--- QUERY START: MySQLDeleteDNDBTSysInfoQuery
+-- QUERY START: MySQLDeleteDNDBTDbObjectRecordQuery
 DELETE FROM `DNDBTDbObjects`
 WHERE `ID` = '3a43615b-40b3-4a13-99e7-93af7c56e8ce';
--- QUERY END: MySQLDeleteDNDBTSysInfoQuery
+-- QUERY END: MySQLDeleteDNDBTDbObjectRecordQuery
 
--- QUERY START: MySQLDeleteDNDBTSysInfoQuery
+-- QUERY START: MySQLDeleteDNDBTDbObjectRecordQuery
 DELETE FROM `DNDBTDbObjects`
 WHERE `ID` = '5a0d1926-3270-4eb2-92eb-00be56c7af23';
--- QUERY END: MySQLDeleteDNDBTSysInfoQuery
+-- QUERY END: MySQLDeleteDNDBTDbObjectRecordQuery
 
--- QUERY START: MySQLUpdateDNDBTSysInfoQuery
+-- QUERY START: MySQLUpdateDNDBTDbObjectRecordQuery
 UPDATE `DNDBTDbObjects` SET
     `Name` = 'MyTable2',
     `Code` = NULL
 WHERE `ID` = 'bfb9030c-a8c3-4882-9c42-1c6ad025cf8f';
--- QUERY END: MySQLUpdateDNDBTSysInfoQuery
+-- QUERY END: MySQLUpdateDNDBTDbObjectRecordQuery
 
--- QUERY START: MySQLUpdateDNDBTSysInfoQuery
+-- QUERY START: MySQLUpdateDNDBTDbObjectRecordQuery
 UPDATE `DNDBTDbObjects` SET
     `Name` = 'MyColumn1NewName',
     `Code` = NULL
 WHERE `ID` = 'c480f22f-7c01-4f41-b282-35e9f5cd1fe3';
--- QUERY END: MySQLUpdateDNDBTSysInfoQuery
+-- QUERY END: MySQLUpdateDNDBTDbObjectRecordQuery
 
--- QUERY START: MySQLInsertDNDBTSysInfoQuery
+-- QUERY START: MySQLInsertDNDBTDbObjectRecordQuery
 INSERT INTO `DNDBTDbObjects`
 (
     `ID`,
@@ -165,9 +165,9 @@ VALUES
     'MyColumn2',
     NULL
 );
--- QUERY END: MySQLInsertDNDBTSysInfoQuery
+-- QUERY END: MySQLInsertDNDBTDbObjectRecordQuery
 
--- QUERY START: MySQLInsertDNDBTSysInfoQuery
+-- QUERY START: MySQLInsertDNDBTDbObjectRecordQuery
 INSERT INTO `DNDBTDbObjects`
 (
     `ID`,
@@ -184,7 +184,7 @@ VALUES
     'PK_MyTable2',
     NULL
 );
--- QUERY END: MySQLInsertDNDBTSysInfoQuery
+-- QUERY END: MySQLInsertDNDBTDbObjectRecordQuery
 
 -- QUERY START: MySQLCreateTableQuery
 CREATE TABLE `MyTable3`
@@ -194,7 +194,7 @@ CREATE TABLE `MyTable3`
 );
 -- QUERY END: MySQLCreateTableQuery
 
--- QUERY START: MySQLInsertDNDBTSysInfoQuery
+-- QUERY START: MySQLInsertDNDBTDbObjectRecordQuery
 INSERT INTO `DNDBTDbObjects`
 (
     `ID`,
@@ -211,9 +211,9 @@ VALUES
     'MyTable3',
     NULL
 );
--- QUERY END: MySQLInsertDNDBTSysInfoQuery
+-- QUERY END: MySQLInsertDNDBTDbObjectRecordQuery
 
--- QUERY START: MySQLInsertDNDBTSysInfoQuery
+-- QUERY START: MySQLInsertDNDBTDbObjectRecordQuery
 INSERT INTO `DNDBTDbObjects`
 (
     `ID`,
@@ -230,9 +230,9 @@ VALUES
     'MyColumn1',
     NULL
 );
--- QUERY END: MySQLInsertDNDBTSysInfoQuery
+-- QUERY END: MySQLInsertDNDBTDbObjectRecordQuery
 
--- QUERY START: MySQLInsertDNDBTSysInfoQuery
+-- QUERY START: MySQLInsertDNDBTDbObjectRecordQuery
 INSERT INTO `DNDBTDbObjects`
 (
     `ID`,
@@ -249,14 +249,14 @@ VALUES
     'MyColumn2',
     NULL
 );
--- QUERY END: MySQLInsertDNDBTSysInfoQuery
+-- QUERY END: MySQLInsertDNDBTDbObjectRecordQuery
 
 -- QUERY START: MySQLCreateIndexQuery
 CREATE UNIQUE INDEX `UQ_MyTable3_MyColumns12`
 ON `MyTable3` (`MyColumn1`, `MyColumn2`);
 -- QUERY END: MySQLCreateIndexQuery
 
--- QUERY START: MySQLInsertDNDBTSysInfoQuery
+-- QUERY START: MySQLInsertDNDBTDbObjectRecordQuery
 INSERT INTO `DNDBTDbObjects`
 (
     `ID`,
@@ -273,14 +273,14 @@ VALUES
     'UQ_MyTable3_MyColumns12',
     NULL
 );
--- QUERY END: MySQLInsertDNDBTSysInfoQuery
+-- QUERY END: MySQLInsertDNDBTDbObjectRecordQuery
 
 -- QUERY START: MySQLCreateIndexQuery
 CREATE UNIQUE INDEX `IDX_MyTable2_MyIndex1`
 ON `MyTable2` (`MyColumn1NewName`, `MyColumn2`);
 -- QUERY END: MySQLCreateIndexQuery
 
--- QUERY START: MySQLInsertDNDBTSysInfoQuery
+-- QUERY START: MySQLInsertDNDBTDbObjectRecordQuery
 INSERT INTO `DNDBTDbObjects`
 (
     `ID`,
@@ -297,7 +297,7 @@ VALUES
     'IDX_MyTable2_MyIndex1',
     NULL
 );
--- QUERY END: MySQLInsertDNDBTSysInfoQuery
+-- QUERY END: MySQLInsertDNDBTDbObjectRecordQuery
 
 -- QUERY START: MySQLCreateForeignKeyQuery
 ALTER TABLE `MyTable1NewName` ADD CONSTRAINT `FK_MyTable1_MyColumn1_MyTable2_MyColumn1` FOREIGN KEY (`MyColumn1`)
@@ -305,7 +305,7 @@ ALTER TABLE `MyTable1NewName` ADD CONSTRAINT `FK_MyTable1_MyColumn1_MyTable2_MyC
     ON UPDATE NO ACTION ON DELETE SET NULL;
 -- QUERY END: MySQLCreateForeignKeyQuery
 
--- QUERY START: MySQLInsertDNDBTSysInfoQuery
+-- QUERY START: MySQLInsertDNDBTDbObjectRecordQuery
 INSERT INTO `DNDBTDbObjects`
 (
     `ID`,
@@ -322,7 +322,7 @@ VALUES
     'FK_MyTable1_MyColumn1_MyTable2_MyColumn1',
     NULL
 );
--- QUERY END: MySQLInsertDNDBTSysInfoQuery
+-- QUERY END: MySQLInsertDNDBTDbObjectRecordQuery
 
 -- QUERY START: MySQLCreateForeignKeyQuery
 ALTER TABLE `MyTable2` ADD CONSTRAINT `FK_MyTable2_MyColumns12_MyTable3_MyColumns12` FOREIGN KEY (`MyColumn1NewName`, `MyColumn2`)
@@ -330,7 +330,7 @@ ALTER TABLE `MyTable2` ADD CONSTRAINT `FK_MyTable2_MyColumns12_MyTable3_MyColumn
     ON UPDATE NO ACTION ON DELETE SET DEFAULT;
 -- QUERY END: MySQLCreateForeignKeyQuery
 
--- QUERY START: MySQLInsertDNDBTSysInfoQuery
+-- QUERY START: MySQLInsertDNDBTDbObjectRecordQuery
 INSERT INTO `DNDBTDbObjects`
 (
     `ID`,
@@ -347,7 +347,7 @@ VALUES
     'FK_MyTable2_MyColumns12_MyTable3_MyColumns12',
     NULL
 );
--- QUERY END: MySQLInsertDNDBTSysInfoQuery
+-- QUERY END: MySQLInsertDNDBTDbObjectRecordQuery
 
 -- QUERY START: GenericQuery
 CREATE VIEW MyView1 AS
@@ -360,7 +360,7 @@ LEFT JOIN MyTable2 t2
     ON t2.MyColumn1NewName = t1.MyColumn1;
 -- QUERY END: GenericQuery
 
--- QUERY START: MySQLInsertDNDBTSysInfoQuery
+-- QUERY START: MySQLInsertDNDBTDbObjectRecordQuery
 INSERT INTO `DNDBTDbObjects`
 (
     `ID`,
@@ -384,7 +384,7 @@ FROM MyTable1NewName t1
 LEFT JOIN MyTable2 t2
     ON t2.MyColumn1NewName = t1.MyColumn1;'
 );
--- QUERY END: MySQLInsertDNDBTSysInfoQuery
+-- QUERY END: MySQLInsertDNDBTDbObjectRecordQuery
 
 -- QUERY START: MySQLCreateTriggerQuery
 CREATE TRIGGER `TR_MyTable2_MyTrigger1`
@@ -397,7 +397,7 @@ BEGIN
 END;
 -- QUERY END: MySQLCreateTriggerQuery
 
--- QUERY START: MySQLInsertDNDBTSysInfoQuery
+-- QUERY START: MySQLInsertDNDBTDbObjectRecordQuery
 INSERT INTO `DNDBTDbObjects`
 (
     `ID`,
@@ -421,4 +421,4 @@ BEGIN
     VALUES (NEW.`MyColumn1NewName`);
 END;'
 );
--- QUERY END: MySQLInsertDNDBTSysInfoQuery
+-- QUERY END: MySQLInsertDNDBTDbObjectRecordQuery

@@ -28,9 +28,9 @@ namespace DotNetDBTools.SampleDeployManagerUsage.MySQL
         private static readonly string s_agnosticGeneratedPublishToEmptyScriptPath = $"{s_samplesOutputDir}/mysql_generated/AgnosticGeneratedPublishToEmptyScript.sql";
         private static readonly string s_agnosticGeneratedPublishToExistingScriptPath = $"{s_samplesOutputDir}/mysql_generated/AgnosticGeneratedPublishToExistingScript.sql";
         private static readonly string s_agnosticGeneratedPublishFromV1ToV2ScriptPath = $"{s_samplesOutputDir}/mysql_generated/AgnosticGeneratedPublishFromV1ToV2Script.sql";
-        private static readonly string s_agnosticGeneratedDDLOnlyPublishFromV1ToV2ScriptPath = $"{s_samplesOutputDir}/mysql_generated/AgnosticGeneratedDDLOnlyPublishFromV1ToV2Script.sql";
+        private static readonly string s_agnosticGeneratedNoDNDBTInfoPublishFromV1ToV2ScriptPath = $"{s_samplesOutputDir}/mysql_generated/AgnosticGeneratedNoDNDBTInfoPublishFromV1ToV2Script.sql";
         private static readonly string s_agnosticGeneratedPublishFromV2ToV1ScriptPath = $"{s_samplesOutputDir}/mysql_generated/AgnosticGeneratedPublishFromV2ToV1Script.sql";
-        private static readonly string s_agnosticGeneratedDDLOnlyPublishFromV2ToV1ScriptPath = $"{s_samplesOutputDir}/mysql_generated/AgnosticGeneratedDDLOnlyPublishFromV2ToV1Script.sql";
+        private static readonly string s_agnosticGeneratedNoDNDBTInfoPublishFromV2ToV1ScriptPath = $"{s_samplesOutputDir}/mysql_generated/AgnosticGeneratedNoDNDBTInfoPublishFromV2ToV1Script.sql";
         private static readonly string s_agnosticGeneratedDefinitionFromUnregisteredDir = $"{s_samplesOutputDir}/mysql_generated/AgnosticGeneratedDefinitionFromUnregistered";
         private static readonly string s_agnosticGeneratedDefinitionFromRegisteredDir = $"{s_samplesOutputDir}/mysql_generated/AgnosticGeneratedDefinitionFromRegistered";
         private static readonly string s_agnosticGeneratedPublishRecreateScriptPath = $"{s_samplesOutputDir}/mysql_generated/AgnosticGeneratedPublishRecreateScript.sql";
@@ -38,9 +38,9 @@ namespace DotNetDBTools.SampleDeployManagerUsage.MySQL
         private static readonly string s_mysqlGeneratedPublishToEmptyScriptPath = $"{s_samplesOutputDir}/mysql_generated/MySQLGeneratedPublishToEmptyScript.sql";
         private static readonly string s_mysqlGeneratedPublishToExistingScriptPath = $"{s_samplesOutputDir}/mysql_generated/MySQLGeneratedPublishToExistingScript.sql";
         private static readonly string s_mysqlGeneratedPublishFromV1ToV2ScriptPath = $"{s_samplesOutputDir}/mysql_generated/MySQLGeneratedPublishFromV1ToV2Script.sql";
-        private static readonly string s_mysqlGeneratedDDLOnlyPublishFromV1ToV2ScriptPath = $"{s_samplesOutputDir}/mysql_generated/MySQLGeneratedDDLOnlyPublishFromV1ToV2Script.sql";
+        private static readonly string s_mysqlGeneratedNoDNDBTInfoPublishFromV1ToV2ScriptPath = $"{s_samplesOutputDir}/mysql_generated/MySQLGeneratedNoDNDBTInfoPublishFromV1ToV2Script.sql";
         private static readonly string s_mysqlGeneratedPublishFromV2ToV1ScriptPath = $"{s_samplesOutputDir}/mysql_generated/MySQLGeneratedPublishFromV2ToV1Script.sql";
-        private static readonly string s_mysqlGeneratedDDLOnlyPublishFromV2ToV1ScriptPath = $"{s_samplesOutputDir}/mysql_generated/MySQLGeneratedDDLOnlyPublishFromV2ToV1Script.sql";
+        private static readonly string s_mysqlGeneratedNoDNDBTInfoPublishFromV2ToV1ScriptPath = $"{s_samplesOutputDir}/mysql_generated/MySQLGeneratedNoDNDBTInfoPublishFromV2ToV1Script.sql";
         private static readonly string s_mysqlGeneratedDefinitionFromUnregisteredDir = $"{s_samplesOutputDir}/mysql_generated/MySQLGeneratedDefinitionFromUnregistered";
         private static readonly string s_mysqlGeneratedDefinitionFromRegisteredDir = $"{s_samplesOutputDir}/mysql_generated/MySQLGeneratedDefinitionFromRegistered";
         private static readonly string s_mysqlGeneratedPublishRecreateScriptPath = $"{s_samplesOutputDir}/mysql_generated/MySQLGeneratedPublishRecreateScript.sql";
@@ -91,15 +91,15 @@ namespace DotNetDBTools.SampleDeployManagerUsage.MySQL
             Console.WriteLine("Generating definition from existing unregistered AgnosticSampleDB...");
             deployManager.GenerateDefinition(connection, s_agnosticGeneratedDefinitionFromUnregisteredDir);
 
-            Console.WriteLine("Generating ddl-only script to update(from v1 to v2) AgnosticSampleDB from the corresponding assembly files...");
-            dmDataLoss.GenerateDDLOnlyPublishScript(dbAssemblyV2, dbAssembly, s_agnosticGeneratedDDLOnlyPublishFromV1ToV2ScriptPath);
-            Console.WriteLine("Updating(from v1 to v2) AgnosticSampleDB using previously generated ddl-only script...");
-            connection.Execute(File.ReadAllText(s_agnosticGeneratedDDLOnlyPublishFromV1ToV2ScriptPath));
+            Console.WriteLine("Generating NoDNDBTInfo script to update(from v1 to v2) AgnosticSampleDB from the corresponding assembly files...");
+            dmDataLoss.GenerateNoDNDBTInfoPublishScript(dbAssemblyV2, dbAssembly, s_agnosticGeneratedNoDNDBTInfoPublishFromV1ToV2ScriptPath);
+            Console.WriteLine("Updating(from v1 to v2) AgnosticSampleDB using previously generated NoDNDBTInfo script...");
+            connection.Execute(File.ReadAllText(s_agnosticGeneratedNoDNDBTInfoPublishFromV1ToV2ScriptPath));
 
-            Console.WriteLine("Generating ddl-only script to update(rollback from v2 to v1) AgnosticSampleDB from the corresponding assembly files...");
-            dmDataLoss.GenerateDDLOnlyPublishScript(dbAssembly, dbAssemblyV2, s_agnosticGeneratedDDLOnlyPublishFromV2ToV1ScriptPath);
-            Console.WriteLine("Updating(rollback from v2 to v1) AgnosticSampleDB using previously generated ddl-only script...");
-            connection.Execute(File.ReadAllText(s_agnosticGeneratedDDLOnlyPublishFromV2ToV1ScriptPath));
+            Console.WriteLine("Generating NoDNDBTInfo script to update(rollback from v2 to v1) AgnosticSampleDB from the corresponding assembly files...");
+            dmDataLoss.GenerateNoDNDBTInfoPublishScript(dbAssembly, dbAssemblyV2, s_agnosticGeneratedNoDNDBTInfoPublishFromV2ToV1ScriptPath);
+            Console.WriteLine("Updating(rollback from v2 to v1) AgnosticSampleDB using previously generated NoDNDBTInfo script...");
+            connection.Execute(File.ReadAllText(s_agnosticGeneratedNoDNDBTInfoPublishFromV2ToV1ScriptPath));
 
             Console.WriteLine("Registiring(=generating and adding new DNDBT system information to DB) AgnosticSampleDB...");
             deployManager.RegisterAsDNDBT(connection);
@@ -153,15 +153,15 @@ namespace DotNetDBTools.SampleDeployManagerUsage.MySQL
             Console.WriteLine("Generating definition from existing unregistered MySQLSampleDB...");
             deployManager.GenerateDefinition(connection, s_mysqlGeneratedDefinitionFromUnregisteredDir);
 
-            Console.WriteLine("Generating ddl-only script to update(from v1 to v2) MySQLSampleDB from the corresponding assembly files...");
-            dmDataLoss.GenerateDDLOnlyPublishScript(dbAssemblyV2, dbAssembly, s_mysqlGeneratedDDLOnlyPublishFromV1ToV2ScriptPath);
-            Console.WriteLine("Updating(from v1 to v2) MySQLSampleDB using previously generated ddl-only script...");
-            connection.Execute(File.ReadAllText(s_mysqlGeneratedDDLOnlyPublishFromV1ToV2ScriptPath));
+            Console.WriteLine("Generating NoDNDBTInfo script to update(from v1 to v2) MySQLSampleDB from the corresponding assembly files...");
+            dmDataLoss.GenerateNoDNDBTInfoPublishScript(dbAssemblyV2, dbAssembly, s_mysqlGeneratedNoDNDBTInfoPublishFromV1ToV2ScriptPath);
+            Console.WriteLine("Updating(from v1 to v2) MySQLSampleDB using previously generated NoDNDBTInfo script...");
+            connection.Execute(File.ReadAllText(s_mysqlGeneratedNoDNDBTInfoPublishFromV1ToV2ScriptPath));
 
-            Console.WriteLine("Generating ddl-only script to update(rollback from v2 to v1) MySQLSampleDB from the corresponding assembly files...");
-            dmDataLoss.GenerateDDLOnlyPublishScript(dbAssembly, dbAssemblyV2, s_mysqlGeneratedDDLOnlyPublishFromV2ToV1ScriptPath);
-            Console.WriteLine("Updating(rollback from v2 to v1) MySQLSampleDB using previously generated ddl-only script...");
-            connection.Execute(File.ReadAllText(s_mysqlGeneratedDDLOnlyPublishFromV2ToV1ScriptPath));
+            Console.WriteLine("Generating NoDNDBTInfo script to update(rollback from v2 to v1) MySQLSampleDB from the corresponding assembly files...");
+            dmDataLoss.GenerateNoDNDBTInfoPublishScript(dbAssembly, dbAssemblyV2, s_mysqlGeneratedNoDNDBTInfoPublishFromV2ToV1ScriptPath);
+            Console.WriteLine("Updating(rollback from v2 to v1) MySQLSampleDB using previously generated NoDNDBTInfo script...");
+            connection.Execute(File.ReadAllText(s_mysqlGeneratedNoDNDBTInfoPublishFromV2ToV1ScriptPath));
 
             Console.WriteLine("Registiring(=generating and adding new DNDBT system information to DB) MySQLSampleDB...");
             deployManager.RegisterAsDNDBT(connection);

@@ -6,14 +6,14 @@ namespace DotNetDBTools.Deploy.Core;
 
 internal abstract class GenSqlScriptQueryExecutor : IGenSqlScriptQueryExecutor
 {
-    public bool DDLOnly { get; set; } = false;
+    public bool NoDNDBTInfo { get; set; } = false;
 
     private int _executeQueriesCount = 0;
     private readonly List<string> _queries = new();
 
     public int Execute(IQuery query)
     {
-        if (DDLOnly && !IsDDLQuery(query))
+        if (NoDNDBTInfo && IsDNDBTDbObjectRecordQuery(query))
             return 0;
         string queryName = query.GetType().Name;
         string queryText = CreateQueryText(query);
@@ -56,18 +56,18 @@ internal abstract class GenSqlScriptQueryExecutor : IGenSqlScriptQueryExecutor
         return string.Join("\n\n", _queries);
     }
 
-    private static bool IsDDLQuery(IQuery query)
+    private static bool IsDNDBTDbObjectRecordQuery(IQuery query)
     {
         string queryNamespace = query.GetType().Namespace;
-        bool isDDLQuery = queryNamespace.EndsWith("DDL", StringComparison.Ordinal) ||
-            query.GetType() == typeof(GenericQuery);
+        bool isDNDBTDbObjectRecordQuery = queryNamespace.EndsWith("DNDBTSysInfo", StringComparison.Ordinal);
 
-        if (!isDDLQuery &&
-            !queryNamespace.EndsWith("DNDBTSysInfo", StringComparison.Ordinal))
+        if (!isDNDBTDbObjectRecordQuery &&
+            !queryNamespace.EndsWith("DDL", StringComparison.Ordinal) &&
+            !(query.GetType() == typeof(GenericQuery)))
         {
             throw new Exception($"Invalid query type '{query.GetType()}' during script generation");
         }
 
-        return isDDLQuery;
+        return isDNDBTDbObjectRecordQuery;
     }
 }

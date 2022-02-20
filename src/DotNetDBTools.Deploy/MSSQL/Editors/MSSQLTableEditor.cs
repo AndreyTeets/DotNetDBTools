@@ -6,9 +6,9 @@ using DotNetDBTools.Deploy.MSSQL.Queries.DNDBTSysInfo;
 namespace DotNetDBTools.Deploy.MSSQL.Editors;
 
 internal class MSSQLTableEditor : TableEditor<
-    MSSQLInsertDNDBTSysInfoQuery,
-    MSSQLDeleteDNDBTSysInfoQuery,
-    MSSQLUpdateDNDBTSysInfoQuery,
+    MSSQLInsertDNDBTDbObjectRecordQuery,
+    MSSQLDeleteDNDBTDbObjectRecordQuery,
+    MSSQLUpdateDNDBTDbObjectRecordQuery,
     MSSQLCreateTableQuery,
     MSSQLDropTableQuery,
     MSSQLAlterTableQuery>

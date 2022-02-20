@@ -5,7 +5,7 @@ using DotNetDBTools.Deploy.Core.Queries.DNDBTSysInfo;
 
 namespace DotNetDBTools.Deploy.PostgreSQL.Queries.DNDBTSysInfo;
 
-internal class PostgreSQLGetAllDbObjectsFromDNDBTSysInfoQuery : GetAllDbObjectsFromDNDBTSysInfoQuery
+internal class PostgreSQLGetDNDBTDbObjectRecordsQuery : GetDNDBTDbObjectRecordsQuery
 {
     public override string Sql =>
 $@"SELECT
@@ -28,7 +28,7 @@ FROM ""{DNDBTSysTables.DNDBTDbObjects}"";";
 
     public class PostgreSQLRecordsLoader : RecordsLoader
     {
-        public override IEnumerable<DNDBTDbObjectRecord> GetRecords(IQueryExecutor queryExecutor, GetAllDbObjectsFromDNDBTSysInfoQuery query)
+        public override IEnumerable<DNDBTDbObjectRecord> GetRecords(IQueryExecutor queryExecutor, GetDNDBTDbObjectRecordsQuery query)
         {
             return queryExecutor.Query<PostgreSQLDNDBTDbObjectRecord>(query);
         }

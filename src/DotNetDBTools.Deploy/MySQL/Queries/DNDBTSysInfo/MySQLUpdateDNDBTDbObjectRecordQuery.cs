@@ -6,13 +6,13 @@ using DotNetDBTools.Deploy.Core.Queries.DNDBTSysInfo;
 
 namespace DotNetDBTools.Deploy.MySQL.Queries.DNDBTSysInfo;
 
-internal class MySQLUpdateDNDBTSysInfoQuery : UpdateDNDBTSysInfoQuery
+internal class MySQLUpdateDNDBTDbObjectRecordQuery : UpdateDNDBTDbObjectRecordQuery
 {
     private const string IDParameterName = "@ID";
     private const string NameParameterName = "@Name";
     private const string CodeParameterName = "@Code";
 
-    public MySQLUpdateDNDBTSysInfoQuery(Guid objectID, string objectName, string objectCode = null)
+    public MySQLUpdateDNDBTDbObjectRecordQuery(Guid objectID, string objectName, string objectCode = null)
         : base(objectID, objectName, objectCode) { }
 
     protected override string GetSql()

@@ -2,6 +2,6 @@
 
 internal interface IGenSqlScriptQueryExecutor : IQueryExecutor
 {
-    public bool DDLOnly { get; set; }
+    public bool NoDNDBTInfo { get; set; }
     public string GetFinalScript();
 }

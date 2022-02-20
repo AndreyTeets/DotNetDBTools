@@ -2,11 +2,11 @@
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Queries.DNDBTSysInfo;
 
-namespace DotNetDBTools.Deploy.MSSQL.Queries.DNDBTSysInfo;
+namespace DotNetDBTools.Deploy.SQLite.Queries.DNDBTSysInfo;
 
-internal class MSSQLDeleteDNDBTSysInfoQuery : DeleteDNDBTSysInfoQuery
+internal class SQLiteDeleteDNDBTDbObjectRecordQuery : DeleteDNDBTDbObjectRecordQuery
 {
-    public MSSQLDeleteDNDBTSysInfoQuery(Guid objectID)
+    public SQLiteDeleteDNDBTDbObjectRecordQuery(Guid objectID)
         : base(objectID) { }
 
     protected override string GetSql(Guid objectID)

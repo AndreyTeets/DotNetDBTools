@@ -6,8 +6,8 @@ using DotNetDBTools.Deploy.MSSQL.Queries.DNDBTSysInfo;
 namespace DotNetDBTools.Deploy.MSSQL.Editors;
 
 internal class MSSQLForeignKeyEditor : ForeignKeyEditor<
-    MSSQLInsertDNDBTSysInfoQuery,
-    MSSQLDeleteDNDBTSysInfoQuery,
+    MSSQLInsertDNDBTDbObjectRecordQuery,
+    MSSQLDeleteDNDBTDbObjectRecordQuery,
     MSSQLCreateForeignKeyQuery,
     MSSQLDropForeignKeyQuery>
 {

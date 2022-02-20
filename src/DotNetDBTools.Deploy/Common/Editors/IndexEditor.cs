@@ -9,13 +9,13 @@ using static DotNetDBTools.Deploy.Core.InstanceCreator;
 namespace DotNetDBTools.Deploy.Common.Editors;
 
 internal abstract class IndexEditor<
-    TInsertDNDBTSysInfoQuery,
-    TDeleteDNDBTSysInfoQuery,
+    TInsertDNDBTDbObjectRecordQuery,
+    TDeleteDNDBTDbObjectRecordQuery,
     TCreateIndexQuery,
     TDropIndexQuery>
     : IIndexEditor
-    where TInsertDNDBTSysInfoQuery : InsertDNDBTSysInfoQuery
-    where TDeleteDNDBTSysInfoQuery : DeleteDNDBTSysInfoQuery
+    where TInsertDNDBTDbObjectRecordQuery : InsertDNDBTDbObjectRecordQuery
+    where TDeleteDNDBTDbObjectRecordQuery : DeleteDNDBTDbObjectRecordQuery
     where TCreateIndexQuery : CreateIndexQuery
     where TDropIndexQuery : DropIndexQuery
 {
@@ -43,13 +43,13 @@ internal abstract class IndexEditor<
     private void CreateIndex(Index index, Table table)
     {
         QueryExecutor.Execute(Create<TCreateIndexQuery>(index, table));
-        QueryExecutor.Execute(Create<TInsertDNDBTSysInfoQuery>(index.ID, table.ID, DbObjectType.Index, index.Name));
+        QueryExecutor.Execute(Create<TInsertDNDBTDbObjectRecordQuery>(index.ID, table.ID, DbObjectType.Index, index.Name));
     }
 
     private void DropIndex(Index index, Table table)
     {
         QueryExecutor.Execute(Create<TDropIndexQuery>(index, table));
-        QueryExecutor.Execute(Create<TDeleteDNDBTSysInfoQuery>(index.ID));
+        QueryExecutor.Execute(Create<TDeleteDNDBTDbObjectRecordQuery>(index.ID));
     }
 
     private static Dictionary<Guid, Table> CreateIndexToTableMap(IEnumerable<Table> tables)

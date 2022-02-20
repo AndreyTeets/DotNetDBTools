@@ -72,7 +72,7 @@ public abstract class DeployManager<TDatabase> : IDeployManager
     {
         Database newDatabase = CreateDatabaseModelFromDbAssembly(dbAssembly);
         Database oldDatabase = GetDatabaseModelFromRegisteredDb(connection);
-        GeneratePublishScriptImpl(newDatabase, oldDatabase, outputPath, ddlOnly: false);
+        GeneratePublishScriptImpl(newDatabase, oldDatabase, outputPath, noDNDBTInfo: false);
     }
 
     public void GeneratePublishScript(string dbAssemblyPath, string outputPath)
@@ -84,7 +84,7 @@ public abstract class DeployManager<TDatabase> : IDeployManager
     {
         Database newDatabase = CreateDatabaseModelFromDbAssembly(dbAssembly);
         Database oldDatabase = new TDatabase();
-        GeneratePublishScriptImpl(newDatabase, oldDatabase, outputPath, ddlOnly: false);
+        GeneratePublishScriptImpl(newDatabase, oldDatabase, outputPath, noDNDBTInfo: false);
     }
 
     public void GeneratePublishScript(string newDbAssemblyPath, string oldDbAssemblyPath, string outputPath)
@@ -97,32 +97,32 @@ public abstract class DeployManager<TDatabase> : IDeployManager
     {
         Database newDatabase = CreateDatabaseModelFromDbAssembly(newDbAssembly);
         Database oldDatabase = CreateDatabaseModelFromDbAssembly(oldDbAssembly);
-        GeneratePublishScriptImpl(newDatabase, oldDatabase, outputPath, ddlOnly: false);
+        GeneratePublishScriptImpl(newDatabase, oldDatabase, outputPath, noDNDBTInfo: false);
     }
 
-    public void GenerateDDLOnlyPublishScript(string dbAssemblyPath, string outputPath)
+    public void GenerateNoDNDBTInfoPublishScript(string dbAssemblyPath, string outputPath)
     {
         Assembly dbAssembly = AssemblyLoader.LoadDbAssemblyFromDll(dbAssemblyPath);
-        GenerateDDLOnlyPublishScript(dbAssembly, outputPath);
+        GenerateNoDNDBTInfoPublishScript(dbAssembly, outputPath);
     }
-    public void GenerateDDLOnlyPublishScript(Assembly dbAssembly, string outputPath)
+    public void GenerateNoDNDBTInfoPublishScript(Assembly dbAssembly, string outputPath)
     {
         Database newDatabase = CreateDatabaseModelFromDbAssembly(dbAssembly);
         Database oldDatabase = new TDatabase();
-        GeneratePublishScriptImpl(newDatabase, oldDatabase, outputPath, ddlOnly: true);
+        GeneratePublishScriptImpl(newDatabase, oldDatabase, outputPath, noDNDBTInfo: true);
     }
 
-    public void GenerateDDLOnlyPublishScript(string newDbAssemblyPath, string oldDbAssemblyPath, string outputPath)
+    public void GenerateNoDNDBTInfoPublishScript(string newDbAssemblyPath, string oldDbAssemblyPath, string outputPath)
     {
         Assembly newDbAssembly = AssemblyLoader.LoadDbAssemblyFromDll(newDbAssemblyPath);
         Assembly oldDbAssembly = AssemblyLoader.LoadDbAssemblyFromDll(oldDbAssemblyPath);
-        GenerateDDLOnlyPublishScript(newDbAssembly, oldDbAssembly, outputPath);
+        GenerateNoDNDBTInfoPublishScript(newDbAssembly, oldDbAssembly, outputPath);
     }
-    public void GenerateDDLOnlyPublishScript(Assembly newDbAssembly, Assembly oldDbAssembly, string outputPath)
+    public void GenerateNoDNDBTInfoPublishScript(Assembly newDbAssembly, Assembly oldDbAssembly, string outputPath)
     {
         Database newDatabase = CreateDatabaseModelFromDbAssembly(newDbAssembly);
         Database oldDatabase = CreateDatabaseModelFromDbAssembly(oldDbAssembly);
-        GeneratePublishScriptImpl(newDatabase, oldDatabase, outputPath, ddlOnly: true);
+        GeneratePublishScriptImpl(newDatabase, oldDatabase, outputPath, noDNDBTInfo: true);
     }
 
     public void GenerateDefinition(DbConnection connection, string outputDirectory)
@@ -139,13 +139,13 @@ public abstract class DeployManager<TDatabase> : IDeployManager
         DbDefinitionGenerator.GenerateDefinition(database, outputDirectory);
     }
 
-    private void GeneratePublishScriptImpl(Database newDatabase, Database oldDatabase, string outputPath, bool ddlOnly)
+    private void GeneratePublishScriptImpl(Database newDatabase, Database oldDatabase, string outputPath, bool noDNDBTInfo)
     {
         DatabaseDiff dbDiff = AnalysisHelper.CreateDatabaseDiff(newDatabase, oldDatabase);
         ValidateDatabaseDiff(dbDiff);
 
         IGenSqlScriptQueryExecutor genSqlScriptQueryExecutor = _factory.CreateGenSqlScriptQueryExecutor();
-        genSqlScriptQueryExecutor.DDLOnly = ddlOnly;
+        genSqlScriptQueryExecutor.NoDNDBTInfo = noDNDBTInfo;
 
         IDbEditor dbEditor = _factory.CreateDbEditor(genSqlScriptQueryExecutor);
         dbEditor.ApplyDatabaseDiff(dbDiff, Options);

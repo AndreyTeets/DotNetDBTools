@@ -7,9 +7,9 @@ using DotNetDBTools.Models.Core;
 namespace DotNetDBTools.Deploy.SQLite.Editors;
 
 internal class SQLiteTableEditor : TableEditor<
-    SQLiteInsertDNDBTSysInfoQuery,
-    SQLiteDeleteDNDBTSysInfoQuery,
-    SQLiteUpdateDNDBTSysInfoQuery,
+    SQLiteInsertDNDBTDbObjectRecordQuery,
+    SQLiteDeleteDNDBTDbObjectRecordQuery,
+    SQLiteUpdateDNDBTDbObjectRecordQuery,
     SQLiteCreateTableQuery,
     SQLiteDropTableQuery,
     SQLiteAlterTableQuery>
@@ -21,22 +21,22 @@ internal class SQLiteTableEditor : TableEditor<
     {
         base.CreateTable(table);
         foreach (ForeignKey fk in table.ForeignKeys)
-            QueryExecutor.Execute(new SQLiteInsertDNDBTSysInfoQuery(fk.ID, table.ID, DbObjectType.ForeignKey, fk.Name));
+            QueryExecutor.Execute(new SQLiteInsertDNDBTDbObjectRecordQuery(fk.ID, table.ID, DbObjectType.ForeignKey, fk.Name));
         foreach (Trigger trg in table.Triggers)
-            QueryExecutor.Execute(new SQLiteInsertDNDBTSysInfoQuery(trg.ID, table.ID, DbObjectType.Trigger, trg.Name, trg.GetCode()));
+            QueryExecutor.Execute(new SQLiteInsertDNDBTDbObjectRecordQuery(trg.ID, table.ID, DbObjectType.Trigger, trg.Name, trg.GetCode()));
         foreach (Index idx in table.Indexes)
-            QueryExecutor.Execute(new SQLiteInsertDNDBTSysInfoQuery(idx.ID, table.ID, DbObjectType.Index, idx.Name));
+            QueryExecutor.Execute(new SQLiteInsertDNDBTDbObjectRecordQuery(idx.ID, table.ID, DbObjectType.Index, idx.Name));
     }
 
     protected override void DropTable(Table table)
     {
         base.DropTable(table);
         foreach (Index idx in table.Indexes)
-            QueryExecutor.Execute(new SQLiteDeleteDNDBTSysInfoQuery(idx.ID));
+            QueryExecutor.Execute(new SQLiteDeleteDNDBTDbObjectRecordQuery(idx.ID));
         foreach (Trigger trg in table.Triggers)
-            QueryExecutor.Execute(new SQLiteDeleteDNDBTSysInfoQuery(trg.ID));
+            QueryExecutor.Execute(new SQLiteDeleteDNDBTDbObjectRecordQuery(trg.ID));
         foreach (ForeignKey fk in table.ForeignKeys)
-            QueryExecutor.Execute(new SQLiteDeleteDNDBTSysInfoQuery(fk.ID));
+            QueryExecutor.Execute(new SQLiteDeleteDNDBTDbObjectRecordQuery(fk.ID));
     }
 
     protected override void AlterTable(TableDiff tableDiff)
@@ -44,17 +44,17 @@ internal class SQLiteTableEditor : TableEditor<
         base.AlterTable(tableDiff);
 
         foreach (Index idx in tableDiff.IndexesToDrop)
-            QueryExecutor.Execute(new SQLiteDeleteDNDBTSysInfoQuery(idx.ID));
+            QueryExecutor.Execute(new SQLiteDeleteDNDBTDbObjectRecordQuery(idx.ID));
         foreach (Trigger trg in tableDiff.TriggersToDrop)
-            QueryExecutor.Execute(new SQLiteDeleteDNDBTSysInfoQuery(trg.ID));
+            QueryExecutor.Execute(new SQLiteDeleteDNDBTDbObjectRecordQuery(trg.ID));
         foreach (ForeignKey fk in tableDiff.ForeignKeysToDrop)
-            QueryExecutor.Execute(new SQLiteDeleteDNDBTSysInfoQuery(fk.ID));
+            QueryExecutor.Execute(new SQLiteDeleteDNDBTDbObjectRecordQuery(fk.ID));
 
         foreach (ForeignKey fk in tableDiff.ForeignKeysToCreate)
-            QueryExecutor.Execute(new SQLiteInsertDNDBTSysInfoQuery(fk.ID, tableDiff.NewTable.ID, DbObjectType.ForeignKey, fk.Name));
+            QueryExecutor.Execute(new SQLiteInsertDNDBTDbObjectRecordQuery(fk.ID, tableDiff.NewTable.ID, DbObjectType.ForeignKey, fk.Name));
         foreach (Trigger trg in tableDiff.TriggersToCreate)
-            QueryExecutor.Execute(new SQLiteInsertDNDBTSysInfoQuery(trg.ID, tableDiff.NewTable.ID, DbObjectType.Trigger, trg.Name, trg.GetCode()));
+            QueryExecutor.Execute(new SQLiteInsertDNDBTDbObjectRecordQuery(trg.ID, tableDiff.NewTable.ID, DbObjectType.Trigger, trg.Name, trg.GetCode()));
         foreach (Index idx in tableDiff.IndexesToCreate)
-            QueryExecutor.Execute(new SQLiteInsertDNDBTSysInfoQuery(idx.ID, tableDiff.NewTable.ID, DbObjectType.Index, idx.Name));
+            QueryExecutor.Execute(new SQLiteInsertDNDBTDbObjectRecordQuery(idx.ID, tableDiff.NewTable.ID, DbObjectType.Index, idx.Name));
     }
 }

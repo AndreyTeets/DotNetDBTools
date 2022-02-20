@@ -26,25 +26,25 @@ internal class SQLiteDbEditor : DbEditor<
         SQLiteDatabase db = (SQLiteDatabase)database;
         foreach (SQLiteTable table in db.Tables)
         {
-            QueryExecutor.Execute(new SQLiteInsertDNDBTSysInfoQuery(table.ID, null, DbObjectType.Table, table.Name));
+            QueryExecutor.Execute(new SQLiteInsertDNDBTDbObjectRecordQuery(table.ID, null, DbObjectType.Table, table.Name));
             foreach (Column c in table.Columns)
-                QueryExecutor.Execute(new SQLiteInsertDNDBTSysInfoQuery(c.ID, table.ID, DbObjectType.Column, c.Name, c.GetCode()));
+                QueryExecutor.Execute(new SQLiteInsertDNDBTDbObjectRecordQuery(c.ID, table.ID, DbObjectType.Column, c.Name, c.GetCode()));
             PrimaryKey pk = table.PrimaryKey;
             if (pk is not null)
-                QueryExecutor.Execute(new SQLiteInsertDNDBTSysInfoQuery(pk.ID, table.ID, DbObjectType.PrimaryKey, pk.Name));
+                QueryExecutor.Execute(new SQLiteInsertDNDBTDbObjectRecordQuery(pk.ID, table.ID, DbObjectType.PrimaryKey, pk.Name));
             foreach (UniqueConstraint uc in table.UniqueConstraints)
-                QueryExecutor.Execute(new SQLiteInsertDNDBTSysInfoQuery(uc.ID, table.ID, DbObjectType.UniqueConstraint, uc.Name));
+                QueryExecutor.Execute(new SQLiteInsertDNDBTDbObjectRecordQuery(uc.ID, table.ID, DbObjectType.UniqueConstraint, uc.Name));
             foreach (CheckConstraint ck in table.CheckConstraints)
-                QueryExecutor.Execute(new SQLiteInsertDNDBTSysInfoQuery(ck.ID, table.ID, DbObjectType.CheckConstraint, ck.Name, ck.GetCode()));
+                QueryExecutor.Execute(new SQLiteInsertDNDBTDbObjectRecordQuery(ck.ID, table.ID, DbObjectType.CheckConstraint, ck.Name, ck.GetCode()));
             foreach (Index index in table.Indexes)
-                QueryExecutor.Execute(new SQLiteInsertDNDBTSysInfoQuery(index.ID, table.ID, DbObjectType.Index, index.Name));
+                QueryExecutor.Execute(new SQLiteInsertDNDBTDbObjectRecordQuery(index.ID, table.ID, DbObjectType.Index, index.Name));
             foreach (Trigger trigger in table.Triggers)
-                QueryExecutor.Execute(new SQLiteInsertDNDBTSysInfoQuery(trigger.ID, table.ID, DbObjectType.Trigger, trigger.Name));
+                QueryExecutor.Execute(new SQLiteInsertDNDBTDbObjectRecordQuery(trigger.ID, table.ID, DbObjectType.Trigger, trigger.Name));
             foreach (ForeignKey fk in table.ForeignKeys)
-                QueryExecutor.Execute(new SQLiteInsertDNDBTSysInfoQuery(fk.ID, table.ID, DbObjectType.ForeignKey, fk.Name));
+                QueryExecutor.Execute(new SQLiteInsertDNDBTDbObjectRecordQuery(fk.ID, table.ID, DbObjectType.ForeignKey, fk.Name));
         }
         foreach (SQLiteView view in db.Views)
-            QueryExecutor.Execute(new SQLiteInsertDNDBTSysInfoQuery(view.ID, null, DbObjectType.View, view.Name, view.GetCode()));
+            QueryExecutor.Execute(new SQLiteInsertDNDBTDbObjectRecordQuery(view.ID, null, DbObjectType.View, view.Name, view.GetCode()));
     }
 
     public override void ApplyDatabaseDiff(DatabaseDiff databaseDiff, DeployOptions options)
@@ -72,12 +72,12 @@ internal class SQLiteDbEditor : DbEditor<
     private void CreateView(SQLiteView view)
     {
         QueryExecutor.Execute(new GenericQuery($"{view.GetCode()}"));
-        QueryExecutor.Execute(new SQLiteInsertDNDBTSysInfoQuery(view.ID, null, DbObjectType.View, view.Name, view.GetCode()));
+        QueryExecutor.Execute(new SQLiteInsertDNDBTDbObjectRecordQuery(view.ID, null, DbObjectType.View, view.Name, view.GetCode()));
     }
 
     private void DropView(SQLiteView view)
     {
         QueryExecutor.Execute(new GenericQuery($"DROP VIEW {view.Name};"));
-        QueryExecutor.Execute(new SQLiteDeleteDNDBTSysInfoQuery(view.ID));
+        QueryExecutor.Execute(new SQLiteDeleteDNDBTDbObjectRecordQuery(view.ID));
     }
 }

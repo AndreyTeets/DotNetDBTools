@@ -8,11 +8,11 @@ internal class ScriptNewCommand : BaseCommand
         Dbms dbms,
         string dbAssemblyPath,
         string outputPath,
-        bool ddlOnly)
+        bool noDNDBTInfo)
     {
         IDeployManager deployManager = CreateDeployManager(dbms);
-        if (ddlOnly)
-            deployManager.GenerateDDLOnlyPublishScript(dbAssemblyPath, outputPath);
+        if (noDNDBTInfo)
+            deployManager.GenerateNoDNDBTInfoPublishScript(dbAssemblyPath, outputPath);
         else
             deployManager.GeneratePublishScript(dbAssemblyPath, outputPath);
     }

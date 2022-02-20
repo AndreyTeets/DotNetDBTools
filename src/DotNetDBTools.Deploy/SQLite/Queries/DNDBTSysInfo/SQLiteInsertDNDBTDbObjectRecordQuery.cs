@@ -4,16 +4,16 @@ using System.Data;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Queries.DNDBTSysInfo;
 
-namespace DotNetDBTools.Deploy.MSSQL.Queries.DNDBTSysInfo;
+namespace DotNetDBTools.Deploy.SQLite.Queries.DNDBTSysInfo;
 
-internal class MSSQLInsertDNDBTSysInfoQuery : InsertDNDBTSysInfoQuery
+internal class SQLiteInsertDNDBTDbObjectRecordQuery : InsertDNDBTDbObjectRecordQuery
 {
     private const string IDParameterName = "@ID";
     private const string ParentIDParameterName = "@ParentID";
     private const string NameParameterName = "@Name";
     private const string CodeParameterName = "@Code";
 
-    public MSSQLInsertDNDBTSysInfoQuery(Guid objectID, Guid? parentObjectID, DbObjectType objectType, string objectName, string objectCode = null)
+    public SQLiteInsertDNDBTDbObjectRecordQuery(Guid objectID, Guid? parentObjectID, DbObjectType objectType, string objectName, string objectCode = null)
         : base(objectID, parentObjectID, objectType, objectName, objectCode) { }
 
     protected override string GetSql(DbObjectType objectType)
@@ -43,8 +43,8 @@ VALUES
     {
         return new List<QueryParameter>
         {
-            new QueryParameter(IDParameterName, objectID, DbType.Guid),
-            new QueryParameter(ParentIDParameterName, parentObjectID, DbType.Guid),
+            new QueryParameter(IDParameterName, objectID.ToString(), DbType.String),
+            new QueryParameter(ParentIDParameterName, parentObjectID?.ToString(), DbType.String),
             new QueryParameter(NameParameterName, objectName, DbType.String),
             new QueryParameter(CodeParameterName, objectCode, DbType.String),
         };

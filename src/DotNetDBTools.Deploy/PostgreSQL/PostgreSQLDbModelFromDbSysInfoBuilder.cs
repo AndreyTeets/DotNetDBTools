@@ -8,7 +8,7 @@ using DotNetDBTools.Deploy.PostgreSQL.Queries.DNDBTSysInfo;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.PostgreSQL;
 using DotNetDBTools.Models.PostgreSQL.UserDefinedTypes;
-using static DotNetDBTools.Deploy.Core.Queries.DNDBTSysInfo.GetAllDbObjectsFromDNDBTSysInfoQuery;
+using static DotNetDBTools.Deploy.Core.Queries.DNDBTSysInfo.GetDNDBTDbObjectRecordsQuery;
 using static DotNetDBTools.Deploy.PostgreSQL.Queries.DBMSSysInfo.PostgreSQLGetCompositeTypesFromDBMSSysInfoQuery;
 using static DotNetDBTools.Deploy.PostgreSQL.Queries.DBMSSysInfo.PostgreSQLGetDomainTypesFromDBMSSysInfoQuery;
 using static DotNetDBTools.Deploy.PostgreSQL.Queries.DBMSSysInfo.PostgreSQLGetEnumTypesFromDBMSSysInfoQuery;
@@ -29,7 +29,7 @@ internal class PostgreSQLDbModelFromDbSysInfoBuilder : DbModelFromDbSysInfoBuild
     PostgreSQLGetTriggersFromDBMSSysInfoQuery,
     PostgreSQLGetForeignKeysFromDBMSSysInfoQuery,
     PostgreSQLGetViewsFromDBMSSysInfoQuery,
-    PostgreSQLGetAllDbObjectsFromDNDBTSysInfoQuery>
+    PostgreSQLGetDNDBTDbObjectRecordsQuery>
 {
     public PostgreSQLDbModelFromDbSysInfoBuilder(IQueryExecutor queryExecutor)
         : base(queryExecutor) { }

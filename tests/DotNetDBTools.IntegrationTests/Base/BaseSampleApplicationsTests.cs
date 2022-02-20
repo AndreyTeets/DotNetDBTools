@@ -48,8 +48,8 @@ public abstract class BaseSampleApplicationsTests
 
         Exec(dtPath, $"unregister --dbms={DtDbms} \"--cs={DtCs}\"");
 
-        Exec(dtPath, $"scriptasmdiff --loss --ddlonly --dbms={DtDbms} --newasm={DtAsm} --oldasm={DtAsmV2} \"--out={outDir}/v2tov1ddlonly.sql\"");
-        ExecuteSqlOnDeployToolDatabase(File.ReadAllText($"{outDir}/v2tov1ddlonly.sql"));
+        Exec(dtPath, $"scriptasmdiff --loss --no-dndbt-info --dbms={DtDbms} --newasm={DtAsm} --oldasm={DtAsmV2} \"--out={outDir}/v2tov1nodndbtinfo.sql\"");
+        ExecuteSqlOnDeployToolDatabase(File.ReadAllText($"{outDir}/v2tov1nodndbtinfo.sql"));
     }
 
     [Test]

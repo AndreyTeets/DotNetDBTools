@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace DotNetDBTools.Deploy.Core.Queries.DNDBTSysInfo;
 
-internal abstract class GetAllDbObjectsFromDNDBTSysInfoQuery : IQuery
+internal abstract class GetDNDBTDbObjectRecordsQuery : IQuery
 {
     public abstract string Sql { get; }
     public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
@@ -26,6 +26,6 @@ internal abstract class GetAllDbObjectsFromDNDBTSysInfoQuery : IQuery
 
     public abstract class RecordsLoader
     {
-        public abstract IEnumerable<DNDBTDbObjectRecord> GetRecords(IQueryExecutor queryExecutor, GetAllDbObjectsFromDNDBTSysInfoQuery query);
+        public abstract IEnumerable<DNDBTDbObjectRecord> GetRecords(IQueryExecutor queryExecutor, GetDNDBTDbObjectRecordsQuery query);
     }
 }
