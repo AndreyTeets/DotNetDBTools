@@ -32,14 +32,27 @@ public abstract class DeployManager<TDatabase> : IDeployManager
     public void RegisterAsDNDBT(DbConnection connection)
     {
         IQueryExecutor queryExecutor = _factory.CreateQueryExecutor(connection);
-        IDbEditor dbEditor = _factory.CreateDbEditor(queryExecutor);
         IDbModelFromDbSysInfoBuilder dbModelFromDbSysInfoBuilder = _factory.CreateDbModelFromDbSysInfoBuilder(queryExecutor);
 
-        if (dbEditor.DNDBTSysTablesExist())
-            throw new InvalidOperationException("Database is already registered");
-        Database oldDatabase = dbModelFromDbSysInfoBuilder.GenerateDatabaseModelFromDBMSSysInfo();
-        dbEditor.CreateDNDBTSysTables();
-        dbEditor.PopulateDNDBTSysTables(oldDatabase);
+        Database dbWithDNDBTInfo = dbModelFromDbSysInfoBuilder.GenerateDatabaseModelFromDBMSSysInfo();
+        RegisterAsDNDBTImpl(connection, dbWithDNDBTInfo);
+    }
+    public void RegisterAsDNDBT(DbConnection connection, string dbWithDNDBTInfoAssemblyPath)
+    {
+        Assembly dbAssembly = AssemblyLoader.LoadDbAssemblyFromDll(dbWithDNDBTInfoAssemblyPath);
+        RegisterAsDNDBT(connection, dbAssembly);
+    }
+    public void RegisterAsDNDBT(DbConnection connection, Assembly dbWithDNDBTInfoAssembly)
+    {
+        IQueryExecutor queryExecutor = _factory.CreateQueryExecutor(connection);
+        IDbModelFromDbSysInfoBuilder dbModelFromDbSysInfoBuilder = _factory.CreateDbModelFromDbSysInfoBuilder(queryExecutor);
+
+        Database actualDb = dbModelFromDbSysInfoBuilder.GenerateDatabaseModelFromDBMSSysInfo();
+        Database dbWithDNDBTInfo = CreateDatabaseModelFromDbAssembly(dbWithDNDBTInfoAssembly);
+
+        if (!AnalysisHelper.DatabasesAreEquivalentExcludingDNDBTInfo(actualDb, dbWithDNDBTInfo, out string diffLog))
+            throw new Exception($"Actual database differs from the one provided for DNDBTInfo. DiffLog:\n{diffLog}");
+        RegisterAsDNDBTImpl(connection, dbWithDNDBTInfo);
     }
     public void UnregisterAsDNDBT(DbConnection connection)
     {
@@ -137,6 +150,17 @@ public abstract class DeployManager<TDatabase> : IDeployManager
         else
             database = dbModelFromDbSysInfoBuilder.GenerateDatabaseModelFromDBMSSysInfo();
         DbDefinitionGenerator.GenerateDefinition(database, outputDirectory);
+    }
+
+    private void RegisterAsDNDBTImpl(DbConnection connection, Database dbWithDNDBTInfo)
+    {
+        IQueryExecutor queryExecutor = _factory.CreateQueryExecutor(connection);
+        IDbEditor dbEditor = _factory.CreateDbEditor(queryExecutor);
+
+        if (dbEditor.DNDBTSysTablesExist())
+            throw new InvalidOperationException("Database is already registered");
+        dbEditor.CreateDNDBTSysTables();
+        dbEditor.PopulateDNDBTSysTables(dbWithDNDBTInfo);
     }
 
     private void GeneratePublishScriptImpl(Database newDatabase, Database oldDatabase, string outputPath, bool noDNDBTInfo)

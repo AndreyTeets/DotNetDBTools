@@ -38,16 +38,18 @@ internal class SQLiteDbEditor : DbEditor<
                 QueryExecutor.Execute(new SQLiteInsertDNDBTDbObjectRecordQuery(uc.ID, table.ID, DbObjectType.UniqueConstraint, uc.Name));
             foreach (CheckConstraint ck in table.CheckConstraints)
                 QueryExecutor.Execute(new SQLiteInsertDNDBTDbObjectRecordQuery(ck.ID, table.ID, DbObjectType.CheckConstraint, ck.Name, ck.GetCode()));
-            foreach (Index index in table.Indexes)
-                QueryExecutor.Execute(new SQLiteInsertDNDBTDbObjectRecordQuery(index.ID, table.ID, DbObjectType.Index, index.Name));
-            foreach (Trigger trigger in table.Triggers)
-                QueryExecutor.Execute(new SQLiteInsertDNDBTDbObjectRecordQuery(trigger.ID, table.ID, DbObjectType.Trigger, trigger.Name));
+            foreach (Index idx in table.Indexes)
+                QueryExecutor.Execute(new SQLiteInsertDNDBTDbObjectRecordQuery(idx.ID, table.ID, DbObjectType.Index, idx.Name));
+            foreach (Trigger trg in table.Triggers)
+                QueryExecutor.Execute(new SQLiteInsertDNDBTDbObjectRecordQuery(trg.ID, table.ID, DbObjectType.Trigger, trg.Name, trg.GetCode()));
             foreach (ForeignKey fk in table.ForeignKeys)
                 QueryExecutor.Execute(new SQLiteInsertDNDBTDbObjectRecordQuery(fk.ID, table.ID, DbObjectType.ForeignKey, fk.Name));
         }
         foreach (SQLiteView view in db.Views)
             QueryExecutor.Execute(new SQLiteInsertDNDBTDbObjectRecordQuery(view.ID, null, DbObjectType.View, view.Name, view.GetCode()));
 
+        foreach (Script script in db.Scripts)
+            QueryExecutor.Execute(new SQLiteInsertDNDBTScriptExecutionRecordQuery(script, -1));
         QueryExecutor.Execute(new SQLiteInsertDNDBTDbAttributesRecordQuery(database));
     }
 

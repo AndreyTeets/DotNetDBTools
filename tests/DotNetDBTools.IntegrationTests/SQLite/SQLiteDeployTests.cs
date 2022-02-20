@@ -20,6 +20,7 @@ public class SQLiteDeployTests : BaseDeployTests<
 {
     protected override string AgnosticSampleDbAssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDB.Agnostic.dll";
     protected override string SpecificDBMSSampleDbAssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDB.SQLite.dll";
+    protected override string ActualFilesDir => "./generated/SQLite";
 
     private const string DbFilesFolder = @"./tmp";
 

@@ -7,7 +7,24 @@ public interface IDeployManager
 {
     public DeployOptions Options { get; set; }
 
+    /// <summary>
+    /// Adds DNDBT system tables and populates them with DNDBTInfo generated from actual database.
+    /// IDs for all objects are generated randomly.
+    /// </summary>
     public void RegisterAsDNDBT(DbConnection connection);
+    /// <summary>
+    /// Adds DNDBT system tables and populates them with DNDBTInfo taken from provided dbAssembly.
+    /// Provided dbAssembly and actual database are first checked for equivalency.
+    /// </summary>
+    public void RegisterAsDNDBT(DbConnection connection, string dbWithDNDBTInfoAssemblyPath);
+    /// <summary>
+    /// Adds DNDBT system tables and populates them with DNDBTInfo taken from provided dbAssembly.
+    /// Provided dbAssembly and actual database are first checked for equivalency.
+    /// </summary>
+    public void RegisterAsDNDBT(DbConnection connection, Assembly dbWithDNDBTInfoAssembly);
+    /// <summary>
+    /// Deletes all DNDBT system tables.
+    /// </summary>
     public void UnregisterAsDNDBT(DbConnection connection);
 
     public void PublishDatabase(string dbAssemblyPath, DbConnection connection);

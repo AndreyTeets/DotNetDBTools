@@ -65,6 +65,8 @@ internal class MSSQLDbEditor : DbEditor<
         foreach (MSSQLProcedure proc in db.Procedures)
             QueryExecutor.Execute(new MSSQLInsertDNDBTDbObjectRecordQuery(proc.ID, null, DbObjectType.Procedure, proc.Name, proc.GetCode()));
 
+        foreach (Script script in db.Scripts)
+            QueryExecutor.Execute(new MSSQLInsertDNDBTScriptExecutionRecordQuery(script, -1));
         QueryExecutor.Execute(new MSSQLInsertDNDBTDbAttributesRecordQuery(database));
     }
 

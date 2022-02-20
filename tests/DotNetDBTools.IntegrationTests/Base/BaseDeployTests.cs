@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.IO;
 using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.DefinitionParsing;
 using DotNetDBTools.Deploy;
@@ -22,6 +23,7 @@ public abstract class BaseDeployTests<TDatabase, TDbConnection, TDbModelConverte
 {
     protected abstract string AgnosticSampleDbAssemblyPath { get; }
     protected abstract string SpecificDBMSSampleDbAssemblyPath { get; }
+    protected abstract string ActualFilesDir { get; }
 
     private TDeployManager _deployManager;
     private TDbConnection _connection;
@@ -43,6 +45,21 @@ public abstract class BaseDeployTests<TDatabase, TDbConnection, TDbModelConverte
     public void TearDown()
     {
         _connection?.Dispose();
+    }
+
+    [Test]
+    public void RegisterAsDNDBT_FromProvidedDbAssembly_WorksCorrectly()
+    {
+        _deployManager.RegisterAsDNDBT(_connection);
+        _deployManager.PublishDatabase(AgnosticSampleDbAssemblyPath, _connection);
+
+        _deployManager.UnregisterAsDNDBT(_connection);
+        _deployManager.RegisterAsDNDBT(_connection, AgnosticSampleDbAssemblyPath);
+
+        string outputPath = @$"{ActualFilesDir}/Actual_PublishScript_For_SampleDB_WhenUpdatingFromV1ToV1.sql";
+        _deployManager.GeneratePublishScript(AgnosticSampleDbAssemblyPath, _connection, outputPath);
+        string actualScript = File.ReadAllText(outputPath);
+        actualScript.Should().Be("");
     }
 
     [Test]

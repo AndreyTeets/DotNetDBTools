@@ -58,6 +58,8 @@ internal class MySQLDbEditor : DbEditor<
         foreach (MySQLProcedure proc in db.Procedures)
             QueryExecutor.Execute(new MySQLInsertDNDBTDbObjectRecordQuery(proc.ID, null, DbObjectType.Procedure, proc.Name, proc.GetCode()));
 
+        foreach (Script script in db.Scripts)
+            QueryExecutor.Execute(new MySQLInsertDNDBTScriptExecutionRecordQuery(script, -1));
         QueryExecutor.Execute(new MySQLInsertDNDBTDbAttributesRecordQuery(database));
     }
 

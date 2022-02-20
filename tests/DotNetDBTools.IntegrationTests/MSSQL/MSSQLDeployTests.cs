@@ -22,6 +22,7 @@ public class MSSQLDeployTests : BaseDeployTests<
 {
     protected override string AgnosticSampleDbAssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDB.Agnostic.dll";
     protected override string SpecificDBMSSampleDbAssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDB.MSSQL.dll";
+    protected override string ActualFilesDir => "./generated/MSSQL";
 
     private static string ConnectionStringWithoutDb => MSSQLContainerHelper.MSSQLContainerConnectionString;
 

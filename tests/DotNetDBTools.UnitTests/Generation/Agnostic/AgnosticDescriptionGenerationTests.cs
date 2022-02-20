@@ -2,8 +2,8 @@
 using System.Reflection;
 using DotNetDBTools.DefinitionParsing;
 using DotNetDBTools.DefinitionParsing.Core;
-using DotNetDBTools.Generation.Agnostic;
-using DotNetDBTools.Models.Agnostic;
+using DotNetDBTools.Generation;
+using DotNetDBTools.Models.Core;
 using DotNetDBTools.UnitTests.Utilities;
 using FluentAssertions;
 using Xunit;
@@ -16,8 +16,8 @@ public class AgnosticDescriptionGenerationTests
     public void Generate_Description_For_AgnosticSampleDB_CreatesCorrectDescription()
     {
         Assembly dbAssembly = TestDbAssembliesHelper.GetSampleDbAssembly("DotNetDBTools.SampleDB.Agnostic");
-        AgnosticDatabase database = (AgnosticDatabase)DbDefinitionParser.CreateDatabaseModel(dbAssembly);
-        string actualDescriptionCode = AgnosticDescriptionGenerator.GenerateDescription(database);
+        Database database = DbDefinitionParser.CreateDatabaseModel(dbAssembly);
+        string actualDescriptionCode = DbDescriptionGenerator.GenerateDescription(database);
         string expectedDescriptionCode = File.ReadAllText(@"TestData/Agnostic/Expected_Description_For_SampleDB.cs");
         actualDescriptionCode.NormalizeLineEndings().Should().Be(expectedDescriptionCode.NormalizeLineEndings());
     }

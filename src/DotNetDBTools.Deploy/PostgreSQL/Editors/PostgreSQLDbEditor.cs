@@ -33,6 +33,8 @@ internal class PostgreSQLDbEditor : DbEditor<
         InsertUserDefinedTypesInfos(db);
         InsertTablesInfos(db);
         InsertViewsFunctionsProceduresInfos(db);
+        foreach (Script script in db.Scripts)
+            QueryExecutor.Execute(new PostgreSQLInsertDNDBTScriptExecutionRecordQuery(script, -1));
         QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbAttributesRecordQuery(database));
     }
 

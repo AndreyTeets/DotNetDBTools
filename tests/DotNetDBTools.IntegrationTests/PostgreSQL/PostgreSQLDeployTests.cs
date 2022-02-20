@@ -20,6 +20,7 @@ public class PostgreSQLDeployTests : BaseDeployTests<
 {
     protected override string AgnosticSampleDbAssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDB.Agnostic.dll";
     protected override string SpecificDBMSSampleDbAssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDB.PostgreSQL.dll";
+    protected override string ActualFilesDir => "./generated/PostgreSQL";
 
     private static string ConnectionStringWithoutDb => PostgreSQLContainerHelper.PostgreSQLContainerConnectionString;
 

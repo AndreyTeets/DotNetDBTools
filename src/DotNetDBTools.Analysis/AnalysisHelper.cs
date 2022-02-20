@@ -54,4 +54,18 @@ public static class AnalysisHelper
     {
         return DiffAnalyzer.IsEmpty(dbDiff);
     }
+
+    public static bool DatabasesAreEquivalentExcludingDNDBTInfo(Database database1, Database database2, out string diffLog)
+    {
+        DNDBTModelsEqualityComparer comparer = new();
+        comparer.IgnoredProperties.Add(new PropInfo { Name = "Name", DeclaringTypeName = nameof(Database) });
+        comparer.IgnoredProperties.Add(new PropInfo { Name = "Version", DeclaringTypeName = nameof(Database) });
+        comparer.IgnoredProperties.Add(new PropInfo { Name = "Scripts", DeclaringTypeName = nameof(Database) });
+        comparer.IgnoredProperties.Add(new PropInfo { Name = "ID", DeclaringTypeName = nameof(DbObject) });
+        comparer.IgnoredProperties.Add(new PropInfo { Name = "Code", DeclaringTypeName = nameof(CodePiece) });
+
+        bool res = comparer.Equals(database1, database2);
+        diffLog = comparer.DiffLog;
+        return res;
+    }
 }

@@ -22,6 +22,7 @@ public class MySQLDeployTests : BaseDeployTests<
 {
     protected override string AgnosticSampleDbAssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDB.Agnostic.dll";
     protected override string SpecificDBMSSampleDbAssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDB.MySQL.dll";
+    protected override string ActualFilesDir => "./generated/MySQL";
 
     private static string ConnectionStringWithoutDb => MySQLContainerHelper.MySQLContainerConnectionString;
 
