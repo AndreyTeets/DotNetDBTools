@@ -1,6 +1,6 @@
 ﻿using System;
-using DotNetDBTools.Definition.Core;
 using DotNetDBTools.Definition.Agnostic;
+using DotNetDBTools.Definition.Core;
 
 namespace DotNetDBTools.SampleDB.Agnostic.BeforePublish
 {

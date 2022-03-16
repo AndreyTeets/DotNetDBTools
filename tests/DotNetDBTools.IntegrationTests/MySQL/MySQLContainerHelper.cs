@@ -7,7 +7,7 @@ namespace DotNetDBTools.IntegrationTests.MySQL;
 
 public class MySQLContainerHelper
 {
-    private const string MySQLImage = "mysql";
+    private const string MySQLImage = "docker.io/library/mysql";
     private const string MySQLImageTag = "8.0.27";
     private const string MySQLContainerName = "DotNetDBTools_IntegrationTests_MySQL";
     private const string MySQLServerPassword = "Strong(!)Passw0rd";

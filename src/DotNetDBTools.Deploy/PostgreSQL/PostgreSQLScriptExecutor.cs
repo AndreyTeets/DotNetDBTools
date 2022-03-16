@@ -1,8 +1,7 @@
 ﻿using DotNetDBTools.Deploy.Core;
-using DotNetDBTools.Deploy.Core.Editors;
 using DotNetDBTools.Deploy.PostgreSQL.Queries.DNDBTSysInfo;
 
-namespace DotNetDBTools.Deploy.PostgreSQL.Editors;
+namespace DotNetDBTools.Deploy.PostgreSQL;
 
 internal class PostgreSQLScriptExecutor : ScriptExecutor<
     PostgreSQLInsertDNDBTScriptExecutionRecordQuery,

@@ -1,6 +1,6 @@
 ﻿using DotNetDBTools.Models.Core;
 
-namespace DotNetDBTools.Deploy.Core.Editors;
+namespace DotNetDBTools.Deploy.Core;
 
 internal interface IScriptExecutor
 {

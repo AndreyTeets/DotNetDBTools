@@ -76,12 +76,12 @@ public static class TestDatabasesCompiler
             string normalizedFilePath = relativeFilePath.Replace(@"/", ".").Replace(@"\", ".");
             string resourceName = $"{assemblyName}.{normalizedFilePath}";
 
-            ResourceDescription resourse = new(
+            ResourceDescription resource = new(
                 resourceName,
                 () => File.OpenRead(filePath),
                 isPublic: true
             );
-            resourcesList.Add(resourse);
+            resourcesList.Add(resource);
         }
         return resourcesList;
     }

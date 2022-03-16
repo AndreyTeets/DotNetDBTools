@@ -28,8 +28,8 @@ public static class ProcessRunner
 
         StringBuilder output = new();
         object outputLock = new();
-        process.OutputDataReceived += (sender, eventArgs) => { lock (outputLock) { output.AppendLine(eventArgs.Data); }; };
-        process.ErrorDataReceived += (sender, eventArgs) => { lock (outputLock) { output.AppendLine(eventArgs.Data); }; };
+        process.OutputDataReceived += (_, eventArgs) => { lock (outputLock) { output.AppendLine(eventArgs.Data); } };
+        process.ErrorDataReceived += (_, eventArgs) => { lock (outputLock) { output.AppendLine(eventArgs.Data); } };
 
         process.Start();
         process.BeginOutputReadLine();

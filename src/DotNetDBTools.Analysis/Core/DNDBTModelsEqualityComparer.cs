@@ -8,7 +8,7 @@ using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.Analysis.Core;
 
-internal partial class DNDBTModelsEqualityComparer : IEqualityComparer<object>
+internal class DNDBTModelsEqualityComparer : IEqualityComparer<object>
 {
     public HashSet<PropInfo> IgnoredProperties { get; set; } = new();
     public string DiffLog => _diffInfoSb.ToString().TrimEnd();

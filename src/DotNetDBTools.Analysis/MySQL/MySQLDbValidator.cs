@@ -49,7 +49,7 @@ $"Trigger '{trigger.Name}' in table '{table.Name}' has different name in it's cr
         foreach (Table table in database.Tables)
         {
             Column identityColumn = table.Columns.SingleOrDefault(c => c.Identity);
-            if (identityColumn is not null && table.PrimaryKey?.Columns.Any(c => c == identityColumn?.Name) != true)
+            if (identityColumn is not null && table.PrimaryKey?.Columns.Any(c => c == identityColumn.Name) != true)
             {
                 string errorMessage =
 $"Identity column '{identityColumn.Name}' in table '{table.Name}' is not a primary key";

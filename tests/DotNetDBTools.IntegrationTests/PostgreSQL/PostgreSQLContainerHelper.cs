@@ -7,7 +7,7 @@ namespace DotNetDBTools.IntegrationTests.PostgreSQL;
 
 public class PostgreSQLContainerHelper
 {
-    private const string PostgreSQLImage = "postgres";
+    private const string PostgreSQLImage = "docker.io/library/postgres";
     private const string PostgreSQLImageTag = "14.1-alpine3.14";
     private const string PostgreSQLContainerName = "DotNetDBTools_IntegrationTests_PostgreSQL";
     private const string PostgreSQLServerPassword = "Strong(!)Passw0rd";

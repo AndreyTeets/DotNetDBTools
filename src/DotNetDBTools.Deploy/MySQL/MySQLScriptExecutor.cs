@@ -1,8 +1,7 @@
 ﻿using DotNetDBTools.Deploy.Core;
-using DotNetDBTools.Deploy.Core.Editors;
 using DotNetDBTools.Deploy.MySQL.Queries.DNDBTSysInfo;
 
-namespace DotNetDBTools.Deploy.MySQL.Editors;
+namespace DotNetDBTools.Deploy.MySQL;
 
 internal class MySQLScriptExecutor : ScriptExecutor<
     MySQLInsertDNDBTScriptExecutionRecordQuery,

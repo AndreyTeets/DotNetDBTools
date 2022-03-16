@@ -44,6 +44,6 @@ internal class SQLiteDataTypeMapper : IDataTypeMapper
                 return new DataType() { Name = normalizedDataType };
             default:
                 throw new InvalidOperationException($"Invalid dataType: {column.DataType}");
-        };
+        }
     }
 }

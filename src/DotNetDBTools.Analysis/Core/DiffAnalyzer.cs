@@ -19,10 +19,8 @@ internal static class DiffAnalyzer
                 IEnumerable collection = (IEnumerable)property.GetValue(dbDiff, null);
                 if (collection is null)
                     continue;
-                foreach (object item in collection)
-                {
+                foreach (object _ in collection)
                     return false;
-                }
             }
         }
         return true;

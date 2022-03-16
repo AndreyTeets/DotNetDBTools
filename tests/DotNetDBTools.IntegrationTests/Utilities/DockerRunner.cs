@@ -69,6 +69,7 @@ public static class DockerRunner
                 {
                     new PortBinding
                     {
+                        HostIP = "127.0.0.1",
                         HostPort = portRedirect.Value
                     }
                 });
@@ -94,12 +95,20 @@ public static class DockerRunner
 
     private static DockerClient CreateDockerClient()
     {
-        string dockerUri = IsRunningOnWindows()
-            ? "npipe://./pipe/docker_engine"
-            : "unix:///var/run/docker.sock";
+        string dockerUri = GetDockerApiUri();
         DockerClient dockerClient = new DockerClientConfiguration(new Uri(dockerUri)).CreateClient();
         return dockerClient;
     }
 
-    private static bool IsRunningOnWindows() => Environment.OSVersion.Platform == PlatformID.Win32NT;
+    private static string GetDockerApiUri()
+    {
+        string dockerHost = Environment.GetEnvironmentVariable("DOCKER_HOST");
+        if (!string.IsNullOrEmpty(dockerHost))
+            return dockerHost;
+
+        if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+            return "npipe://./pipe/docker_engine";
+        else
+            return "unix:///var/run/docker.sock";
+    }
 }

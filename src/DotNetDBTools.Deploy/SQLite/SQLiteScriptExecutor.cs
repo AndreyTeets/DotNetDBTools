@@ -1,8 +1,7 @@
 ﻿using DotNetDBTools.Deploy.Core;
-using DotNetDBTools.Deploy.Core.Editors;
 using DotNetDBTools.Deploy.SQLite.Queries.DNDBTSysInfo;
 
-namespace DotNetDBTools.Deploy.SQLite.Editors;
+namespace DotNetDBTools.Deploy.SQLite;
 
 internal class SQLiteScriptExecutor : ScriptExecutor<
     SQLiteInsertDNDBTScriptExecutionRecordQuery,

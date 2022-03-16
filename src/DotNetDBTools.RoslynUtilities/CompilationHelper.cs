@@ -25,7 +25,7 @@ internal static class CompilationHelper
             .Select(f => f.Path);
 
         IEnumerable<ResourceDescription> resources = null;
-        if (embeddedFilesPaths.Count() > 0)
+        if (embeddedFilesPaths.Any())
         {
             if (!analyzerConfigOptions.TryGetValue("build_property.ProjectDir", out string projectDirectory))
                 throw new Exception("MSBuild property 'ProjectDir' is missing");
@@ -121,12 +121,12 @@ internal static class CompilationHelper
             string normalizedFilePath = relativeFilePath.Replace(@"/", ".").Replace(@"\", ".");
             string resourceName = $"{rootNamespace}.{normalizedFilePath}";
 
-            ResourceDescription resourse = new(
+            ResourceDescription resource = new(
                 resourceName,
                 () => File.OpenRead(filePath),
                 isPublic: true
             );
-            resourcesList.Add(resourse);
+            resourcesList.Add(resource);
         }
         return resourcesList;
     }

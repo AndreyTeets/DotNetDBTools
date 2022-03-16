@@ -6,7 +6,7 @@ using DotNetDBTools.Deploy.Core.Queries.DNDBTSysInfo;
 using DotNetDBTools.Models.Core;
 using static DotNetDBTools.Deploy.Core.InstanceCreator;
 
-namespace DotNetDBTools.Deploy.Core.Editors;
+namespace DotNetDBTools.Deploy.Core;
 
 internal abstract class ScriptExecutor<
     TInsertDNDBTScriptExecutionRecordQuery,

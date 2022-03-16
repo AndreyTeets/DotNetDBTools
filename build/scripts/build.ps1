@@ -8,8 +8,10 @@ function ClearDotNetDBToolsNugetPackagesGlobalCache {
     if ($Env:CI) {
         exec dotnet nuget locals --clear global-packages
     } else {
-        Write-Host "Clearing DotNetDBTools nuget packages global cache"
-        Get-ChildItem -Path "~/.nuget/packages" -Filter "DotNetDBTools.*" -Force | Remove-Item -Recurse -Force
+        if (Test-Path -Path "~/.nuget/packages") {
+            Write-Host "Clearing DotNetDBTools nuget packages global cache"
+            Get-ChildItem -Path "~/.nuget/packages" -Filter "DotNetDBTools.*" -Force | Remove-Item -Recurse -Force
+        }
     }
 }
 

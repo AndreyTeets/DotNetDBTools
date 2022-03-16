@@ -8,7 +8,7 @@ using DotNetDBTools.UnitTests.Utilities;
 using FluentAssertions;
 using Xunit;
 
-namespace DotNetDBTools.UnitTests.Description.Agnostic;
+namespace DotNetDBTools.UnitTests.Generation.Agnostic;
 
 public class AgnosticDescriptionGenerationTests
 {

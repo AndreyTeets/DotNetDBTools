@@ -1,9 +1,12 @@
 bin/
 obj/
-.vs/
+*.user
+/.vs/
+/.idea/
+/.vscode/
+!.vscode/*sample
 .sonarqube/
 .antlr/
-.vscode/launch.json
-artifacts/
+/artifacts/
+/SamplesOutput/
 TestResults/
-SamplesOutput/

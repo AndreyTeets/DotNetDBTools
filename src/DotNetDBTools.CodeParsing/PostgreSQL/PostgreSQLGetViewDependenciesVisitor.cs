@@ -20,7 +20,7 @@ internal class PostgreSQLGetViewDependenciesVisitor : PostgreSQLParserBaseVisito
             string tableOrViewName = Unquote(context.schema_qualified_name().GetText());
             _dependencies.Add(new Dependency { Type = DependencyType.TableOrView, Name = tableOrViewName });
         }
-        else if (context.function_call().Count() > 0)
+        else if (context.function_call().Any())
         {
             string functionName = Unquote(context.function_call(0).schema_qualified_name_nontype().GetText());
             _dependencies.Add(new Dependency { Type = DependencyType.Function, Name = functionName });

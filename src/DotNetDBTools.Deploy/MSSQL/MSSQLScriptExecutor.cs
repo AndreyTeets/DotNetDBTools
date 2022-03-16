@@ -1,8 +1,7 @@
 ﻿using DotNetDBTools.Deploy.Core;
-using DotNetDBTools.Deploy.Core.Editors;
 using DotNetDBTools.Deploy.MSSQL.Queries.DNDBTSysInfo;
 
-namespace DotNetDBTools.Deploy.MSSQL.Editors;
+namespace DotNetDBTools.Deploy.MSSQL;
 
 internal class MSSQLScriptExecutor : ScriptExecutor<
     MSSQLInsertDNDBTScriptExecutionRecordQuery,

@@ -36,7 +36,7 @@ bla bla";
     [InlineData("bla bla")]
     public void TryParseScriptInfo_ReturnsFalse_OnNegativeInput(string input)
     {
-        ScriptDeclarationParser.TryParseScriptInfo(input, out ScriptInfo scriptInfo).Should().BeFalse();
+        ScriptDeclarationParser.TryParseScriptInfo(input, out ScriptInfo _).Should().BeFalse();
     }
 
     [Theory]
@@ -45,7 +45,7 @@ bla bla";
     [InlineData($"\n{ScriptDeclaration}\nbla bla")]
     public void ParseFunction_ThrowsOnMalformedInput(string input)
     {
-        FluentActions.Invoking(() => ScriptDeclarationParser.TryParseScriptInfo(input, out ScriptInfo scriptInfo))
+        FluentActions.Invoking(() => ScriptDeclarationParser.TryParseScriptInfo(input, out ScriptInfo _))
             .Should().Throw<Exception>().WithMessage($"Failed to parse script info from input [{input}]");
     }
 }
