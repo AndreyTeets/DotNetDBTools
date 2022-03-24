@@ -27,6 +27,7 @@ try {
 
     exec dotnet tool restore
 
+    $env:RECREATE_CONTAINERS = "true"
     exec dotnet test "./tests/DotNetDBTools.UnitTests" @testOptions "-p:CoverletOutputFormat=json"
     exec dotnet test "./tests/DotNetDBTools.AnalyzersTests" @testOptions "-p:CoverletOutputFormat=json"
     exec dotnet test "./tests/DotNetDBTools.IntegrationTests" @testOptions "-p:CoverletOutputFormat=opencover"

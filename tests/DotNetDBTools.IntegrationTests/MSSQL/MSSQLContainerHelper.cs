@@ -16,7 +16,7 @@ public class MSSQLContainerHelper
     public static string MSSQLContainerConnectionString =>
         new SqlConnectionStringBuilder()
         {
-            DataSource = $"localhost,{MSSQLServerHostPort}",
+            DataSource = $"127.0.0.1,{MSSQLServerHostPort}",
             IntegratedSecurity = false,
             UserID = "SA",
             Password = MSSQLServerPassword,

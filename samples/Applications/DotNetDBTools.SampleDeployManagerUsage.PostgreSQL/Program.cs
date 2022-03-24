@@ -20,11 +20,11 @@ namespace DotNetDBTools.SampleDeployManagerUsage.PostgreSQL
 
         private static readonly string s_agnosticDbAssemblyPath = $"{s_samplesOutputDir}/DotNetDBTools.SampleDB.Agnostic.dll";
         private static readonly string s_agnosticDbV2AssemblyPath = $"{s_samplesOutputDir}/DotNetDBTools.SampleDBv2.Agnostic.dll";
-        private static readonly string s_agnosticConnectionString = $"Host=localhost;Port={PostgreSQLServerHostPort};Database={AgnosticDatabaseName};Username=postgres;Password={PostgreSQLServerPassword}";
+        private static readonly string s_agnosticConnectionString = $"Host=127.0.0.1;Port={PostgreSQLServerHostPort};Database={AgnosticDatabaseName};Username=postgres;Password={PostgreSQLServerPassword}";
 
         private static readonly string s_postgresqlDbAssemblyPath = $"{s_samplesOutputDir}/DotNetDBTools.SampleDB.PostgreSQL.dll";
         private static readonly string s_postgresqlDbV2AssemblyPath = $"{s_samplesOutputDir}/DotNetDBTools.SampleDBv2.PostgreSQL.dll";
-        private static readonly string s_postgresqlConnectionString = $"Host=localhost;Port={PostgreSQLServerHostPort};Database={PostgreSQLDatabaseName};Username=postgres;Password={PostgreSQLServerPassword}";
+        private static readonly string s_postgresqlConnectionString = $"Host=127.0.0.1;Port={PostgreSQLServerHostPort};Database={PostgreSQLDatabaseName};Username=postgres;Password={PostgreSQLServerPassword}";
 
         private static readonly string s_agnosticGeneratedPublishToEmptyScriptPath = $"{s_samplesOutputDir}/postgresql_generated/AgnosticGeneratedPublishToEmptyScript.sql";
         private static readonly string s_agnosticGeneratedPublishToExistingScriptPath = $"{s_samplesOutputDir}/postgresql_generated/AgnosticGeneratedPublishToExistingScript.sql";

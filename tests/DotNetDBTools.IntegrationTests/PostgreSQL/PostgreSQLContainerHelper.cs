@@ -16,7 +16,7 @@ public class PostgreSQLContainerHelper
     public static string PostgreSQLContainerConnectionString =>
         new NpgsqlConnectionStringBuilder()
         {
-            Host = "localhost",
+            Host = "127.0.0.1",
             Port = PostgreSQLServerHostPort,
             Username = "postgres",
             Password = PostgreSQLServerPassword,

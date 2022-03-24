@@ -15,7 +15,7 @@ namespace DotNetDBTools.SampleSelfUpdatingApp.PostgreSQL
         private const string PostgreSQLServerHostPort = "5007";
         private const string DatabaseName = "AgnosticSampleDB_SelfUpdatingApp";
 
-        private static readonly string s_connectionString = $"Host=localhost;Port={PostgreSQLServerHostPort};Database={DatabaseName};Username=postgres;Password={PostgreSQLServerPassword}";
+        private static readonly string s_connectionString = $"Host=127.0.0.1;Port={PostgreSQLServerHostPort};Database={DatabaseName};Username=postgres;Password={PostgreSQLServerPassword}";
 
         public static void Main()
         {

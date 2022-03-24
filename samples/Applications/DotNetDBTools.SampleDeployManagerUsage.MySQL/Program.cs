@@ -20,11 +20,11 @@ namespace DotNetDBTools.SampleDeployManagerUsage.MySQL
 
         private static readonly string s_agnosticDbAssemblyPath = $"{s_samplesOutputDir}/DotNetDBTools.SampleDB.Agnostic.dll";
         private static readonly string s_agnosticDbV2AssemblyPath = $"{s_samplesOutputDir}/DotNetDBTools.SampleDBv2.Agnostic.dll";
-        private static readonly string s_agnosticConnectionString = $"Host=localhost;Port={MySQLServerHostPort};Database={AgnosticDatabaseName};Username=root;Password={MySQLServerPassword}";
+        private static readonly string s_agnosticConnectionString = $"Host=127.0.0.1;Port={MySQLServerHostPort};Database={AgnosticDatabaseName};Username=root;Password={MySQLServerPassword}";
 
         private static readonly string s_mysqlDbAssemblyPath = $"{s_samplesOutputDir}/DotNetDBTools.SampleDB.MySQL.dll";
         private static readonly string s_mysqlDbV2AssemblyPath = $"{s_samplesOutputDir}/DotNetDBTools.SampleDBv2.MySQL.dll";
-        private static readonly string s_mysqlConnectionString = $"Host=localhost;Port={MySQLServerHostPort};Database={MySQLDatabaseName};Username=root;Password={MySQLServerPassword}";
+        private static readonly string s_mysqlConnectionString = $"Host=127.0.0.1;Port={MySQLServerHostPort};Database={MySQLDatabaseName};Username=root;Password={MySQLServerPassword}";
 
         private static readonly string s_agnosticGeneratedPublishToEmptyScriptPath = $"{s_samplesOutputDir}/mysql_generated/AgnosticGeneratedPublishToEmptyScript.sql";
         private static readonly string s_agnosticGeneratedPublishToExistingScriptPath = $"{s_samplesOutputDir}/mysql_generated/AgnosticGeneratedPublishToExistingScript.sql";

@@ -16,7 +16,7 @@ public class MySQLContainerHelper
     public static string MySQLContainerConnectionString =>
         new MySqlConnectionStringBuilder()
         {
-            Server = "localhost",
+            Server = "127.0.0.1",
             Port = MySQLServerHostPort,
             UserID = "root",
             Password = MySQLServerPassword,

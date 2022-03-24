@@ -15,12 +15,17 @@ public static class DockerRunner
         if (container is null)
             return;
 
-        if (container.State != "running" ||
+        bool recreateContainers = Environment.GetEnvironmentVariable("RECREATE_CONTAINERS") == "true";
+        if (recreateContainers ||
+            container.State != "running" ||
             container.Created.AddMinutes(oldMinutes) < DateTime.UtcNow)
         {
             DockerClient dockerClient = CreateDockerClient();
-            await dockerClient.Containers.StopContainerAsync(container.ID, new ContainerStopParameters());
-            await dockerClient.Containers.RemoveContainerAsync(container.ID, new ContainerRemoveParameters());
+            await dockerClient.Containers.RemoveContainerAsync(container.ID, new ContainerRemoveParameters()
+            {
+                Force = true,
+                RemoveVolumes = true,
+            });
         }
     }
 
@@ -39,7 +44,7 @@ public static class DockerRunner
         await dockerClient.Images.CreateImageAsync(
             new ImagesCreateParameters
             {
-                FromImage = imageNameWithTag
+                FromImage = imageNameWithTag,
             },
             null,
             new Progress<JSONMessage>());
@@ -70,14 +75,15 @@ public static class DockerRunner
                     new PortBinding
                     {
                         HostIP = "127.0.0.1",
-                        HostPort = portRedirect.Value
+                        HostPort = portRedirect.Value,
                     }
                 });
         }
 
         return new HostConfig()
         {
-            PortBindings = portBindings
+            PortBindings = portBindings,
+            AutoRemove = true,
         };
     }
 

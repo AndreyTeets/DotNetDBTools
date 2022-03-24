@@ -15,7 +15,7 @@ namespace DotNetDBTools.SampleSelfUpdatingApp.MySQL
         private const string MySQLServerHostPort = "5006";
         private const string DatabaseName = "AgnosticSampleDB_SelfUpdatingApp";
 
-        private static readonly string s_connectionString = $"Host=localhost;Port={MySQLServerHostPort};Database={DatabaseName};Username=root;Password={MySQLServerPassword}";
+        private static readonly string s_connectionString = $"Host=127.0.0.1;Port={MySQLServerHostPort};Database={DatabaseName};Username=root;Password={MySQLServerPassword}";
 
         public static void Main()
         {

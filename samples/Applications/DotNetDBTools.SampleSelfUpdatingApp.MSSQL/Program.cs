@@ -15,7 +15,7 @@ namespace DotNetDBTools.SampleSelfUpdatingApp.MSSQL
         private const string MsSqlServerHostPort = "5005";
         private const string AgnosticDatabaseName = "AgnosticSampleDB_SelfUpdatingApp";
 
-        private static readonly string s_connectionString = $"Data Source=localhost,{MsSqlServerHostPort};Initial Catalog={AgnosticDatabaseName};Integrated Security=False;User ID=SA;Password={MsSqlServerPassword}";
+        private static readonly string s_connectionString = $"Data Source=127.0.0.1,{MsSqlServerHostPort};Initial Catalog={AgnosticDatabaseName};Integrated Security=False;User ID=SA;Password={MsSqlServerPassword}";
 
         public static void Main()
         {
