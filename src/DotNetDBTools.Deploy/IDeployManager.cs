@@ -6,6 +6,7 @@ namespace DotNetDBTools.Deploy;
 public interface IDeployManager
 {
     public DeployOptions Options { get; set; }
+    public Events Events { get; }
 
     /// <summary>
     /// Adds DNDBT system tables and populates them with DNDBTInfo generated from actual database.

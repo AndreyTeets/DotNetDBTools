@@ -2,6 +2,7 @@
 using System.Data.Common;
 using System.IO;
 using DotNetDBTools.Deploy;
+using DotNetDBTools.EventsLogger;
 using DotNetDBTools.SampleBusinessLogicLib.Agnostic;
 using Microsoft.Data.Sqlite;
 using SqlKata.Compilers;
@@ -30,6 +31,7 @@ namespace DotNetDBTools.SampleSelfUpdatingApp.SQLite
         {
             Console.WriteLine("Publishing DotNetDBTools.SampleDBv2.Agnostic from referenced assembly");
             SQLiteDeployManager deployManager = new(new DeployOptions());
+            deployManager.Events.EventFired += DeployManagerEventsLogger.LogEvent;
             deployManager.PublishDatabase(typeof(SampleDB.Agnostic.Tables.MyTable3).Assembly, connection);
         }
 
@@ -39,8 +41,10 @@ namespace DotNetDBTools.SampleSelfUpdatingApp.SQLite
             {
                 Console.WriteLine("Database doesn't exist. Creating new empty database and registering it as DNDBT.");
                 CreateDatabase(connectionString);
+                SQLiteDeployManager deployManager = new(new DeployOptions());
+                deployManager.Events.EventFired += DeployManagerEventsLogger.LogEvent;
                 using SqliteConnection connection = new(connectionString);
-                new SQLiteDeployManager(new DeployOptions()).RegisterAsDNDBT(connection);
+                deployManager.RegisterAsDNDBT(connection);
             }
         }
 

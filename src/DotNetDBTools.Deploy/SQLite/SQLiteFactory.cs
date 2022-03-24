@@ -9,9 +9,9 @@ namespace DotNetDBTools.Deploy.SQLite;
 
 internal class SQLiteFactory : IFactory
 {
-    public IQueryExecutor CreateQueryExecutor(DbConnection connection)
+    public IQueryExecutor CreateQueryExecutor(DbConnection connection, Events events)
     {
-        return new SQLiteQueryExecutor(connection);
+        return new SQLiteQueryExecutor(connection, events);
     }
 
     public IGenSqlScriptQueryExecutor CreateGenSqlScriptQueryExecutor()

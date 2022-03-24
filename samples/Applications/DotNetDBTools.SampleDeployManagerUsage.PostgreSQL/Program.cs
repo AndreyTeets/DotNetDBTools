@@ -3,6 +3,7 @@ using System.IO;
 using System.Reflection;
 using Dapper;
 using DotNetDBTools.Deploy;
+using DotNetDBTools.EventsLogger;
 using Npgsql;
 
 namespace DotNetDBTools.SampleDeployManagerUsage.PostgreSQL
@@ -60,10 +61,12 @@ namespace DotNetDBTools.SampleDeployManagerUsage.PostgreSQL
             Assembly dbAssemblyV2 = Assembly.Load(File.ReadAllBytes(s_agnosticDbV2AssemblyPath));
 
             IDeployManager deployManager = new PostgreSQLDeployManager(new DeployOptions());
+            deployManager.Events.EventFired += DeployManagerEventsLogger.LogEvent;
             IDeployManager dmDataLoss = new PostgreSQLDeployManager(new DeployOptions { AllowDataLoss = true });
+            dmDataLoss.Events.EventFired += DeployManagerEventsLogger.LogEvent;
             using NpgsqlConnection connection = new(s_agnosticConnectionString);
 
-            Console.WriteLine("Registiring empty AgnosticSampleDB as DNDBT to make other actions with it possible...");
+            Console.WriteLine("Registering empty AgnosticSampleDB as DNDBT to make other actions with it possible...");
             deployManager.RegisterAsDNDBT(connection);
 
             Console.WriteLine("Generating script to create new AgnosticSampleDB from dbAssembly file...");
@@ -101,7 +104,7 @@ namespace DotNetDBTools.SampleDeployManagerUsage.PostgreSQL
             Console.WriteLine("Updating(rollback from v2 to v1) AgnosticSampleDB using previously generated NoDNDBTInfo script...");
             connection.Execute(File.ReadAllText(s_agnosticGeneratedNoDNDBTInfoPublishFromV2ToV1ScriptPath));
 
-            Console.WriteLine("Registiring(=generating and adding new DNDBT system information to DB) AgnosticSampleDB...");
+            Console.WriteLine("Registering(=generating and adding new DNDBT system information to DB) AgnosticSampleDB...");
             deployManager.RegisterAsDNDBT(connection);
             Console.WriteLine("Generating definition from existing registered AgnosticSampleDB...");
             deployManager.GenerateDefinition(connection, s_agnosticGeneratedDefinitionFromRegisteredDir);
@@ -122,10 +125,12 @@ namespace DotNetDBTools.SampleDeployManagerUsage.PostgreSQL
             Assembly dbAssemblyV2 = Assembly.Load(File.ReadAllBytes(s_postgresqlDbV2AssemblyPath));
 
             IDeployManager deployManager = new PostgreSQLDeployManager(new DeployOptions());
+            deployManager.Events.EventFired += DeployManagerEventsLogger.LogEvent;
             IDeployManager dmDataLoss = new PostgreSQLDeployManager(new DeployOptions { AllowDataLoss = true });
+            dmDataLoss.Events.EventFired += DeployManagerEventsLogger.LogEvent;
             using NpgsqlConnection connection = new(s_postgresqlConnectionString);
 
-            Console.WriteLine("Registiring empty AgnosticSampleDB as DNDBT to make other actions with it possible...");
+            Console.WriteLine("Registering empty AgnosticSampleDB as DNDBT to make other actions with it possible...");
             deployManager.RegisterAsDNDBT(connection);
 
             Console.WriteLine("Generating script to create new PostgreSQLSampleDB from dbAssembly file...");
@@ -163,7 +168,7 @@ namespace DotNetDBTools.SampleDeployManagerUsage.PostgreSQL
             Console.WriteLine("Updating(rollback from v2 to v1) PostgreSQLSampleDB using previously generated NoDNDBTInfo script...");
             connection.Execute(File.ReadAllText(s_postgresqlGeneratedNoDNDBTInfoPublishFromV2ToV1ScriptPath));
 
-            Console.WriteLine("Registiring(=generating and adding new DNDBT system information to DB) PostgreSQLSampleDB...");
+            Console.WriteLine("Registering(=generating and adding new DNDBT system information to DB) PostgreSQLSampleDB...");
             deployManager.RegisterAsDNDBT(connection);
             Console.WriteLine("Generating definition from existing registered PostgreSQLSampleDB...");
             deployManager.GenerateDefinition(connection, s_postgresqlGeneratedDefinitionFromRegisteredDir);

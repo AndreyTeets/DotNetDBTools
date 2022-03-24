@@ -6,7 +6,7 @@ namespace DotNetDBTools.Deploy.Core;
 
 internal interface IFactory
 {
-    public IQueryExecutor CreateQueryExecutor(DbConnection connection);
+    public IQueryExecutor CreateQueryExecutor(DbConnection connection, Events events);
     public IGenSqlScriptQueryExecutor CreateGenSqlScriptQueryExecutor();
     public IDbModelConverter CreateDbModelConverter();
     public IDbEditor CreateDbEditor(IQueryExecutor queryExecutor);

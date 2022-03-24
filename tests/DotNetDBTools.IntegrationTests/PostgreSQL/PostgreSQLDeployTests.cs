@@ -64,6 +64,6 @@ public class PostgreSQLDeployTests : BaseDeployTests<
 
     private protected override IDbModelFromDBMSProvider CreateDbModelFromDBMSProvider(DbConnection connection)
     {
-        return new PostgreSQLDbModelFromDBMSProvider(new PostgreSQLQueryExecutor(connection));
+        return new PostgreSQLDbModelFromDBMSProvider(new PostgreSQLQueryExecutor(connection, new Events()));
     }
 }

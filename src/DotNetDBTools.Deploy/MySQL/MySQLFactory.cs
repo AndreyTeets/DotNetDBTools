@@ -9,9 +9,9 @@ namespace DotNetDBTools.Deploy.MySQL;
 
 internal class MySQLFactory : IFactory
 {
-    public IQueryExecutor CreateQueryExecutor(DbConnection connection)
+    public IQueryExecutor CreateQueryExecutor(DbConnection connection, Events events)
     {
-        return new MySQLQueryExecutor(connection);
+        return new MySQLQueryExecutor(connection, events);
     }
 
     public IGenSqlScriptQueryExecutor CreateGenSqlScriptQueryExecutor()

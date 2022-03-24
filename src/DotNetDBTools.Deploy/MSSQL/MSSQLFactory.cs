@@ -9,9 +9,9 @@ namespace DotNetDBTools.Deploy.MSSQL;
 
 internal class MSSQLFactory : IFactory
 {
-    public IQueryExecutor CreateQueryExecutor(DbConnection connection)
+    public IQueryExecutor CreateQueryExecutor(DbConnection connection, Events events)
     {
-        return new MSSQLQueryExecutor(connection);
+        return new MSSQLQueryExecutor(connection, events);
     }
 
     public IGenSqlScriptQueryExecutor CreateGenSqlScriptQueryExecutor()

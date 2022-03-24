@@ -15,7 +15,7 @@ internal abstract class GenSqlScriptQueryExecutor : IGenSqlScriptQueryExecutor
     {
         if (NoDNDBTInfo && IsDNDBTDbObjectRecordQuery(query))
             return 0;
-        string queryName = query.GetType().Name;
+        string queryName = query.GetName();
         string queryText = CreateQueryText(query);
         _queries.Add($"-- QUERY START: {queryName}\n{queryText}\n-- QUERY END: {queryName}");
         _executeQueriesCount++;

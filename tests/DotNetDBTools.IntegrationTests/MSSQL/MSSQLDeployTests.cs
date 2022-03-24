@@ -66,6 +66,6 @@ public class MSSQLDeployTests : BaseDeployTests<
 
     private protected override IDbModelFromDBMSProvider CreateDbModelFromDBMSProvider(DbConnection connection)
     {
-        return new MSSQLDbModelFromDBMSProvider(new MSSQLQueryExecutor(connection));
+        return new MSSQLDbModelFromDBMSProvider(new MSSQLQueryExecutor(connection, new Events()));
     }
 }

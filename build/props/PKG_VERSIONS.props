@@ -29,6 +29,9 @@
     <NpgsqlVersion>6.0.3</NpgsqlVersion>
     <SqliteVersion>6.0.2</SqliteVersion>
     <SqlKataVersion>2.3.7</SqlKataVersion>
+    <SerilogVersion>2.10.0</SerilogVersion>
+    <SerilogSinksConsoleVersion>4.0.1</SerilogSinksConsoleVersion>
+    <SerilogSinksFileVersion>5.0.0</SerilogSinksFileVersion>
   </PropertyGroup>
 
 </Project>

@@ -69,7 +69,7 @@ public class MySQLDeployTests : BaseDeployTests<
 
     private protected override IDbModelFromDBMSProvider CreateDbModelFromDBMSProvider(DbConnection connection)
     {
-        return new MySQLDbModelFromDBMSProvider(new MySQLQueryExecutor(connection));
+        return new MySQLDbModelFromDBMSProvider(new MySQLQueryExecutor(connection, new Events()));
     }
 
     private static string MangleDbNameIfTooLong(string databaseName)

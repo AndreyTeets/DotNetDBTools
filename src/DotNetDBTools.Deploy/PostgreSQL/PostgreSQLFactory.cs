@@ -9,9 +9,9 @@ namespace DotNetDBTools.Deploy.PostgreSQL;
 
 internal class PostgreSQLFactory : IFactory
 {
-    public IQueryExecutor CreateQueryExecutor(DbConnection connection)
+    public IQueryExecutor CreateQueryExecutor(DbConnection connection, Events events)
     {
-        return new PostgreSQLQueryExecutor(connection);
+        return new PostgreSQLQueryExecutor(connection, events);
     }
 
     public IGenSqlScriptQueryExecutor CreateGenSqlScriptQueryExecutor()

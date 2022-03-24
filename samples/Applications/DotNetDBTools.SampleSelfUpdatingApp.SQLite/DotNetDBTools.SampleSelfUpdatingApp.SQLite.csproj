@@ -6,6 +6,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Serilog" Version="$(SerilogVersion)" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="$(SerilogSinksConsoleVersion)" />
+    <PackageReference Include="Serilog.Sinks.File" Version="$(SerilogSinksFileVersion)" />
     <PackageReference Include="Microsoft.Data.Sqlite" Version="$(SqliteVersion)" />
   </ItemGroup>
 
@@ -20,5 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\DotNetDBTools.SampleBusinessLogicLib.Agnostic\DotNetDBTools.SampleBusinessLogicLib.Agnostic.csproj" />
   </ItemGroup>
+
+  <Import Project="..\DotNetDBTools.EventsLogger\DotNetDBTools.EventsLogger.projitems" Label="Shared" />
 
 </Project>

@@ -2,6 +2,7 @@
 using System.Data.Common;
 using Dapper;
 using DotNetDBTools.Deploy;
+using DotNetDBTools.EventsLogger;
 using DotNetDBTools.SampleBusinessLogicLib.Agnostic;
 using MySqlConnector;
 using SqlKata.Compilers;
@@ -31,6 +32,7 @@ namespace DotNetDBTools.SampleSelfUpdatingApp.MySQL
         {
             Console.WriteLine("Publishing DotNetDBTools.SampleDBv2.Agnostic from referenced assembly");
             MySQLDeployManager deployManager = new(new DeployOptions());
+            deployManager.Events.EventFired += DeployManagerEventsLogger.LogEvent;
             deployManager.PublishDatabase(typeof(SampleDB.Agnostic.Tables.MyTable3).Assembly, connection);
         }
 
@@ -40,8 +42,10 @@ namespace DotNetDBTools.SampleSelfUpdatingApp.MySQL
             {
                 Console.WriteLine("Database doesn't exist. Creating new empty database and registering it as DNDBT.");
                 CreateDatabase(connectionString);
+                MySQLDeployManager deployManager = new(new DeployOptions());
+                deployManager.Events.EventFired += DeployManagerEventsLogger.LogEvent;
                 using MySqlConnection connection = new(connectionString);
-                new MySQLDeployManager(new DeployOptions()).RegisterAsDNDBT(connection);
+                deployManager.RegisterAsDNDBT(connection);
             }
         }
 

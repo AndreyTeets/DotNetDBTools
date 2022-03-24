@@ -6,8 +6,8 @@ namespace DotNetDBTools.Deploy.SQLite;
 
 internal class SQLiteQueryExecutor : QueryExecutor
 {
-    public SQLiteQueryExecutor(DbConnection connection)
-        : base(connection)
+    public SQLiteQueryExecutor(DbConnection connection, Events events)
+        : base(connection, events)
     {
     }
 

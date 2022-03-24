@@ -3,6 +3,7 @@ using System.Data.Common;
 using System.Data.SqlClient;
 using Dapper;
 using DotNetDBTools.Deploy;
+using DotNetDBTools.EventsLogger;
 using DotNetDBTools.SampleBusinessLogicLib.Agnostic;
 using SqlKata.Compilers;
 
@@ -31,6 +32,7 @@ namespace DotNetDBTools.SampleSelfUpdatingApp.MSSQL
         {
             Console.WriteLine("Publishing DotNetDBTools.SampleDBv2.Agnostic from referenced assembly");
             MSSQLDeployManager deployManager = new(new DeployOptions());
+            deployManager.Events.EventFired += DeployManagerEventsLogger.LogEvent;
             deployManager.PublishDatabase(typeof(SampleDB.Agnostic.Tables.MyTable3).Assembly, connection);
         }
 
@@ -40,8 +42,10 @@ namespace DotNetDBTools.SampleSelfUpdatingApp.MSSQL
             {
                 Console.WriteLine("Database doesn't exist. Creating new empty database and registering it as DNDBT.");
                 CreateDatabase(connectionString);
+                MSSQLDeployManager deployManager = new(new DeployOptions());
+                deployManager.Events.EventFired += DeployManagerEventsLogger.LogEvent;
                 using SqlConnection connection = new(connectionString);
-                new MSSQLDeployManager(new DeployOptions()).RegisterAsDNDBT(connection);
+                deployManager.RegisterAsDNDBT(connection);
             }
         }
 

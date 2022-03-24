@@ -1,4 +1,5 @@
 ﻿using DotNetDBTools.Deploy;
+using DotNetDBTools.EventsLogger;
 
 namespace DotNetDBTools.DeployTool.Commands;
 
@@ -11,6 +12,7 @@ internal class ScriptNewCommand : BaseCommand
         bool noDNDBTInfo)
     {
         IDeployManager deployManager = CreateDeployManager(dbms);
+        deployManager.Events.EventFired += DeployManagerEventsLogger.LogEvent;
         if (noDNDBTInfo)
             deployManager.GenerateNoDNDBTInfoPublishScript(dbAssemblyPath, outputPath);
         else

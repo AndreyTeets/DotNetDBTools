@@ -5,8 +5,8 @@ namespace DotNetDBTools.Deploy.PostgreSQL;
 
 internal class PostgreSQLQueryExecutor : QueryExecutor
 {
-    public PostgreSQLQueryExecutor(DbConnection connection)
-        : base(connection)
+    public PostgreSQLQueryExecutor(DbConnection connection, Events events)
+        : base(connection, events)
     {
     }
 }

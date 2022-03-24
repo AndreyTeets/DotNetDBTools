@@ -6,8 +6,8 @@ namespace DotNetDBTools.Deploy.MSSQL;
 
 internal class MSSQLQueryExecutor : QueryExecutor
 {
-    public MSSQLQueryExecutor(DbConnection connection)
-        : base(connection)
+    public MSSQLQueryExecutor(DbConnection connection, Events events)
+        : base(connection, events)
     {
     }
 

@@ -5,8 +5,8 @@ namespace DotNetDBTools.Deploy.MySQL;
 
 internal class MySQLQueryExecutor : QueryExecutor
 {
-    public MySQLQueryExecutor(DbConnection connection)
-        : base(connection)
+    public MySQLQueryExecutor(DbConnection connection, Events events)
+        : base(connection, events)
     {
     }
 }

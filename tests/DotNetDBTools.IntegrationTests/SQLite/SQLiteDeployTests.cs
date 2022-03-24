@@ -59,6 +59,6 @@ public class SQLiteDeployTests : BaseDeployTests<
 
     private protected override IDbModelFromDBMSProvider CreateDbModelFromDBMSProvider(DbConnection connection)
     {
-        return new SQLiteDbModelFromDBMSProvider(new SQLiteQueryExecutor(connection));
+        return new SQLiteDbModelFromDBMSProvider(new SQLiteQueryExecutor(connection, new Events()));
     }
 }
