@@ -64,8 +64,8 @@ public class MSSQLDeployTests : BaseDeployTests<
         return MSSQLDatabaseHelper.CreateConnectionString(ConnectionStringWithoutDb, databaseName);
     }
 
-    private protected override IDbModelFromDbSysInfoBuilder CreateDbModelFromDbSysInfoBuilder(DbConnection connection)
+    private protected override IDbModelFromDBMSProvider CreateDbModelFromDBMSProvider(DbConnection connection)
     {
-        return new MSSQLDbModelFromDbSysInfoBuilder(new MSSQLQueryExecutor(connection));
+        return new MSSQLDbModelFromDBMSProvider(new MSSQLQueryExecutor(connection));
     }
 }

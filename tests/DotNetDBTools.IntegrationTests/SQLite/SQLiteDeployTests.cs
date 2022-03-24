@@ -57,8 +57,8 @@ public class SQLiteDeployTests : BaseDeployTests<
         return SQLiteDatabaseHelper.CreateConnectionString(DbFilesFolder, databaseName);
     }
 
-    private protected override IDbModelFromDbSysInfoBuilder CreateDbModelFromDbSysInfoBuilder(DbConnection connection)
+    private protected override IDbModelFromDBMSProvider CreateDbModelFromDBMSProvider(DbConnection connection)
     {
-        return new SQLiteDbModelFromDbSysInfoBuilder(new SQLiteQueryExecutor(connection));
+        return new SQLiteDbModelFromDBMSProvider(new SQLiteQueryExecutor(connection));
     }
 }

@@ -29,8 +29,8 @@ internal class PostgreSQLFactory : IFactory
         return new PostgreSQLDbEditor(queryExecutor);
     }
 
-    public IDbModelFromDbSysInfoBuilder CreateDbModelFromDbSysInfoBuilder(IQueryExecutor queryExecutor)
+    public IDbModelFromDBMSProvider CreateDbModelFromDBMSProvider(IQueryExecutor queryExecutor)
     {
-        return new PostgreSQLDbModelFromDbSysInfoBuilder(queryExecutor);
+        return new PostgreSQLDbModelFromDBMSProvider(queryExecutor);
     }
 }

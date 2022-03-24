@@ -11,15 +11,9 @@ using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.DefinitionParsing;
 
-public static class DbDefinitionParser
+public class GenericDbModelFromDefinitionProvider : IDbModelFromDefinitionProvider
 {
-    public static Database CreateDatabaseModel(string dbAssemblyPath)
-    {
-        Assembly dbAssembly = AssemblyLoader.LoadDbAssemblyFromDll(dbAssemblyPath);
-        return CreateDatabaseModel(dbAssembly);
-    }
-
-    public static Database CreateDatabaseModel(Assembly dbAssembly)
+    public Database CreateDbModel(Assembly dbAssembly)
     {
         (DefinitionKind defKind, DatabaseKind dbKind) = DbAssemblyInfoHelper.GetDbKind(dbAssembly);
         return defKind switch
@@ -28,20 +22,20 @@ public static class DbDefinitionParser
             DefinitionKind.MSSQL => throw new NotImplementedException(),
             DefinitionKind.MySQL => throw new NotImplementedException(),
             DefinitionKind.PostgreSQL => throw new NotImplementedException(),
-            DefinitionKind.SQLite => new SQLiteDbModelFromSqlDefinitionBuilder().BuildDatabaseModel(dbAssembly),
+            DefinitionKind.SQLite => new SQLiteDbModelFromSqlDefinitionProvider().CreateDbModel(dbAssembly),
             _ => throw new InvalidOperationException($"Invalid defKind: {defKind}"),
         };
     }
 
-    private static Database BuildDatabaseModelFromCSharpDefinition(Assembly dbAssembly, DatabaseKind dbKind)
+    private Database BuildDatabaseModelFromCSharpDefinition(Assembly dbAssembly, DatabaseKind dbKind)
     {
         return dbKind switch
         {
-            DatabaseKind.Agnostic => new AgnosticDatabaseModelBuilder().BuildDatabaseModel(dbAssembly),
-            DatabaseKind.MSSQL => new MSSQLDbModelFromCSharpDefinitionBuilder().BuildDatabaseModel(dbAssembly),
-            DatabaseKind.MySQL => new MySQLDbModelFromCSharpDefinitionBuilder().BuildDatabaseModel(dbAssembly),
-            DatabaseKind.PostgreSQL => new PostgreSQLDbModelFromCSharpDefinitionBuilder().BuildDatabaseModel(dbAssembly),
-            DatabaseKind.SQLite => new SQLiteDbModelFromCSharpDefinitionBuilder().BuildDatabaseModel(dbAssembly),
+            DatabaseKind.Agnostic => new AgnosticDatabaseModelProvider().CreateDbModel(dbAssembly),
+            DatabaseKind.MSSQL => new MSSQLDbModelFromCSharpDefinitionProvider().CreateDbModel(dbAssembly),
+            DatabaseKind.MySQL => new MySQLDbModelFromCSharpDefinitionProvider().CreateDbModel(dbAssembly),
+            DatabaseKind.PostgreSQL => new PostgreSQLDbModelFromCSharpDefinitionProvider().CreateDbModel(dbAssembly),
+            DatabaseKind.SQLite => new SQLiteDbModelFromCSharpDefinitionProvider().CreateDbModel(dbAssembly),
             _ => throw new InvalidOperationException($"Invalid dbKind: {dbKind}"),
         };
     }

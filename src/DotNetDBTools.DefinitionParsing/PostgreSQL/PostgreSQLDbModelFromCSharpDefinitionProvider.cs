@@ -15,13 +15,13 @@ using DotNetDBTools.Models.PostgreSQL.UserDefinedTypes;
 
 namespace DotNetDBTools.DefinitionParsing.PostgreSQL;
 
-internal class PostgreSQLDbModelFromCSharpDefinitionBuilder : DbModelFromCSharpDefinitionBuilder<
+internal class PostgreSQLDbModelFromCSharpDefinitionProvider : DbModelFromCSharpDefinitionProvider<
     PostgreSQLDatabase,
     PostgreSQLTable,
     PostgreSQLView,
     Models.Core.Column>
 {
-    public PostgreSQLDbModelFromCSharpDefinitionBuilder() : base(
+    public PostgreSQLDbModelFromCSharpDefinitionProvider() : base(
         new PostgreSQLDataTypeMapper(),
         new SpecificDbmsDbObjectCodeMapper(),
         new PostgreSQLDefaultValueMapper())

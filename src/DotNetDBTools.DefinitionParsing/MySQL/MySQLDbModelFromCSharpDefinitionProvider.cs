@@ -10,13 +10,13 @@ using DotNetDBTools.Models.MySQL;
 
 namespace DotNetDBTools.DefinitionParsing.MySQL;
 
-internal class MySQLDbModelFromCSharpDefinitionBuilder : DbModelFromCSharpDefinitionBuilder<
+internal class MySQLDbModelFromCSharpDefinitionProvider : DbModelFromCSharpDefinitionProvider<
     MySQLDatabase,
     MySQLTable,
     MySQLView,
     Models.Core.Column>
 {
-    public MySQLDbModelFromCSharpDefinitionBuilder() : base(
+    public MySQLDbModelFromCSharpDefinitionProvider() : base(
         new MySQLDataTypeMapper(),
         new SpecificDbmsDbObjectCodeMapper(),
         new MySQLDefaultValueMapper())

@@ -29,8 +29,8 @@ internal class MySQLFactory : IFactory
         return new MySQLDbEditor(queryExecutor);
     }
 
-    public IDbModelFromDbSysInfoBuilder CreateDbModelFromDbSysInfoBuilder(IQueryExecutor queryExecutor)
+    public IDbModelFromDBMSProvider CreateDbModelFromDBMSProvider(IQueryExecutor queryExecutor)
     {
-        return new MySQLDbModelFromDbSysInfoBuilder(queryExecutor);
+        return new MySQLDbModelFromDBMSProvider(queryExecutor);
     }
 }

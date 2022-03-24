@@ -12,25 +12,25 @@ using DotNetDBTools.Models.SQLite;
 
 namespace DotNetDBTools.DefinitionParsing.SQLite;
 
-internal class SQLiteDbModelFromSqlDefinitionBuilder
+internal class SQLiteDbModelFromSqlDefinitionProvider : IDbModelFromDefinitionProvider
 {
     private readonly SQLiteDataTypeMapper _dataTypeMapper = new();
     private readonly SQLiteDefaultValueMapper _defaultValueMapper = new();
 
-    public Database BuildDatabaseModel(Assembly dbAssembly)
+    public Database CreateDbModel(Assembly dbAssembly)
     {
         SQLiteDatabase database = new();
         database.Name = DbAssemblyInfoHelper.GetDbName(dbAssembly);
         database.Version = DbAssemblyInfoHelper.GetDbVersion(dbAssembly);
 
         List<ObjectInfo> dbObjects = ParseDbObjectsFromEmbeddedSqlFiles(dbAssembly);
-        database.Tables = BuildTableModels(dbObjects.Where(x => x is TableInfo).Select(x => (TableInfo)x));
-        database.Views = BuildViewModels(dbObjects.Where(x => x is ViewInfo).Select(x => (ViewInfo)x));
-        database.Scripts = BuildScriptModels(dbObjects.Where(x => x is ScriptInfo).Select(x => (ScriptInfo)x));
+        database.Tables = BuildTableModels(dbObjects.OfType<TableInfo>());
+        database.Views = BuildViewModels(dbObjects.OfType<ViewInfo>());
+        database.Scripts = BuildScriptModels(dbObjects.OfType<ScriptInfo>());
 
         Dictionary<string, Table> tableNameToTableMap = database.Tables.ToDictionary(x => x.Name, x => x);
-        BuildTablesIndexes(tableNameToTableMap, dbObjects.Where(x => x is IndexInfo).Select(x => (IndexInfo)x));
-        BuildTablesTriggers(tableNameToTableMap, dbObjects.Where(x => x is TriggerInfo).Select(x => (TriggerInfo)x));
+        BuildTablesIndexes(tableNameToTableMap, dbObjects.OfType<IndexInfo>());
+        BuildTablesTriggers(tableNameToTableMap, dbObjects.OfType<TriggerInfo>());
 
         return database;
     }

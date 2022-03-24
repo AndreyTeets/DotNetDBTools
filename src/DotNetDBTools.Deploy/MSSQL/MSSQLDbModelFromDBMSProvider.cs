@@ -9,7 +9,7 @@ using static DotNetDBTools.Deploy.MSSQL.Queries.DBMSSysInfo.MSSQLGetTypesFromDBM
 
 namespace DotNetDBTools.Deploy.MSSQL;
 
-internal class MSSQLDbModelFromDbSysInfoBuilder : DbModelFromDbSysInfoBuilder<
+internal class MSSQLDbModelFromDBMSProvider : DbModelFromDBMSProvider<
     MSSQLDatabase,
     MSSQLTable,
     MSSQLView,
@@ -25,7 +25,7 @@ internal class MSSQLDbModelFromDbSysInfoBuilder : DbModelFromDbSysInfoBuilder<
     MSSQLGetDNDBTDbObjectRecordsQuery,
     MSSQLGetDNDBTScriptExecutionRecordsQuery>
 {
-    public MSSQLDbModelFromDbSysInfoBuilder(IQueryExecutor queryExecutor)
+    public MSSQLDbModelFromDBMSProvider(IQueryExecutor queryExecutor)
         : base(queryExecutor) { }
 
     protected override void ReplaceAdditionalDbModelObjectsIDsAndCodeWithDNDBTSysInfo(Database database, Dictionary<string, DNDBTInfo> dbObjectIDsMap)

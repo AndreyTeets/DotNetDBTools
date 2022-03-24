@@ -29,8 +29,8 @@ internal class SQLiteFactory : IFactory
         return new SQLiteDbEditor(queryExecutor);
     }
 
-    public IDbModelFromDbSysInfoBuilder CreateDbModelFromDbSysInfoBuilder(IQueryExecutor queryExecutor)
+    public IDbModelFromDBMSProvider CreateDbModelFromDBMSProvider(IQueryExecutor queryExecutor)
     {
-        return new SQLiteDbModelFromDbSysInfoBuilder(queryExecutor);
+        return new SQLiteDbModelFromDBMSProvider(queryExecutor);
     }
 }

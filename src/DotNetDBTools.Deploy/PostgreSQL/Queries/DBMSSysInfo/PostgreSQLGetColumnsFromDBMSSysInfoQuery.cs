@@ -53,21 +53,21 @@ WHERE c.relkind = 'r'
 
     public class PostgreSQLRecordMapper : RecordMapper
     {
-        public override Column MapToColumnModel(ColumnRecord builderColumnRecord)
+        public override Column MapToColumnModel(ColumnRecord columnRecord)
         {
-            PostgreSQLColumnRecord columnRecord = (PostgreSQLColumnRecord)builderColumnRecord;
+            PostgreSQLColumnRecord cr = (PostgreSQLColumnRecord)columnRecord;
             DataType dataType = PostgreSQLQueriesHelper.CreateDataTypeModel(
-                columnRecord.DataType,
-                columnRecord.Length,
-                columnRecord.IsBaseDataType);
+                cr.DataType,
+                cr.Length,
+                cr.IsBaseDataType);
             return new Column()
             {
                 ID = Guid.NewGuid(),
-                Name = columnRecord.ColumnName,
+                Name = cr.ColumnName,
                 DataType = dataType,
-                Nullable = columnRecord.Nullable,
-                Identity = columnRecord.Identity,
-                Default = PostgreSQLQueriesHelper.ParseDefault(dataType, columnRecord.Default),
+                Nullable = cr.Nullable,
+                Identity = cr.Identity,
+                Default = PostgreSQLQueriesHelper.ParseDefault(dataType, cr.Default),
             };
         }
     }

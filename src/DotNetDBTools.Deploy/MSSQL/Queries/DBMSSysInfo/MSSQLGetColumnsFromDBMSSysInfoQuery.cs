@@ -53,19 +53,19 @@ WHERE t.name NOT IN ({DNDBTSysTables.AllTablesForInClause});";
 
     public class MSSQLRecordMapper : RecordMapper
     {
-        public override Column MapToColumnModel(ColumnRecord builderColumnRecord)
+        public override Column MapToColumnModel(ColumnRecord columnRecord)
         {
-            MSSQLColumnRecord columnRecord = (MSSQLColumnRecord)builderColumnRecord;
-            DataType dataType = ParseDataType(columnRecord);
+            MSSQLColumnRecord cr = (MSSQLColumnRecord)columnRecord;
+            DataType dataType = ParseDataType(cr);
             return new MSSQLColumn()
             {
                 ID = Guid.NewGuid(),
-                Name = columnRecord.ColumnName,
+                Name = cr.ColumnName,
                 DataType = dataType,
-                Nullable = columnRecord.Nullable,
-                Identity = columnRecord.Identity,
-                Default = ParseDefault(dataType, columnRecord),
-                DefaultConstraintName = columnRecord.DefaultConstraintName,
+                Nullable = cr.Nullable,
+                Identity = cr.Identity,
+                Default = ParseDefault(dataType, cr),
+                DefaultConstraintName = cr.DefaultConstraintName,
             };
         }
 

@@ -12,7 +12,7 @@ using static DotNetDBTools.Deploy.SQLite.Queries.DBMSSysInfo.SQLiteGetTablesDefi
 
 namespace DotNetDBTools.Deploy.SQLite;
 
-internal class SQLiteDbModelFromDbSysInfoBuilder : DbModelFromDbSysInfoBuilder<
+internal class SQLiteDbModelFromDBMSProvider : DbModelFromDBMSProvider<
     SQLiteDatabase,
     SQLiteTable,
     SQLiteView,
@@ -28,7 +28,7 @@ internal class SQLiteDbModelFromDbSysInfoBuilder : DbModelFromDbSysInfoBuilder<
     SQLiteGetDNDBTDbObjectRecordsQuery,
     SQLiteGetDNDBTScriptExecutionRecordsQuery>
 {
-    public SQLiteDbModelFromDbSysInfoBuilder(IQueryExecutor queryExecutor)
+    public SQLiteDbModelFromDBMSProvider(IQueryExecutor queryExecutor)
         : base(queryExecutor) { }
 
     protected override void BuildAdditionalTablesAttributes(Dictionary<string, Table> tables)

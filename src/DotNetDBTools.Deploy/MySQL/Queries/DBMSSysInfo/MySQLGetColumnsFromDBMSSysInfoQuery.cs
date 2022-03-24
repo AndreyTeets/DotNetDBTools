@@ -48,18 +48,18 @@ WHERE t.TABLE_SCHEMA = (select DATABASE())
 
     public class MySQLRecordMapper : RecordMapper
     {
-        public override Column MapToColumnModel(ColumnRecord builderColumnRecord)
+        public override Column MapToColumnModel(ColumnRecord columnRecord)
         {
-            MySQLColumnRecord columnRecord = (MySQLColumnRecord)builderColumnRecord;
-            DataType dataType = ParseDataType(columnRecord);
+            MySQLColumnRecord cr = (MySQLColumnRecord)columnRecord;
+            DataType dataType = ParseDataType(cr);
             return new Column()
             {
                 ID = Guid.NewGuid(),
-                Name = columnRecord.ColumnName,
+                Name = cr.ColumnName,
                 DataType = dataType,
-                Nullable = columnRecord.Nullable,
-                Identity = columnRecord.Identity,
-                Default = ParseDefault(dataType, columnRecord),
+                Nullable = cr.Nullable,
+                Identity = cr.Identity,
+                Default = ParseDefault(dataType, cr),
             };
         }
 

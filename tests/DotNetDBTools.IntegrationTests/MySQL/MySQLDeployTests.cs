@@ -67,9 +67,9 @@ public class MySQLDeployTests : BaseDeployTests<
         return MySQLDatabaseHelper.CreateConnectionString(ConnectionStringWithoutDb, databaseName);
     }
 
-    private protected override IDbModelFromDbSysInfoBuilder CreateDbModelFromDbSysInfoBuilder(DbConnection connection)
+    private protected override IDbModelFromDBMSProvider CreateDbModelFromDBMSProvider(DbConnection connection)
     {
-        return new MySQLDbModelFromDbSysInfoBuilder(new MySQLQueryExecutor(connection));
+        return new MySQLDbModelFromDBMSProvider(new MySQLQueryExecutor(connection));
     }
 
     private static string MangleDbNameIfTooLong(string databaseName)

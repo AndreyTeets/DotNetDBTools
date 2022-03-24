@@ -42,18 +42,18 @@ WHERE sm.type = 'table'
 
     public class SQLiteRecordMapper : RecordMapper
     {
-        public override Column MapToColumnModel(ColumnRecord builderColumnRecord)
+        public override Column MapToColumnModel(ColumnRecord columnRecord)
         {
-            SQLiteColumnRecord columnRecord = (SQLiteColumnRecord)builderColumnRecord;
-            DataType dataType = ParseDataType(columnRecord);
+            SQLiteColumnRecord cr = (SQLiteColumnRecord)columnRecord;
+            DataType dataType = ParseDataType(cr);
             return new Column()
             {
                 ID = Guid.NewGuid(),
-                Name = columnRecord.ColumnName,
-                DataType = ParseDataType(columnRecord),
-                Nullable = columnRecord.Nullable,
-                Identity = columnRecord.IsIdentityCandidate,
-                Default = ParseDefault(dataType, columnRecord.Default),
+                Name = cr.ColumnName,
+                DataType = ParseDataType(cr),
+                Nullable = cr.Nullable,
+                Identity = cr.IsIdentityCandidate,
+                Default = ParseDefault(dataType, cr.Default),
             };
         }
 

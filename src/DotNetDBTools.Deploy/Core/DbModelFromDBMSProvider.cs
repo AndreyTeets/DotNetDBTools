@@ -18,7 +18,7 @@ using static DotNetDBTools.Deploy.Core.Queries.DNDBTSysInfo.GetDNDBTScriptExecut
 
 namespace DotNetDBTools.Deploy.Core;
 
-internal abstract class DbModelFromDbSysInfoBuilder<
+internal abstract class DbModelFromDBMSProvider<
     TDatabase,
     TTable,
     TView,
@@ -33,7 +33,7 @@ internal abstract class DbModelFromDbSysInfoBuilder<
     TGetDbAttributesRecordFromDNDBTSysInfoQuery,
     TGetDbObjectRecordsFromDNDBTSysInfoQuery,
     TGetScriptExecutionRecordsFromDNDBTSysInfoQuery>
-    : IDbModelFromDbSysInfoBuilder
+    : IDbModelFromDBMSProvider
     where TDatabase : Database, new()
     where TTable : Table, new()
     where TView : View, new()
@@ -51,21 +51,21 @@ internal abstract class DbModelFromDbSysInfoBuilder<
 {
     protected readonly IQueryExecutor QueryExecutor;
 
-    protected DbModelFromDbSysInfoBuilder(IQueryExecutor queryExecutor)
+    protected DbModelFromDBMSProvider(IQueryExecutor queryExecutor)
     {
         QueryExecutor = queryExecutor;
     }
 
-    public Database GetDatabaseModelFromDNDBTSysInfo()
+    public Database CreateDbModelUsingDNDBTSysInfo()
     {
-        Database database = GenerateDatabaseModelFromDBMSSysInfo();
+        Database database = CreateDbModelUsingDBMSSysInfo();
         ReplaceDbModelObjectsIDsAndCodeWithDNDBTSysInfo(database);
         PopulateScriptsFromDNDBTSysInfo(database);
         PopulateDbAttributesFromDNDBTSysInfo(database);
         return database;
     }
 
-    public Database GenerateDatabaseModelFromDBMSSysInfo()
+    public Database CreateDbModelUsingDBMSSysInfo()
     {
         TDatabase database = new();
         database.Tables = BuildTables();

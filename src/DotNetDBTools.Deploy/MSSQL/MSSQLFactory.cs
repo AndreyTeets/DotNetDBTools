@@ -29,8 +29,8 @@ internal class MSSQLFactory : IFactory
         return new MSSQLDbEditor(queryExecutor);
     }
 
-    public IDbModelFromDbSysInfoBuilder CreateDbModelFromDbSysInfoBuilder(IQueryExecutor queryExecutor)
+    public IDbModelFromDBMSProvider CreateDbModelFromDBMSProvider(IQueryExecutor queryExecutor)
     {
-        return new MSSQLDbModelFromDbSysInfoBuilder(queryExecutor);
+        return new MSSQLDbModelFromDBMSProvider(queryExecutor);
     }
 }

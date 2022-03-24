@@ -62,8 +62,8 @@ public class PostgreSQLDeployTests : BaseDeployTests<
         return PostgreSQLDatabaseHelper.CreateConnectionString(ConnectionStringWithoutDb, databaseName);
     }
 
-    private protected override IDbModelFromDbSysInfoBuilder CreateDbModelFromDbSysInfoBuilder(DbConnection connection)
+    private protected override IDbModelFromDBMSProvider CreateDbModelFromDBMSProvider(DbConnection connection)
     {
-        return new PostgreSQLDbModelFromDbSysInfoBuilder(new PostgreSQLQueryExecutor(connection));
+        return new PostgreSQLDbModelFromDBMSProvider(new PostgreSQLQueryExecutor(connection));
     }
 }

@@ -5,7 +5,7 @@ using DotNetDBTools.Models.MySQL;
 
 namespace DotNetDBTools.Deploy.MySQL;
 
-internal class MySQLDbModelFromDbSysInfoBuilder : DbModelFromDbSysInfoBuilder<
+internal class MySQLDbModelFromDBMSProvider : DbModelFromDBMSProvider<
     MySQLDatabase,
     MySQLTable,
     MySQLView,
@@ -21,6 +21,6 @@ internal class MySQLDbModelFromDbSysInfoBuilder : DbModelFromDbSysInfoBuilder<
     MySQLGetDNDBTDbObjectRecordsQuery,
     MySQLGetDNDBTScriptExecutionRecordsQuery>
 {
-    public MySQLDbModelFromDbSysInfoBuilder(IQueryExecutor queryExecutor)
+    public MySQLDbModelFromDBMSProvider(IQueryExecutor queryExecutor)
         : base(queryExecutor) { }
 }

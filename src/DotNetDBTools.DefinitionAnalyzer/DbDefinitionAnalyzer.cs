@@ -43,7 +43,7 @@ internal class DbDefinitionAnalyzer : DiagnosticAnalyzer
                 context.Options.AdditionalFiles);
 
             Assembly dbAssembly = CompilationHelper.CompileInMemoryAnLoad(context.Compilation, resources);
-            Database database = DbDefinitionParser.CreateDatabaseModel(dbAssembly);
+            Database database = new GenericDbModelFromDefinitionProvider().CreateDbModel(dbAssembly);
             if (!AnalysisHelper.DbIsValid(database, out DbError dbError))
             {
                 Location location = InvalidDbObjectsFinder.GetInvalidDbObjectLocation(context.Compilation, dbError);

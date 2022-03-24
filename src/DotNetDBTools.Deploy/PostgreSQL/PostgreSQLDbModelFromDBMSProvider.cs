@@ -17,7 +17,7 @@ using static DotNetDBTools.Deploy.PostgreSQL.Queries.DBMSSysInfo.PostgreSQLGetRa
 
 namespace DotNetDBTools.Deploy.PostgreSQL;
 
-internal class PostgreSQLDbModelFromDbSysInfoBuilder : DbModelFromDbSysInfoBuilder<
+internal class PostgreSQLDbModelFromDBMSProvider : DbModelFromDBMSProvider<
     PostgreSQLDatabase,
     PostgreSQLTable,
     PostgreSQLView,
@@ -33,7 +33,7 @@ internal class PostgreSQLDbModelFromDbSysInfoBuilder : DbModelFromDbSysInfoBuild
     PostgreSQLGetDNDBTDbObjectRecordsQuery,
     PostgreSQLGetDNDBTScriptExecutionRecordsQuery>
 {
-    public PostgreSQLDbModelFromDbSysInfoBuilder(IQueryExecutor queryExecutor)
+    public PostgreSQLDbModelFromDBMSProvider(IQueryExecutor queryExecutor)
         : base(queryExecutor) { }
 
     protected override void ReplaceAdditionalDbModelObjectsIDsAndCodeWithDNDBTSysInfo(Database database, Dictionary<string, DNDBTInfo> dbObjectIDsMap)

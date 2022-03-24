@@ -14,8 +14,8 @@ public class SQLiteBuildDbModelTests
     {
         Assembly dbAssemblyCSharp = TestDbAssembliesHelper.GetSampleDbAssembly("DotNetDBTools.SampleDBv2.SQLite");
         Assembly dbAssemblySql = TestDbAssembliesHelper.GetSampleDbAssembly("DotNetDBTools.SampleDBv2SqlDef.SQLite");
-        SQLiteDatabase databaseCSharp = (SQLiteDatabase)DbDefinitionParser.CreateDatabaseModel(dbAssemblyCSharp);
-        SQLiteDatabase databaseSql = (SQLiteDatabase)DbDefinitionParser.CreateDatabaseModel(dbAssemblySql);
+        SQLiteDatabase databaseCSharp = (SQLiteDatabase)new GenericDbModelFromDefinitionProvider().CreateDbModel(dbAssemblyCSharp);
+        SQLiteDatabase databaseSql = (SQLiteDatabase)new GenericDbModelFromDefinitionProvider().CreateDbModel(dbAssemblySql);
         databaseSql.Should().BeEquivalentTo(databaseCSharp, options =>
             options.WithStrictOrdering().Excluding(database => database.Name));
     }

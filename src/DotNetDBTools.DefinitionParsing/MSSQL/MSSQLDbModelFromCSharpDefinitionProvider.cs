@@ -9,13 +9,13 @@ using DotNetDBTools.Models.MSSQL;
 
 namespace DotNetDBTools.DefinitionParsing.MSSQL;
 
-internal class MSSQLDbModelFromCSharpDefinitionBuilder : DbModelFromCSharpDefinitionBuilder<
+internal class MSSQLDbModelFromCSharpDefinitionProvider : DbModelFromCSharpDefinitionProvider<
     MSSQLDatabase,
     MSSQLTable,
     MSSQLView,
     MSSQLColumn>
 {
-    public MSSQLDbModelFromCSharpDefinitionBuilder() : base(
+    public MSSQLDbModelFromCSharpDefinitionProvider() : base(
         new MSSQLDataTypeMapper(),
         new SpecificDbmsDbObjectCodeMapper(),
         new MSSQLDefaultValueMapper())

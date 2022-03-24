@@ -4,13 +4,13 @@ using DotNetDBTools.Models.Agnostic;
 
 namespace DotNetDBTools.DefinitionParsing.Agnostic;
 
-internal class AgnosticDatabaseModelBuilder : DbModelFromCSharpDefinitionBuilder<
+internal class AgnosticDatabaseModelProvider : DbModelFromCSharpDefinitionProvider<
     AgnosticDatabase,
     AgnosticTable,
     AgnosticView,
     Models.Core.Column>
 {
-    public AgnosticDatabaseModelBuilder() : base(
+    public AgnosticDatabaseModelProvider() : base(
         new AgnosticDataTypeMapper(),
         new AgnosticDbObjectCodeMapper(),
         new AgnosticDefaultValueMapper())

@@ -32,9 +32,9 @@ public abstract class DeployManager<TDatabase> : IDeployManager
     public void RegisterAsDNDBT(DbConnection connection)
     {
         IQueryExecutor queryExecutor = _factory.CreateQueryExecutor(connection);
-        IDbModelFromDbSysInfoBuilder dbModelFromDbSysInfoBuilder = _factory.CreateDbModelFromDbSysInfoBuilder(queryExecutor);
+        IDbModelFromDBMSProvider dbModelFromDBMSProvider = _factory.CreateDbModelFromDBMSProvider(queryExecutor);
 
-        Database dbWithDNDBTInfo = dbModelFromDbSysInfoBuilder.GenerateDatabaseModelFromDBMSSysInfo();
+        Database dbWithDNDBTInfo = dbModelFromDBMSProvider.CreateDbModelUsingDBMSSysInfo();
         RegisterAsDNDBTImpl(connection, dbWithDNDBTInfo);
     }
     public void RegisterAsDNDBT(DbConnection connection, string dbWithDNDBTInfoAssemblyPath)
@@ -45,9 +45,9 @@ public abstract class DeployManager<TDatabase> : IDeployManager
     public void RegisterAsDNDBT(DbConnection connection, Assembly dbWithDNDBTInfoAssembly)
     {
         IQueryExecutor queryExecutor = _factory.CreateQueryExecutor(connection);
-        IDbModelFromDbSysInfoBuilder dbModelFromDbSysInfoBuilder = _factory.CreateDbModelFromDbSysInfoBuilder(queryExecutor);
+        IDbModelFromDBMSProvider dbModelFromDBMSProvider = _factory.CreateDbModelFromDBMSProvider(queryExecutor);
 
-        Database actualDb = dbModelFromDbSysInfoBuilder.GenerateDatabaseModelFromDBMSSysInfo();
+        Database actualDb = dbModelFromDBMSProvider.CreateDbModelUsingDBMSSysInfo();
         Database dbWithDNDBTInfo = CreateDatabaseModelFromDbAssembly(dbWithDNDBTInfoAssembly);
 
         if (!AnalysisHelper.DatabasesAreEquivalentExcludingDNDBTInfo(actualDb, dbWithDNDBTInfo, out string diffLog))
@@ -142,13 +142,13 @@ public abstract class DeployManager<TDatabase> : IDeployManager
     {
         IQueryExecutor queryExecutor = _factory.CreateQueryExecutor(connection);
         IDbEditor dbEditor = _factory.CreateDbEditor(queryExecutor);
-        IDbModelFromDbSysInfoBuilder dbModelFromDbSysInfoBuilder = _factory.CreateDbModelFromDbSysInfoBuilder(queryExecutor);
+        IDbModelFromDBMSProvider dbModelFromDBMSProvider = _factory.CreateDbModelFromDBMSProvider(queryExecutor);
 
         Database database;
         if (dbEditor.DNDBTSysTablesExist())
-            database = dbModelFromDbSysInfoBuilder.GetDatabaseModelFromDNDBTSysInfo();
+            database = dbModelFromDBMSProvider.CreateDbModelUsingDNDBTSysInfo();
         else
-            database = dbModelFromDbSysInfoBuilder.GenerateDatabaseModelFromDBMSSysInfo();
+            database = dbModelFromDBMSProvider.CreateDbModelUsingDBMSSysInfo();
         DbDefinitionGenerator.GenerateDefinition(database, outputDirectory);
     }
 
@@ -182,7 +182,7 @@ public abstract class DeployManager<TDatabase> : IDeployManager
 
     private Database CreateDatabaseModelFromDbAssembly(Assembly dbAssembly)
     {
-        Database database = DbDefinitionParser.CreateDatabaseModel(dbAssembly);
+        Database database = new GenericDbModelFromDefinitionProvider().CreateDbModel(dbAssembly);
         if (database.Kind == DatabaseKind.Agnostic)
             database = _dbModelConverter.FromAgnostic(database);
 
@@ -195,10 +195,10 @@ public abstract class DeployManager<TDatabase> : IDeployManager
     {
         IQueryExecutor queryExecutor = _factory.CreateQueryExecutor(connection);
         IDbEditor dbEditor = _factory.CreateDbEditor(queryExecutor);
-        IDbModelFromDbSysInfoBuilder dbModelFromDbSysInfoBuilder = _factory.CreateDbModelFromDbSysInfoBuilder(queryExecutor);
+        IDbModelFromDBMSProvider dbModelFromDBMSProvider = _factory.CreateDbModelFromDBMSProvider(queryExecutor);
 
         if (dbEditor.DNDBTSysTablesExist())
-            return dbModelFromDbSysInfoBuilder.GetDatabaseModelFromDNDBTSysInfo();
+            return dbModelFromDBMSProvider.CreateDbModelUsingDNDBTSysInfo();
         else
             throw new InvalidOperationException("Database is not registered");
     }

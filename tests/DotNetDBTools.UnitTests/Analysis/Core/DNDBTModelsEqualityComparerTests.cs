@@ -16,6 +16,7 @@ namespace DotNetDBTools.UnitTests.Analysis.Core;
 
 public class DNDBTModelsEqualityComparerTests
 {
+    private readonly IDbModelFromDefinitionProvider _dbModelFromDefinitionProvider = new GenericDbModelFromDefinitionProvider();
     private readonly DNDBTModelsEqualityComparer _comparer = new();
     private readonly AgnosticTable _tableModel1 = CreateTemplateAgnosticTableModel();
     private AgnosticTable _tableModel2;
@@ -24,8 +25,8 @@ public class DNDBTModelsEqualityComparerTests
     public void DNDBTModelsEqualityComparer_Equals_ReturnsTrue_ForDatabase_WhenModelsAreEqual()
     {
         Assembly dbAssemblyV2 = TestDbAssembliesHelper.GetSampleDbAssembly("DotNetDBTools.SampleDBv2.Agnostic");
-        Database database1 = DbDefinitionParser.CreateDatabaseModel(dbAssemblyV2);
-        Database database2 = DbDefinitionParser.CreateDatabaseModel(dbAssemblyV2);
+        Database database1 = _dbModelFromDefinitionProvider.CreateDbModel(dbAssemblyV2);
+        Database database2 = _dbModelFromDefinitionProvider.CreateDbModel(dbAssemblyV2);
         _comparer.Equals(database1, database2).Should().BeTrue();
     }
 
@@ -34,15 +35,15 @@ public class DNDBTModelsEqualityComparerTests
     {
         Assembly dbAssembly = TestDbAssembliesHelper.GetSampleDbAssembly("DotNetDBTools.SampleDB.Agnostic");
         Assembly dbAssemblyV2 = TestDbAssembliesHelper.GetSampleDbAssembly("DotNetDBTools.SampleDBv2.Agnostic");
-        Database database1 = DbDefinitionParser.CreateDatabaseModel(dbAssembly);
-        Database database2 = DbDefinitionParser.CreateDatabaseModel(dbAssemblyV2);
+        Database database1 = _dbModelFromDefinitionProvider.CreateDbModel(dbAssembly);
+        Database database2 = _dbModelFromDefinitionProvider.CreateDbModel(dbAssemblyV2);
         _comparer.Equals(database1, database2).Should().BeFalse();
 
-        Database database3 = DbDefinitionParser.CreateDatabaseModel(dbAssembly);
+        Database database3 = _dbModelFromDefinitionProvider.CreateDbModel(dbAssembly);
         database3.Version++;
         _comparer.Equals(database1, database3).Should().BeFalse();
 
-        database3 = DbDefinitionParser.CreateDatabaseModel(dbAssembly);
+        database3 = _dbModelFromDefinitionProvider.CreateDbModel(dbAssembly);
         ((AgnosticCodePiece)database3.Views.Single(x => x.Name == "MyView1").CodePiece)
                 .DbKindToCodeMap[DatabaseKind.PostgreSQL] = "some other view code";
         _comparer.Equals(database1, database3).Should().BeFalse();
@@ -53,8 +54,8 @@ public class DNDBTModelsEqualityComparerTests
     {
         Assembly dbAssemblyV1 = TestDbAssembliesHelper.GetSampleDbAssembly("DotNetDBTools.SampleDB.PostgreSQL");
         Assembly dbAssemblyV2 = TestDbAssembliesHelper.GetSampleDbAssembly("DotNetDBTools.SampleDBv2.PostgreSQL");
-        Database databaseV1 = DbDefinitionParser.CreateDatabaseModel(dbAssemblyV1);
-        Database databaseV2 = DbDefinitionParser.CreateDatabaseModel(dbAssemblyV2);
+        Database databaseV1 = _dbModelFromDefinitionProvider.CreateDbModel(dbAssemblyV1);
+        Database databaseV2 = _dbModelFromDefinitionProvider.CreateDbModel(dbAssemblyV2);
         DatabaseDiff dbDiff1 = AnalysisHelper.CreateDatabaseDiff(databaseV1, databaseV2);
         DatabaseDiff dbDiff2 = AnalysisHelper.CreateDatabaseDiff(databaseV1, databaseV2);
         _comparer.Equals(dbDiff1, dbDiff2).Should().BeTrue();
@@ -65,8 +66,8 @@ public class DNDBTModelsEqualityComparerTests
     {
         Assembly dbAssemblyV1 = TestDbAssembliesHelper.GetSampleDbAssembly("DotNetDBTools.SampleDB.SQLite");
         Assembly dbAssemblyV2 = TestDbAssembliesHelper.GetSampleDbAssembly("DotNetDBTools.SampleDBv2.SQLite");
-        Database databaseV1 = DbDefinitionParser.CreateDatabaseModel(dbAssemblyV1);
-        Database databaseV2 = DbDefinitionParser.CreateDatabaseModel(dbAssemblyV2);
+        Database databaseV1 = _dbModelFromDefinitionProvider.CreateDbModel(dbAssemblyV1);
+        Database databaseV2 = _dbModelFromDefinitionProvider.CreateDbModel(dbAssemblyV2);
         DatabaseDiff dbDiff1 = AnalysisHelper.CreateDatabaseDiff(databaseV1, databaseV2);
         DatabaseDiff dbDiff2 = AnalysisHelper.CreateDatabaseDiff(databaseV2, databaseV1);
         _comparer.Equals(dbDiff1, dbDiff2).Should().BeFalse();

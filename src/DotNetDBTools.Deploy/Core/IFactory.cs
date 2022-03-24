@@ -10,5 +10,5 @@ internal interface IFactory
     public IGenSqlScriptQueryExecutor CreateGenSqlScriptQueryExecutor();
     public IDbModelConverter CreateDbModelConverter();
     public IDbEditor CreateDbEditor(IQueryExecutor queryExecutor);
-    public IDbModelFromDbSysInfoBuilder CreateDbModelFromDbSysInfoBuilder(IQueryExecutor queryExecutor);
+    public IDbModelFromDBMSProvider CreateDbModelFromDBMSProvider(IQueryExecutor queryExecutor);
 }
