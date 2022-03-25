@@ -25,7 +25,7 @@ namespace SampleTestCode
         public Column TestColumn1 = new(""0C322A6A-7D5F-418C-BC5E-DF120D16CF4C"")
         {
             DataType = new IntDataType(),
-            Nullable = false,
+            NotNull = true,
         };
     }
 }

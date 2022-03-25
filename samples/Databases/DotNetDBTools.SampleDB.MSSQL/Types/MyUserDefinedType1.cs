@@ -9,6 +9,6 @@ namespace DotNetDBTools.SampleDB.MSSQL.Types
     {
         public Guid ID => new("0CD1E71C-CC9C-440F-AC0B-81A1D6F7DDAA");
         public IDataType UnderlyingType => new StringDataType() { Length = 100, SqlType = StringSqlType.VARCHAR };
-        public bool Nullable => true;
+        public bool NotNull => false;
     }
 }

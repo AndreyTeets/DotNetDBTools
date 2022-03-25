@@ -81,9 +81,9 @@ public class SQLiteCodeParserTests
                     ID = new Guid("5C36AE77-B7E4-40C3-824F-BD20DC270A14"),
                     Name = "Col1",
                     DataType = "INTEGER",
+                    NotNull = true,
                     DefaultType = DefaultType.Number,
                     DefaultValue = "15",
-                    NotNull = true,
                     Unique = true,
                 },
                 new ColumnInfo()
@@ -99,27 +99,27 @@ public class SQLiteCodeParserTests
                     ID = new Guid("7C36AE77-B7E4-40C3-824F-BD20DC270A14"),
                     Name = "Col3",
                     DataType = "INTEGER",
-                    PrimaryKey = true,
-                    Autoincrement = true,
                     NotNull = true,
+                    Identity = true,
+                    PrimaryKey = true,
                 },
                 new ColumnInfo()
                 {
                     ID = new Guid("8C36AE77-B7E4-40C3-824F-BD20DC270A14"),
                     Name = "Col4",
                     DataType = "TEXT",
+                    NotNull = true,
                     DefaultType = DefaultType.String,
                     DefaultValue = "CONSTRAINT CK_String_Check1 CHECK (Col3 >= 0),",
-                    NotNull = true,
                 },
                 new ColumnInfo()
                 {
                     ID = new Guid("9C36AE77-B7E4-40C3-824F-BD20DC270A14"),
                     Name = "Col5",
                     DataType = "BLOB",
+                    NotNull = true,
                     DefaultType = DefaultType.Function,
                     DefaultValue = "DATETIME('now')",
-                    NotNull = true,
                 },
             },
             Constraints = new List<ConstraintInfo>()

@@ -83,7 +83,7 @@ internal class SQLiteGetModelFromCreateStatementVisitor : SQLiteParserBaseVisito
                 throw new ParseException("Invalid column constraint context");
 
             if (column.PrimaryKey && context.AUTOINCREMENT_() != null)
-                column.Autoincrement = true;
+                column.Identity = true;
 
             static void AddColumnDefault(ColumnInfo column, Column_constraintContext context)
             {

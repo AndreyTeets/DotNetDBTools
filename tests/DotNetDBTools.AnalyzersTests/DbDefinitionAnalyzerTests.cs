@@ -22,7 +22,7 @@ namespace SampleTestCode
     {
         public Guid ID => new(""AF622311-F791-4DC3-995D-D03C75236A1F"");
         public IDataType UnderlyingType => new StringDataType() { Length = 100 };
-        public bool Nullable => true;
+        public bool NotNull => false;
     }
 
     public class TestTable2 : ITable
@@ -32,7 +32,7 @@ namespace SampleTestCode
         public Column TestColumn1 = new(""032611EB-AA7C-4FEA-8B3C-BB8609E140F6"")
         {
             DataType = new IntDataType(),
-            Nullable = false,
+            NotNull = true,
             Default = 145,
             DefaultConstraintName = ""DF_TestTable2_TestColumn1"",
         };
@@ -40,7 +40,7 @@ namespace SampleTestCode
         public Column TestColumn2 = new(""2FD848D5-A689-419F-9214-AFCF9F742564"")
         {
             DataType = new TestUserDefinedType1(),
-            Nullable = false,
+            NotNull = true,
         };
     }
 
@@ -51,7 +51,7 @@ namespace SampleTestCode
         public Column TestColumn1 = new(""0C322A6A-7D5F-418C-BC5E-DF120D16CF4C"")
         {
             DataType = new IntDataType(),
-            Nullable = false,
+            NotNull = true,
         };
 
         public ForeignKey {|#0:FK_TestName1|} = new(""1955F440-4333-4F33-9755-1C618816C9FB"")

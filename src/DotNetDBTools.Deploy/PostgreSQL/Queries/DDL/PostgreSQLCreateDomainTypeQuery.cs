@@ -52,10 +52,10 @@ $@"    CONSTRAINT ""{ck.Name}"" {ck.GetCode()}");
 
     private static string GetNullabilityStatement(PostgreSQLDomainType type)
     {
-        return type.Nullable switch
+        return type.NotNull switch
         {
-            true => "NULL",
-            false => "NOT NULL",
+            false => "NULL",
+            true => "NOT NULL",
         };
     }
 }

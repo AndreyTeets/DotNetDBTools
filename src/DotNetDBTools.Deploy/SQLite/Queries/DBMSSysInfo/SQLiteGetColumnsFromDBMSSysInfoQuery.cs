@@ -15,9 +15,9 @@ $@"SELECT
     sm.name AS {nameof(SQLiteColumnRecord.TableName)},
     ti.name AS {nameof(SQLiteColumnRecord.ColumnName)},
     ti.type AS {nameof(SQLiteColumnRecord.DataType)},
-    CASE WHEN ti.[notnull] = 1 THEN 0 ELSE 1 END AS {nameof(SQLiteColumnRecord.Nullable)},
+    CASE WHEN ti.[notnull] = 1 THEN 1 ELSE 0 END AS [{nameof(SQLiteColumnRecord.NotNull)}],
     CASE WHEN ti.pk = 1 AND lower(ti.type) = 'integer' THEN 1 ELSE 0 END AS {nameof(SQLiteColumnRecord.IsIdentityCandidate)},
-    ti.dflt_value AS ""{nameof(SQLiteColumnRecord.Default)}""
+    ti.dflt_value AS [{nameof(SQLiteColumnRecord.Default)}]
 FROM sqlite_master sm
 INNER JOIN pragma_table_info(sm.name) ti
 WHERE sm.type = 'table'
@@ -51,7 +51,7 @@ WHERE sm.type = 'table'
                 ID = Guid.NewGuid(),
                 Name = cr.ColumnName,
                 DataType = ParseDataType(cr),
-                Nullable = cr.Nullable,
+                NotNull = cr.NotNull,
                 Identity = cr.IsIdentityCandidate,
                 Default = ParseDefault(dataType, cr.Default),
             };

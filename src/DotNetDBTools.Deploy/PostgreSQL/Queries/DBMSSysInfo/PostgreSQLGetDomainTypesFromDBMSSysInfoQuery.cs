@@ -12,7 +12,7 @@ $@"SELECT
     t.typtypmod AS ""{nameof(DomainTypeRecord.UnderlyingTypeLength)}"",
     bt.typtype = 'b' AS ""{nameof(DomainTypeRecord.UnderlyingTypeIsBaseDataType)}"",
     t.typdefault AS ""{nameof(DomainTypeRecord.Default)}"",
-    NOT t.typnotnull AS ""{nameof(DomainTypeRecord.Nullable)}"",
+    t.typnotnull AS ""{nameof(DomainTypeRecord.NotNull)}"",
     c.con_name AS ""{nameof(DomainTypeRecord.CheckConstrantName)}"",
     c.con_def AS ""{nameof(DomainTypeRecord.CheckConstrantCode)}""
 FROM pg_catalog.pg_type t
@@ -39,8 +39,8 @@ WHERE t.typtype = 'd'
         public string UnderlyingTypeName { get; set; }
         public string UnderlyingTypeLength { get; set; }
         public bool UnderlyingTypeIsBaseDataType { get; set; }
+        public bool NotNull { get; set; }
         public string Default { get; set; }
-        public bool Nullable { get; set; }
         public string CheckConstrantName { get; set; }
         public string CheckConstrantCode { get; set; }
     }

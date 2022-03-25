@@ -85,7 +85,7 @@ internal class PostgreSQLDbModelFromCSharpDefinitionProvider : DbModelFromCSharp
                 Name = typeName,
                 UnderlyingType = DataTypeMapper.MapToDataTypeModel(type.UnderlyingType),
                 Default = MapDefaultValue(type),
-                Nullable = type.Nullable,
+                NotNull = type.NotNull,
                 CheckConstraints = BuildCheckConstraintModels(type),
             };
             typeModelsList.Add(typeModel);

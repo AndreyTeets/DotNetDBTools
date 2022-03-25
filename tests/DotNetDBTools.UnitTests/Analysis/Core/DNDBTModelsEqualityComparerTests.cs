@@ -210,7 +210,6 @@ Values [DotNetDBTools.Models.Core.PrimaryKey] and [DotNetDBTools.Models.Core.Pri
                         Length = 1000,
                     },
                     Default = "testval1",
-                    Nullable = true,
                 },
                 new Column()
                 {
@@ -220,8 +219,8 @@ Values [DotNetDBTools.Models.Core.PrimaryKey] and [DotNetDBTools.Models.Core.Pri
                     {
                         Name = AgnosticDataTypeNames.Int,
                     },
+                    NotNull = true,
                     Default = 325,
-                    Nullable = true,
                 }
             },
             PrimaryKey = new PrimaryKey()

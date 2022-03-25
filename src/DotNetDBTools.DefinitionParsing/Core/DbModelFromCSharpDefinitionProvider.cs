@@ -123,7 +123,7 @@ internal abstract class DbModelFromCSharpDefinitionProvider<
                     ID = column.ID,
                     Name = x.Name,
                     DataType = dataTypeModel,
-                    Nullable = column.Nullable,
+                    NotNull = column.NotNull,
                     Identity = column.Identity,
                     Default = DefaultValueMapper.MapDefaultValue(column),
                 };

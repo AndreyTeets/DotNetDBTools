@@ -11,6 +11,7 @@ namespace DotNetDBTools.SampleDB.SQLite.Tables
         public Column MyColumn1 = new("DE0425B8-9F99-4D76-9A64-09E52F8B5D5A")
         {
             DataType = new IntDataType(),
+            NotNull = true,
         };
     }
 }

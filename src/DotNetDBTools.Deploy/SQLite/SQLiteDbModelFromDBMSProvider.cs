@@ -83,7 +83,7 @@ internal class SQLiteDbModelFromDBMSProvider : DbModelFromDBMSProvider<
         if (column is not null)
         {
             ColumnInfo columnInfo = tableInfo.Columns.Single(x => x.Name == column.Name);
-            if (columnInfo.Autoincrement == false)
+            if (columnInfo.Identity == false)
                 column.Identity = false;
         }
     }

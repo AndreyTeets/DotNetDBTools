@@ -126,7 +126,7 @@ internal class PostgreSQLDbModelFromDBMSProvider : DbModelFromDBMSProvider<
                     Name = typeRecord.TypeName,
                     UnderlyingType = underlyingType,
                     Default = PostgreSQLQueriesHelper.ParseDefault(underlyingType, typeRecord.Default),
-                    Nullable = typeRecord.Nullable,
+                    NotNull = typeRecord.NotNull,
                     CheckConstraints = new List<CheckConstraint>(),
                 };
                 typesMap.Add(typeRecord.TypeName, type);

@@ -16,19 +16,20 @@ public class MyTable : ITable
     public Column MyKeyColumn = new("A2F2A4DE-1337-4594-AE41-72ED4D05F317")
     {
         DataType = new IntDataType() { Size = IntSize.Int64 },
+        NotNull = true,
         Identity = true,
     };
 
     public Column MyDataColumn = new("FE68EE3D-09D0-40AC-93F9-5E441FBB4F70")
     {
         DataType = new StringDataType() { Length = 40 },
-        Nullable = true,
         Default = "33",
     };
 
     public Column MyDataColumn2 = new("34CB2ADB-3A6B-4BCD-A9F0-21321AB659C1")
     {
         DataType = new DateTimeDataType() { SqlType = DateTimeSqlType.DATETIME },
+        NotNull = true,
         Default = "GETDATE()",
         DefaultIsFunction = true,
     };

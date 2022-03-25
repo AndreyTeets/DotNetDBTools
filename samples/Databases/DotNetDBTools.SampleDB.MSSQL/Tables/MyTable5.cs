@@ -12,6 +12,7 @@ namespace DotNetDBTools.SampleDB.MSSQL.Tables
         public Column MyColumn1 = new("5309D66F-2030-402E-912E-5547BABAA072")
         {
             DataType = new IntDataType(),
+            NotNull = true,
             Default = "ABS(-15)",
             DefaultIsFunction = true,
         };
@@ -19,7 +20,6 @@ namespace DotNetDBTools.SampleDB.MSSQL.Tables
         public Column MyColumn2 = new("15AE6061-426D-4485-85E6-ECD3E0F98882")
         {
             DataType = new MyUserDefinedType1(),
-            Nullable = true,
             Default = "cc",
             DefaultConstraintName = "DF_MyTable5_MyColumn2",
         };
@@ -27,7 +27,6 @@ namespace DotNetDBTools.SampleDB.MSSQL.Tables
         public Column MyColumn3 = new("4DDE852D-EC19-4B61-80F9-DA428D8FF41A")
         {
             DataType = new DateTimeDataType() { SqlType = DateTimeSqlType.DATETIMEOFFSET },
-            Nullable = true,
         };
     }
 }

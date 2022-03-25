@@ -10,8 +10,8 @@ internal class MSSQLGetTypesFromDBMSSysInfoQuery : IQuery
     public string Sql =>
 $@"SELECT
     t.name AS {nameof(UserDefinedTypeRecord.Name)},
-    t.is_nullable AS {nameof(UserDefinedTypeRecord.Nullable)},
     st.name AS {nameof(UserDefinedTypeRecord.UnderlyingDataTypeName)},
+    ~t.is_nullable AS [{nameof(UserDefinedTypeRecord.NotNull)}],
     t.max_length AS {nameof(UserDefinedTypeRecord.UnderlyingDataTypeLength)},
     t.precision AS {nameof(UserDefinedTypeRecord.UnderlyingDataTypePrecision)},
     t.scale AS {nameof(UserDefinedTypeRecord.UnderlyingDataTypeScale)}
@@ -27,7 +27,7 @@ WHERE t.is_user_defined = 1
     public class UserDefinedTypeRecord
     {
         public string Name { get; set; }
-        public bool Nullable { get; set; }
+        public bool NotNull { get; set; }
         public string UnderlyingDataTypeName { get; set; }
         public int UnderlyingDataTypeLength { get; set; }
         public int UnderlyingDataTypePrecision { get; set; }
@@ -42,7 +42,7 @@ WHERE t.is_user_defined = 1
             {
                 ID = Guid.NewGuid(),
                 Name = userDefinedTypeRecord.Name,
-                Nullable = userDefinedTypeRecord.Nullable,
+                NotNull = userDefinedTypeRecord.NotNull,
                 UnderlyingDataType = MSSQLQueriesHelper.CreateDataTypeModel(
                     userDefinedTypeRecord.UnderlyingDataTypeName.ToUpper(),
                     userDefinedTypeRecord.UnderlyingDataTypeLength,

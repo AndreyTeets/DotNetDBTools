@@ -132,8 +132,8 @@ internal class SQLiteDbModelFromSqlDefinitionProvider : IDbModelFromDefinitionPr
                 ID = column.ID.Value,
                 Name = column.Name,
                 DataType = _dataTypeMapper.GetDataTypeModel(column),
-                Nullable = !column.NotNull,
-                Identity = column.Autoincrement,
+                NotNull = column.NotNull,
+                Identity = column.Identity,
                 Default = _defaultValueMapper.GetDefaultValueModel(column),
             };
             columnModels.Add(columnModel);

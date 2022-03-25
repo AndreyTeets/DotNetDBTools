@@ -14,10 +14,10 @@ internal static class PostgreSQLQueriesHelper
 
     public static string GetNullabilityStatement(Column column)
     {
-        return column.Nullable switch
+        return column.NotNull switch
         {
-            true => "NULL",
-            false => "NOT NULL",
+            false => "NULL",
+            true => "NOT NULL",
         };
     }
 

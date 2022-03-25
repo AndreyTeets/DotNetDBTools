@@ -56,9 +56,9 @@ internal class PostgreSQLAlterTableQuery : AlterTableQuery
                 sb.Append(Queries.RenameColumn(tableDiff.NewTable.Name, columnDiff.OldColumn.Name, columnDiff.NewColumn.Name));
 
             sb.Append(Queries.AlterColumnType(tableDiff.NewTable.Name, columnDiff.NewColumn));
-            if (!columnDiff.NewColumn.Nullable && columnDiff.OldColumn.Nullable)
+            if (columnDiff.NewColumn.NotNull && !columnDiff.OldColumn.NotNull)
                 sb.Append(Queries.SetColumnNotNull(tableDiff.NewTable.Name, columnDiff.NewColumn));
-            else if (columnDiff.NewColumn.Nullable && !columnDiff.OldColumn.Nullable)
+            else if (!columnDiff.NewColumn.NotNull && columnDiff.OldColumn.NotNull)
                 sb.Append(Queries.DropColumnNotNull(tableDiff.NewTable.Name, columnDiff.NewColumn));
 
             if (columnDiff.NewColumn.Default is not null)

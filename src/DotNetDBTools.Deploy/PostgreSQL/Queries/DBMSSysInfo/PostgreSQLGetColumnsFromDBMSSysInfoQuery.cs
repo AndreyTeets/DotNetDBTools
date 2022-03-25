@@ -14,7 +14,7 @@ $@"SELECT
     a.attname AS ""{nameof(PostgreSQLColumnRecord.ColumnName)}"",
     t.typname AS ""{nameof(PostgreSQLColumnRecord.DataType)}"",
     t.typtype = 'b' AS ""{nameof(PostgreSQLColumnRecord.IsBaseDataType)}"",
-    NOT a.attnotnull AS ""{nameof(PostgreSQLColumnRecord.Nullable)}"",
+    a.attnotnull AS ""{nameof(PostgreSQLColumnRecord.NotNull)}"",
     pg_catalog.pg_get_serial_sequence('""' || n.nspname || '"".""' || c.relname || '""', a.attname) IS NOT NULL AS ""{nameof(PostgreSQLColumnRecord.Identity)}"",
     pg_catalog.pg_get_expr(d.adbin, d.adrelid) AS ""{nameof(PostgreSQLColumnRecord.Default)}"",
     a.atttypmod AS ""{nameof(PostgreSQLColumnRecord.Length)}""
@@ -65,7 +65,7 @@ WHERE c.relkind = 'r'
                 ID = Guid.NewGuid(),
                 Name = cr.ColumnName,
                 DataType = dataType,
-                Nullable = cr.Nullable,
+                NotNull = cr.NotNull,
                 Identity = cr.Identity,
                 Default = PostgreSQLQueriesHelper.ParseDefault(dataType, cr.Default),
             };

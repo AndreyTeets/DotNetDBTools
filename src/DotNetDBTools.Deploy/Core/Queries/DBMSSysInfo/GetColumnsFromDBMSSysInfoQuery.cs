@@ -15,7 +15,7 @@ internal abstract class GetColumnsFromDBMSSysInfoQuery : IQuery
         public string TableName { get; set; }
         public string ColumnName { get; set; }
         public string DataType { get; set; }
-        public bool Nullable { get; set; }
+        public bool NotNull { get; set; }
         public string Default { get; set; }
     }
 

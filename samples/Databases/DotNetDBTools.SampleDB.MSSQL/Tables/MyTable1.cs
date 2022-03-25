@@ -11,24 +11,28 @@ namespace DotNetDBTools.SampleDB.MSSQL.Tables
         public Column MyColumn1 = new("A2F2A4DE-1337-4594-AE41-72ED4D05F317")
         {
             DataType = new IntDataType(),
+            NotNull = true,
             Default = 15,
         };
 
         public Column MyColumn2 = new("FE68EE3D-09D0-40AC-93F9-5E441FBB4F70")
         {
             DataType = new StringDataType() { Length = 10 },
+            NotNull = true,
             Default = "33",
         };
 
         public Column MyColumn3 = new("6E95DE30-E01A-4FB4-B8B7-8F0C40BB682C")
         {
             DataType = new IntDataType(),
+            NotNull = true,
             Identity = true,
         };
 
         public Column MyColumn4 = new("867AC528-E87E-4C93-B6E3-DD2FCBBB837F")
         {
             DataType = new DecimalDataType(),
+            NotNull = true,
             Default = 7.36m,
         };
 

@@ -11,6 +11,7 @@ namespace DotNetDBTools.SampleDB.MSSQL.Tables
         public Column MyColumn1 = new("DE0425B8-9F99-4D76-9A64-09E52F8B5D5A")
         {
             DataType = new IntDataType() { Size = IntSize.Int64 },
+            NotNull = true,
         };
     }
 }

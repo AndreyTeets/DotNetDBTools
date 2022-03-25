@@ -12,7 +12,7 @@ public abstract class BaseColumn : IDbObject
 
     public Guid ID => _id;
     public IDataType DataType { get; set; }
-    public bool Nullable { get; set; }
+    public bool NotNull { get; set; }
     public bool Identity { get; set; }
     public object Default { get; set; }
     public bool DefaultIsFunction { get; set; }

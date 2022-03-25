@@ -16,7 +16,7 @@ $@"SELECT
     c.COLUMN_NAME AS {nameof(MySQLColumnRecord.ColumnName)},
     c.DATA_TYPE AS {nameof(MySQLColumnRecord.DataType)},
     c.COLUMN_TYPE AS {nameof(MySQLColumnRecord.FullDataType)},
-    CASE WHEN c.IS_NULLABLE = 'YES' THEN TRUE ELSE FALSE END AS {nameof(MySQLColumnRecord.Nullable)},
+    CASE WHEN c.IS_NULLABLE = 'NO' THEN TRUE ELSE FALSE END AS `{nameof(MySQLColumnRecord.NotNull)}`,
     CASE WHEN c.EXTRA = 'auto_increment' THEN TRUE ELSE FALSE END AS {nameof(MySQLColumnRecord.Identity)},
     c.COLUMN_DEFAULT AS `{nameof(MySQLColumnRecord.Default)}`,
     CASE WHEN c.EXTRA = 'DEFAULT_GENERATED' THEN TRUE ELSE FALSE END AS {nameof(MySQLColumnRecord.DefaultIsFunction)}
@@ -57,7 +57,7 @@ WHERE t.TABLE_SCHEMA = (select DATABASE())
                 ID = Guid.NewGuid(),
                 Name = cr.ColumnName,
                 DataType = dataType,
-                Nullable = cr.Nullable,
+                NotNull = cr.NotNull,
                 Identity = cr.Identity,
                 Default = ParseDefault(dataType, cr),
             };

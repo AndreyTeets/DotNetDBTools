@@ -83,7 +83,7 @@ public class MSSQLDbModelConverter : DbModelConverter
                 ID = column.ID,
                 Name = column.Name,
                 DataType = dataType,
-                Nullable = column.Nullable,
+                NotNull = column.NotNull,
                 Identity = column.Identity,
                 Default = column.Default,
                 DefaultConstraintName = column.Default is not null
