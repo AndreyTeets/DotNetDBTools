@@ -250,7 +250,6 @@ internal abstract class DbModelFromCSharpDefinitionProvider<
                     ID = index.ID,
                     Name = x.Name,
                     Columns = index.Columns.ToList(),
-                    IncludeColumns = index.IncludeColumns?.ToList() ?? new List<string>(),
                     Unique = index.Unique,
                 };
                 BuildAdditionalIndexModelProperties(indexModel, index, table.GetType().Name);

@@ -46,6 +46,12 @@ internal class PostgreSQLDbModelFromCSharpDefinitionProvider : DbModelFromCSharp
             tableModel.OfType = typedTable.OfType;
     }
 
+    protected override void BuildAdditionalIndexModelProperties(
+        Models.Core.Index indexModel, BaseIndex index, string tableName)
+    {
+        indexModel.IncludeColumns = ((Definition.PostgreSQL.Index)index).IncludeColumns?.ToList() ?? new List<string>();
+    }
+
     protected override string GetOnUpdateActionName(BaseForeignKey fk) =>
         MapFKActionNameFromDefinitionToModel(((Definition.PostgreSQL.ForeignKey)fk).OnUpdate.ToString());
     protected override string GetOnDeleteActionName(BaseForeignKey fk) =>

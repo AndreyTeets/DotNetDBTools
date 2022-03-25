@@ -17,7 +17,6 @@ public static class MySQLPostBuildProcessingHelper
                     ID = uc.ID,
                     Name = uc.Name,
                     Columns = uc.Columns,
-                    IncludeColumns = new List<string>(),
                     Unique = true,
                 };
                 ((List<Index>)table.Indexes).Add(index);

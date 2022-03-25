@@ -13,6 +13,5 @@ public abstract class BaseIndex : IDbObject
 
     public Guid ID => _id;
     public IEnumerable<string> Columns { get; set; }
-    public IEnumerable<string> IncludeColumns { get; set; }
     public bool Unique { get; set; }
 }

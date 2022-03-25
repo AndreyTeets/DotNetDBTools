@@ -6,6 +6,7 @@ using System.Reflection;
 using DotNetDBTools.RoslynUtilities;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace DotNetDBTools.UnitTests.Utilities;
 
@@ -31,7 +32,6 @@ public static class TestDatabasesCompiler
     {
         List<SyntaxTree> syntaxTrees = new();
 
-        syntaxTrees.Add(CreateSyntaxTree("global using Index = DotNetDBTools.Definition.Agnostic.Index;"));
         foreach (string filePath in Directory.EnumerateFiles(projectDir, "*.cs", SearchOption.TopDirectoryOnly))
             syntaxTrees.Add(CreateSyntaxTree(File.ReadAllText(filePath)));
 
@@ -46,7 +46,26 @@ public static class TestDatabasesCompiler
 
         static SyntaxTree CreateSyntaxTree(string code)
         {
-            return CSharpSyntaxTree.ParseText(code, new CSharpParseOptions(LanguageVersion.Preview));
+            // DbAssembly is always netstandard2.0 and doesn't have conflict with System.Index,
+            // but netcoreapp3.0+ does and here it is being compiled with roslyn against 3.0+ system references.
+            SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(code);
+            List<TypeSyntax> typeSyntaxesOfFieldsWithNameEqualIndex = syntaxTree.GetRoot().DescendantNodes()
+                .OfType<FieldDeclarationSyntax>()
+                .Where(x => TypeNameEqualIndex(x.Declaration.Type))
+                .Select(x => x.Declaration.Type)
+                .ToList();
+
+            return SyntaxFactory.SyntaxTree(syntaxTree.GetRoot()
+                .ReplaceNodes(typeSyntaxesOfFieldsWithNameEqualIndex, CreateFullyQualifiedTypeSyntax));
+
+            static bool TypeNameEqualIndex(TypeSyntax type) => ((IdentifierNameSyntax)type).Identifier.Text == "Index";
+
+            static TypeSyntax CreateFullyQualifiedTypeSyntax(TypeSyntax type, TypeSyntax _)
+            {
+                NamespaceDeclarationSyntax ns = (NamespaceDeclarationSyntax)type.Parent.Parent.Parent.Parent;
+                string dbmsNsPart = ns.Name.ToString().Split('.')[2];
+                return SyntaxFactory.ParseTypeName($"Definition.{dbmsNsPart}.Index");
+            }
         }
     }
 

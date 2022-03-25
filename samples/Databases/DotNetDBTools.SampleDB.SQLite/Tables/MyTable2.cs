@@ -34,7 +34,6 @@ namespace DotNetDBTools.SampleDB.SQLite.Tables
         public Index IDX_MyTable2_MyIndex1 = new("74390B3C-BC39-4860-A42E-12BAA400F927")
         {
             Columns = new string[] { nameof(MyColumn1), nameof(MyColumn2) },
-            IncludeColumns = null,
             Unique = true,
         };
     }

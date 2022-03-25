@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using DotNetDBTools.Definition.Core;
 using DotNetDBTools.Definition.MSSQL;
@@ -34,6 +35,12 @@ internal class MSSQLDbModelFromCSharpDefinitionProvider : DbModelFromCSharpDefin
         columnModel.DefaultConstraintName = column.Default is not null
             ? ((Definition.MSSQL.Column)column).DefaultConstraintName ?? $"DF_{tableName}_{columnModel.Name}"
             : null;
+    }
+
+    protected override void BuildAdditionalIndexModelProperties(
+        Models.Core.Index indexModel, BaseIndex index, string tableName)
+    {
+        indexModel.IncludeColumns = ((Definition.MSSQL.Index)index).IncludeColumns?.ToList() ?? new List<string>();
     }
 
     protected override string GetOnUpdateActionName(BaseForeignKey fk) =>

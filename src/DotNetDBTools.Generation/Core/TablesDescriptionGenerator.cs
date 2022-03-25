@@ -50,6 +50,6 @@ $@"namespace {database.Name}Description
     }}
 }}";
 
-        return res;
+        return res.NormalizeLineEndings();
     }
 }

@@ -235,7 +235,6 @@ internal class SQLiteDbModelFromSqlDefinitionProvider : IDbModelFromDefinitionPr
                 ID = index.ID.Value,
                 Name = index.Name,
                 Columns = index.Columns,
-                IncludeColumns = new List<string>(),
                 Unique = index.Unique,
             };
             ((List<Index>)tableNameToTableMap[index.Table].Indexes).Add(indexModel);

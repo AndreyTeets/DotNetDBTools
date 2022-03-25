@@ -246,7 +246,7 @@ Values [DotNetDBTools.Models.Core.PrimaryKey] and [DotNetDBTools.Models.Core.Pri
                     ID = new Guid("65C65B34-E769-4826-8F06-B8E83BF7D06A"),
                     Name = "IDX_T1_1",
                     Columns = new string[] { "C1" },
-                    IncludeColumns = null,
+                    IncludeColumns = new List<string>(),
                     Unique = true,
                 }
             },
