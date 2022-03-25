@@ -97,8 +97,8 @@ internal class PostgreSQLDbModelFromCSharpDefinitionProvider : DbModelFromCSharp
             object value = domain.Default;
             if (value is null)
                 return null;
-            if (domain.DefaultIsFunction)
-                return new CodePiece() { Code = (string)value };
+            if (value is Expression expression)
+                return new CodePiece() { Code = expression.Code };
             return PostgreSQLDefaultValueMapper.MapByColumnDataType(domain.UnderlyingType, value);
         }
         List<Models.Core.CheckConstraint> BuildCheckConstraintModels(IDomain type)

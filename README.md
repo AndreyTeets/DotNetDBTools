@@ -30,8 +30,7 @@ public class MyTable : ITable
     {
         DataType = new DateTimeDataType() { SqlType = DateTimeSqlType.DATETIME },
         NotNull = true,
-        Default = "GETDATE()",
-        DefaultIsFunction = true,
+        Default = new Expression("GETDATE()"),
     };
 
     public PrimaryKey PK_MyTable = new("37A45DEF-F4A0-4BE7-8BFB-8FBED4A7D705")

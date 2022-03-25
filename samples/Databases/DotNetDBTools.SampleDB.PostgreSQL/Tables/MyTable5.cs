@@ -1,4 +1,5 @@
 ﻿using System;
+using DotNetDBTools.Definition.Core;
 using DotNetDBTools.Definition.PostgreSQL;
 using DotNetDBTools.Definition.PostgreSQL.DataTypes;
 using DotNetDBTools.SampleDB.PostgreSQL.Types;
@@ -13,8 +14,7 @@ namespace DotNetDBTools.SampleDB.PostgreSQL.Tables
         {
             DataType = new IntDataType(),
             NotNull = true,
-            Default = @"""MyFunction1""(-25, 10)",
-            DefaultIsFunction = true,
+            Default = new Expression(@"""MyFunction1""(-25, 10)"),
         };
 
         public Column MyColumn2 = new("15AE6061-426D-4485-85E6-ECD3E0F98882")

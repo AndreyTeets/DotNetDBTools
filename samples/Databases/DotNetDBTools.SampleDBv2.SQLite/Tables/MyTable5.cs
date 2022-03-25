@@ -1,4 +1,5 @@
 ﻿using System;
+using DotNetDBTools.Definition.Core;
 using DotNetDBTools.Definition.SQLite;
 using DotNetDBTools.Definition.SQLite.DataTypes;
 
@@ -12,8 +13,7 @@ namespace DotNetDBTools.SampleDB.SQLite.Tables
         {
             DataType = new IntDataType(),
             NotNull = true,
-            Default = "ABS(-15)",
-            DefaultIsFunction = true,
+            Default = new Expression("ABS(-15)"),
         };
 
         public Column MyColumn3 = new("4DDE852D-EC19-4B61-80F9-DA428D8FF41A")

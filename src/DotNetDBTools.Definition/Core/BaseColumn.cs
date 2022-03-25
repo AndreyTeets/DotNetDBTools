@@ -15,5 +15,4 @@ public abstract class BaseColumn : IDbObject
     public bool NotNull { get; set; }
     public bool Identity { get; set; }
     public object Default { get; set; }
-    public bool DefaultIsFunction { get; set; }
 }

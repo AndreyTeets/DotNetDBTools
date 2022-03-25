@@ -1,4 +1,5 @@
 ﻿using System;
+using DotNetDBTools.Definition.Core;
 using DotNetDBTools.Definition.MSSQL;
 using DotNetDBTools.Definition.MSSQL.DataTypes;
 using DotNetDBTools.SampleDB.MSSQL.Types;
@@ -13,8 +14,7 @@ namespace DotNetDBTools.SampleDB.MSSQL.Tables
         {
             DataType = new IntDataType(),
             NotNull = true,
-            Default = "ABS(-15)",
-            DefaultIsFunction = true,
+            Default = new Expression("ABS(-15)"),
         };
 
         public Column MyColumn2 = new("15AE6061-426D-4485-85E6-ECD3E0F98882")

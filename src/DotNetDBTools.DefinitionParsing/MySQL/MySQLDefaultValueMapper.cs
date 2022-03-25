@@ -13,8 +13,8 @@ internal class MySQLDefaultValueMapper : IDefaultValueMapper
         object value = column.Default;
         if (value is null)
             return null;
-        if (column.DefaultIsFunction)
-            return new CodePiece() { Code = (string)value };
+        if (value is Expression expression)
+            return new CodePiece() { Code = expression.Code };
         return MapByColumnDataType(column.DataType, value);
     }
 

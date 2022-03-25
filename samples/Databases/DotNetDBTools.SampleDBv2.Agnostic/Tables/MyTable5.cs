@@ -1,6 +1,7 @@
 ﻿using System;
 using DotNetDBTools.Definition.Agnostic;
 using DotNetDBTools.Definition.Agnostic.DataTypes;
+using DotNetDBTools.Definition.Core;
 
 namespace DotNetDBTools.SampleDB.Agnostic.Tables
 {
@@ -12,8 +13,7 @@ namespace DotNetDBTools.SampleDB.Agnostic.Tables
         {
             DataType = new IntDataType(),
             NotNull = true,
-            Default = "ABS(-15)",
-            DefaultIsFunction = true,
+            Default = new Expression("ABS(-15)"),
         };
 
         public Column MyColumn3 = new("4DDE852D-EC19-4B61-80F9-DA428D8FF41A")

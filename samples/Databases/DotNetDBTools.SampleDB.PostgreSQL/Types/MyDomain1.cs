@@ -12,7 +12,6 @@ namespace DotNetDBTools.SampleDB.PostgreSQL.Types
         public IDataType UnderlyingType => new StringDataType() { Length = 100, SqlType = StringSqlType.VARCHAR };
         public bool NotNull => false;
         public object Default => null;
-        public bool DefaultIsFunction => false;
 
         public CheckConstraint MyDomain1_CK1 = new("7A053CEE-ABCC-4993-8EEA-12B87C5194E6")
         {

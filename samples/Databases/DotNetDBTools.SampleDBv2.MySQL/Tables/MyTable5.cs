@@ -1,4 +1,5 @@
 ﻿using System;
+using DotNetDBTools.Definition.Core;
 using DotNetDBTools.Definition.MySQL;
 using DotNetDBTools.Definition.MySQL.DataTypes;
 
@@ -12,8 +13,7 @@ namespace DotNetDBTools.SampleDB.MySQL.Tables
         {
             DataType = new IntDataType(),
             NotNull = true,
-            Default = "ABS(-15)",
-            DefaultIsFunction = true,
+            Default = new Expression("ABS(-15)"),
         };
 
         public Column MyColumn3 = new("4DDE852D-EC19-4B61-80F9-DA428D8FF41A")
