@@ -83,7 +83,6 @@ public static class DockerRunner
         return new HostConfig()
         {
             PortBindings = portBindings,
-            AutoRemove = true,
         };
     }
 

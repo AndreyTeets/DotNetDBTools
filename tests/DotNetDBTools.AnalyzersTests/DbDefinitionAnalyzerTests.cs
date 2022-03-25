@@ -8,7 +8,7 @@ namespace DotNetDBTools.AnalyzersTests;
 public class DbDefinitionAnalyzerTests
 {
     [Fact]
-    public async Task DbDefinitionAnalyzer_DoesntReportOnGoodDbCode_And_ReportsErrorOnBadDbCode()
+    public async Task DbDefinitionAnalyzer_DoesntReportForGoodDbCode_And_ReportsErrorForBadDbCode()
     {
         string goodDbCode =
 @"using System;
