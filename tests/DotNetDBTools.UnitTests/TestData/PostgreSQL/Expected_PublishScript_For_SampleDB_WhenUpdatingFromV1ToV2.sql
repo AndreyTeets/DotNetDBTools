@@ -340,7 +340,7 @@ WHERE "ID" = ''299675e6-4faa-4d0f-a36a-224306ba5bcb'';';
 -- QUERY START: PostgreSQLUpdateDNDBTDbObjectRecordQuery
 EXECUTE 'UPDATE "DNDBTDbObjects" SET
     "Name" = ''MyColumn1'',
-    "Code" = NULL
+    "Code" = ''15''
 WHERE "ID" = ''a2f2a4de-1337-4594-ae41-72ed4d05f317'';';
 -- QUERY END: PostgreSQLUpdateDNDBTDbObjectRecordQuery
 
@@ -398,7 +398,7 @@ WHERE "ID" = ''bfb9030c-a8c3-4882-9c42-1c6ad025cf8f'';';
 -- QUERY START: PostgreSQLUpdateDNDBTDbObjectRecordQuery
 EXECUTE 'UPDATE "DNDBTDbObjects" SET
     "Name" = ''MyColumn1NewName'',
-    "Code" = NULL
+    "Code" = ''333''
 WHERE "ID" = ''c480f22f-7c01-4f41-b282-35e9f5cd1fe3'';';
 -- QUERY END: PostgreSQLUpdateDNDBTDbObjectRecordQuery
 
@@ -417,7 +417,7 @@ VALUES
     ''bfb9030c-a8c3-4882-9c42-1c6ad025cf8f'',
     ''Column'',
     ''MyColumn2'',
-    NULL
+    ''''''\x000102''''''
 );';
 -- QUERY END: PostgreSQLInsertDNDBTDbObjectRecordQuery
 
@@ -530,7 +530,7 @@ VALUES
     ''474cd761-2522-4529-9d20-2b94115f9626'',
     ''Column'',
     ''MyColumn1'',
-    NULL
+    ''333''
 );';
 -- QUERY END: PostgreSQLInsertDNDBTDbObjectRecordQuery
 

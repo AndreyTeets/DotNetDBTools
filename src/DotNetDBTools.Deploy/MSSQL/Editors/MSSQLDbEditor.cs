@@ -8,6 +8,7 @@ using DotNetDBTools.Deploy.MSSQL.Queries.DDL;
 using DotNetDBTools.Deploy.MSSQL.Queries.DNDBTSysInfo;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.MSSQL;
+using DotNetDBTools.Models.MSSQL.UserDefinedTypes;
 
 namespace DotNetDBTools.Deploy.MSSQL.Editors;
 

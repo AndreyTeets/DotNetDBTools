@@ -14,7 +14,7 @@ internal static class PostgreSQLDbObjectsExtensions
             return type.Name;
     }
 
-    public static string GetCode(this PostgreSQLDomainType type) => (type.Default as CodePiece)?.Code;
+    public static string GetCode(this PostgreSQLDomainType type) => type.Default.Code;
     public static string GetCode(this PostgreSQLFunction func) => func.CodePiece.Code;
     public static string GetCode(this PostgreSQLProcedure proc) => proc.CodePiece.Code;
 }

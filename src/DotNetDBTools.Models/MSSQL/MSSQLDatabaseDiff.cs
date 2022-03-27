@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using DotNetDBTools.Models.Core;
+using DotNetDBTools.Models.MSSQL.UserDefinedTypes;
 
 namespace DotNetDBTools.Models.MSSQL;
 

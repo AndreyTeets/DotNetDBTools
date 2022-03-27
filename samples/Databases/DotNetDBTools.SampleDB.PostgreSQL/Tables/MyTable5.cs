@@ -1,7 +1,7 @@
 ﻿using System;
-using DotNetDBTools.Definition.Core;
+using DotNetDBTools.Definition.Core.CSharpDataTypes;
 using DotNetDBTools.Definition.PostgreSQL;
-using DotNetDBTools.Definition.PostgreSQL.DataTypes;
+using DotNetDBTools.SampleDB.PostgreSQL.Functions;
 using DotNetDBTools.SampleDB.PostgreSQL.Types;
 
 namespace DotNetDBTools.SampleDB.PostgreSQL.Tables
@@ -12,9 +12,9 @@ namespace DotNetDBTools.SampleDB.PostgreSQL.Tables
 
         public Column MyColumn1 = new("5309D66F-2030-402E-912E-5547BABAA072")
         {
-            DataType = new IntDataType(),
+            DataType = new VerbatimDataType("INT"),
             NotNull = true,
-            Default = new Expression(@"""MyFunction1""(-25, 10)"),
+            Default = new VerbatimDefaultValue(@$"{nameof(MyFunction1).Quote()}(-25, 10)"),
         };
 
         public Column MyColumn2 = new("15AE6061-426D-4485-85E6-ECD3E0F98882")
@@ -25,7 +25,7 @@ namespace DotNetDBTools.SampleDB.PostgreSQL.Tables
 
         public Column MyColumn3 = new("4DDE852D-EC19-4B61-80F9-DA428D8FF41A")
         {
-            DataType = new DateTimeDataType() { IsWithTimeZone = true },
+            DataType = new DateTimeDataType(),
         };
 
         public Column MyColumn4 = new("45856161-DB66-49F6-AFDE-9214D2D2D4B0")

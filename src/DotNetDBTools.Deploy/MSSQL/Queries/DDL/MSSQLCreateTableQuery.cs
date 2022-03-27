@@ -48,10 +48,9 @@ $@"    CONSTRAINT [{ck.Name}] {ck.GetCode()}"));
 
     private static string GetDefaultValStatement(Column column)
     {
-        if (column.Default is not null)
-        {
-            return $" CONSTRAINT {((MSSQLColumn)column).DefaultConstraintName} DEFAULT {QuoteDefaultValue(column.Default)}";
-        }
-        return "";
+        if (column.Default.Code is not null)
+            return $" CONSTRAINT {((MSSQLColumn)column).DefaultConstraintName} DEFAULT {column.Default.Code}";
+        else
+            return "";
     }
 }

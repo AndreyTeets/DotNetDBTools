@@ -117,14 +117,14 @@ public class DNDBTModelsEqualityComparerTests
         _comparer.Equals(_tableModel1, _tableModel2).Should().BeFalse();
 
         _tableModel2 = CreateTemplateAgnosticTableModel();
-        _tableModel2.Columns.Skip(1).First().DataType = new AgnosticDataType()
+        _tableModel2.Columns.Skip(1).First().DataType = new CSharpDataType()
         {
-            Name = AgnosticDataTypeNames.String,
+            Name = CSharpDataTypeNames.String,
         };
         _comparer.Equals(_tableModel1, _tableModel2).Should().BeFalse();
 
         _tableModel2 = CreateTemplateAgnosticTableModel();
-        _tableModel2.Columns.Skip(1).First().Default = 125;
+        _tableModel2.Columns.Skip(1).First().Default.Code = "125";
         _comparer.Equals(_tableModel1, _tableModel2).Should().BeFalse();
 
         _tableModel2 = CreateTemplateAgnosticTableModel();
@@ -203,24 +203,24 @@ Values [DotNetDBTools.Models.Core.PrimaryKey] and [DotNetDBTools.Models.Core.Pri
                 {
                     ID = new Guid("33457F8A-AAA0-467A-A098-CE349157A493"),
                     Name = "C1",
-                    DataType = new AgnosticDataType()
+                    DataType = new CSharpDataType()
                     {
-                        Name = AgnosticDataTypeNames.String,
+                        Name = CSharpDataTypeNames.String,
                         IsFixedLength = true,
                         Length = 1000,
                     },
-                    Default = "testval1",
+                    Default = new CodePiece { Code = "testval1" },
                 },
                 new Column()
                 {
                     ID = new Guid("33457F8A-AAA0-467A-A098-CE349157A493"),
                     Name = "C2",
-                    DataType = new AgnosticDataType()
+                    DataType = new CSharpDataType()
                     {
-                        Name = AgnosticDataTypeNames.Int,
+                        Name = CSharpDataTypeNames.Int,
                     },
                     NotNull = true,
-                    Default = 325,
+                    Default = new CodePiece { Code = "325" },
                 }
             },
             PrimaryKey = new PrimaryKey()

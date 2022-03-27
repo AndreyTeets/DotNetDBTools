@@ -1,32 +1,22 @@
 ﻿using System;
-using DotNetDBTools.Definition.Agnostic.DataTypes;
+using DotNetDBTools.Definition.Agnostic;
 using DotNetDBTools.Definition.Core;
 using DotNetDBTools.DefinitionParsing.Core;
 using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.DefinitionParsing.Agnostic;
 
-internal class AgnosticDefaultValueMapper : IDefaultValueMapper
+internal class AgnosticDefaultValueMapper : DefaultValueMapper
 {
-    public object MapDefaultValue(BaseColumn column)
+    public override CodePiece MapToDefaultValueModel(IDefaultValue defaultValue)
     {
-        object value = column.Default;
-        if (value is null)
-            return null;
-        if (value is Expression expression)
-            return new CodePiece() { Code = expression.Code };
-        return MapByColumnDataType(column.DataType, value);
-    }
-
-    private static object MapByColumnDataType(IDataType dataType, object value)
-    {
-        return dataType switch
-        {
-            StringDataType => (string)value,
-            IntDataType => (long)(int)value,
-            DecimalDataType => (decimal)value,
-            BinaryDataType => (byte[])value,
-            _ => throw new InvalidOperationException($"Invalid default value type: '{value.GetType()}' for a column with type '{dataType.GetType()}'"),
-        };
+        if (defaultValue is null)
+            return AgnosticDbObjectCodeMapper.CreateAgnosticCodePiece(dk => null);
+        else if (defaultValue is Definition.Core.CSharpDefaultValue cdv)
+            return CreateCSharpDefaultValueModel(cdv);
+        else if (defaultValue is VerbatimDefaultValue vdv)
+            return AgnosticDbObjectCodeMapper.CreateAgnosticCodePiece(vdv.Value);
+        else
+            throw new Exception($"Invalid defaultValue: {defaultValue}");
     }
 }

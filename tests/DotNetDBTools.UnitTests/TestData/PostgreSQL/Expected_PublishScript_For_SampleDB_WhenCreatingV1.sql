@@ -230,7 +230,7 @@ VALUES
     ''299675e6-4faa-4d0f-a36a-224306ba5bcb'',
     ''Column'',
     ''MyColumn1'',
-    NULL
+    ''15''
 );';
 -- QUERY END: PostgreSQLInsertDNDBTDbObjectRecordQuery
 
@@ -249,7 +249,7 @@ VALUES
     ''299675e6-4faa-4d0f-a36a-224306ba5bcb'',
     ''Column'',
     ''MyColumn2'',
-    NULL
+    ''''''33''''''
 );';
 -- QUERY END: PostgreSQLInsertDNDBTDbObjectRecordQuery
 
@@ -287,7 +287,7 @@ VALUES
     ''299675e6-4faa-4d0f-a36a-224306ba5bcb'',
     ''Column'',
     ''MyColumn4'',
-    NULL
+    ''7.36''
 );';
 -- QUERY END: PostgreSQLInsertDNDBTDbObjectRecordQuery
 
@@ -391,7 +391,7 @@ VALUES
     ''bfb9030c-a8c3-4882-9c42-1c6ad025cf8f'',
     ''Column'',
     ''MyColumn1'',
-    NULL
+    ''333''
 );';
 -- QUERY END: PostgreSQLInsertDNDBTDbObjectRecordQuery
 
@@ -410,7 +410,7 @@ VALUES
     ''bfb9030c-a8c3-4882-9c42-1c6ad025cf8f'',
     ''Column'',
     ''MyColumn2'',
-    NULL
+    ''''''\x000102''''''
 );';
 -- QUERY END: PostgreSQLInsertDNDBTDbObjectRecordQuery
 
@@ -483,7 +483,7 @@ EXECUTE 'CREATE TABLE "MyTable5"
 (
     "MyColumn1" INT NOT NULL DEFAULT "MyFunction1"(-25, 10),
     "MyColumn2" "MyCompositeType1" NOT NULL,
-    "MyColumn3" TIMESTAMPTZ(6) NULL,
+    "MyColumn3" TIMESTAMP NULL,
     "MyColumn4" "MyDomain1" NOT NULL,
     "MyColumn5" "MyEnumType1" NOT NULL,
     "MyColumn6" "MyRangeType1" NOT NULL

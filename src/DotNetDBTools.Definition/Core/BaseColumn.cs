@@ -14,5 +14,5 @@ public abstract class BaseColumn : IDbObject
     public IDataType DataType { get; set; }
     public bool NotNull { get; set; }
     public bool Identity { get; set; }
-    public object Default { get; set; }
+    public IDefaultValue Default { get; set; }
 }

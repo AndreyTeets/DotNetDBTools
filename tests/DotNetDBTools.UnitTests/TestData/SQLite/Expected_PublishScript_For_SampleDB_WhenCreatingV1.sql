@@ -50,7 +50,7 @@ VALUES
     '299675e6-4faa-4d0f-a36a-224306ba5bcb',
     'Column',
     'MyColumn1',
-    NULL
+    '15'
 );
 -- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
 
@@ -69,7 +69,7 @@ VALUES
     '299675e6-4faa-4d0f-a36a-224306ba5bcb',
     'Column',
     'MyColumn2',
-    NULL
+    '''33'''
 );
 -- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
 
@@ -107,7 +107,7 @@ VALUES
     '299675e6-4faa-4d0f-a36a-224306ba5bcb',
     'Column',
     'MyColumn4',
-    NULL
+    '7.36'
 );
 -- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
 
@@ -241,7 +241,7 @@ VALUES
     'bfb9030c-a8c3-4882-9c42-1c6ad025cf8f',
     'Column',
     'MyColumn1',
-    NULL
+    '333'
 );
 -- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
 
@@ -260,7 +260,7 @@ VALUES
     'bfb9030c-a8c3-4882-9c42-1c6ad025cf8f',
     'Column',
     'MyColumn2',
-    NULL
+    '0x000102'
 );
 -- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
 
@@ -415,7 +415,7 @@ VALUES
     '6ca51f29-c1bc-4349-b9c1-6f1ea170f162',
     'Column',
     'MyColumn1',
-    'ABS(-15)'
+    '(ABS(-15))'
 );
 -- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
 

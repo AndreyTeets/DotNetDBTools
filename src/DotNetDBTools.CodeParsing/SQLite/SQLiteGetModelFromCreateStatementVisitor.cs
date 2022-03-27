@@ -88,19 +88,13 @@ internal class SQLiteGetModelFromCreateStatementVisitor : SQLiteParserBaseVisito
             static void AddColumnDefault(ColumnInfo column, Column_constraintContext context)
             {
                 if (context.signed_number() != null)
-                    AddColumnDefaultWithType(column, DefaultType.Number, context.signed_number().GetText());
+                    column.Default = context.signed_number().GetText();
                 else if (context.literal_value() != null)
-                    AddColumnDefaultWithType(column, DefaultType.String, UnquoteLiteral(context.literal_value().GetText()));
+                    column.Default = UnquoteLiteral(context.literal_value().GetText());
                 else if (context.expr() != null)
-                    AddColumnDefaultWithType(column, DefaultType.Function, GetInitialText(context.expr()));
+                    column.Default = $"({GetInitialText(context.expr())})";
                 else
                     throw new ParseException("Invalid column default constraint context");
-
-                static void AddColumnDefaultWithType(ColumnInfo column, DefaultType type, string value)
-                {
-                    column.DefaultType = type;
-                    column.DefaultValue = value;
-                }
             }
         }
     }

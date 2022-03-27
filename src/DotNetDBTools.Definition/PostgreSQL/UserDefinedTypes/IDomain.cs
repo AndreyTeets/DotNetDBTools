@@ -6,5 +6,5 @@ public interface IDomain : IDbObject, IDataType
 {
     public IDataType UnderlyingType { get; }
     public bool NotNull { get; }
-    public object Default { get; }
+    public IDefaultValue Default { get; }
 }

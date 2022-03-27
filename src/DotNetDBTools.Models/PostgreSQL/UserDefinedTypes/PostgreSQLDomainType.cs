@@ -7,6 +7,6 @@ public class PostgreSQLDomainType : DbObject
 {
     public DataType UnderlyingType { get; set; }
     public bool NotNull { get; set; }
-    public object Default { get; set; }
+    public CodePiece Default { get; set; }
     public IEnumerable<CheckConstraint> CheckConstraints { get; set; }
 }

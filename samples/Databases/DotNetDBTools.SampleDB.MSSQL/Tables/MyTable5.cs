@@ -1,7 +1,7 @@
 ﻿using System;
 using DotNetDBTools.Definition.Core;
+using DotNetDBTools.Definition.Core.CSharpDataTypes;
 using DotNetDBTools.Definition.MSSQL;
-using DotNetDBTools.Definition.MSSQL.DataTypes;
 using DotNetDBTools.SampleDB.MSSQL.Types;
 
 namespace DotNetDBTools.SampleDB.MSSQL.Tables
@@ -12,21 +12,21 @@ namespace DotNetDBTools.SampleDB.MSSQL.Tables
 
         public Column MyColumn1 = new("5309D66F-2030-402E-912E-5547BABAA072")
         {
-            DataType = new IntDataType(),
+            DataType = new VerbatimDataType("INT"),
             NotNull = true,
-            Default = new Expression("ABS(-15)"),
+            Default = new VerbatimDefaultValue("ABS(-15)"),
         };
 
         public Column MyColumn2 = new("15AE6061-426D-4485-85E6-ECD3E0F98882")
         {
             DataType = new MyUserDefinedType1(),
-            Default = "cc",
+            Default = new CSharpDefaultValue("cc"),
             DefaultConstraintName = "DF_MyTable5_MyColumn2",
         };
 
         public Column MyColumn3 = new("4DDE852D-EC19-4B61-80F9-DA428D8FF41A")
         {
-            DataType = new DateTimeDataType() { SqlType = DateTimeSqlType.DATETIMEOFFSET },
+            DataType = new DateTimeDataType(),
         };
     }
 }

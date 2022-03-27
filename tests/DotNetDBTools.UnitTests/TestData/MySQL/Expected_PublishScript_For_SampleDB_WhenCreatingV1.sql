@@ -1,8 +1,8 @@
 -- QUERY START: MySQLCreateTableQuery
 CREATE TABLE `MyTable1`
 (
-    `MyColumn1` INT NOT NULL DEFAULT (15),
-    `MyColumn2` VARCHAR(7) NOT NULL DEFAULT ('33'),
+    `MyColumn1` INT NOT NULL DEFAULT 15,
+    `MyColumn2` VARCHAR(10) NOT NULL DEFAULT '33',
     `MyColumn3` INT AUTO_INCREMENT NOT NULL,
     `MyColumn4` DECIMAL(19,2) NOT NULL DEFAULT 7.36,
     CONSTRAINT `PK_MyTable1` PRIMARY KEY (`MyColumn3`),
@@ -44,7 +44,7 @@ VALUES
     '299675e6-4faa-4d0f-a36a-224306ba5bcb',
     'Column',
     'MyColumn1',
-    NULL
+    '15'
 );
 -- QUERY END: MySQLInsertDNDBTDbObjectRecordQuery
 
@@ -63,7 +63,7 @@ VALUES
     '299675e6-4faa-4d0f-a36a-224306ba5bcb',
     'Column',
     'MyColumn2',
-    NULL
+    '''33'''
 );
 -- QUERY END: MySQLInsertDNDBTDbObjectRecordQuery
 
@@ -101,7 +101,7 @@ VALUES
     '299675e6-4faa-4d0f-a36a-224306ba5bcb',
     'Column',
     'MyColumn4',
-    NULL
+    '7.36'
 );
 -- QUERY END: MySQLInsertDNDBTDbObjectRecordQuery
 
@@ -146,8 +146,8 @@ VALUES
 -- QUERY START: MySQLCreateTableQuery
 CREATE TABLE `MyTable2`
 (
-    `MyColumn1` INT NOT NULL DEFAULT (333),
-    `MyColumn2` BINARY(6) NULL DEFAULT (0x000102),
+    `MyColumn1` INT NOT NULL DEFAULT 333,
+    `MyColumn2` VARBINARY(22) NULL DEFAULT (0x000102),
     CONSTRAINT `PK_MyTable2` PRIMARY KEY (`MyColumn1`)
 );
 -- QUERY END: MySQLCreateTableQuery
@@ -186,7 +186,7 @@ VALUES
     'bfb9030c-a8c3-4882-9c42-1c6ad025cf8f',
     'Column',
     'MyColumn1',
-    NULL
+    '333'
 );
 -- QUERY END: MySQLInsertDNDBTDbObjectRecordQuery
 
@@ -205,7 +205,7 @@ VALUES
     'bfb9030c-a8c3-4882-9c42-1c6ad025cf8f',
     'Column',
     'MyColumn2',
-    NULL
+    '(0x000102)'
 );
 -- QUERY END: MySQLInsertDNDBTDbObjectRecordQuery
 
@@ -315,7 +315,7 @@ VALUES
     '6ca51f29-c1bc-4349-b9c1-6f1ea170f162',
     'Column',
     'MyColumn1',
-    'ABS(-15)'
+    '(ABS(-15))'
 );
 -- QUERY END: MySQLInsertDNDBTDbObjectRecordQuery
 

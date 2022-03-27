@@ -42,14 +42,14 @@ internal class PostgreSQLAlterTableQuery : AlterTableQuery
     {
         foreach (Column column in tableDiff.RemovedColumns)
         {
-            if (column.Default is not null)
+            if (column.Default.Code is not null)
                 sb.Append(Queries.DropDefaultConstraint(tableDiff.NewTable.Name, column));
             sb.Append(Queries.DropColumn(tableDiff.NewTable.Name, column.Name));
         }
 
         foreach (ColumnDiff columnDiff in tableDiff.ChangedColumns)
         {
-            if (columnDiff.OldColumn.Default is not null)
+            if (columnDiff.OldColumn.Default.Code is not null)
                 sb.Append(Queries.DropDefaultConstraint(tableDiff.NewTable.Name, columnDiff.OldColumn));
 
             if (columnDiff.OldColumn.Name != columnDiff.NewColumn.Name)
@@ -61,14 +61,14 @@ internal class PostgreSQLAlterTableQuery : AlterTableQuery
             else if (!columnDiff.NewColumn.NotNull && columnDiff.OldColumn.NotNull)
                 sb.Append(Queries.DropColumnNotNull(tableDiff.NewTable.Name, columnDiff.NewColumn));
 
-            if (columnDiff.NewColumn.Default is not null)
+            if (columnDiff.NewColumn.Default.Code is not null)
                 sb.Append(Queries.AddDefaultConstraint(tableDiff.NewTable.Name, columnDiff.NewColumn));
         }
 
         foreach (Column column in tableDiff.AddedColumns)
         {
             sb.Append(Queries.AddColumn(tableDiff.NewTable.Name, column));
-            if (column.Default is not null)
+            if (column.Default.Code is not null)
                 sb.Append(Queries.AddDefaultConstraint(tableDiff.NewTable.Name, column));
         }
     }
@@ -134,7 +134,7 @@ ALTER TABLE ""{tableName}"" DROP CONSTRAINT ""{ckName}"";"
 
         public static string AddDefaultConstraint(string tableName, Column c) =>
 $@"
-ALTER TABLE ""{tableName}"" ALTER COLUMN ""{c.Name}"" SET DEFAULT {QuoteDefaultValue(c.Default)};"
+ALTER TABLE ""{tableName}"" ALTER COLUMN ""{c.Name}"" SET DEFAULT {c.Default.Code};"
             ;
         public static string DropDefaultConstraint(string tableName, Column c) =>
 $@"

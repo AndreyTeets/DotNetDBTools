@@ -103,7 +103,7 @@ WHERE ID = ''0cd1e71c-cc9c-440f-ac0b-81a1d6f7ddaa'';';
 -- QUERY END: MSSQLDeleteDNDBTDbObjectRecordQuery
 
 -- QUERY START: MSSQLCreateTypeQuery
-EXEC sp_executesql N'CREATE TYPE MyUserDefinedType1 FROM VARCHAR(110);';
+EXEC sp_executesql N'CREATE TYPE MyUserDefinedType1 FROM NVARCHAR(110);';
 -- QUERY END: MSSQLCreateTypeQuery
 
 -- QUERY START: MSSQLInsertDNDBTDbObjectRecordQuery
@@ -238,7 +238,7 @@ WHERE ID = @ID;';
 -- QUERY START: MSSQLUpdateDNDBTDbObjectRecordQuery
 EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''a2f2a4de-1337-4594-ae41-72ed4d05f317'';
 DECLARE @Name NVARCHAR(MAX) = N''MyColumn1'';
-DECLARE @Code NVARCHAR(MAX) = NULL;
+DECLARE @Code NVARCHAR(MAX) = N''15'';
 UPDATE DNDBTDbObjects SET
     Name = @Name,
     Code = @Code
@@ -248,7 +248,7 @@ WHERE ID = @ID;';
 -- QUERY START: MSSQLUpdateDNDBTDbObjectRecordQuery
 EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''867ac528-e87e-4c93-b6e3-dd2fcbbb837f'';
 DECLARE @Name NVARCHAR(MAX) = N''MyColumn4'';
-DECLARE @Code NVARCHAR(MAX) = NULL;
+DECLARE @Code NVARCHAR(MAX) = N''7.36'';
 UPDATE DNDBTDbObjects SET
     Name = @Name,
     Code = @Code
@@ -315,7 +315,7 @@ WHERE ID = @ID;';
 -- QUERY START: MSSQLUpdateDNDBTDbObjectRecordQuery
 EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''c480f22f-7c01-4f41-b282-35e9f5cd1fe3'';
 DECLARE @Name NVARCHAR(MAX) = N''MyColumn1NewName'';
-DECLARE @Code NVARCHAR(MAX) = NULL;
+DECLARE @Code NVARCHAR(MAX) = N''333'';
 UPDATE DNDBTDbObjects SET
     Name = @Name,
     Code = @Code
@@ -326,7 +326,7 @@ WHERE ID = @ID;';
 EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''c2df19c2-e029-4014-8a5b-4ab42fecb6b8'';
 DECLARE @ParentID UNIQUEIDENTIFIER = N''bfb9030c-a8c3-4882-9c42-1c6ad025cf8f'';
 DECLARE @Name NVARCHAR(MAX) = N''MyColumn2'';
-DECLARE @Code NVARCHAR(MAX) = NULL;
+DECLARE @Code NVARCHAR(MAX) = N''0x000102'';
 INSERT INTO DNDBTDbObjects
 (
     ID,
@@ -408,7 +408,7 @@ VALUES
 EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''726f503a-d944-46ee-a0ff-6a2c2faab46e'';
 DECLARE @ParentID UNIQUEIDENTIFIER = N''474cd761-2522-4529-9d20-2b94115f9626'';
 DECLARE @Name NVARCHAR(MAX) = N''MyColumn1'';
-DECLARE @Code NVARCHAR(MAX) = NULL;
+DECLARE @Code NVARCHAR(MAX) = N''333'';
 INSERT INTO DNDBTDbObjects
 (
     ID,

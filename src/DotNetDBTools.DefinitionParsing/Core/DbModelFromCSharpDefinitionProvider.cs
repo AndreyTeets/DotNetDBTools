@@ -125,7 +125,7 @@ internal abstract class DbModelFromCSharpDefinitionProvider<
                     DataType = dataTypeModel,
                     NotNull = column.NotNull,
                     Identity = column.Identity,
-                    Default = DefaultValueMapper.MapDefaultValue(column),
+                    Default = DefaultValueMapper.MapToDefaultValueModel(column.Default),
                 };
                 BuildAdditionalColumnModelProperties(columnModel, column, table.GetType().Name);
                 return columnModel;

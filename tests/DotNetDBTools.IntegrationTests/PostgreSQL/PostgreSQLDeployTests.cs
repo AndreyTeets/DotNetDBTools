@@ -41,6 +41,8 @@ public class PostgreSQLDeployTests : BaseDeployTests<
             .Replace("::INTEGER", "")
             .Replace("::NUMERIC", "")
             .Replace("::TEXT", "")
+            .Replace("::CHARACTERVARYING", "")
+            .Replace("::BYTEA", "")
             .Replace("PUBLIC.", "");
     }
 

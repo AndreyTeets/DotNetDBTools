@@ -14,9 +14,6 @@ namespace DotNetDBTools.DefinitionParsing.SQLite;
 
 internal class SQLiteDbModelFromSqlDefinitionProvider : IDbModelFromDefinitionProvider
 {
-    private readonly SQLiteDataTypeMapper _dataTypeMapper = new();
-    private readonly SQLiteDefaultValueMapper _defaultValueMapper = new();
-
     public Database CreateDbModel(Assembly dbAssembly)
     {
         SQLiteDatabase database = new();
@@ -131,10 +128,10 @@ internal class SQLiteDbModelFromSqlDefinitionProvider : IDbModelFromDefinitionPr
             {
                 ID = column.ID.Value,
                 Name = column.Name,
-                DataType = _dataTypeMapper.GetDataTypeModel(column),
+                DataType = new DataType { Name = column.DataType.ToUpper() },
                 NotNull = column.NotNull,
                 Identity = column.Identity,
-                Default = _defaultValueMapper.GetDefaultValueModel(column),
+                Default = new CodePiece { Code = column.Default },
             };
             columnModels.Add(columnModel);
         }

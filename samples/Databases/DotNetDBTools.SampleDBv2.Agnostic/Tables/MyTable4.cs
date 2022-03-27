@@ -1,6 +1,6 @@
 ﻿using System;
 using DotNetDBTools.Definition.Agnostic;
-using DotNetDBTools.Definition.Agnostic.DataTypes;
+using DotNetDBTools.Definition.Core.CSharpDataTypes;
 
 namespace DotNetDBTools.SampleDB.Agnostic.Tables
 {

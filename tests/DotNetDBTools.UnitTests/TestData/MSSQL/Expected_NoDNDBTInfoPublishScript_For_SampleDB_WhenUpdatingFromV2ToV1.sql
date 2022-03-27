@@ -32,7 +32,7 @@ EXEC sp_executesql N'EXEC sp_rename ''MyUserDefinedType1'', ''_DNDBTTemp_MyUserD
 -- QUERY END: MSSQLRenameUserDefinedDataTypeQuery
 
 -- QUERY START: MSSQLCreateTypeQuery
-EXEC sp_executesql N'CREATE TYPE MyUserDefinedType1 FROM VARCHAR(100);';
+EXEC sp_executesql N'CREATE TYPE MyUserDefinedType1 FROM NVARCHAR(100);';
 -- QUERY END: MSSQLCreateTypeQuery
 
 -- QUERY START: MSSQLUseNewUDTInAllTablesQuery
@@ -115,7 +115,7 @@ ALTER TABLE [MyTable2] DROP CONSTRAINT DF_MyTable2_MyColumn1NewName;
 EXEC sp_rename ''MyTable2.MyColumn1NewName'', ''MyColumn1'', ''COLUMN'';
 ALTER TABLE MyTable2 ALTER COLUMN MyColumn1 INT NOT NULL;
 ALTER TABLE MyTable2 ADD CONSTRAINT DF_MyTable2_MyColumn1 DEFAULT 333 FOR MyColumn1;
-ALTER TABLE MyTable2 ADD MyColumn2 BINARY(22) NULL;
+ALTER TABLE MyTable2 ADD MyColumn2 VARBINARY(22) NULL;
 ALTER TABLE MyTable2 ADD CONSTRAINT DF_MyTable2_MyColumn2 DEFAULT 0x000102 FOR MyColumn2;
 ALTER TABLE MyTable2 ADD CONSTRAINT PK_MyTable2 PRIMARY KEY (MyColumn1);';
 -- QUERY END: MSSQLAlterTableQuery

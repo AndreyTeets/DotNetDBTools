@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.Models.Agnostic;
@@ -62,72 +61,16 @@ public class PostgreSQLDbModelConverter : DbModelConverter
     {
         foreach (Column column in columns)
         {
-            column.DataType = column.DataType.Name switch
-            {
-                AgnosticDataTypeNames.Int => ConvertIntSqlType((AgnosticDataType)column.DataType),
-                AgnosticDataTypeNames.Real => ConvertRealSqlType((AgnosticDataType)column.DataType),
-                AgnosticDataTypeNames.Decimal => ConvertDecimalSqlType((AgnosticDataType)column.DataType),
-                AgnosticDataTypeNames.Bool => new DataType { Name = PostgreSQLDataTypeNames.BOOL },
+            if (column.DataType is AgnosticVerbatimDataType avdt)
+                column.DataType = new DataType { Name = ConvertCodePiece(avdt.NameCodePiece).Code };
+            else
+                column.DataType = PostgreSQLDataTypeConverter.ConvertToPostgreSQL((CSharpDataType)column.DataType);
 
-                AgnosticDataTypeNames.String => ConvertStringSqlType((AgnosticDataType)column.DataType),
-                AgnosticDataTypeNames.Binary => new DataType { Name = PostgreSQLDataTypeNames.BYTEA },
-
-                AgnosticDataTypeNames.Date => new DataType { Name = PostgreSQLDataTypeNames.DATE },
-                AgnosticDataTypeNames.Time => ConvertTimeSqlType((AgnosticDataType)column.DataType),
-                AgnosticDataTypeNames.DateTime => ConvertDateTimeSqlType((AgnosticDataType)column.DataType),
-
-                AgnosticDataTypeNames.Guid => new DataType { Name = PostgreSQLDataTypeNames.UUID },
-                _ => throw new InvalidOperationException($"Invalid agnostic column datatype name: {column.DataType.Name}"),
-            };
+            if (column.Default is AgnosticCodePiece acp)
+                column.Default = ConvertCodePiece(acp);
+            else
+                column.Default = PostgreSQLDefaultValueConverter.ConvertToPostgreSQL((CSharpDefaultValue)column.Default);
         }
         return columns;
-    }
-
-    private DataType ConvertIntSqlType(AgnosticDataType dataType)
-    {
-        return dataType.Size switch
-        {
-            8 => new DataType { Name = PostgreSQLDataTypeNames.SMALLINT },
-            16 => new DataType { Name = PostgreSQLDataTypeNames.SMALLINT },
-            32 => new DataType { Name = PostgreSQLDataTypeNames.INT },
-            64 => new DataType { Name = PostgreSQLDataTypeNames.BIGINT },
-            _ => throw new Exception($"Invalid int size: '{dataType.Size}'")
-        };
-    }
-
-    private DataType ConvertRealSqlType(AgnosticDataType dataType)
-    {
-        if (dataType.IsDoublePrecision)
-            return new DataType { Name = PostgreSQLDataTypeNames.FLOAT8 };
-        else
-            return new DataType { Name = PostgreSQLDataTypeNames.FLOAT4 };
-    }
-
-    private DataType ConvertDecimalSqlType(AgnosticDataType dataType)
-    {
-        return new DataType { Name = $"{PostgreSQLDataTypeNames.DECIMAL}({dataType.Precision}, {dataType.Scale})" };
-    }
-
-    private DataType ConvertStringSqlType(AgnosticDataType dataType)
-    {
-        string stringTypeName = dataType.IsFixedLength ? PostgreSQLDataTypeNames.CHAR : PostgreSQLDataTypeNames.VARCHAR;
-        string lengthStr = dataType.Length.ToString();
-        return new DataType { Name = $"{stringTypeName}({lengthStr})" };
-    }
-
-    private DataType ConvertTimeSqlType(AgnosticDataType dataType)
-    {
-        if (dataType.IsWithTimeZone)
-            return new DataType { Name = PostgreSQLDataTypeNames.TIMETZ };
-        else
-            return new DataType { Name = PostgreSQLDataTypeNames.TIME };
-    }
-
-    private DataType ConvertDateTimeSqlType(AgnosticDataType dataType)
-    {
-        if (dataType.IsWithTimeZone)
-            return new DataType { Name = PostgreSQLDataTypeNames.TIMESTAMPTZ };
-        else
-            return new DataType { Name = PostgreSQLDataTypeNames.TIMESTAMP };
     }
 }

@@ -4,6 +4,7 @@ using DotNetDBTools.Deploy.MSSQL.Queries.DBMSSysInfo;
 using DotNetDBTools.Deploy.MSSQL.Queries.DNDBTSysInfo;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.MSSQL;
+using DotNetDBTools.Models.MSSQL.UserDefinedTypes;
 using static DotNetDBTools.Deploy.Core.Queries.DNDBTSysInfo.GetDNDBTDbObjectRecordsQuery;
 using static DotNetDBTools.Deploy.MSSQL.Queries.DBMSSysInfo.MSSQLGetTypesFromDBMSSysInfoQuery;
 

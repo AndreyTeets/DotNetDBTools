@@ -1,32 +1,23 @@
 ﻿using System;
+using DotNetDBTools.Analysis.PostgreSQL;
 using DotNetDBTools.Definition.Core;
-using DotNetDBTools.Definition.PostgreSQL.DataTypes;
+using DotNetDBTools.Definition.PostgreSQL;
 using DotNetDBTools.DefinitionParsing.Core;
 using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.DefinitionParsing.PostgreSQL;
 
-internal class PostgreSQLDefaultValueMapper : IDefaultValueMapper
+internal class PostgreSQLDefaultValueMapper : DefaultValueMapper
 {
-    public object MapDefaultValue(BaseColumn column)
+    public override CodePiece MapToDefaultValueModel(IDefaultValue defaultValue)
     {
-        object value = column.Default;
-        if (value is null)
-            return null;
-        if (value is Expression expression)
-            return new CodePiece() { Code = expression.Code };
-        return MapByColumnDataType(column.DataType, value);
-    }
-
-    public static object MapByColumnDataType(IDataType dataType, object value)
-    {
-        return dataType switch
-        {
-            StringDataType => (string)value,
-            IntDataType => (long)(int)value,
-            DecimalDataType => (decimal)value,
-            BinaryDataType => (byte[])value,
-            _ => throw new InvalidOperationException($"Invalid default value type: '{value.GetType()}' for a column with type '{dataType.GetType()}'"),
-        };
+        if (defaultValue is null)
+            return new CodePiece { Code = null };
+        else if (defaultValue is Definition.Core.CSharpDefaultValue cdv)
+            return PostgreSQLDefaultValueConverter.ConvertToPostgreSQL(CreateCSharpDefaultValueModel(cdv));
+        else if (defaultValue is VerbatimDefaultValue vdv)
+            return new CodePiece { Code = vdv.Value };
+        else
+            throw new Exception($"Invalid defaultValue: {defaultValue}");
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using DotNetDBTools.Definition.Agnostic;
-using DotNetDBTools.Definition.Agnostic.DataTypes;
+using DotNetDBTools.Definition.Core;
+using DotNetDBTools.Definition.Core.CSharpDataTypes;
 
 namespace DotNetDBTools.SampleDB.Agnostic.Tables
 {
@@ -12,13 +13,13 @@ namespace DotNetDBTools.SampleDB.Agnostic.Tables
         {
             DataType = new IntDataType(),
             NotNull = true,
-            Default = 333,
+            Default = new CSharpDefaultValue(333),
         };
 
         public Column MyColumn2 = new("5A0D1926-3270-4EB2-92EB-00BE56C7AF23")
         {
             DataType = new BinaryDataType() { Length = 22, IsFixedLength = true },
-            Default = new byte[] { 0, 1, 2 },
+            Default = new CSharpDefaultValue(new byte[] { 0, 1, 2 }),
         };
 
         public PrimaryKey PK_MyTable2 = new("3A43615B-40B3-4A13-99E7-93AF7C56E8CE")

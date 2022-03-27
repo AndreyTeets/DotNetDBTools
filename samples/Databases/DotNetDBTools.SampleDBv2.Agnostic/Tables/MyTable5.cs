@@ -1,7 +1,6 @@
 ﻿using System;
 using DotNetDBTools.Definition.Agnostic;
-using DotNetDBTools.Definition.Agnostic.DataTypes;
-using DotNetDBTools.Definition.Core;
+using DotNetDBTools.Definition.Core.CSharpDataTypes;
 
 namespace DotNetDBTools.SampleDB.Agnostic.Tables
 {
@@ -11,9 +10,9 @@ namespace DotNetDBTools.SampleDB.Agnostic.Tables
 
         public Column MyColumn1 = new("5309D66F-2030-402E-912E-5547BABAA072")
         {
-            DataType = new IntDataType(),
+            DataType = new VerbatimDataType(dk => dk == DbmsKind.SQLite ? "INTEGER" : "INT"),
             NotNull = true,
-            Default = new Expression("ABS(-15)"),
+            Default = new VerbatimDefaultValue(dk => dk is DbmsKind.SQLite or DbmsKind.MySQL ? "(ABS(-15))" : "ABS(-15)"),
         };
 
         public Column MyColumn3 = new("4DDE852D-EC19-4B61-80F9-DA428D8FF41A")

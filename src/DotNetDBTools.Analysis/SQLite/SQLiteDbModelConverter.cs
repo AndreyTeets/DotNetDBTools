@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.Models.Agnostic;
@@ -59,23 +58,15 @@ public class SQLiteDbModelConverter : DbModelConverter
     {
         foreach (Column column in columns)
         {
-            column.DataType = column.DataType.Name switch
-            {
-                AgnosticDataTypeNames.Int => new DataType { Name = SQLiteDataTypeNames.INTEGER },
-                AgnosticDataTypeNames.Real => new DataType { Name = SQLiteDataTypeNames.REAL },
-                AgnosticDataTypeNames.Decimal => new DataType { Name = SQLiteDataTypeNames.NUMERIC },
-                AgnosticDataTypeNames.Bool => new DataType { Name = SQLiteDataTypeNames.INTEGER },
+            if (column.DataType is AgnosticVerbatimDataType avdt)
+                column.DataType = new DataType { Name = ConvertCodePiece(avdt.NameCodePiece).Code };
+            else
+                column.DataType = SQLiteDataTypeConverter.ConvertToSQLite((CSharpDataType)column.DataType);
 
-                AgnosticDataTypeNames.String => new DataType { Name = SQLiteDataTypeNames.TEXT },
-                AgnosticDataTypeNames.Binary => new DataType { Name = SQLiteDataTypeNames.BLOB },
-                AgnosticDataTypeNames.Guid => new DataType { Name = SQLiteDataTypeNames.BLOB },
-
-                AgnosticDataTypeNames.Date => new DataType { Name = SQLiteDataTypeNames.NUMERIC },
-                AgnosticDataTypeNames.Time => new DataType { Name = SQLiteDataTypeNames.NUMERIC },
-                AgnosticDataTypeNames.DateTime => new DataType { Name = SQLiteDataTypeNames.NUMERIC },
-
-                _ => throw new InvalidOperationException($"Invalid agnostic column datatype name: {column.DataType.Name}"),
-            };
+            if (column.Default is AgnosticCodePiece acp)
+                column.Default = ConvertCodePiece(acp);
+            else
+                column.Default = SQLiteDefaultValueConverter.ConvertToSQLite((CSharpDefaultValue)column.Default);
         }
         return columns;
     }

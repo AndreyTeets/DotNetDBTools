@@ -1,49 +1,39 @@
 ﻿using System;
-using DotNetDBTools.CodeParsing.Core.Models;
+using DotNetDBTools.Analysis.SQLite;
 using DotNetDBTools.Definition.Core;
-using DotNetDBTools.Definition.SQLite.DataTypes;
+using DotNetDBTools.Definition.Core.CSharpDataTypes;
+using DotNetDBTools.Definition.SQLite;
 using DotNetDBTools.DefinitionParsing.Core;
 using DotNetDBTools.Models.Core;
-using DotNetDBTools.Models.SQLite;
 
 namespace DotNetDBTools.DefinitionParsing.SQLite;
 
-internal class SQLiteDataTypeMapper : IDataTypeMapper
+internal class SQLiteDataTypeMapper : DataTypeMapper
 {
-    public DataType MapToDataTypeModel(IDataType dataType)
+    public override DataType MapToDataTypeModel(IDataType dataType)
     {
-        return dataType switch
+        switch (dataType)
         {
-            IntDataType dt => new DataType() { Name = SQLiteDataTypeNames.INTEGER },
-            RealDataType dt => new DataType() { Name = SQLiteDataTypeNames.REAL },
-            DecimalDataType dt => new DataType() { Name = SQLiteDataTypeNames.NUMERIC },
-            BoolDataType dt => new DataType() { Name = SQLiteDataTypeNames.INTEGER },
+            case IntDataType:
+            case RealDataType:
+            case DecimalDataType:
+            case BoolDataType:
 
-            StringDataType dt => new DataType() { Name = SQLiteDataTypeNames.TEXT },
-            BinaryDataType dt => new DataType() { Name = SQLiteDataTypeNames.BLOB },
-            GuidDataType dt => new DataType() { Name = SQLiteDataTypeNames.BLOB },
+            case StringDataType:
+            case BinaryDataType:
+            case GuidDataType:
 
-            DateDataType dt => new DataType() { Name = SQLiteDataTypeNames.NUMERIC },
-            TimeDataType dt => new DataType() { Name = SQLiteDataTypeNames.NUMERIC },
-            DateTimeDataType dt => new DataType() { Name = SQLiteDataTypeNames.NUMERIC },
+            case DateDataType:
+            case TimeDataType:
+            case DateTimeDataType:
+                CSharpDataType csharpDataType = CreateCSharpDataTypeModel(dataType);
+                return SQLiteDataTypeConverter.ConvertToSQLite(csharpDataType);
 
-            _ => throw new InvalidOperationException($"Invalid dataType: {dataType}")
-        };
-    }
+            case VerbatimDataType verbatimDataType:
+                return new DataType { Name = verbatimDataType.Name.ToUpper() };
 
-    public DataType GetDataTypeModel(ColumnInfo column)
-    {
-        string normalizedDataType = column.DataType.ToUpper();
-        switch (normalizedDataType)
-        {
-            case SQLiteDataTypeNames.INTEGER:
-            case SQLiteDataTypeNames.REAL:
-            case SQLiteDataTypeNames.NUMERIC:
-            case SQLiteDataTypeNames.TEXT:
-            case SQLiteDataTypeNames.BLOB:
-                return new DataType() { Name = normalizedDataType };
             default:
-                throw new InvalidOperationException($"Invalid dataType: {column.DataType}");
+                throw new InvalidOperationException($"Invalid dataType: {dataType}");
         }
     }
 }

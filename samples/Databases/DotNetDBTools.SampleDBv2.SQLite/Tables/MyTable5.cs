@@ -1,7 +1,6 @@
 ﻿using System;
-using DotNetDBTools.Definition.Core;
+using DotNetDBTools.Definition.Core.CSharpDataTypes;
 using DotNetDBTools.Definition.SQLite;
-using DotNetDBTools.Definition.SQLite.DataTypes;
 
 namespace DotNetDBTools.SampleDB.SQLite.Tables
 {
@@ -11,9 +10,9 @@ namespace DotNetDBTools.SampleDB.SQLite.Tables
 
         public Column MyColumn1 = new("5309D66F-2030-402E-912E-5547BABAA072")
         {
-            DataType = new IntDataType(),
+            DataType = new VerbatimDataType("INTEGER"),
             NotNull = true,
-            Default = new Expression("ABS(-15)"),
+            Default = new VerbatimDefaultValue("(ABS(-15))"),
         };
 
         public Column MyColumn3 = new("4DDE852D-EC19-4B61-80F9-DA428D8FF41A")

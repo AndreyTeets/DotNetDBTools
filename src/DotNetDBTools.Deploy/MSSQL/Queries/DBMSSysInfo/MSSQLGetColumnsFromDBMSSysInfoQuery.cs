@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo;
 using DotNetDBTools.Models.Core;
@@ -64,7 +63,7 @@ WHERE t.name NOT IN ({DNDBTSysTables.AllTablesForInClause});";
                 DataType = dataType,
                 NotNull = cr.NotNull,
                 Identity = cr.Identity,
-                Default = ParseDefault(dataType, cr),
+                Default = ParseDefault(cr),
                 DefaultConstraintName = cr.DefaultConstraintName,
             };
         }
@@ -81,56 +80,15 @@ WHERE t.name NOT IN ({DNDBTSysTables.AllTablesForInClause});";
                 columnRecord.Scale);
         }
 
-        private static object ParseDefault(DataType dataType, MSSQLColumnRecord columnRecord)
+        private static CodePiece ParseDefault(MSSQLColumnRecord columnRecord)
         {
             string valueFromDBMSSysTable = columnRecord.Default;
             if (valueFromDBMSSysTable is null)
-                return null;
+                return new CodePiece() { Code = null };
             string value = TrimOuterParantheses(valueFromDBMSSysTable);
+            return new CodePiece() { Code = value };
 
-            if (IsFunction(value))
-                return new CodePiece() { Code = value };
-
-            string baseDataType = columnRecord.DataType.ToUpper();
-            switch (baseDataType)
-            {
-                case MSSQLDataTypeNames.TINYINT:
-                case MSSQLDataTypeNames.SMALLINT:
-                case MSSQLDataTypeNames.INT:
-                case MSSQLDataTypeNames.BIGINT:
-                    return long.Parse(TrimOuterParantheses(value));
-                case MSSQLDataTypeNames.DECIMAL:
-                    return decimal.Parse(TrimOuterParantheses(value), CultureInfo.InvariantCulture);
-                case MSSQLDataTypeNames.CHAR:
-                case MSSQLDataTypeNames.VARCHAR:
-                case MSSQLDataTypeNames.NCHAR:
-                case MSSQLDataTypeNames.NVARCHAR:
-                    return TrimOuterQuotes(value);
-                case MSSQLDataTypeNames.BINARY:
-                case MSSQLDataTypeNames.VARBINARY:
-                    return ToByteArray(value);
-                default:
-                    throw new InvalidOperationException($"Invalid default value [{valueFromDBMSSysTable}] for data type [{dataType.Name}]");
-            }
-
-            static bool IsFunction(string val) => val.Contains("(") && val.Contains(")") && !IsString(val) && !IsNumber(val);
-            static bool IsNumber(string val) =>
-                double.TryParse(TrimOuterParantheses(val), NumberStyles.Number, CultureInfo.InvariantCulture, out double _);
-            static bool IsString(string val) =>
-                val.StartsWith("'", StringComparison.Ordinal) &&
-                val.EndsWith("'", StringComparison.Ordinal) &&
-                !TrimOuterQuotes(val).Replace("''", "").Contains("'");
             static string TrimOuterParantheses(string val) => val.Substring(1, val.Length - 2);
-            static string TrimOuterQuotes(string val) => val.Substring(1, val.Length - 2);
-            static byte[] ToByteArray(string val)
-            {
-                string hex = val.Substring(2, val.Length - 2);
-                int numChars = hex.Length;
-                byte[] bytes = new byte[numChars / 2];
-                for (int i = 0; i < numChars; i += 2)
-                    bytes[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
-                return bytes;
-            }
         }
     }
 }

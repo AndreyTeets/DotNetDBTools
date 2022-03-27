@@ -13,8 +13,9 @@ public class DbDefinitionAnalyzerTests
         string goodDbCode =
 @"using System;
 using DotNetDBTools.Definition.Core;
+using DotNetDBTools.Definition.Core.CSharpDataTypes;
 using DotNetDBTools.Definition.MSSQL;
-using DotNetDBTools.Definition.MSSQL.DataTypes;
+using DotNetDBTools.Definition.MSSQL.UserDefinedTypes;
 
 namespace SampleTestCode
 {
@@ -33,7 +34,7 @@ namespace SampleTestCode
         {
             DataType = new IntDataType(),
             NotNull = true,
-            Default = 145,
+            Default = new CSharpDefaultValue(145),
             DefaultConstraintName = ""DF_TestTable2_TestColumn1"",
         };
 

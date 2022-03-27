@@ -189,6 +189,11 @@ public abstract class BaseDeployTests<TDatabase, TDbConnection, TDbModelConverte
 
         public bool Equals(CodePiece x, CodePiece y)
         {
+            if (x is null && y is null)
+                return true;
+            else if (x is null || y is null)
+                return false;
+
             if (x.Code is null && y.Code is null)
                 return true;
             else if (x.Code is null || y.Code is null)

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.MySQL;
 
@@ -19,21 +18,6 @@ internal static class MySQLQueriesHelper
             false => "NULL",
             true => "NOT NULL",
         };
-    }
-
-    public static string QuoteDefaultValue(object value)
-    {
-        return value switch
-        {
-            CodePiece => $"({((CodePiece)value).Code})",
-            string => $"('{value}')",
-            long => $"({value})",
-            decimal val => $"{val.ToString(CultureInfo.InvariantCulture)}",
-            byte[] => $"({ToHex((byte[])value)})",
-            _ => throw new InvalidOperationException($"Invalid value type: '{value.GetType()}'")
-        };
-
-        static string ToHex(byte[] val) => $@"0x{BitConverter.ToString(val).Replace("-", "")}";
     }
 
     public static DataType CreateDataTypeModel(string dataType, string fullDataType)

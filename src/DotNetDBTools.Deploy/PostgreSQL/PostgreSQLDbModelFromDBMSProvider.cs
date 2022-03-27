@@ -45,8 +45,7 @@ internal class PostgreSQLDbModelFromDBMSProvider : DbModelFromDBMSProvider<
         {
             DNDBTInfo dndbtInfo = dbObjectIDsMap[$"{DbObjectType.UserDefinedType}_{type.Name}_{null}"];
             type.ID = dndbtInfo.ID;
-            if (type.Default is CodePiece codePiece)
-                codePiece.Code = dndbtInfo.Code;
+            type.Default.Code = dndbtInfo.Code;
 
             foreach (CheckConstraint ck in type.CheckConstraints)
             {
@@ -125,8 +124,8 @@ internal class PostgreSQLDbModelFromDBMSProvider : DbModelFromDBMSProvider<
                     ID = Guid.NewGuid(),
                     Name = typeRecord.TypeName,
                     UnderlyingType = underlyingType,
-                    Default = PostgreSQLQueriesHelper.ParseDefault(underlyingType, typeRecord.Default),
                     NotNull = typeRecord.NotNull,
+                    Default = PostgreSQLQueriesHelper.ParseDefault(typeRecord.Default),
                     CheckConstraints = new List<CheckConstraint>(),
                 };
                 typesMap.Add(typeRecord.TypeName, type);

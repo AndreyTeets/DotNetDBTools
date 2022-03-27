@@ -98,7 +98,7 @@ ALTER TABLE `MyTable1NewName` DROP COLUMN `MyColumn2`;
 ALTER TABLE `MyTable1NewName` DROP COLUMN `MyColumn3`;
 ALTER TABLE `MyTable1NewName` ALTER COLUMN `MyColumn1` DROP DEFAULT;
 ALTER TABLE `MyTable1NewName` MODIFY COLUMN `MyColumn1` BIGINT NULL;
-ALTER TABLE `MyTable1NewName` ALTER COLUMN `MyColumn1` SET DEFAULT (15);
+ALTER TABLE `MyTable1NewName` ALTER COLUMN `MyColumn1` SET DEFAULT 15;
 ALTER TABLE `MyTable1NewName` ADD CONSTRAINT `CK_MyTable1_MyCheck1` CHECK (MyColumn4 >= 1);
 -- QUERY END: MySQLAlterTableQuery
 
@@ -132,7 +132,7 @@ WHERE `ID` = '299675e6-4faa-4d0f-a36a-224306ba5bcb';
 -- QUERY START: MySQLUpdateDNDBTDbObjectRecordQuery
 UPDATE `DNDBTDbObjects` SET
     `Name` = 'MyColumn1',
-    `Code` = NULL
+    `Code` = '15'
 WHERE `ID` = 'a2f2a4de-1337-4594-ae41-72ed4d05f317';
 -- QUERY END: MySQLUpdateDNDBTDbObjectRecordQuery
 
@@ -163,8 +163,8 @@ ALTER TABLE `MyTable2` DROP COLUMN `MyColumn2`;
 ALTER TABLE `MyTable2` ALTER COLUMN `MyColumn1` DROP DEFAULT;
 ALTER TABLE `MyTable2` RENAME COLUMN `MyColumn1` TO `MyColumn1NewName`;
 ALTER TABLE `MyTable2` MODIFY COLUMN `MyColumn1NewName` BIGINT NOT NULL;
-ALTER TABLE `MyTable2` ALTER COLUMN `MyColumn1NewName` SET DEFAULT (333);
-ALTER TABLE `MyTable2` ADD COLUMN `MyColumn2` VARBINARY(9) NULL;
+ALTER TABLE `MyTable2` ALTER COLUMN `MyColumn1NewName` SET DEFAULT 333;
+ALTER TABLE `MyTable2` ADD COLUMN `MyColumn2` VARBINARY(22) NULL;
 ALTER TABLE `MyTable2` ALTER COLUMN `MyColumn2` SET DEFAULT (0x000102);
 ALTER TABLE `MyTable2` ADD PRIMARY KEY (`MyColumn1NewName`);
 -- QUERY END: MySQLAlterTableQuery
@@ -189,7 +189,7 @@ WHERE `ID` = 'bfb9030c-a8c3-4882-9c42-1c6ad025cf8f';
 -- QUERY START: MySQLUpdateDNDBTDbObjectRecordQuery
 UPDATE `DNDBTDbObjects` SET
     `Name` = 'MyColumn1NewName',
-    `Code` = NULL
+    `Code` = '333'
 WHERE `ID` = 'c480f22f-7c01-4f41-b282-35e9f5cd1fe3';
 -- QUERY END: MySQLUpdateDNDBTDbObjectRecordQuery
 
@@ -208,7 +208,7 @@ VALUES
     'bfb9030c-a8c3-4882-9c42-1c6ad025cf8f',
     'Column',
     'MyColumn2',
-    NULL
+    '(0x000102)'
 );
 -- QUERY END: MySQLInsertDNDBTDbObjectRecordQuery
 
@@ -234,8 +234,8 @@ VALUES
 -- QUERY START: MySQLCreateTableQuery
 CREATE TABLE `MyTable3`
 (
-    `MyColumn1` BIGINT NOT NULL DEFAULT (333),
-    `MyColumn2` VARBINARY(9) NOT NULL
+    `MyColumn1` BIGINT NOT NULL DEFAULT 333,
+    `MyColumn2` VARBINARY(22) NOT NULL
 );
 -- QUERY END: MySQLCreateTableQuery
 
@@ -273,7 +273,7 @@ VALUES
     '474cd761-2522-4529-9d20-2b94115f9626',
     'Column',
     'MyColumn1',
-    NULL
+    '333'
 );
 -- QUERY END: MySQLInsertDNDBTDbObjectRecordQuery
 

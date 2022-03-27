@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
-using Microsoft.CodeAnalysis.Testing;
 using DotNetDBTools.DefinitionParsing.Core;
+using Microsoft.CodeAnalysis.Testing;
 using Xunit;
 using Verify = DotNetDBTools.AnalyzersTests.DbDescriptionSourceGeneratorVerifier<DotNetDBTools.DescriptionSourceGenerator.DbDescriptionSourceGenerator>;
 
@@ -14,8 +14,8 @@ public class DbDescriptionSourceGeneratorTests
         string goodDbCode =
 @"using System;
 using DotNetDBTools.Definition.Core;
+using DotNetDBTools.Definition.Core.CSharpDataTypes;
 using DotNetDBTools.Definition.MSSQL;
-using DotNetDBTools.Definition.MSSQL.DataTypes;
 
 namespace SampleTestCode
 {

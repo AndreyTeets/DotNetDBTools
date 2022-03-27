@@ -42,28 +42,28 @@ internal class MSSQLAlterTableQuery : AlterTableQuery
     {
         foreach (Column column in tableDiff.RemovedColumns)
         {
-            if (column.Default is not null)
+            if (column.Default.Code is not null)
                 sb.Append(Queries.DropDefaultConstraint(tableDiff.NewTable.Name, column));
             sb.Append(Queries.DropColumn(tableDiff.NewTable.Name, column.Name));
         }
 
         foreach (ColumnDiff columnDiff in tableDiff.ChangedColumns)
         {
-            if (columnDiff.OldColumn.Default is not null)
+            if (columnDiff.OldColumn.Default.Code is not null)
                 sb.Append(Queries.DropDefaultConstraint(tableDiff.NewTable.Name, columnDiff.OldColumn));
 
             if (columnDiff.OldColumn.Name != columnDiff.NewColumn.Name)
                 sb.Append(Queries.RenameColumn(tableDiff.NewTable.Name, columnDiff.OldColumn.Name, columnDiff.NewColumn.Name));
             sb.Append(Queries.AlterColumnTypeAndNullability(tableDiff.NewTable.Name, columnDiff.NewColumn));
 
-            if (columnDiff.NewColumn.Default is not null)
+            if (columnDiff.NewColumn.Default.Code is not null)
                 sb.Append(Queries.AddDefaultConstraint(tableDiff.NewTable.Name, columnDiff.NewColumn));
         }
 
         foreach (Column column in tableDiff.AddedColumns)
         {
             sb.Append(Queries.AddColumn(tableDiff.NewTable.Name, column));
-            if (column.Default is not null)
+            if (column.Default.Code is not null)
                 sb.Append(Queries.AddDefaultConstraint(tableDiff.NewTable.Name, column));
         }
     }
@@ -120,7 +120,7 @@ ALTER TABLE {tableName} DROP CONSTRAINT {ckName};"
 
         public static string AddDefaultConstraint(string tableName, Column c) =>
 $@"
-ALTER TABLE {tableName} ADD CONSTRAINT {((MSSQLColumn)c).DefaultConstraintName} DEFAULT {QuoteDefaultValue(c.Default)} FOR {c.Name};"
+ALTER TABLE {tableName} ADD CONSTRAINT {((MSSQLColumn)c).DefaultConstraintName} DEFAULT {c.Default.Code} FOR {c.Name};"
             ;
         public static string DropDefaultConstraint(string tableName, Column c) =>
 $@"

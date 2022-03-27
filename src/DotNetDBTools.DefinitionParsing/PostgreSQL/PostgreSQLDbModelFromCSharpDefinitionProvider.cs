@@ -5,7 +5,6 @@ using System.Reflection;
 using DotNetDBTools.Analysis.PostgreSQL;
 using DotNetDBTools.Definition.Core;
 using DotNetDBTools.Definition.PostgreSQL;
-using DotNetDBTools.Definition.PostgreSQL.DataTypes;
 using DotNetDBTools.Definition.PostgreSQL.UserDefinedTypes;
 using DotNetDBTools.DefinitionParsing.Common;
 using DotNetDBTools.DefinitionParsing.Core;
@@ -90,23 +89,14 @@ internal class PostgreSQLDbModelFromCSharpDefinitionProvider : DbModelFromCSharp
                 ID = type.ID,
                 Name = typeName,
                 UnderlyingType = DataTypeMapper.MapToDataTypeModel(type.UnderlyingType),
-                Default = MapDefaultValue(type),
                 NotNull = type.NotNull,
+                Default = DefaultValueMapper.MapToDefaultValueModel(type.Default),
                 CheckConstraints = BuildCheckConstraintModels(type),
             };
             typeModelsList.Add(typeModel);
         }
         return typeModelsList;
 
-        object MapDefaultValue(IDomain domain)
-        {
-            object value = domain.Default;
-            if (value is null)
-                return null;
-            if (value is Expression expression)
-                return new CodePiece() { Code = expression.Code };
-            return PostgreSQLDefaultValueMapper.MapByColumnDataType(domain.UnderlyingType, value);
-        }
         List<Models.Core.CheckConstraint> BuildCheckConstraintModels(IDomain type)
         {
             return type.GetType().GetPropertyOrFieldMembers()
@@ -159,7 +149,7 @@ internal class PostgreSQLDbModelFromCSharpDefinitionProvider : DbModelFromCSharp
                 Name = typeName,
                 Subtype = subtype,
                 SubtypeOperatorClass = type.SubtypeOperatorClass ?? GetDefaultSubtypeOperatorClass(subtype),
-                Collation = type.Collation ?? GetDefaultCollation(type.Subtype),
+                Collation = type.Collation ?? GetDefaultCollation(subtype),
                 CanonicalFunction = type.CanonicalFunction ?? null,
                 SubtypeDiff = type.SubtypeDiff ?? null,
                 MultirangeTypeName = type.MultirangeTypeName ?? $"{typeName}_multirange",
@@ -196,11 +186,13 @@ internal class PostgreSQLDbModelFromCSharpDefinitionProvider : DbModelFromCSharp
             };
         }
 
-        string GetDefaultCollation(IDataType subType)
+        string GetDefaultCollation(DataType subtype)
         {
-            return subType switch
+            return subtype.Name switch
             {
-                StringDataType => "default",
+                PostgreSQLDataTypeNames.CHAR => "default",
+                PostgreSQLDataTypeNames.VARCHAR => "default",
+                PostgreSQLDataTypeNames.TEXT => "default",
                 _ => null,
             };
         }

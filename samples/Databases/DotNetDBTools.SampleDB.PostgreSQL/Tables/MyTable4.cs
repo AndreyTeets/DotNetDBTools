@@ -1,6 +1,6 @@
 ﻿using System;
+using DotNetDBTools.Definition.Core.CSharpDataTypes;
 using DotNetDBTools.Definition.PostgreSQL;
-using DotNetDBTools.Definition.PostgreSQL.DataTypes;
 
 namespace DotNetDBTools.SampleDB.PostgreSQL.Tables
 {

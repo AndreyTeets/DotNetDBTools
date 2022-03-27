@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo;
 using DotNetDBTools.Models.Core;
@@ -71,12 +70,11 @@ WHERE t.TABLE_SCHEMA = (select DATABASE())
             return dataTypeModel;
         }
 
-        private static object ParseDefault(DataType dataType, MySQLColumnRecord columnRecord)
+        private static CodePiece ParseDefault(DataType dataType, MySQLColumnRecord columnRecord)
         {
             string value = columnRecord.Default;
             if (value is null)
-                return null;
-
+                return new CodePiece() { Code = value };
             if (IsFunction(value))
                 return new CodePiece() { Code = value };
 
@@ -88,38 +86,28 @@ WHERE t.TABLE_SCHEMA = (select DATABASE())
                 case MySQLDataTypeNames.MEDIUMINT:
                 case MySQLDataTypeNames.INT:
                 case MySQLDataTypeNames.BIGINT:
-                    return long.Parse(value);
                 case MySQLDataTypeNames.DECIMAL:
-                    return decimal.Parse(value, CultureInfo.InvariantCulture);
+                    return new CodePiece() { Code = value };
                 case MySQLDataTypeNames.CHAR:
                 case MySQLDataTypeNames.VARCHAR:
                 case MySQLDataTypeNames.TINYTEXT:
                 case MySQLDataTypeNames.TEXT:
                 case MySQLDataTypeNames.MEDIUMTEXT:
                 case MySQLDataTypeNames.LONGTEXT:
-                    return TrimOuterQuotesIfExist(value.Replace("_utf8mb4", ""));
+                    return new CodePiece() { Code = $"'{TrimOuterQuotesIfExist(value.Replace("_utf8mb4", ""))}'" };
                 case MySQLDataTypeNames.BINARY:
                 case MySQLDataTypeNames.VARBINARY:
                 case MySQLDataTypeNames.TINYBLOB:
                 case MySQLDataTypeNames.BLOB:
                 case MySQLDataTypeNames.MEDIUMBLOB:
                 case MySQLDataTypeNames.LONGBLOB:
-                    return ToByteArray(value);
+                    return new CodePiece() { Code = value };
                 default:
                     throw new InvalidOperationException($"Invalid default value [{value}] for data type [{dataType.Name}]");
             }
 
             bool IsFunction(string val) => val.Contains("(") && val.Contains(")") && columnRecord.DefaultIsFunction;
             static string TrimOuterQuotesIfExist(string val) => val.Contains(@"\'") ? val.Substring(2, val.Length - 4) : val;
-            static byte[] ToByteArray(string val)
-            {
-                string hex = val.Substring(2, val.Length - 2);
-                int numChars = hex.Length;
-                byte[] bytes = new byte[numChars / 2];
-                for (int i = 0; i < numChars; i += 2)
-                    bytes[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
-                return bytes;
-            }
         }
     }
 }

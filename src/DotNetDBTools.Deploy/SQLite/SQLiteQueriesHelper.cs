@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
+﻿using System.Collections.Generic;
 using System.Linq;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Models.Core;
@@ -67,25 +65,9 @@ $@"    CONSTRAINT [{ck.Name}] {ck.GetCode()}"));
 
     private static string GetDefaultValStatement(Column column)
     {
-        if (column.Default is not null)
-        {
-            return $" DEFAULT {QuoteDefaultValue(column.Default)}";
-        }
-        return "";
-    }
-
-    private static string QuoteDefaultValue(object value)
-    {
-        return value switch
-        {
-            CodePiece => $"({((CodePiece)value).Code})",
-            string => $"'{value}'",
-            long => $"{value}",
-            decimal val => $"{val.ToString(CultureInfo.InvariantCulture)}",
-            byte[] => $"{ToHex((byte[])value)}",
-            _ => throw new InvalidOperationException($"Invalid value type: '{value.GetType()}'")
-        };
-
-        static string ToHex(byte[] val) => $@"0x{BitConverter.ToString(val).Replace("-", "")}";
+        if (column.Default.Code is not null)
+            return $" DEFAULT {column.Default.Code}";
+        else
+            return "";
     }
 }

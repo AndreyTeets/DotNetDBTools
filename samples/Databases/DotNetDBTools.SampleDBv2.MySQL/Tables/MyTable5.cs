@@ -1,7 +1,6 @@
 ﻿using System;
-using DotNetDBTools.Definition.Core;
+using DotNetDBTools.Definition.Core.CSharpDataTypes;
 using DotNetDBTools.Definition.MySQL;
-using DotNetDBTools.Definition.MySQL.DataTypes;
 
 namespace DotNetDBTools.SampleDB.MySQL.Tables
 {
@@ -11,14 +10,14 @@ namespace DotNetDBTools.SampleDB.MySQL.Tables
 
         public Column MyColumn1 = new("5309D66F-2030-402E-912E-5547BABAA072")
         {
-            DataType = new IntDataType(),
+            DataType = new VerbatimDataType("INT"),
             NotNull = true,
-            Default = new Expression("ABS(-15)"),
+            Default = new VerbatimDefaultValue("(ABS(-15))"),
         };
 
         public Column MyColumn3 = new("4DDE852D-EC19-4B61-80F9-DA428D8FF41A")
         {
-            DataType = new DateTimeDataType() { SqlType = DateTimeSqlType.DATETIME },
+            DataType = new DateTimeDataType(),
         };
     }
 }

@@ -3,10 +3,12 @@ using System.Linq;
 using System.Reflection;
 using DotNetDBTools.Definition.Core;
 using DotNetDBTools.Definition.MSSQL;
+using DotNetDBTools.Definition.MSSQL.UserDefinedTypes;
 using DotNetDBTools.DefinitionParsing.Common;
 using DotNetDBTools.DefinitionParsing.Core;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.MSSQL;
+using DotNetDBTools.Models.MSSQL.UserDefinedTypes;
 
 namespace DotNetDBTools.DefinitionParsing.MSSQL;
 

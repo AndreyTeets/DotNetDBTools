@@ -1,6 +1,7 @@
 ﻿using System;
+using DotNetDBTools.Definition.Core;
+using DotNetDBTools.Definition.Core.CSharpDataTypes;
 using DotNetDBTools.Definition.SQLite;
-using DotNetDBTools.Definition.SQLite.DataTypes;
 
 namespace DotNetDBTools.SampleDB.SQLite.Tables
 {
@@ -12,13 +13,13 @@ namespace DotNetDBTools.SampleDB.SQLite.Tables
         {
             DataType = new IntDataType(),
             NotNull = true,
-            Default = 333,
+            Default = new CSharpDefaultValue(333),
         };
 
         public Column MyColumn2 = new("C2DF19C2-E029-4014-8A5B-4AB42FECB6B8")
         {
             DataType = new BinaryDataType(),
-            Default = new byte[] { 0, 1, 2 },
+            Default = new CSharpDefaultValue(new byte[] { 0, 1, 2 }),
         };
 
         public PrimaryKey PK_MyTable2 = new("3A43615B-40B3-4A13-99E7-93AF7C56E8CE")

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo;
 using DotNetDBTools.Models.Core;
@@ -53,7 +52,7 @@ WHERE sm.type = 'table'
                 DataType = ParseDataType(cr),
                 NotNull = cr.NotNull,
                 Identity = cr.IsIdentityCandidate,
-                Default = ParseDefault(dataType, cr.Default),
+                Default = ParseDefault(cr),
             };
         }
 
@@ -73,41 +72,16 @@ WHERE sm.type = 'table'
             }
         }
 
-        private static object ParseDefault(DataType dataType, string valueFromDBMSSysTable)
+        private static CodePiece ParseDefault(SQLiteColumnRecord columnRecord)
         {
-            if (valueFromDBMSSysTable is null)
-                return null;
-            string value = valueFromDBMSSysTable;
-
+            string value = columnRecord.Default;
+            if (value is null)
+                return new CodePiece { Code = null };
             if (IsFunction(value))
-                return new CodePiece() { Code = value };
-
-            string baseDataType = dataType.Name;
-            switch (baseDataType)
-            {
-                case SQLiteDataTypeNames.INTEGER:
-                    return long.Parse(value);
-                case SQLiteDataTypeNames.NUMERIC:
-                    return decimal.Parse(value, CultureInfo.InvariantCulture);
-                case SQLiteDataTypeNames.TEXT:
-                    return TrimOuterQuotes(value);
-                case SQLiteDataTypeNames.BLOB:
-                    return ToByteArray(value);
-                default:
-                    throw new InvalidOperationException($"Invalid default value [{valueFromDBMSSysTable}] for data type [{dataType.Name}]");
-            }
+                return new CodePiece { Code = $"({value})" };
+            return new CodePiece { Code = value };
 
             static bool IsFunction(string val) => val.Contains("(") && val.Contains(")") && !val.StartsWith("'", StringComparison.Ordinal);
-            static string TrimOuterQuotes(string val) => val.Substring(1, val.Length - 2);
-            static byte[] ToByteArray(string val)
-            {
-                string hex = val.Substring(2, val.Length - 2);
-                int numChars = hex.Length;
-                byte[] bytes = new byte[numChars / 2];
-                for (int i = 0; i < numChars; i += 2)
-                    bytes[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
-                return bytes;
-            }
         }
     }
 }

@@ -14,27 +14,20 @@ internal class AgnosticDbObjectCodeMapper : IDbObjectCodeMapper
     {
         return dbObject switch
         {
-            Definition.Agnostic.CheckConstraint ck => new AgnosticCodePiece
-            {
-                Code = null,
-                DbKindToCodeMap = CreateDbKindToCodeMap(ck.Code),
-            },
-            Definition.Agnostic.Trigger trigger => new AgnosticCodePiece
-            {
-                Code = null,
-                DbKindToCodeMap = CreateDbKindToCodeMap(trigger.Code),
-            },
-            IView view => new AgnosticCodePiece
-            {
-                Code = null,
-                DbKindToCodeMap = CreateDbKindToCodeMap(view.Code),
-            },
-            IScript script => new AgnosticCodePiece
-            {
-                Code = null,
-                DbKindToCodeMap = CreateDbKindToCodeMap(script.Code),
-            },
+            Definition.Agnostic.CheckConstraint ck => CreateAgnosticCodePiece(ck.Code),
+            Definition.Agnostic.Trigger trigger => CreateAgnosticCodePiece(trigger.Code),
+            IView view => CreateAgnosticCodePiece(view.Code),
+            IScript script => CreateAgnosticCodePiece(script.Code),
             _ => throw new InvalidOperationException($"Invalid dbObject for code mapping: {dbObject}"),
+        };
+    }
+
+    public static AgnosticCodePiece CreateAgnosticCodePiece(Func<DbmsKind, string> getCodeFunc)
+    {
+        return new AgnosticCodePiece
+        {
+            Code = null,
+            DbKindToCodeMap = CreateDbKindToCodeMap(getCodeFunc),
         };
     }
 
@@ -42,10 +35,10 @@ internal class AgnosticDbObjectCodeMapper : IDbObjectCodeMapper
     {
         return new Dictionary<DatabaseKind, string>()
         {
-            { DatabaseKind.MSSQL, getCodeFunc(DbmsKind.MSSQL).NormalizeLineEndings() },
-            { DatabaseKind.MySQL, getCodeFunc(DbmsKind.MySQL).NormalizeLineEndings() },
-            { DatabaseKind.PostgreSQL, getCodeFunc(DbmsKind.PostgreSQL).NormalizeLineEndings() },
-            { DatabaseKind.SQLite, getCodeFunc(DbmsKind.SQLite).NormalizeLineEndings() },
+            { DatabaseKind.MSSQL, getCodeFunc(DbmsKind.MSSQL)?.NormalizeLineEndings() },
+            { DatabaseKind.MySQL, getCodeFunc(DbmsKind.MySQL)?.NormalizeLineEndings() },
+            { DatabaseKind.PostgreSQL, getCodeFunc(DbmsKind.PostgreSQL)?.NormalizeLineEndings() },
+            { DatabaseKind.SQLite, getCodeFunc(DbmsKind.SQLite)?.NormalizeLineEndings() },
         };
     }
 }

@@ -1,109 +1,43 @@
 ﻿using System;
+using DotNetDBTools.Analysis.MSSQL;
 using DotNetDBTools.Definition.Core;
+using DotNetDBTools.Definition.Core.CSharpDataTypes;
 using DotNetDBTools.Definition.MSSQL;
-using DotNetDBTools.Definition.MSSQL.DataTypes;
+using DotNetDBTools.Definition.MSSQL.UserDefinedTypes;
 using DotNetDBTools.DefinitionParsing.Core;
 using DotNetDBTools.Models.Core;
-using DotNetDBTools.Models.MSSQL;
 
 namespace DotNetDBTools.DefinitionParsing.MSSQL;
 
-internal class MSSQLDataTypeMapper : IDataTypeMapper
+internal class MSSQLDataTypeMapper : DataTypeMapper
 {
-    public DataType MapToDataTypeModel(IDataType dataType)
+    public override DataType MapToDataTypeModel(IDataType dataType)
     {
-        return dataType switch
+        switch (dataType)
         {
-            IntDataType dt => Map(dt),
-            RealDataType dt => Map(dt),
-            DecimalDataType dt => Map(dt),
-            BoolDataType dt => new DataType() { Name = MSSQLDataTypeNames.BIT },
+            case IntDataType:
+            case RealDataType:
+            case DecimalDataType:
+            case BoolDataType:
 
-            MoneyDataType dt => new DataType() { Name = dt.SqlType.ToString() },
+            case StringDataType:
+            case BinaryDataType:
+            case GuidDataType:
 
-            StringDataType dt => Map(dt),
-            BinaryDataType dt => Map(dt),
+            case DateDataType:
+            case TimeDataType:
+            case DateTimeDataType:
+                CSharpDataType csharpDataType = CreateCSharpDataTypeModel(dataType);
+                return MSSQLDataTypeConverter.ConvertToMSSQL(csharpDataType);
 
-            DateDataType dt => new DataType() { Name = MSSQLDataTypeNames.DATE },
-            TimeDataType dt => new DataType() { Name = MSSQLDataTypeNames.TIME },
-            DateTimeDataType dt => new DataType() { Name = dt.SqlType.ToString() },
+            case VerbatimDataType verbatimDataType:
+                return new DataType { Name = verbatimDataType.Name.ToUpper() };
 
-            GuidDataType dt => new DataType() { Name = MSSQLDataTypeNames.UNIQUEIDENTIFIER },
-            RowVersionDataType dt => new DataType() { Name = MSSQLDataTypeNames.ROWVERSION },
+            case IUserDefinedType:
+                return new DataType { Name = dataType.GetType().Name, IsUserDefined = true };
 
-            IUserDefinedType udt => new DataType { Name = udt.GetType().Name, IsUserDefined = true },
-            _ => throw new InvalidOperationException($"Invalid dataType: '{dataType}'")
-        };
-    }
-
-    private static DataType Map(IntDataType intDataType)
-    {
-        return intDataType.Size switch
-        {
-            IntSize.Int8 => new DataType() { Name = MSSQLDataTypeNames.TINYINT },
-            IntSize.Int16 => new DataType() { Name = MSSQLDataTypeNames.SMALLINT },
-            IntSize.Int32 => new DataType() { Name = MSSQLDataTypeNames.INT },
-            IntSize.Int64 => new DataType() { Name = MSSQLDataTypeNames.BIGINT },
-            _ => throw new InvalidOperationException($"Invalid int size: {intDataType.Size}"),
-        };
-    }
-
-    private static DataType Map(RealDataType realDataType)
-    {
-        if (realDataType.IsDoublePrecision)
-            return new DataType() { Name = MSSQLDataTypeNames.FLOAT };
-        else
-            return new DataType() { Name = MSSQLDataTypeNames.REAL };
-    }
-
-    private static DataType Map(DecimalDataType decimalDataType)
-    {
-        return new DataType { Name = $"{MSSQLDataTypeNames.DECIMAL}({decimalDataType.Precision}, {decimalDataType.Scale})" };
-    }
-
-    private static DataType Map(StringDataType stringDataType)
-    {
-        string stringTypeName = stringDataType.SqlType.ToString();
-        (bool isFixedLength, int maxAllowedLength) = stringTypeName switch
-        {
-            MSSQLDataTypeNames.CHAR => (true, 8000),
-            MSSQLDataTypeNames.NCHAR => (true, 4000),
-            MSSQLDataTypeNames.VARCHAR => (false, 8000),
-            MSSQLDataTypeNames.NVARCHAR => (false, 4000),
-            _ => throw new InvalidOperationException($"Invalid string data type sql type: {stringDataType.SqlType}"),
-        };
-
-        string lengthStr = stringDataType.Length.ToString();
-        if (stringDataType.Length > maxAllowedLength ||
-            stringDataType.Length < 1)
-        {
-            if (isFixedLength)
-                throw new Exception($"The size ({stringDataType.Length}) given to type {stringTypeName} exceeds maximum allowed length");
-            lengthStr = "MAX";
+            default:
+                throw new InvalidOperationException($"Invalid dataType: {dataType}");
         }
-
-        return new DataType { Name = $"{stringTypeName}({lengthStr})" };
-    }
-
-    private static DataType Map(BinaryDataType binaryDataType)
-    {
-        string binaryTypeName = binaryDataType.SqlType.ToString();
-        (bool isFixedLength, int maxAllowedLength) = binaryTypeName switch
-        {
-            MSSQLDataTypeNames.BINARY => (true, 8000),
-            MSSQLDataTypeNames.VARBINARY => (false, 8000),
-            _ => throw new InvalidOperationException($"Invalid binary data type sql type: {binaryDataType.SqlType}"),
-        };
-
-        string lengthStr = binaryDataType.Length.ToString();
-        if (binaryDataType.Length > maxAllowedLength ||
-            binaryDataType.Length < 1)
-        {
-            if (isFixedLength)
-                throw new Exception($"The size ({binaryDataType.Length}) given to type {binaryTypeName} exceeds maximum allowed length");
-            lengthStr = "MAX";
-        }
-
-        return new DataType { Name = $"{binaryTypeName}({lengthStr})" };
     }
 }

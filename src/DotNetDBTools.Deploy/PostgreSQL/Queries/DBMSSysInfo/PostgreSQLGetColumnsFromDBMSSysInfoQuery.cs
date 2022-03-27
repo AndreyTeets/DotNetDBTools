@@ -67,7 +67,7 @@ WHERE c.relkind = 'r'
                 DataType = dataType,
                 NotNull = cr.NotNull,
                 Identity = cr.Identity,
-                Default = PostgreSQLQueriesHelper.ParseDefault(dataType, cr.Default),
+                Default = PostgreSQLQueriesHelper.ParseDefault(cr.Default),
             };
         }
     }

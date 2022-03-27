@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using DotNetDBTools.Deploy.Core;
-using DotNetDBTools.Models.MSSQL;
+using DotNetDBTools.Models.MSSQL.UserDefinedTypes;
 
 namespace DotNetDBTools.Deploy.MSSQL.Queries.DDL;
 

@@ -2,7 +2,6 @@
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.PostgreSQL.UserDefinedTypes;
-using static DotNetDBTools.Deploy.PostgreSQL.PostgreSQLQueriesHelper;
 
 namespace DotNetDBTools.Deploy.PostgreSQL.Queries.DDL;
 
@@ -32,10 +31,10 @@ $@"CREATE DOMAIN ""{type.Name}"" AS {type.UnderlyingType.GetQuotedName()}{GetDom
     {
         List<string> definitions = new();
 
-        if (type.Default is not null)
+        if (type.Default.Code is not null)
         {
             definitions.Add(
-$@"    DEFAULT {QuoteDefaultValue(type.Default)}");
+$@"    DEFAULT {type.Default.Code}");
         }
 
         definitions.Add(

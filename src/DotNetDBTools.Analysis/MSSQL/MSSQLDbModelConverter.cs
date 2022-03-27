@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.Models.Agnostic;
@@ -60,23 +59,13 @@ public class MSSQLDbModelConverter : DbModelConverter
         List<Column> mssqlColumns = new();
         foreach (Column column in columns)
         {
-            DataType dataType = column.DataType.Name switch
-            {
-                AgnosticDataTypeNames.Int => ConvertIntSqlType((AgnosticDataType)column.DataType),
-                AgnosticDataTypeNames.Real => ConvertRealSqlType((AgnosticDataType)column.DataType),
-                AgnosticDataTypeNames.Decimal => ConvertDecimalSqlType((AgnosticDataType)column.DataType),
-                AgnosticDataTypeNames.Bool => new DataType { Name = MSSQLDataTypeNames.BIT },
+            DataType dataType = column.DataType is AgnosticVerbatimDataType avdt
+                ? new DataType { Name = ConvertCodePiece(avdt.NameCodePiece).Code }
+                : MSSQLDataTypeConverter.ConvertToMSSQL((CSharpDataType)column.DataType);
 
-                AgnosticDataTypeNames.String => ConvertStringSqlType((AgnosticDataType)column.DataType),
-                AgnosticDataTypeNames.Binary => ConvertBinarySqlType((AgnosticDataType)column.DataType),
-
-                AgnosticDataTypeNames.Date => new DataType { Name = MSSQLDataTypeNames.DATE },
-                AgnosticDataTypeNames.Time => new DataType { Name = MSSQLDataTypeNames.TIME },
-                AgnosticDataTypeNames.DateTime => ConvertDateTimeSqlType((AgnosticDataType)column.DataType),
-
-                AgnosticDataTypeNames.Guid => new DataType { Name = MSSQLDataTypeNames.UNIQUEIDENTIFIER },
-                _ => throw new InvalidOperationException($"Invalid agnostic column datatype name: {column.DataType.Name}"),
-            };
+            CodePiece defaultValue = column.Default is AgnosticCodePiece acp
+                ? ConvertCodePiece(acp)
+                : MSSQLDefaultValueConverter.ConvertToMSSQL((CSharpDefaultValue)column.Default);
 
             MSSQLColumn mssqlColumn = new()
             {
@@ -85,78 +74,13 @@ public class MSSQLDbModelConverter : DbModelConverter
                 DataType = dataType,
                 NotNull = column.NotNull,
                 Identity = column.Identity,
-                Default = column.Default,
-                DefaultConstraintName = column.Default is not null
+                Default = defaultValue,
+                DefaultConstraintName = defaultValue.Code is not null
                     ? $"DF_{tableName}_{column.Name}"
                     : null
             };
             mssqlColumns.Add(mssqlColumn);
         }
         return mssqlColumns;
-    }
-
-    private DataType ConvertIntSqlType(AgnosticDataType dataType)
-    {
-        return dataType.Size switch
-        {
-            8 => new DataType { Name = MSSQLDataTypeNames.TINYINT },
-            16 => new DataType { Name = MSSQLDataTypeNames.SMALLINT },
-            32 => new DataType { Name = MSSQLDataTypeNames.INT },
-            64 => new DataType { Name = MSSQLDataTypeNames.BIGINT },
-            _ => throw new Exception($"Invalid int size: '{dataType.Size}'")
-        };
-    }
-
-    private DataType ConvertRealSqlType(AgnosticDataType dataType)
-    {
-        if (dataType.IsDoublePrecision)
-            return new DataType { Name = MSSQLDataTypeNames.REAL };
-        else
-            return new DataType { Name = MSSQLDataTypeNames.FLOAT };
-    }
-
-    private DataType ConvertDecimalSqlType(AgnosticDataType dataType)
-    {
-        return new DataType { Name = $"{MSSQLDataTypeNames.DECIMAL}({dataType.Precision}, {dataType.Scale})" };
-    }
-
-    private DataType ConvertStringSqlType(AgnosticDataType dataType)
-    {
-        string stringTypeName = dataType.IsFixedLength ? MSSQLDataTypeNames.NCHAR : MSSQLDataTypeNames.NVARCHAR;
-
-        string lengthStr = dataType.Length.ToString();
-        if (dataType.Length > 4000 ||
-            dataType.Length < 1)
-        {
-            if (dataType.IsFixedLength)
-                stringTypeName = MSSQLDataTypeNames.NVARCHAR;
-            lengthStr = "MAX";
-        }
-
-        return new DataType { Name = $"{stringTypeName}({lengthStr})" };
-    }
-
-    private DataType ConvertBinarySqlType(AgnosticDataType dataType)
-    {
-        string binaryTypeName = dataType.IsFixedLength ? MSSQLDataTypeNames.BINARY : MSSQLDataTypeNames.VARBINARY;
-
-        string lengthStr = dataType.Length.ToString();
-        if (dataType.Length > 8000 ||
-            dataType.Length < 1)
-        {
-            if (dataType.IsFixedLength)
-                binaryTypeName = MSSQLDataTypeNames.VARBINARY;
-            lengthStr = "MAX";
-        }
-
-        return new DataType { Name = $"{binaryTypeName}({lengthStr})" };
-    }
-
-    private DataType ConvertDateTimeSqlType(AgnosticDataType dataType)
-    {
-        if (dataType.IsWithTimeZone)
-            return new DataType { Name = MSSQLDataTypeNames.DATETIMEOFFSET };
-        else
-            return new DataType { Name = MSSQLDataTypeNames.DATETIME2 };
     }
 }
