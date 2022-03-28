@@ -115,14 +115,14 @@ ALTER TABLE "MyTable2" ADD CONSTRAINT "PK_MyTable2" PRIMARY KEY ("MyColumn1");';
 
 -- QUERY START: PostgreSQLAlterTableQuery
 EXECUTE '
-ALTER TABLE "MyTable5" ALTER COLUMN "MyColumn2" SET DATA TYPE "MyCompositeType1"
-    USING ("MyColumn2"::text::"MyCompositeType1");
-ALTER TABLE "MyTable5" ALTER COLUMN "MyColumn4" SET DATA TYPE "MyDomain1"
-    USING ("MyColumn4"::text::"MyDomain1");
-ALTER TABLE "MyTable5" ALTER COLUMN "MyColumn5" SET DATA TYPE "MyEnumType1"
-    USING ("MyColumn5"::text::"MyEnumType1");
-ALTER TABLE "MyTable5" ALTER COLUMN "MyColumn6" SET DATA TYPE "MyRangeType1"
-    USING ("MyColumn6"::text::"MyRangeType1");';
+ALTER TABLE "MyTable5" ALTER COLUMN "MyColumn13" SET DATA TYPE "MyCompositeType1"
+    USING ("MyColumn13"::text::"MyCompositeType1");
+ALTER TABLE "MyTable5" ALTER COLUMN "MyColumn14" SET DATA TYPE "MyDomain1"
+    USING ("MyColumn14"::text::"MyDomain1");
+ALTER TABLE "MyTable5" ALTER COLUMN "MyColumn15" SET DATA TYPE "MyEnumType1"
+    USING ("MyColumn15"::text::"MyEnumType1");
+ALTER TABLE "MyTable5" ALTER COLUMN "MyColumn16" SET DATA TYPE "MyRangeType1"
+    USING ("MyColumn16"::text::"MyRangeType1");';
 -- QUERY END: PostgreSQLAlterTableQuery
 
 -- QUERY START: PostgreSQLDropTypeQuery

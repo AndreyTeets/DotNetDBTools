@@ -442,14 +442,14 @@ VALUES
 
 -- QUERY START: PostgreSQLAlterTableQuery
 EXECUTE '
-ALTER TABLE "MyTable5" ALTER COLUMN "MyColumn2" SET DATA TYPE "MyCompositeType1"
-    USING ("MyColumn2"::text::"MyCompositeType1");
-ALTER TABLE "MyTable5" ALTER COLUMN "MyColumn4" SET DATA TYPE "MyDomain1"
-    USING ("MyColumn4"::text::"MyDomain1");
-ALTER TABLE "MyTable5" ALTER COLUMN "MyColumn5" SET DATA TYPE "MyEnumType1"
-    USING ("MyColumn5"::text::"MyEnumType1");
-ALTER TABLE "MyTable5" ALTER COLUMN "MyColumn6" SET DATA TYPE "MyRangeType1"
-    USING ("MyColumn6"::text::"MyRangeType1");';
+ALTER TABLE "MyTable5" ALTER COLUMN "MyColumn13" SET DATA TYPE "MyCompositeType1"
+    USING ("MyColumn13"::text::"MyCompositeType1");
+ALTER TABLE "MyTable5" ALTER COLUMN "MyColumn14" SET DATA TYPE "MyDomain1"
+    USING ("MyColumn14"::text::"MyDomain1");
+ALTER TABLE "MyTable5" ALTER COLUMN "MyColumn15" SET DATA TYPE "MyEnumType1"
+    USING ("MyColumn15"::text::"MyEnumType1");
+ALTER TABLE "MyTable5" ALTER COLUMN "MyColumn16" SET DATA TYPE "MyRangeType1"
+    USING ("MyColumn16"::text::"MyRangeType1");';
 -- QUERY END: PostgreSQLAlterTableQuery
 
 -- QUERY START: PostgreSQLUpdateDNDBTDbObjectRecordQuery
@@ -461,28 +461,28 @@ WHERE "ID" = ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'';';
 
 -- QUERY START: PostgreSQLUpdateDNDBTDbObjectRecordQuery
 EXECUTE 'UPDATE "DNDBTDbObjects" SET
-    "Name" = ''MyColumn2'',
+    "Name" = ''MyColumn13'',
     "Code" = NULL
 WHERE "ID" = ''15ae6061-426d-4485-85e6-ecd3e0f98882'';';
 -- QUERY END: PostgreSQLUpdateDNDBTDbObjectRecordQuery
 
 -- QUERY START: PostgreSQLUpdateDNDBTDbObjectRecordQuery
 EXECUTE 'UPDATE "DNDBTDbObjects" SET
-    "Name" = ''MyColumn4'',
+    "Name" = ''MyColumn14'',
     "Code" = NULL
 WHERE "ID" = ''45856161-db66-49f6-afde-9214d2d2d4b0'';';
 -- QUERY END: PostgreSQLUpdateDNDBTDbObjectRecordQuery
 
 -- QUERY START: PostgreSQLUpdateDNDBTDbObjectRecordQuery
 EXECUTE 'UPDATE "DNDBTDbObjects" SET
-    "Name" = ''MyColumn5'',
+    "Name" = ''MyColumn15'',
     "Code" = NULL
 WHERE "ID" = ''b45d163b-f49e-499f-a9e5-2538cd073b80'';';
 -- QUERY END: PostgreSQLUpdateDNDBTDbObjectRecordQuery
 
 -- QUERY START: PostgreSQLUpdateDNDBTDbObjectRecordQuery
 EXECUTE 'UPDATE "DNDBTDbObjects" SET
-    "Name" = ''MyColumn6'',
+    "Name" = ''MyColumn16'',
     "Code" = NULL
 WHERE "ID" = ''c8b03b75-a8a2-47e0-bf5c-f3e4f1b8f500'';';
 -- QUERY END: PostgreSQLUpdateDNDBTDbObjectRecordQuery

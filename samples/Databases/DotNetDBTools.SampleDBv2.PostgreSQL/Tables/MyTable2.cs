@@ -1,6 +1,6 @@
 ﻿using System;
-using DotNetDBTools.Definition.Core;
 using DotNetDBTools.Definition.Core.CSharpDataTypes;
+using DotNetDBTools.Definition.Core.CSharpDefaultValues;
 using DotNetDBTools.Definition.PostgreSQL;
 using DotNetDBTools.SampleDBv2.PostgreSQL.Functions;
 
@@ -14,13 +14,13 @@ namespace DotNetDBTools.SampleDB.PostgreSQL.Tables
         {
             DataType = new IntDataType() { Size = IntSize.Int64 },
             NotNull = true,
-            Default = new CSharpDefaultValue(333),
+            Default = new IntDefaultValue(333),
         };
 
         public Column MyColumn2 = new("C2DF19C2-E029-4014-8A5B-4AB42FECB6B8")
         {
             DataType = new BinaryDataType(),
-            Default = new CSharpDefaultValue(new byte[] { 0, 1, 2 }),
+            Default = new BinaryDefaultValue(new byte[] { 0, 1, 2 }),
         };
 
         public PrimaryKey PK_MyTable2 = new("3A43615B-40B3-4A13-99E7-93AF7C56E8CE")

@@ -1,6 +1,6 @@
 ﻿using System;
-using DotNetDBTools.Definition.Core;
 using DotNetDBTools.Definition.Core.CSharpDataTypes;
+using DotNetDBTools.Definition.Core.CSharpDefaultValues;
 using DotNetDBTools.Definition.MySQL;
 
 namespace DotNetDBTools.SampleDB.MySQL.Tables
@@ -13,7 +13,7 @@ namespace DotNetDBTools.SampleDB.MySQL.Tables
         {
             DataType = new IntDataType() { Size = IntSize.Int64 },
             NotNull = true,
-            Default = new CSharpDefaultValue(333),
+            Default = new IntDefaultValue(333),
         };
 
         public Column MyColumn2 = new("169824E1-8B74-4B60-AF17-99656D6DBBEE")

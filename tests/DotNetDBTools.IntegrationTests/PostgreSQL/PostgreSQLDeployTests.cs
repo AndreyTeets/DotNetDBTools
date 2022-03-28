@@ -42,7 +42,13 @@ public class PostgreSQLDeployTests : BaseDeployTests<
             .Replace("::NUMERIC", "")
             .Replace("::TEXT", "")
             .Replace("::CHARACTERVARYING", "")
+            .Replace("::BPCHAR", "")
             .Replace("::BYTEA", "")
+            .Replace("::UUID", "")
+            .Replace("::DATE", "")
+            .Replace("::TIMEWITHOUTTIMEZONE", "")
+            .Replace("::TIMESTAMPWITHOUTTIMEZONE", "")
+            .Replace("::TIMESTAMPWITHTIMEZONE", "")
             .Replace("PUBLIC.", "");
     }
 

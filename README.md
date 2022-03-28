@@ -24,7 +24,7 @@ public class MyTable : ITable
     public Column MyDataColumn = new("FE68EE3D-09D0-40AC-93F9-5E441FBB4F70")
     {
         DataType = new StringDataType() { Length = 40 },
-        Default = new CSharpDefaultValue("33"),
+        Default = new StringDefaultValue("33"),
     };
 
     public Column MyDataColumn2 = new("34CB2ADB-3A6B-4BCD-A9F0-21321AB659C1")

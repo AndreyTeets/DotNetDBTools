@@ -165,7 +165,7 @@ DROP TRIGGER TR_MyTable2_MyTrigger1;
 CREATE TABLE _DNDBTTemp_MyTable2
 (
     MyColumn1NewName INTEGER PRIMARY KEY NOT NULL DEFAULT 333,
-    MyColumn2 BLOB NULL DEFAULT 0x000102,
+    MyColumn2 BLOB NULL DEFAULT X'000102',
     CONSTRAINT FK_MyTable2_MyColumns12_MyTable3_MyColumns12 FOREIGN KEY (MyColumn1NewName, MyColumn2)
         REFERENCES MyTable3(MyColumn1, MyColumn2)
         ON UPDATE NO ACTION ON DELETE SET DEFAULT
@@ -231,7 +231,7 @@ VALUES
     'bfb9030c-a8c3-4882-9c42-1c6ad025cf8f',
     'Column',
     'MyColumn2',
-    '0x000102'
+    'X''000102'''
 );
 -- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
 

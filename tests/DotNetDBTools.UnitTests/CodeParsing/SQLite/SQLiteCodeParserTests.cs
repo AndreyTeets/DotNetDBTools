@@ -107,7 +107,7 @@ public class SQLiteCodeParserTests
                     Name = "Col4",
                     DataType = "TEXT",
                     NotNull = true,
-                    Default = "CONSTRAINT CK_String_Check1 CHECK (Col3 >= 0),",
+                    Default = "'CONSTRAINT CK_String_Check1 CHECK (Col3 >= 0),'",
                 },
                 new ColumnInfo()
                 {

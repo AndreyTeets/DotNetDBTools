@@ -81,13 +81,6 @@ WHERE t.TABLE_SCHEMA = (select DATABASE())
             string baseDataType = dataType.Name.Split('(')[0];
             switch (baseDataType)
             {
-                case MySQLDataTypeNames.TINYINT:
-                case MySQLDataTypeNames.SMALLINT:
-                case MySQLDataTypeNames.MEDIUMINT:
-                case MySQLDataTypeNames.INT:
-                case MySQLDataTypeNames.BIGINT:
-                case MySQLDataTypeNames.DECIMAL:
-                    return new CodePiece() { Code = value };
                 case MySQLDataTypeNames.CHAR:
                 case MySQLDataTypeNames.VARCHAR:
                 case MySQLDataTypeNames.TINYTEXT:
@@ -95,15 +88,14 @@ WHERE t.TABLE_SCHEMA = (select DATABASE())
                 case MySQLDataTypeNames.MEDIUMTEXT:
                 case MySQLDataTypeNames.LONGTEXT:
                     return new CodePiece() { Code = $"'{TrimOuterQuotesIfExist(value.Replace("_utf8mb4", ""))}'" };
-                case MySQLDataTypeNames.BINARY:
-                case MySQLDataTypeNames.VARBINARY:
-                case MySQLDataTypeNames.TINYBLOB:
-                case MySQLDataTypeNames.BLOB:
-                case MySQLDataTypeNames.MEDIUMBLOB:
-                case MySQLDataTypeNames.LONGBLOB:
-                    return new CodePiece() { Code = value };
+                case MySQLDataTypeNames.DATE:
+                case MySQLDataTypeNames.TIME:
+                case MySQLDataTypeNames.SMALLDATETIME:
+                case MySQLDataTypeNames.DATETIME:
+                case MySQLDataTypeNames.TIMESTAMP:
+                    return new CodePiece() { Code = $"'{value}'" };
                 default:
-                    throw new InvalidOperationException($"Invalid default value [{value}] for data type [{dataType.Name}]");
+                    return new CodePiece() { Code = value };
             }
 
             bool IsFunction(string val) => val.Contains("(") && val.Contains(")") && columnRecord.DefaultIsFunction;

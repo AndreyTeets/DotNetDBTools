@@ -44,7 +44,7 @@ internal abstract class DataTypeMapper : IDataTypeMapper
         return new CSharpDataType()
         {
             Name = CSharpDataTypeNames.Real,
-            IsDoublePrecision = realDataType.IsDoublePrecision,
+            IsSinglePrecision = realDataType.IsSinglePrecision,
         };
     }
 

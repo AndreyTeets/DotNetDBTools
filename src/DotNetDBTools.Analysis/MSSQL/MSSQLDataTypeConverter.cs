@@ -41,10 +41,10 @@ public class MSSQLDataTypeConverter
 
     private static DataType ConvertRealSqlType(CSharpDataType dataType)
     {
-        if (dataType.IsDoublePrecision)
-            return new DataType { Name = MSSQLDataTypeNames.REAL };
-        else
+        if (dataType.IsSinglePrecision)
             return new DataType { Name = MSSQLDataTypeNames.FLOAT };
+        else
+            return new DataType { Name = MSSQLDataTypeNames.REAL };
     }
 
     private static DataType ConvertDecimalSqlType(CSharpDataType dataType)

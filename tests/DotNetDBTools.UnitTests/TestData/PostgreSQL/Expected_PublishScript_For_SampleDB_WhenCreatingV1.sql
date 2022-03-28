@@ -482,11 +482,21 @@ VALUES
 EXECUTE 'CREATE TABLE "MyTable5"
 (
     "MyColumn1" INT NOT NULL DEFAULT "MyFunction1"(-25, 10),
-    "MyColumn2" "MyCompositeType1" NOT NULL,
-    "MyColumn3" TIMESTAMP NULL,
-    "MyColumn4" "MyDomain1" NOT NULL,
-    "MyColumn5" "MyEnumType1" NOT NULL,
-    "MyColumn6" "MyRangeType1" NOT NULL
+    "MyColumn10" TIME NOT NULL DEFAULT ''16:17:18'',
+    "MyColumn11" TIMESTAMP NOT NULL DEFAULT ''2022-02-15 16:17:18'',
+    "MyColumn12" TIMESTAMPTZ NOT NULL DEFAULT ''2022-02-15 14:47:18+00'',
+    "MyColumn13" "MyCompositeType1" NOT NULL,
+    "MyColumn14" "MyDomain1" NOT NULL,
+    "MyColumn15" "MyEnumType1" NOT NULL,
+    "MyColumn16" "MyRangeType1" NOT NULL,
+    "MyColumn2" CHAR(4) NOT NULL DEFAULT ''test'',
+    "MyColumn3" BYTEA NOT NULL DEFAULT ''\x000204'',
+    "MyColumn4" FLOAT4 NOT NULL DEFAULT 123.456,
+    "MyColumn5" FLOAT8 NOT NULL DEFAULT 12345.6789,
+    "MyColumn6" DECIMAL(6, 1) NOT NULL DEFAULT 12.3,
+    "MyColumn7" BOOL NOT NULL DEFAULT TRUE,
+    "MyColumn8" UUID NOT NULL DEFAULT ''8e2f99ad-0fc8-456d-b0e4-ec3ba572dd15'',
+    "MyColumn9" DATE NOT NULL DEFAULT ''2022-02-15''
 );';
 -- QUERY END: PostgreSQLCreateTableQuery
 
@@ -539,11 +549,11 @@ EXECUTE 'INSERT INTO "DNDBTDbObjects"
 )
 VALUES
 (
-    ''15ae6061-426d-4485-85e6-ecd3e0f98882'',
+    ''cba4849b-3d84-4e38-b2c8-f9dbdff22fa6'',
     ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
     ''Column'',
-    ''MyColumn2'',
-    NULL
+    ''MyColumn10'',
+    ''''''16:17:18''''''
 );';
 -- QUERY END: PostgreSQLInsertDNDBTDbObjectRecordQuery
 
@@ -561,7 +571,45 @@ VALUES
     ''4dde852d-ec19-4b61-80f9-da428d8ff41a'',
     ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
     ''Column'',
-    ''MyColumn3'',
+    ''MyColumn11'',
+    ''''''2022-02-15 16:17:18''''''
+);';
+-- QUERY END: PostgreSQLInsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: PostgreSQLInsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''685faf2e-fef7-4e6b-a960-acd093f1f004'',
+    ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
+    ''Column'',
+    ''MyColumn12'',
+    ''''''2022-02-15 14:47:18+00''''''
+);';
+-- QUERY END: PostgreSQLInsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: PostgreSQLInsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''15ae6061-426d-4485-85e6-ecd3e0f98882'',
+    ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
+    ''Column'',
+    ''MyColumn13'',
     NULL
 );';
 -- QUERY END: PostgreSQLInsertDNDBTDbObjectRecordQuery
@@ -580,7 +628,7 @@ VALUES
     ''45856161-db66-49f6-afde-9214d2d2d4b0'',
     ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
     ''Column'',
-    ''MyColumn4'',
+    ''MyColumn14'',
     NULL
 );';
 -- QUERY END: PostgreSQLInsertDNDBTDbObjectRecordQuery
@@ -599,7 +647,7 @@ VALUES
     ''b45d163b-f49e-499f-a9e5-2538cd073b80'',
     ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
     ''Column'',
-    ''MyColumn5'',
+    ''MyColumn15'',
     NULL
 );';
 -- QUERY END: PostgreSQLInsertDNDBTDbObjectRecordQuery
@@ -618,8 +666,160 @@ VALUES
     ''c8b03b75-a8a2-47e0-bf5c-f3e4f1b8f500'',
     ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
     ''Column'',
-    ''MyColumn6'',
+    ''MyColumn16'',
     NULL
+);';
+-- QUERY END: PostgreSQLInsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: PostgreSQLInsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''11ef8e25-3691-42d4-b2fa-88d724f73b61'',
+    ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
+    ''Column'',
+    ''MyColumn2'',
+    ''''''test''''''
+);';
+-- QUERY END: PostgreSQLInsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: PostgreSQLInsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''6ed0ab37-aad3-4294-9ba6-c0921f0e67af'',
+    ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
+    ''Column'',
+    ''MyColumn3'',
+    ''''''\x000204''''''
+);';
+-- QUERY END: PostgreSQLInsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: PostgreSQLInsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''aca57fd6-80d0-4c18-b2ca-aabcb06bea10'',
+    ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
+    ''Column'',
+    ''MyColumn4'',
+    ''123.456''
+);';
+-- QUERY END: PostgreSQLInsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: PostgreSQLInsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''47666b8b-ca72-4507-86b2-04c47a84aed4'',
+    ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
+    ''Column'',
+    ''MyColumn5'',
+    ''12345.6789''
+);';
+-- QUERY END: PostgreSQLInsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: PostgreSQLInsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''98fded6c-d486-4a2e-9c9a-1ec31c9d5830'',
+    ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
+    ''Column'',
+    ''MyColumn6'',
+    ''12.3''
+);';
+-- QUERY END: PostgreSQLInsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: PostgreSQLInsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''2502cade-458a-48ee-9421-e6d7850493f7'',
+    ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
+    ''Column'',
+    ''MyColumn7'',
+    ''TRUE''
+);';
+-- QUERY END: PostgreSQLInsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: PostgreSQLInsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''ed044a8a-6858-41e2-a867-9e5b01f226c8'',
+    ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
+    ''Column'',
+    ''MyColumn8'',
+    ''''''8e2f99ad-0fc8-456d-b0e4-ec3ba572dd15''''''
+);';
+-- QUERY END: PostgreSQLInsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: PostgreSQLInsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''9939d676-73b7-42d1-ba3e-5c13aed5ce34'',
+    ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
+    ''Column'',
+    ''MyColumn9'',
+    ''''''2022-02-15''''''
 );';
 -- QUERY END: PostgreSQLInsertDNDBTDbObjectRecordQuery
 

@@ -1,5 +1,4 @@
-﻿using System;
-using DotNetDBTools.Analysis.PostgreSQL;
+﻿using DotNetDBTools.Analysis.PostgreSQL;
 using DotNetDBTools.Definition.Core;
 using DotNetDBTools.Definition.PostgreSQL;
 using DotNetDBTools.DefinitionParsing.Core;
@@ -13,11 +12,8 @@ internal class PostgreSQLDefaultValueMapper : DefaultValueMapper
     {
         if (defaultValue is null)
             return new CodePiece { Code = null };
-        else if (defaultValue is Definition.Core.CSharpDefaultValue cdv)
-            return PostgreSQLDefaultValueConverter.ConvertToPostgreSQL(CreateCSharpDefaultValueModel(cdv));
-        else if (defaultValue is VerbatimDefaultValue vdv)
+        if (defaultValue is VerbatimDefaultValue vdv)
             return new CodePiece { Code = vdv.Value };
-        else
-            throw new Exception($"Invalid defaultValue: {defaultValue}");
+        return PostgreSQLDefaultValueConverter.ConvertToPostgreSQL(CreateCSharpDefaultValueModel(defaultValue));
     }
 }

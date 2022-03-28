@@ -12,7 +12,7 @@
 public class RealDataType : IDataType
 {
     /// <remarks>
-    /// Default value is true.
+    /// Default value is false.
     /// </remarks>
-    public bool IsDoublePrecision { get; set; } = true;
+    public bool IsSinglePrecision { get; set; } = false;
 }

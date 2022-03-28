@@ -41,10 +41,10 @@ public static class PostgreSQLDataTypeConverter
 
     private static DataType ConvertRealSqlType(CSharpDataType dataType)
     {
-        if (dataType.IsDoublePrecision)
-            return new DataType { Name = PostgreSQLDataTypeNames.FLOAT8 };
-        else
+        if (dataType.IsSinglePrecision)
             return new DataType { Name = PostgreSQLDataTypeNames.FLOAT4 };
+        else
+            return new DataType { Name = PostgreSQLDataTypeNames.FLOAT8 };
     }
 
     private static DataType ConvertDecimalSqlType(CSharpDataType dataType)

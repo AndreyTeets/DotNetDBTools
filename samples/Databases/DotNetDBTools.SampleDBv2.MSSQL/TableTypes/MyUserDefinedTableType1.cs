@@ -1,6 +1,6 @@
 ﻿using System;
-using DotNetDBTools.Definition.Core;
 using DotNetDBTools.Definition.Core.CSharpDataTypes;
+using DotNetDBTools.Definition.Core.CSharpDefaultValues;
 using DotNetDBTools.Definition.MSSQL;
 using DotNetDBTools.Definition.MSSQL.UserDefinedTypes;
 
@@ -13,7 +13,7 @@ namespace DotNetDBTools.SampleDB.MSSQL.TableTypes
         public Column MyColumn1 = new("280FB390-63B7-44A5-8E3B-9961761F20A9")
         {
             DataType = new IntDataType(),
-            Default = new CSharpDefaultValue(666),
+            Default = new IntDefaultValue(666),
         };
 
         public CheckConstraint CK_MyUserDefinedTableType1_MyColumn1 = new("74670124-20AD-43D0-B132-AEB8B04A7FEC")

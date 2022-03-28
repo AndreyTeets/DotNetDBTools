@@ -191,7 +191,7 @@ VALUES
 CREATE TABLE MyTable2
 (
     MyColumn1 INTEGER PRIMARY KEY NOT NULL DEFAULT 333,
-    MyColumn2 BLOB NULL DEFAULT 0x000102
+    MyColumn2 BLOB NULL DEFAULT X'000102'
 );
 
 CREATE TRIGGER [TR_MyTable2_MyTrigger1]
@@ -260,7 +260,7 @@ VALUES
     'bfb9030c-a8c3-4882-9c42-1c6ad025cf8f',
     'Column',
     'MyColumn2',
-    '0x000102'
+    'X''000102'''
 );
 -- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
 
@@ -377,7 +377,17 @@ VALUES
 CREATE TABLE MyTable5
 (
     MyColumn1 INTEGER NOT NULL DEFAULT (ABS(-15)),
-    MyColumn3 NUMERIC NULL
+    MyColumn10 NUMERIC NOT NULL DEFAULT '16:17:18',
+    MyColumn11 NUMERIC NOT NULL DEFAULT '2022-02-15 16:17:18',
+    MyColumn12 NUMERIC NOT NULL DEFAULT '2022-02-15 16:17:18+01:30',
+    MyColumn2 TEXT NOT NULL DEFAULT 'test',
+    MyColumn3 BLOB NOT NULL DEFAULT X'000204',
+    MyColumn4 REAL NOT NULL DEFAULT 123.456,
+    MyColumn5 REAL NOT NULL DEFAULT 12345.6789,
+    MyColumn6 NUMERIC NOT NULL DEFAULT 12.3,
+    MyColumn7 INTEGER NOT NULL DEFAULT TRUE,
+    MyColumn8 BLOB NOT NULL DEFAULT X'8e2f99ad0fc8456db0e4ec3ba572dd15',
+    MyColumn9 NUMERIC NOT NULL DEFAULT '2022-02-15'
 );
 -- QUERY END: SQLiteCreateTableQuery
 
@@ -430,11 +440,201 @@ INSERT INTO DNDBTDbObjects
 )
 VALUES
 (
+    'cba4849b-3d84-4e38-b2c8-f9dbdff22fa6',
+    '6ca51f29-c1bc-4349-b9c1-6f1ea170f162',
+    'Column',
+    'MyColumn10',
+    '''16:17:18'''
+);
+-- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
+INSERT INTO DNDBTDbObjects
+(
+    ID,
+    ParentID,
+    Type,
+    Name,
+    Code
+)
+VALUES
+(
     '4dde852d-ec19-4b61-80f9-da428d8ff41a',
     '6ca51f29-c1bc-4349-b9c1-6f1ea170f162',
     'Column',
+    'MyColumn11',
+    '''2022-02-15 16:17:18'''
+);
+-- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
+INSERT INTO DNDBTDbObjects
+(
+    ID,
+    ParentID,
+    Type,
+    Name,
+    Code
+)
+VALUES
+(
+    '685faf2e-fef7-4e6b-a960-acd093f1f004',
+    '6ca51f29-c1bc-4349-b9c1-6f1ea170f162',
+    'Column',
+    'MyColumn12',
+    '''2022-02-15 16:17:18+01:30'''
+);
+-- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
+INSERT INTO DNDBTDbObjects
+(
+    ID,
+    ParentID,
+    Type,
+    Name,
+    Code
+)
+VALUES
+(
+    '11ef8e25-3691-42d4-b2fa-88d724f73b61',
+    '6ca51f29-c1bc-4349-b9c1-6f1ea170f162',
+    'Column',
+    'MyColumn2',
+    '''test'''
+);
+-- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
+INSERT INTO DNDBTDbObjects
+(
+    ID,
+    ParentID,
+    Type,
+    Name,
+    Code
+)
+VALUES
+(
+    '6ed0ab37-aad3-4294-9ba6-c0921f0e67af',
+    '6ca51f29-c1bc-4349-b9c1-6f1ea170f162',
+    'Column',
     'MyColumn3',
-    NULL
+    'X''000204'''
+);
+-- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
+INSERT INTO DNDBTDbObjects
+(
+    ID,
+    ParentID,
+    Type,
+    Name,
+    Code
+)
+VALUES
+(
+    'aca57fd6-80d0-4c18-b2ca-aabcb06bea10',
+    '6ca51f29-c1bc-4349-b9c1-6f1ea170f162',
+    'Column',
+    'MyColumn4',
+    '123.456'
+);
+-- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
+INSERT INTO DNDBTDbObjects
+(
+    ID,
+    ParentID,
+    Type,
+    Name,
+    Code
+)
+VALUES
+(
+    '47666b8b-ca72-4507-86b2-04c47a84aed4',
+    '6ca51f29-c1bc-4349-b9c1-6f1ea170f162',
+    'Column',
+    'MyColumn5',
+    '12345.6789'
+);
+-- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
+INSERT INTO DNDBTDbObjects
+(
+    ID,
+    ParentID,
+    Type,
+    Name,
+    Code
+)
+VALUES
+(
+    '98fded6c-d486-4a2e-9c9a-1ec31c9d5830',
+    '6ca51f29-c1bc-4349-b9c1-6f1ea170f162',
+    'Column',
+    'MyColumn6',
+    '12.3'
+);
+-- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
+INSERT INTO DNDBTDbObjects
+(
+    ID,
+    ParentID,
+    Type,
+    Name,
+    Code
+)
+VALUES
+(
+    '2502cade-458a-48ee-9421-e6d7850493f7',
+    '6ca51f29-c1bc-4349-b9c1-6f1ea170f162',
+    'Column',
+    'MyColumn7',
+    'TRUE'
+);
+-- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
+INSERT INTO DNDBTDbObjects
+(
+    ID,
+    ParentID,
+    Type,
+    Name,
+    Code
+)
+VALUES
+(
+    'ed044a8a-6858-41e2-a867-9e5b01f226c8',
+    '6ca51f29-c1bc-4349-b9c1-6f1ea170f162',
+    'Column',
+    'MyColumn8',
+    'X''8e2f99ad0fc8456db0e4ec3ba572dd15'''
+);
+-- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
+INSERT INTO DNDBTDbObjects
+(
+    ID,
+    ParentID,
+    Type,
+    Name,
+    Code
+)
+VALUES
+(
+    '9939d676-73b7-42d1-ba3e-5c13aed5ce34',
+    '6ca51f29-c1bc-4349-b9c1-6f1ea170f162',
+    'Column',
+    'MyColumn9',
+    '''2022-02-15'''
 );
 -- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
 

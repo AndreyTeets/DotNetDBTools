@@ -1,6 +1,6 @@
 ﻿using System;
-using DotNetDBTools.Definition.Core;
 using DotNetDBTools.Definition.Core.CSharpDataTypes;
+using DotNetDBTools.Definition.Core.CSharpDefaultValues;
 using DotNetDBTools.Definition.MySQL;
 
 namespace DotNetDBTools.SampleDB.MySQL.Tables
@@ -12,14 +12,14 @@ namespace DotNetDBTools.SampleDB.MySQL.Tables
         public Column MyColumn1 = new("A2F2A4DE-1337-4594-AE41-72ED4D05F317")
         {
             DataType = new IntDataType() { Size = IntSize.Int64 },
-            Default = new CSharpDefaultValue(15),
+            Default = new IntDefaultValue(15),
         };
 
         public Column MyColumn4 = new("867AC528-E87E-4C93-B6E3-DD2FCBBB837F")
         {
             DataType = new DecimalDataType(),
             NotNull = true,
-            Default = new CSharpDefaultValue(7.36m),
+            Default = new DecimalDefaultValue(7.36m),
         };
 
         public ForeignKey FK_MyTable1_MyColumn1_MyTable2_MyColumn1 = new("D11B2A53-32DB-432F-BB6B-F91788844BA9")

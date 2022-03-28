@@ -14,6 +14,7 @@ public class DbDefinitionAnalyzerTests
 @"using System;
 using DotNetDBTools.Definition.Core;
 using DotNetDBTools.Definition.Core.CSharpDataTypes;
+using DotNetDBTools.Definition.Core.CSharpDefaultValues;
 using DotNetDBTools.Definition.MSSQL;
 using DotNetDBTools.Definition.MSSQL.UserDefinedTypes;
 
@@ -34,7 +35,7 @@ namespace SampleTestCode
         {
             DataType = new IntDataType(),
             NotNull = true,
-            Default = new CSharpDefaultValue(145),
+            Default = new IntDefaultValue(145),
             DefaultConstraintName = ""DF_TestTable2_TestColumn1"",
         };
 

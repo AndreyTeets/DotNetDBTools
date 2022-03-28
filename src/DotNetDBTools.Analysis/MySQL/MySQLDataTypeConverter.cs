@@ -41,10 +41,10 @@ public class MySQLDataTypeConverter
 
     private static DataType ConvertRealSqlType(CSharpDataType dataType)
     {
-        if (dataType.IsDoublePrecision)
-            return new DataType { Name = MySQLDataTypeNames.DOUBLE };
-        else
+        if (dataType.IsSinglePrecision)
             return new DataType { Name = MySQLDataTypeNames.FLOAT };
+        else
+            return new DataType { Name = MySQLDataTypeNames.DOUBLE };
     }
 
     private static DataType ConvertDecimalSqlType(CSharpDataType dataType)

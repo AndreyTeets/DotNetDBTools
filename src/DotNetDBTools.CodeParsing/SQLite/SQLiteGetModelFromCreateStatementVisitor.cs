@@ -90,7 +90,7 @@ internal class SQLiteGetModelFromCreateStatementVisitor : SQLiteParserBaseVisito
                 if (context.signed_number() != null)
                     column.Default = context.signed_number().GetText();
                 else if (context.literal_value() != null)
-                    column.Default = UnquoteLiteral(context.literal_value().GetText());
+                    column.Default = context.literal_value().GetText();
                 else if (context.expr() != null)
                     column.Default = $"({GetInitialText(context.expr())})";
                 else
@@ -187,10 +187,5 @@ internal class SQLiteGetModelFromCreateStatementVisitor : SQLiteParserBaseVisito
             .Replace("[", "").Replace("]", "")
             .Replace("`", "")
             .Replace("\"", "");
-    }
-
-    private static string UnquoteLiteral(string stringLiteral)
-    {
-        return stringLiteral.Substring(1, stringLiteral.Length - 2);
     }
 }

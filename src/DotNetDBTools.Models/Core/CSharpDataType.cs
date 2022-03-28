@@ -7,6 +7,6 @@ public class CSharpDataType : DataType
     public int Precision { get; set; }
     public int Scale { get; set; }
     public bool IsFixedLength { get; set; }
-    public bool IsDoublePrecision { get; set; }
+    public bool IsSinglePrecision { get; set; }
     public bool IsWithTimeZone { get; set; }
 }

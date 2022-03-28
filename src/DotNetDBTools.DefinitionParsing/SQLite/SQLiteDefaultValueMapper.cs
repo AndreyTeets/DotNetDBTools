@@ -1,5 +1,4 @@
-﻿using System;
-using DotNetDBTools.Analysis.SQLite;
+﻿using DotNetDBTools.Analysis.SQLite;
 using DotNetDBTools.Definition.Core;
 using DotNetDBTools.Definition.SQLite;
 using DotNetDBTools.DefinitionParsing.Core;
@@ -13,11 +12,8 @@ internal class SQLiteDefaultValueMapper : DefaultValueMapper
     {
         if (defaultValue is null)
             return new CodePiece { Code = null };
-        else if (defaultValue is Definition.Core.CSharpDefaultValue cdv)
-            return SQLiteDefaultValueConverter.ConvertToSQLite(CreateCSharpDefaultValueModel(cdv));
-        else if (defaultValue is VerbatimDefaultValue vdv)
+        if (defaultValue is VerbatimDefaultValue vdv)
             return new CodePiece { Code = vdv.Value };
-        else
-            throw new Exception($"Invalid defaultValue: {defaultValue}");
+        return SQLiteDefaultValueConverter.ConvertToSQLite(CreateCSharpDefaultValueModel(defaultValue));
     }
 }
