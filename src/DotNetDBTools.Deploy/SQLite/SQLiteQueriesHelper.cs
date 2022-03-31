@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Models.Core;
@@ -69,5 +70,13 @@ $@"    CONSTRAINT [{ck.Name}] {ck.GetCode()}"));
             return $" DEFAULT {column.Default.Code}";
         else
             return "";
+    }
+
+    public static string AppendSemicolonIfAbsent(string val)
+    {
+        if (!val.EndsWith(";", StringComparison.Ordinal))
+            return $"{val};";
+        else
+            return val;
     }
 }

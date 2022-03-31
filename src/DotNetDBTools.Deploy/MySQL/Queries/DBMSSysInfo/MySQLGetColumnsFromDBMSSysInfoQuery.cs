@@ -76,7 +76,7 @@ WHERE t.TABLE_SCHEMA = (select DATABASE())
             if (value is null)
                 return new CodePiece() { Code = value };
             if (IsFunction(value))
-                return new CodePiece() { Code = value };
+                return new CodePiece() { Code = $"({value})" };
 
             string baseDataType = dataType.Name.Split('(')[0];
             switch (baseDataType)
@@ -94,6 +94,9 @@ WHERE t.TABLE_SCHEMA = (select DATABASE())
                 case MySQLDataTypeNames.DATETIME:
                 case MySQLDataTypeNames.TIMESTAMP:
                     return new CodePiece() { Code = $"'{value}'" };
+                case MySQLDataTypeNames.BINARY:
+                case MySQLDataTypeNames.VARBINARY:
+                    return new CodePiece() { Code = $"({value})" };
                 default:
                     return new CodePiece() { Code = value };
             }

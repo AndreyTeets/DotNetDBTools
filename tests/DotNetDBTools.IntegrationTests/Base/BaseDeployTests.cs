@@ -29,7 +29,6 @@ public abstract class BaseDeployTests<TDatabase, TDbConnection, TDbModelConverte
     private TDeployManager _deployManager;
     private TDbConnection _connection;
     private IDbModelFromDefinitionProvider _dbModelFromDefinitionProvider;
-    private IDbModelFromDBMSProvider _dbModelFromDBMSProvider;
 
     [SetUp]
     public void SetUp()
@@ -41,7 +40,6 @@ public abstract class BaseDeployTests<TDatabase, TDbConnection, TDbModelConverte
         _connection = new();
         _connection.ConnectionString = CreateConnectionString(TestContext.CurrentContext.Test.Name);
         _dbModelFromDefinitionProvider = new GenericDbModelFromDefinitionProvider();
-        _dbModelFromDBMSProvider = CreateDbModelFromDBMSProvider(_connection);
     }
 
     [TearDown]
@@ -82,7 +80,7 @@ public abstract class BaseDeployTests<TDatabase, TDbConnection, TDbModelConverte
         TDatabase dbModelFromDefinition = (TDatabase)new TDbModelConverter().FromAgnostic(
             (AgnosticDatabase)_dbModelFromDefinitionProvider.CreateDbModel(
                 AssemblyLoader.LoadDbAssemblyFromDll(AgnosticSampleDbAssemblyPath)));
-        TDatabase dbModelFromDBMSUsingDNDBTSysInfo = (TDatabase)_dbModelFromDBMSProvider.CreateDbModelUsingDNDBTSysInfo();
+        TDatabase dbModelFromDBMSUsingDNDBTSysInfo = (TDatabase)_deployManager.CreateDatabaseModelUsingDNDBTSysInfo(_connection);
 
         AssertDbModelEquivalence(dbModelFromDefinition, dbModelFromDBMSUsingDNDBTSysInfo, CompareMode.None);
     }
@@ -97,7 +95,7 @@ public abstract class BaseDeployTests<TDatabase, TDbConnection, TDbModelConverte
         TDatabase dbModelFromDefinition = (TDatabase)new TDbModelConverter().FromAgnostic(
             (AgnosticDatabase)_dbModelFromDefinitionProvider.CreateDbModel(
                 AssemblyLoader.LoadDbAssemblyFromDll(AgnosticSampleDbAssemblyPath)));
-        TDatabase dbModelFromDBMSUsingDBMSSysInfo = (TDatabase)_dbModelFromDBMSProvider.CreateDbModelUsingDBMSSysInfo();
+        TDatabase dbModelFromDBMSUsingDBMSSysInfo = (TDatabase)_deployManager.CreateDatabaseModelUsingDBMSSysInfo(_connection);
 
         AssertDbModelEquivalence(dbModelFromDefinition, dbModelFromDBMSUsingDBMSSysInfo, CompareMode.IgnoreAllDNDBTSysInfoSpecific);
     }
@@ -118,7 +116,7 @@ public abstract class BaseDeployTests<TDatabase, TDbConnection, TDbModelConverte
 
         TDatabase dbModelFromDefinition = (TDatabase)_dbModelFromDefinitionProvider.CreateDbModel(
             AssemblyLoader.LoadDbAssemblyFromDll(SpecificDBMSSampleDbAssemblyPath));
-        TDatabase dbModelFromDBMSUsingDNDBTSysInfo = (TDatabase)_dbModelFromDBMSProvider.CreateDbModelUsingDNDBTSysInfo();
+        TDatabase dbModelFromDBMSUsingDNDBTSysInfo = (TDatabase)_deployManager.CreateDatabaseModelUsingDNDBTSysInfo(_connection);
 
         AssertDbModelEquivalence(dbModelFromDefinition, dbModelFromDBMSUsingDNDBTSysInfo, CompareMode.None);
     }
@@ -132,9 +130,31 @@ public abstract class BaseDeployTests<TDatabase, TDbConnection, TDbModelConverte
 
         TDatabase dbModelFromDefinition = (TDatabase)_dbModelFromDefinitionProvider.CreateDbModel(
             AssemblyLoader.LoadDbAssemblyFromDll(SpecificDBMSSampleDbAssemblyPath));
-        TDatabase dbModelFromDBMSUsingDBMSSysInfo = (TDatabase)_dbModelFromDBMSProvider.CreateDbModelUsingDBMSSysInfo();
+        TDatabase dbModelFromDBMSUsingDBMSSysInfo = (TDatabase)_deployManager.CreateDatabaseModelUsingDBMSSysInfo(_connection);
 
         AssertDbModelEquivalence(dbModelFromDefinition, dbModelFromDBMSUsingDBMSSysInfo, CompareMode.IgnoreAllDNDBTSysInfoSpecific);
+    }
+
+    [Test]
+    public void DbModelFromDBMSUsingDBMSSysInfo_IsValid_And_CorrectlyRepresentsDatabase()
+    {
+        _deployManager.RegisterAsDNDBT(_connection);
+        _deployManager.PublishDatabase(SpecificDBMSSampleDbAssemblyPath, _connection);
+        TDatabase dbModel1 = (TDatabase)_deployManager.CreateDatabaseModelUsingDBMSSysInfo(_connection);
+        dbModel1.Version = 1;
+
+        string db2Name = $"Db2_{TestContext.CurrentContext.Test.Name}";
+        DropDatabaseIfExists(db2Name);
+        CreateDatabase(db2Name);
+        using TDbConnection connection2 = new();
+        connection2.ConnectionString = CreateConnectionString(db2Name);
+
+        _deployManager.RegisterAsDNDBT(connection2);
+        _deployManager.PublishDatabase(dbModel1, connection2);
+        TDatabase dbModel2 = (TDatabase)_deployManager.CreateDatabaseModelUsingDBMSSysInfo(connection2);
+        dbModel2.Version = 1;
+
+        AssertDbModelEquivalence(dbModel1, dbModel2, CompareMode.IgnoreIDs);
     }
 
     private void AssertDbModelEquivalence(TDatabase dbModel1, TDatabase dbModel2, CompareMode compareMode)

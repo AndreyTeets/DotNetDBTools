@@ -29,7 +29,7 @@ bla bla;".NormalizeLineEndings();
 
     [Theory]
     [InlineData("create function f1() no funcID definition bla bla;", false)]
-    [InlineData("create function f1() no end-statement colon bla bla")]
+    [InlineData("create function f1() no end-statement semicolon bla bla")]
     [InlineData("create function invalid-func-name() bla bla;")]
     [InlineData("create function f2 no parantheses bla bla;")]
     public void ParseFunction_ThrowsOnMalformedInput(string statement, bool prependValidFuncIDDefinition = true)

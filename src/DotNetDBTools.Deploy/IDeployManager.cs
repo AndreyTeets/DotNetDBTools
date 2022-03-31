@@ -1,5 +1,6 @@
 ﻿using System.Data.Common;
 using System.Reflection;
+using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.Deploy;
 
@@ -30,15 +31,19 @@ public interface IDeployManager
 
     public void PublishDatabase(string dbAssemblyPath, DbConnection connection);
     public void PublishDatabase(Assembly dbAssembly, DbConnection connection);
+    public void PublishDatabase(Database database, DbConnection connection);
 
     public void GeneratePublishScript(string dbAssemblyPath, DbConnection connection, string outputPath);
     public void GeneratePublishScript(Assembly dbAssembly, DbConnection connection, string outputPath);
+    public void GeneratePublishScript(Database database, DbConnection connection, string outputPath);
 
     public void GeneratePublishScript(string dbAssemblyPath, string outputPath);
     public void GeneratePublishScript(Assembly dbAssembly, string outputPath);
+    public void GeneratePublishScript(Database database, string outputPath);
 
     public void GeneratePublishScript(string newDbAssemblyPath, string oldDbAssemblyPath, string outputPath);
     public void GeneratePublishScript(Assembly newDbAssembly, Assembly oldDbAssembly, string outputPath);
+    public void GeneratePublishScript(Database newDatabase, Database oldDatabase, string outputPath);
 
     /// <summary>
     /// Do not include DNDBT system info changes in script.
@@ -48,6 +53,10 @@ public interface IDeployManager
     /// Do not include DNDBT system info changes in script.
     /// </summary>
     public void GenerateNoDNDBTInfoPublishScript(Assembly dbAssembly, string outputPath);
+    /// <summary>
+    /// Do not include DNDBT system info changes in script.
+    /// </summary>
+    public void GenerateNoDNDBTInfoPublishScript(Database database, string outputPath);
 
     /// <summary>
     /// Do not include DNDBT system info changes in script.
@@ -57,6 +66,13 @@ public interface IDeployManager
     /// Do not include DNDBT system info changes in script.
     /// </summary>
     public void GenerateNoDNDBTInfoPublishScript(Assembly newDbAssembly, Assembly oldDbAssembly, string outputPath);
+    /// <summary>
+    /// Do not include DNDBT system info changes in script.
+    /// </summary>
+    public void GenerateNoDNDBTInfoPublishScript(Database newDatabase, Database oldDatabase, string outputPath);
 
     public void GenerateDefinition(DbConnection connection, string outputDirectory);
+
+    public Database CreateDatabaseModelUsingDNDBTSysInfo(DbConnection connection);
+    public Database CreateDatabaseModelUsingDBMSSysInfo(DbConnection connection);
 }

@@ -19,7 +19,7 @@ internal class SQLiteCreateTableQuery : CreateTableQuery
         foreach (Trigger trigger in table.Triggers)
         {
             createTriggerStatements.Add(
-$@"{trigger.GetCode()}");
+$@"{AppendSemicolonIfAbsent(trigger.GetCode())}");
         }
 
         List<string> createIndexStatements = new();
