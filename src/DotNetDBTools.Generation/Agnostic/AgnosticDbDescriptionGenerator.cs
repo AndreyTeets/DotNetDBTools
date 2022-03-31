@@ -7,6 +7,6 @@ internal static class AgnosticDescriptionGenerator
 {
     public static string GenerateDescription(AgnosticDatabase database)
     {
-        return TablesDescriptionGenerator.GenerateTablesDescription(database);
+        return TablesDescriptionGenerator.Create(database);
     }
 }

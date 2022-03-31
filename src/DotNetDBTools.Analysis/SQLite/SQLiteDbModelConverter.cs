@@ -50,7 +50,7 @@ public class SQLiteDbModelConverter : DbModelConverter
         {
             ID = view.ID,
             Name = view.Name,
-            CodePiece = new CodePiece { Code = ((AgnosticCodePiece)view.CodePiece).DbKindToCodeMap[DatabaseKind.SQLite] },
+            CodePiece = ConvertCodePiece(view.CodePiece),
         };
     }
 

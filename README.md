@@ -97,10 +97,10 @@ Although it provides analogous declaritive means for database structure descript
 Also provides declarative means for database structure description with different syntax, but publishing process is entirely different and relies on dragging the whole history of every change done to database. Also DotNetDBTools is not an ORM, it just provides means to describe and deploy database structure and analysis on this structure.
 
 # Supported DBMS
-+ MSSQL (in development, only basic descriptions (c#) and their deployment work, probably with major bugs)
-+ MySQL (in development, only basic descriptions (c#) and their deployment work, probably with major bugs)
-+ PostgreSQL (in development, descriptions (c#) and their deployment work, probably with major bugs)
-+ SQLite (in development, descriptions (c# and sql) and their deployment work, probably with bugs)
++ MSSQL (basic descriptions (c#) and their deployment/generation seem to work, probably with major bugs, almost no analysis)
++ MySQL (basic descriptions (c#) and their deployment/generation seem to work, probably with major bugs, almost no analysis)
++ PostgreSQL (most descriptions (c#) and their deployment/generation seem to work, probably with major bugs, almost no analysis)
++ SQLite (all descriptions (c# and sql) and their deployment/generation seem to work, probably with bugs, almost no analysis)
 
 # How to use
 1. Create a netstandard2.0 project for a database decription.

@@ -7,6 +7,6 @@ internal static class PostgreSQLDescriptionGenerator
 {
     public static string GenerateDescription(PostgreSQLDatabase database)
     {
-        return TablesDescriptionGenerator.GenerateTablesDescription(database);
+        return TablesDescriptionGenerator.Create(database);
     }
 }

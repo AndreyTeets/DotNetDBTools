@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.Definition.Core;
 using DotNetDBTools.Definition.MSSQL;
 using DotNetDBTools.Definition.MSSQL.UserDefinedTypes;
@@ -79,7 +80,7 @@ internal class MSSQLDbModelFromCSharpDefinitionProvider : DbModelFromCSharpDefin
             {
                 ID = function.ID,
                 Name = function.GetType().Name,
-                CodePiece = new CodePiece { Code = function.Code },
+                CodePiece = new CodePiece { Code = function.Code.NormalizeLineEndings() },
             };
             functionModels.Add(functionModel);
         }

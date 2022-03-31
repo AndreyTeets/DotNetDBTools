@@ -31,7 +31,7 @@ public static class DbDefinitionAnalyzerVerifier<TAnalyzer>
         {
             TestCode = source;
             ExpectedDiagnostics.AddRange(expected);
-            TestState.AdditionalReferences.Add(typeof(DotNetDBTools.Definition.MSSQL.ITable).Assembly);
+            TestState.AdditionalReferences.Add(typeof(DotNetDBTools.Definition.Core.IDbObject).Assembly);
         }
     }
 }

@@ -53,7 +53,7 @@ public class PostgreSQLDbModelConverter : DbModelConverter
         {
             ID = view.ID,
             Name = view.Name,
-            CodePiece = new CodePiece { Code = ((AgnosticCodePiece)view.CodePiece).DbKindToCodeMap[DatabaseKind.PostgreSQL] },
+            CodePiece = ConvertCodePiece(view.CodePiece),
         };
     }
 

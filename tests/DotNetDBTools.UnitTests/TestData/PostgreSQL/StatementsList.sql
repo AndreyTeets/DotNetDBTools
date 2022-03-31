@@ -42,4 +42,4 @@ AFTER INSERT
 ON "MyTable2"
 --comm--ent;
 FOR EACH ROW
-EXECUTE FUNCTION "TR_MyTable2_MyTrigger1_Handler"();
+EXECUTE FUNCTION "TR_MyTable2_MyTrigger1_Handler"()

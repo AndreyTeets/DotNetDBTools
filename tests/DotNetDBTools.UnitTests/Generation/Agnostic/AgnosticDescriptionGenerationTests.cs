@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Reflection;
+using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.DefinitionParsing;
-using DotNetDBTools.DefinitionParsing.Core;
 using DotNetDBTools.Generation;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.UnitTests.Utilities;

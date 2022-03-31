@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using DotNetDBTools.RoslynUtilities;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -55,16 +56,39 @@ public static class TestDatabasesCompiler
                 .Select(x => x.Declaration.Type)
                 .ToList();
 
-            return SyntaxFactory.SyntaxTree(syntaxTree.GetRoot()
-                .ReplaceNodes(typeSyntaxesOfFieldsWithNameEqualIndex, CreateFullyQualifiedTypeSyntax));
-
-            static bool TypeNameEqualIndex(TypeSyntax type) => ((IdentifierNameSyntax)type).Identifier.Text == "Index";
-
-            static TypeSyntax CreateFullyQualifiedTypeSyntax(TypeSyntax type, TypeSyntax _)
+            if (typeSyntaxesOfFieldsWithNameEqualIndex.Any())
             {
-                NamespaceDeclarationSyntax ns = (NamespaceDeclarationSyntax)type.Parent.Parent.Parent.Parent;
-                string dbmsNsPart = ns.Name.ToString().Split('.')[2];
-                return SyntaxFactory.ParseTypeName($"Definition.{dbmsNsPart}.Index");
+                string dbms = GetDBMSNameFromUsings(syntaxTree);
+                TypeSyntax fullyQualifiedIndexTypeSyntax = CreateFullyQualifiedIndexTypeSyntax(dbms);
+                return SyntaxFactory.SyntaxTree(syntaxTree.GetRoot()
+                    .ReplaceNodes(typeSyntaxesOfFieldsWithNameEqualIndex, (type, _) => fullyQualifiedIndexTypeSyntax));
+            }
+            return syntaxTree;
+
+            static bool TypeNameEqualIndex(TypeSyntax type)
+            {
+                return ((IdentifierNameSyntax)type).Identifier.Text == "Index";
+            }
+
+            static string GetDBMSNameFromUsings(SyntaxTree syntaxTree)
+            {
+                List<string> usingStatements = syntaxTree.GetRoot().DescendantNodes()
+                    .OfType<UsingDirectiveSyntax>()
+                    .Select(x => x.ToString())
+                    .ToList();
+                foreach (string usingStatement in usingStatements)
+                {
+                    string pattern = "using DotNetDBTools.Definition.(?<dbms>Agnostic|MSSQL|MySQL|PostgreSQL|SQLite);";
+                    Match match = Regex.Match(usingStatement, pattern);
+                    if (match.Groups[0].Success)
+                        return match.Groups["dbms"].Value;
+                }
+                return null;
+            }
+
+            static TypeSyntax CreateFullyQualifiedIndexTypeSyntax(string dbms)
+            {
+                return SyntaxFactory.ParseTypeName($"DotNetDBTools.Definition.{dbms}.Index");
             }
         }
     }

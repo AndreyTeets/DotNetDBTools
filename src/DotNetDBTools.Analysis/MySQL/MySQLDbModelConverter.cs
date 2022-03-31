@@ -52,7 +52,7 @@ public class MySQLDbModelConverter : DbModelConverter
         {
             ID = view.ID,
             Name = view.Name,
-            CodePiece = new CodePiece { Code = ((AgnosticCodePiece)view.CodePiece).DbKindToCodeMap[DatabaseKind.MySQL] },
+            CodePiece = ConvertCodePiece(view.CodePiece),
         };
     }
 

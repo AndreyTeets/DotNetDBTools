@@ -7,6 +7,6 @@ internal static class MSSQLDescriptionGenerator
 {
     public static string GenerateDescription(MSSQLDatabase database)
     {
-        return TablesDescriptionGenerator.GenerateTablesDescription(database);
+        return TablesDescriptionGenerator.Create(database);
     }
 }

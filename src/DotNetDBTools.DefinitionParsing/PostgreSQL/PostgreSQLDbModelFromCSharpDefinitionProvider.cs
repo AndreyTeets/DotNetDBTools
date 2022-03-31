@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.Analysis.PostgreSQL;
 using DotNetDBTools.Definition.Core;
 using DotNetDBTools.Definition.PostgreSQL;
@@ -208,7 +209,7 @@ internal class PostgreSQLDbModelFromCSharpDefinitionProvider : DbModelFromCSharp
             {
                 ID = function.ID,
                 Name = function.GetType().Name,
-                CodePiece = new CodePiece { Code = function.Code },
+                CodePiece = new CodePiece { Code = function.Code.NormalizeLineEndings() },
             };
             functionModels.Add(functionModel);
         }

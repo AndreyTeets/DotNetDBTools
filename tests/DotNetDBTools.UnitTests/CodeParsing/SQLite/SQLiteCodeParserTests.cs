@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
+using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.CodeParsing.Core;
 using DotNetDBTools.CodeParsing.Core.Models;
 using DotNetDBTools.CodeParsing.SQLite;
-using DotNetDBTools.DefinitionParsing.Core;
 using FluentAssertions;
 using Xunit;
 

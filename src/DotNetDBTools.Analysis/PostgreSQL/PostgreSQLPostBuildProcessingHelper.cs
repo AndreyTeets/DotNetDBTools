@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.PostgreSQL;
 
@@ -21,7 +22,7 @@ public static class PostgreSQLPostBuildProcessingHelper
                 {
                     PostgreSQLFunction func = PostgreSQLObjectsFromCodeParser.ParseFunction(statements[0]);
                     ((List<PostgreSQLFunction>)database.Functions).Add(func);
-                    trg.CodePiece.Code = statements[1];
+                    trg.CodePiece.Code = statements[1].NormalizeLineEndings();
                     continue;
                 }
 

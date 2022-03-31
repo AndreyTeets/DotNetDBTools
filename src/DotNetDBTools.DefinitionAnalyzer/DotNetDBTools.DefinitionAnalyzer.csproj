@@ -16,7 +16,7 @@ DotNetDBTools.DefinitionAnalyzer is an analyzer for databases defined using DotN
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DotNetDBTools.DefinitionParsing\DotNetDBTools.DefinitionParsing.csproj" />
+    <ProjectReference Include="..\DotNetDBTools.DefinitionParsing\DotNetDBTools.DefinitionParsing.csproj" PrivateAssets="all" />
   </ItemGroup>
 
   <Import Project="..\DotNetDBTools.RoslynUtilities\DotNetDBTools.RoslynUtilities.projitems" Label="Shared" />

@@ -46,6 +46,7 @@ public static class PostgreSQLStatementsParser
                 continue;
             }
 
+            bool wasLastStatement = statementLength == statementsStr.Length;
             switch (state)
             {
                 case State.NotInQuotes:
@@ -89,10 +90,14 @@ public static class PostgreSQLStatementsParser
                     }
                     break;
                 case State.InsideComment:
-                    if (c == '\n')
+                    if (wasLastStatement || c == '\n')
                         state = beforeCommentState;
                     break;
             }
+
+            if (wasLastStatement && state == State.NotInQuotes)
+                return statementLength;
+
             prevChar = c;
         }
         throw new Exception($"Failed to find first statement length in [{statementsStr}]");

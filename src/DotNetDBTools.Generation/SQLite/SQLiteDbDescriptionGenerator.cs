@@ -7,6 +7,6 @@ internal static class SQLiteDescriptionGenerator
 {
     public static string GenerateDescription(SQLiteDatabase database)
     {
-        return TablesDescriptionGenerator.GenerateTablesDescription(database);
+        return TablesDescriptionGenerator.Create(database);
     }
 }

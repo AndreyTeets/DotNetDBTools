@@ -44,13 +44,13 @@ public class MSSQLDbModelConverter : DbModelConverter
         };
     }
 
-    private static MSSQLView ConvertToMSSQLModel(AgnosticView view)
+    private MSSQLView ConvertToMSSQLModel(AgnosticView view)
     {
         return new()
         {
             ID = view.ID,
             Name = view.Name,
-            CodePiece = new CodePiece { Code = ((AgnosticCodePiece)view.CodePiece).DbKindToCodeMap[DatabaseKind.MSSQL] },
+            CodePiece = ConvertCodePiece(view.CodePiece),
         };
     }
 

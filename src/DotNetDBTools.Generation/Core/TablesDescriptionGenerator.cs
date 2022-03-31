@@ -6,7 +6,7 @@ namespace DotNetDBTools.Generation.Core;
 
 internal static class TablesDescriptionGenerator
 {
-    public static string GenerateTablesDescription(Database database)
+    public static string Create(Database database)
     {
         if (string.IsNullOrEmpty(database.Name))
             throw new InvalidOperationException("Database name is not set when generating description");
@@ -19,12 +19,12 @@ internal static class TablesDescriptionGenerator
             foreach (Column column in table.Columns)
             {
                 string columnDeclaration =
-$@"            public readonly string {column.Name} = nameof({column.Name});";
+@$"            public readonly string {column.Name} = nameof({column.Name});";
                 columnDeclarations.Add(columnDeclaration);
             }
 
             string tableDescriptionDefinition =
-$@"        public class {table.Name}Description
+@$"        public class {table.Name}Description
         {{
 {string.Join("\n", columnDeclarations)}
 
@@ -33,14 +33,14 @@ $@"        public class {table.Name}Description
         }}";
 
             string tableDeclaration =
-$@"        public static readonly {table.Name}Description {table.Name} = new();";
+@$"        public static readonly {table.Name}Description {table.Name} = new();";
 
             tableDescriptionDefinitions.Add(tableDescriptionDefinition);
             tableDeclarations.Add(tableDeclaration);
         }
 
         string res =
-$@"namespace {database.Name}Description
+@$"namespace {database.Name}Description
 {{
     public static class {database.Name}Tables
     {{

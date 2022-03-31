@@ -1,4 +1,4 @@
-﻿namespace DotNetDBTools.DefinitionParsing.Core;
+﻿namespace DotNetDBTools.Analysis.Core;
 
 public static class StringExtensions
 {

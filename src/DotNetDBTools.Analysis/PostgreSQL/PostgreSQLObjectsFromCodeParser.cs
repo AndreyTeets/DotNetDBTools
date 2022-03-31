@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text.RegularExpressions;
+using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.PostgreSQL;
 
@@ -29,7 +30,7 @@ public static class PostgreSQLObjectsFromCodeParser
             {
                 ID = Guid.Parse(match.Groups["funcID"].Value),
                 Name = GetIdentifierName(match.Groups["funcName"].Value),
-                CodePiece = new CodePiece { Code = match.Groups["funcCode"].Value },
+                CodePiece = new CodePiece { Code = match.Groups["funcCode"].Value.NormalizeLineEndings() },
             };
             return func;
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.Analysis.PostgreSQL;
 using DotNetDBTools.Models.PostgreSQL;
 using FluentAssertions;
@@ -16,7 +17,7 @@ public class PostgreSQLObjectsFromCodeParserTests
         string functionStatement =
 @$"{FuncIDDefinition}
 CREATE   function ""TR_SomeTriggerFunction"" ()
-bla bla;";
+bla bla;".NormalizeLineEndings();
 
         PostgreSQLFunction func = PostgreSQLObjectsFromCodeParser.ParseFunction(functionStatement);
 

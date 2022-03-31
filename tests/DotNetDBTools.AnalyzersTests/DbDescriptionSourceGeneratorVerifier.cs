@@ -37,7 +37,7 @@ public static class DbDescriptionSourceGeneratorVerifier<TSourceGenerator>
         {
             TestCode = source;
             ExpectedDiagnostics.AddRange(expected);
-            TestState.AdditionalReferences.Add(typeof(DotNetDBTools.Definition.MSSQL.ITable).Assembly);
+            TestState.AdditionalReferences.Add(typeof(DotNetDBTools.Definition.Core.IDbObject).Assembly);
             if (expectedGeneratedCode is not null)
             {
                 TestState.GeneratedSources.Add(

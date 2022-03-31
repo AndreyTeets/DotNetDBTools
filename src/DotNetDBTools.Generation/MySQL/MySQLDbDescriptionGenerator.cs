@@ -7,6 +7,6 @@ internal static class MySQLDescriptionGenerator
 {
     public static string GenerateDescription(MySQLDatabase database)
     {
-        return TablesDescriptionGenerator.GenerateTablesDescription(database);
+        return TablesDescriptionGenerator.Create(database);
     }
 }

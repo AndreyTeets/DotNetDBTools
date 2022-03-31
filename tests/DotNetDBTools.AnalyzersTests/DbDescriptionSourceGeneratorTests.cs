@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using DotNetDBTools.DefinitionParsing.Core;
 using Microsoft.CodeAnalysis.Testing;
 using Xunit;
 using Verify = DotNetDBTools.AnalyzersTests.DbDescriptionSourceGeneratorVerifier<DotNetDBTools.DescriptionSourceGenerator.DbDescriptionSourceGenerator>;
@@ -47,7 +46,7 @@ namespace SampleTestCode
             public static implicit operator string(TestTable1Description description) => description.ToString();
         }
     }
-}".NormalizeLineEndings();
+}".Replace("\r\n", "\n");
 
         await Verify.VerifyGeneratorAsync(goodDbCode, expectedGeneratedCode);
 

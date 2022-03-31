@@ -7,17 +7,18 @@ using DotNetDBTools.Generation.MySQL;
 using DotNetDBTools.Generation.PostgreSQL;
 using DotNetDBTools.Generation.SQLite;
 using DotNetDBTools.Models.Core;
-using DotNetDBTools.Models.MSSQL;
-using DotNetDBTools.Models.MySQL;
-using DotNetDBTools.Models.PostgreSQL;
-using DotNetDBTools.Models.SQLite;
 
 namespace DotNetDBTools.Generation;
 
 public static class DbDefinitionGenerator
 {
+    private const string ProjectNamespace = "MyDatabaseGeneratedDefinition";
+
     public static void GenerateDefinition(Database database, string outputDirectory)
     {
+        if (Directory.Exists(outputDirectory))
+            Directory.Delete(outputDirectory, true);
+
         IEnumerable<DefinitionSourceFile> definitionSourceFiles = GenerateDefinition(database);
         foreach (DefinitionSourceFile file in definitionSourceFiles)
         {
@@ -31,10 +32,10 @@ public static class DbDefinitionGenerator
     {
         IEnumerable<DefinitionSourceFile> definitionSourceFiles = database.Kind switch
         {
-            DatabaseKind.MSSQL => MSSQLDefinitionGenerator.GenerateDefinition((MSSQLDatabase)database),
-            DatabaseKind.MySQL => MySQLDefinitionGenerator.GenerateDefinition((MySQLDatabase)database),
-            DatabaseKind.PostgreSQL => PostgreSQLDefinitionGenerator.GenerateDefinition((PostgreSQLDatabase)database),
-            DatabaseKind.SQLite => SQLiteDefinitionGenerator.GenerateDefinition((SQLiteDatabase)database),
+            DatabaseKind.MSSQL => MSSQLDefinitionGenerator.GenerateDefinition(database, ProjectNamespace),
+            DatabaseKind.MySQL => MySQLDefinitionGenerator.GenerateDefinition(database, ProjectNamespace),
+            DatabaseKind.PostgreSQL => PostgreSQLDefinitionGenerator.GenerateDefinition(database, ProjectNamespace),
+            DatabaseKind.SQLite => SQLiteDefinitionGenerator.GenerateDefinition(database, ProjectNamespace),
             _ => throw new InvalidOperationException($"Invalid dbKind: {database.Kind}"),
         };
         return definitionSourceFiles;

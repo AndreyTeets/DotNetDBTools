@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.Analysis.PostgreSQL;
-using DotNetDBTools.DefinitionParsing.Core;
 using FluentAssertions;
 using Xunit;
 
@@ -27,12 +27,23 @@ public class PostgreSQLStatementsParserTests
         statementsList[1].Should().EndWith("END;\n$FuncBody$;");
 
         statementsList[2].Should().StartWith("CREATE TRIGGER \"TR_MyTable2_MyTrigger1\"");
-        statementsList[2].Should().EndWith("EXECUTE FUNCTION \"TR_MyTable2_MyTrigger1_Handler\"();");
+        statementsList[2].Should().EndWith("EXECUTE FUNCTION \"TR_MyTable2_MyTrigger1_Handler\"()");
     }
 
     [Theory]
     [InlineData("some statement")]
-    [InlineData("some statement--comment;")]
+    [InlineData("some statement--comment")]
+    [InlineData("some statement--co'mment")]
+    [InlineData("some statement--co$mment")]
+    [InlineData("some statement--co$$mment")]
+    public void ParseToStatementsList_ParsesValidInput(string statementStr)
+    {
+        List<string> statementsList = PostgreSQLStatementsParser.ParseToStatementsList(statementStr);
+        statementsList.Count.Should().Be(1);
+        statementsList[0].Should().Be(statementStr);
+    }
+
+    [Theory]
     [InlineData("some 'statement;")]
     [InlineData("some $statement;")]
     [InlineData("some $$statement;")]
