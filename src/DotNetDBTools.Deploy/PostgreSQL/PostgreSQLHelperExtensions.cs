@@ -4,7 +4,7 @@ using DotNetDBTools.Models.PostgreSQL.UserDefinedTypes;
 
 namespace DotNetDBTools.Deploy.PostgreSQL;
 
-internal static class PostgreSQLDbObjectsExtensions
+internal static class PostgreSQLHelperExtensions
 {
     public static string GetQuotedName(this DataType type)
     {

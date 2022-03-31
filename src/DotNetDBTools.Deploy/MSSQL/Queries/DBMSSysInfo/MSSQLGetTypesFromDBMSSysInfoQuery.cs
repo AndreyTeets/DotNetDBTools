@@ -10,11 +10,11 @@ internal class MSSQLGetTypesFromDBMSSysInfoQuery : IQuery
     public string Sql =>
 $@"SELECT
     t.name AS {nameof(UserDefinedTypeRecord.Name)},
-    st.name AS {nameof(UserDefinedTypeRecord.UnderlyingDataTypeName)},
+    st.name AS {nameof(UserDefinedTypeRecord.UnderlyingTypeName)},
     ~t.is_nullable AS [{nameof(UserDefinedTypeRecord.NotNull)}],
-    t.max_length AS {nameof(UserDefinedTypeRecord.UnderlyingDataTypeLength)},
-    t.precision AS {nameof(UserDefinedTypeRecord.UnderlyingDataTypePrecision)},
-    t.scale AS {nameof(UserDefinedTypeRecord.UnderlyingDataTypeScale)}
+    t.max_length AS {nameof(UserDefinedTypeRecord.UnderlyingTypeLength)},
+    t.precision AS {nameof(UserDefinedTypeRecord.UnderlyingTypePrecision)},
+    t.scale AS {nameof(UserDefinedTypeRecord.UnderlyingTypeScale)}
 FROM sys.types t
 INNER JOIN sys.types st
     ON st.user_type_id = t.system_type_id
@@ -28,10 +28,10 @@ WHERE t.is_user_defined = 1
     {
         public string Name { get; set; }
         public bool NotNull { get; set; }
-        public string UnderlyingDataTypeName { get; set; }
-        public int UnderlyingDataTypeLength { get; set; }
-        public int UnderlyingDataTypePrecision { get; set; }
-        public int UnderlyingDataTypeScale { get; set; }
+        public string UnderlyingTypeName { get; set; }
+        public int UnderlyingTypeLength { get; set; }
+        public int UnderlyingTypePrecision { get; set; }
+        public int UnderlyingTypeScale { get; set; }
     }
 
     public class RecordMapper
@@ -43,11 +43,11 @@ WHERE t.is_user_defined = 1
                 ID = Guid.NewGuid(),
                 Name = userDefinedTypeRecord.Name,
                 NotNull = userDefinedTypeRecord.NotNull,
-                UnderlyingDataType = MSSQLQueriesHelper.CreateDataTypeModel(
-                    userDefinedTypeRecord.UnderlyingDataTypeName.ToUpper(),
-                    userDefinedTypeRecord.UnderlyingDataTypeLength,
-                    userDefinedTypeRecord.UnderlyingDataTypePrecision,
-                    userDefinedTypeRecord.UnderlyingDataTypeScale),
+                UnderlyingType = MSSQLQueriesHelper.CreateDataTypeModel(
+                    userDefinedTypeRecord.UnderlyingTypeName.ToUpper(),
+                    userDefinedTypeRecord.UnderlyingTypeLength,
+                    userDefinedTypeRecord.UnderlyingTypePrecision,
+                    userDefinedTypeRecord.UnderlyingTypeScale),
             };
         }
     }

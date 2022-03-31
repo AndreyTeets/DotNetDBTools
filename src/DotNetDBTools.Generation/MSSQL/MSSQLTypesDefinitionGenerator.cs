@@ -27,7 +27,7 @@ namespace {projectNamespace}.Types
     public class {type.Name} : IUserDefinedType
     {{
         public Guid ID => new(""{type.ID}"");
-        public IDataType UnderlyingType => {DeclareDataType(type.UnderlyingDataType)};
+        public IDataType UnderlyingType => {DeclareDataType(type.UnderlyingType)};
         public bool NotNull => {DeclareBool(type.NotNull)};
     }}
 }}";

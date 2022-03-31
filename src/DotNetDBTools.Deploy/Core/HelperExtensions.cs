@@ -4,7 +4,7 @@ using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.Deploy.Core;
 
-internal static class DbObjectsExtensions
+internal static class HelperExtensions
 {
     public static string GetCode(this Column column) => column.Default.Code;
     public static string GetCode(this CheckConstraint ck) => ck.CodePiece.Code;

@@ -63,7 +63,7 @@ internal class MSSQLDbModelFromCSharpDefinitionProvider : DbModelFromCSharpDefin
                 ID = udt.ID,
                 Name = udt.GetType().Name,
                 NotNull = udt.NotNull,
-                UnderlyingDataType = dataType,
+                UnderlyingType = dataType,
             };
             userDefinedTypeModels.Add(udtModel);
         }
