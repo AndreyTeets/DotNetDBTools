@@ -44,10 +44,13 @@ internal class DbDefinitionAnalyzer : DiagnosticAnalyzer
 
             Assembly dbAssembly = CompilationHelper.CompileInMemoryAnLoad(context.Compilation, resources);
             Database database = new GenericDbModelFromDefinitionProvider().CreateDbModel(dbAssembly);
-            if (!AnalysisHelper.DbIsValid(database, out DbError dbError))
+            if (!AnalysisHelper.DbIsValid(database, out List<DbError> dbErrors))
             {
-                Location location = InvalidDbObjectsFinder.GetInvalidDbObjectLocation(context.Compilation, dbError);
-                context.ReportDiagnostic(Diagnostic.Create(s_diagnosticDescriptor, location, dbError.ErrorMessage));
+                foreach (DbError dbError in dbErrors)
+                {
+                    Location location = InvalidDbObjectsFinder.GetInvalidDbObjectLocation(context.Compilation, dbError);
+                    context.ReportDiagnostic(Diagnostic.Create(s_diagnosticDescriptor, location, dbError.ErrorMessage));
+                }
             }
         }
         catch (Exception ex)

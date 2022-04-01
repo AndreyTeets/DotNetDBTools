@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DotNetDBTools.Analysis.Agnostic;
 using DotNetDBTools.Analysis.Core;
@@ -13,15 +14,15 @@ namespace DotNetDBTools.Analysis;
 
 public static class AnalysisHelper
 {
-    public static bool DbIsValid(Database database, out DbError dbError)
+    public static bool DbIsValid(Database database, out List<DbError> dbErrors)
     {
         return database.Kind switch
         {
-            DatabaseKind.Agnostic => new AgnosticDbValidator().DbIsValid(database, out dbError),
-            DatabaseKind.MSSQL => new MSSQLDbValidator().DbIsValid(database, out dbError),
-            DatabaseKind.MySQL => new MySQLDbValidator().DbIsValid(database, out dbError),
-            DatabaseKind.PostgreSQL => new PostgreSQLDbValidator().DbIsValid(database, out dbError),
-            DatabaseKind.SQLite => new SQLiteDbValidator().DbIsValid(database, out dbError),
+            DatabaseKind.Agnostic => new AgnosticDbValidator().DbIsValid(database, out dbErrors),
+            DatabaseKind.MSSQL => new MSSQLDbValidator().DbIsValid(database, out dbErrors),
+            DatabaseKind.MySQL => new MySQLDbValidator().DbIsValid(database, out dbErrors),
+            DatabaseKind.PostgreSQL => new PostgreSQLDbValidator().DbIsValid(database, out dbErrors),
+            DatabaseKind.SQLite => new SQLiteDbValidator().DbIsValid(database, out dbErrors),
             _ => throw new InvalidOperationException($"Invalid dbKind: {database.Kind}"),
         };
     }

@@ -12,17 +12,20 @@ internal static class InvalidDbObjectsFinder
 {
     public static Location GetInvalidDbObjectLocation(Compilation compilation, DbError dbError)
     {
-        if (dbError is InvalidFKDbError invalidFKDbError)
-            return GetInvalidFKLocation(compilation, invalidFKDbError);
-        if (dbError is InvalidIdentityColumnDbError)
-            return Location.None;
-        if (dbError is InvalidTriggerCodeDbError)
-            return Location.None;
-        else
-            throw new InvalidOperationException($"Invalid dbError type: '{dbError.GetType()}'");
+        return dbError switch
+        {
+            ColumnDbError err => GetClassMemberLocation(compilation, err.TableName, err.ColumnName, "Column"),
+            ForeignKeyDbError err => GetClassMemberLocation(compilation, err.TableName, err.ForeignKeyName, "ForeignKey"),
+            TriggerDbError err => GetClassMemberLocation(compilation, err.TableName, err.TriggerName, "Trigger"),
+            _ => throw new InvalidOperationException($"Invalid dbError type: '{dbError.GetType()}'"),
+        };
     }
 
-    private static Location GetInvalidFKLocation(Compilation compilation, InvalidFKDbError invalidFKDbError)
+    private static Location GetClassMemberLocation(
+        Compilation compilation,
+        string tableName,
+        string memberName,
+        string memberTypeName)
     {
         foreach (SyntaxTree st in compilation.SyntaxTrees)
         {
@@ -34,32 +37,30 @@ internal static class InvalidDbObjectsFinder
             foreach (ClassDeclarationSyntax c in classes)
             {
                 ITypeSymbol classSymbol = (ITypeSymbol)semanticModel.GetDeclaredSymbol(c);
-                if (!classSymbol.AllInterfaces.Any(x => x.Name == nameof(IBaseTable)))
-                    continue;
-                if (classSymbol.Name != invalidFKDbError.TableName)
-                    continue;
+                if (classSymbol.Name == tableName &&
+                    classSymbol.AllInterfaces.Any(x => x.Name == nameof(IBaseTable)))
+                {
+                    ISymbol classMemberSymbol = classSymbol.GetMembers().SingleOrDefault(x =>
+                        x.Name == memberName &&
+                        IsOfBaseType(x, memberTypeName));
 
-                ISymbol foreignKeySymbol = classSymbol.GetMembers()
-                    .Where(x => IsForeignKey(x))
-                    .SingleOrDefault(x => x.Name == invalidFKDbError.ForeignKeyName);
-                if (foreignKeySymbol is null)
-                    continue;
-
-                return foreignKeySymbol.Locations.First();
+                    if (classMemberSymbol is not null)
+                        return classMemberSymbol.Locations.First();
+                }
             }
         }
         return Location.None;
     }
 
-    private static bool IsForeignKey(ISymbol symbol)
+    private static bool IsOfBaseType(ISymbol symbol, string typeName)
     {
         if (symbol is IFieldSymbol fieldSymbol &&
-            fieldSymbol.Type.BaseType.Name == nameof(BaseForeignKey))
+            fieldSymbol.Type.Name == typeName)
         {
             return true;
         }
         else if (symbol is IPropertySymbol propertySymbol &&
-            propertySymbol.Type.BaseType.Name == nameof(BaseForeignKey))
+            propertySymbol.Type.Name == typeName)
         {
             return true;
         }

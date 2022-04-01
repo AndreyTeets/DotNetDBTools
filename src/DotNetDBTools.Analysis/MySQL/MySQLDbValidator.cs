@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.Analysis.Core.Errors;
@@ -8,60 +9,42 @@ namespace DotNetDBTools.Analysis.MySQL;
 
 internal class MySQLDbValidator : DbValidator
 {
-    public override bool DbIsValid(Database database, out DbError dbError)
+    public override bool DbIsValid(Database database, out List<DbError> dbErrors)
     {
-        if (!HasNoBadTables(database, out dbError))
-            return false;
-        if (!TriggersCodeIsValid(database, out dbError))
-            return false;
-        if (!IdentityColumnsAreValid(database, out dbError))
-            return false;
-        return true;
+        dbErrors = new();
+        AddCoreDbObjectsErrors(database, dbErrors);
+        return dbErrors.Count == 0;
     }
 
-    private static bool TriggersCodeIsValid(Database database, out DbError dbError)
+    protected override void AddAdditionalTriggerErrors(Table table, Trigger trigger, List<DbError> dbErrors)
     {
-        dbError = null;
-        foreach (Table table in database.Tables)
+        if (!Regex.IsMatch(trigger.CodePiece.Code, @$"CREATE TRIGGER `?{trigger.Name}`?"))
         {
-            foreach (Trigger trigger in table.Triggers)
-            {
-                if (!Regex.IsMatch(trigger.CodePiece.Code, @$"CREATE TRIGGER `?{trigger.Name}`?"))
-                {
-                    string errorMessage =
-$"Trigger '{trigger.Name}' in table '{table.Name}' has different name in it's creation code";
+            string errorMessage =
+$"Trigger '{trigger.Name}' in table '{table.Name}' has different name in it's creation code.";
 
-                    dbError = new InvalidTriggerCodeDbError(
-                        errorMessage: errorMessage,
-                        tableName: table.Name,
-                        triggerName: trigger.Name);
+            DbError dbError = new TriggerDbError(
+                errorMessage: errorMessage,
+                tableName: table.Name,
+                triggerName: trigger.Name);
 
-                    return false;
-                }
-            }
+            dbErrors.Add(dbError);
         }
-        return true;
     }
 
-    private static bool IdentityColumnsAreValid(Database database, out DbError dbError)
+    protected override void AddAdditionalColumnErrors(Table table, Column column, List<DbError> dbErrors)
     {
-        dbError = null;
-        foreach (Table table in database.Tables)
+        if (column.Identity && table.PrimaryKey?.Columns.Any(c => c == column.Name) != true)
         {
-            Column identityColumn = table.Columns.SingleOrDefault(c => c.Identity);
-            if (identityColumn is not null && table.PrimaryKey?.Columns.Any(c => c == identityColumn.Name) != true)
-            {
-                string errorMessage =
-$"Identity column '{identityColumn.Name}' in table '{table.Name}' is not a primary key";
+            string errorMessage =
+$"Identity column '{column.Name}' in table '{table.Name}' is not a primary key";
 
-                dbError = new InvalidIdentityColumnDbError(
-                    errorMessage: errorMessage,
-                    tableName: table.Name,
-                    identityColumnName: identityColumn.Name);
+            DbError dbError = new ColumnDbError(
+                errorMessage: errorMessage,
+                tableName: table.Name,
+                columnName: column.Name);
 
-                return false;
-            }
+            dbErrors.Add(dbError);
         }
-        return true;
     }
 }

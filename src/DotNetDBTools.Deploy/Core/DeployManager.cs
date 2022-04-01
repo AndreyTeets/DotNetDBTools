@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Common;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using DotNetDBTools.Analysis;
 using DotNetDBTools.Analysis.Core;
@@ -225,8 +227,8 @@ public abstract class DeployManager<TDatabase> : IDeployManager
         if (database.Kind == DatabaseKind.Agnostic)
             database = _dbModelConverter.FromAgnostic(database);
 
-        if (!AnalysisHelper.DbIsValid(database, out DbError error))
-            throw new Exception($"Db is invalid: {error}");
+        if (!AnalysisHelper.DbIsValid(database, out List<DbError> dbErrors))
+            throw new Exception($"Db is invalid:\n{string.Join("\n", dbErrors.Select(x => x.ErrorMessage))}");
 
         Events.InvokeEventFired(EventType.CreateDbModelFromDefinitionFinished);
         return database;

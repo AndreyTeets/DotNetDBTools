@@ -15,6 +15,8 @@ internal class MSSQLDataTypeMapper : DataTypeMapper
     {
         switch (dataType)
         {
+            case null:
+                return null;
             case IntDataType:
             case RealDataType:
             case DecimalDataType:

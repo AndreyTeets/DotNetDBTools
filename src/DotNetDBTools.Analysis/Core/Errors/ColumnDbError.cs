@@ -1,17 +1,17 @@
 ﻿namespace DotNetDBTools.Analysis.Core.Errors;
 
-public class InvalidTriggerCodeDbError : DbError
+public class ColumnDbError : DbError
 {
     public string TableName { get; private set; }
-    public string TriggerName { get; private set; }
+    public string ColumnName { get; private set; }
 
-    public InvalidTriggerCodeDbError(
+    public ColumnDbError(
         string errorMessage,
         string tableName,
-        string triggerName)
+        string columnName)
     {
         ErrorMessage = errorMessage;
         TableName = tableName;
-        TriggerName = triggerName;
+        ColumnName = columnName;
     }
 }
