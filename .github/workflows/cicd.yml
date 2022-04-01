@@ -40,7 +40,7 @@ jobs:
         run: ./build/scripts/test.ps1
 
       - name: Upload code coverage
-        if: ${{ false }}
+        if: ${{ true }}
         uses: codecov/codecov-action@v2
         with:
           files: ./tests/TestResults/coverage.opencover.xml
