@@ -11,6 +11,7 @@
   <Import Project="$(ProjectDir)..\..\build\props\PKG.coverlet.props" />
 
   <ItemGroup>
+    <PackageReference Include="Antlr4.Runtime.Standard" Version="$(Antlr4RuntimeVersion)" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="$(CodeAnalysisVersion)" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Analyzer.Testing.XUnit" Version="$(CodeAnalysisTestingVersion)" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.CodeFix.Testing.XUnit" Version="$(CodeAnalysisTestingVersion)" />
