@@ -11,10 +11,7 @@ Import-Module "$PSScriptRoot/common.psm1"
 $repoRoot = "$PSScriptRoot/../.."
 Push-Location $repoRoot
 try {
-    #exec dotnet nuget push artifacts/nuget/Release/*.nupkg -s https://api.nuget.org/v3/index.json --api-key $NugetApiKey
-    Write-Host "Echo: dotnet nuget push stub"
-    exec dotnet --list-sdks
-    Get-ChildItem artifacts/nuget/Release/
+    exec dotnet nuget push "artifacts/nuget/Release/*.nupkg" -s https://api.nuget.org/v3/index.json -k $NugetApiKey
 } finally {
     Pop-Location
 }
