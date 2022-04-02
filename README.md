@@ -1,13 +1,19 @@
-<h1 align="center"><a href="https://github.com/AndreyTeets/DotNetDBTools">DotNetDBTools</a></h1>
-
 # What is DotNetDBTools?
-DotNetDBTools is a set of libraries to define and deploy (publish migrate) relational databases throughout their evolution using database as code approach.<br/>
-Or in other words - state-based (declarative) database version control tools.<br/>
-It provides the means to conviniently describe database structure for supported DBMS's as c# code or as sql in a declarative way, to analyze that structure and the means of publishing it to the selected DBMS with automatic differences calculation between what's being published and what's currently in the DBMS now.<br/>
+DotNetDBTools is a set of libraries to define and deploy (publish migrate) relational databases throughout their evolution using database as code approach.
+
+Or in other words - state-based (declarative) database version control tools.
+
+It provides the means to conviniently describe database structure for the supported DBMS as c# code or as sql in a declarative way, to analyze that structure and the means of publishing it to the selected DBMS with automatic differences calculation between what's being published and what's currently in the DBMS now.
+
 Agnostic description for standard sql objects (Tables, Views, Indexes, Triggers) is also supported (as c# code only) and can then be used to publish to any supported DBMS.
 
 ## How it works
-Differences are calculated on the idea of assigning unique identifiers to each object (table, column, foreign key, function, e.t.c.) in database description (and saving them in DBMS as well) and then creating new objects during publish if there's no record of this identifier in DBMS now, altering only changed properties of this object (like changing name for a table, or changing data type for a column) if there's a record of this identifier in DBMS now and dropping objects if object was deleted in description but still exists in DBMS. Identifiers are there to provide a reliable mapping between what's in the description and what's in DBMS because it can't be done with names which often change.
+Differences are calculated on the idea of assigning unique identifiers to each object (table, column, foreign key, function, e.t.c.) in database description (and saving them in DBMS as well) and then:
++ Creating new objects during publish if there's no record of this identifier in DBMS now.
++ Altering only changed properties of this object (like changing name for a table, or changing data type for a column) if there's a record of this identifier in DBMS now.
++ Dropping objects if object was deleted in description but still exists in DBMS.
+
+Identifiers are there to provide a reliable mapping between what's in the description and what's in DBMS because it can't be done with names which often change.
 
 ## Example database structure description as c# code
 ```
@@ -91,10 +97,10 @@ WHERE {MyTable.MyKeyColumn} IN (1, 2)
 IEnumerable<string> values = connection.Query<string>(sql); // Dapper call
 ```
 
-## How is 'SQL Server Data Tools (SSDT)' different
+## How is 'SQL Server Data Tools (SSDT)' different?
 Although it provides analogous declaritive means for database structure description it still has to drag all the history of renames to make publish correctly work to support renames. Plus it's only available for MSSQL.
 
-## How is 'Entity framework' different
+## How is 'Entity framework' different?
 Also provides declarative means for database structure description with different syntax, but publishing process is entirely different and relies on dragging the whole history of every change done to database. Also DotNetDBTools is not an ORM, it just provides means to describe and deploy database structure and analysis on this structure.
 
 # Supported DBMS
@@ -108,7 +114,7 @@ Also provides declarative means for database structure description with differen
 + MySQL - definition (as c#) of only basic "standard relational db entities" and it's deployment+generation seem to work, probably with major bugs, database analysis using just a few example checks.
 + PostgreSQL - definition (as c#) of most "standard relational db entities" and it's deployment+generation seem to work, probably with major bugs, database analysis using just a few example checks.
 + SQLite - definition (as c# and as sql) of all "standard sqlite entities" and it's deployment+generation seem to work, probably with bugs, database analysis using just a few example checks.
-+ Agnostic definition for "standard relational db entities" and it's deployment to all the above DBMS according with corresponding development state of the specific dbms above.
++ Agnostic definition for "standard relational db entities" and it's deployment to all the above DBMS according with corresponding development state of the specific DBMS above.
 
 # How to use
 1. Create a netstandard2.0 project for a database decription.
@@ -120,7 +126,10 @@ Also provides declarative means for database structure description with differen
 5. Create a standalone console project with a reference to `DotNetDBTools.Deploy` nuget package and use provided `MSSQLDeployManager` / `MySQLDeployManager` / `PostgreSQLDeployManager` / `SQLiteDeployManager` classes to create a simple deployment tool, after that use this tool to publish database from compiled database project output dll to DBMS as it evolves. Or alternatively reference `DotNetDBTools.Deploy` package right in business logic application and add database publish logic right there.
 6. Optionally reference database project in business application to use additional description classes generated by `DotNetDBTools.DescriptionSourceGenerator`.
 
-It is also possible to generate definition from an already existing database, register it with DotNetDBTools system and then keep managing it with DotNetDBTools.<br/>
+Generation of publish scripts is supported as well.
+
+It is also possible to generate definition from an already existing database and then keep managing it with DotNetDBTools.
+
 Here is a concise list of all the available database management methods:
 ```
 public interface IDeployManager
@@ -190,9 +199,9 @@ public interface IDeployManager
 ```
 
 ## Example code to publish database
-Note: database has to be registered with DotNetDBTools using `deployManager.RegisterAsDNDBT(connection)` method before using any other methods that require connection as an argument.<br/>
-<br/>
-Create an instance of IDeployManager for the appropriate dbms using non-default options if needed and a DbConnection instance to pass to deployManager methods
+Note: database must exist and has to be registered with DotNetDBTools using `deployManager.RegisterAsDNDBT(connection)` method before using publish methods.
+
+Create an instance of IDeployManager for the appropriate DBMS using non-default options if needed and a DbConnection instance to pass to deployManager methods
 ```
 IDeployManager deployManager = new MSSQLDeployManager(new DeployOptions() { AllowDataLoss = true });
 using DbConnection connection = new SqlConnection(SomeMSSQLConnectionString);
@@ -217,9 +226,9 @@ connection.Execute(File.ReadAllText("./publishScript.sql")); // Dapper call
 ```
 
 # Additional information
-More information how to use with end-to-end working examples can be found in [/samples](/samples) directory of this project.<br/>
-In order to run these samples docker container with appropriate DBMS has to be started (except for SQLite which works out of the box).
-To start containers simply run any (or all) integration test for the chosen DBMS, it will create container with required parameters and leave it running.
+More information on usage with end-to-end working examples can be found in [/samples](/samples) directory of this project. For even more complex scenarios one can check out available public methods in all packages and/or look at the code of tests and DeployManager class to find examples of their usage.
+
+In order to run sample applications docker container with the appropriate DBMS has to be started (except for SQLite which works out of the box). To start containers simply run any (or all) integration test for the chosen DBMS, it will create container with required parameters and leave it running. Deleting created databases between sample applications runs may be required.
 
 # Licence
 MIT License. See [LICENSE](LICENSE) file.

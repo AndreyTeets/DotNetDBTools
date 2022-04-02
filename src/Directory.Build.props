@@ -18,20 +18,19 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/AndreyTeets/DotNetDBTools</PackageProjectUrl>
     <RepositoryUrl>>https://github.com/AndreyTeets/DotNetDBTools.git</RepositoryUrl>
-    <PackageTags>DNDBT DBMS sql state-based declarative database as code version control tools db migration</PackageTags>
+    <PackageTags>DNDBT DBMS sql state-based declarative database version control tools db migration</PackageTags>
     <Description>
-DotNetDBTools is a set of libraries to define and deploy relational databases throughout their evolution using database as code approach.
+DotNetDBTools is a set of libraries to define and deploy (publish migrate) relational databases throughout their evolution using database as code approach.
 Or in other words - state-based (declarative) database version control tools.
-It provides the means to conviniently describe database structure for supported DBMS's as c# code or as sql in a declarative way, to analyze that structure and the means of publishing it to the selected DBMS with automatic differences calculation between what's being published and what's currently in the DBMS now.
+It provides the means to conviniently describe database structure for the supported DBMS as c# code or as sql in a declarative way, to analyze that structure and the means of publishing it to the selected DBMS with automatic differences calculation between what's being published and what's currently in the DBMS now.
+Agnostic description for standard sql objects (Tables, Views, Indexes, Triggers) is also supported (as c# code only) and can then be used to publish to any supported DBMS.
     </Description>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
     <Authors>Andrey Teets</Authors>
     <Copyright>Copyright (c) 2021 Andrey Teets</Copyright>
     <PackageOutputPath>$(MSBuildThisFileDirectory)..\artifacts\nuget\$(Configuration)</PackageOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="$(MSBuildThisFileDirectory)..\README.md" Pack="true" PackagePath="\"/>
     <InternalsVisibleTo Include="DotNetDBTools.AnalyzersTests" />
     <InternalsVisibleTo Include="DotNetDBTools.IntegrationTests" />
     <InternalsVisibleTo Include="DotNetDBTools.UnitTests" />
