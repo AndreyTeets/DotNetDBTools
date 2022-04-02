@@ -1,11 +1,12 @@
-<h1 align="center">DotNetDBTools</h1>
+<h1 align="center"><a href="https://github.com/AndreyTeets/DotNetDBTools">DotNetDBTools</a></h1>
 
-DotNetDBTools is a set of libraries to define and deploy relational databases throughout their evolution using database as code approach.<br/>
+# What is DotNetDBTools?
+DotNetDBTools is a set of libraries to define and deploy (publish migrate) relational databases throughout their evolution using database as code approach.<br/>
 Or in other words - state-based (declarative) database version control tools.<br/>
 It provides the means to conviniently describe database structure for supported DBMS's as c# code or as sql in a declarative way, to analyze that structure and the means of publishing it to the selected DBMS with automatic differences calculation between what's being published and what's currently in the DBMS now.<br/>
 Agnostic description for standard sql objects (Tables, Views, Indexes, Triggers) is also supported (as c# code only) and can then be used to publish to any supported DBMS.
 
-## More details
+## How it works
 Differences are calculated on the idea of assigning unique identifiers to each object (table, column, foreign key, function, e.t.c.) in database description (and saving them in DBMS as well) and then creating new objects during publish if there's no record of this identifier in DBMS now, altering only changed properties of this object (like changing name for a table, or changing data type for a column) if there's a record of this identifier in DBMS now and dropping objects if object was deleted in description but still exists in DBMS. Identifiers are there to provide a reliable mapping between what's in the description and what's in DBMS because it can't be done with names which often change.
 
 ## Example database structure description as c# code
@@ -91,16 +92,23 @@ IEnumerable<string> values = connection.Query<string>(sql); // Dapper call
 ```
 
 ## How is 'SQL Server Data Tools (SSDT)' different
-Although it provides analogous declaritive means for database structure description (except that description is done by pure sql-create statements instead of c# code) it still has to drag all the history of renames to make publish correctly work to support renames. Plus it's only available for MSSQL.
+Although it provides analogous declaritive means for database structure description it still has to drag all the history of renames to make publish correctly work to support renames. Plus it's only available for MSSQL.
 
 ## How is 'Entity framework' different
 Also provides declarative means for database structure description with different syntax, but publishing process is entirely different and relies on dragging the whole history of every change done to database. Also DotNetDBTools is not an ORM, it just provides means to describe and deploy database structure and analysis on this structure.
 
 # Supported DBMS
-+ MSSQL (basic descriptions (c#) and their deployment/generation seem to work, probably with major bugs, almost no analysis)
-+ MySQL (basic descriptions (c#) and their deployment/generation seem to work, probably with major bugs, almost no analysis)
-+ PostgreSQL (most descriptions (c#) and their deployment/generation seem to work, probably with major bugs, almost no analysis)
-+ SQLite (all descriptions (c# and sql) and their deployment/generation seem to work, probably with bugs, almost no analysis)
++ MSSQL
++ MySQL
++ PostgreSQL
++ SQLite
+
+# State of development
++ MSSQL - definition (as c#) of only basic "standard relational db entities" and it's deployment+generation seem to work, probably with major bugs, database analysis using just a few example checks.
++ MySQL - definition (as c#) of only basic "standard relational db entities" and it's deployment+generation seem to work, probably with major bugs, database analysis using just a few example checks.
++ PostgreSQL - definition (as c#) of most "standard relational db entities" and it's deployment+generation seem to work, probably with major bugs, database analysis using just a few example checks.
++ SQLite - definition (as c# and as sql) of all "standard sqlite entities" and it's deployment+generation seem to work, probably with bugs, database analysis using just a few example checks.
++ Agnostic definition for "standard relational db entities" and it's deployment to all the above DBMS according with corresponding development state of the specific dbms above.
 
 # How to use
 1. Create a netstandard2.0 project for a database decription.
@@ -158,6 +166,7 @@ public interface IDeployManager
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <LangVersion>9.0</LangVersion>
     <TargetFramework>netstandard2.0</TargetFramework>
     <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
     <CompilerGeneratedFilesOutputPath>obj/Generated</CompilerGeneratedFilesOutputPath>
@@ -208,7 +217,7 @@ connection.Execute(File.ReadAllText("./publishScript.sql")); // Dapper call
 ```
 
 # Additional information
-More information with end-to-end working examples can be found in /samples directory of this project.<br/>
+More information how to use with end-to-end working examples can be found in [/samples](/samples) directory of this project.<br/>
 In order to run these samples docker container with appropriate DBMS has to be started (except for SQLite which works out of the box).
 To start containers simply run any (or all) integration test for the chosen DBMS, it will create container with required parameters and leave it running.
 
