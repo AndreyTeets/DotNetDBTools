@@ -18,7 +18,8 @@ namespace DotNetDBTools.SampleSelfUpdatingApp.SQLite
 
         public static void Main()
         {
-            CreateAndRegisterDatabaseIfDoesntExist(s_connectionString);
+            CreateDatabaseIfNotExists(s_connectionString);
+            RegisterDatabaseIfNotRegistered(s_connectionString);
 
             using SqliteConnection connection = new(s_connectionString);
             PublishAgnosticSampleDBv2(connection);
@@ -35,15 +36,24 @@ namespace DotNetDBTools.SampleSelfUpdatingApp.SQLite
             deployManager.PublishDatabase(typeof(SampleDB.Agnostic.Tables.MyTable3).Assembly, connection);
         }
 
-        private static void CreateAndRegisterDatabaseIfDoesntExist(string connectionString)
+        private static void CreateDatabaseIfNotExists(string connectionString)
         {
             if (!DatabaseExists(connectionString))
             {
-                Console.WriteLine("Database doesn't exist. Creating new empty database and registering it as DNDBT.");
+                Console.WriteLine("Database doesn't exist. Creating new empty database.");
                 CreateDatabase(connectionString);
-                SQLiteDeployManager deployManager = new(new DeployOptions());
-                deployManager.Events.EventFired += DeployManagerEventsLogger.LogEvent;
-                using SqliteConnection connection = new(connectionString);
+            }
+        }
+
+        private static void RegisterDatabaseIfNotRegistered(string connectionString)
+        {
+            SQLiteDeployManager deployManager = new(new DeployOptions());
+            deployManager.Events.EventFired += DeployManagerEventsLogger.LogEvent;
+            using SqliteConnection connection = new(connectionString);
+
+            if (!deployManager.IsRegisteredAsDNDBT(connection))
+            {
+                Console.WriteLine("Database isn't registered as DNDBT. Registering it.");
                 deployManager.RegisterAsDNDBT(connection);
             }
         }

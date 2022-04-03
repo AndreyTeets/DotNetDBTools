@@ -31,9 +31,7 @@ internal class PostgreSQLGetFunctionAttributesVisitor : PostgreSQLParserBaseVisi
     public override object VisitFunction_actions_common([NotNull] Function_actions_commonContext context)
     {
         if (context.LANGUAGE() != null)
-        {
             FunctionLanguage = context.GetText().Replace(context.LANGUAGE().GetText(), "").Trim().ToUpper();
-        }
         return base.VisitFunction_actions_common(context);
     }
 }

@@ -42,6 +42,7 @@ namespace DotNetDBTools.EventsLogger
         {
             string msg = eventArgs.EventType switch
             {
+                EventType.IsRegisteredBegan => "Checking if database is registered...",
                 EventType.RegisterBegan => "Registering database...",
                 EventType.UnregisterBegan => "Unregistering database...",
                 EventType.PublishBegan => "Publishing database...",

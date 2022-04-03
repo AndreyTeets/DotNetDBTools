@@ -32,12 +32,19 @@ public abstract class DeployManager<TDatabase> : IDeployManager
         _dbModelConverter = _factory.CreateDbModelConverter();
     }
 
+    public bool IsRegisteredAsDNDBT(DbConnection connection)
+    {
+        Events.InvokeEventFired(EventType.IsRegisteredBegan);
+        IQueryExecutor queryExecutor = _factory.CreateQueryExecutor(connection, Events);
+        IDbEditor dbEditor = _factory.CreateDbEditor(queryExecutor);
+        bool isRegistered = dbEditor.DNDBTSysTablesExist();
+        Events.InvokeEventFired(EventType.IsRegisteredFinished);
+        return isRegistered;
+    }
     public void RegisterAsDNDBT(DbConnection connection)
     {
-        Events.InvokeEventFired(EventType.RegisterBegan);
         Database dbWithDNDBTInfo = CreateDbModelFromDBMS(connection, ExpectedRegistrationState.Unregistered, useDNDBTSysInfoIfAvailable: null);
         RegisterAsDNDBTImpl(connection, dbWithDNDBTInfo);
-        Events.InvokeEventFired(EventType.RegisterFinished);
     }
     public void RegisterAsDNDBT(DbConnection connection, string dbWithDNDBTInfoAssemblyPath)
     {
@@ -46,7 +53,6 @@ public abstract class DeployManager<TDatabase> : IDeployManager
     }
     public void RegisterAsDNDBT(DbConnection connection, Assembly dbWithDNDBTInfoAssembly)
     {
-        Events.InvokeEventFired(EventType.RegisterBegan);
         Database actualDb = CreateDbModelFromDBMS(connection, ExpectedRegistrationState.Unregistered, useDNDBTSysInfoIfAvailable: null);
         Database dbWithDNDBTInfo = CreateDbModelFromDefinition(dbWithDNDBTInfoAssembly);
 
@@ -54,7 +60,6 @@ public abstract class DeployManager<TDatabase> : IDeployManager
             throw new Exception($"Actual database differs from the one provided for DNDBTInfo. DiffLog:\n{diffLog}");
 
         RegisterAsDNDBTImpl(connection, dbWithDNDBTInfo);
-        Events.InvokeEventFired(EventType.RegisterFinished);
     }
     public void UnregisterAsDNDBT(DbConnection connection)
     {
@@ -194,10 +199,12 @@ public abstract class DeployManager<TDatabase> : IDeployManager
 
     private void RegisterAsDNDBTImpl(DbConnection connection, Database dbWithDNDBTInfo)
     {
+        Events.InvokeEventFired(EventType.RegisterBegan);
         IQueryExecutor queryExecutor = _factory.CreateQueryExecutor(connection, Events);
         IDbEditor dbEditor = _factory.CreateDbEditor(queryExecutor);
         dbEditor.CreateDNDBTSysTables();
         dbEditor.PopulateDNDBTSysTables(dbWithDNDBTInfo);
+        Events.InvokeEventFired(EventType.RegisterFinished);
     }
 
     private void GeneratePublishScriptImpl(Database newDatabase, Database oldDatabase, string outputPath, bool noDNDBTInfo)
@@ -239,21 +246,18 @@ public abstract class DeployManager<TDatabase> : IDeployManager
         ExpectedRegistrationState expectedRegistrationState,
         bool? useDNDBTSysInfoIfAvailable)
     {
-        Events.InvokeEventFired(EventType.CreateDbModelFromDBMSBegan);
-        IQueryExecutor queryExecutor = _factory.CreateQueryExecutor(connection, Events);
-        IDbEditor dbEditor = _factory.CreateDbEditor(queryExecutor);
-        IDbModelFromDBMSProvider dbModelFromDBMSProvider = _factory.CreateDbModelFromDBMSProvider(queryExecutor);
-
-        bool isRegistered = dbEditor.DNDBTSysTablesExist();
+        bool isRegistered = IsRegisteredAsDNDBT(connection);
         if (expectedRegistrationState == ExpectedRegistrationState.Registered && !isRegistered)
             throw new InvalidOperationException("Database is expected to be registered but it's unregistered");
         if (expectedRegistrationState == ExpectedRegistrationState.Unregistered && isRegistered)
             throw new InvalidOperationException("Database is expected to be unregistered but it's registered");
 
+        Events.InvokeEventFired(EventType.CreateDbModelFromDBMSBegan);
+        IQueryExecutor queryExecutor = _factory.CreateQueryExecutor(connection, Events);
+        IDbModelFromDBMSProvider dbModelFromDBMSProvider = _factory.CreateDbModelFromDBMSProvider(queryExecutor);
         Database database = isRegistered && useDNDBTSysInfoIfAvailable.Value
             ? dbModelFromDBMSProvider.CreateDbModelUsingDNDBTSysInfo()
             : dbModelFromDBMSProvider.CreateDbModelUsingDBMSSysInfo();
-
         Events.InvokeEventFired(EventType.CreateDbModelFromDBMSFinished);
         return database;
     }

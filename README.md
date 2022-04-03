@@ -134,6 +134,7 @@ Here is a concise list of all the available database management methods:
 ```
 public interface IDeployManager
 {
+    public bool IsRegisteredAsDNDBT(DbConnection connection);
     public void RegisterAsDNDBT(DbConnection connection);
     public void RegisterAsDNDBT(DbConnection connection, string dbWithDNDBTInfoAssemblyPath);
     public void RegisterAsDNDBT(DbConnection connection, Assembly dbWithDNDBTInfoAssembly);

@@ -42,7 +42,7 @@ internal static class InvalidDbObjectsFinder
                 {
                     ISymbol classMemberSymbol = classSymbol.GetMembers().SingleOrDefault(x =>
                         x.Name == memberName &&
-                        IsOfBaseType(x, memberTypeName));
+                        IsOfType(x, memberTypeName));
 
                     if (classMemberSymbol is not null)
                         return classMemberSymbol.Locations.First();
@@ -52,7 +52,7 @@ internal static class InvalidDbObjectsFinder
         return Location.None;
     }
 
-    private static bool IsOfBaseType(ISymbol symbol, string typeName)
+    private static bool IsOfType(ISymbol symbol, string typeName)
     {
         if (symbol is IFieldSymbol fieldSymbol &&
             fieldSymbol.Type.Name == typeName)

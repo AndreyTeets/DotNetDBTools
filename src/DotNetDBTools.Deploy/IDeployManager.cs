@@ -10,6 +10,10 @@ public interface IDeployManager
     public Events Events { get; }
 
     /// <summary>
+    /// Checks if DNDBT system tables exist.
+    /// </summary>
+    public bool IsRegisteredAsDNDBT(DbConnection connection);
+    /// <summary>
     /// Adds DNDBT system tables and populates them with DNDBTInfo generated from actual database.
     /// IDs for all objects are generated randomly.
     /// </summary>

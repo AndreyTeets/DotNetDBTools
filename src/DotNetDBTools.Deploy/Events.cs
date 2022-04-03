@@ -25,6 +25,8 @@ public class EventFiredEventArgs
 
 public enum EventType
 {
+    IsRegisteredBegan,
+    IsRegisteredFinished,
     RegisterBegan,
     RegisterFinished,
     UnregisterBegan,
