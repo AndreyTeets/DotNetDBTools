@@ -53,21 +53,23 @@ public abstract class BaseSampleApplicationsTests
     }
 
     [Test]
-    public void SampleDeployManagerUsage_And_SampleBusinessLogicOnlyApp_Run_WithoutErrors()
+    public void SampleDeployManagerUsage_And_SampleBusinessLogicOnlyApp_Run_And_Rerun_WithoutErrors()
     {
         using IDisposable _ = ExclusiveExecutionScope.CreateScope(SyncScopeName);
 
         Exec(SampleDeployManagerUsageAssemblyPath);
         Exec(SampleBusinessLogicOnlyAppAssemblyPath);
+        Exec(SampleBusinessLogicOnlyAppAssemblyPath);
     }
 
     [Test]
-    public void SampleSelfUpdatingApp_Runs_WithoutErrors()
+    public void SampleSelfUpdatingApp_Runs_And_Reruns_WithoutErrors()
     {
         using IDisposable _ = ExclusiveExecutionScope.CreateScope(SyncScopeName);
 
         DropSelfUpdatingAppDatabaseIfExists();
 
+        Exec(SampleSelfUpdatingAppAssemblyPath);
         Exec(SampleSelfUpdatingAppAssemblyPath);
     }
 

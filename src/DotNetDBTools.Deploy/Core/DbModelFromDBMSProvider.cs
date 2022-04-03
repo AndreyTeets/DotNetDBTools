@@ -220,13 +220,19 @@ internal abstract class DbModelFromDBMSProvider<
         TGetPrimaryKeysFromDBMSSysInfoQuery query = new();
         IEnumerable<PrimaryKeyRecord> primaryKeyRecords = QueryExecutor.Query<PrimaryKeyRecord>(query);
         Dictionary<string, SortedDictionary<int, string>> columnNames = new();
+        HashSet<string> addedPrimaryKeys = new();
         foreach (PrimaryKeyRecord pkr in primaryKeyRecords)
         {
             if (!columnNames.ContainsKey(pkr.ConstraintName))
                 columnNames.Add(pkr.ConstraintName, new SortedDictionary<int, string>());
 
             columnNames[pkr.ConstraintName].Add(pkr.ColumnPosition, pkr.ColumnName);
-            tables[pkr.TableName].PrimaryKey = query.Mapper.MapExceptColumnsToPrimaryKeyModel(pkr);
+
+            if (!addedPrimaryKeys.Contains(pkr.ConstraintName))
+            {
+                tables[pkr.TableName].PrimaryKey = query.Mapper.MapExceptColumnsToPrimaryKeyModel(pkr);
+                addedPrimaryKeys.Add(pkr.ConstraintName);
+            }
         }
 
         foreach (Table table in tables.Values)
@@ -242,6 +248,7 @@ internal abstract class DbModelFromDBMSProvider<
         TGetUniqueConstraintsFromDBMSSysInfoQuery query = new();
         IEnumerable<UniqueConstraintRecord> uniqueConstraintRecords = QueryExecutor.Query<UniqueConstraintRecord>(query);
         Dictionary<string, SortedDictionary<int, string>> columnNames = new();
+        HashSet<string> addedUniqueConstraints = new();
         foreach (UniqueConstraintRecord ucr in uniqueConstraintRecords)
         {
             if (!columnNames.ContainsKey(ucr.ConstraintName))
@@ -249,8 +256,12 @@ internal abstract class DbModelFromDBMSProvider<
 
             columnNames[ucr.ConstraintName].Add(ucr.ColumnPosition, ucr.ColumnName);
 
-            UniqueConstraint uc = query.Mapper.MapExceptColumnsToUniqueConstraintModel(ucr);
-            ((List<UniqueConstraint>)tables[ucr.TableName].UniqueConstraints).Add(uc);
+            if (!addedUniqueConstraints.Contains(ucr.ConstraintName))
+            {
+                UniqueConstraint uc = query.Mapper.MapExceptColumnsToUniqueConstraintModel(ucr);
+                ((List<UniqueConstraint>)tables[ucr.TableName].UniqueConstraints).Add(uc);
+                addedUniqueConstraints.Add(ucr.ConstraintName);
+            }
         }
 
         foreach (Table table in tables.Values)
@@ -279,12 +290,9 @@ internal abstract class DbModelFromDBMSProvider<
         IEnumerable<IndexRecord> indexRecords = QueryExecutor.Query<IndexRecord>(query);
         Dictionary<string, SortedDictionary<int, string>> columnNames = new();
         Dictionary<string, SortedDictionary<int, string>> includeColumnNames = new();
-        Dictionary<string, HashSet<string>> addedIndexesForTable = new();
+        HashSet<string> addedIndexes = new();
         foreach (IndexRecord ir in indexRecords)
         {
-            if (!addedIndexesForTable.ContainsKey(ir.TableName))
-                addedIndexesForTable.Add(ir.TableName, new HashSet<string>());
-
             if (!columnNames.ContainsKey(ir.IndexName))
                 columnNames.Add(ir.IndexName, new SortedDictionary<int, string>());
             if (!includeColumnNames.ContainsKey(ir.IndexName))
@@ -295,11 +303,11 @@ internal abstract class DbModelFromDBMSProvider<
             else
                 includeColumnNames[ir.IndexName].Add(ir.ColumnPosition, ir.ColumnName);
 
-            if (!addedIndexesForTable[ir.TableName].Contains(ir.IndexName))
+            if (!addedIndexes.Contains(ir.IndexName))
             {
                 Index index = query.Mapper.MapExceptColumnsToIndexModel(ir);
                 ((List<Index>)tables[ir.TableName].Indexes).Add(index);
-                addedIndexesForTable[ir.TableName].Add(ir.IndexName);
+                addedIndexes.Add(ir.IndexName);
             }
         }
 
@@ -330,12 +338,9 @@ internal abstract class DbModelFromDBMSProvider<
         IEnumerable<ForeignKeyRecord> foreignKeyRecords = QueryExecutor.Query<ForeignKeyRecord>(query);
         Dictionary<string, SortedDictionary<int, string>> thisColumnNames = new();
         Dictionary<string, SortedDictionary<int, string>> referencedColumnNames = new();
-        Dictionary<string, HashSet<string>> addedForeignKeysForTable = new();
+        HashSet<string> addedForeignKeys = new();
         foreach (ForeignKeyRecord fkr in foreignKeyRecords)
         {
-            if (!addedForeignKeysForTable.ContainsKey(fkr.ThisTableName))
-                addedForeignKeysForTable.Add(fkr.ThisTableName, new HashSet<string>());
-
             if (!thisColumnNames.ContainsKey(fkr.ForeignKeyName))
                 thisColumnNames.Add(fkr.ForeignKeyName, new SortedDictionary<int, string>());
             if (!referencedColumnNames.ContainsKey(fkr.ForeignKeyName))
@@ -344,11 +349,11 @@ internal abstract class DbModelFromDBMSProvider<
             thisColumnNames[fkr.ForeignKeyName].Add(fkr.ThisColumnPosition, fkr.ThisColumnName);
             referencedColumnNames[fkr.ForeignKeyName].Add(fkr.ReferencedColumnPosition, fkr.ReferencedColumnName);
 
-            if (!addedForeignKeysForTable[fkr.ThisTableName].Contains(fkr.ForeignKeyName))
+            if (!addedForeignKeys.Contains(fkr.ForeignKeyName))
             {
                 ForeignKey fk = query.Mapper.MapExceptColumnsToForeignKeyModel(fkr);
                 ((List<ForeignKey>)tables[fkr.ThisTableName].ForeignKeys).Add(fk);
-                addedForeignKeysForTable[fkr.ThisTableName].Add(fkr.ForeignKeyName);
+                addedForeignKeys.Add(fkr.ForeignKeyName);
             }
         }
 

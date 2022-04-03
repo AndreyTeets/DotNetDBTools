@@ -55,6 +55,30 @@ DELETE FROM DNDBTDbObjects
 WHERE ID = 'e2569aae-d5da-4a77-b3cd-51adbdb272d9';
 -- QUERY END: SQLiteDeleteDNDBTDbObjectRecordQuery
 
+-- QUERY START: SQLiteDropTableQuery
+DROP TABLE MyTable6;
+-- QUERY END: SQLiteDropTableQuery
+
+-- QUERY START: SQLiteDeleteDNDBTDbObjectRecordQuery
+DELETE FROM DNDBTDbObjects
+WHERE ID = 'bfa08c82-5c8f-4ab4-bd41-1f1d85cf3c85';
+-- QUERY END: SQLiteDeleteDNDBTDbObjectRecordQuery
+
+-- QUERY START: SQLiteDeleteDNDBTDbObjectRecordQuery
+DELETE FROM DNDBTDbObjects
+WHERE ID = 'a402e2b7-c826-4cfd-a304-97c9bc346ba2';
+-- QUERY END: SQLiteDeleteDNDBTDbObjectRecordQuery
+
+-- QUERY START: SQLiteDeleteDNDBTDbObjectRecordQuery
+DELETE FROM DNDBTDbObjects
+WHERE ID = 'f3064a8c-346a-4b3d-af2c-d967b39841e4';
+-- QUERY END: SQLiteDeleteDNDBTDbObjectRecordQuery
+
+-- QUERY START: SQLiteDeleteDNDBTDbObjectRecordQuery
+DELETE FROM DNDBTDbObjects
+WHERE ID = 'ae453b22-d270-41fc-8184-9ac26b7a0569';
+-- QUERY END: SQLiteDeleteDNDBTDbObjectRecordQuery
+
 -- QUERY START: SQLiteAlterTableQuery
 CREATE TABLE _DNDBTTemp_MyTable1NewName
 (
@@ -66,8 +90,8 @@ CREATE TABLE _DNDBTTemp_MyTable1NewName
     CONSTRAINT [CK_MyTable1_MyCheck1] CHECK (MyColumn4 >= 1)
 );
 
-INSERT INTO  _DNDBTTemp_MyTable1NewName(MyColumn1)
-SELECT MyColumn1
+INSERT INTO _DNDBTTemp_MyTable1NewName(MyColumn1, MyColumn4)
+SELECT MyColumn1, MyColumn4
 FROM MyTable1;
 
 DROP TABLE MyTable1;
@@ -171,7 +195,7 @@ CREATE TABLE _DNDBTTemp_MyTable2
         ON UPDATE NO ACTION ON DELETE SET DEFAULT
 );
 
-INSERT INTO  _DNDBTTemp_MyTable2(MyColumn1NewName)
+INSERT INTO _DNDBTTemp_MyTable2(MyColumn1NewName)
 SELECT MyColumn1
 FROM MyTable2;
 
@@ -327,6 +351,56 @@ VALUES
     NULL
 );
 -- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: SQLiteAlterTableQuery
+DROP INDEX IDX_MyTable5_MyIndex1;
+
+CREATE TABLE _DNDBTTemp_MyTable5
+(
+    MyColumn1 INTEGER NOT NULL DEFAULT (ABS(-15)),
+    MyColumn10 NUMERIC NOT NULL DEFAULT '16:17:18',
+    MyColumn11 NUMERIC NOT NULL DEFAULT '2022-02-15 16:17:18',
+    MyColumn12 NUMERIC NOT NULL DEFAULT '2022-02-15 16:17:18+01:30',
+    MyColumn2 TEXT NOT NULL DEFAULT 'test',
+    MyColumn3 BLOB NOT NULL DEFAULT X'000204',
+    MyColumn4 REAL NOT NULL DEFAULT 123.456,
+    MyColumn5 REAL NOT NULL DEFAULT 12345.6789,
+    MyColumn6 NUMERIC NOT NULL DEFAULT 12.3,
+    MyColumn7 INTEGER NOT NULL DEFAULT TRUE,
+    MyColumn8 BLOB NOT NULL DEFAULT X'8e2f99ad0fc8456db0e4ec3ba572dd15',
+    MyColumn9 NUMERIC NOT NULL DEFAULT '2022-02-15'
+);
+
+INSERT INTO _DNDBTTemp_MyTable5(MyColumn1, MyColumn10, MyColumn11, MyColumn12, MyColumn2, MyColumn3, MyColumn4, MyColumn5, MyColumn6, MyColumn7, MyColumn8, MyColumn9)
+SELECT MyColumn1, MyColumn10, MyColumn11, MyColumn12, MyColumn2, MyColumn3, MyColumn4, MyColumn5, MyColumn6, MyColumn7, MyColumn8, MyColumn9
+FROM MyTable5;
+
+DROP TABLE MyTable5;
+
+ALTER TABLE _DNDBTTemp_MyTable5 RENAME TO MyTable5;
+-- QUERY END: SQLiteAlterTableQuery
+
+-- QUERY START: SQLiteDeleteDNDBTDbObjectRecordQuery
+DELETE FROM DNDBTDbObjects
+WHERE ID = '5293b58a-9f63-4f0f-8d6f-18416ebbd751';
+-- QUERY END: SQLiteDeleteDNDBTDbObjectRecordQuery
+
+-- QUERY START: SQLiteDeleteDNDBTDbObjectRecordQuery
+DELETE FROM DNDBTDbObjects
+WHERE ID = '79384d48-a39b-4a22-900e-066b2ca67ba2';
+-- QUERY END: SQLiteDeleteDNDBTDbObjectRecordQuery
+
+-- QUERY START: SQLiteUpdateDNDBTDbObjectRecordQuery
+UPDATE DNDBTDbObjects SET
+    Name = 'MyTable5',
+    Code = NULL
+WHERE ID = '6ca51f29-c1bc-4349-b9c1-6f1ea170f162';
+-- QUERY END: SQLiteUpdateDNDBTDbObjectRecordQuery
+
+-- QUERY START: SQLiteDeleteDNDBTDbObjectRecordQuery
+DELETE FROM DNDBTDbObjects
+WHERE ID = '1d632285-9914-4c5d-98e6-a618a99bd799';
+-- QUERY END: SQLiteDeleteDNDBTDbObjectRecordQuery
 
 -- QUERY START: SQLiteCreateTableQuery
 CREATE TABLE MyTable3

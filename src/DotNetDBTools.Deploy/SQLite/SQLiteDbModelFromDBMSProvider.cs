@@ -42,7 +42,7 @@ internal class SQLiteDbModelFromDBMSProvider : DbModelFromDBMSProvider<
             Table table = tables[tableRecord.TableName];
             BuildTableCheckConstraints(table, tableInfo);
             BuildTableConstraintNames(table, tableInfo);
-            ProcessTableIdentityColumnCandidateIfExist(table, tableInfo);
+            SetTableIdentityColumnIfAny(table, tableInfo);
         }
     }
 
@@ -77,14 +77,12 @@ internal class SQLiteDbModelFromDBMSProvider : DbModelFromDBMSProvider<
         static string CreateKeyFromColumns(IEnumerable<string> columns) => string.Join(",", columns);
     }
 
-    private void ProcessTableIdentityColumnCandidateIfExist(Table table, TableInfo tableInfo)
+    private void SetTableIdentityColumnIfAny(Table table, TableInfo tableInfo)
     {
-        Column column = table.Columns.SingleOrDefault(c => c.Identity == true);
-        if (column is not null)
+        foreach (ColumnInfo columnInfo in tableInfo.Columns.Where(c => c.Identity == true))
         {
-            ColumnInfo columnInfo = tableInfo.Columns.Single(x => x.Name == column.Name);
-            if (columnInfo.Identity == false)
-                column.Identity = false;
+            Column column = table.Columns.Single(x => x.Name == columnInfo.Name);
+            column.Identity = true;
         }
     }
 }

@@ -287,7 +287,8 @@ CREATE TABLE `MyTable5`
     `MyColumn6` DECIMAL(6,1) NOT NULL DEFAULT 12.3,
     `MyColumn7` TINYINT(1) NOT NULL DEFAULT 1,
     `MyColumn8` BINARY(16) NOT NULL DEFAULT (0x8e2f99ad0fc8456db0e4ec3ba572dd15),
-    `MyColumn9` DATE NOT NULL DEFAULT '2022-02-15'
+    `MyColumn9` DATE NOT NULL DEFAULT '2022-02-15',
+    CONSTRAINT `PK_MyTable5` PRIMARY KEY (`MyColumn2`, `MyColumn1`)
 );
 -- QUERY END: MySQLCreateTableQuery
 
@@ -538,6 +539,90 @@ VALUES
 );
 -- QUERY END: MySQLInsertDNDBTDbObjectRecordQuery
 
+-- QUERY START: MySQLInsertDNDBTDbObjectRecordQuery
+INSERT INTO `DNDBTDbObjects`
+(
+    `ID`,
+    `ParentID`,
+    `Type`,
+    `Name`,
+    `Code`
+)
+VALUES
+(
+    '79384d48-a39b-4a22-900e-066b2ca67ba2',
+    '6ca51f29-c1bc-4349-b9c1-6f1ea170f162',
+    'PrimaryKey',
+    'PK_MyTable5',
+    NULL
+);
+-- QUERY END: MySQLInsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: MySQLCreateTableQuery
+CREATE TABLE `MyTable6`
+(
+    `MyColumn1` CHAR(4) NULL,
+    `MyColumn2` INT NULL
+);
+-- QUERY END: MySQLCreateTableQuery
+
+-- QUERY START: MySQLInsertDNDBTDbObjectRecordQuery
+INSERT INTO `DNDBTDbObjects`
+(
+    `ID`,
+    `ParentID`,
+    `Type`,
+    `Name`,
+    `Code`
+)
+VALUES
+(
+    'f3064a8c-346a-4b3d-af2c-d967b39841e4',
+    NULL,
+    'Table',
+    'MyTable6',
+    NULL
+);
+-- QUERY END: MySQLInsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: MySQLInsertDNDBTDbObjectRecordQuery
+INSERT INTO `DNDBTDbObjects`
+(
+    `ID`,
+    `ParentID`,
+    `Type`,
+    `Name`,
+    `Code`
+)
+VALUES
+(
+    'bfa08c82-5c8f-4ab4-bd41-1f1d85cf3c85',
+    'f3064a8c-346a-4b3d-af2c-d967b39841e4',
+    'Column',
+    'MyColumn1',
+    NULL
+);
+-- QUERY END: MySQLInsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: MySQLInsertDNDBTDbObjectRecordQuery
+INSERT INTO `DNDBTDbObjects`
+(
+    `ID`,
+    `ParentID`,
+    `Type`,
+    `Name`,
+    `Code`
+)
+VALUES
+(
+    'a402e2b7-c826-4cfd-a304-97c9bc346ba2',
+    'f3064a8c-346a-4b3d-af2c-d967b39841e4',
+    'Column',
+    'MyColumn2',
+    NULL
+);
+-- QUERY END: MySQLInsertDNDBTDbObjectRecordQuery
+
 -- QUERY START: MySQLCreateIndexQuery
 CREATE UNIQUE INDEX `UQ_MyTable1_MyColumn2`
 ON `MyTable1` (`MyColumn2`);
@@ -586,6 +671,54 @@ VALUES
 );
 -- QUERY END: MySQLInsertDNDBTDbObjectRecordQuery
 
+-- QUERY START: MySQLCreateIndexQuery
+CREATE INDEX `IDX_MyTable5_MyIndex1`
+ON `MyTable5` (`MyColumn8`);
+-- QUERY END: MySQLCreateIndexQuery
+
+-- QUERY START: MySQLInsertDNDBTDbObjectRecordQuery
+INSERT INTO `DNDBTDbObjects`
+(
+    `ID`,
+    `ParentID`,
+    `Type`,
+    `Name`,
+    `Code`
+)
+VALUES
+(
+    '1d632285-9914-4c5d-98e6-a618a99bd799',
+    '6ca51f29-c1bc-4349-b9c1-6f1ea170f162',
+    'Index',
+    'IDX_MyTable5_MyIndex1',
+    NULL
+);
+-- QUERY END: MySQLInsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: MySQLCreateIndexQuery
+CREATE UNIQUE INDEX `UQ_MyTable5_1`
+ON `MyTable5` (`MyColumn6`, `MyColumn3`, `MyColumn7`);
+-- QUERY END: MySQLCreateIndexQuery
+
+-- QUERY START: MySQLInsertDNDBTDbObjectRecordQuery
+INSERT INTO `DNDBTDbObjects`
+(
+    `ID`,
+    `ParentID`,
+    `Type`,
+    `Name`,
+    `Code`
+)
+VALUES
+(
+    '5293b58a-9f63-4f0f-8d6f-18416ebbd751',
+    '6ca51f29-c1bc-4349-b9c1-6f1ea170f162',
+    'Index',
+    'UQ_MyTable5_1',
+    NULL
+);
+-- QUERY END: MySQLInsertDNDBTDbObjectRecordQuery
+
 -- QUERY START: MySQLCreateForeignKeyQuery
 ALTER TABLE `MyTable1` ADD CONSTRAINT `FK_MyTable1_MyColumn1_MyTable2_MyColumn1` FOREIGN KEY (`MyColumn1`)
     REFERENCES `MyTable2` (`MyColumn1`)
@@ -607,6 +740,31 @@ VALUES
     '299675e6-4faa-4d0f-a36a-224306ba5bcb',
     'ForeignKey',
     'FK_MyTable1_MyColumn1_MyTable2_MyColumn1',
+    NULL
+);
+-- QUERY END: MySQLInsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: MySQLCreateForeignKeyQuery
+ALTER TABLE `MyTable6` ADD CONSTRAINT `FK_MyTable6_MyTable5_1` FOREIGN KEY (`MyColumn1`, `MyColumn2`)
+    REFERENCES `MyTable5` (`MyColumn2`, `MyColumn1`)
+    ON UPDATE NO ACTION ON DELETE NO ACTION;
+-- QUERY END: MySQLCreateForeignKeyQuery
+
+-- QUERY START: MySQLInsertDNDBTDbObjectRecordQuery
+INSERT INTO `DNDBTDbObjects`
+(
+    `ID`,
+    `ParentID`,
+    `Type`,
+    `Name`,
+    `Code`
+)
+VALUES
+(
+    'ae453b22-d270-41fc-8184-9ac26b7a0569',
+    'f3064a8c-346a-4b3d-af2c-d967b39841e4',
+    'ForeignKey',
+    'FK_MyTable6_MyTable5_1',
     NULL
 );
 -- QUERY END: MySQLInsertDNDBTDbObjectRecordQuery

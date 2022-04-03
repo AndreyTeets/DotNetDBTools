@@ -122,8 +122,18 @@ ALTER TABLE "MyTable5" ALTER COLUMN "MyColumn14" SET DATA TYPE "MyDomain1"
 ALTER TABLE "MyTable5" ALTER COLUMN "MyColumn15" SET DATA TYPE "MyEnumType1"
     USING ("MyColumn15"::text::"MyEnumType1");
 ALTER TABLE "MyTable5" ALTER COLUMN "MyColumn16" SET DATA TYPE "MyRangeType1"
-    USING ("MyColumn16"::text::"MyRangeType1");';
+    USING ("MyColumn16"::text::"MyRangeType1");
+ALTER TABLE "MyTable5" ADD CONSTRAINT "PK_MyTable5" PRIMARY KEY ("MyColumn2", "MyColumn1");
+ALTER TABLE "MyTable5" ADD CONSTRAINT "UQ_MyTable5_1" UNIQUE ("MyColumn6", "MyColumn3", "MyColumn7");';
 -- QUERY END: PostgreSQLAlterTableQuery
+
+-- QUERY START: PostgreSQLCreateTableQuery
+EXECUTE 'CREATE TABLE "MyTable6"
+(
+    "MyColumn1" CHAR(4) NULL,
+    "MyColumn2" INT NULL
+);';
+-- QUERY END: PostgreSQLCreateTableQuery
 
 -- QUERY START: PostgreSQLDropTypeQuery
 EXECUTE 'DROP TYPE "_DNDBTTemp_MyCompositeType1";';
@@ -145,6 +155,17 @@ EXECUTE 'DROP TYPE "_DNDBTTemp_MyRangeType1";';
 EXECUTE 'CREATE UNIQUE INDEX "IDX_MyTable2_MyIndex1"
 ON "MyTable2" ("MyColumn1", "MyColumn2");';
 -- QUERY END: PostgreSQLCreateIndexQuery
+
+-- QUERY START: PostgreSQLCreateIndexQuery
+EXECUTE 'CREATE INDEX "IDX_MyTable5_MyIndex1"
+ON "MyTable5" ("MyColumn8");';
+-- QUERY END: PostgreSQLCreateIndexQuery
+
+-- QUERY START: PostgreSQLCreateForeignKeyQuery
+EXECUTE 'ALTER TABLE "MyTable6" ADD CONSTRAINT "FK_MyTable6_MyTable5_1" FOREIGN KEY ("MyColumn1", "MyColumn2")
+    REFERENCES "MyTable5" ("MyColumn2", "MyColumn1")
+    ON UPDATE NO ACTION ON DELETE NO ACTION;';
+-- QUERY END: PostgreSQLCreateForeignKeyQuery
 
 -- QUERY START: PostgreSQLCreateForeignKeyQuery
 EXECUTE 'ALTER TABLE "MyTable1" ADD CONSTRAINT "FK_MyTable1_MyColumn1_MyTable2_MyColumn1" FOREIGN KEY ("MyColumn1")

@@ -53,6 +53,19 @@ ALTER TABLE `MyTable2` ALTER COLUMN `MyColumn2` SET DEFAULT (0x000102);
 ALTER TABLE `MyTable2` ADD PRIMARY KEY (`MyColumn1`);
 -- QUERY END: MySQLAlterTableQuery
 
+-- QUERY START: MySQLAlterTableQuery
+
+ALTER TABLE `MyTable5` ADD PRIMARY KEY (`MyColumn2`, `MyColumn1`);
+-- QUERY END: MySQLAlterTableQuery
+
+-- QUERY START: MySQLCreateTableQuery
+CREATE TABLE `MyTable6`
+(
+    `MyColumn1` CHAR(4) NULL,
+    `MyColumn2` INT NULL
+);
+-- QUERY END: MySQLCreateTableQuery
+
 -- QUERY START: MySQLCreateIndexQuery
 CREATE UNIQUE INDEX `UQ_MyTable1_MyColumn2`
 ON `MyTable1` (`MyColumn2`);
@@ -62,6 +75,22 @@ ON `MyTable1` (`MyColumn2`);
 CREATE UNIQUE INDEX `IDX_MyTable2_MyIndex1`
 ON `MyTable2` (`MyColumn1`, `MyColumn2`);
 -- QUERY END: MySQLCreateIndexQuery
+
+-- QUERY START: MySQLCreateIndexQuery
+CREATE INDEX `IDX_MyTable5_MyIndex1`
+ON `MyTable5` (`MyColumn8`);
+-- QUERY END: MySQLCreateIndexQuery
+
+-- QUERY START: MySQLCreateIndexQuery
+CREATE UNIQUE INDEX `UQ_MyTable5_1`
+ON `MyTable5` (`MyColumn6`, `MyColumn3`, `MyColumn7`);
+-- QUERY END: MySQLCreateIndexQuery
+
+-- QUERY START: MySQLCreateForeignKeyQuery
+ALTER TABLE `MyTable6` ADD CONSTRAINT `FK_MyTable6_MyTable5_1` FOREIGN KEY (`MyColumn1`, `MyColumn2`)
+    REFERENCES `MyTable5` (`MyColumn2`, `MyColumn1`)
+    ON UPDATE NO ACTION ON DELETE NO ACTION;
+-- QUERY END: MySQLCreateForeignKeyQuery
 
 -- QUERY START: MySQLCreateForeignKeyQuery
 ALTER TABLE `MyTable1` ADD CONSTRAINT `FK_MyTable1_MyColumn1_MyTable2_MyColumn1` FOREIGN KEY (`MyColumn1`)

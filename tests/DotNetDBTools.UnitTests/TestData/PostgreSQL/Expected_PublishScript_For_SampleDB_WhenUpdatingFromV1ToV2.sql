@@ -74,6 +74,15 @@ WHERE "ID" = ''e2569aae-d5da-4a77-b3cd-51adbdb272d9'';';
 -- QUERY END: PostgreSQLDeleteDNDBTDbObjectRecordQuery
 
 -- QUERY START: PostgreSQLDropForeignKeyQuery
+EXECUTE 'ALTER TABLE "MyTable6" DROP CONSTRAINT "FK_MyTable6_MyTable5_1";';
+-- QUERY END: PostgreSQLDropForeignKeyQuery
+
+-- QUERY START: PostgreSQLDeleteDNDBTDbObjectRecordQuery
+EXECUTE 'DELETE FROM "DNDBTDbObjects"
+WHERE "ID" = ''ae453b22-d270-41fc-8184-9ac26b7a0569'';';
+-- QUERY END: PostgreSQLDeleteDNDBTDbObjectRecordQuery
+
+-- QUERY START: PostgreSQLDropForeignKeyQuery
 EXECUTE 'ALTER TABLE "MyTable1" DROP CONSTRAINT "FK_MyTable1_MyColumn1_MyTable2_MyColumn1";';
 -- QUERY END: PostgreSQLDropForeignKeyQuery
 
@@ -89,6 +98,15 @@ EXECUTE 'DROP INDEX "IDX_MyTable2_MyIndex1";';
 -- QUERY START: PostgreSQLDeleteDNDBTDbObjectRecordQuery
 EXECUTE 'DELETE FROM "DNDBTDbObjects"
 WHERE "ID" = ''74390b3c-bc39-4860-a42e-12baa400f927'';';
+-- QUERY END: PostgreSQLDeleteDNDBTDbObjectRecordQuery
+
+-- QUERY START: PostgreSQLDropIndexQuery
+EXECUTE 'DROP INDEX "IDX_MyTable5_MyIndex1";';
+-- QUERY END: PostgreSQLDropIndexQuery
+
+-- QUERY START: PostgreSQLDeleteDNDBTDbObjectRecordQuery
+EXECUTE 'DELETE FROM "DNDBTDbObjects"
+WHERE "ID" = ''1d632285-9914-4c5d-98e6-a618a99bd799'';';
 -- QUERY END: PostgreSQLDeleteDNDBTDbObjectRecordQuery
 
 -- QUERY START: PostgreSQLRenameTypeToTempQuery
@@ -289,6 +307,25 @@ VALUES
 );';
 -- QUERY END: PostgreSQLInsertDNDBTDbObjectRecordQuery
 
+-- QUERY START: PostgreSQLDropTableQuery
+EXECUTE 'DROP TABLE "MyTable6";';
+-- QUERY END: PostgreSQLDropTableQuery
+
+-- QUERY START: PostgreSQLDeleteDNDBTDbObjectRecordQuery
+EXECUTE 'DELETE FROM "DNDBTDbObjects"
+WHERE "ID" = ''bfa08c82-5c8f-4ab4-bd41-1f1d85cf3c85'';';
+-- QUERY END: PostgreSQLDeleteDNDBTDbObjectRecordQuery
+
+-- QUERY START: PostgreSQLDeleteDNDBTDbObjectRecordQuery
+EXECUTE 'DELETE FROM "DNDBTDbObjects"
+WHERE "ID" = ''a402e2b7-c826-4cfd-a304-97c9bc346ba2'';';
+-- QUERY END: PostgreSQLDeleteDNDBTDbObjectRecordQuery
+
+-- QUERY START: PostgreSQLDeleteDNDBTDbObjectRecordQuery
+EXECUTE 'DELETE FROM "DNDBTDbObjects"
+WHERE "ID" = ''f3064a8c-346a-4b3d-af2c-d967b39841e4'';';
+-- QUERY END: PostgreSQLDeleteDNDBTDbObjectRecordQuery
+
 -- QUERY START: PostgreSQLAlterTableQuery
 EXECUTE 'ALTER TABLE "MyTable1" RENAME TO "MyTable1NewName";
 ALTER TABLE "MyTable1NewName" DROP CONSTRAINT "CK_MyTable1_MyCheck1";
@@ -442,6 +479,8 @@ VALUES
 
 -- QUERY START: PostgreSQLAlterTableQuery
 EXECUTE '
+ALTER TABLE "MyTable5" DROP CONSTRAINT "UQ_MyTable5_1";
+ALTER TABLE "MyTable5" DROP CONSTRAINT "PK_MyTable5";
 ALTER TABLE "MyTable5" ALTER COLUMN "MyColumn13" SET DATA TYPE "MyCompositeType1"
     USING ("MyColumn13"::text::"MyCompositeType1");
 ALTER TABLE "MyTable5" ALTER COLUMN "MyColumn14" SET DATA TYPE "MyDomain1"
@@ -451,6 +490,16 @@ ALTER TABLE "MyTable5" ALTER COLUMN "MyColumn15" SET DATA TYPE "MyEnumType1"
 ALTER TABLE "MyTable5" ALTER COLUMN "MyColumn16" SET DATA TYPE "MyRangeType1"
     USING ("MyColumn16"::text::"MyRangeType1");';
 -- QUERY END: PostgreSQLAlterTableQuery
+
+-- QUERY START: PostgreSQLDeleteDNDBTDbObjectRecordQuery
+EXECUTE 'DELETE FROM "DNDBTDbObjects"
+WHERE "ID" = ''5293b58a-9f63-4f0f-8d6f-18416ebbd751'';';
+-- QUERY END: PostgreSQLDeleteDNDBTDbObjectRecordQuery
+
+-- QUERY START: PostgreSQLDeleteDNDBTDbObjectRecordQuery
+EXECUTE 'DELETE FROM "DNDBTDbObjects"
+WHERE "ID" = ''79384d48-a39b-4a22-900e-066b2ca67ba2'';';
+-- QUERY END: PostgreSQLDeleteDNDBTDbObjectRecordQuery
 
 -- QUERY START: PostgreSQLUpdateDNDBTDbObjectRecordQuery
 EXECUTE 'UPDATE "DNDBTDbObjects" SET

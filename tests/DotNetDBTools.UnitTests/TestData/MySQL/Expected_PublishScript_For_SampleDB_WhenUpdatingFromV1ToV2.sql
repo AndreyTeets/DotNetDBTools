@@ -62,6 +62,15 @@ WHERE `ID` = 'e2569aae-d5da-4a77-b3cd-51adbdb272d9';
 -- QUERY END: MySQLDeleteDNDBTDbObjectRecordQuery
 
 -- QUERY START: MySQLDropForeignKeyQuery
+ALTER TABLE `MyTable6` DROP CONSTRAINT `FK_MyTable6_MyTable5_1`;
+-- QUERY END: MySQLDropForeignKeyQuery
+
+-- QUERY START: MySQLDeleteDNDBTDbObjectRecordQuery
+DELETE FROM `DNDBTDbObjects`
+WHERE `ID` = 'ae453b22-d270-41fc-8184-9ac26b7a0569';
+-- QUERY END: MySQLDeleteDNDBTDbObjectRecordQuery
+
+-- QUERY START: MySQLDropForeignKeyQuery
 ALTER TABLE `MyTable1` DROP CONSTRAINT `FK_MyTable1_MyColumn1_MyTable2_MyColumn1`;
 -- QUERY END: MySQLDropForeignKeyQuery
 
@@ -86,6 +95,43 @@ DROP INDEX `IDX_MyTable2_MyIndex1` ON `MyTable2`;
 -- QUERY START: MySQLDeleteDNDBTDbObjectRecordQuery
 DELETE FROM `DNDBTDbObjects`
 WHERE `ID` = '74390b3c-bc39-4860-a42e-12baa400f927';
+-- QUERY END: MySQLDeleteDNDBTDbObjectRecordQuery
+
+-- QUERY START: MySQLDropIndexQuery
+DROP INDEX `IDX_MyTable5_MyIndex1` ON `MyTable5`;
+-- QUERY END: MySQLDropIndexQuery
+
+-- QUERY START: MySQLDeleteDNDBTDbObjectRecordQuery
+DELETE FROM `DNDBTDbObjects`
+WHERE `ID` = '1d632285-9914-4c5d-98e6-a618a99bd799';
+-- QUERY END: MySQLDeleteDNDBTDbObjectRecordQuery
+
+-- QUERY START: MySQLDropIndexQuery
+DROP INDEX `UQ_MyTable5_1` ON `MyTable5`;
+-- QUERY END: MySQLDropIndexQuery
+
+-- QUERY START: MySQLDeleteDNDBTDbObjectRecordQuery
+DELETE FROM `DNDBTDbObjects`
+WHERE `ID` = '5293b58a-9f63-4f0f-8d6f-18416ebbd751';
+-- QUERY END: MySQLDeleteDNDBTDbObjectRecordQuery
+
+-- QUERY START: MySQLDropTableQuery
+DROP TABLE `MyTable6`;
+-- QUERY END: MySQLDropTableQuery
+
+-- QUERY START: MySQLDeleteDNDBTDbObjectRecordQuery
+DELETE FROM `DNDBTDbObjects`
+WHERE `ID` = 'bfa08c82-5c8f-4ab4-bd41-1f1d85cf3c85';
+-- QUERY END: MySQLDeleteDNDBTDbObjectRecordQuery
+
+-- QUERY START: MySQLDeleteDNDBTDbObjectRecordQuery
+DELETE FROM `DNDBTDbObjects`
+WHERE `ID` = 'a402e2b7-c826-4cfd-a304-97c9bc346ba2';
+-- QUERY END: MySQLDeleteDNDBTDbObjectRecordQuery
+
+-- QUERY START: MySQLDeleteDNDBTDbObjectRecordQuery
+DELETE FROM `DNDBTDbObjects`
+WHERE `ID` = 'f3064a8c-346a-4b3d-af2c-d967b39841e4';
 -- QUERY END: MySQLDeleteDNDBTDbObjectRecordQuery
 
 -- QUERY START: MySQLAlterTableQuery
@@ -230,6 +276,23 @@ VALUES
     NULL
 );
 -- QUERY END: MySQLInsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: MySQLAlterTableQuery
+
+ALTER TABLE `MyTable5` DROP PRIMARY KEY;
+-- QUERY END: MySQLAlterTableQuery
+
+-- QUERY START: MySQLDeleteDNDBTDbObjectRecordQuery
+DELETE FROM `DNDBTDbObjects`
+WHERE `ID` = '79384d48-a39b-4a22-900e-066b2ca67ba2';
+-- QUERY END: MySQLDeleteDNDBTDbObjectRecordQuery
+
+-- QUERY START: MySQLUpdateDNDBTDbObjectRecordQuery
+UPDATE `DNDBTDbObjects` SET
+    `Name` = 'MyTable5',
+    `Code` = NULL
+WHERE `ID` = '6ca51f29-c1bc-4349-b9c1-6f1ea170f162';
+-- QUERY END: MySQLUpdateDNDBTDbObjectRecordQuery
 
 -- QUERY START: MySQLCreateTableQuery
 CREATE TABLE `MyTable3`

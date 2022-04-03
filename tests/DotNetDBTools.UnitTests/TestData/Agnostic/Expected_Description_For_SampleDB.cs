@@ -6,6 +6,7 @@
         public static readonly MyTable2Description MyTable2 = new();
         public static readonly MyTable4Description MyTable4 = new();
         public static readonly MyTable5Description MyTable5 = new();
+        public static readonly MyTable6Description MyTable6 = new();
 
         public class MyTable1Description
         {
@@ -49,6 +50,14 @@
 
             public override string ToString() => nameof(MyTable5);
             public static implicit operator string(MyTable5Description description) => description.ToString();
+        }
+        public class MyTable6Description
+        {
+            public readonly string MyColumn1 = nameof(MyColumn1);
+            public readonly string MyColumn2 = nameof(MyColumn2);
+
+            public override string ToString() => nameof(MyTable6);
+            public static implicit operator string(MyTable6Description description) => description.ToString();
         }
     }
 }

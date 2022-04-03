@@ -1,5 +1,5 @@
 # What is DotNetDBTools?
-DotNetDBTools is a set of libraries to define and deploy (publish migrate) relational databases throughout their evolution using database as code approach.
+DotNetDBTools is a set of libraries to define, analyze and deploy (publish migrate) relational databases throughout their evolution using database as code approach.
 
 Or in other words - state-based (declarative) database version control tools.
 
@@ -229,7 +229,7 @@ connection.Execute(File.ReadAllText("./publishScript.sql")); // Dapper call
 # Additional information
 More information on usage with end-to-end working examples can be found in [/samples](/samples) directory of this project. For even more complex scenarios one can check out available public methods in all packages and/or look at the code of tests and DeployManager class to find examples of their usage.
 
-In order to run sample applications docker container with the appropriate DBMS has to be started (except for SQLite which works out of the box). To start containers simply run any (or all) integration test for the chosen DBMS, it will create container with required parameters and leave it running. Deleting created databases between sample applications runs may be required.
+In order to run sample applications docker container with the appropriate DBMS has to be started (except for SQLite which works out of the box). To start containers simply run any (or all) integration test for the chosen DBMS, it will create container with required parameters and leave it running. SampleBusinessLogicOnlyApp.* samples require running corresponding SampleDeployManagerUsage.* sample first to create appropriate db.
 
 # Licence
 MIT License. See [LICENSE](LICENSE) file.

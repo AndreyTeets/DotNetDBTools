@@ -15,8 +15,17 @@ namespace DotNetDBTools.SampleBusinessLogicLib.Agnostic
     {
         public static void ReadWriteSomeData(DbConnection connection, Compiler compiler)
         {
+            DropExistingDataIfAny(connection, compiler);
             InsertSomeData(connection, compiler);
             ReadSomeData(connection, compiler);
+        }
+
+        private static void DropExistingDataIfAny(DbConnection connection, Compiler compiler)
+        {
+            Query query = new Query(MyTable3).AsDelete();
+            SqlResult sqlCompilationResult = compiler.Compile(query);
+            string sql = sqlCompilationResult.Sql;
+            connection.Execute(sql);
         }
 
         private static void InsertSomeData(DbConnection connection, Compiler compiler)

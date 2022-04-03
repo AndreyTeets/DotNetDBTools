@@ -26,6 +26,9 @@ internal abstract class ScriptExecutor<
     {
         foreach (Script script in GetOrderedByNameScriptsToExecute(dbDiff, scriptKind))
             ExecuteScript(script, dbDiff.OldDatabase.Version);
+
+        foreach (Script script in GetScriptsToAddRecordWithoutExecution(dbDiff, scriptKind))
+            AddScriptExecutionRecord(script, -1);
     }
 
     public void DeleteRemovedScriptsExecutionRecords(DatabaseDiff dbDiff)
@@ -43,10 +46,22 @@ internal abstract class ScriptExecutor<
             .OrderByName();
     }
 
-    private void ExecuteScript(Script script, long oldDbVersion)
+    private IEnumerable<Script> GetScriptsToAddRecordWithoutExecution(DatabaseDiff dbDiff, ScriptKind scriptKind)
+    {
+        return dbDiff.AddedScripts
+            .Where(x => x.Kind == scriptKind)
+            .Except(GetOrderedByNameScriptsToExecute(dbDiff, scriptKind));
+    }
+
+    private void ExecuteScript(Script script, long executedOnDbVersion)
     {
         QueryExecutor.Execute(new GenericQuery($"{script.GetCode()}"));
-        QueryExecutor.Execute(Create<TInsertDNDBTScriptExecutionRecordQuery>(script, oldDbVersion));
+        AddScriptExecutionRecord(script, executedOnDbVersion);
+    }
+
+    private void AddScriptExecutionRecord(Script script, long executedOnDbVersion)
+    {
+        QueryExecutor.Execute(Create<TInsertDNDBTScriptExecutionRecordQuery>(script, executedOnDbVersion));
     }
 
     private void DeleteScriptExecutionRecord(Script script)

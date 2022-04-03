@@ -15,7 +15,6 @@ $@"SELECT
     ti.name AS {nameof(SQLiteColumnRecord.ColumnName)},
     ti.type AS {nameof(SQLiteColumnRecord.DataType)},
     CASE WHEN ti.[notnull] = 1 THEN 1 ELSE 0 END AS [{nameof(SQLiteColumnRecord.NotNull)}],
-    CASE WHEN ti.pk = 1 AND lower(ti.type) = 'integer' THEN 1 ELSE 0 END AS {nameof(SQLiteColumnRecord.IsIdentityCandidate)},
     ti.dflt_value AS [{nameof(SQLiteColumnRecord.Default)}]
 FROM sqlite_master sm
 INNER JOIN pragma_table_info(sm.name) ti
@@ -28,7 +27,6 @@ WHERE sm.type = 'table'
 
     public class SQLiteColumnRecord : ColumnRecord
     {
-        public bool IsIdentityCandidate { get; set; }
     }
 
     public class SQLiteRecordsLoader : RecordsLoader
@@ -51,7 +49,7 @@ WHERE sm.type = 'table'
                 Name = cr.ColumnName,
                 DataType = ParseDataType(cr),
                 NotNull = cr.NotNull,
-                Identity = cr.IsIdentityCandidate,
+                Identity = false,
                 Default = ParseDefault(cr),
             };
         }

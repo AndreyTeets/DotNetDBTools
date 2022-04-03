@@ -15,8 +15,19 @@ namespace DotNetDBTools.SampleBusinessLogicOnlyApp.PostgreSQL
 
         public static void Main()
         {
+            DropExistingDataIfAny();
             InsertSomeData();
             ReadSomeData();
+        }
+
+        private static void DropExistingDataIfAny()
+        {
+            string query =
+$@"DELETE FROM ""{MyTable1}"";
+DELETE FROM ""{MyTable2}"";";
+
+            using NpgsqlConnection connection = new(s_connectionString);
+            connection.Execute(query);
         }
 
         private static void InsertSomeData()

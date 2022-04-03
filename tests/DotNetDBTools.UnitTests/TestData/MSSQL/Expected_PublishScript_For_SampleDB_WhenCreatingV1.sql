@@ -396,7 +396,9 @@ EXEC sp_executesql N'CREATE TABLE MyTable5
     MyColumn6 DECIMAL(6, 1) NOT NULL CONSTRAINT DF_MyTable5_MyColumn6 DEFAULT 12.3,
     MyColumn7 BIT NOT NULL CONSTRAINT DF_MyTable5_MyColumn7 DEFAULT 1,
     MyColumn8 UNIQUEIDENTIFIER NOT NULL CONSTRAINT DF_MyTable5_MyColumn8 DEFAULT ''8e2f99ad-0fc8-456d-b0e4-ec3ba572dd15'',
-    MyColumn9 DATE NOT NULL CONSTRAINT DF_MyTable5_MyColumn9 DEFAULT ''2022-02-15''
+    MyColumn9 DATE NOT NULL CONSTRAINT DF_MyTable5_MyColumn9 DEFAULT ''2022-02-15'',
+    CONSTRAINT PK_MyTable5 PRIMARY KEY (MyColumn2, MyColumn1),
+    CONSTRAINT UQ_MyTable5_1 UNIQUE (MyColumn6, MyColumn3, MyColumn7)
 );';
 -- QUERY END: MSSQLCreateTableQuery
 
@@ -722,6 +724,129 @@ VALUES
 );';
 -- QUERY END: MSSQLInsertDNDBTDbObjectRecordQuery
 
+-- QUERY START: MSSQLInsertDNDBTDbObjectRecordQuery
+EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''79384d48-a39b-4a22-900e-066b2ca67ba2'';
+DECLARE @ParentID UNIQUEIDENTIFIER = N''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'';
+DECLARE @Name NVARCHAR(MAX) = N''PK_MyTable5'';
+DECLARE @Code NVARCHAR(MAX) = NULL;
+INSERT INTO DNDBTDbObjects
+(
+    ID,
+    ParentID,
+    Type,
+    Name,
+    Code
+)
+VALUES
+(
+    @ID,
+    @ParentID,
+    ''PrimaryKey'',
+    @Name,
+    @Code
+);';
+-- QUERY END: MSSQLInsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: MSSQLInsertDNDBTDbObjectRecordQuery
+EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''5293b58a-9f63-4f0f-8d6f-18416ebbd751'';
+DECLARE @ParentID UNIQUEIDENTIFIER = N''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'';
+DECLARE @Name NVARCHAR(MAX) = N''UQ_MyTable5_1'';
+DECLARE @Code NVARCHAR(MAX) = NULL;
+INSERT INTO DNDBTDbObjects
+(
+    ID,
+    ParentID,
+    Type,
+    Name,
+    Code
+)
+VALUES
+(
+    @ID,
+    @ParentID,
+    ''UniqueConstraint'',
+    @Name,
+    @Code
+);';
+-- QUERY END: MSSQLInsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: MSSQLCreateTableQuery
+EXEC sp_executesql N'CREATE TABLE MyTable6
+(
+    MyColumn1 NCHAR(4) NULL,
+    MyColumn2 INT NULL
+);';
+-- QUERY END: MSSQLCreateTableQuery
+
+-- QUERY START: MSSQLInsertDNDBTDbObjectRecordQuery
+EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''f3064a8c-346a-4b3d-af2c-d967b39841e4'';
+DECLARE @ParentID UNIQUEIDENTIFIER = NULL;
+DECLARE @Name NVARCHAR(MAX) = N''MyTable6'';
+DECLARE @Code NVARCHAR(MAX) = NULL;
+INSERT INTO DNDBTDbObjects
+(
+    ID,
+    ParentID,
+    Type,
+    Name,
+    Code
+)
+VALUES
+(
+    @ID,
+    @ParentID,
+    ''Table'',
+    @Name,
+    @Code
+);';
+-- QUERY END: MSSQLInsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: MSSQLInsertDNDBTDbObjectRecordQuery
+EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''bfa08c82-5c8f-4ab4-bd41-1f1d85cf3c85'';
+DECLARE @ParentID UNIQUEIDENTIFIER = N''f3064a8c-346a-4b3d-af2c-d967b39841e4'';
+DECLARE @Name NVARCHAR(MAX) = N''MyColumn1'';
+DECLARE @Code NVARCHAR(MAX) = NULL;
+INSERT INTO DNDBTDbObjects
+(
+    ID,
+    ParentID,
+    Type,
+    Name,
+    Code
+)
+VALUES
+(
+    @ID,
+    @ParentID,
+    ''Column'',
+    @Name,
+    @Code
+);';
+-- QUERY END: MSSQLInsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: MSSQLInsertDNDBTDbObjectRecordQuery
+EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''a402e2b7-c826-4cfd-a304-97c9bc346ba2'';
+DECLARE @ParentID UNIQUEIDENTIFIER = N''f3064a8c-346a-4b3d-af2c-d967b39841e4'';
+DECLARE @Name NVARCHAR(MAX) = N''MyColumn2'';
+DECLARE @Code NVARCHAR(MAX) = NULL;
+INSERT INTO DNDBTDbObjects
+(
+    ID,
+    ParentID,
+    Type,
+    Name,
+    Code
+)
+VALUES
+(
+    @ID,
+    @ParentID,
+    ''Column'',
+    @Name,
+    @Code
+);';
+-- QUERY END: MSSQLInsertDNDBTDbObjectRecordQuery
+
 -- QUERY START: MSSQLCreateIndexQuery
 EXEC sp_executesql N'CREATE UNIQUE INDEX IDX_MyTable2_MyIndex1
 ON MyTable2 (MyColumn1, MyColumn2);';
@@ -731,6 +856,34 @@ ON MyTable2 (MyColumn1, MyColumn2);';
 EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''74390b3c-bc39-4860-a42e-12baa400f927'';
 DECLARE @ParentID UNIQUEIDENTIFIER = N''bfb9030c-a8c3-4882-9c42-1c6ad025cf8f'';
 DECLARE @Name NVARCHAR(MAX) = N''IDX_MyTable2_MyIndex1'';
+DECLARE @Code NVARCHAR(MAX) = NULL;
+INSERT INTO DNDBTDbObjects
+(
+    ID,
+    ParentID,
+    Type,
+    Name,
+    Code
+)
+VALUES
+(
+    @ID,
+    @ParentID,
+    ''Index'',
+    @Name,
+    @Code
+);';
+-- QUERY END: MSSQLInsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: MSSQLCreateIndexQuery
+EXEC sp_executesql N'CREATE INDEX IDX_MyTable5_MyIndex1
+ON MyTable5 (MyColumn8);';
+-- QUERY END: MSSQLCreateIndexQuery
+
+-- QUERY START: MSSQLInsertDNDBTDbObjectRecordQuery
+EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''1d632285-9914-4c5d-98e6-a618a99bd799'';
+DECLARE @ParentID UNIQUEIDENTIFIER = N''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'';
+DECLARE @Name NVARCHAR(MAX) = N''IDX_MyTable5_MyIndex1'';
 DECLARE @Code NVARCHAR(MAX) = NULL;
 INSERT INTO DNDBTDbObjects
 (
@@ -760,6 +913,35 @@ EXEC sp_executesql N'ALTER TABLE MyTable1 ADD CONSTRAINT FK_MyTable1_MyColumn1_M
 EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''d11b2a53-32db-432f-bb6b-f91788844ba9'';
 DECLARE @ParentID UNIQUEIDENTIFIER = N''299675e6-4faa-4d0f-a36a-224306ba5bcb'';
 DECLARE @Name NVARCHAR(MAX) = N''FK_MyTable1_MyColumn1_MyTable2_MyColumn1'';
+DECLARE @Code NVARCHAR(MAX) = NULL;
+INSERT INTO DNDBTDbObjects
+(
+    ID,
+    ParentID,
+    Type,
+    Name,
+    Code
+)
+VALUES
+(
+    @ID,
+    @ParentID,
+    ''ForeignKey'',
+    @Name,
+    @Code
+);';
+-- QUERY END: MSSQLInsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: MSSQLCreateForeignKeyQuery
+EXEC sp_executesql N'ALTER TABLE MyTable6 ADD CONSTRAINT FK_MyTable6_MyTable5_1 FOREIGN KEY (MyColumn1, MyColumn2)
+    REFERENCES MyTable5 (MyColumn2, MyColumn1)
+    ON UPDATE NO ACTION ON DELETE NO ACTION;';
+-- QUERY END: MSSQLCreateForeignKeyQuery
+
+-- QUERY START: MSSQLInsertDNDBTDbObjectRecordQuery
+EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''ae453b22-d270-41fc-8184-9ac26b7a0569'';
+DECLARE @ParentID UNIQUEIDENTIFIER = N''f3064a8c-346a-4b3d-af2c-d967b39841e4'';
+DECLARE @Name NVARCHAR(MAX) = N''FK_MyTable6_MyTable5_1'';
 DECLARE @Code NVARCHAR(MAX) = NULL;
 INSERT INTO DNDBTDbObjects
 (
