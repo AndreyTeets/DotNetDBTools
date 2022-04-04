@@ -18,7 +18,7 @@ namespace DotNetDBTools.SampleDB.SQLite.Tables
             DataType = new IntDataType(),
         };
 
-        public ForeignKey FK_MyTable6_MyTable5_1 = new("AE453B22-D270-41FC-8184-9AC26B7A0569")
+        public ForeignKey FK_MyTable6_MyTable5_CustomName = new("AE453B22-D270-41FC-8184-9AC26B7A0569")
         {
             ThisColumns = new string[] { nameof(MyColumn1), nameof(MyColumn2) },
             ReferencedTable = nameof(MyTable5),

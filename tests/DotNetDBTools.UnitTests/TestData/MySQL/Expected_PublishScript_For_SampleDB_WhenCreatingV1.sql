@@ -672,7 +672,7 @@ VALUES
 -- QUERY END: MySQLInsertDNDBTDbObjectRecordQuery
 
 -- QUERY START: MySQLCreateIndexQuery
-CREATE INDEX `IDX_MyTable5_MyIndex1`
+CREATE INDEX `IDX_MyTable5_CustomName`
 ON `MyTable5` (`MyColumn8`);
 -- QUERY END: MySQLCreateIndexQuery
 
@@ -690,13 +690,13 @@ VALUES
     '1d632285-9914-4c5d-98e6-a618a99bd799',
     '6ca51f29-c1bc-4349-b9c1-6f1ea170f162',
     'Index',
-    'IDX_MyTable5_MyIndex1',
+    'IDX_MyTable5_CustomName',
     NULL
 );
 -- QUERY END: MySQLInsertDNDBTDbObjectRecordQuery
 
 -- QUERY START: MySQLCreateIndexQuery
-CREATE UNIQUE INDEX `UQ_MyTable5_1`
+CREATE UNIQUE INDEX `UQ_MyTable5_CustomName`
 ON `MyTable5` (`MyColumn6`, `MyColumn3`, `MyColumn7`);
 -- QUERY END: MySQLCreateIndexQuery
 
@@ -714,7 +714,7 @@ VALUES
     '5293b58a-9f63-4f0f-8d6f-18416ebbd751',
     '6ca51f29-c1bc-4349-b9c1-6f1ea170f162',
     'Index',
-    'UQ_MyTable5_1',
+    'UQ_MyTable5_CustomName',
     NULL
 );
 -- QUERY END: MySQLInsertDNDBTDbObjectRecordQuery
@@ -745,7 +745,7 @@ VALUES
 -- QUERY END: MySQLInsertDNDBTDbObjectRecordQuery
 
 -- QUERY START: MySQLCreateForeignKeyQuery
-ALTER TABLE `MyTable6` ADD CONSTRAINT `FK_MyTable6_MyTable5_1` FOREIGN KEY (`MyColumn1`, `MyColumn2`)
+ALTER TABLE `MyTable6` ADD CONSTRAINT `FK_MyTable6_MyTable5_CustomName` FOREIGN KEY (`MyColumn1`, `MyColumn2`)
     REFERENCES `MyTable5` (`MyColumn2`, `MyColumn1`)
     ON UPDATE NO ACTION ON DELETE NO ACTION;
 -- QUERY END: MySQLCreateForeignKeyQuery
@@ -764,7 +764,7 @@ VALUES
     'ae453b22-d270-41fc-8184-9ac26b7a0569',
     'f3064a8c-346a-4b3d-af2c-d967b39841e4',
     'ForeignKey',
-    'FK_MyTable6_MyTable5_1',
+    'FK_MyTable6_MyTable5_CustomName',
     NULL
 );
 -- QUERY END: MySQLInsertDNDBTDbObjectRecordQuery

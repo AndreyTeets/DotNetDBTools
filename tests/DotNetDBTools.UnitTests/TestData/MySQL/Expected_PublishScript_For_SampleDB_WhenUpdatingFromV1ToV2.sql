@@ -62,7 +62,7 @@ WHERE `ID` = 'e2569aae-d5da-4a77-b3cd-51adbdb272d9';
 -- QUERY END: MySQLDeleteDNDBTDbObjectRecordQuery
 
 -- QUERY START: MySQLDropForeignKeyQuery
-ALTER TABLE `MyTable6` DROP CONSTRAINT `FK_MyTable6_MyTable5_1`;
+ALTER TABLE `MyTable6` DROP CONSTRAINT `FK_MyTable6_MyTable5_CustomName`;
 -- QUERY END: MySQLDropForeignKeyQuery
 
 -- QUERY START: MySQLDeleteDNDBTDbObjectRecordQuery
@@ -98,7 +98,7 @@ WHERE `ID` = '74390b3c-bc39-4860-a42e-12baa400f927';
 -- QUERY END: MySQLDeleteDNDBTDbObjectRecordQuery
 
 -- QUERY START: MySQLDropIndexQuery
-DROP INDEX `IDX_MyTable5_MyIndex1` ON `MyTable5`;
+DROP INDEX `IDX_MyTable5_CustomName` ON `MyTable5`;
 -- QUERY END: MySQLDropIndexQuery
 
 -- QUERY START: MySQLDeleteDNDBTDbObjectRecordQuery
@@ -107,7 +107,7 @@ WHERE `ID` = '1d632285-9914-4c5d-98e6-a618a99bd799';
 -- QUERY END: MySQLDeleteDNDBTDbObjectRecordQuery
 
 -- QUERY START: MySQLDropIndexQuery
-DROP INDEX `UQ_MyTable5_1` ON `MyTable5`;
+DROP INDEX `UQ_MyTable5_CustomName` ON `MyTable5`;
 -- QUERY END: MySQLDropIndexQuery
 
 -- QUERY START: MySQLDeleteDNDBTDbObjectRecordQuery

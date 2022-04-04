@@ -37,7 +37,7 @@ public class MySQLDbModelConverter : DbModelConverter
             ID = table.ID,
             Name = table.Name,
             Columns = ConvertToMySQLModel(table.Columns),
-            PrimaryKey = table.PrimaryKey is null ? table.PrimaryKey : ConvertToMySQLModel(table.PrimaryKey, table.Name),
+            PrimaryKey = ConvertToMySQLModel(table.PrimaryKey, table.Name),
             UniqueConstraints = table.UniqueConstraints,
             CheckConstraints = table.CheckConstraints.Select(ck => { ck.CodePiece = ConvertCodePiece(ck.CodePiece); return ck; }).ToList(),
             Indexes = table.Indexes,
@@ -58,6 +58,8 @@ public class MySQLDbModelConverter : DbModelConverter
 
     private PrimaryKey ConvertToMySQLModel(PrimaryKey pk, string tableName)
     {
+        if (pk is null)
+            return null;
         return new()
         {
             ID = pk.ID,

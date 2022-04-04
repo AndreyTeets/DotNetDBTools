@@ -80,7 +80,7 @@ CREATE TABLE _DNDBTTemp_MyTable5
     MyColumn8 BLOB NOT NULL DEFAULT X'8e2f99ad0fc8456db0e4ec3ba572dd15',
     MyColumn9 NUMERIC NOT NULL DEFAULT '2022-02-15',
     CONSTRAINT PK_MyTable5 PRIMARY KEY (MyColumn2, MyColumn1),
-    CONSTRAINT UQ_MyTable5_1 UNIQUE (MyColumn6, MyColumn3, MyColumn7)
+    CONSTRAINT UQ_MyTable5_CustomName UNIQUE (MyColumn6, MyColumn3, MyColumn7)
 );
 
 INSERT INTO _DNDBTTemp_MyTable5(MyColumn1, MyColumn10, MyColumn11, MyColumn12, MyColumn2, MyColumn3, MyColumn4, MyColumn5, MyColumn6, MyColumn7, MyColumn8, MyColumn9)
@@ -91,7 +91,7 @@ DROP TABLE MyTable5;
 
 ALTER TABLE _DNDBTTemp_MyTable5 RENAME TO MyTable5;
 
-CREATE INDEX IDX_MyTable5_MyIndex1
+CREATE INDEX IDX_MyTable5_CustomName
 ON MyTable5 (MyColumn8);
 -- QUERY END: SQLiteAlterTableQuery
 
@@ -100,7 +100,7 @@ CREATE TABLE MyTable6
 (
     MyColumn1 TEXT NULL,
     MyColumn2 INTEGER NULL,
-    CONSTRAINT FK_MyTable6_MyTable5_1 FOREIGN KEY (MyColumn1, MyColumn2)
+    CONSTRAINT FK_MyTable6_MyTable5_CustomName FOREIGN KEY (MyColumn1, MyColumn2)
         REFERENCES MyTable5(MyColumn2, MyColumn1)
         ON UPDATE NO ACTION ON DELETE NO ACTION
 );

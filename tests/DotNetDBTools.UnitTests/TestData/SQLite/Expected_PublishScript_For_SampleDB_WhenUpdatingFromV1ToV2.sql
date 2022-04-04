@@ -353,7 +353,7 @@ VALUES
 -- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
 
 -- QUERY START: SQLiteAlterTableQuery
-DROP INDEX IDX_MyTable5_MyIndex1;
+DROP INDEX IDX_MyTable5_CustomName;
 
 CREATE TABLE _DNDBTTemp_MyTable5
 (

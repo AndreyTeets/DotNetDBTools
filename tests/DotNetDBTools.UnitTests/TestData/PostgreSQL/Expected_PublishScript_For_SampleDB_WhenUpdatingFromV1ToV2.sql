@@ -74,7 +74,7 @@ WHERE "ID" = ''e2569aae-d5da-4a77-b3cd-51adbdb272d9'';';
 -- QUERY END: PostgreSQLDeleteDNDBTDbObjectRecordQuery
 
 -- QUERY START: PostgreSQLDropForeignKeyQuery
-EXECUTE 'ALTER TABLE "MyTable6" DROP CONSTRAINT "FK_MyTable6_MyTable5_1";';
+EXECUTE 'ALTER TABLE "MyTable6" DROP CONSTRAINT "FK_MyTable6_MyTable5_CustomName";';
 -- QUERY END: PostgreSQLDropForeignKeyQuery
 
 -- QUERY START: PostgreSQLDeleteDNDBTDbObjectRecordQuery
@@ -101,7 +101,7 @@ WHERE "ID" = ''74390b3c-bc39-4860-a42e-12baa400f927'';';
 -- QUERY END: PostgreSQLDeleteDNDBTDbObjectRecordQuery
 
 -- QUERY START: PostgreSQLDropIndexQuery
-EXECUTE 'DROP INDEX "IDX_MyTable5_MyIndex1";';
+EXECUTE 'DROP INDEX "IDX_MyTable5_CustomName";';
 -- QUERY END: PostgreSQLDropIndexQuery
 
 -- QUERY START: PostgreSQLDeleteDNDBTDbObjectRecordQuery
@@ -402,7 +402,7 @@ VALUES
 
 -- QUERY START: PostgreSQLAlterTableQuery
 EXECUTE '
-ALTER TABLE "MyTable2" DROP CONSTRAINT "PK_MyTable2";
+ALTER TABLE "MyTable2" DROP CONSTRAINT "PK_MyTable2_CustomName";
 ALTER TABLE "MyTable2" ALTER COLUMN "MyColumn2" DROP DEFAULT;
 ALTER TABLE "MyTable2" DROP COLUMN "MyColumn2";
 ALTER TABLE "MyTable2" ALTER COLUMN "MyColumn1" DROP DEFAULT;
@@ -412,7 +412,7 @@ ALTER TABLE "MyTable2" ALTER COLUMN "MyColumn1NewName" SET DATA TYPE BIGINT
 ALTER TABLE "MyTable2" ALTER COLUMN "MyColumn1NewName" SET DEFAULT 333;
 ALTER TABLE "MyTable2" ADD COLUMN "MyColumn2" BYTEA NULL;
 ALTER TABLE "MyTable2" ALTER COLUMN "MyColumn2" SET DEFAULT ''\x000102'';
-ALTER TABLE "MyTable2" ADD CONSTRAINT "PK_MyTable2" PRIMARY KEY ("MyColumn1NewName");';
+ALTER TABLE "MyTable2" ADD CONSTRAINT "PK_MyTable2_CustomName" PRIMARY KEY ("MyColumn1NewName");';
 -- QUERY END: PostgreSQLAlterTableQuery
 
 -- QUERY START: PostgreSQLDeleteDNDBTDbObjectRecordQuery
@@ -472,15 +472,15 @@ VALUES
     ''3a43615b-40b3-4a13-99e7-93af7c56e8ce'',
     ''bfb9030c-a8c3-4882-9c42-1c6ad025cf8f'',
     ''PrimaryKey'',
-    ''PK_MyTable2'',
+    ''PK_MyTable2_CustomName'',
     NULL
 );';
 -- QUERY END: PostgreSQLInsertDNDBTDbObjectRecordQuery
 
 -- QUERY START: PostgreSQLAlterTableQuery
 EXECUTE '
-ALTER TABLE "MyTable5" DROP CONSTRAINT "UQ_MyTable5_1";
-ALTER TABLE "MyTable5" DROP CONSTRAINT "PK_MyTable5";
+ALTER TABLE "MyTable5" DROP CONSTRAINT "UQ_MyTable5_CustomName";
+ALTER TABLE "MyTable5" DROP CONSTRAINT "PK_MyTable5_CustomName";
 ALTER TABLE "MyTable5" ALTER COLUMN "MyColumn13" SET DATA TYPE "MyCompositeType1"
     USING ("MyColumn13"::text::"MyCompositeType1");
 ALTER TABLE "MyTable5" ALTER COLUMN "MyColumn14" SET DATA TYPE "MyDomain1"

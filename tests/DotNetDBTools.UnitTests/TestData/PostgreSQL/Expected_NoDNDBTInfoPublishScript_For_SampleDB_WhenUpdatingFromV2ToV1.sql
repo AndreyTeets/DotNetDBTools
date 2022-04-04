@@ -100,7 +100,7 @@ ALTER TABLE "MyTable1" ADD CONSTRAINT "CK_MyTable1_MyCheck1" CHECK ("MyColumn4" 
 
 -- QUERY START: PostgreSQLAlterTableQuery
 EXECUTE '
-ALTER TABLE "MyTable2" DROP CONSTRAINT "PK_MyTable2";
+ALTER TABLE "MyTable2" DROP CONSTRAINT "PK_MyTable2_CustomName";
 ALTER TABLE "MyTable2" ALTER COLUMN "MyColumn2" DROP DEFAULT;
 ALTER TABLE "MyTable2" DROP COLUMN "MyColumn2";
 ALTER TABLE "MyTable2" ALTER COLUMN "MyColumn1NewName" DROP DEFAULT;
@@ -110,7 +110,7 @@ ALTER TABLE "MyTable2" ALTER COLUMN "MyColumn1" SET DATA TYPE INT
 ALTER TABLE "MyTable2" ALTER COLUMN "MyColumn1" SET DEFAULT 333;
 ALTER TABLE "MyTable2" ADD COLUMN "MyColumn2" BYTEA NULL;
 ALTER TABLE "MyTable2" ALTER COLUMN "MyColumn2" SET DEFAULT ''\x000102'';
-ALTER TABLE "MyTable2" ADD CONSTRAINT "PK_MyTable2" PRIMARY KEY ("MyColumn1");';
+ALTER TABLE "MyTable2" ADD CONSTRAINT "PK_MyTable2_CustomName" PRIMARY KEY ("MyColumn1");';
 -- QUERY END: PostgreSQLAlterTableQuery
 
 -- QUERY START: PostgreSQLAlterTableQuery
@@ -123,8 +123,8 @@ ALTER TABLE "MyTable5" ALTER COLUMN "MyColumn15" SET DATA TYPE "MyEnumType1"
     USING ("MyColumn15"::text::"MyEnumType1");
 ALTER TABLE "MyTable5" ALTER COLUMN "MyColumn16" SET DATA TYPE "MyRangeType1"
     USING ("MyColumn16"::text::"MyRangeType1");
-ALTER TABLE "MyTable5" ADD CONSTRAINT "PK_MyTable5" PRIMARY KEY ("MyColumn2", "MyColumn1");
-ALTER TABLE "MyTable5" ADD CONSTRAINT "UQ_MyTable5_1" UNIQUE ("MyColumn6", "MyColumn3", "MyColumn7");';
+ALTER TABLE "MyTable5" ADD CONSTRAINT "PK_MyTable5_CustomName" PRIMARY KEY ("MyColumn2", "MyColumn1");
+ALTER TABLE "MyTable5" ADD CONSTRAINT "UQ_MyTable5_CustomName" UNIQUE ("MyColumn6", "MyColumn3", "MyColumn7");';
 -- QUERY END: PostgreSQLAlterTableQuery
 
 -- QUERY START: PostgreSQLCreateTableQuery
@@ -157,12 +157,12 @@ ON "MyTable2" ("MyColumn1", "MyColumn2");';
 -- QUERY END: PostgreSQLCreateIndexQuery
 
 -- QUERY START: PostgreSQLCreateIndexQuery
-EXECUTE 'CREATE INDEX "IDX_MyTable5_MyIndex1"
+EXECUTE 'CREATE INDEX "IDX_MyTable5_CustomName"
 ON "MyTable5" ("MyColumn8");';
 -- QUERY END: PostgreSQLCreateIndexQuery
 
 -- QUERY START: PostgreSQLCreateForeignKeyQuery
-EXECUTE 'ALTER TABLE "MyTable6" ADD CONSTRAINT "FK_MyTable6_MyTable5_1" FOREIGN KEY ("MyColumn1", "MyColumn2")
+EXECUTE 'ALTER TABLE "MyTable6" ADD CONSTRAINT "FK_MyTable6_MyTable5_CustomName" FOREIGN KEY ("MyColumn1", "MyColumn2")
     REFERENCES "MyTable5" ("MyColumn2", "MyColumn1")
     ON UPDATE NO ACTION ON DELETE NO ACTION;';
 -- QUERY END: PostgreSQLCreateForeignKeyQuery

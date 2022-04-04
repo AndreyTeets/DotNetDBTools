@@ -35,7 +35,7 @@ public class SQLiteDbModelConverter : DbModelConverter
             ID = table.ID,
             Name = table.Name,
             Columns = ConvertToSQLiteModel(table.Columns),
-            PrimaryKey = table.PrimaryKey,
+            PrimaryKey = ConvertToMySQLModel(table.PrimaryKey, table.Name),
             UniqueConstraints = table.UniqueConstraints,
             CheckConstraints = table.CheckConstraints.Select(ck => { ck.CodePiece = ConvertCodePiece(ck.CodePiece); return ck; }).ToList(),
             Indexes = table.Indexes,
@@ -51,6 +51,18 @@ public class SQLiteDbModelConverter : DbModelConverter
             ID = view.ID,
             Name = view.Name,
             CodePiece = ConvertCodePiece(view.CodePiece),
+        };
+    }
+
+    private PrimaryKey ConvertToMySQLModel(PrimaryKey pk, string tableName)
+    {
+        if (pk is null)
+            return null;
+        return new()
+        {
+            ID = pk.ID,
+            Name = $"PK_{tableName}",
+            Columns = pk.Columns,
         };
     }
 

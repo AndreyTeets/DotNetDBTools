@@ -108,7 +108,7 @@ ALTER TABLE MyTable1 ADD CONSTRAINT CK_MyTable1_MyCheck1 CHECK (MyColumn4 >= 0);
 
 -- QUERY START: MSSQLAlterTableQuery
 EXEC sp_executesql N'
-ALTER TABLE MyTable2 DROP CONSTRAINT PK_MyTable2;
+ALTER TABLE MyTable2 DROP CONSTRAINT PK_MyTable2_CustomName;
 ALTER TABLE [MyTable2] DROP CONSTRAINT DF_MyTable2_MyColumn2;
 ALTER TABLE MyTable2 DROP COLUMN MyColumn2;
 ALTER TABLE [MyTable2] DROP CONSTRAINT DF_MyTable2_MyColumn1NewName;
@@ -117,13 +117,13 @@ ALTER TABLE MyTable2 ALTER COLUMN MyColumn1 INT NOT NULL;
 ALTER TABLE MyTable2 ADD CONSTRAINT DF_MyTable2_MyColumn1 DEFAULT 333 FOR MyColumn1;
 ALTER TABLE MyTable2 ADD MyColumn2 VARBINARY(22) NULL;
 ALTER TABLE MyTable2 ADD CONSTRAINT DF_MyTable2_MyColumn2 DEFAULT 0x000102 FOR MyColumn2;
-ALTER TABLE MyTable2 ADD CONSTRAINT PK_MyTable2 PRIMARY KEY (MyColumn1);';
+ALTER TABLE MyTable2 ADD CONSTRAINT PK_MyTable2_CustomName PRIMARY KEY (MyColumn1);';
 -- QUERY END: MSSQLAlterTableQuery
 
 -- QUERY START: MSSQLAlterTableQuery
 EXEC sp_executesql N'
-ALTER TABLE MyTable5 ADD CONSTRAINT PK_MyTable5 PRIMARY KEY (MyColumn2, MyColumn1);
-ALTER TABLE MyTable5 ADD CONSTRAINT UQ_MyTable5_1 UNIQUE (MyColumn6, MyColumn3, MyColumn7);';
+ALTER TABLE MyTable5 ADD CONSTRAINT PK_MyTable5_CustomName PRIMARY KEY (MyColumn2, MyColumn1);
+ALTER TABLE MyTable5 ADD CONSTRAINT UQ_MyTable5_CustomName UNIQUE (MyColumn6, MyColumn3, MyColumn7);';
 -- QUERY END: MSSQLAlterTableQuery
 
 -- QUERY START: MSSQLDropTypeQuery
@@ -144,12 +144,12 @@ ON MyTable2 (MyColumn1, MyColumn2);';
 -- QUERY END: MSSQLCreateIndexQuery
 
 -- QUERY START: MSSQLCreateIndexQuery
-EXEC sp_executesql N'CREATE INDEX IDX_MyTable5_MyIndex1
+EXEC sp_executesql N'CREATE INDEX IDX_MyTable5_CustomName
 ON MyTable5 (MyColumn8);';
 -- QUERY END: MSSQLCreateIndexQuery
 
 -- QUERY START: MSSQLCreateForeignKeyQuery
-EXEC sp_executesql N'ALTER TABLE MyTable6 ADD CONSTRAINT FK_MyTable6_MyTable5_1 FOREIGN KEY (MyColumn1, MyColumn2)
+EXEC sp_executesql N'ALTER TABLE MyTable6 ADD CONSTRAINT FK_MyTable6_MyTable5_CustomName FOREIGN KEY (MyColumn1, MyColumn2)
     REFERENCES MyTable5 (MyColumn2, MyColumn1)
     ON UPDATE NO ACTION ON DELETE NO ACTION;';
 -- QUERY END: MSSQLCreateForeignKeyQuery

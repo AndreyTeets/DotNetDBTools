@@ -22,7 +22,7 @@ namespace DotNetDBTools.SampleDB.Agnostic.Tables
             Default = new BinaryDefaultValue(new byte[] { 0, 1, 2 }),
         };
 
-        public PrimaryKey PK_MyTable2 = new("3A43615B-40B3-4A13-99E7-93AF7C56E8CE")
+        public PrimaryKey PK_MyTable2_CustomName = new("3A43615B-40B3-4A13-99E7-93AF7C56E8CE")
         {
             Columns = new string[] { nameof(MyColumn1) },
         };

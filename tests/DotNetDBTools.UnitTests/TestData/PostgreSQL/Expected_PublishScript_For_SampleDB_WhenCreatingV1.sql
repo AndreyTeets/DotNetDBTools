@@ -353,7 +353,7 @@ EXECUTE 'CREATE TABLE "MyTable2"
 (
     "MyColumn1" INT NOT NULL DEFAULT 333,
     "MyColumn2" BYTEA NULL DEFAULT ''\x000102'',
-    CONSTRAINT "PK_MyTable2" PRIMARY KEY ("MyColumn1")
+    CONSTRAINT "PK_MyTable2_CustomName" PRIMARY KEY ("MyColumn1")
 );';
 -- QUERY END: PostgreSQLCreateTableQuery
 
@@ -428,7 +428,7 @@ VALUES
     ''3a43615b-40b3-4a13-99e7-93af7c56e8ce'',
     ''bfb9030c-a8c3-4882-9c42-1c6ad025cf8f'',
     ''PrimaryKey'',
-    ''PK_MyTable2'',
+    ''PK_MyTable2_CustomName'',
     NULL
 );';
 -- QUERY END: PostgreSQLInsertDNDBTDbObjectRecordQuery
@@ -497,8 +497,8 @@ EXECUTE 'CREATE TABLE "MyTable5"
     "MyColumn7" BOOL NOT NULL DEFAULT TRUE,
     "MyColumn8" UUID NOT NULL DEFAULT ''8e2f99ad-0fc8-456d-b0e4-ec3ba572dd15'',
     "MyColumn9" DATE NOT NULL DEFAULT ''2022-02-15'',
-    CONSTRAINT "PK_MyTable5" PRIMARY KEY ("MyColumn2", "MyColumn1"),
-    CONSTRAINT "UQ_MyTable5_1" UNIQUE ("MyColumn6", "MyColumn3", "MyColumn7")
+    CONSTRAINT "PK_MyTable5_CustomName" PRIMARY KEY ("MyColumn2", "MyColumn1"),
+    CONSTRAINT "UQ_MyTable5_CustomName" UNIQUE ("MyColumn6", "MyColumn3", "MyColumn7")
 );';
 -- QUERY END: PostgreSQLCreateTableQuery
 
@@ -839,7 +839,7 @@ VALUES
     ''79384d48-a39b-4a22-900e-066b2ca67ba2'',
     ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
     ''PrimaryKey'',
-    ''PK_MyTable5'',
+    ''PK_MyTable5_CustomName'',
     NULL
 );';
 -- QUERY END: PostgreSQLInsertDNDBTDbObjectRecordQuery
@@ -858,7 +858,7 @@ VALUES
     ''5293b58a-9f63-4f0f-8d6f-18416ebbd751'',
     ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
     ''UniqueConstraint'',
-    ''UQ_MyTable5_1'',
+    ''UQ_MyTable5_CustomName'',
     NULL
 );';
 -- QUERY END: PostgreSQLInsertDNDBTDbObjectRecordQuery
@@ -953,7 +953,7 @@ VALUES
 -- QUERY END: PostgreSQLInsertDNDBTDbObjectRecordQuery
 
 -- QUERY START: PostgreSQLCreateIndexQuery
-EXECUTE 'CREATE INDEX "IDX_MyTable5_MyIndex1"
+EXECUTE 'CREATE INDEX "IDX_MyTable5_CustomName"
 ON "MyTable5" ("MyColumn8");';
 -- QUERY END: PostgreSQLCreateIndexQuery
 
@@ -971,7 +971,7 @@ VALUES
     ''1d632285-9914-4c5d-98e6-a618a99bd799'',
     ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
     ''Index'',
-    ''IDX_MyTable5_MyIndex1'',
+    ''IDX_MyTable5_CustomName'',
     NULL
 );';
 -- QUERY END: PostgreSQLInsertDNDBTDbObjectRecordQuery
@@ -1002,7 +1002,7 @@ VALUES
 -- QUERY END: PostgreSQLInsertDNDBTDbObjectRecordQuery
 
 -- QUERY START: PostgreSQLCreateForeignKeyQuery
-EXECUTE 'ALTER TABLE "MyTable6" ADD CONSTRAINT "FK_MyTable6_MyTable5_1" FOREIGN KEY ("MyColumn1", "MyColumn2")
+EXECUTE 'ALTER TABLE "MyTable6" ADD CONSTRAINT "FK_MyTable6_MyTable5_CustomName" FOREIGN KEY ("MyColumn1", "MyColumn2")
     REFERENCES "MyTable5" ("MyColumn2", "MyColumn1")
     ON UPDATE NO ACTION ON DELETE NO ACTION;';
 -- QUERY END: PostgreSQLCreateForeignKeyQuery
@@ -1021,7 +1021,7 @@ VALUES
     ''ae453b22-d270-41fc-8184-9ac26b7a0569'',
     ''f3064a8c-346a-4b3d-af2c-d967b39841e4'',
     ''ForeignKey'',
-    ''FK_MyTable6_MyTable5_1'',
+    ''FK_MyTable6_MyTable5_CustomName'',
     NULL
 );';
 -- QUERY END: PostgreSQLInsertDNDBTDbObjectRecordQuery

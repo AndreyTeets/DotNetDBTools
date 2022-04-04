@@ -152,6 +152,7 @@ internal class SQLiteDbModelFromSqlDefinitionProvider : IDbModelFromDefinitionPr
                 Name = pk.Name,
                 Columns = pk.Columns,
             };
+            pkModel.Name = $"PK_{table.Name}";
             return pkModel;
         }
         return null;

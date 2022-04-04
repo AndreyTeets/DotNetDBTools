@@ -76,7 +76,7 @@ WHERE ID = ''e2569aae-d5da-4a77-b3cd-51adbdb272d9'';';
 -- QUERY END: MSSQLDeleteDNDBTDbObjectRecordQuery
 
 -- QUERY START: MSSQLDropForeignKeyQuery
-EXEC sp_executesql N'ALTER TABLE MyTable6 DROP CONSTRAINT FK_MyTable6_MyTable5_1;';
+EXEC sp_executesql N'ALTER TABLE MyTable6 DROP CONSTRAINT FK_MyTable6_MyTable5_CustomName;';
 -- QUERY END: MSSQLDropForeignKeyQuery
 
 -- QUERY START: MSSQLDeleteDNDBTDbObjectRecordQuery
@@ -103,7 +103,7 @@ WHERE ID = ''74390b3c-bc39-4860-a42e-12baa400f927'';';
 -- QUERY END: MSSQLDeleteDNDBTDbObjectRecordQuery
 
 -- QUERY START: MSSQLDropIndexQuery
-EXEC sp_executesql N'DROP INDEX [IDX_MyTable5_MyIndex1] ON [MyTable5];';
+EXEC sp_executesql N'DROP INDEX [IDX_MyTable5_CustomName] ON [MyTable5];';
 -- QUERY END: MSSQLDropIndexQuery
 
 -- QUERY START: MSSQLDeleteDNDBTDbObjectRecordQuery
@@ -317,7 +317,7 @@ VALUES
 
 -- QUERY START: MSSQLAlterTableQuery
 EXEC sp_executesql N'
-ALTER TABLE MyTable2 DROP CONSTRAINT PK_MyTable2;
+ALTER TABLE MyTable2 DROP CONSTRAINT PK_MyTable2_CustomName;
 ALTER TABLE [MyTable2] DROP CONSTRAINT DF_MyTable2_MyColumn2;
 ALTER TABLE MyTable2 DROP COLUMN MyColumn2;
 ALTER TABLE [MyTable2] DROP CONSTRAINT DF_MyTable2_MyColumn1;
@@ -326,7 +326,7 @@ ALTER TABLE MyTable2 ALTER COLUMN MyColumn1NewName BIGINT NOT NULL;
 ALTER TABLE MyTable2 ADD CONSTRAINT DF_MyTable2_MyColumn1NewName DEFAULT 333 FOR MyColumn1NewName;
 ALTER TABLE MyTable2 ADD MyColumn2 VARBINARY(22) NULL;
 ALTER TABLE MyTable2 ADD CONSTRAINT DF_MyTable2_MyColumn2 DEFAULT 0x000102 FOR MyColumn2;
-ALTER TABLE MyTable2 ADD CONSTRAINT PK_MyTable2 PRIMARY KEY (MyColumn1NewName);';
+ALTER TABLE MyTable2 ADD CONSTRAINT PK_MyTable2_CustomName PRIMARY KEY (MyColumn1NewName);';
 -- QUERY END: MSSQLAlterTableQuery
 
 -- QUERY START: MSSQLDeleteDNDBTDbObjectRecordQuery
@@ -385,7 +385,7 @@ VALUES
 -- QUERY START: MSSQLInsertDNDBTDbObjectRecordQuery
 EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''3a43615b-40b3-4a13-99e7-93af7c56e8ce'';
 DECLARE @ParentID UNIQUEIDENTIFIER = N''bfb9030c-a8c3-4882-9c42-1c6ad025cf8f'';
-DECLARE @Name NVARCHAR(MAX) = N''PK_MyTable2'';
+DECLARE @Name NVARCHAR(MAX) = N''PK_MyTable2_CustomName'';
 DECLARE @Code NVARCHAR(MAX) = NULL;
 INSERT INTO DNDBTDbObjects
 (
@@ -407,8 +407,8 @@ VALUES
 
 -- QUERY START: MSSQLAlterTableQuery
 EXEC sp_executesql N'
-ALTER TABLE MyTable5 DROP CONSTRAINT UQ_MyTable5_1;
-ALTER TABLE MyTable5 DROP CONSTRAINT PK_MyTable5;';
+ALTER TABLE MyTable5 DROP CONSTRAINT UQ_MyTable5_CustomName;
+ALTER TABLE MyTable5 DROP CONSTRAINT PK_MyTable5_CustomName;';
 -- QUERY END: MSSQLAlterTableQuery
 
 -- QUERY START: MSSQLDeleteDNDBTDbObjectRecordQuery

@@ -77,17 +77,17 @@ ON `MyTable2` (`MyColumn1`, `MyColumn2`);
 -- QUERY END: MySQLCreateIndexQuery
 
 -- QUERY START: MySQLCreateIndexQuery
-CREATE INDEX `IDX_MyTable5_MyIndex1`
+CREATE INDEX `IDX_MyTable5_CustomName`
 ON `MyTable5` (`MyColumn8`);
 -- QUERY END: MySQLCreateIndexQuery
 
 -- QUERY START: MySQLCreateIndexQuery
-CREATE UNIQUE INDEX `UQ_MyTable5_1`
+CREATE UNIQUE INDEX `UQ_MyTable5_CustomName`
 ON `MyTable5` (`MyColumn6`, `MyColumn3`, `MyColumn7`);
 -- QUERY END: MySQLCreateIndexQuery
 
 -- QUERY START: MySQLCreateForeignKeyQuery
-ALTER TABLE `MyTable6` ADD CONSTRAINT `FK_MyTable6_MyTable5_1` FOREIGN KEY (`MyColumn1`, `MyColumn2`)
+ALTER TABLE `MyTable6` ADD CONSTRAINT `FK_MyTable6_MyTable5_CustomName` FOREIGN KEY (`MyColumn1`, `MyColumn2`)
     REFERENCES `MyTable5` (`MyColumn2`, `MyColumn1`)
     ON UPDATE NO ACTION ON DELETE NO ACTION;
 -- QUERY END: MySQLCreateForeignKeyQuery

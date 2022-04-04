@@ -18,6 +18,11 @@ internal class SQLiteDbModelFromCSharpDefinitionProvider : DbModelFromCSharpDefi
     {
     }
 
+    protected override void BuildAdditionalPrimaryKeyModelProperties(Models.Core.PrimaryKey pkModel, BasePrimaryKey pk, string tableName)
+    {
+        pkModel.Name = $"PK_{tableName}";
+    }
+
     protected override string GetOnUpdateActionName(BaseForeignKey fk) =>
         MapFKActionNameFromDefinitionToModel(((Definition.SQLite.ForeignKey)fk).OnUpdate.ToString());
     protected override string GetOnDeleteActionName(BaseForeignKey fk) =>

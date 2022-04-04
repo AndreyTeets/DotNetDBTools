@@ -389,10 +389,10 @@ CREATE TABLE MyTable5
     MyColumn8 BLOB NOT NULL DEFAULT X'8e2f99ad0fc8456db0e4ec3ba572dd15',
     MyColumn9 NUMERIC NOT NULL DEFAULT '2022-02-15',
     CONSTRAINT PK_MyTable5 PRIMARY KEY (MyColumn2, MyColumn1),
-    CONSTRAINT UQ_MyTable5_1 UNIQUE (MyColumn6, MyColumn3, MyColumn7)
+    CONSTRAINT UQ_MyTable5_CustomName UNIQUE (MyColumn6, MyColumn3, MyColumn7)
 );
 
-CREATE INDEX IDX_MyTable5_MyIndex1
+CREATE INDEX IDX_MyTable5_CustomName
 ON MyTable5 (MyColumn8);
 -- QUERY END: SQLiteCreateTableQuery
 
@@ -676,7 +676,7 @@ VALUES
     '5293b58a-9f63-4f0f-8d6f-18416ebbd751',
     '6ca51f29-c1bc-4349-b9c1-6f1ea170f162',
     'UniqueConstraint',
-    'UQ_MyTable5_1',
+    'UQ_MyTable5_CustomName',
     NULL
 );
 -- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
@@ -695,7 +695,7 @@ VALUES
     '1d632285-9914-4c5d-98e6-a618a99bd799',
     '6ca51f29-c1bc-4349-b9c1-6f1ea170f162',
     'Index',
-    'IDX_MyTable5_MyIndex1',
+    'IDX_MyTable5_CustomName',
     NULL
 );
 -- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
@@ -705,7 +705,7 @@ CREATE TABLE MyTable6
 (
     MyColumn1 TEXT NULL,
     MyColumn2 INTEGER NULL,
-    CONSTRAINT FK_MyTable6_MyTable5_1 FOREIGN KEY (MyColumn1, MyColumn2)
+    CONSTRAINT FK_MyTable6_MyTable5_CustomName FOREIGN KEY (MyColumn1, MyColumn2)
         REFERENCES MyTable5(MyColumn2, MyColumn1)
         ON UPDATE NO ACTION ON DELETE NO ACTION
 );
@@ -782,7 +782,7 @@ VALUES
     'ae453b22-d270-41fc-8184-9ac26b7a0569',
     'f3064a8c-346a-4b3d-af2c-d967b39841e4',
     'ForeignKey',
-    'FK_MyTable6_MyTable5_1',
+    'FK_MyTable6_MyTable5_CustomName',
     NULL
 );
 -- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
