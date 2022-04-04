@@ -10,6 +10,10 @@ public class DatabaseSettingsAttribute : Attribute
     /// </remarks>
     public DefinitionKind DefinitionKind { get; set; } = DefinitionKind.CSharp;
 
+    /// <summary>
+    /// Useful when Before/After publish scripts are used, mainly to protect from [Min|Max]DbVersionToExecute mistakes.
+    /// Otherwise it may be desirable to disable version check during publish in DeployOptions.
+    /// </summary>
     /// <remarks>
     /// Default value is 1.
     /// </remarks>
