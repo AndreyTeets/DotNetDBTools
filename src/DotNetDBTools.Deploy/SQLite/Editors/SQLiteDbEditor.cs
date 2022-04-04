@@ -1,5 +1,4 @@
-﻿using System;
-using DotNetDBTools.Deploy.Core;
+﻿using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Editors;
 using DotNetDBTools.Deploy.Core.Queries;
 using DotNetDBTools.Deploy.SQLite.Queries.DNDBTSysInfo;
@@ -56,31 +55,29 @@ internal class SQLiteDbEditor : DbEditor<
     public override void ApplyDatabaseDiff(DatabaseDiff databaseDiff, DeployOptions options)
     {
         SQLiteDatabaseDiff dbDiff = (SQLiteDatabaseDiff)databaseDiff;
-        QueryExecutor.BeginTransaction();
-        try
-        {
-            _scriptExecutor.DeleteRemovedScriptsExecutionRecords(dbDiff);
-            _scriptExecutor.ExecuteScripts(dbDiff, ScriptKind.BeforePublishOnce);
+        if (options.NoTransaction)
+            ApplyDatabaseDiff(dbDiff);
+        else
+            QueryExecutor.ExecuteInTransaction(() => ApplyDatabaseDiff(dbDiff));
+    }
 
-            foreach (SQLiteView view in dbDiff.ViewsToDrop)
-                DropView(view);
-            _tableEditor.DropTables(dbDiff);
-            _tableEditor.AlterTables(dbDiff);
-            _tableEditor.CreateTables(dbDiff);
-            foreach (SQLiteView view in dbDiff.ViewsToCreate)
-                CreateView(view);
+    private void ApplyDatabaseDiff(SQLiteDatabaseDiff dbDiff)
+    {
+        _scriptExecutor.DeleteRemovedScriptsExecutionRecords(dbDiff);
+        _scriptExecutor.ExecuteScripts(dbDiff, ScriptKind.BeforePublishOnce);
 
-            _scriptExecutor.ExecuteScripts(dbDiff, ScriptKind.AfterPublishOnce);
+        foreach (SQLiteView view in dbDiff.ViewsToDrop)
+            DropView(view);
+        _tableEditor.DropTables(dbDiff);
+        _tableEditor.AlterTables(dbDiff);
+        _tableEditor.CreateTables(dbDiff);
+        foreach (SQLiteView view in dbDiff.ViewsToCreate)
+            CreateView(view);
 
-            if (dbDiff.NewDatabase.Version != dbDiff.OldDatabase.Version)
-                QueryExecutor.Execute(new SQLiteUpdateDNDBTDbAttributesRecordQuery(dbDiff.NewDatabase));
-        }
-        catch (Exception)
-        {
-            QueryExecutor.RollbackTransaction();
-            throw;
-        }
-        QueryExecutor.CommitTransaction();
+        _scriptExecutor.ExecuteScripts(dbDiff, ScriptKind.AfterPublishOnce);
+
+        if (dbDiff.NewDatabase.Version != dbDiff.OldDatabase.Version)
+            QueryExecutor.Execute(new SQLiteUpdateDNDBTDbAttributesRecordQuery(dbDiff.NewDatabase));
     }
 
     private void CreateView(SQLiteView view)

@@ -66,7 +66,11 @@ internal class MySQLDbEditor : DbEditor<
     public override void ApplyDatabaseDiff(DatabaseDiff databaseDiff, DeployOptions options)
     {
         MySQLDatabaseDiff dbDiff = (MySQLDatabaseDiff)databaseDiff;
+        ApplyDatabaseDiff(dbDiff);
+    }
 
+    private void ApplyDatabaseDiff(MySQLDatabaseDiff dbDiff)
+    {
         _scriptExecutor.DeleteRemovedScriptsExecutionRecords(dbDiff);
         _scriptExecutor.ExecuteScripts(dbDiff, ScriptKind.BeforePublishOnce);
 

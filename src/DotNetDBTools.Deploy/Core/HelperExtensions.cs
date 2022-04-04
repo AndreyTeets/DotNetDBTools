@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DotNetDBTools.Models.Core;
 
@@ -27,5 +28,20 @@ internal static class HelperExtensions
         {
             return string.Join("\n", parameters.Select(x => $"{x.Name} {x.Type} = {x.Value}"));
         }
+    }
+
+    public static void ExecuteInTransaction(this IQueryExecutor queryExecutor, Action action)
+    {
+        queryExecutor.BeginTransaction();
+        try
+        {
+            action();
+        }
+        catch (Exception)
+        {
+            queryExecutor.RollbackTransaction();
+            throw;
+        }
+        queryExecutor.CommitTransaction();
     }
 }

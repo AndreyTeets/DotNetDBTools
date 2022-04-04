@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using DotNetDBTools.Deploy.Common.Editors;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Editors;
@@ -74,59 +73,57 @@ internal class MSSQLDbEditor : DbEditor<
     public override void ApplyDatabaseDiff(DatabaseDiff databaseDiff, DeployOptions options)
     {
         MSSQLDatabaseDiff dbDiff = (MSSQLDatabaseDiff)databaseDiff;
-        QueryExecutor.BeginTransaction();
-        try
-        {
-            _scriptExecutor.DeleteRemovedScriptsExecutionRecords(dbDiff);
-            _scriptExecutor.ExecuteScripts(dbDiff, ScriptKind.BeforePublishOnce);
+        if (options.NoTransaction)
+            ApplyDatabaseDiff(dbDiff);
+        else
+            QueryExecutor.ExecuteInTransaction(() => ApplyDatabaseDiff(dbDiff));
+    }
 
-            _triggerEditor.DropTriggers(dbDiff);
-            foreach (MSSQLProcedure procedure in dbDiff.ProceduresToDrop)
-                DropProcedure(procedure);
-            foreach (MSSQLView view in dbDiff.ViewsToDrop)
-                DropView(view);
-            foreach (MSSQLFunction function in dbDiff.FunctionsToDrop)
-                DropFunction(function);
-            foreach (MSSQLUserDefinedTableType udtt in dbDiff.UserDefinedTableTypesToDrop)
-                DropUserDefinedTableType(udtt);
-            _foreignKeyEditor.DropForeignKeys(dbDiff);
-            _indexEditor.DropIndexes(dbDiff);
-            _tableEditor.DropTables(dbDiff);
+    private void ApplyDatabaseDiff(MSSQLDatabaseDiff dbDiff)
+    {
+        _scriptExecutor.DeleteRemovedScriptsExecutionRecords(dbDiff);
+        _scriptExecutor.ExecuteScripts(dbDiff, ScriptKind.BeforePublishOnce);
 
-            foreach (MSSQLUserDefinedType udt in dbDiff.RemovedUserDefinedTypes.Concat(dbDiff.ChangedUserDefinedTypes.Select(x => x.OldUserDefinedType)))
-                RenameUserDefinedTypeToTempInDbAndInDbDiff(udt);
-            foreach (MSSQLUserDefinedType udt in dbDiff.AddedUserDefinedTypes.Concat(dbDiff.ChangedUserDefinedTypes.Select(x => x.NewUserDefinedType)))
-                CreateUserDefinedType(udt);
-            foreach (MSSQLUserDefinedTypeDiff udtDiff in dbDiff.ChangedUserDefinedTypes)
-                UseNewUDTInAllTables(udtDiff);
-            _tableEditor.AlterTables(dbDiff);
-            foreach (MSSQLUserDefinedType udt in dbDiff.RemovedUserDefinedTypes.Concat(dbDiff.ChangedUserDefinedTypes.Select(x => x.OldUserDefinedType)))
-                DropUserDefinedType(udt);
+        _triggerEditor.DropTriggers(dbDiff);
+        foreach (MSSQLProcedure procedure in dbDiff.ProceduresToDrop)
+            DropProcedure(procedure);
+        foreach (MSSQLView view in dbDiff.ViewsToDrop)
+            DropView(view);
+        foreach (MSSQLFunction function in dbDiff.FunctionsToDrop)
+            DropFunction(function);
+        foreach (MSSQLUserDefinedTableType udtt in dbDiff.UserDefinedTableTypesToDrop)
+            DropUserDefinedTableType(udtt);
+        _foreignKeyEditor.DropForeignKeys(dbDiff);
+        _indexEditor.DropIndexes(dbDiff);
+        _tableEditor.DropTables(dbDiff);
 
-            _tableEditor.CreateTables(dbDiff);
-            _indexEditor.CreateIndexes(dbDiff);
-            _foreignKeyEditor.CreateForeignKeys(dbDiff);
-            foreach (MSSQLUserDefinedTableType udtt in dbDiff.UserDefinedTableTypesToCreate)
-                CreateUserDefinedTableType(udtt);
-            foreach (MSSQLFunction function in dbDiff.FunctionsToCreate)
-                CreateFunction(function);
-            foreach (MSSQLView view in dbDiff.ViewsToCreate)
-                CreateView(view);
-            foreach (MSSQLProcedure procedure in dbDiff.ProceduresToCreate)
-                CreateProcedure(procedure);
-            _triggerEditor.CreateTriggers(dbDiff);
+        foreach (MSSQLUserDefinedType udt in dbDiff.RemovedUserDefinedTypes.Concat(dbDiff.ChangedUserDefinedTypes.Select(x => x.OldUserDefinedType)))
+            RenameUserDefinedTypeToTempInDbAndInDbDiff(udt);
+        foreach (MSSQLUserDefinedType udt in dbDiff.AddedUserDefinedTypes.Concat(dbDiff.ChangedUserDefinedTypes.Select(x => x.NewUserDefinedType)))
+            CreateUserDefinedType(udt);
+        foreach (MSSQLUserDefinedTypeDiff udtDiff in dbDiff.ChangedUserDefinedTypes)
+            UseNewUDTInAllTables(udtDiff);
+        _tableEditor.AlterTables(dbDiff);
+        foreach (MSSQLUserDefinedType udt in dbDiff.RemovedUserDefinedTypes.Concat(dbDiff.ChangedUserDefinedTypes.Select(x => x.OldUserDefinedType)))
+            DropUserDefinedType(udt);
 
-            _scriptExecutor.ExecuteScripts(dbDiff, ScriptKind.AfterPublishOnce);
+        _tableEditor.CreateTables(dbDiff);
+        _indexEditor.CreateIndexes(dbDiff);
+        _foreignKeyEditor.CreateForeignKeys(dbDiff);
+        foreach (MSSQLUserDefinedTableType udtt in dbDiff.UserDefinedTableTypesToCreate)
+            CreateUserDefinedTableType(udtt);
+        foreach (MSSQLFunction function in dbDiff.FunctionsToCreate)
+            CreateFunction(function);
+        foreach (MSSQLView view in dbDiff.ViewsToCreate)
+            CreateView(view);
+        foreach (MSSQLProcedure procedure in dbDiff.ProceduresToCreate)
+            CreateProcedure(procedure);
+        _triggerEditor.CreateTriggers(dbDiff);
 
-            if (dbDiff.NewDatabase.Version != dbDiff.OldDatabase.Version)
-                QueryExecutor.Execute(new MSSQLUpdateDNDBTDbAttributesRecordQuery(dbDiff.NewDatabase));
-        }
-        catch (Exception)
-        {
-            QueryExecutor.RollbackTransaction();
-            throw;
-        }
-        QueryExecutor.CommitTransaction();
+        _scriptExecutor.ExecuteScripts(dbDiff, ScriptKind.AfterPublishOnce);
+
+        if (dbDiff.NewDatabase.Version != dbDiff.OldDatabase.Version)
+            QueryExecutor.Execute(new MSSQLUpdateDNDBTDbAttributesRecordQuery(dbDiff.NewDatabase));
     }
 
     private void RenameUserDefinedTypeToTempInDbAndInDbDiff(MSSQLUserDefinedType udt)

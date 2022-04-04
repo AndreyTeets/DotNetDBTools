@@ -1,5 +1,4 @@
-﻿using System;
-using DotNetDBTools.Deploy.Core;
+﻿using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Editors;
 using DotNetDBTools.Deploy.PostgreSQL.Queries.DNDBTSysInfo;
 using DotNetDBTools.Models.Core;
@@ -41,17 +40,10 @@ internal class PostgreSQLDbEditor : DbEditor<
     public override void ApplyDatabaseDiff(DatabaseDiff databaseDiff, DeployOptions options)
     {
         PostgreSQLDatabaseDiff dbDiff = (PostgreSQLDatabaseDiff)databaseDiff;
-        QueryExecutor.BeginTransaction();
-        try
-        {
+        if (options.NoTransaction)
             ApplyDatabaseDiff(dbDiff);
-        }
-        catch (Exception)
-        {
-            QueryExecutor.RollbackTransaction();
-            throw;
-        }
-        QueryExecutor.CommitTransaction();
+        else
+            QueryExecutor.ExecuteInTransaction(() => ApplyDatabaseDiff(dbDiff));
     }
 
     private void ApplyDatabaseDiff(PostgreSQLDatabaseDiff dbDiff)
