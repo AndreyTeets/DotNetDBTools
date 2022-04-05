@@ -4,7 +4,7 @@
     <!--Source packages-->
     <DapperVersion>2.0.123</DapperVersion>
     <SystemRuntimeLoaderVersion>4.3.0</SystemRuntimeLoaderVersion>
-    <CodeAnalysisVersion>4.0.1</CodeAnalysisVersion>
+    <CodeAnalysisVersion>3.11.0</CodeAnalysisVersion>
     <CodeAnalysisAnalyzersVersion>3.3.3</CodeAnalysisAnalyzersVersion>
     <Antlr4RuntimeVersion>4.9.3</Antlr4RuntimeVersion>
     <Antlr4BuildTasksVersion>8.17.0</Antlr4BuildTasksVersion>
