@@ -158,7 +158,7 @@ namespace {projectNamespace}.Tables
 
     private static string CreateColumnsDeclaration(string propName, IEnumerable<string> columns)
     {
-        return @$"            {propName} = new string[] {{ {string.Join(", ", columns.Select(x => $"\"{x}\""))} }},";
+        return @$"            {propName} = new[] {{ {string.Join(", ", columns.Select(x => $"\"{x}\""))} }},";
     }
 
     private static string MapActionName(string actionName)

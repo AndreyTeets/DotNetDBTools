@@ -24,14 +24,14 @@ namespace DotNetDBTools.SampleDB.SQLite.Tables
 
         public PrimaryKey PK_MyTable2_CustomName = new("3A43615B-40B3-4A13-99E7-93AF7C56E8CE")
         {
-            Columns = new string[] { nameof(MyColumn1NewName) },
+            Columns = new[] { nameof(MyColumn1NewName) },
         };
 
         public ForeignKey FK_MyTable2_MyColumns12_MyTable3_MyColumns12 = new("480F3508-9D51-4190-88AA-45BC20E49119")
         {
-            ThisColumns = new string[] { nameof(MyColumn1NewName), nameof(MyColumn2) },
+            ThisColumns = new[] { nameof(MyColumn1NewName), nameof(MyColumn2) },
             ReferencedTable = nameof(MyTable3),
-            ReferencedTableColumns = new string[] { nameof(MyTable3.MyColumn1), nameof(MyTable3.MyColumn2) },
+            ReferencedTableColumns = new[] { nameof(MyTable3.MyColumn1), nameof(MyTable3.MyColumn2) },
             OnUpdate = ForeignKeyActions.NoAction,
             OnDelete = ForeignKeyActions.SetDefault,
         };
@@ -43,7 +43,7 @@ namespace DotNetDBTools.SampleDB.SQLite.Tables
 
         public Index IDX_MyTable2_MyIndex1 = new("74390B3C-BC39-4860-A42E-12BAA400F927")
         {
-            Columns = new string[] { nameof(MyColumn1NewName), nameof(MyColumn2) },
+            Columns = new[] { nameof(MyColumn1NewName), nameof(MyColumn2) },
             Unique = true,
         };
     }

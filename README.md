@@ -43,17 +43,17 @@ public class MyTable : ITable
 
     public PrimaryKey PK_MyTable = new("37A45DEF-F4A0-4BE7-8BFB-8FBED4A7D705")
     {
-        Columns = new string[] { nameof(MyKeyColumn) },
+        Columns = new[] { nameof(MyKeyColumn) },
     };
 
     public UniqueConstraint UQ_MyTable_MyDataColumn = new("F3F08522-26EE-4950-9135-22EDF2E4E0CF")
     {
-        Columns = new string[] { nameof(MyDataColumn) },
+        Columns = new[] { nameof(MyDataColumn) },
     };
 
     public Index IDX_MyTable_MyDataColumn2 = new("74390B3C-BC39-4860-A42E-12BAA400F927")
     {
-        Columns = new string[] { nameof(MyDataColumn2) },
+        Columns = new[] { nameof(MyDataColumn2) },
         Unique = true,
     };
 }
@@ -183,9 +183,9 @@ public interface IDeployManager
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DotNetDBTools.Definition" Version="0.1.0" PrivateAssets="all" />
-    <PackageReference Include="DotNetDBTools.DefinitionAnalyzer" Version="0.1.0" PrivateAssets="all" />
-    <PackageReference Include="DotNetDBTools.DescriptionSourceGenerator" Version="0.1.0" PrivateAssets="all" />
+    <PackageReference Include="DotNetDBTools.Definition" PrivateAssets="all" />
+    <PackageReference Include="DotNetDBTools.DefinitionAnalyzer" PrivateAssets="all" />
+    <PackageReference Include="DotNetDBTools.DescriptionSourceGenerator" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>

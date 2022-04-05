@@ -274,12 +274,16 @@ public abstract class DeployManager<TDatabase> : IDeployManager
     private void ValidateDbDiff(DatabaseDiff dbDiff)
     {
         if (!Options.AllowDataLoss && AnalysisHelper.LeadsToDataLoss(dbDiff))
-            throw new Exception("Update would lead to data loss and it's not allowed.");
+        {
+            throw new Exception(
+"Update would lead to data loss and it's not allowed. This check can be disabled in DeployOptions.");
+        }
 
         if (!Options.AllowUnchangedDbVersionForNonEmptyDbDiff &&
             !AnalysisHelper.DiffIsEmpty(dbDiff) && dbDiff.NewDatabase.Version == dbDiff.OldDatabase.Version)
         {
-            throw new Exception("New and old databases are different but their versions are the same.");
+            throw new Exception(
+"New and old databases are different but their versions are the same. This check can be disabled in DeployOptions.");
         }
     }
 

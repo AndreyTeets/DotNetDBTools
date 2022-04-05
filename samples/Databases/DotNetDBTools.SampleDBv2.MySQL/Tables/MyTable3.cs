@@ -24,7 +24,7 @@ namespace DotNetDBTools.SampleDB.MySQL.Tables
 
         public UniqueConstraint UQ_MyTable3_MyColumns12 = new("FD288E38-35BA-4BB1-ACE3-597C99EF26C7")
         {
-            Columns = new string[] { nameof(MyColumn1), nameof(MyColumn2) },
+            Columns = new[] { nameof(MyColumn1), nameof(MyColumn2) },
         };
     }
 }

@@ -39,19 +39,19 @@ namespace DotNetDBTools.SampleDB.MySQL.Tables
 
         public PrimaryKey PK_MyTable1 = new("37A45DEF-F4A0-4BE7-8BFB-8FBED4A7D705")
         {
-            Columns = new string[] { nameof(MyColumn3) },
+            Columns = new[] { nameof(MyColumn3) },
         };
 
         public UniqueConstraint UQ_MyTable1_MyColumn2 = new("F3F08522-26EE-4950-9135-22EDF2E4E0CF")
         {
-            Columns = new string[] { nameof(MyColumn2) },
+            Columns = new[] { nameof(MyColumn2) },
         };
 
         public ForeignKey FK_MyTable1_MyColumn1_MyTable2_MyColumn1 = new("D11B2A53-32DB-432F-BB6B-F91788844BA9")
         {
-            ThisColumns = new string[] { nameof(MyColumn1) },
+            ThisColumns = new[] { nameof(MyColumn1) },
             ReferencedTable = nameof(MyTable2),
-            ReferencedTableColumns = new string[] { nameof(MyTable2.MyColumn1) },
+            ReferencedTableColumns = new[] { nameof(MyTable2.MyColumn1) },
             OnUpdate = ForeignKeyActions.NoAction,
             OnDelete = ForeignKeyActions.Cascade,
         };

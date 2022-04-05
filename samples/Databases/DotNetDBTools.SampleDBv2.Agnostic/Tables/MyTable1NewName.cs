@@ -24,9 +24,9 @@ namespace DotNetDBTools.SampleDB.Agnostic.Tables
 
         public ForeignKey FK_MyTable1_MyColumn1_MyTable2_MyColumn1 = new("D11B2A53-32DB-432F-BB6B-F91788844BA9")
         {
-            ThisColumns = new string[] { nameof(MyColumn1) },
+            ThisColumns = new[] { nameof(MyColumn1) },
             ReferencedTable = nameof(MyTable2),
-            ReferencedTableColumns = new string[] { nameof(MyTable2.MyColumn1NewName) },
+            ReferencedTableColumns = new[] { nameof(MyTable2.MyColumn1NewName) },
             OnUpdate = ForeignKeyActions.NoAction,
             OnDelete = ForeignKeyActions.SetNull,
         };

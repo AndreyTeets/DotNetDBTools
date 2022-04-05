@@ -67,9 +67,9 @@ namespace SampleTestCode
 
         public ForeignKey {|#1:FK_TestName1|} = new(""1955F440-4333-4F33-9755-1C618816C9FB"")
         {
-            ThisColumns = new string[] { nameof(TestColumn1) },
+            ThisColumns = new[] { nameof(TestColumn1) },
             ReferencedTable = nameof(TestTable2),
-            ReferencedTableColumns = new string[] { nameof(TestTable2.TestColumn2) },
+            ReferencedTableColumns = new[] { nameof(TestTable2.TestColumn2) },
             OnUpdate = ForeignKeyActions.NoAction,
             OnDelete = ForeignKeyActions.Cascade,
         };

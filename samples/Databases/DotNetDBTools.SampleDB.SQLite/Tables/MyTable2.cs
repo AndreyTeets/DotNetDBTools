@@ -24,7 +24,7 @@ namespace DotNetDBTools.SampleDB.SQLite.Tables
 
         public PrimaryKey PK_MyTable2_CustomName = new("3A43615B-40B3-4A13-99E7-93AF7C56E8CE")
         {
-            Columns = new string[] { nameof(MyColumn1) },
+            Columns = new[] { nameof(MyColumn1) },
         };
 
         public Trigger TR_MyTable2_MyTrigger1 = new("EE64FFC3-5536-4624-BEAF-BC3A61D06A1A")
@@ -34,7 +34,7 @@ namespace DotNetDBTools.SampleDB.SQLite.Tables
 
         public Index IDX_MyTable2_MyIndex1 = new("74390B3C-BC39-4860-A42E-12BAA400F927")
         {
-            Columns = new string[] { nameof(MyColumn1), nameof(MyColumn2) },
+            Columns = new[] { nameof(MyColumn1), nameof(MyColumn2) },
             Unique = true,
         };
     }

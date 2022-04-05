@@ -20,9 +20,9 @@ namespace DotNetDBTools.SampleDB.SQLite.Tables
 
         public ForeignKey FK_MyTable6_MyTable5_CustomName = new("AE453B22-D270-41FC-8184-9AC26B7A0569")
         {
-            ThisColumns = new string[] { nameof(MyColumn1), nameof(MyColumn2) },
+            ThisColumns = new[] { nameof(MyColumn1), nameof(MyColumn2) },
             ReferencedTable = nameof(MyTable5),
-            ReferencedTableColumns = new string[] { nameof(MyTable2.MyColumn2), nameof(MyTable2.MyColumn1) },
+            ReferencedTableColumns = new[] { nameof(MyTable2.MyColumn2), nameof(MyTable2.MyColumn1) },
         };
     }
 }

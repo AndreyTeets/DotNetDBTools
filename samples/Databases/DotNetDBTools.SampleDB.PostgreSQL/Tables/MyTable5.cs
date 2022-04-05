@@ -121,17 +121,17 @@ namespace DotNetDBTools.SampleDB.PostgreSQL.Tables
 
         public PrimaryKey PK_MyTable5_CustomName = new("79384D48-A39B-4A22-900E-066B2CA67BA2")
         {
-            Columns = new string[] { nameof(MyColumn2), nameof(MyColumn1) },
+            Columns = new[] { nameof(MyColumn2), nameof(MyColumn1) },
         };
 
         public UniqueConstraint UQ_MyTable5_CustomName = new("5293B58A-9F63-4F0F-8D6F-18416EBBD751")
         {
-            Columns = new string[] { nameof(MyColumn6), nameof(MyColumn3), nameof(MyColumn7) },
+            Columns = new[] { nameof(MyColumn6), nameof(MyColumn3), nameof(MyColumn7) },
         };
 
         public Index IDX_MyTable5_CustomName = new("1D632285-9914-4C5D-98E6-A618A99BD799")
         {
-            Columns = new string[] { nameof(MyColumn8) },
+            Columns = new[] { nameof(MyColumn8) },
         };
     }
 }

@@ -107,7 +107,7 @@ namespace {projectNamespace}.Types
     public class {type.Name} : IEnumType
     {{
         public Guid ID => new(""{type.ID}"");
-        public IEnumerable<string> AllowedValues => new string[]
+        public IEnumerable<string> AllowedValues => new[]
         {{
 {string.Join("\n", allowedValuesDeclarations)}
         }};
