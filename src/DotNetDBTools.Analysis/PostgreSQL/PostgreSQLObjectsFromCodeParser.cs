@@ -21,7 +21,7 @@ public static class PostgreSQLObjectsFromCodeParser
     public static PostgreSQLFunction ParseFunction(string statement)
     {
         string pattern =
-@$"^--FunctionID:\# (?<funcID> (?>[{{|}}|\-|\w|\d]{{32,38}}) ) \#\r?\n
+$@"^--FunctionID:\# (?<funcID> (?>[{{|}}|\-|\w|\d]{{32,38}}) ) \#\r?\n
 (?<funcCode> (?> CREATE{WS1}FUNCTION{WS1} (?<funcName>{Identifier}){WS0}\( .+;$ ) )";
         Match match = Regex.Match(statement, pattern, s_regexOptions);
         if (match.Groups[0].Success)

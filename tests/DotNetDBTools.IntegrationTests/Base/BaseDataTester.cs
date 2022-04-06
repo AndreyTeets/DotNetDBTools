@@ -32,7 +32,7 @@ public abstract class BaseDataTester
     private void PopulateTable1(DbConnection connection)
     {
         connection.Execute(
-@$"INSERT INTO {Quote("MyTable1")}
+$@"INSERT INTO {Quote("MyTable1")}
 (
     {Quote("MyColumn1")},
     {Quote("MyColumn2")},
@@ -54,7 +54,7 @@ VALUES
     {
         string newName = assertKind == AssertKind.V2 ? "NewName" : "";
         connection.QuerySingle<int>(
-@$"SELECT
+$@"SELECT
     COUNT(*)
 FROM {Quote($"MyTable1{newName}")}
 WHERE {Quote("MyColumn1")} = 101 AND {Quote("MyColumn4")} = 100.4
@@ -65,7 +65,7 @@ WHERE {Quote("MyColumn1")} = 101 AND {Quote("MyColumn4")} = 100.4
     private void PopulateTable2(DbConnection connection)
     {
         connection.Execute(
-@$"INSERT INTO {Quote("MyTable2")}
+$@"INSERT INTO {Quote("MyTable2")}
 (
     {Quote("MyColumn1")},
     {Quote("MyColumn2")}
@@ -85,7 +85,7 @@ VALUES
         string newName = assertKind == AssertKind.V2 ? "NewName" : "";
         string col2Op = assertKind == AssertKind.V1Rollbacked ? "!=" : "=";
         connection.QuerySingle<int>(
-@$"SELECT
+$@"SELECT
     COUNT(*)
 FROM {Quote("MyTable2")}
 WHERE {Quote($"MyColumn1{newName}")} = 101 AND {Quote("MyColumn2")} {col2Op} {BinaryLiteral("000102")}
@@ -96,14 +96,14 @@ WHERE {Quote($"MyColumn1{newName}")} = 101 AND {Quote("MyColumn2")} {col2Op} {Bi
     private void PopulateTable4(DbConnection connection)
     {
         connection.Execute(
-@$"UPDATE {Quote("MyTable4")} SET
+$@"UPDATE {Quote("MyTable4")} SET
     {Quote("MyColumn1")} = {Quote("MyColumn1")} + 500;");
     }
     private void AssertDataInTable4(DbConnection connection)
     {
         // Init script adds 1,2,3 and trigger on MyTable2 adds 101,201
         connection.QuerySingle<int>(
-@$"SELECT
+$@"SELECT
     COUNT(*)
 FROM {Quote("MyTable4")}
 WHERE {Quote("MyColumn1")} IN (501,502,503,601,701);")
@@ -115,7 +115,7 @@ WHERE {Quote("MyColumn1")} IN (501,502,503,601,701);")
         string extraColumns = IsDbmsSpecific ? GetSpecificDbmsTable5ExtraColumns() : "";
         string extraValues = IsDbmsSpecific ? GetSpecificDbmsTable5ExtraValues() : "";
         connection.Execute(
-@$"INSERT INTO {Quote("MyTable5")}
+$@"INSERT INTO {Quote("MyTable5")}
 (
     {Quote("MyColumn1")},
     {Quote("MyColumn2")},
@@ -150,7 +150,7 @@ VALUES
     {
         string extraConditions = IsDbmsSpecific ? GetSpecificDbmsTable5ExtraConditions() : "";
         connection.QuerySingle<int>(
-@$"SELECT
+$@"SELECT
     COUNT(*)
 FROM {Quote("MyTable5")}
 WHERE {Quote("MyColumn1")} = 101

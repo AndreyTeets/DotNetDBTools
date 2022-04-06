@@ -30,11 +30,11 @@ public abstract class BasePublishScriptGenerationTests<TDeployManager>
     [Fact]
     public void Generate_PublishScript_For_SampleDB_CreatesCorrectScript_WhenCreatingV1()
     {
-        string outputPath = @$"{ActualFilesDir}/Actual_PublishScript_For_SampleDB_WhenCreatingV1.sql";
+        string outputPath = $@"{ActualFilesDir}/Actual_PublishScript_For_SampleDB_WhenCreatingV1.sql";
         _deployManager.GeneratePublishScript(_dbAssemblyV1, outputPath);
 
         string actualScript = File.ReadAllText(outputPath);
-        string expectedScript = File.ReadAllText(@$"{ExpectedFilesDir}/Expected_PublishScript_For_SampleDB_WhenCreatingV1.sql");
+        string expectedScript = File.ReadAllText($@"{ExpectedFilesDir}/Expected_PublishScript_For_SampleDB_WhenCreatingV1.sql");
         actualScript.NormalizeLineEndings().Should().Be(expectedScript.NormalizeLineEndings());
     }
 
@@ -43,11 +43,11 @@ public abstract class BasePublishScriptGenerationTests<TDeployManager>
     {
         _deployManager.Options = new DeployOptions { AllowDataLoss = true };
 
-        string outputPath = @$"{ActualFilesDir}/Actual_PublishScript_For_SampleDB_WhenUpdatingFromV1ToV2.sql";
+        string outputPath = $@"{ActualFilesDir}/Actual_PublishScript_For_SampleDB_WhenUpdatingFromV1ToV2.sql";
         _deployManager.GeneratePublishScript(_dbAssemblyV2, _dbAssemblyV1, outputPath);
 
         string actualScript = File.ReadAllText(outputPath);
-        string expectedScript = File.ReadAllText(@$"{ExpectedFilesDir}/Expected_PublishScript_For_SampleDB_WhenUpdatingFromV1ToV2.sql");
+        string expectedScript = File.ReadAllText($@"{ExpectedFilesDir}/Expected_PublishScript_For_SampleDB_WhenUpdatingFromV1ToV2.sql");
         actualScript.NormalizeLineEndings().Should().Be(expectedScript.NormalizeLineEndings());
     }
 
@@ -56,23 +56,23 @@ public abstract class BasePublishScriptGenerationTests<TDeployManager>
     {
         _deployManager.Options = new DeployOptions { AllowDataLoss = true };
 
-        string outputPath = @$"{ActualFilesDir}/Actual_NoDNDBTInfoPublishScript_For_SampleDB_WhenUpdatingFromV2ToV1.sql";
+        string outputPath = $@"{ActualFilesDir}/Actual_NoDNDBTInfoPublishScript_For_SampleDB_WhenUpdatingFromV2ToV1.sql";
         _deployManager.GenerateNoDNDBTInfoPublishScript(_dbAssemblyV1, _dbAssemblyV2, outputPath);
 
         string actualScript = File.ReadAllText(outputPath);
-        string expectedScript = File.ReadAllText(@$"{ExpectedFilesDir}/Expected_NoDNDBTInfoPublishScript_For_SampleDB_WhenUpdatingFromV2ToV1.sql");
+        string expectedScript = File.ReadAllText($@"{ExpectedFilesDir}/Expected_NoDNDBTInfoPublishScript_For_SampleDB_WhenUpdatingFromV2ToV1.sql");
         actualScript.NormalizeLineEndings().Should().Be(expectedScript.NormalizeLineEndings());
     }
 
     [Fact]
     public void Generate_PublishScript_For_SampleDB_CreatesEmptyScript_WhenExistingDbIsEqual()
     {
-        string outputPath1 = @$"{ActualFilesDir}/ActualPublishScript_For_SampleDB_WhenUpdatingFromV1ToV1.sql";
+        string outputPath1 = $@"{ActualFilesDir}/ActualPublishScript_For_SampleDB_WhenUpdatingFromV1ToV1.sql";
         _deployManager.GeneratePublishScript(_dbAssemblyV1, _dbAssemblyV1, outputPath1);
         string actualScript1 = File.ReadAllText(outputPath1);
         actualScript1.Should().Be("");
 
-        string outputPath2 = @$"{ActualFilesDir}/Actual_PublishScript_For_SampleDB_WhenUpdatingFromV2ToV2.sql";
+        string outputPath2 = $@"{ActualFilesDir}/Actual_PublishScript_For_SampleDB_WhenUpdatingFromV2ToV2.sql";
         _deployManager.GeneratePublishScript(_dbAssemblyV2, _dbAssemblyV2, outputPath2);
         string actualScript2 = File.ReadAllText(outputPath2);
         actualScript2.Should().Be("");

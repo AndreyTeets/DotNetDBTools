@@ -15,7 +15,7 @@ public class PostgreSQLStatementsParserTests
     [Fact]
     public void ParseToStatementsList_GetsCorrectData()
     {
-        string statementsStr = File.ReadAllText(@$"{TestDataDir}/StatementsList.sql").NormalizeLineEndings();
+        string statementsStr = File.ReadAllText($@"{TestDataDir}/StatementsList.sql").NormalizeLineEndings();
         List<string> statementsList = PostgreSQLStatementsParser.ParseToStatementsList(statementsStr);
 
         statementsList.Count.Should().Be(3);

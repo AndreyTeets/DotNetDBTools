@@ -7,15 +7,15 @@ internal static class DefinitionGenerationHelper
     public static string DeclareDataType(DataType dataType)
     {
         if (dataType.IsUserDefined)
-            return @$"new Types.{dataType.Name}()";
+            return $@"new Types.{dataType.Name}()";
         else
-            return @$"new VerbatimDataType({DeclareString(dataType.Name)})";
+            return $@"new VerbatimDataType({DeclareString(dataType.Name)})";
     }
 
     public static string DeclareDefaultValue(CodePiece codePiece)
     {
         if (codePiece.Code is not null)
-            return @$"new VerbatimDefaultValue({DeclareString(codePiece.Code)})";
+            return $@"new VerbatimDefaultValue({DeclareString(codePiece.Code)})";
         else
             return "null";
     }

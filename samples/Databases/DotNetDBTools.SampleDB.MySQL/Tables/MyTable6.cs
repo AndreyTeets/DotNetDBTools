@@ -1,6 +1,6 @@
 ﻿using System;
-using DotNetDBTools.Definition.MySQL;
 using DotNetDBTools.Definition.Core.CSharpDataTypes;
+using DotNetDBTools.Definition.MySQL;
 
 namespace DotNetDBTools.SampleDB.MySQL.Tables
 {

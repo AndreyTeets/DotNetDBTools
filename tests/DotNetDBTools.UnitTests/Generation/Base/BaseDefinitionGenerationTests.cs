@@ -26,7 +26,7 @@ public abstract class BaseDefinitionGenerationTests<TDatabase>
     {
         TDatabase originalDbModel = (TDatabase)new GenericDbModelFromDefinitionProvider().CreateDbModel(_dbAssemblyV1CSharp);
 
-        string projectDir = @$"{GeneratedFilesDir}/SampleDBv1GeneratedDefinition";
+        string projectDir = $@"{GeneratedFilesDir}/SampleDBv1GeneratedDefinition";
         DbDefinitionGenerator.GenerateDefinition(originalDbModel, projectDir);
         Assembly genDefDbAssembly = TestDatabasesCompiler.CompileSampleDbProject(projectDir);
         TDatabase genDefDbModel = (TDatabase)new GenericDbModelFromDefinitionProvider().CreateDbModel(genDefDbAssembly);

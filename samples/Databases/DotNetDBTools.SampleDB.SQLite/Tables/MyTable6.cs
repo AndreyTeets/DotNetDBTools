@@ -1,6 +1,6 @@
 ﻿using System;
-using DotNetDBTools.Definition.SQLite;
 using DotNetDBTools.Definition.Core.CSharpDataTypes;
+using DotNetDBTools.Definition.SQLite;
 
 namespace DotNetDBTools.SampleDB.SQLite.Tables
 {

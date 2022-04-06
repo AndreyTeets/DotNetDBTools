@@ -14,7 +14,7 @@ internal static class MSSQLFunctionsDefinitionGenerator
         foreach (MSSQLFunction func in db.Functions)
         {
             string funcCode =
-@$"using System;
+$@"using System;
 using DotNetDBTools.Definition.{database.Kind};
 
 namespace {projectNamespace}.Functions

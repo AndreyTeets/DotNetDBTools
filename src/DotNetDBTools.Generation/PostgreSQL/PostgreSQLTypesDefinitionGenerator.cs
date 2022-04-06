@@ -20,11 +20,11 @@ internal static class PostgreSQLTypesDefinitionGenerator
             foreach (PostgreSQLCompositeTypeAttribute attribute in type.Attributes)
             {
                 attributesDeclarations.Add(
-@$"            {{ ""{attribute.Name}"", {DeclareDataType(attribute.DataType)} }},");
+$@"            {{ ""{attribute.Name}"", {DeclareDataType(attribute.DataType)} }},");
             }
 
             string typeCode =
-@$"using System;
+$@"using System;
 using System.Collections.Generic;
 using DotNetDBTools.Definition.Core;
 using DotNetDBTools.Definition.{db.Kind};
@@ -56,7 +56,7 @@ namespace {projectNamespace}.Types
             foreach (CheckConstraint ck in type.CheckConstraints)
             {
                 string ckDeclaration =
-@$"        public CheckConstraint {ck.Name} = new(""{ck.ID}"")
+$@"        public CheckConstraint {ck.Name} = new(""{ck.ID}"")
         {{
             Code = {DeclareString(ck.CodePiece.Code)},
         }};";
@@ -65,7 +65,7 @@ namespace {projectNamespace}.Types
             }
 
             string typeCode =
-@$"using System;
+$@"using System;
 using DotNetDBTools.Definition.Core;
 using DotNetDBTools.Definition.{db.Kind};
 using DotNetDBTools.Definition.{db.Kind}.UserDefinedTypes;
@@ -95,10 +95,10 @@ namespace {projectNamespace}.Types
         {
             List<string> allowedValuesDeclarations = new();
             foreach (string value in type.AllowedValues)
-                allowedValuesDeclarations.Add(@$"            ""{value}"",");
+                allowedValuesDeclarations.Add($@"            ""{value}"",");
 
             string typeCode =
-@$"using System;
+$@"using System;
 using System.Collections.Generic;
 using DotNetDBTools.Definition.{db.Kind}.UserDefinedTypes;
 
@@ -125,7 +125,7 @@ namespace {projectNamespace}.Types
         foreach (PostgreSQLRangeType type in db.RangeTypes)
         {
             string typeCode =
-@$"using System;
+$@"using System;
 using DotNetDBTools.Definition.Core;
 using DotNetDBTools.Definition.{db.Kind};
 using DotNetDBTools.Definition.{db.Kind}.UserDefinedTypes;

@@ -17,7 +17,7 @@ internal static class MSSQLTypesDefinitionGenerator
         foreach (MSSQLUserDefinedType type in db.UserDefinedTypes)
         {
             string typeCode =
-@$"using System;
+$@"using System;
 using DotNetDBTools.Definition.Core;
 using DotNetDBTools.Definition.{db.Kind};
 using DotNetDBTools.Definition.{db.Kind}.UserDefinedTypes;
@@ -46,7 +46,7 @@ namespace {projectNamespace}.Types
             foreach (UniqueConstraint uc in type.UniqueConstraints)
             {
                 string ckDeclaration =
-@$"        public UniqueConstraint {uc.Name} = new(""{uc.ID}"")
+$@"        public UniqueConstraint {uc.Name} = new(""{uc.ID}"")
         {{
         }};";
 
@@ -54,7 +54,7 @@ namespace {projectNamespace}.Types
             }
 
             string typeCode =
-@$"using System;
+$@"using System;
 using DotNetDBTools.Definition.Core;
 using DotNetDBTools.Definition.{db.Kind};
 using DotNetDBTools.Definition.{db.Kind}.UserDefinedTypes;

@@ -8,7 +8,7 @@ namespace DotNetDBTools.SampleDB.MySQL.Views
     {
         public Guid ID => new("E2569AAE-D5DA-4A77-B3CD-51ADBDB272D9");
         public string Code =>
-@$"CREATE VIEW {nameof(MyView1)} AS
+$@"CREATE VIEW {nameof(MyView1)} AS
 SELECT
     t1.{nameof(MyTable1NewName.MyColumn1)},
     t1.{nameof(MyTable1NewName.MyColumn4)},

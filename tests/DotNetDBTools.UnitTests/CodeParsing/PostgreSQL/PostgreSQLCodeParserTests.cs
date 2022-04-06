@@ -15,7 +15,7 @@ public class PostgreSQLCodeParserTests
     [Fact]
     public void SplitToStatements_GetsCorrectData()
     {
-        string input = File.ReadAllText(@$"{TestDataDir}/StatementsList.sql").NormalizeLineEndings();
+        string input = File.ReadAllText($@"{TestDataDir}/StatementsList.sql").NormalizeLineEndings();
         PostgreSQLCodeParser parser = new();
         List<string> statements = parser.SplitToStatements(input);
 
@@ -43,7 +43,7 @@ public class PostgreSQLCodeParserTests
     [Fact]
     public void GetViewDependencies_GetsCorrectData()
     {
-        string input = File.ReadAllText(@$"{TestDataDir}/CreateView.sql");
+        string input = File.ReadAllText($@"{TestDataDir}/CreateView.sql");
         PostgreSQLCodeParser parser = new();
         List<Dependency> dependencies = parser.GetViewDependencies(input);
 
@@ -59,7 +59,7 @@ public class PostgreSQLCodeParserTests
     [Fact]
     public void GetFunctionDependencies_GetsCorrectData_FromSQLFunc()
     {
-        string input = File.ReadAllText(@$"{TestDataDir}/CreateSQLFunction.sql");
+        string input = File.ReadAllText($@"{TestDataDir}/CreateSQLFunction.sql");
         PostgreSQLCodeParser parser = new();
         List<Dependency> dependencies = parser.GetFunctionDependencies(input);
 
@@ -75,7 +75,7 @@ public class PostgreSQLCodeParserTests
     [Fact]
     public void GetFunctionDependencies_GetsCorrectData_FromPLPGSQLFunc()
     {
-        string input = File.ReadAllText(@$"{TestDataDir}/CreatePLPGSQLFunction.sql");
+        string input = File.ReadAllText($@"{TestDataDir}/CreatePLPGSQLFunction.sql");
         PostgreSQLCodeParser parser = new();
         List<Dependency> dependencies = parser.GetFunctionDependencies(input);
 

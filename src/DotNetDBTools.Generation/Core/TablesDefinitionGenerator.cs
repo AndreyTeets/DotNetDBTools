@@ -19,16 +19,16 @@ internal static class TablesDefinitionGenerator
             foreach (Column column in table.Columns)
             {
                 List<string> propsDeclarations = new();
-                propsDeclarations.Add(@$"            DataType = {DeclareDataType(column.DataType)},");
+                propsDeclarations.Add($@"            DataType = {DeclareDataType(column.DataType)},");
                 if (column.NotNull)
-                    propsDeclarations.Add(@$"            NotNull = {DeclareBool(column.NotNull)},");
+                    propsDeclarations.Add($@"            NotNull = {DeclareBool(column.NotNull)},");
                 if (column.Identity)
-                    propsDeclarations.Add(@$"            Identity = {DeclareBool(column.Identity)},");
+                    propsDeclarations.Add($@"            Identity = {DeclareBool(column.Identity)},");
                 if (column.Default.Code is not null)
                     propsDeclarations.Add($@"            Default = {DeclareDefaultValue(column.Default)},");
 
                 string columnDeclaration =
-@$"        public Column {column.Name} = new(""{column.ID}"")
+$@"        public Column {column.Name} = new(""{column.ID}"")
         {{
 {string.Join("\n", propsDeclarations)}
         }};";
@@ -40,7 +40,7 @@ internal static class TablesDefinitionGenerator
             if (table.PrimaryKey is not null)
             {
                 pkDeclaration =
-@$"        public PrimaryKey {table.PrimaryKey.Name} = new(""{table.PrimaryKey.ID}"")
+$@"        public PrimaryKey {table.PrimaryKey.Name} = new(""{table.PrimaryKey.ID}"")
         {{
 {CreateColumnsDeclaration("Columns", table.PrimaryKey.Columns)}
         }};";
@@ -50,7 +50,7 @@ internal static class TablesDefinitionGenerator
             foreach (UniqueConstraint uc in table.UniqueConstraints)
             {
                 string ucDeclaration =
-@$"        public UniqueConstraint {uc.Name} = new(""{uc.ID}"")
+$@"        public UniqueConstraint {uc.Name} = new(""{uc.ID}"")
         {{
 {CreateColumnsDeclaration("Columns", uc.Columns)}
         }};";
@@ -62,7 +62,7 @@ internal static class TablesDefinitionGenerator
             foreach (ForeignKey fk in table.ForeignKeys)
             {
                 string fkDeclaration =
-@$"        public ForeignKey {fk.Name} = new(""{fk.ID}"")
+$@"        public ForeignKey {fk.Name} = new(""{fk.ID}"")
         {{
 {CreateColumnsDeclaration("ThisColumns", fk.ThisColumnNames)}
             ReferencedTable = ""{fk.ReferencedTableName}"",
@@ -80,10 +80,10 @@ internal static class TablesDefinitionGenerator
                 List<string> propsDeclarations = new();
                 propsDeclarations.Add(CreateColumnsDeclaration("Columns", idx.Columns));
                 if (idx.Unique)
-                    propsDeclarations.Add(@$"            Unique = {DeclareBool(idx.Unique)},");
+                    propsDeclarations.Add($@"            Unique = {DeclareBool(idx.Unique)},");
 
                 string idxDeclaration =
-@$"        public Index {idx.Name} = new(""{idx.ID}"")
+$@"        public Index {idx.Name} = new(""{idx.ID}"")
         {{
 {string.Join("\n", propsDeclarations)}
         }};";
@@ -95,7 +95,7 @@ internal static class TablesDefinitionGenerator
             foreach (Trigger tr in table.Triggers)
             {
                 string trDeclaration =
-@$"        public Trigger {tr.Name} = new(""{tr.ID}"")
+$@"        public Trigger {tr.Name} = new(""{tr.ID}"")
         {{
             Code = ""Triggers.{tr.Name}.sql"".AsSqlResource(),
         }};";
@@ -113,7 +113,7 @@ internal static class TablesDefinitionGenerator
             foreach (CheckConstraint ck in table.CheckConstraints)
             {
                 string ckDeclaration =
-@$"        public CheckConstraint {ck.Name} = new(""{ck.ID}"")
+$@"        public CheckConstraint {ck.Name} = new(""{ck.ID}"")
         {{
             Code = {DeclareString(ck.CodePiece.Code)},
         }};";
@@ -132,7 +132,7 @@ internal static class TablesDefinitionGenerator
             allDeclarations.AddRange(ckDeclarations);
 
             string tableCode =
-@$"using System;
+$@"using System;
 using DotNetDBTools.Definition.{database.Kind};
 
 namespace {projectNamespace}.Tables
@@ -158,7 +158,7 @@ namespace {projectNamespace}.Tables
 
     private static string CreateColumnsDeclaration(string propName, IEnumerable<string> columns)
     {
-        return @$"            {propName} = new[] {{ {string.Join(", ", columns.Select(x => $"\"{x}\""))} }},";
+        return $@"            {propName} = new[] {{ {string.Join(", ", columns.Select(x => $"\"{x}\""))} }},";
     }
 
     private static string MapActionName(string actionName)

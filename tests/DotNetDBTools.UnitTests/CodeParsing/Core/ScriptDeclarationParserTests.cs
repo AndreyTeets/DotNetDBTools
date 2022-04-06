@@ -19,7 +19,7 @@ public class ScriptDeclarationParserTests
     public void TryParseScriptInfo_GetsCorrectData_OnPositiveInput()
     {
         string input =
-@$"{ScriptDeclaration}
+$@"{ScriptDeclaration}
 bla bla";
 
         ScriptDeclarationParser.TryParseScriptInfo(input, out ScriptInfo scriptInfo).Should().BeTrue();

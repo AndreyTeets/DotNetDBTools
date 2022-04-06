@@ -19,12 +19,12 @@ internal static class TablesDescriptionGenerator
             foreach (Column column in table.Columns)
             {
                 string columnDeclaration =
-@$"            public readonly string {column.Name} = nameof({column.Name});";
+$@"            public readonly string {column.Name} = nameof({column.Name});";
                 columnDeclarations.Add(columnDeclaration);
             }
 
             string tableDescriptionDefinition =
-@$"        public class {table.Name}Description
+$@"        public class {table.Name}Description
         {{
 {string.Join("\n", columnDeclarations)}
 
@@ -33,14 +33,14 @@ internal static class TablesDescriptionGenerator
         }}";
 
             string tableDeclaration =
-@$"        public static readonly {table.Name}Description {table.Name} = new();";
+$@"        public static readonly {table.Name}Description {table.Name} = new();";
 
             tableDescriptionDefinitions.Add(tableDescriptionDefinition);
             tableDeclarations.Add(tableDeclaration);
         }
 
         string res =
-@$"namespace {database.Name}Description
+$@"namespace {database.Name}Description
 {{
     public static class {database.Name}Tables
     {{

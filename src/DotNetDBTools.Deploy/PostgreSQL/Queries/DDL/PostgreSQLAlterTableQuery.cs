@@ -24,7 +24,7 @@ internal class PostgreSQLAlterTableQuery : AlterTableQuery
 
         string tableAlters = GetTableAlter(tableDiff);
         if (!string.IsNullOrEmpty(tableAlters))
-            sb.AppendLine(@$"ALTER TABLE ""{tableDiff.NewTable.Name}""{tableAlters};");
+            sb.AppendLine($@"ALTER TABLE ""{tableDiff.NewTable.Name}""{tableAlters};");
 
         return sb.ToString();
     }

@@ -18,7 +18,7 @@ internal static class CommonDefinitionProjectFilesCreator
     private static DefinitionSourceFile CreateStringExtensionsFile(string projectNamespace)
     {
         string code =
-@$"using System;
+$@"using System;
 using System.IO;
 using System.Reflection;
 
@@ -53,7 +53,7 @@ namespace {projectNamespace}
     private static DefinitionSourceFile CreateDatabaseSettingsFile()
     {
         string code =
-@$"using DotNetDBTools.Definition;
+$@"using DotNetDBTools.Definition;
 
 [assembly: DatabaseSettings(
     DefinitionKind = DefinitionKind.CSharp,
@@ -75,7 +75,7 @@ namespace {projectNamespace}
             .InformationalVersion;
 
         string code =
-@$"<Project Sdk=""Microsoft.NET.Sdk"">
+$@"<Project Sdk=""Microsoft.NET.Sdk"">
 
   <PropertyGroup>
     <LangVersion>9.0</LangVersion>

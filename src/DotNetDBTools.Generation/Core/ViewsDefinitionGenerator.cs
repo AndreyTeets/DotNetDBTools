@@ -11,7 +11,7 @@ internal static class ViewsDefinitionGenerator
         foreach (View view in database.Views)
         {
             string viewCode =
-@$"using System;
+$@"using System;
 using DotNetDBTools.Definition.{database.Kind};
 
 namespace {projectNamespace}.Views

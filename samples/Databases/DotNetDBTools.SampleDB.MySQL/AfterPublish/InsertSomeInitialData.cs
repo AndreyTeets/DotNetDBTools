@@ -12,7 +12,7 @@ namespace DotNetDBTools.SampleDB.MySQL.AfterPublish
         public long MinDbVersionToExecute => 0;
         public long MaxDbVersionToExecute => long.MaxValue;
         public string Code =>
-@$"INSERT INTO {nameof(MyTable4).Quote()}({nameof(MyTable4.MyColumn1).Quote()})
+$@"INSERT INTO {nameof(MyTable4).Quote()}({nameof(MyTable4.MyColumn1).Quote()})
 SELECT * FROM
 (
     SELECT 1

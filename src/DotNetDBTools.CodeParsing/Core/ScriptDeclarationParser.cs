@@ -22,7 +22,7 @@ public static class ScriptDeclarationParser
     public static bool TryParseScriptInfo(string input, out ScriptInfo scriptInfo)
     {
         string pattern =
-@$"^--ScriptID:\#{{ (?<scriptID> {AnyGuid} ) }}\#\r?\n
+$@"^--ScriptID:\#{{ (?<scriptID> {AnyGuid} ) }}\#\r?\n
 --ScriptName:\#{{ (?<scriptName> {AnyScriptName} ) }}\#\r?\n
 --ScriptType:\#{{ (?<scriptType> {AnyScriptType} ) }}\#\r?\n
 --ScriptMinDbVersionToExecute:\#{{ (?<scriptMinDbVersionToExecute> {AnyInt64} ) }}\#\r?\n
@@ -45,7 +45,7 @@ public static class ScriptDeclarationParser
         }
         else
         {
-            string malformedInputPattern = @$"^{WS0}--ScriptID:\# {AnyText}$";
+            string malformedInputPattern = $@"^{WS0}--ScriptID:\# {AnyText}$";
             if (Regex.IsMatch(input, malformedInputPattern, s_regexOptions))
                 throw new Exception($"Failed to parse script info from input [{input}]");
 

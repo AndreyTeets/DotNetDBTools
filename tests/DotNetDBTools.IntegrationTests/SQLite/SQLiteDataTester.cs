@@ -6,7 +6,7 @@ public class SQLiteDataTester : BaseDataTester
 {
     protected override string Quote(string identifier)
     {
-        return @$"[{identifier}]";
+        return $@"[{identifier}]";
     }
 
     protected override string BoolLiteral(bool value)
@@ -16,12 +16,12 @@ public class SQLiteDataTester : BaseDataTester
 
     protected override string BinaryLiteral(string hexBase)
     {
-        return @$"X'{hexBase}'";
+        return $@"X'{hexBase}'";
     }
 
     protected override string GuidLiteral(string guidString)
     {
-        return @$"X'{guidString.Replace("-", "").ToLower()}'";
+        return $@"X'{guidString.Replace("-", "").ToLower()}'";
     }
 
     protected override string GetSpecificDbmsTable5ExtraColumns()

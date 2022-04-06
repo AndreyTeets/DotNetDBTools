@@ -12,7 +12,7 @@ namespace DotNetDBTools.SampleDB.Agnostic.AfterPublish
         public long MinDbVersionToExecute => 0;
         public long MaxDbVersionToExecute => long.MaxValue;
         public Func<DbmsKind, string> Code => dk =>
-@$"INSERT INTO {nameof(MyTable4).Quote(dk)}({nameof(MyTable4.MyColumn1).Quote(dk)})
+$@"INSERT INTO {nameof(MyTable4).Quote(dk)}({nameof(MyTable4.MyColumn1).Quote(dk)})
 SELECT * FROM
 (
     SELECT 1

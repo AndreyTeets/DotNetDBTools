@@ -60,7 +60,7 @@ public abstract class BaseDeployTests<TDatabase, TDbConnection, TDbModelConverte
         _deployManager.UnregisterAsDNDBT(_connection);
         _deployManager.RegisterAsDNDBT(_connection, AgnosticSampleDbAssemblyPath);
 
-        string outputPath = @$"{ActualFilesDir}/Actual_PublishScript_For_SampleDB_WhenUpdatingFromV1ToV1.sql";
+        string outputPath = $@"{ActualFilesDir}/Actual_PublishScript_For_SampleDB_WhenUpdatingFromV1ToV1.sql";
         _deployManager.GeneratePublishScript(AgnosticSampleDbAssemblyPath, _connection, outputPath);
         string actualScript = File.ReadAllText(outputPath);
         actualScript.Should().Be("");

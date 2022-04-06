@@ -18,7 +18,7 @@ public class SQLiteCodeParserTests
     [Fact]
     public void GetModelFromCreateStatement_ParsesTableCorrectly()
     {
-        string input = File.ReadAllText(@$"{TestDataDir}/CreateTable.sql");
+        string input = File.ReadAllText($@"{TestDataDir}/CreateTable.sql");
         SQLiteCodeParser parser = new();
         TableInfo table = (TableInfo)parser.GetModelFromCreateStatement(input);
 
@@ -29,7 +29,7 @@ public class SQLiteCodeParserTests
     [Fact]
     public void GetModelFromCreateStatement_ParsesViewCorrectly()
     {
-        string input = File.ReadAllText(@$"{TestDataDir}/CreateView.sql").NormalizeLineEndings();
+        string input = File.ReadAllText($@"{TestDataDir}/CreateView.sql").NormalizeLineEndings();
         SQLiteCodeParser parser = new();
         ViewInfo view = (ViewInfo)parser.GetModelFromCreateStatement(input);
 
@@ -40,7 +40,7 @@ public class SQLiteCodeParserTests
     [Fact]
     public void GetModelFromCreateStatement_ParsesIndexCorrectly()
     {
-        string input = File.ReadAllText(@$"{TestDataDir}/CreateIndex.sql");
+        string input = File.ReadAllText($@"{TestDataDir}/CreateIndex.sql");
         SQLiteCodeParser parser = new();
         IndexInfo index = (IndexInfo)parser.GetModelFromCreateStatement(input);
 
@@ -51,7 +51,7 @@ public class SQLiteCodeParserTests
     [Fact]
     public void GetModelFromCreateStatement_ParsesTriggerCorrectly()
     {
-        string input = File.ReadAllText(@$"{TestDataDir}/CreateTrigger.sql").NormalizeLineEndings();
+        string input = File.ReadAllText($@"{TestDataDir}/CreateTrigger.sql").NormalizeLineEndings();
         SQLiteCodeParser parser = new();
         TriggerInfo trigger = (TriggerInfo)parser.GetModelFromCreateStatement(input);
 
@@ -192,7 +192,7 @@ public class SQLiteCodeParserTests
         {
             ID = new Guid("3C36AE77-B7E4-40C3-824F-BD20DC270A14"),
             Name = "MyView1",
-            Code = RemoveIdDeclarations(File.ReadAllText(@$"{TestDataDir}/CreateView.sql")).NormalizeLineEndings(),
+            Code = RemoveIdDeclarations(File.ReadAllText($@"{TestDataDir}/CreateView.sql")).NormalizeLineEndings(),
         };
     }
 
@@ -215,7 +215,7 @@ public class SQLiteCodeParserTests
             ID = new Guid("2C36AE77-B7E4-40C3-824F-BD20DC270A14"),
             Name = "TR_MyTable2_MyTrigger1",
             Table = "MyTable2",
-            Code = RemoveIdDeclarations(File.ReadAllText(@$"{TestDataDir}/CreateTrigger.sql")).NormalizeLineEndings(),
+            Code = RemoveIdDeclarations(File.ReadAllText($@"{TestDataDir}/CreateTrigger.sql")).NormalizeLineEndings(),
         };
     }
 

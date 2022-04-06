@@ -6,7 +6,7 @@ public class PostgreSQLDataTester : BaseDataTester
 {
     protected override string Quote(string identifier)
     {
-        return @$"""{identifier}""";
+        return $@"""{identifier}""";
     }
 
     protected override string BoolLiteral(bool value)
@@ -16,12 +16,12 @@ public class PostgreSQLDataTester : BaseDataTester
 
     protected override string BinaryLiteral(string hexBase)
     {
-        return @$"'\x{hexBase}'";
+        return $@"'\x{hexBase}'";
     }
 
     protected override string GuidLiteral(string guidString)
     {
-        return @$"'{guidString}'";
+        return $@"'{guidString}'";
     }
 
     protected override string GetSpecificDbmsTable5ExtraColumns()

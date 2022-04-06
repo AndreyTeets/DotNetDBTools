@@ -15,7 +15,7 @@ public class PostgreSQLObjectsFromCodeParserTests
     public void ParseFunction_GetsCorrectData()
     {
         string functionStatement =
-@$"{FuncIDDefinition}
+$@"{FuncIDDefinition}
 CREATE   function ""TR_SomeTriggerFunction"" ()
 bla bla;".NormalizeLineEndings();
 
