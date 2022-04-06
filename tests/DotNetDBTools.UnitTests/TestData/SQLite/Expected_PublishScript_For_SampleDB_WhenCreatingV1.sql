@@ -8,7 +8,7 @@ CREATE TABLE MyTable1
     MyColumn2 TEXT NOT NULL DEFAULT '33',
     MyColumn3 INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     MyColumn4 NUMERIC NOT NULL DEFAULT 7.36,
-    CONSTRAINT UQ_MyTable1_MyColumn2 UNIQUE (MyColumn2),
+    CONSTRAINT UQ_MyTable1_MyColumn4 UNIQUE (MyColumn4),
     CONSTRAINT FK_MyTable1_MyColumn1_MyTable2_MyColumn1 FOREIGN KEY (MyColumn1)
         REFERENCES MyTable2(MyColumn1)
         ON UPDATE NO ACTION ON DELETE CASCADE,
@@ -144,7 +144,7 @@ VALUES
     'f3f08522-26ee-4950-9135-22edf2e4e0cf',
     '299675e6-4faa-4d0f-a36a-224306ba5bcb',
     'UniqueConstraint',
-    'UQ_MyTable1_MyColumn2',
+    'UQ_MyTable1_MyColumn4',
     NULL
 );
 -- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
@@ -191,7 +191,7 @@ VALUES
 CREATE TABLE MyTable2
 (
     MyColumn1 INTEGER PRIMARY KEY NOT NULL DEFAULT 333,
-    MyColumn2 BLOB NULL DEFAULT X'000102'
+    MyColumn2 BLOB NULL DEFAULT X'000408'
 );
 
 CREATE TRIGGER [TR_MyTable2_MyTrigger1]
@@ -260,7 +260,7 @@ VALUES
     'bfb9030c-a8c3-4882-9c42-1c6ad025cf8f',
     'Column',
     'MyColumn2',
-    'X''000102'''
+    'X''000408'''
 );
 -- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
 
@@ -834,7 +834,7 @@ SELECT * FROM
     UNION ALL
     SELECT 3
 ) t
-WHERE NOT EXISTS (SELECT COUNT(*) FROM [MyTable4]);
+WHERE NOT EXISTS (SELECT * FROM [MyTable4]);
 -- QUERY END: GenericQuery
 
 -- QUERY START: SQLiteInsertDNDBTScriptExecutionRecordQuery
@@ -862,7 +862,7 @@ SELECT * FROM
     UNION ALL
     SELECT 3
 ) t
-WHERE NOT EXISTS (SELECT COUNT(*) FROM [MyTable4]);',
+WHERE NOT EXISTS (SELECT * FROM [MyTable4]);',
     0,
     9223372036854775807,
     0

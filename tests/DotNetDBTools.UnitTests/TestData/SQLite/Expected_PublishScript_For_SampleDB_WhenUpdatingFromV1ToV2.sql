@@ -189,8 +189,10 @@ DROP TRIGGER TR_MyTable2_MyTrigger1;
 CREATE TABLE _DNDBTTemp_MyTable2
 (
     MyColumn1NewName INTEGER PRIMARY KEY NOT NULL DEFAULT 333,
-    MyColumn2 BLOB NULL DEFAULT X'000102',
-    CONSTRAINT FK_MyTable2_MyColumns12_MyTable3_MyColumns12 FOREIGN KEY (MyColumn1NewName, MyColumn2)
+    MyColumn2 BLOB NULL DEFAULT X'000408',
+    MyColumn3 INTEGER NULL,
+    MyColumn4 BLOB NULL,
+    CONSTRAINT FK_MyTable2_MyColumns34_MyTable3_MyColumns12 FOREIGN KEY (MyColumn3, MyColumn4)
         REFERENCES MyTable3(MyColumn1, MyColumn2)
         ON UPDATE NO ACTION ON DELETE SET DEFAULT
 );
@@ -255,7 +257,45 @@ VALUES
     'bfb9030c-a8c3-4882-9c42-1c6ad025cf8f',
     'Column',
     'MyColumn2',
-    'X''000102'''
+    'X''000408'''
+);
+-- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
+INSERT INTO DNDBTDbObjects
+(
+    ID,
+    ParentID,
+    Type,
+    Name,
+    Code
+)
+VALUES
+(
+    '99bc3f49-3151-4f52-87f7-104b424ed7bf',
+    'bfb9030c-a8c3-4882-9c42-1c6ad025cf8f',
+    'Column',
+    'MyColumn3',
+    NULL
+);
+-- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
+INSERT INTO DNDBTDbObjects
+(
+    ID,
+    ParentID,
+    Type,
+    Name,
+    Code
+)
+VALUES
+(
+    '87950a3f-2072-42db-ac3c-a4e85b79720d',
+    'bfb9030c-a8c3-4882-9c42-1c6ad025cf8f',
+    'Column',
+    'MyColumn4',
+    NULL
 );
 -- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
 
@@ -302,7 +342,7 @@ VALUES
     '480f3508-9d51-4190-88aa-45bc20e49119',
     'bfb9030c-a8c3-4882-9c42-1c6ad025cf8f',
     'ForeignKey',
-    'FK_MyTable2_MyColumns12_MyTable3_MyColumns12',
+    'FK_MyTable2_MyColumns34_MyTable3_MyColumns12',
     NULL
 );
 -- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
@@ -405,7 +445,7 @@ WHERE ID = '1d632285-9914-4c5d-98e6-a618a99bd799';
 -- QUERY START: SQLiteCreateTableQuery
 CREATE TABLE MyTable3
 (
-    MyColumn1 INTEGER NOT NULL DEFAULT 333,
+    MyColumn1 INTEGER NOT NULL DEFAULT 444,
     MyColumn2 BLOB NOT NULL,
     CONSTRAINT UQ_MyTable3_MyColumns12 UNIQUE (MyColumn1, MyColumn2)
 );
@@ -445,7 +485,7 @@ VALUES
     '474cd761-2522-4529-9d20-2b94115f9626',
     'Column',
     'MyColumn1',
-    '333'
+    '444'
 );
 -- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
 

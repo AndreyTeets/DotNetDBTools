@@ -80,7 +80,7 @@ WHERE `ID` = 'd11b2a53-32db-432f-bb6b-f91788844ba9';
 -- QUERY END: MySQLDeleteDNDBTDbObjectRecordQuery
 
 -- QUERY START: MySQLDropIndexQuery
-DROP INDEX `UQ_MyTable1_MyColumn2` ON `MyTable1`;
+DROP INDEX `UQ_MyTable1_MyColumn4` ON `MyTable1`;
 -- QUERY END: MySQLDropIndexQuery
 
 -- QUERY START: MySQLDeleteDNDBTDbObjectRecordQuery
@@ -136,16 +136,15 @@ WHERE `ID` = 'f3064a8c-346a-4b3d-af2c-d967b39841e4';
 
 -- QUERY START: MySQLAlterTableQuery
 RENAME TABLE `MyTable1` TO `MyTable1NewName`;
+
 ALTER TABLE `MyTable1NewName` DROP CONSTRAINT `CK_MyTable1_MyCheck1`;
 ALTER TABLE `MyTable1NewName` DROP PRIMARY KEY,
     MODIFY COLUMN `MyColumn3` INT NOT NULL;
-ALTER TABLE `MyTable1NewName` ALTER COLUMN `MyColumn2` DROP DEFAULT;
 ALTER TABLE `MyTable1NewName` DROP COLUMN `MyColumn2`;
 ALTER TABLE `MyTable1NewName` DROP COLUMN `MyColumn3`;
-ALTER TABLE `MyTable1NewName` ALTER COLUMN `MyColumn1` DROP DEFAULT;
 ALTER TABLE `MyTable1NewName` MODIFY COLUMN `MyColumn1` BIGINT NULL;
-ALTER TABLE `MyTable1NewName` ALTER COLUMN `MyColumn1` SET DEFAULT 15;
 ALTER TABLE `MyTable1NewName` ADD CONSTRAINT `CK_MyTable1_MyCheck1` CHECK (MyColumn4 >= 1);
+
 -- QUERY END: MySQLAlterTableQuery
 
 -- QUERY START: MySQLDeleteDNDBTDbObjectRecordQuery
@@ -203,16 +202,16 @@ VALUES
 
 -- QUERY START: MySQLAlterTableQuery
 
-ALTER TABLE `MyTable2` DROP PRIMARY KEY;
-ALTER TABLE `MyTable2` ALTER COLUMN `MyColumn2` DROP DEFAULT;
-ALTER TABLE `MyTable2` DROP COLUMN `MyColumn2`;
-ALTER TABLE `MyTable2` ALTER COLUMN `MyColumn1` DROP DEFAULT;
 ALTER TABLE `MyTable2` RENAME COLUMN `MyColumn1` TO `MyColumn1NewName`;
+
+ALTER TABLE `MyTable2` DROP PRIMARY KEY;
+ALTER TABLE `MyTable2` DROP COLUMN `MyColumn2`;
 ALTER TABLE `MyTable2` MODIFY COLUMN `MyColumn1NewName` BIGINT NOT NULL;
-ALTER TABLE `MyTable2` ALTER COLUMN `MyColumn1NewName` SET DEFAULT 333;
-ALTER TABLE `MyTable2` ADD COLUMN `MyColumn2` VARBINARY(22) NULL;
-ALTER TABLE `MyTable2` ALTER COLUMN `MyColumn2` SET DEFAULT (0x000102);
+ALTER TABLE `MyTable2` ADD COLUMN `MyColumn2` VARBINARY(22) NULL DEFAULT (0x000408);
+ALTER TABLE `MyTable2` ADD COLUMN `MyColumn3` BIGINT NULL;
+ALTER TABLE `MyTable2` ADD COLUMN `MyColumn4` VARBINARY(50) NULL;
 ALTER TABLE `MyTable2` ADD PRIMARY KEY (`MyColumn1NewName`);
+
 -- QUERY END: MySQLAlterTableQuery
 
 -- QUERY START: MySQLDeleteDNDBTDbObjectRecordQuery
@@ -254,7 +253,45 @@ VALUES
     'bfb9030c-a8c3-4882-9c42-1c6ad025cf8f',
     'Column',
     'MyColumn2',
-    '(0x000102)'
+    '(0x000408)'
+);
+-- QUERY END: MySQLInsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: MySQLInsertDNDBTDbObjectRecordQuery
+INSERT INTO `DNDBTDbObjects`
+(
+    `ID`,
+    `ParentID`,
+    `Type`,
+    `Name`,
+    `Code`
+)
+VALUES
+(
+    '99bc3f49-3151-4f52-87f7-104b424ed7bf',
+    'bfb9030c-a8c3-4882-9c42-1c6ad025cf8f',
+    'Column',
+    'MyColumn3',
+    NULL
+);
+-- QUERY END: MySQLInsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: MySQLInsertDNDBTDbObjectRecordQuery
+INSERT INTO `DNDBTDbObjects`
+(
+    `ID`,
+    `ParentID`,
+    `Type`,
+    `Name`,
+    `Code`
+)
+VALUES
+(
+    '87950a3f-2072-42db-ac3c-a4e85b79720d',
+    'bfb9030c-a8c3-4882-9c42-1c6ad025cf8f',
+    'Column',
+    'MyColumn4',
+    NULL
 );
 -- QUERY END: MySQLInsertDNDBTDbObjectRecordQuery
 
@@ -280,6 +317,7 @@ VALUES
 -- QUERY START: MySQLAlterTableQuery
 
 ALTER TABLE `MyTable5` DROP PRIMARY KEY;
+
 -- QUERY END: MySQLAlterTableQuery
 
 -- QUERY START: MySQLDeleteDNDBTDbObjectRecordQuery
@@ -297,8 +335,8 @@ WHERE `ID` = '6ca51f29-c1bc-4349-b9c1-6f1ea170f162';
 -- QUERY START: MySQLCreateTableQuery
 CREATE TABLE `MyTable3`
 (
-    `MyColumn1` BIGINT NOT NULL DEFAULT 333,
-    `MyColumn2` VARBINARY(22) NOT NULL
+    `MyColumn1` BIGINT NOT NULL DEFAULT 444,
+    `MyColumn2` VARBINARY(50) NOT NULL
 );
 -- QUERY END: MySQLCreateTableQuery
 
@@ -336,7 +374,7 @@ VALUES
     '474cd761-2522-4529-9d20-2b94115f9626',
     'Column',
     'MyColumn1',
-    '333'
+    '444'
 );
 -- QUERY END: MySQLInsertDNDBTDbObjectRecordQuery
 
@@ -433,7 +471,7 @@ VALUES
 -- QUERY END: MySQLInsertDNDBTDbObjectRecordQuery
 
 -- QUERY START: MySQLCreateForeignKeyQuery
-ALTER TABLE `MyTable2` ADD CONSTRAINT `FK_MyTable2_MyColumns12_MyTable3_MyColumns12` FOREIGN KEY (`MyColumn1NewName`, `MyColumn2`)
+ALTER TABLE `MyTable2` ADD CONSTRAINT `FK_MyTable2_MyColumns34_MyTable3_MyColumns12` FOREIGN KEY (`MyColumn3`, `MyColumn4`)
     REFERENCES `MyTable3` (`MyColumn1`, `MyColumn2`)
     ON UPDATE NO ACTION ON DELETE SET DEFAULT;
 -- QUERY END: MySQLCreateForeignKeyQuery
@@ -452,7 +490,7 @@ VALUES
     '480f3508-9d51-4190-88aa-45bc20e49119',
     'bfb9030c-a8c3-4882-9c42-1c6ad025cf8f',
     'ForeignKey',
-    'FK_MyTable2_MyColumns12_MyTable3_MyColumns12',
+    'FK_MyTable2_MyColumns34_MyTable3_MyColumns12',
     NULL
 );
 -- QUERY END: MySQLInsertDNDBTDbObjectRecordQuery

@@ -16,8 +16,22 @@ internal class MySQLAlterTableQuery : AlterTableQuery
     {
         StringBuilder sb = new();
 
-        if (tableDiff.OldTable.Name != tableDiff.NewTable.Name)
-            sb.Append(Queries.RenameTable(tableDiff.OldTable.Name, tableDiff.NewTable.Name));
+        if (tableDiff.NewTable.Name != tableDiff.OldTable.Name)
+            sb.AppendLine(Queries.RenameTable(tableDiff.OldTable.Name, tableDiff.NewTable.Name));
+
+        foreach (ColumnDiff columnDiff in tableDiff.ChangedColumns.Where(x => x.NewColumn.Name != x.OldColumn.Name))
+            sb.AppendLine(Queries.RenameColumn(tableDiff.NewTable.Name, columnDiff.OldColumn.Name, columnDiff.NewColumn.Name));
+
+        string tableAlters = GetTableAlter(tableDiff);
+        if (!string.IsNullOrEmpty(tableAlters))
+            sb.AppendLine(tableAlters);
+
+        return sb.ToString();
+    }
+
+    private static string GetTableAlter(TableDiff tableDiff)
+    {
+        StringBuilder sb = new();
 
         foreach (CheckConstraint ck in tableDiff.CheckConstraintsToDrop)
             sb.Append(Queries.DropCheckConstraint(tableDiff.NewTable.Name, ck.Name));
@@ -47,22 +61,13 @@ internal class MySQLAlterTableQuery : AlterTableQuery
     private static bool AppendColumnsAlters(StringBuilder sb, TableDiff tableDiff)
     {
         foreach (Column column in tableDiff.RemovedColumns)
-        {
-            if (column.Default.Code is not null)
-                sb.Append(Queries.DropDefaultConstraint(tableDiff.NewTable.Name, column));
             sb.Append(Queries.DropColumn(tableDiff.NewTable.Name, column.Name));
-        }
 
         foreach (ColumnDiff columnDiff in tableDiff.ChangedColumns)
         {
-            if (columnDiff.OldColumn.Default.Code is not null)
-                sb.Append(Queries.DropDefaultConstraint(tableDiff.NewTable.Name, columnDiff.OldColumn));
-
-            if (columnDiff.OldColumn.Name != columnDiff.NewColumn.Name)
-                sb.Append(Queries.RenameColumn(tableDiff.NewTable.Name, columnDiff.OldColumn.Name, columnDiff.NewColumn.Name));
             sb.Append(Queries.AlterColumnTypeAndNullability(tableDiff.NewTable.Name, columnDiff.NewColumn));
 
-            if (columnDiff.NewColumn.Default.Code is not null)
+            if (columnDiff.NewColumn.Default.Code != columnDiff.OldColumn.Default.Code)
                 sb.Append(Queries.AddDefaultConstraint(tableDiff.NewTable.Name, columnDiff.NewColumn));
         }
 
@@ -78,9 +83,6 @@ internal class MySQLAlterTableQuery : AlterTableQuery
             {
                 sb.Append(Queries.AddColumn(tableDiff.NewTable.Name, column));
             }
-
-            if (column.Default.Code is not null)
-                sb.Append(Queries.AddDefaultConstraint(tableDiff.NewTable.Name, column));
         }
         return addedPk;
     }
@@ -97,7 +99,7 @@ ALTER TABLE `{tableName}` RENAME COLUMN `{oldColumnName}` TO `{newColumnName}`;"
 
         public static string AddColumn(string tableName, Column c) =>
 $@"
-ALTER TABLE `{tableName}` ADD COLUMN `{c.Name}` {c.DataType.Name}{GetIdentityStatement(c)} {GetNullabilityStatement(c)};"
+ALTER TABLE `{tableName}` ADD COLUMN `{c.Name}` {c.DataType.Name}{GetIdentityStatement(c)} {GetNullabilityStatement(c)}{GetDefaultValStatement(c)};"
             ;
         public static string AddColumnAsPrimaryKey(string tableName, Column c, PrimaryKey pk) =>
 $@"

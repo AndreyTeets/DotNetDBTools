@@ -147,7 +147,7 @@ VALUES
 CREATE TABLE `MyTable2`
 (
     `MyColumn1` INT NOT NULL DEFAULT 333,
-    `MyColumn2` VARBINARY(22) NULL DEFAULT (0x000102),
+    `MyColumn2` VARBINARY(22) NULL DEFAULT (0x000408),
     CONSTRAINT `PK_MyTable2` PRIMARY KEY (`MyColumn1`)
 );
 -- QUERY END: MySQLCreateTableQuery
@@ -205,7 +205,7 @@ VALUES
     'bfb9030c-a8c3-4882-9c42-1c6ad025cf8f',
     'Column',
     'MyColumn2',
-    '(0x000102)'
+    '(0x000408)'
 );
 -- QUERY END: MySQLInsertDNDBTDbObjectRecordQuery
 
@@ -624,8 +624,8 @@ VALUES
 -- QUERY END: MySQLInsertDNDBTDbObjectRecordQuery
 
 -- QUERY START: MySQLCreateIndexQuery
-CREATE UNIQUE INDEX `UQ_MyTable1_MyColumn2`
-ON `MyTable1` (`MyColumn2`);
+CREATE UNIQUE INDEX `UQ_MyTable1_MyColumn4`
+ON `MyTable1` (`MyColumn4`);
 -- QUERY END: MySQLCreateIndexQuery
 
 -- QUERY START: MySQLInsertDNDBTDbObjectRecordQuery
@@ -642,7 +642,7 @@ VALUES
     'f3f08522-26ee-4950-9135-22edf2e4e0cf',
     '299675e6-4faa-4d0f-a36a-224306ba5bcb',
     'Index',
-    'UQ_MyTable1_MyColumn2',
+    'UQ_MyTable1_MyColumn4',
     NULL
 );
 -- QUERY END: MySQLInsertDNDBTDbObjectRecordQuery
@@ -853,7 +853,7 @@ SELECT * FROM
     UNION ALL
     SELECT 3
 ) t
-WHERE NOT EXISTS (SELECT COUNT(*) FROM `MyTable4`);
+WHERE NOT EXISTS (SELECT * FROM `MyTable4`);
 -- QUERY END: GenericQuery
 
 -- QUERY START: MySQLInsertDNDBTScriptExecutionRecordQuery
@@ -881,7 +881,7 @@ SELECT * FROM
     UNION ALL
     SELECT 3
 ) t
-WHERE NOT EXISTS (SELECT COUNT(*) FROM `MyTable4`);',
+WHERE NOT EXISTS (SELECT * FROM `MyTable4`);',
     0,
     9223372036854775807,
     0

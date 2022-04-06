@@ -44,12 +44,4 @@ $@"    CONSTRAINT ""{ck.Name}"" {ck.GetCode()}"));
 
         return string.Join(",\n", tableDefinitions);
     }
-
-    private static string GetDefaultValStatement(Column column)
-    {
-        if (column.Default.Code is not null)
-            return $@" DEFAULT {column.Default.Code}";
-        else
-            return "";
-    }
 }

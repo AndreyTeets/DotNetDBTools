@@ -19,8 +19,11 @@ public class SQLiteDeployTests : BaseDeployTests<
     SQLiteDeployManager>
 {
     protected override string AgnosticSampleDbAssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDB.Agnostic.dll";
+    protected override string AgnosticSampleDbV2AssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDBv2.Agnostic.dll";
     protected override string SpecificDBMSSampleDbAssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDB.SQLite.dll";
+    protected override string SpecificDBMSSampleDbV2AssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDBv2.SQLite.dll";
     protected override string ActualFilesDir => "./generated/SQLite";
+    protected override BaseDataTester DataTester { get; set; } = new SQLiteDataTester();
 
     private const string DbFilesFolder = @"./tmp";
 

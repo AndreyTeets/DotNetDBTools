@@ -51,16 +51,16 @@ VALUES
 INSERT INTO ""{MyTable1}""
 (
     ""{MyTable1.MyColumn1}"",
-    ""{MyTable1.MyColumn2}""
+    ""{MyTable1.MyColumn4}""
 )
 VALUES
 (
     1,
-    N'value1'
+    1.11
 ),
 (
     2,
-    N'value2'
+    2.22
 );";
 
             using NpgsqlConnection connection = new(s_connectionString);
@@ -75,7 +75,7 @@ $@"SELECT
 FROM ""{MyTable1}"" t1
 INNER JOIN ""{MyTable2}"" t2
     ON t1.""{MyTable1.MyColumn1}"" = t2.""{MyTable2.MyColumn1}""
-WHERE t1.""{MyTable1.MyColumn2}"" IN (N'value1', N'value2')
+WHERE t1.""{MyTable1.MyColumn4}"" IN (1.11, 2.22)
     AND t2.""{MyTable2.MyColumn2}"" IS NULL;";
 
             using NpgsqlConnection connection = new(s_connectionString);

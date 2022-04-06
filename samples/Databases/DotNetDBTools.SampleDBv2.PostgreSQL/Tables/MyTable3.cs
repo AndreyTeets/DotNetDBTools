@@ -13,7 +13,7 @@ namespace DotNetDBTools.SampleDB.PostgreSQL.Tables
         {
             DataType = new IntDataType() { Size = IntSize.Int64 },
             NotNull = true,
-            Default = new IntDefaultValue(333),
+            Default = new IntDefaultValue(444),
         };
 
         public Column MyColumn2 = new("169824E1-8B74-4B60-AF17-99656D6DBBEE")

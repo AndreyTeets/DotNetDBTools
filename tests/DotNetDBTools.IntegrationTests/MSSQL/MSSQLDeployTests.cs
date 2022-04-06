@@ -21,8 +21,11 @@ public class MSSQLDeployTests : BaseDeployTests<
     MSSQLDeployManager>
 {
     protected override string AgnosticSampleDbAssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDB.Agnostic.dll";
+    protected override string AgnosticSampleDbV2AssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDBv2.Agnostic.dll";
     protected override string SpecificDBMSSampleDbAssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDB.MSSQL.dll";
+    protected override string SpecificDBMSSampleDbV2AssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDBv2.MSSQL.dll";
     protected override string ActualFilesDir => "./generated/MSSQL";
+    protected override BaseDataTester DataTester { get; set; } = new MSSQLDataTester();
 
     private static string ConnectionStringWithoutDb => MSSQLContainerHelper.MSSQLContainerConnectionString;
 

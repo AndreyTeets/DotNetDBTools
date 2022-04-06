@@ -23,8 +23,11 @@ public abstract class BaseDeployTests<TDatabase, TDbConnection, TDbModelConverte
     where TDeployManager : IDeployManager, new()
 {
     protected abstract string AgnosticSampleDbAssemblyPath { get; }
+    protected abstract string AgnosticSampleDbV2AssemblyPath { get; }
     protected abstract string SpecificDBMSSampleDbAssemblyPath { get; }
+    protected abstract string SpecificDBMSSampleDbV2AssemblyPath { get; }
     protected abstract string ActualFilesDir { get; }
+    protected abstract BaseDataTester DataTester { get; set; }
 
     private TDeployManager _deployManager;
     private TDbConnection _connection;
@@ -72,6 +75,15 @@ public abstract class BaseDeployTests<TDatabase, TDbConnection, TDbModelConverte
     }
 
     [Test]
+    public void Publish_AgnosticSampleDB_Preserves_RelevantData()
+    {
+        DataTester.IsDbmsSpecific = false;
+        Publish_SampleDB_Preserves_RelevantData(
+            AgnosticSampleDbAssemblyPath,
+            AgnosticSampleDbV2AssemblyPath);
+    }
+
+    [Test]
     public void AgnosticSampleDB_DbModelFromDBMSUsingDNDBTSysInfo_IsEquivalentTo_DbModelFromDefinition()
     {
         _deployManager.RegisterAsDNDBT(_connection);
@@ -106,6 +118,15 @@ public abstract class BaseDeployTests<TDatabase, TDbConnection, TDbModelConverte
         _deployManager.RegisterAsDNDBT(_connection);
         _deployManager.PublishDatabase(SpecificDBMSSampleDbAssemblyPath, _connection);
         _deployManager.PublishDatabase(SpecificDBMSSampleDbAssemblyPath, _connection);
+    }
+
+    [Test]
+    public void Publish_SpecificDBMSSampleDB_Preserves_RelevantData()
+    {
+        DataTester.IsDbmsSpecific = true;
+        Publish_SampleDB_Preserves_RelevantData(
+            SpecificDBMSSampleDbAssemblyPath,
+            SpecificDBMSSampleDbV2AssemblyPath);
     }
 
     [Test]
@@ -155,6 +176,30 @@ public abstract class BaseDeployTests<TDatabase, TDbConnection, TDbModelConverte
         dbModel2.Version = 1;
 
         AssertDbModelEquivalence(dbModel1, dbModel2, CompareMode.IgnoreIDs);
+    }
+
+    private void Publish_SampleDB_Preserves_RelevantData(string assemblyV1Path, string assemblyV2Path)
+    {
+        _deployManager.RegisterAsDNDBT(_connection);
+        _deployManager.PublishDatabase(assemblyV1Path, _connection);
+
+        DataTester.Populate_SampleDb_WithData(_connection);
+        DataTester.Assert_SampleDb_Data(_connection, BaseDataTester.AssertKind.V1);
+
+        _deployManager.PublishDatabase(assemblyV1Path, _connection);
+        DataTester.Assert_SampleDb_Data(_connection, BaseDataTester.AssertKind.V1);
+
+        _deployManager.Options.AllowDataLoss = true;
+        _deployManager.PublishDatabase(assemblyV2Path, _connection);
+        DataTester.Assert_SampleDb_Data(_connection, BaseDataTester.AssertKind.V2);
+
+        _deployManager.Options.AllowDataLoss = false;
+        _deployManager.PublishDatabase(assemblyV2Path, _connection);
+        DataTester.Assert_SampleDb_Data(_connection, BaseDataTester.AssertKind.V2);
+
+        _deployManager.Options.AllowDataLoss = true;
+        _deployManager.PublishDatabase(assemblyV1Path, _connection);
+        DataTester.Assert_SampleDb_Data(_connection, BaseDataTester.AssertKind.V1Rollbacked);
     }
 
     private void AssertDbModelEquivalence(TDatabase dbModel1, TDatabase dbModel2, CompareMode compareMode)

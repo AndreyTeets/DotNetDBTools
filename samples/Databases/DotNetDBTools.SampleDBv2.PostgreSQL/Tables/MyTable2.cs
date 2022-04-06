@@ -20,7 +20,17 @@ namespace DotNetDBTools.SampleDB.PostgreSQL.Tables
         public Column MyColumn2 = new("C2DF19C2-E029-4014-8A5B-4AB42FECB6B8")
         {
             DataType = new BinaryDataType(),
-            Default = new BinaryDefaultValue(new byte[] { 0, 1, 2 }),
+            Default = new BinaryDefaultValue(new byte[] { 0, 4, 8 }),
+        };
+
+        public Column MyColumn3 = new("99BC3F49-3151-4F52-87F7-104B424ED7BF")
+        {
+            DataType = new IntDataType() { Size = IntSize.Int64 },
+        };
+
+        public Column MyColumn4 = new("87950A3F-2072-42DB-AC3C-A4E85B79720D")
+        {
+            DataType = new BinaryDataType(),
         };
 
         public PrimaryKey PK_MyTable2_CustomName = new("3A43615B-40B3-4A13-99E7-93AF7C56E8CE")
@@ -28,9 +38,9 @@ namespace DotNetDBTools.SampleDB.PostgreSQL.Tables
             Columns = new[] { nameof(MyColumn1NewName) },
         };
 
-        public ForeignKey FK_MyTable2_MyColumns12_MyTable3_MyColumns12 = new("480F3508-9D51-4190-88AA-45BC20E49119")
+        public ForeignKey FK_MyTable2_MyColumns34_MyTable3_MyColumns12 = new("480F3508-9D51-4190-88AA-45BC20E49119")
         {
-            ThisColumns = new[] { nameof(MyColumn1NewName), nameof(MyColumn2) },
+            ThisColumns = new[] { nameof(MyColumn3), nameof(MyColumn4) },
             ReferencedTable = nameof(MyTable3),
             ReferencedTableColumns = new[] { nameof(MyTable3.MyColumn1), nameof(MyTable3.MyColumn2) },
             OnUpdate = ForeignKeyActions.NoAction,

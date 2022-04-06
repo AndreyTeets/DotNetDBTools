@@ -19,7 +19,7 @@ namespace DotNetDBTools.SampleDB.PostgreSQL.Tables
         public Column MyColumn2 = new("5A0D1926-3270-4EB2-92EB-00BE56C7AF23")
         {
             DataType = new BinaryDataType(),
-            Default = new BinaryDefaultValue(new byte[] { 0, 1, 2 }),
+            Default = new BinaryDefaultValue(new byte[] { 0, 4, 8 }),
         };
 
         public PrimaryKey PK_MyTable2_CustomName = new("3A43615B-40B3-4A13-99E7-93AF7C56E8CE")

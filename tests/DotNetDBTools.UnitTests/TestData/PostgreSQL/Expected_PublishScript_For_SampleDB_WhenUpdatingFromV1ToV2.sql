@@ -328,18 +328,17 @@ WHERE "ID" = ''f3064a8c-346a-4b3d-af2c-d967b39841e4'';';
 
 -- QUERY START: PostgreSQLAlterTableQuery
 EXECUTE 'ALTER TABLE "MyTable1" RENAME TO "MyTable1NewName";
-ALTER TABLE "MyTable1NewName" DROP CONSTRAINT "CK_MyTable1_MyCheck1";
-ALTER TABLE "MyTable1NewName" DROP CONSTRAINT "UQ_MyTable1_MyColumn2";
-ALTER TABLE "MyTable1NewName" DROP CONSTRAINT "PK_MyTable1";
-ALTER TABLE "MyTable1NewName" ALTER COLUMN "MyColumn2" DROP DEFAULT;
-ALTER TABLE "MyTable1NewName" DROP COLUMN "MyColumn2";
-ALTER TABLE "MyTable1NewName" DROP COLUMN "MyColumn3";
-ALTER TABLE "MyTable1NewName" ALTER COLUMN "MyColumn1" DROP DEFAULT;
-ALTER TABLE "MyTable1NewName" ALTER COLUMN "MyColumn1" SET DATA TYPE BIGINT
-    USING ("MyColumn1"::text::BIGINT);
-ALTER TABLE "MyTable1NewName" ALTER COLUMN "MyColumn1" DROP NOT NULL;
-ALTER TABLE "MyTable1NewName" ALTER COLUMN "MyColumn1" SET DEFAULT 15;
-ALTER TABLE "MyTable1NewName" ADD CONSTRAINT "CK_MyTable1_MyCheck1" CHECK ("MyColumn4" >= 1);';
+ALTER TABLE "MyTable1NewName"
+    DROP CONSTRAINT "CK_MyTable1_MyCheck1",
+    DROP CONSTRAINT "UQ_MyTable1_MyColumn4",
+    DROP CONSTRAINT "PK_MyTable1",
+    DROP COLUMN "MyColumn2",
+    DROP COLUMN "MyColumn3",
+    ALTER COLUMN "MyColumn1" SET DATA TYPE BIGINT
+        USING ("MyColumn1"::text::BIGINT),
+    ALTER COLUMN "MyColumn1" DROP NOT NULL,
+    ADD CONSTRAINT "CK_MyTable1_MyCheck1" CHECK ("MyColumn4" >= 1);
+';
 -- QUERY END: PostgreSQLAlterTableQuery
 
 -- QUERY START: PostgreSQLDeleteDNDBTDbObjectRecordQuery
@@ -402,17 +401,17 @@ VALUES
 
 -- QUERY START: PostgreSQLAlterTableQuery
 EXECUTE '
-ALTER TABLE "MyTable2" DROP CONSTRAINT "PK_MyTable2_CustomName";
-ALTER TABLE "MyTable2" ALTER COLUMN "MyColumn2" DROP DEFAULT;
-ALTER TABLE "MyTable2" DROP COLUMN "MyColumn2";
-ALTER TABLE "MyTable2" ALTER COLUMN "MyColumn1" DROP DEFAULT;
 ALTER TABLE "MyTable2" RENAME COLUMN "MyColumn1" TO "MyColumn1NewName";
-ALTER TABLE "MyTable2" ALTER COLUMN "MyColumn1NewName" SET DATA TYPE BIGINT
-    USING ("MyColumn1NewName"::text::BIGINT);
-ALTER TABLE "MyTable2" ALTER COLUMN "MyColumn1NewName" SET DEFAULT 333;
-ALTER TABLE "MyTable2" ADD COLUMN "MyColumn2" BYTEA NULL;
-ALTER TABLE "MyTable2" ALTER COLUMN "MyColumn2" SET DEFAULT ''\x000102'';
-ALTER TABLE "MyTable2" ADD CONSTRAINT "PK_MyTable2_CustomName" PRIMARY KEY ("MyColumn1NewName");';
+ALTER TABLE "MyTable2"
+    DROP CONSTRAINT "PK_MyTable2_CustomName",
+    DROP COLUMN "MyColumn2",
+    ALTER COLUMN "MyColumn1NewName" SET DATA TYPE BIGINT
+        USING ("MyColumn1NewName"::text::BIGINT),
+    ADD COLUMN "MyColumn2" BYTEA NULL DEFAULT ''\x000408'',
+    ADD COLUMN "MyColumn3" BIGINT NULL,
+    ADD COLUMN "MyColumn4" BYTEA NULL,
+    ADD CONSTRAINT "PK_MyTable2_CustomName" PRIMARY KEY ("MyColumn1NewName");
+';
 -- QUERY END: PostgreSQLAlterTableQuery
 
 -- QUERY START: PostgreSQLDeleteDNDBTDbObjectRecordQuery
@@ -454,7 +453,45 @@ VALUES
     ''bfb9030c-a8c3-4882-9c42-1c6ad025cf8f'',
     ''Column'',
     ''MyColumn2'',
-    ''''''\x000102''''''
+    ''''''\x000408''''''
+);';
+-- QUERY END: PostgreSQLInsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: PostgreSQLInsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''99bc3f49-3151-4f52-87f7-104b424ed7bf'',
+    ''bfb9030c-a8c3-4882-9c42-1c6ad025cf8f'',
+    ''Column'',
+    ''MyColumn3'',
+    NULL
+);';
+-- QUERY END: PostgreSQLInsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: PostgreSQLInsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''87950a3f-2072-42db-ac3c-a4e85b79720d'',
+    ''bfb9030c-a8c3-4882-9c42-1c6ad025cf8f'',
+    ''Column'',
+    ''MyColumn4'',
+    NULL
 );';
 -- QUERY END: PostgreSQLInsertDNDBTDbObjectRecordQuery
 
@@ -478,17 +515,18 @@ VALUES
 -- QUERY END: PostgreSQLInsertDNDBTDbObjectRecordQuery
 
 -- QUERY START: PostgreSQLAlterTableQuery
-EXECUTE '
-ALTER TABLE "MyTable5" DROP CONSTRAINT "UQ_MyTable5_CustomName";
-ALTER TABLE "MyTable5" DROP CONSTRAINT "PK_MyTable5_CustomName";
-ALTER TABLE "MyTable5" ALTER COLUMN "MyColumn13" SET DATA TYPE "MyCompositeType1"
-    USING ("MyColumn13"::text::"MyCompositeType1");
-ALTER TABLE "MyTable5" ALTER COLUMN "MyColumn14" SET DATA TYPE "MyDomain1"
-    USING ("MyColumn14"::text::"MyDomain1");
-ALTER TABLE "MyTable5" ALTER COLUMN "MyColumn15" SET DATA TYPE "MyEnumType1"
-    USING ("MyColumn15"::text::"MyEnumType1");
-ALTER TABLE "MyTable5" ALTER COLUMN "MyColumn16" SET DATA TYPE "MyRangeType1"
-    USING ("MyColumn16"::text::"MyRangeType1");';
+EXECUTE 'ALTER TABLE "MyTable5"
+    DROP CONSTRAINT "UQ_MyTable5_CustomName",
+    DROP CONSTRAINT "PK_MyTable5_CustomName",
+    ALTER COLUMN "MyColumn13" SET DATA TYPE "MyCompositeType1"
+        USING ("MyColumn13"::text::"MyCompositeType1"),
+    ALTER COLUMN "MyColumn14" SET DATA TYPE "MyDomain1"
+        USING ("MyColumn14"::text::"MyDomain1"),
+    ALTER COLUMN "MyColumn15" SET DATA TYPE "MyEnumType1"
+        USING ("MyColumn15"::text::"MyEnumType1"),
+    ALTER COLUMN "MyColumn16" SET DATA TYPE "MyRangeType1"
+        USING ("MyColumn16"::text::"MyRangeType1");
+';
 -- QUERY END: PostgreSQLAlterTableQuery
 
 -- QUERY START: PostgreSQLDeleteDNDBTDbObjectRecordQuery
@@ -539,7 +577,7 @@ WHERE "ID" = ''c8b03b75-a8a2-47e0-bf5c-f3e4f1b8f500'';';
 -- QUERY START: PostgreSQLCreateTableQuery
 EXECUTE 'CREATE TABLE "MyTable3"
 (
-    "MyColumn1" BIGINT NOT NULL DEFAULT 333,
+    "MyColumn1" BIGINT NOT NULL DEFAULT 444,
     "MyColumn2" BYTEA NOT NULL,
     CONSTRAINT "UQ_MyTable3_MyColumns12" UNIQUE ("MyColumn1", "MyColumn2")
 );';
@@ -579,7 +617,7 @@ VALUES
     ''474cd761-2522-4529-9d20-2b94115f9626'',
     ''Column'',
     ''MyColumn1'',
-    ''333''
+    ''444''
 );';
 -- QUERY END: PostgreSQLInsertDNDBTDbObjectRecordQuery
 
@@ -687,7 +725,7 @@ VALUES
 -- QUERY END: PostgreSQLInsertDNDBTDbObjectRecordQuery
 
 -- QUERY START: PostgreSQLCreateForeignKeyQuery
-EXECUTE 'ALTER TABLE "MyTable2" ADD CONSTRAINT "FK_MyTable2_MyColumns12_MyTable3_MyColumns12" FOREIGN KEY ("MyColumn1NewName", "MyColumn2")
+EXECUTE 'ALTER TABLE "MyTable2" ADD CONSTRAINT "FK_MyTable2_MyColumns34_MyTable3_MyColumns12" FOREIGN KEY ("MyColumn3", "MyColumn4")
     REFERENCES "MyTable3" ("MyColumn1", "MyColumn2")
     ON UPDATE NO ACTION ON DELETE SET DEFAULT;';
 -- QUERY END: PostgreSQLCreateForeignKeyQuery
@@ -706,7 +744,7 @@ VALUES
     ''480f3508-9d51-4190-88aa-45bc20e49119'',
     ''bfb9030c-a8c3-4882-9c42-1c6ad025cf8f'',
     ''ForeignKey'',
-    ''FK_MyTable2_MyColumns12_MyTable3_MyColumns12'',
+    ''FK_MyTable2_MyColumns34_MyTable3_MyColumns12'',
     NULL
 );';
 -- QUERY END: PostgreSQLInsertDNDBTDbObjectRecordQuery

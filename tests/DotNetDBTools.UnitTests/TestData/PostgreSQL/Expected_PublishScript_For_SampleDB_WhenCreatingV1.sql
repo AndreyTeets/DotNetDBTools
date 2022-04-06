@@ -191,7 +191,7 @@ EXECUTE 'CREATE TABLE "MyTable1"
     "MyColumn3" INT GENERATED ALWAYS AS IDENTITY NOT NULL,
     "MyColumn4" DECIMAL(19, 2) NOT NULL DEFAULT 7.36,
     CONSTRAINT "PK_MyTable1" PRIMARY KEY ("MyColumn3"),
-    CONSTRAINT "UQ_MyTable1_MyColumn2" UNIQUE ("MyColumn2"),
+    CONSTRAINT "UQ_MyTable1_MyColumn4" UNIQUE ("MyColumn4"),
     CONSTRAINT "CK_MyTable1_MyCheck1" CHECK ("MyColumn4" >= 0)
 );';
 -- QUERY END: PostgreSQLCreateTableQuery
@@ -324,7 +324,7 @@ VALUES
     ''f3f08522-26ee-4950-9135-22edf2e4e0cf'',
     ''299675e6-4faa-4d0f-a36a-224306ba5bcb'',
     ''UniqueConstraint'',
-    ''UQ_MyTable1_MyColumn2'',
+    ''UQ_MyTable1_MyColumn4'',
     NULL
 );';
 -- QUERY END: PostgreSQLInsertDNDBTDbObjectRecordQuery
@@ -352,7 +352,7 @@ VALUES
 EXECUTE 'CREATE TABLE "MyTable2"
 (
     "MyColumn1" INT NOT NULL DEFAULT 333,
-    "MyColumn2" BYTEA NULL DEFAULT ''\x000102'',
+    "MyColumn2" BYTEA NULL DEFAULT ''\x000408'',
     CONSTRAINT "PK_MyTable2_CustomName" PRIMARY KEY ("MyColumn1")
 );';
 -- QUERY END: PostgreSQLCreateTableQuery
@@ -410,7 +410,7 @@ VALUES
     ''bfb9030c-a8c3-4882-9c42-1c6ad025cf8f'',
     ''Column'',
     ''MyColumn2'',
-    ''''''\x000102''''''
+    ''''''\x000408''''''
 );';
 -- QUERY END: PostgreSQLInsertDNDBTDbObjectRecordQuery
 
@@ -1147,7 +1147,7 @@ SELECT * FROM
     UNION ALL
     SELECT 3
 ) t
-WHERE NOT EXISTS (SELECT COUNT(*) FROM "MyTable4");';
+WHERE NOT EXISTS (SELECT * FROM "MyTable4");';
 -- QUERY END: GenericQuery
 
 -- QUERY START: PostgreSQLInsertDNDBTScriptExecutionRecordQuery
@@ -1175,7 +1175,7 @@ SELECT * FROM
     UNION ALL
     SELECT 3
 ) t
-WHERE NOT EXISTS (SELECT COUNT(*) FROM "MyTable4");'',
+WHERE NOT EXISTS (SELECT * FROM "MyTable4");'',
     0,
     9223372036854775807,
     0

@@ -18,7 +18,7 @@ EXECUTE 'ALTER TABLE "MyTable1NewName" DROP CONSTRAINT "FK_MyTable1_MyColumn1_My
 -- QUERY END: PostgreSQLDropForeignKeyQuery
 
 -- QUERY START: PostgreSQLDropForeignKeyQuery
-EXECUTE 'ALTER TABLE "MyTable2" DROP CONSTRAINT "FK_MyTable2_MyColumns12_MyTable3_MyColumns12";';
+EXECUTE 'ALTER TABLE "MyTable2" DROP CONSTRAINT "FK_MyTable2_MyColumns34_MyTable3_MyColumns12";';
 -- QUERY END: PostgreSQLDropForeignKeyQuery
 
 -- QUERY START: PostgreSQLDropIndexQuery
@@ -84,47 +84,47 @@ EXECUTE 'DROP TABLE "MyTable3";';
 
 -- QUERY START: PostgreSQLAlterTableQuery
 EXECUTE 'ALTER TABLE "MyTable1NewName" RENAME TO "MyTable1";
-ALTER TABLE "MyTable1" DROP CONSTRAINT "CK_MyTable1_MyCheck1";
-ALTER TABLE "MyTable1" ALTER COLUMN "MyColumn1" DROP DEFAULT;
-ALTER TABLE "MyTable1" ALTER COLUMN "MyColumn1" SET DATA TYPE INT
-    USING ("MyColumn1"::text::INT);
-ALTER TABLE "MyTable1" ALTER COLUMN "MyColumn1" SET NOT NULL;
-ALTER TABLE "MyTable1" ALTER COLUMN "MyColumn1" SET DEFAULT 15;
-ALTER TABLE "MyTable1" ADD COLUMN "MyColumn2" VARCHAR(10) NOT NULL;
-ALTER TABLE "MyTable1" ALTER COLUMN "MyColumn2" SET DEFAULT ''33'';
-ALTER TABLE "MyTable1" ADD COLUMN "MyColumn3" INT GENERATED ALWAYS AS IDENTITY NOT NULL;
-ALTER TABLE "MyTable1" ADD CONSTRAINT "PK_MyTable1" PRIMARY KEY ("MyColumn3");
-ALTER TABLE "MyTable1" ADD CONSTRAINT "UQ_MyTable1_MyColumn2" UNIQUE ("MyColumn2");
-ALTER TABLE "MyTable1" ADD CONSTRAINT "CK_MyTable1_MyCheck1" CHECK ("MyColumn4" >= 0);';
+ALTER TABLE "MyTable1"
+    DROP CONSTRAINT "CK_MyTable1_MyCheck1",
+    ALTER COLUMN "MyColumn1" SET DATA TYPE INT
+        USING ("MyColumn1"::text::INT),
+    ALTER COLUMN "MyColumn1" SET NOT NULL,
+    ADD COLUMN "MyColumn2" VARCHAR(10) NOT NULL DEFAULT ''33'',
+    ADD COLUMN "MyColumn3" INT GENERATED ALWAYS AS IDENTITY NOT NULL,
+    ADD CONSTRAINT "PK_MyTable1" PRIMARY KEY ("MyColumn3"),
+    ADD CONSTRAINT "UQ_MyTable1_MyColumn4" UNIQUE ("MyColumn4"),
+    ADD CONSTRAINT "CK_MyTable1_MyCheck1" CHECK ("MyColumn4" >= 0);
+';
 -- QUERY END: PostgreSQLAlterTableQuery
 
 -- QUERY START: PostgreSQLAlterTableQuery
 EXECUTE '
-ALTER TABLE "MyTable2" DROP CONSTRAINT "PK_MyTable2_CustomName";
-ALTER TABLE "MyTable2" ALTER COLUMN "MyColumn2" DROP DEFAULT;
-ALTER TABLE "MyTable2" DROP COLUMN "MyColumn2";
-ALTER TABLE "MyTable2" ALTER COLUMN "MyColumn1NewName" DROP DEFAULT;
 ALTER TABLE "MyTable2" RENAME COLUMN "MyColumn1NewName" TO "MyColumn1";
-ALTER TABLE "MyTable2" ALTER COLUMN "MyColumn1" SET DATA TYPE INT
-    USING ("MyColumn1"::text::INT);
-ALTER TABLE "MyTable2" ALTER COLUMN "MyColumn1" SET DEFAULT 333;
-ALTER TABLE "MyTable2" ADD COLUMN "MyColumn2" BYTEA NULL;
-ALTER TABLE "MyTable2" ALTER COLUMN "MyColumn2" SET DEFAULT ''\x000102'';
-ALTER TABLE "MyTable2" ADD CONSTRAINT "PK_MyTable2_CustomName" PRIMARY KEY ("MyColumn1");';
+ALTER TABLE "MyTable2"
+    DROP CONSTRAINT "PK_MyTable2_CustomName",
+    DROP COLUMN "MyColumn2",
+    DROP COLUMN "MyColumn3",
+    DROP COLUMN "MyColumn4",
+    ALTER COLUMN "MyColumn1" SET DATA TYPE INT
+        USING ("MyColumn1"::text::INT),
+    ADD COLUMN "MyColumn2" BYTEA NULL DEFAULT ''\x000408'',
+    ADD CONSTRAINT "PK_MyTable2_CustomName" PRIMARY KEY ("MyColumn1");
+';
 -- QUERY END: PostgreSQLAlterTableQuery
 
 -- QUERY START: PostgreSQLAlterTableQuery
-EXECUTE '
-ALTER TABLE "MyTable5" ALTER COLUMN "MyColumn13" SET DATA TYPE "MyCompositeType1"
-    USING ("MyColumn13"::text::"MyCompositeType1");
-ALTER TABLE "MyTable5" ALTER COLUMN "MyColumn14" SET DATA TYPE "MyDomain1"
-    USING ("MyColumn14"::text::"MyDomain1");
-ALTER TABLE "MyTable5" ALTER COLUMN "MyColumn15" SET DATA TYPE "MyEnumType1"
-    USING ("MyColumn15"::text::"MyEnumType1");
-ALTER TABLE "MyTable5" ALTER COLUMN "MyColumn16" SET DATA TYPE "MyRangeType1"
-    USING ("MyColumn16"::text::"MyRangeType1");
-ALTER TABLE "MyTable5" ADD CONSTRAINT "PK_MyTable5_CustomName" PRIMARY KEY ("MyColumn2", "MyColumn1");
-ALTER TABLE "MyTable5" ADD CONSTRAINT "UQ_MyTable5_CustomName" UNIQUE ("MyColumn6", "MyColumn3", "MyColumn7");';
+EXECUTE 'ALTER TABLE "MyTable5"
+    ALTER COLUMN "MyColumn13" SET DATA TYPE "MyCompositeType1"
+        USING ("MyColumn13"::text::"MyCompositeType1"),
+    ALTER COLUMN "MyColumn14" SET DATA TYPE "MyDomain1"
+        USING ("MyColumn14"::text::"MyDomain1"),
+    ALTER COLUMN "MyColumn15" SET DATA TYPE "MyEnumType1"
+        USING ("MyColumn15"::text::"MyEnumType1"),
+    ALTER COLUMN "MyColumn16" SET DATA TYPE "MyRangeType1"
+        USING ("MyColumn16"::text::"MyRangeType1"),
+    ADD CONSTRAINT "PK_MyTable5_CustomName" PRIMARY KEY ("MyColumn2", "MyColumn1"),
+    ADD CONSTRAINT "UQ_MyTable5_CustomName" UNIQUE ("MyColumn6", "MyColumn3", "MyColumn7");
+';
 -- QUERY END: PostgreSQLAlterTableQuery
 
 -- QUERY START: PostgreSQLCreateTableQuery

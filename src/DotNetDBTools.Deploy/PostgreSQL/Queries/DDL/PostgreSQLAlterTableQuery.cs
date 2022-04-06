@@ -16,64 +16,66 @@ internal class PostgreSQLAlterTableQuery : AlterTableQuery
     {
         StringBuilder sb = new();
 
-        if (tableDiff.OldTable.Name != tableDiff.NewTable.Name)
-            sb.Append(Queries.RenameTable(tableDiff.OldTable.Name, tableDiff.NewTable.Name));
+        if (tableDiff.NewTable.Name != tableDiff.OldTable.Name)
+            sb.AppendLine(Queries.RenameTable(tableDiff.OldTable.Name, tableDiff.NewTable.Name));
+
+        foreach (ColumnDiff columnDiff in tableDiff.ChangedColumns.Where(x => x.NewColumn.Name != x.OldColumn.Name))
+            sb.AppendLine(Queries.RenameColumn(tableDiff.NewTable.Name, columnDiff.OldColumn.Name, columnDiff.NewColumn.Name));
+
+        string tableAlters = GetTableAlter(tableDiff);
+        if (!string.IsNullOrEmpty(tableAlters))
+            sb.AppendLine(@$"ALTER TABLE ""{tableDiff.NewTable.Name}""{tableAlters};");
+
+        return sb.ToString();
+    }
+
+    private static string GetTableAlter(TableDiff tableDiff)
+    {
+        StringBuilder sb = new();
 
         foreach (CheckConstraint ck in tableDiff.CheckConstraintsToDrop)
-            sb.Append(Queries.DropCheckConstraint(tableDiff.NewTable.Name, ck.Name));
+            sb.Append(Queries.DropCheckConstraint(ck.Name));
         foreach (UniqueConstraint uc in tableDiff.UniqueConstraintsToDrop)
-            sb.Append(Queries.DropUniqueConstraint(tableDiff.NewTable.Name, uc.Name));
+            sb.Append(Queries.DropUniqueConstraint(uc.Name));
         if (tableDiff.PrimaryKeyToDrop is not null)
-            sb.Append(Queries.DropPrimaryKey(tableDiff.NewTable.Name, tableDiff.PrimaryKeyToDrop.Name));
+            sb.Append(Queries.DropPrimaryKey(tableDiff.PrimaryKeyToDrop.Name));
 
         AppendColumnsAlters(sb, tableDiff);
 
         if (tableDiff.PrimaryKeyToCreate is not null)
-            sb.Append(Queries.AddPrimaryKey(tableDiff.NewTable.Name, tableDiff.PrimaryKeyToCreate));
+            sb.Append(Queries.AddPrimaryKey(tableDiff.PrimaryKeyToCreate));
         foreach (UniqueConstraint uc in tableDiff.UniqueConstraintsToCreate)
-            sb.Append(Queries.AddUniqueConstraint(tableDiff.NewTable.Name, uc));
+            sb.Append(Queries.AddUniqueConstraint(uc));
         foreach (CheckConstraint ck in tableDiff.CheckConstraintsToCreate)
-            sb.Append(Queries.AddCheckConstraint(tableDiff.NewTable.Name, ck));
+            sb.Append(Queries.AddCheckConstraint(ck));
 
+        if (sb.Length > 0)
+            sb.Remove(sb.Length - 1, 1);
         return sb.ToString();
     }
 
     private static void AppendColumnsAlters(StringBuilder sb, TableDiff tableDiff)
     {
         foreach (Column column in tableDiff.RemovedColumns)
-        {
-            if (column.Default.Code is not null)
-                sb.Append(Queries.DropDefaultConstraint(tableDiff.NewTable.Name, column));
-            sb.Append(Queries.DropColumn(tableDiff.NewTable.Name, column.Name));
-        }
+            sb.Append(Queries.DropColumn(column.Name));
 
         foreach (ColumnDiff columnDiff in tableDiff.ChangedColumns)
         {
-            if (columnDiff.OldColumn.Default.Code is not null)
-                sb.Append(Queries.DropDefaultConstraint(tableDiff.NewTable.Name, columnDiff.OldColumn));
-
-            if (columnDiff.OldColumn.Name != columnDiff.NewColumn.Name)
-                sb.Append(Queries.RenameColumn(tableDiff.NewTable.Name, columnDiff.OldColumn.Name, columnDiff.NewColumn.Name));
-
-            // TODO if (columnDiff.OldColumn.DataType.Name != columnDiff.NewColumn.DataType.Name)
+            // TODO if (columnDiff.NewColumn.DataType.Name != columnDiff.OldColumn.DataType.Name)
             // Need to track if custom data type was changed (and so being recreated).
-            sb.Append(Queries.AlterColumnType(tableDiff.NewTable.Name, columnDiff.NewColumn));
+            sb.Append(Queries.AlterColumnType(columnDiff.NewColumn));
 
             if (columnDiff.NewColumn.NotNull && !columnDiff.OldColumn.NotNull)
-                sb.Append(Queries.SetColumnNotNull(tableDiff.NewTable.Name, columnDiff.NewColumn));
+                sb.Append(Queries.SetColumnNotNull(columnDiff.NewColumn));
             else if (!columnDiff.NewColumn.NotNull && columnDiff.OldColumn.NotNull)
-                sb.Append(Queries.DropColumnNotNull(tableDiff.NewTable.Name, columnDiff.NewColumn));
+                sb.Append(Queries.DropColumnNotNull(columnDiff.NewColumn.Name));
 
-            if (columnDiff.NewColumn.Default.Code is not null)
-                sb.Append(Queries.AddDefaultConstraint(tableDiff.NewTable.Name, columnDiff.NewColumn));
+            if (columnDiff.NewColumn.Default.Code != columnDiff.OldColumn.Default.Code)
+                sb.Append(Queries.AddDefaultConstraint(columnDiff.NewColumn));
         }
 
         foreach (Column column in tableDiff.AddedColumns)
-        {
-            sb.Append(Queries.AddColumn(tableDiff.NewTable.Name, column));
-            if (column.Default.Code is not null)
-                sb.Append(Queries.AddDefaultConstraint(tableDiff.NewTable.Name, column));
-        }
+            sb.Append(Queries.AddColumn(column));
     }
 
     private static class Queries
@@ -86,62 +88,62 @@ $@"
 ALTER TABLE ""{tableName}"" RENAME COLUMN ""{oldColumnName}"" TO ""{newColumnName}"";"
             ;
 
-        public static string AddColumn(string tableName, Column c) =>
+        public static string AddColumn(Column c) =>
 $@"
-ALTER TABLE ""{tableName}"" ADD COLUMN ""{c.Name}"" {c.DataType.GetQuotedName()}{GetIdentityStatement(c)} {GetNullabilityStatement(c)};"
+    ADD COLUMN ""{c.Name}"" {c.DataType.GetQuotedName()}{GetIdentityStatement(c)} {GetNullabilityStatement(c)}{GetDefaultValStatement(c)},"
             ;
-        public static string DropColumn(string tableName, string columnName) =>
+        public static string DropColumn(string columnName) =>
 $@"
-ALTER TABLE ""{tableName}"" DROP COLUMN ""{columnName}"";"
+    DROP COLUMN ""{columnName}"","
             ;
-        public static string AlterColumnType(string tableName, Column c) =>
+        public static string AlterColumnType(Column c) =>
 $@"
-ALTER TABLE ""{tableName}"" ALTER COLUMN ""{c.Name}"" SET DATA TYPE {c.DataType.GetQuotedName()}
-    USING (""{c.Name}""::text::{c.DataType.GetQuotedName()});"
+    ALTER COLUMN ""{c.Name}"" SET DATA TYPE {c.DataType.GetQuotedName()}
+        USING (""{c.Name}""::text::{c.DataType.GetQuotedName()}),"
             ; // TODO Add TypeChangeConversionsList<DataType(srcType),DataType(destType),string(usingCode)> in definition for columns?
-        public static string SetColumnNotNull(string tableName, Column c) =>
+        public static string SetColumnNotNull(Column c) =>
 $@"
-ALTER TABLE ""{tableName}"" ALTER COLUMN ""{c.Name}"" SET NOT NULL;"
+    ALTER COLUMN ""{c.Name}"" SET NOT NULL,"
 ;
-        public static string DropColumnNotNull(string tableName, Column c) =>
+        public static string DropColumnNotNull(string columnName) =>
 $@"
-ALTER TABLE ""{tableName}"" ALTER COLUMN ""{c.Name}"" DROP NOT NULL;"
+    ALTER COLUMN ""{columnName}"" DROP NOT NULL,"
 ;
 
-        public static string AddPrimaryKey(string tableName, PrimaryKey pk) =>
+        public static string AddPrimaryKey(PrimaryKey pk) =>
 $@"
-ALTER TABLE ""{tableName}"" ADD CONSTRAINT ""{pk.Name}"" PRIMARY KEY ({string.Join(", ", pk.Columns.Select(x => $@"""{x}"""))});"
+    ADD CONSTRAINT ""{pk.Name}"" PRIMARY KEY ({string.Join(", ", pk.Columns.Select(x => $@"""{x}"""))}),"
             ;
-        public static string DropPrimaryKey(string tableName, string pkName) =>
+        public static string DropPrimaryKey(string pkName) =>
 $@"
-ALTER TABLE ""{tableName}"" DROP CONSTRAINT ""{pkName}"";"
-            ;
-
-        public static string AddUniqueConstraint(string tableName, UniqueConstraint uc) =>
-$@"
-ALTER TABLE ""{tableName}"" ADD CONSTRAINT ""{uc.Name}"" UNIQUE ({string.Join(", ", uc.Columns.Select(x => $@"""{x}"""))});"
-            ;
-        public static string DropUniqueConstraint(string tableName, string ucName) =>
-$@"
-ALTER TABLE ""{tableName}"" DROP CONSTRAINT ""{ucName}"";"
+    DROP CONSTRAINT ""{pkName}"","
             ;
 
-        public static string AddCheckConstraint(string tableName, CheckConstraint ck) =>
+        public static string AddUniqueConstraint(UniqueConstraint uc) =>
 $@"
-ALTER TABLE ""{tableName}"" ADD CONSTRAINT ""{ck.Name}"" {ck.GetCode()};"
+    ADD CONSTRAINT ""{uc.Name}"" UNIQUE ({string.Join(", ", uc.Columns.Select(x => $@"""{x}"""))}),"
             ;
-        public static string DropCheckConstraint(string tableName, string ckName) =>
+        public static string DropUniqueConstraint(string ucName) =>
 $@"
-ALTER TABLE ""{tableName}"" DROP CONSTRAINT ""{ckName}"";"
+    DROP CONSTRAINT ""{ucName}"","
             ;
 
-        public static string AddDefaultConstraint(string tableName, Column c) =>
+        public static string AddCheckConstraint(CheckConstraint ck) =>
 $@"
-ALTER TABLE ""{tableName}"" ALTER COLUMN ""{c.Name}"" SET DEFAULT {c.Default.Code};"
+    ADD CONSTRAINT ""{ck.Name}"" {ck.GetCode()},"
             ;
-        public static string DropDefaultConstraint(string tableName, Column c) =>
+        public static string DropCheckConstraint(string ckName) =>
 $@"
-ALTER TABLE ""{tableName}"" ALTER COLUMN ""{c.Name}"" DROP DEFAULT;"
+    DROP CONSTRAINT ""{ckName}"","
+            ;
+
+        public static string AddDefaultConstraint(Column c) =>
+$@"
+    ALTER COLUMN ""{c.Name}"" SET DEFAULT {c.Default.Code},"
+            ;
+        public static string DropDefaultConstraint(string columnName) =>
+$@"
+    ALTER COLUMN ""{columnName}"" DROP DEFAULT,"
             ;
     }
 }

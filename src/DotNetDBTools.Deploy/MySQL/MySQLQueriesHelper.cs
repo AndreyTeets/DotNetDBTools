@@ -20,6 +20,14 @@ internal static class MySQLQueriesHelper
         };
     }
 
+    public static string GetDefaultValStatement(Column column)
+    {
+        if (column.Default.Code is not null)
+            return $" DEFAULT {column.Default.Code}";
+        else
+            return "";
+    }
+
     public static DataType CreateDataTypeModel(string dataType, string fullDataType)
     {
         switch (dataType)

@@ -222,19 +222,21 @@ EXEC (@SqlText);';
 
 -- QUERY START: MSSQLAlterTableQuery
 EXEC sp_executesql N'EXEC sp_rename ''MyTable1'', ''MyTable1NewName'';
-ALTER TABLE MyTable1NewName DROP CONSTRAINT CK_MyTable1_MyCheck1;
-ALTER TABLE MyTable1NewName DROP CONSTRAINT UQ_MyTable1_MyColumn2;
-ALTER TABLE MyTable1NewName DROP CONSTRAINT PK_MyTable1;
-ALTER TABLE [MyTable1NewName] DROP CONSTRAINT DF_MyTable1_MyColumn2;
-ALTER TABLE MyTable1NewName DROP COLUMN MyColumn2;
-ALTER TABLE MyTable1NewName DROP COLUMN MyColumn3;
-ALTER TABLE [MyTable1NewName] DROP CONSTRAINT DF_MyTable1_MyColumn1;
-ALTER TABLE MyTable1NewName ALTER COLUMN MyColumn1 BIGINT NULL;
-ALTER TABLE MyTable1NewName ADD CONSTRAINT DF_MyTable1NewName_MyColumn1 DEFAULT 15 FOR MyColumn1;
-ALTER TABLE [MyTable1NewName] DROP CONSTRAINT DF_MyTable1_MyColumn4;
-ALTER TABLE MyTable1NewName ALTER COLUMN MyColumn4 DECIMAL(19, 2) NOT NULL;
-ALTER TABLE MyTable1NewName ADD CONSTRAINT DF_MyTable1NewName_MyColumn4 DEFAULT 7.36 FOR MyColumn4;
-ALTER TABLE MyTable1NewName ADD CONSTRAINT CK_MyTable1_MyCheck1 CHECK (MyColumn4 >= 1);';
+
+ALTER TABLE [MyTable1NewName] DROP CONSTRAINT [CK_MyTable1_MyCheck1];
+ALTER TABLE [MyTable1NewName] DROP CONSTRAINT [UQ_MyTable1_MyColumn4];
+ALTER TABLE [MyTable1NewName] DROP CONSTRAINT [PK_MyTable1];
+ALTER TABLE [MyTable1NewName] DROP CONSTRAINT [DF_MyTable1_MyColumn2];
+ALTER TABLE [MyTable1NewName] DROP COLUMN [MyColumn2];
+ALTER TABLE [MyTable1NewName] DROP COLUMN [MyColumn3];
+ALTER TABLE [MyTable1NewName] DROP CONSTRAINT [DF_MyTable1_MyColumn1];
+ALTER TABLE [MyTable1NewName] ALTER COLUMN [MyColumn1] BIGINT NULL;
+ALTER TABLE [MyTable1NewName] ADD CONSTRAINT [DF_MyTable1NewName_MyColumn1] DEFAULT 15 FOR [MyColumn1];
+ALTER TABLE [MyTable1NewName] DROP CONSTRAINT [DF_MyTable1_MyColumn4];
+ALTER TABLE [MyTable1NewName] ALTER COLUMN [MyColumn4] DECIMAL(19, 2) NOT NULL;
+ALTER TABLE [MyTable1NewName] ADD CONSTRAINT [DF_MyTable1NewName_MyColumn4] DEFAULT 7.36 FOR [MyColumn4];
+ALTER TABLE [MyTable1NewName] ADD CONSTRAINT [CK_MyTable1_MyCheck1] CHECK (MyColumn4 >= 1);
+';
 -- QUERY END: MSSQLAlterTableQuery
 
 -- QUERY START: MSSQLDeleteDNDBTDbObjectRecordQuery
@@ -317,16 +319,19 @@ VALUES
 
 -- QUERY START: MSSQLAlterTableQuery
 EXEC sp_executesql N'
-ALTER TABLE MyTable2 DROP CONSTRAINT PK_MyTable2_CustomName;
-ALTER TABLE [MyTable2] DROP CONSTRAINT DF_MyTable2_MyColumn2;
-ALTER TABLE MyTable2 DROP COLUMN MyColumn2;
-ALTER TABLE [MyTable2] DROP CONSTRAINT DF_MyTable2_MyColumn1;
 EXEC sp_rename ''MyTable2.MyColumn1'', ''MyColumn1NewName'', ''COLUMN'';
-ALTER TABLE MyTable2 ALTER COLUMN MyColumn1NewName BIGINT NOT NULL;
-ALTER TABLE MyTable2 ADD CONSTRAINT DF_MyTable2_MyColumn1NewName DEFAULT 333 FOR MyColumn1NewName;
-ALTER TABLE MyTable2 ADD MyColumn2 VARBINARY(22) NULL;
-ALTER TABLE MyTable2 ADD CONSTRAINT DF_MyTable2_MyColumn2 DEFAULT 0x000102 FOR MyColumn2;
-ALTER TABLE MyTable2 ADD CONSTRAINT PK_MyTable2_CustomName PRIMARY KEY (MyColumn1NewName);';
+
+ALTER TABLE [MyTable2] DROP CONSTRAINT [PK_MyTable2_CustomName];
+ALTER TABLE [MyTable2] DROP CONSTRAINT [DF_MyTable2_MyColumn2];
+ALTER TABLE [MyTable2] DROP COLUMN [MyColumn2];
+ALTER TABLE [MyTable2] DROP CONSTRAINT [DF_MyTable2_MyColumn1];
+ALTER TABLE [MyTable2] ALTER COLUMN [MyColumn1NewName] BIGINT NOT NULL;
+ALTER TABLE [MyTable2] ADD CONSTRAINT [DF_MyTable2_MyColumn1NewName] DEFAULT 333 FOR [MyColumn1NewName];
+ALTER TABLE [MyTable2] ADD [MyColumn2] VARBINARY(22) NULL CONSTRAINT DF_MyTable2_MyColumn2 DEFAULT 0x000408 WITH VALUES;
+ALTER TABLE [MyTable2] ADD [MyColumn3] BIGINT NULL;
+ALTER TABLE [MyTable2] ADD [MyColumn4] VARBINARY(50) NULL;
+ALTER TABLE [MyTable2] ADD CONSTRAINT [PK_MyTable2_CustomName] PRIMARY KEY ([MyColumn1NewName]);
+';
 -- QUERY END: MSSQLAlterTableQuery
 
 -- QUERY START: MSSQLDeleteDNDBTDbObjectRecordQuery
@@ -363,7 +368,53 @@ WHERE ID = @ID;';
 EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''c2df19c2-e029-4014-8a5b-4ab42fecb6b8'';
 DECLARE @ParentID UNIQUEIDENTIFIER = N''bfb9030c-a8c3-4882-9c42-1c6ad025cf8f'';
 DECLARE @Name NVARCHAR(MAX) = N''MyColumn2'';
-DECLARE @Code NVARCHAR(MAX) = N''0x000102'';
+DECLARE @Code NVARCHAR(MAX) = N''0x000408'';
+INSERT INTO DNDBTDbObjects
+(
+    ID,
+    ParentID,
+    Type,
+    Name,
+    Code
+)
+VALUES
+(
+    @ID,
+    @ParentID,
+    ''Column'',
+    @Name,
+    @Code
+);';
+-- QUERY END: MSSQLInsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: MSSQLInsertDNDBTDbObjectRecordQuery
+EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''99bc3f49-3151-4f52-87f7-104b424ed7bf'';
+DECLARE @ParentID UNIQUEIDENTIFIER = N''bfb9030c-a8c3-4882-9c42-1c6ad025cf8f'';
+DECLARE @Name NVARCHAR(MAX) = N''MyColumn3'';
+DECLARE @Code NVARCHAR(MAX) = NULL;
+INSERT INTO DNDBTDbObjects
+(
+    ID,
+    ParentID,
+    Type,
+    Name,
+    Code
+)
+VALUES
+(
+    @ID,
+    @ParentID,
+    ''Column'',
+    @Name,
+    @Code
+);';
+-- QUERY END: MSSQLInsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: MSSQLInsertDNDBTDbObjectRecordQuery
+EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''87950a3f-2072-42db-ac3c-a4e85b79720d'';
+DECLARE @ParentID UNIQUEIDENTIFIER = N''bfb9030c-a8c3-4882-9c42-1c6ad025cf8f'';
+DECLARE @Name NVARCHAR(MAX) = N''MyColumn4'';
+DECLARE @Code NVARCHAR(MAX) = NULL;
 INSERT INTO DNDBTDbObjects
 (
     ID,
@@ -407,8 +458,9 @@ VALUES
 
 -- QUERY START: MSSQLAlterTableQuery
 EXEC sp_executesql N'
-ALTER TABLE MyTable5 DROP CONSTRAINT UQ_MyTable5_CustomName;
-ALTER TABLE MyTable5 DROP CONSTRAINT PK_MyTable5_CustomName;';
+ALTER TABLE [MyTable5] DROP CONSTRAINT [UQ_MyTable5_CustomName];
+ALTER TABLE [MyTable5] DROP CONSTRAINT [PK_MyTable5_CustomName];
+';
 -- QUERY END: MSSQLAlterTableQuery
 
 -- QUERY START: MSSQLDeleteDNDBTDbObjectRecordQuery
@@ -438,8 +490,8 @@ EXEC sp_executesql N'DROP TYPE _DNDBTTemp_MyUserDefinedType1;';
 -- QUERY START: MSSQLCreateTableQuery
 EXEC sp_executesql N'CREATE TABLE MyTable3
 (
-    MyColumn1 BIGINT NOT NULL CONSTRAINT DF_MyTable3_MyColumn1 DEFAULT 333,
-    MyColumn2 VARBINARY(22) NOT NULL,
+    MyColumn1 BIGINT NOT NULL CONSTRAINT DF_MyTable3_MyColumn1 DEFAULT 444,
+    MyColumn2 VARBINARY(50) NOT NULL,
     CONSTRAINT UQ_MyTable3_MyColumns12 UNIQUE (MyColumn1, MyColumn2)
 );';
 -- QUERY END: MSSQLCreateTableQuery
@@ -471,7 +523,7 @@ VALUES
 EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''726f503a-d944-46ee-a0ff-6a2c2faab46e'';
 DECLARE @ParentID UNIQUEIDENTIFIER = N''474cd761-2522-4529-9d20-2b94115f9626'';
 DECLARE @Name NVARCHAR(MAX) = N''MyColumn1'';
-DECLARE @Code NVARCHAR(MAX) = N''333'';
+DECLARE @Code NVARCHAR(MAX) = N''444'';
 INSERT INTO DNDBTDbObjects
 (
     ID,
@@ -594,7 +646,7 @@ VALUES
 -- QUERY END: MSSQLInsertDNDBTDbObjectRecordQuery
 
 -- QUERY START: MSSQLCreateForeignKeyQuery
-EXEC sp_executesql N'ALTER TABLE MyTable2 ADD CONSTRAINT FK_MyTable2_MyColumns12_MyTable3_MyColumns12 FOREIGN KEY (MyColumn1NewName, MyColumn2)
+EXEC sp_executesql N'ALTER TABLE MyTable2 ADD CONSTRAINT FK_MyTable2_MyColumns34_MyTable3_MyColumns12 FOREIGN KEY (MyColumn3, MyColumn4)
     REFERENCES MyTable3 (MyColumn1, MyColumn2)
     ON UPDATE NO ACTION ON DELETE SET DEFAULT;';
 -- QUERY END: MSSQLCreateForeignKeyQuery
@@ -602,7 +654,7 @@ EXEC sp_executesql N'ALTER TABLE MyTable2 ADD CONSTRAINT FK_MyTable2_MyColumns12
 -- QUERY START: MSSQLInsertDNDBTDbObjectRecordQuery
 EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''480f3508-9d51-4190-88aa-45bc20e49119'';
 DECLARE @ParentID UNIQUEIDENTIFIER = N''bfb9030c-a8c3-4882-9c42-1c6ad025cf8f'';
-DECLARE @Name NVARCHAR(MAX) = N''FK_MyTable2_MyColumns12_MyTable3_MyColumns12'';
+DECLARE @Name NVARCHAR(MAX) = N''FK_MyTable2_MyColumns34_MyTable3_MyColumns12'';
 DECLARE @Code NVARCHAR(MAX) = NULL;
 INSERT INTO DNDBTDbObjects
 (
