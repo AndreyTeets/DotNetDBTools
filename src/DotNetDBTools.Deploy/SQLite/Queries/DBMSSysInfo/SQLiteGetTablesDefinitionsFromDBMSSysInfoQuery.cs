@@ -7,8 +7,8 @@ internal class SQLiteGetTablesDefinitionsFromDBMSSysInfoQuery : IQuery
 {
     public string Sql =>
 $@"SELECT
-    sm.name AS {nameof(TableRecord.TableName)},
-    sm.sql AS {nameof(TableRecord.TableDefinition)}
+    sm.name AS [{nameof(TableRecord.TableName)}],
+    sm.sql AS [{nameof(TableRecord.TableDefinition)}]
 FROM sqlite_master sm
 WHERE sm.type = 'table'
     AND sm.name != 'sqlite_sequence'

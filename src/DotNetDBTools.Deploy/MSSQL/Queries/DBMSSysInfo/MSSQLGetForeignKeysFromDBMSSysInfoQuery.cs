@@ -9,15 +9,15 @@ internal class MSSQLGetForeignKeysFromDBMSSysInfoQuery : GetForeignKeysFromDBMSS
 {
     public override string Sql =>
 $@"SELECT
-    thisTable.name AS {nameof(ForeignKeyRecord.ThisTableName)},
-    foreignKey.name AS {nameof(ForeignKeyRecord.ForeignKeyName)},
-    thisColumns.name AS {nameof(ForeignKeyRecord.ThisColumnName)},
-    fkColumnsMap.constraint_column_id AS {nameof(ForeignKeyRecord.ThisColumnPosition)},
-    referencedTable.name AS {nameof(ForeignKeyRecord.ReferencedTableName)},
-    referencedColumns.name AS {nameof(ForeignKeyRecord.ReferencedColumnName)},
-    fkColumnsMap.constraint_column_id AS {nameof(ForeignKeyRecord.ReferencedColumnPosition)},
-    foreignKey.update_referential_action_desc AS {nameof(ForeignKeyRecord.OnUpdate)},
-    foreignKey.delete_referential_action_desc AS {nameof(ForeignKeyRecord.OnDelete)}
+    thisTable.name AS [{nameof(ForeignKeyRecord.ThisTableName)}],
+    foreignKey.name AS [{nameof(ForeignKeyRecord.ForeignKeyName)}],
+    thisColumns.name AS [{nameof(ForeignKeyRecord.ThisColumnName)}],
+    fkColumnsMap.constraint_column_id AS [{nameof(ForeignKeyRecord.ThisColumnPosition)}],
+    referencedTable.name AS [{nameof(ForeignKeyRecord.ReferencedTableName)}],
+    referencedColumns.name AS [{nameof(ForeignKeyRecord.ReferencedColumnName)}],
+    fkColumnsMap.constraint_column_id AS [{nameof(ForeignKeyRecord.ReferencedColumnPosition)}],
+    foreignKey.update_referential_action_desc AS [{nameof(ForeignKeyRecord.OnUpdate)}],
+    foreignKey.delete_referential_action_desc AS [{nameof(ForeignKeyRecord.OnDelete)}]
 FROM sys.tables thisTable
 INNER JOIN sys.foreign_keys foreignKey
     ON foreignKey.parent_object_id = thisTable.object_id

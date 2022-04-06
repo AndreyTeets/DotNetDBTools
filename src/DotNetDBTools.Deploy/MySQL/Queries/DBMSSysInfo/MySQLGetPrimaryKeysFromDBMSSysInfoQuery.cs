@@ -9,10 +9,10 @@ internal class MySQLGetPrimaryKeysFromDBMSSysInfoQuery : GetPrimaryKeysFromDBMSS
 {
     public override string Sql =>
 $@"SELECT
-    tc.TABLE_NAME AS {nameof(PrimaryKeyRecord.TableName)},
-    CONCAT('PK_', tc.TABLE_NAME) AS {nameof(PrimaryKeyRecord.ConstraintName)},
-    kcu.COLUMN_NAME AS {nameof(PrimaryKeyRecord.ColumnName)},
-    kcu.ORDINAL_POSITION AS {nameof(PrimaryKeyRecord.ColumnPosition)}
+    tc.TABLE_NAME AS `{nameof(PrimaryKeyRecord.TableName)}`,
+    CONCAT('PK_', tc.TABLE_NAME) AS `{nameof(PrimaryKeyRecord.ConstraintName)}`,
+    kcu.COLUMN_NAME AS `{nameof(PrimaryKeyRecord.ColumnName)}`,
+    kcu.ORDINAL_POSITION AS `{nameof(PrimaryKeyRecord.ColumnPosition)}`
 FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc
 INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE kcu
     ON kcu.CONSTRAINT_SCHEMA = tc.CONSTRAINT_SCHEMA

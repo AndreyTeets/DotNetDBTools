@@ -12,8 +12,8 @@ internal class SQLiteDeleteDNDBTScriptExecutionRecordQuery : DeleteDNDBTScriptEx
     protected override string GetSql(Guid scriptID)
     {
         string query =
-$@"DELETE FROM {DNDBTSysTables.DNDBTScriptExecutions}
-WHERE {DNDBTSysTables.DNDBTScriptExecutions.ID} = '{scriptID}';";
+$@"DELETE FROM [{DNDBTSysTables.DNDBTScriptExecutions}]
+WHERE [{DNDBTSysTables.DNDBTScriptExecutions.ID}] = '{scriptID}';";
 
         return query;
     }

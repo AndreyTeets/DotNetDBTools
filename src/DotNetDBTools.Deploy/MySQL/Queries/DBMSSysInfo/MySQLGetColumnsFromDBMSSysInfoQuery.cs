@@ -11,14 +11,14 @@ internal class MySQLGetColumnsFromDBMSSysInfoQuery : GetColumnsFromDBMSSysInfoQu
 {
     public override string Sql =>
 $@"SELECT
-    c.TABLE_NAME AS {nameof(MySQLColumnRecord.TableName)},
-    c.COLUMN_NAME AS {nameof(MySQLColumnRecord.ColumnName)},
-    c.DATA_TYPE AS {nameof(MySQLColumnRecord.DataType)},
-    c.COLUMN_TYPE AS {nameof(MySQLColumnRecord.FullDataType)},
+    c.TABLE_NAME AS `{nameof(MySQLColumnRecord.TableName)}`,
+    c.COLUMN_NAME AS `{nameof(MySQLColumnRecord.ColumnName)}`,
+    c.DATA_TYPE AS `{nameof(MySQLColumnRecord.DataType)}`,
+    c.COLUMN_TYPE AS `{nameof(MySQLColumnRecord.FullDataType)}`,
     CASE WHEN c.IS_NULLABLE = 'NO' THEN TRUE ELSE FALSE END AS `{nameof(MySQLColumnRecord.NotNull)}`,
-    CASE WHEN c.EXTRA = 'auto_increment' THEN TRUE ELSE FALSE END AS {nameof(MySQLColumnRecord.Identity)},
+    CASE WHEN c.EXTRA = 'auto_increment' THEN TRUE ELSE FALSE END AS `{nameof(MySQLColumnRecord.Identity)}`,
     c.COLUMN_DEFAULT AS `{nameof(MySQLColumnRecord.Default)}`,
-    CASE WHEN c.EXTRA = 'DEFAULT_GENERATED' THEN TRUE ELSE FALSE END AS {nameof(MySQLColumnRecord.DefaultIsFunction)}
+    CASE WHEN c.EXTRA = 'DEFAULT_GENERATED' THEN TRUE ELSE FALSE END AS `{nameof(MySQLColumnRecord.DefaultIsFunction)}`
 FROM INFORMATION_SCHEMA.TABLES t
 INNER JOIN INFORMATION_SCHEMA.COLUMNS c
     ON c.TABLE_SCHEMA = t.TABLE_SCHEMA

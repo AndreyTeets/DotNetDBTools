@@ -8,13 +8,13 @@ internal class MySQLGetTriggersFromDBMSSysInfoQuery : GetTriggersFromDBMSSysInfo
 {
     public override string Sql =>
 $@"SELECT
-    t.EVENT_OBJECT_TABLE AS {nameof(TriggerRecord.TableName)},
-    t.TRIGGER_NAME AS {nameof(TriggerRecord.TriggerName)},
+    t.EVENT_OBJECT_TABLE AS `{nameof(TriggerRecord.TableName)}`,
+    t.TRIGGER_NAME AS `{nameof(TriggerRecord.TriggerName)}`,
     CONCAT(
         'CREATE TRIGGER `', t.TRIGGER_NAME, '` ',
         ACTION_TIMING, ' ', EVENT_MANIPULATION, ' ON `', t.EVENT_OBJECT_TABLE,
         '` FOR EACH ROW ', t.ACTION_STATEMENT
-    ) AS {nameof(TriggerRecord.TriggerCode)}
+    ) AS `{nameof(TriggerRecord.TriggerCode)}`
 FROM INFORMATION_SCHEMA.TRIGGERS t
 WHERE t.TRIGGER_SCHEMA = (select DATABASE());";
 

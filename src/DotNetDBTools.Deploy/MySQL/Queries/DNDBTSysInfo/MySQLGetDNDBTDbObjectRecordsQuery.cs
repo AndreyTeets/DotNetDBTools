@@ -9,8 +9,8 @@ internal class MySQLGetDNDBTDbObjectRecordsQuery : GetDNDBTDbObjectRecordsQuery
 {
     public override string Sql =>
 $@"SELECT
-    CAST(`{DNDBTSysTables.DNDBTDbObjects.ID}` AS CHAR(36)) AS {nameof(MySQLDNDBTDbObjectRecord.ID)},
-    CAST(`{DNDBTSysTables.DNDBTDbObjects.ParentID}` AS CHAR(36)) AS {nameof(MySQLDNDBTDbObjectRecord.ParentID)},
+    CAST(`{DNDBTSysTables.DNDBTDbObjects.ID}` AS CHAR(36)) AS `{nameof(MySQLDNDBTDbObjectRecord.ID)}`,
+    CAST(`{DNDBTSysTables.DNDBTDbObjects.ParentID}` AS CHAR(36)) AS `{nameof(MySQLDNDBTDbObjectRecord.ParentID)}`,
     `{DNDBTSysTables.DNDBTDbObjects.Type}`,
     `{DNDBTSysTables.DNDBTDbObjects.Name}`,
     `{DNDBTSysTables.DNDBTDbObjects.Code}`

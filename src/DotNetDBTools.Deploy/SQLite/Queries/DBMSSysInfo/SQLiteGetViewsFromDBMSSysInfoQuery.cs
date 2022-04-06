@@ -6,8 +6,8 @@ internal class SQLiteGetViewsFromDBMSSysInfoQuery : GetViewsFromDBMSSysInfoQuery
 {
     public override string Sql =>
 $@"SELECT
-    sm.name AS {nameof(ViewRecord.ViewName)},
-    sm.sql AS {nameof(ViewRecord.ViewCode)}
+    sm.name AS [{nameof(ViewRecord.ViewName)}],
+    sm.sql AS [{nameof(ViewRecord.ViewCode)}]
 FROM sqlite_master sm
 WHERE sm.type = 'view';";
 }

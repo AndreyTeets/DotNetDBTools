@@ -19,7 +19,7 @@ internal class MSSQLDropTypeQuery : IQuery
     private static string GetSql(MSSQLUserDefinedType userDefinedType)
     {
         string query =
-$@"DROP TYPE {userDefinedType.Name};";
+$@"DROP TYPE [{userDefinedType.Name}];";
 
         return query;
     }

@@ -4,7 +4,7 @@ BEGIN TRY;
     BEGIN TRANSACTION;
 
 -- QUERY START: MSSQLCreateTypeQuery
-EXEC sp_executesql N'CREATE TYPE MyUserDefinedType1 FROM NVARCHAR(100);';
+EXEC sp_executesql N'CREATE TYPE [MyUserDefinedType1] FROM NVARCHAR(100);';
 -- QUERY END: MSSQLCreateTypeQuery
 
 -- QUERY START: MSSQLInsertDNDBTDbObjectRecordQuery
@@ -12,13 +12,13 @@ EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''0cd1e71c-cc9c-440f-ac0b-8
 DECLARE @ParentID UNIQUEIDENTIFIER = NULL;
 DECLARE @Name NVARCHAR(MAX) = N''MyUserDefinedType1'';
 DECLARE @Code NVARCHAR(MAX) = NULL;
-INSERT INTO DNDBTDbObjects
+INSERT INTO [DNDBTDbObjects]
 (
-    ID,
-    ParentID,
-    Type,
-    Name,
-    Code
+    [ID],
+    [ParentID],
+    [Type],
+    [Name],
+    [Code]
 )
 VALUES
 (
@@ -31,14 +31,14 @@ VALUES
 -- QUERY END: MSSQLInsertDNDBTDbObjectRecordQuery
 
 -- QUERY START: MSSQLCreateTableQuery
-EXEC sp_executesql N'CREATE TABLE MyTable1
+EXEC sp_executesql N'CREATE TABLE [MyTable1]
 (
-    MyColumn1 INT NOT NULL CONSTRAINT DF_MyTable1_MyColumn1 DEFAULT 15,
-    MyColumn2 NVARCHAR(10) NOT NULL CONSTRAINT DF_MyTable1_MyColumn2 DEFAULT ''33'',
-    MyColumn3 INT IDENTITY NOT NULL,
-    MyColumn4 DECIMAL(19, 2) NOT NULL CONSTRAINT DF_MyTable1_MyColumn4 DEFAULT 7.36,
-    CONSTRAINT PK_MyTable1 PRIMARY KEY (MyColumn3),
-    CONSTRAINT UQ_MyTable1_MyColumn4 UNIQUE (MyColumn4),
+    [MyColumn1] INT NOT NULL CONSTRAINT [DF_MyTable1_MyColumn1] DEFAULT 15,
+    [MyColumn2] NVARCHAR(10) NOT NULL CONSTRAINT [DF_MyTable1_MyColumn2] DEFAULT ''33'',
+    [MyColumn3] INT IDENTITY NOT NULL,
+    [MyColumn4] DECIMAL(19, 2) NOT NULL CONSTRAINT [DF_MyTable1_MyColumn4] DEFAULT 7.36,
+    CONSTRAINT [PK_MyTable1] PRIMARY KEY ([MyColumn3]),
+    CONSTRAINT [UQ_MyTable1_MyColumn4] UNIQUE ([MyColumn4]),
     CONSTRAINT [CK_MyTable1_MyCheck1] CHECK (MyColumn4 >= 0)
 );';
 -- QUERY END: MSSQLCreateTableQuery
@@ -48,13 +48,13 @@ EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''299675e6-4faa-4d0f-a36a-2
 DECLARE @ParentID UNIQUEIDENTIFIER = NULL;
 DECLARE @Name NVARCHAR(MAX) = N''MyTable1'';
 DECLARE @Code NVARCHAR(MAX) = NULL;
-INSERT INTO DNDBTDbObjects
+INSERT INTO [DNDBTDbObjects]
 (
-    ID,
-    ParentID,
-    Type,
-    Name,
-    Code
+    [ID],
+    [ParentID],
+    [Type],
+    [Name],
+    [Code]
 )
 VALUES
 (
@@ -71,13 +71,13 @@ EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''a2f2a4de-1337-4594-ae41-7
 DECLARE @ParentID UNIQUEIDENTIFIER = N''299675e6-4faa-4d0f-a36a-224306ba5bcb'';
 DECLARE @Name NVARCHAR(MAX) = N''MyColumn1'';
 DECLARE @Code NVARCHAR(MAX) = N''15'';
-INSERT INTO DNDBTDbObjects
+INSERT INTO [DNDBTDbObjects]
 (
-    ID,
-    ParentID,
-    Type,
-    Name,
-    Code
+    [ID],
+    [ParentID],
+    [Type],
+    [Name],
+    [Code]
 )
 VALUES
 (
@@ -94,13 +94,13 @@ EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''fe68ee3d-09d0-40ac-93f9-5
 DECLARE @ParentID UNIQUEIDENTIFIER = N''299675e6-4faa-4d0f-a36a-224306ba5bcb'';
 DECLARE @Name NVARCHAR(MAX) = N''MyColumn2'';
 DECLARE @Code NVARCHAR(MAX) = N''''''33'''''';
-INSERT INTO DNDBTDbObjects
+INSERT INTO [DNDBTDbObjects]
 (
-    ID,
-    ParentID,
-    Type,
-    Name,
-    Code
+    [ID],
+    [ParentID],
+    [Type],
+    [Name],
+    [Code]
 )
 VALUES
 (
@@ -117,13 +117,13 @@ EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''6e95de30-e01a-4fb4-b8b7-8
 DECLARE @ParentID UNIQUEIDENTIFIER = N''299675e6-4faa-4d0f-a36a-224306ba5bcb'';
 DECLARE @Name NVARCHAR(MAX) = N''MyColumn3'';
 DECLARE @Code NVARCHAR(MAX) = NULL;
-INSERT INTO DNDBTDbObjects
+INSERT INTO [DNDBTDbObjects]
 (
-    ID,
-    ParentID,
-    Type,
-    Name,
-    Code
+    [ID],
+    [ParentID],
+    [Type],
+    [Name],
+    [Code]
 )
 VALUES
 (
@@ -140,13 +140,13 @@ EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''867ac528-e87e-4c93-b6e3-d
 DECLARE @ParentID UNIQUEIDENTIFIER = N''299675e6-4faa-4d0f-a36a-224306ba5bcb'';
 DECLARE @Name NVARCHAR(MAX) = N''MyColumn4'';
 DECLARE @Code NVARCHAR(MAX) = N''7.36'';
-INSERT INTO DNDBTDbObjects
+INSERT INTO [DNDBTDbObjects]
 (
-    ID,
-    ParentID,
-    Type,
-    Name,
-    Code
+    [ID],
+    [ParentID],
+    [Type],
+    [Name],
+    [Code]
 )
 VALUES
 (
@@ -163,13 +163,13 @@ EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''37a45def-f4a0-4be7-8bfb-8
 DECLARE @ParentID UNIQUEIDENTIFIER = N''299675e6-4faa-4d0f-a36a-224306ba5bcb'';
 DECLARE @Name NVARCHAR(MAX) = N''PK_MyTable1'';
 DECLARE @Code NVARCHAR(MAX) = NULL;
-INSERT INTO DNDBTDbObjects
+INSERT INTO [DNDBTDbObjects]
 (
-    ID,
-    ParentID,
-    Type,
-    Name,
-    Code
+    [ID],
+    [ParentID],
+    [Type],
+    [Name],
+    [Code]
 )
 VALUES
 (
@@ -186,13 +186,13 @@ EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''f3f08522-26ee-4950-9135-2
 DECLARE @ParentID UNIQUEIDENTIFIER = N''299675e6-4faa-4d0f-a36a-224306ba5bcb'';
 DECLARE @Name NVARCHAR(MAX) = N''UQ_MyTable1_MyColumn4'';
 DECLARE @Code NVARCHAR(MAX) = NULL;
-INSERT INTO DNDBTDbObjects
+INSERT INTO [DNDBTDbObjects]
 (
-    ID,
-    ParentID,
-    Type,
-    Name,
-    Code
+    [ID],
+    [ParentID],
+    [Type],
+    [Name],
+    [Code]
 )
 VALUES
 (
@@ -209,13 +209,13 @@ EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''eb9c59b5-bc7e-49d7-adaa-f
 DECLARE @ParentID UNIQUEIDENTIFIER = N''299675e6-4faa-4d0f-a36a-224306ba5bcb'';
 DECLARE @Name NVARCHAR(MAX) = N''CK_MyTable1_MyCheck1'';
 DECLARE @Code NVARCHAR(MAX) = N''CHECK (MyColumn4 >= 0)'';
-INSERT INTO DNDBTDbObjects
+INSERT INTO [DNDBTDbObjects]
 (
-    ID,
-    ParentID,
-    Type,
-    Name,
-    Code
+    [ID],
+    [ParentID],
+    [Type],
+    [Name],
+    [Code]
 )
 VALUES
 (
@@ -228,11 +228,11 @@ VALUES
 -- QUERY END: MSSQLInsertDNDBTDbObjectRecordQuery
 
 -- QUERY START: MSSQLCreateTableQuery
-EXEC sp_executesql N'CREATE TABLE MyTable2
+EXEC sp_executesql N'CREATE TABLE [MyTable2]
 (
-    MyColumn1 INT NOT NULL CONSTRAINT DF_MyTable2_MyColumn1 DEFAULT 333,
-    MyColumn2 VARBINARY(22) NULL CONSTRAINT DF_MyTable2_MyColumn2 DEFAULT 0x000408,
-    CONSTRAINT PK_MyTable2_CustomName PRIMARY KEY (MyColumn1)
+    [MyColumn1] INT NOT NULL CONSTRAINT [DF_MyTable2_MyColumn1] DEFAULT 333,
+    [MyColumn2] VARBINARY(22) NULL CONSTRAINT [DF_MyTable2_MyColumn2] DEFAULT 0x000408,
+    CONSTRAINT [PK_MyTable2_CustomName] PRIMARY KEY ([MyColumn1])
 );';
 -- QUERY END: MSSQLCreateTableQuery
 
@@ -241,13 +241,13 @@ EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''bfb9030c-a8c3-4882-9c42-1
 DECLARE @ParentID UNIQUEIDENTIFIER = NULL;
 DECLARE @Name NVARCHAR(MAX) = N''MyTable2'';
 DECLARE @Code NVARCHAR(MAX) = NULL;
-INSERT INTO DNDBTDbObjects
+INSERT INTO [DNDBTDbObjects]
 (
-    ID,
-    ParentID,
-    Type,
-    Name,
-    Code
+    [ID],
+    [ParentID],
+    [Type],
+    [Name],
+    [Code]
 )
 VALUES
 (
@@ -264,13 +264,13 @@ EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''c480f22f-7c01-4f41-b282-3
 DECLARE @ParentID UNIQUEIDENTIFIER = N''bfb9030c-a8c3-4882-9c42-1c6ad025cf8f'';
 DECLARE @Name NVARCHAR(MAX) = N''MyColumn1'';
 DECLARE @Code NVARCHAR(MAX) = N''333'';
-INSERT INTO DNDBTDbObjects
+INSERT INTO [DNDBTDbObjects]
 (
-    ID,
-    ParentID,
-    Type,
-    Name,
-    Code
+    [ID],
+    [ParentID],
+    [Type],
+    [Name],
+    [Code]
 )
 VALUES
 (
@@ -287,13 +287,13 @@ EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''5a0d1926-3270-4eb2-92eb-0
 DECLARE @ParentID UNIQUEIDENTIFIER = N''bfb9030c-a8c3-4882-9c42-1c6ad025cf8f'';
 DECLARE @Name NVARCHAR(MAX) = N''MyColumn2'';
 DECLARE @Code NVARCHAR(MAX) = N''0x000408'';
-INSERT INTO DNDBTDbObjects
+INSERT INTO [DNDBTDbObjects]
 (
-    ID,
-    ParentID,
-    Type,
-    Name,
-    Code
+    [ID],
+    [ParentID],
+    [Type],
+    [Name],
+    [Code]
 )
 VALUES
 (
@@ -310,13 +310,13 @@ EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''3a43615b-40b3-4a13-99e7-9
 DECLARE @ParentID UNIQUEIDENTIFIER = N''bfb9030c-a8c3-4882-9c42-1c6ad025cf8f'';
 DECLARE @Name NVARCHAR(MAX) = N''PK_MyTable2_CustomName'';
 DECLARE @Code NVARCHAR(MAX) = NULL;
-INSERT INTO DNDBTDbObjects
+INSERT INTO [DNDBTDbObjects]
 (
-    ID,
-    ParentID,
-    Type,
-    Name,
-    Code
+    [ID],
+    [ParentID],
+    [Type],
+    [Name],
+    [Code]
 )
 VALUES
 (
@@ -329,9 +329,9 @@ VALUES
 -- QUERY END: MSSQLInsertDNDBTDbObjectRecordQuery
 
 -- QUERY START: MSSQLCreateTableQuery
-EXEC sp_executesql N'CREATE TABLE MyTable4
+EXEC sp_executesql N'CREATE TABLE [MyTable4]
 (
-    MyColumn1 BIGINT NOT NULL
+    [MyColumn1] BIGINT NOT NULL
 );';
 -- QUERY END: MSSQLCreateTableQuery
 
@@ -340,13 +340,13 @@ EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''b12a6a37-7739-48e0-a9e1-4
 DECLARE @ParentID UNIQUEIDENTIFIER = NULL;
 DECLARE @Name NVARCHAR(MAX) = N''MyTable4'';
 DECLARE @Code NVARCHAR(MAX) = NULL;
-INSERT INTO DNDBTDbObjects
+INSERT INTO [DNDBTDbObjects]
 (
-    ID,
-    ParentID,
-    Type,
-    Name,
-    Code
+    [ID],
+    [ParentID],
+    [Type],
+    [Name],
+    [Code]
 )
 VALUES
 (
@@ -363,13 +363,13 @@ EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''de0425b8-9f99-4d76-9a64-0
 DECLARE @ParentID UNIQUEIDENTIFIER = N''b12a6a37-7739-48e0-a9e1-499ae7d2a395'';
 DECLARE @Name NVARCHAR(MAX) = N''MyColumn1'';
 DECLARE @Code NVARCHAR(MAX) = NULL;
-INSERT INTO DNDBTDbObjects
+INSERT INTO [DNDBTDbObjects]
 (
-    ID,
-    ParentID,
-    Type,
-    Name,
-    Code
+    [ID],
+    [ParentID],
+    [Type],
+    [Name],
+    [Code]
 )
 VALUES
 (
@@ -382,23 +382,23 @@ VALUES
 -- QUERY END: MSSQLInsertDNDBTDbObjectRecordQuery
 
 -- QUERY START: MSSQLCreateTableQuery
-EXEC sp_executesql N'CREATE TABLE MyTable5
+EXEC sp_executesql N'CREATE TABLE [MyTable5]
 (
-    MyColumn1 INT NOT NULL CONSTRAINT DF_MyTable5_MyColumn1 DEFAULT ABS(-15),
-    MyColumn10 TIME NOT NULL CONSTRAINT DF_MyTable5_MyColumn10 DEFAULT ''16:17:18'',
-    MyColumn11 DATETIME2 NOT NULL CONSTRAINT DF_MyTable5_MyColumn11 DEFAULT ''2022-02-15 16:17:18'',
-    MyColumn12 DATETIMEOFFSET NOT NULL CONSTRAINT DF_MyTable5_MyColumn12 DEFAULT ''2022-02-15 16:17:18+01:30'',
-    MyColumn13 MyUserDefinedType1 NULL CONSTRAINT DF_MyTable5_MyColumn13 DEFAULT ''cc'',
-    MyColumn2 NCHAR(4) NOT NULL CONSTRAINT DF_MyTable5_MyColumn2 DEFAULT ''test'',
-    MyColumn3 BINARY(3) NOT NULL CONSTRAINT DF_MyTable5_MyColumn3 DEFAULT 0x000204,
-    MyColumn4 FLOAT NOT NULL CONSTRAINT DF_MyTable5_MyColumn4 DEFAULT 123.456,
-    MyColumn5 REAL NOT NULL CONSTRAINT DF_MyTable5_MyColumn5 DEFAULT 12345.6789,
-    MyColumn6 DECIMAL(6, 1) NOT NULL CONSTRAINT DF_MyTable5_MyColumn6 DEFAULT 12.3,
-    MyColumn7 BIT NOT NULL CONSTRAINT DF_MyTable5_MyColumn7 DEFAULT 1,
-    MyColumn8 UNIQUEIDENTIFIER NOT NULL CONSTRAINT DF_MyTable5_MyColumn8 DEFAULT ''8e2f99ad-0fc8-456d-b0e4-ec3ba572dd15'',
-    MyColumn9 DATE NOT NULL CONSTRAINT DF_MyTable5_MyColumn9 DEFAULT ''2022-02-15'',
-    CONSTRAINT PK_MyTable5_CustomName PRIMARY KEY (MyColumn2, MyColumn1),
-    CONSTRAINT UQ_MyTable5_CustomName UNIQUE (MyColumn6, MyColumn3, MyColumn7)
+    [MyColumn1] INT NOT NULL CONSTRAINT [DF_MyTable5_MyColumn1] DEFAULT ABS(-15),
+    [MyColumn10] TIME NOT NULL CONSTRAINT [DF_MyTable5_MyColumn10] DEFAULT ''16:17:18'',
+    [MyColumn11] DATETIME2 NOT NULL CONSTRAINT [DF_MyTable5_MyColumn11] DEFAULT ''2022-02-15 16:17:18'',
+    [MyColumn12] DATETIMEOFFSET NOT NULL CONSTRAINT [DF_MyTable5_MyColumn12] DEFAULT ''2022-02-15 16:17:18+01:30'',
+    [MyColumn13] MyUserDefinedType1 NULL CONSTRAINT [DF_MyTable5_MyColumn13] DEFAULT ''cc'',
+    [MyColumn2] NCHAR(4) NOT NULL CONSTRAINT [DF_MyTable5_MyColumn2] DEFAULT ''test'',
+    [MyColumn3] BINARY(3) NOT NULL CONSTRAINT [DF_MyTable5_MyColumn3] DEFAULT 0x000204,
+    [MyColumn4] FLOAT NOT NULL CONSTRAINT [DF_MyTable5_MyColumn4] DEFAULT 123.456,
+    [MyColumn5] REAL NOT NULL CONSTRAINT [DF_MyTable5_MyColumn5] DEFAULT 12345.6789,
+    [MyColumn6] DECIMAL(6, 1) NOT NULL CONSTRAINT [DF_MyTable5_MyColumn6] DEFAULT 12.3,
+    [MyColumn7] BIT NOT NULL CONSTRAINT [DF_MyTable5_MyColumn7] DEFAULT 1,
+    [MyColumn8] UNIQUEIDENTIFIER NOT NULL CONSTRAINT [DF_MyTable5_MyColumn8] DEFAULT ''8e2f99ad-0fc8-456d-b0e4-ec3ba572dd15'',
+    [MyColumn9] DATE NOT NULL CONSTRAINT [DF_MyTable5_MyColumn9] DEFAULT ''2022-02-15'',
+    CONSTRAINT [PK_MyTable5_CustomName] PRIMARY KEY ([MyColumn2], [MyColumn1]),
+    CONSTRAINT [UQ_MyTable5_CustomName] UNIQUE ([MyColumn6], [MyColumn3], [MyColumn7])
 );';
 -- QUERY END: MSSQLCreateTableQuery
 
@@ -407,13 +407,13 @@ EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''6ca51f29-c1bc-4349-b9c1-6
 DECLARE @ParentID UNIQUEIDENTIFIER = NULL;
 DECLARE @Name NVARCHAR(MAX) = N''MyTable5'';
 DECLARE @Code NVARCHAR(MAX) = NULL;
-INSERT INTO DNDBTDbObjects
+INSERT INTO [DNDBTDbObjects]
 (
-    ID,
-    ParentID,
-    Type,
-    Name,
-    Code
+    [ID],
+    [ParentID],
+    [Type],
+    [Name],
+    [Code]
 )
 VALUES
 (
@@ -430,13 +430,13 @@ EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''5309d66f-2030-402e-912e-5
 DECLARE @ParentID UNIQUEIDENTIFIER = N''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'';
 DECLARE @Name NVARCHAR(MAX) = N''MyColumn1'';
 DECLARE @Code NVARCHAR(MAX) = N''ABS(-15)'';
-INSERT INTO DNDBTDbObjects
+INSERT INTO [DNDBTDbObjects]
 (
-    ID,
-    ParentID,
-    Type,
-    Name,
-    Code
+    [ID],
+    [ParentID],
+    [Type],
+    [Name],
+    [Code]
 )
 VALUES
 (
@@ -453,13 +453,13 @@ EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''cba4849b-3d84-4e38-b2c8-f
 DECLARE @ParentID UNIQUEIDENTIFIER = N''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'';
 DECLARE @Name NVARCHAR(MAX) = N''MyColumn10'';
 DECLARE @Code NVARCHAR(MAX) = N''''''16:17:18'''''';
-INSERT INTO DNDBTDbObjects
+INSERT INTO [DNDBTDbObjects]
 (
-    ID,
-    ParentID,
-    Type,
-    Name,
-    Code
+    [ID],
+    [ParentID],
+    [Type],
+    [Name],
+    [Code]
 )
 VALUES
 (
@@ -476,13 +476,13 @@ EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''4dde852d-ec19-4b61-80f9-d
 DECLARE @ParentID UNIQUEIDENTIFIER = N''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'';
 DECLARE @Name NVARCHAR(MAX) = N''MyColumn11'';
 DECLARE @Code NVARCHAR(MAX) = N''''''2022-02-15 16:17:18'''''';
-INSERT INTO DNDBTDbObjects
+INSERT INTO [DNDBTDbObjects]
 (
-    ID,
-    ParentID,
-    Type,
-    Name,
-    Code
+    [ID],
+    [ParentID],
+    [Type],
+    [Name],
+    [Code]
 )
 VALUES
 (
@@ -499,13 +499,13 @@ EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''685faf2e-fef7-4e6b-a960-a
 DECLARE @ParentID UNIQUEIDENTIFIER = N''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'';
 DECLARE @Name NVARCHAR(MAX) = N''MyColumn12'';
 DECLARE @Code NVARCHAR(MAX) = N''''''2022-02-15 16:17:18+01:30'''''';
-INSERT INTO DNDBTDbObjects
+INSERT INTO [DNDBTDbObjects]
 (
-    ID,
-    ParentID,
-    Type,
-    Name,
-    Code
+    [ID],
+    [ParentID],
+    [Type],
+    [Name],
+    [Code]
 )
 VALUES
 (
@@ -522,13 +522,13 @@ EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''15ae6061-426d-4485-85e6-e
 DECLARE @ParentID UNIQUEIDENTIFIER = N''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'';
 DECLARE @Name NVARCHAR(MAX) = N''MyColumn13'';
 DECLARE @Code NVARCHAR(MAX) = N''''''cc'''''';
-INSERT INTO DNDBTDbObjects
+INSERT INTO [DNDBTDbObjects]
 (
-    ID,
-    ParentID,
-    Type,
-    Name,
-    Code
+    [ID],
+    [ParentID],
+    [Type],
+    [Name],
+    [Code]
 )
 VALUES
 (
@@ -545,13 +545,13 @@ EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''11ef8e25-3691-42d4-b2fa-8
 DECLARE @ParentID UNIQUEIDENTIFIER = N''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'';
 DECLARE @Name NVARCHAR(MAX) = N''MyColumn2'';
 DECLARE @Code NVARCHAR(MAX) = N''''''test'''''';
-INSERT INTO DNDBTDbObjects
+INSERT INTO [DNDBTDbObjects]
 (
-    ID,
-    ParentID,
-    Type,
-    Name,
-    Code
+    [ID],
+    [ParentID],
+    [Type],
+    [Name],
+    [Code]
 )
 VALUES
 (
@@ -568,13 +568,13 @@ EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''6ed0ab37-aad3-4294-9ba6-c
 DECLARE @ParentID UNIQUEIDENTIFIER = N''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'';
 DECLARE @Name NVARCHAR(MAX) = N''MyColumn3'';
 DECLARE @Code NVARCHAR(MAX) = N''0x000204'';
-INSERT INTO DNDBTDbObjects
+INSERT INTO [DNDBTDbObjects]
 (
-    ID,
-    ParentID,
-    Type,
-    Name,
-    Code
+    [ID],
+    [ParentID],
+    [Type],
+    [Name],
+    [Code]
 )
 VALUES
 (
@@ -591,13 +591,13 @@ EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''aca57fd6-80d0-4c18-b2ca-a
 DECLARE @ParentID UNIQUEIDENTIFIER = N''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'';
 DECLARE @Name NVARCHAR(MAX) = N''MyColumn4'';
 DECLARE @Code NVARCHAR(MAX) = N''123.456'';
-INSERT INTO DNDBTDbObjects
+INSERT INTO [DNDBTDbObjects]
 (
-    ID,
-    ParentID,
-    Type,
-    Name,
-    Code
+    [ID],
+    [ParentID],
+    [Type],
+    [Name],
+    [Code]
 )
 VALUES
 (
@@ -614,13 +614,13 @@ EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''47666b8b-ca72-4507-86b2-0
 DECLARE @ParentID UNIQUEIDENTIFIER = N''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'';
 DECLARE @Name NVARCHAR(MAX) = N''MyColumn5'';
 DECLARE @Code NVARCHAR(MAX) = N''12345.6789'';
-INSERT INTO DNDBTDbObjects
+INSERT INTO [DNDBTDbObjects]
 (
-    ID,
-    ParentID,
-    Type,
-    Name,
-    Code
+    [ID],
+    [ParentID],
+    [Type],
+    [Name],
+    [Code]
 )
 VALUES
 (
@@ -637,13 +637,13 @@ EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''98fded6c-d486-4a2e-9c9a-1
 DECLARE @ParentID UNIQUEIDENTIFIER = N''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'';
 DECLARE @Name NVARCHAR(MAX) = N''MyColumn6'';
 DECLARE @Code NVARCHAR(MAX) = N''12.3'';
-INSERT INTO DNDBTDbObjects
+INSERT INTO [DNDBTDbObjects]
 (
-    ID,
-    ParentID,
-    Type,
-    Name,
-    Code
+    [ID],
+    [ParentID],
+    [Type],
+    [Name],
+    [Code]
 )
 VALUES
 (
@@ -660,13 +660,13 @@ EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''2502cade-458a-48ee-9421-e
 DECLARE @ParentID UNIQUEIDENTIFIER = N''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'';
 DECLARE @Name NVARCHAR(MAX) = N''MyColumn7'';
 DECLARE @Code NVARCHAR(MAX) = N''1'';
-INSERT INTO DNDBTDbObjects
+INSERT INTO [DNDBTDbObjects]
 (
-    ID,
-    ParentID,
-    Type,
-    Name,
-    Code
+    [ID],
+    [ParentID],
+    [Type],
+    [Name],
+    [Code]
 )
 VALUES
 (
@@ -683,13 +683,13 @@ EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''ed044a8a-6858-41e2-a867-9
 DECLARE @ParentID UNIQUEIDENTIFIER = N''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'';
 DECLARE @Name NVARCHAR(MAX) = N''MyColumn8'';
 DECLARE @Code NVARCHAR(MAX) = N''''''8e2f99ad-0fc8-456d-b0e4-ec3ba572dd15'''''';
-INSERT INTO DNDBTDbObjects
+INSERT INTO [DNDBTDbObjects]
 (
-    ID,
-    ParentID,
-    Type,
-    Name,
-    Code
+    [ID],
+    [ParentID],
+    [Type],
+    [Name],
+    [Code]
 )
 VALUES
 (
@@ -706,13 +706,13 @@ EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''9939d676-73b7-42d1-ba3e-5
 DECLARE @ParentID UNIQUEIDENTIFIER = N''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'';
 DECLARE @Name NVARCHAR(MAX) = N''MyColumn9'';
 DECLARE @Code NVARCHAR(MAX) = N''''''2022-02-15'''''';
-INSERT INTO DNDBTDbObjects
+INSERT INTO [DNDBTDbObjects]
 (
-    ID,
-    ParentID,
-    Type,
-    Name,
-    Code
+    [ID],
+    [ParentID],
+    [Type],
+    [Name],
+    [Code]
 )
 VALUES
 (
@@ -729,13 +729,13 @@ EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''79384d48-a39b-4a22-900e-0
 DECLARE @ParentID UNIQUEIDENTIFIER = N''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'';
 DECLARE @Name NVARCHAR(MAX) = N''PK_MyTable5_CustomName'';
 DECLARE @Code NVARCHAR(MAX) = NULL;
-INSERT INTO DNDBTDbObjects
+INSERT INTO [DNDBTDbObjects]
 (
-    ID,
-    ParentID,
-    Type,
-    Name,
-    Code
+    [ID],
+    [ParentID],
+    [Type],
+    [Name],
+    [Code]
 )
 VALUES
 (
@@ -752,13 +752,13 @@ EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''5293b58a-9f63-4f0f-8d6f-1
 DECLARE @ParentID UNIQUEIDENTIFIER = N''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'';
 DECLARE @Name NVARCHAR(MAX) = N''UQ_MyTable5_CustomName'';
 DECLARE @Code NVARCHAR(MAX) = NULL;
-INSERT INTO DNDBTDbObjects
+INSERT INTO [DNDBTDbObjects]
 (
-    ID,
-    ParentID,
-    Type,
-    Name,
-    Code
+    [ID],
+    [ParentID],
+    [Type],
+    [Name],
+    [Code]
 )
 VALUES
 (
@@ -771,10 +771,10 @@ VALUES
 -- QUERY END: MSSQLInsertDNDBTDbObjectRecordQuery
 
 -- QUERY START: MSSQLCreateTableQuery
-EXEC sp_executesql N'CREATE TABLE MyTable6
+EXEC sp_executesql N'CREATE TABLE [MyTable6]
 (
-    MyColumn1 NCHAR(4) NULL,
-    MyColumn2 INT NULL
+    [MyColumn1] NCHAR(4) NULL,
+    [MyColumn2] INT NULL
 );';
 -- QUERY END: MSSQLCreateTableQuery
 
@@ -783,13 +783,13 @@ EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''f3064a8c-346a-4b3d-af2c-d
 DECLARE @ParentID UNIQUEIDENTIFIER = NULL;
 DECLARE @Name NVARCHAR(MAX) = N''MyTable6'';
 DECLARE @Code NVARCHAR(MAX) = NULL;
-INSERT INTO DNDBTDbObjects
+INSERT INTO [DNDBTDbObjects]
 (
-    ID,
-    ParentID,
-    Type,
-    Name,
-    Code
+    [ID],
+    [ParentID],
+    [Type],
+    [Name],
+    [Code]
 )
 VALUES
 (
@@ -806,13 +806,13 @@ EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''bfa08c82-5c8f-4ab4-bd41-1
 DECLARE @ParentID UNIQUEIDENTIFIER = N''f3064a8c-346a-4b3d-af2c-d967b39841e4'';
 DECLARE @Name NVARCHAR(MAX) = N''MyColumn1'';
 DECLARE @Code NVARCHAR(MAX) = NULL;
-INSERT INTO DNDBTDbObjects
+INSERT INTO [DNDBTDbObjects]
 (
-    ID,
-    ParentID,
-    Type,
-    Name,
-    Code
+    [ID],
+    [ParentID],
+    [Type],
+    [Name],
+    [Code]
 )
 VALUES
 (
@@ -829,13 +829,13 @@ EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''a402e2b7-c826-4cfd-a304-9
 DECLARE @ParentID UNIQUEIDENTIFIER = N''f3064a8c-346a-4b3d-af2c-d967b39841e4'';
 DECLARE @Name NVARCHAR(MAX) = N''MyColumn2'';
 DECLARE @Code NVARCHAR(MAX) = NULL;
-INSERT INTO DNDBTDbObjects
+INSERT INTO [DNDBTDbObjects]
 (
-    ID,
-    ParentID,
-    Type,
-    Name,
-    Code
+    [ID],
+    [ParentID],
+    [Type],
+    [Name],
+    [Code]
 )
 VALUES
 (
@@ -848,8 +848,8 @@ VALUES
 -- QUERY END: MSSQLInsertDNDBTDbObjectRecordQuery
 
 -- QUERY START: MSSQLCreateIndexQuery
-EXEC sp_executesql N'CREATE UNIQUE INDEX IDX_MyTable2_MyIndex1
-ON MyTable2 (MyColumn1, MyColumn2);';
+EXEC sp_executesql N'CREATE UNIQUE INDEX [IDX_MyTable2_MyIndex1]
+ON [MyTable2] ([MyColumn1], [MyColumn2]);';
 -- QUERY END: MSSQLCreateIndexQuery
 
 -- QUERY START: MSSQLInsertDNDBTDbObjectRecordQuery
@@ -857,13 +857,13 @@ EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''74390b3c-bc39-4860-a42e-1
 DECLARE @ParentID UNIQUEIDENTIFIER = N''bfb9030c-a8c3-4882-9c42-1c6ad025cf8f'';
 DECLARE @Name NVARCHAR(MAX) = N''IDX_MyTable2_MyIndex1'';
 DECLARE @Code NVARCHAR(MAX) = NULL;
-INSERT INTO DNDBTDbObjects
+INSERT INTO [DNDBTDbObjects]
 (
-    ID,
-    ParentID,
-    Type,
-    Name,
-    Code
+    [ID],
+    [ParentID],
+    [Type],
+    [Name],
+    [Code]
 )
 VALUES
 (
@@ -876,8 +876,8 @@ VALUES
 -- QUERY END: MSSQLInsertDNDBTDbObjectRecordQuery
 
 -- QUERY START: MSSQLCreateIndexQuery
-EXEC sp_executesql N'CREATE INDEX IDX_MyTable5_CustomName
-ON MyTable5 (MyColumn8);';
+EXEC sp_executesql N'CREATE INDEX [IDX_MyTable5_CustomName]
+ON [MyTable5] ([MyColumn8]);';
 -- QUERY END: MSSQLCreateIndexQuery
 
 -- QUERY START: MSSQLInsertDNDBTDbObjectRecordQuery
@@ -885,13 +885,13 @@ EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''1d632285-9914-4c5d-98e6-a
 DECLARE @ParentID UNIQUEIDENTIFIER = N''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'';
 DECLARE @Name NVARCHAR(MAX) = N''IDX_MyTable5_CustomName'';
 DECLARE @Code NVARCHAR(MAX) = NULL;
-INSERT INTO DNDBTDbObjects
+INSERT INTO [DNDBTDbObjects]
 (
-    ID,
-    ParentID,
-    Type,
-    Name,
-    Code
+    [ID],
+    [ParentID],
+    [Type],
+    [Name],
+    [Code]
 )
 VALUES
 (
@@ -904,8 +904,8 @@ VALUES
 -- QUERY END: MSSQLInsertDNDBTDbObjectRecordQuery
 
 -- QUERY START: MSSQLCreateForeignKeyQuery
-EXEC sp_executesql N'ALTER TABLE MyTable1 ADD CONSTRAINT FK_MyTable1_MyColumn1_MyTable2_MyColumn1 FOREIGN KEY (MyColumn1)
-    REFERENCES MyTable2 (MyColumn1)
+EXEC sp_executesql N'ALTER TABLE [MyTable1] ADD CONSTRAINT [FK_MyTable1_MyColumn1_MyTable2_MyColumn1] FOREIGN KEY ([MyColumn1])
+    REFERENCES [MyTable2] ([MyColumn1])
     ON UPDATE NO ACTION ON DELETE CASCADE;';
 -- QUERY END: MSSQLCreateForeignKeyQuery
 
@@ -914,13 +914,13 @@ EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''d11b2a53-32db-432f-bb6b-f
 DECLARE @ParentID UNIQUEIDENTIFIER = N''299675e6-4faa-4d0f-a36a-224306ba5bcb'';
 DECLARE @Name NVARCHAR(MAX) = N''FK_MyTable1_MyColumn1_MyTable2_MyColumn1'';
 DECLARE @Code NVARCHAR(MAX) = NULL;
-INSERT INTO DNDBTDbObjects
+INSERT INTO [DNDBTDbObjects]
 (
-    ID,
-    ParentID,
-    Type,
-    Name,
-    Code
+    [ID],
+    [ParentID],
+    [Type],
+    [Name],
+    [Code]
 )
 VALUES
 (
@@ -933,8 +933,8 @@ VALUES
 -- QUERY END: MSSQLInsertDNDBTDbObjectRecordQuery
 
 -- QUERY START: MSSQLCreateForeignKeyQuery
-EXEC sp_executesql N'ALTER TABLE MyTable6 ADD CONSTRAINT FK_MyTable6_MyTable5_CustomName FOREIGN KEY (MyColumn1, MyColumn2)
-    REFERENCES MyTable5 (MyColumn2, MyColumn1)
+EXEC sp_executesql N'ALTER TABLE [MyTable6] ADD CONSTRAINT [FK_MyTable6_MyTable5_CustomName] FOREIGN KEY ([MyColumn1], [MyColumn2])
+    REFERENCES [MyTable5] ([MyColumn2], [MyColumn1])
     ON UPDATE NO ACTION ON DELETE NO ACTION;';
 -- QUERY END: MSSQLCreateForeignKeyQuery
 
@@ -943,13 +943,13 @@ EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''ae453b22-d270-41fc-8184-9
 DECLARE @ParentID UNIQUEIDENTIFIER = N''f3064a8c-346a-4b3d-af2c-d967b39841e4'';
 DECLARE @Name NVARCHAR(MAX) = N''FK_MyTable6_MyTable5_CustomName'';
 DECLARE @Code NVARCHAR(MAX) = NULL;
-INSERT INTO DNDBTDbObjects
+INSERT INTO [DNDBTDbObjects]
 (
-    ID,
-    ParentID,
-    Type,
-    Name,
-    Code
+    [ID],
+    [ParentID],
+    [Type],
+    [Name],
+    [Code]
 )
 VALUES
 (
@@ -984,13 +984,13 @@ SELECT
 FROM MyTable1 t1
 LEFT JOIN MyTable2 t2
     ON t2.MyColumn1 = t1.MyColumn1;'';
-INSERT INTO DNDBTDbObjects
+INSERT INTO [DNDBTDbObjects]
 (
-    ID,
-    ParentID,
-    Type,
-    Name,
-    Code
+    [ID],
+    [ParentID],
+    [Type],
+    [Name],
+    [Code]
 )
 VALUES
 (
@@ -1025,13 +1025,13 @@ BEGIN
     INSERT INTO [MyTable4]([MyColumn1])
     SELECT i.[MyColumn1] FROM inserted i;
 END;'';
-INSERT INTO DNDBTDbObjects
+INSERT INTO [DNDBTDbObjects]
 (
-    ID,
-    ParentID,
-    Type,
-    Name,
-    Code
+    [ID],
+    [ParentID],
+    [Type],
+    [Name],
+    [Code]
 )
 VALUES
 (

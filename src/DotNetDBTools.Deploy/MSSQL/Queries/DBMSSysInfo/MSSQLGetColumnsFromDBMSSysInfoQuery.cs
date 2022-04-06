@@ -11,17 +11,17 @@ internal class MSSQLGetColumnsFromDBMSSysInfoQuery : GetColumnsFromDBMSSysInfoQu
 {
     public override string Sql =>
 $@"SELECT
-    t.name AS {nameof(MSSQLColumnRecord.TableName)},
-    c.name AS {nameof(MSSQLColumnRecord.ColumnName)},
-    (SELECT tp.name FROM sys.types tp WHERE tp.user_type_id = c.system_type_id) AS {nameof(MSSQLColumnRecord.DataType)},
-    (SELECT tp.name FROM sys.types tp WHERE tp.user_type_id = c.user_type_id AND tp.is_user_defined = 1) AS {nameof(MSSQLColumnRecord.UserDefinedDataType)},
+    t.name AS [{nameof(MSSQLColumnRecord.TableName)}],
+    c.name AS [{nameof(MSSQLColumnRecord.ColumnName)}],
+    (SELECT tp.name FROM sys.types tp WHERE tp.user_type_id = c.system_type_id) AS [{nameof(MSSQLColumnRecord.DataType)}],
+    (SELECT tp.name FROM sys.types tp WHERE tp.user_type_id = c.user_type_id AND tp.is_user_defined = 1) AS [{nameof(MSSQLColumnRecord.UserDefinedDataType)}],
     ~c.is_nullable AS [{nameof(MSSQLColumnRecord.NotNull)}],
     c.is_identity AS [{nameof(MSSQLColumnRecord.Identity)}],
     dc.definition AS [{nameof(MSSQLColumnRecord.Default)}],
-    dc.name AS {nameof(MSSQLColumnRecord.DefaultConstraintName)},
-    c.max_length AS {nameof(MSSQLColumnRecord.Length)},
-    c.precision AS {nameof(MSSQLColumnRecord.Precision)},
-    c.scale AS {nameof(MSSQLColumnRecord.Scale)}
+    dc.name AS [{nameof(MSSQLColumnRecord.DefaultConstraintName)}],
+    c.max_length AS [{nameof(MSSQLColumnRecord.Length)}],
+    c.precision AS [{nameof(MSSQLColumnRecord.Precision)}],
+    c.scale AS [{nameof(MSSQLColumnRecord.Scale)}]
 FROM sys.tables t
 INNER JOIN sys.columns c
     ON c.object_id = t.object_id

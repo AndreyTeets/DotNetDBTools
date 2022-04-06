@@ -22,14 +22,14 @@ internal class SQLiteAlterTableQuery : AlterTableQuery
         foreach (Index index in tableDiff.IndexesToDrop)
         {
             dropIndexStatements.Add(
-$@"DROP INDEX {index.Name};");
+$@"DROP INDEX [{index.Name}];");
         }
 
         List<string> dropTriggerStatements = new();
         foreach (Trigger trigger in tableDiff.TriggersToDrop)
         {
             dropTriggerStatements.Add(
-$@"DROP TRIGGER {trigger.Name};");
+$@"DROP TRIGGER [{trigger.Name}];");
         }
 
         List<string> createTriggerStatements = new();
@@ -43,23 +43,23 @@ $@"{AppendSemicolonIfAbsent(trigger.GetCode())}");
         foreach (Index index in tableDiff.IndexesToCreate)
         {
             createIndexStatements.Add(
-$@"CREATE{GetUniqueStatement(index.Unique)} INDEX {index.Name}
-ON {tableDiff.NewTable.Name} ({string.Join(", ", index.Columns)});");
+$@"CREATE{GetUniqueStatement(index.Unique)} INDEX [{index.Name}]
+ON [{tableDiff.NewTable.Name}] ({string.Join(", ", index.Columns.Select(x => $@"[{x}]"))});");
         }
 
         string alterTableStatement =
-$@"CREATE TABLE {DNDBTTempPrefix}{tableDiff.NewTable.Name}
+$@"CREATE TABLE [{DNDBTTempPrefix}{tableDiff.NewTable.Name}]
 (
 {GetTableDefinitionsText((SQLiteTable)tableDiff.NewTable)}
 );
 
-INSERT INTO {DNDBTTempPrefix}{tableDiff.NewTable.Name}({GetCommonColumnsNewNamesText(tableDiff)})
+INSERT INTO [{DNDBTTempPrefix}{tableDiff.NewTable.Name}]({GetCommonColumnsNewNamesText(tableDiff)})
 SELECT {GetCommonColumnsOldNamesText(tableDiff)}
-FROM {tableDiff.OldTable.Name};
+FROM [{tableDiff.OldTable.Name}];
 
-DROP TABLE {tableDiff.OldTable.Name};
+DROP TABLE [{tableDiff.OldTable.Name}];
 
-ALTER TABLE {DNDBTTempPrefix}{tableDiff.NewTable.Name} RENAME TO {tableDiff.NewTable.Name};";
+ALTER TABLE [{DNDBTTempPrefix}{tableDiff.NewTable.Name}] RENAME TO [{tableDiff.NewTable.Name}];";
 
         StringBuilder sb = new();
 
@@ -82,13 +82,13 @@ ALTER TABLE {DNDBTTempPrefix}{tableDiff.NewTable.Name} RENAME TO {tableDiff.NewT
     {
         IEnumerable<string> commonNewOldColumnsNames = tableDiff.NewTable.Columns.Select(x => x.Name)
             .Except(tableDiff.AddedColumns.Select(x => x.Name));
-        return string.Join(", ", commonNewOldColumnsNames);
+        return string.Join(", ", commonNewOldColumnsNames.Select(x => $@"[{x}]"));
     }
 
     private static string GetCommonColumnsOldNamesText(TableDiff tableDiff)
     {
         IEnumerable<string> commonNewOldColumnsNames = tableDiff.OldTable.Columns.Select(x => x.Name)
             .Except(tableDiff.RemovedColumns.Select(x => x.Name));
-        return string.Join(", ", commonNewOldColumnsNames);
+        return string.Join(", ", commonNewOldColumnsNames.Select(x => $@"[{x}]"));
     }
 }

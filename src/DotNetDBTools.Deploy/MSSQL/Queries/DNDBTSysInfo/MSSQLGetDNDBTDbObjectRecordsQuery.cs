@@ -9,12 +9,12 @@ internal class MSSQLGetDNDBTDbObjectRecordsQuery : GetDNDBTDbObjectRecordsQuery
 {
     public override string Sql =>
 $@"SELECT
-    {DNDBTSysTables.DNDBTDbObjects.ID},
-    {DNDBTSysTables.DNDBTDbObjects.ParentID},
-    {DNDBTSysTables.DNDBTDbObjects.Type},
-    {DNDBTSysTables.DNDBTDbObjects.Name},
-    {DNDBTSysTables.DNDBTDbObjects.Code}
-FROM {DNDBTSysTables.DNDBTDbObjects};";
+    [{DNDBTSysTables.DNDBTDbObjects.ID}],
+    [{DNDBTSysTables.DNDBTDbObjects.ParentID}],
+    [{DNDBTSysTables.DNDBTDbObjects.Type}],
+    [{DNDBTSysTables.DNDBTDbObjects.Name}],
+    [{DNDBTSysTables.DNDBTDbObjects.Code}]
+FROM [{DNDBTSysTables.DNDBTDbObjects}];";
 
     public override RecordsLoader Loader => new MSSQLRecordsLoader();
 

@@ -26,12 +26,12 @@ $@"{AppendSemicolonIfAbsent(trigger.GetCode())}");
         foreach (Index index in table.Indexes)
         {
             createIndexStatements.Add(
-$@"CREATE{GetUniqueStatement(index.Unique)} INDEX {index.Name}
-ON {table.Name} ({string.Join(", ", index.Columns)});");
+$@"CREATE{GetUniqueStatement(index.Unique)} INDEX [{index.Name}]
+ON [{table.Name}] ({string.Join(", ", index.Columns.Select(x => $@"[{x}]"))});");
         }
 
         string createTableStatement =
-$@"CREATE TABLE {table.Name}
+$@"CREATE TABLE [{table.Name}]
 (
 {GetTableDefinitionsText(table)}
 );";

@@ -169,7 +169,7 @@ internal class MSSQLDbEditor : DbEditor<
 
     private void DropFunction(MSSQLFunction func)
     {
-        QueryExecutor.Execute(new GenericQuery($"DROP FUNCTION {func.Name};"));
+        QueryExecutor.Execute(new GenericQuery($"DROP FUNCTION [{func.Name}];"));
         QueryExecutor.Execute(new MSSQLDeleteDNDBTDbObjectRecordQuery(func.ID));
     }
 
@@ -181,7 +181,7 @@ internal class MSSQLDbEditor : DbEditor<
 
     private void DropView(MSSQLView view)
     {
-        QueryExecutor.Execute(new GenericQuery($"DROP VIEW {view.Name};"));
+        QueryExecutor.Execute(new GenericQuery($"DROP VIEW [{view.Name}];"));
         QueryExecutor.Execute(new MSSQLDeleteDNDBTDbObjectRecordQuery(view.ID));
     }
 
@@ -193,7 +193,7 @@ internal class MSSQLDbEditor : DbEditor<
 
     private void DropProcedure(MSSQLProcedure proc)
     {
-        QueryExecutor.Execute(new GenericQuery($"DROP PROCEDURE {proc.Name};"));
+        QueryExecutor.Execute(new GenericQuery($"DROP PROCEDURE [{proc.Name}];"));
         QueryExecutor.Execute(new MSSQLDeleteDNDBTDbObjectRecordQuery(proc.ID));
     }
 }

@@ -18,10 +18,10 @@ internal class SQLiteUpdateDNDBTDbObjectRecordQuery : UpdateDNDBTDbObjectRecordQ
     protected override string GetSql()
     {
         string query =
-$@"UPDATE {DNDBTSysTables.DNDBTDbObjects} SET
-    {DNDBTSysTables.DNDBTDbObjects.Name} = {NameParameterName},
-    {DNDBTSysTables.DNDBTDbObjects.Code} = {CodeParameterName}
-WHERE {DNDBTSysTables.DNDBTDbObjects.ID} = {IDParameterName};";
+$@"UPDATE [{DNDBTSysTables.DNDBTDbObjects}] SET
+    [{DNDBTSysTables.DNDBTDbObjects.Name}] = {NameParameterName},
+    [{DNDBTSysTables.DNDBTDbObjects.Code}] = {CodeParameterName}
+WHERE [{DNDBTSysTables.DNDBTDbObjects.ID}] = {IDParameterName};";
 
         return query;
     }

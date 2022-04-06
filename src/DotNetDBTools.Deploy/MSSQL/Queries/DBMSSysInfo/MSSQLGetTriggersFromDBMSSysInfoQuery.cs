@@ -8,9 +8,9 @@ internal class MSSQLGetTriggersFromDBMSSysInfoQuery : GetTriggersFromDBMSSysInfo
 {
     public override string Sql =>
 $@"SELECT
-    o.name AS {nameof(TriggerRecord.TableName)},
-    t.name AS {nameof(TriggerRecord.TriggerName)},
-    object_definition(t.object_id) AS {nameof(TriggerRecord.TriggerCode)}
+    o.name AS [{nameof(TriggerRecord.TableName)}],
+    t.name AS [{nameof(TriggerRecord.TriggerName)}],
+    object_definition(t.object_id) AS [{nameof(TriggerRecord.TriggerCode)}]
 FROM sys.triggers t
 INNER JOIN sys.objects o
     ON t.parent_id = o.object_id

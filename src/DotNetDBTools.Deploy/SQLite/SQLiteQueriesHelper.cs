@@ -13,20 +13,20 @@ internal static class SQLiteQueriesHelper
         List<string> tableDefinitions = new();
 
         tableDefinitions.AddRange(table.Columns.Select(c =>
-$@"    {c.Name} {c.DataType.Name}{GetPrimaryKeyStatement(c, table.PrimaryKey)} {GetNullabilityStatement(c)}{GetDefaultValStatement(c)}"));
+$@"    [{c.Name}] {c.DataType.Name}{GetPrimaryKeyStatement(c, table.PrimaryKey)} {GetNullabilityStatement(c)}{GetDefaultValStatement(c)}"));
 
         if (table.PrimaryKey is not null && table.PrimaryKey.Columns.Count() > 1)
         {
             tableDefinitions.Add(
-$@"    CONSTRAINT {table.PrimaryKey.Name} PRIMARY KEY ({string.Join(", ", table.PrimaryKey.Columns)})");
+$@"    CONSTRAINT [{table.PrimaryKey.Name}] PRIMARY KEY ({string.Join(", ", table.PrimaryKey.Columns.Select(x => $@"[{x}]"))})");
         }
 
         tableDefinitions.AddRange(table.UniqueConstraints.Select(uc =>
-$@"    CONSTRAINT {uc.Name} UNIQUE ({string.Join(", ", uc.Columns)})"));
+$@"    CONSTRAINT [{uc.Name}] UNIQUE ({string.Join(", ", uc.Columns.Select(x => $@"[{x}]"))})"));
 
         tableDefinitions.AddRange(table.ForeignKeys.Select(fk =>
-$@"    CONSTRAINT {fk.Name} FOREIGN KEY ({string.Join(", ", fk.ThisColumnNames)})
-        REFERENCES {fk.ReferencedTableName}({string.Join(", ", fk.ReferencedTableColumnNames)})
+$@"    CONSTRAINT [{fk.Name}] FOREIGN KEY ({string.Join(", ", fk.ThisColumnNames.Select(x => $@"[{x}]"))})
+        REFERENCES [{fk.ReferencedTableName}]({string.Join(", ", fk.ReferencedTableColumnNames.Select(x => $@"[{x}]"))})
         ON UPDATE {fk.OnUpdate} ON DELETE {fk.OnDelete}"));
 
         tableDefinitions.AddRange(table.CheckConstraints.Select(ck =>

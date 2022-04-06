@@ -1,4 +1,5 @@
-﻿using DotNetDBTools.Deploy.Common.Queries.DDL;
+﻿using System.Linq;
+using DotNetDBTools.Deploy.Common.Queries.DDL;
 using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.Deploy.MSSQL.Queries.DDL;
@@ -11,8 +12,8 @@ internal class MSSQLCreateForeignKeyQuery : CreateForeignKeyQuery
     protected override string GetSql(ForeignKey fk, string tableName)
     {
         string query =
-$@"ALTER TABLE {tableName} ADD CONSTRAINT {fk.Name} FOREIGN KEY ({string.Join(", ", fk.ThisColumnNames)})
-    REFERENCES {fk.ReferencedTableName} ({string.Join(", ", fk.ReferencedTableColumnNames)})
+$@"ALTER TABLE [{tableName}] ADD CONSTRAINT [{fk.Name}] FOREIGN KEY ({string.Join(", ", fk.ThisColumnNames.Select(x => $@"[{x}]"))})
+    REFERENCES [{fk.ReferencedTableName}] ({string.Join(", ", fk.ReferencedTableColumnNames.Select(x => $@"[{x}]"))})
     ON UPDATE {fk.OnUpdate} ON DELETE {fk.OnDelete};";
 
         return query;

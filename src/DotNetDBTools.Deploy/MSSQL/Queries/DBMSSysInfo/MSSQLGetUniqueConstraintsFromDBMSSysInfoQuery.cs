@@ -9,10 +9,10 @@ internal class MSSQLGetUniqueConstraintsFromDBMSSysInfoQuery : GetUniqueConstrai
 {
     public override string Sql =>
 $@"SELECT
-    t.name AS {nameof(UniqueConstraintRecord.TableName)},
-    i.name AS {nameof(UniqueConstraintRecord.ConstraintName)},
-    c.name AS {nameof(UniqueConstraintRecord.ColumnName)},
-    ic.key_ordinal AS {nameof(UniqueConstraintRecord.ColumnPosition)}
+    t.name AS [{nameof(UniqueConstraintRecord.TableName)}],
+    i.name AS [{nameof(UniqueConstraintRecord.ConstraintName)}],
+    c.name AS [{nameof(UniqueConstraintRecord.ColumnName)}],
+    ic.key_ordinal AS [{nameof(UniqueConstraintRecord.ColumnPosition)}]
 FROM sys.tables t
 INNER JOIN sys.columns c
       ON c.object_id = t.object_id

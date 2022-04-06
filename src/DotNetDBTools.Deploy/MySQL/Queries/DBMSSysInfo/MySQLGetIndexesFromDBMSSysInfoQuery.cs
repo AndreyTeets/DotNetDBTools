@@ -9,12 +9,12 @@ internal class MySQLGetIndexesFromDBMSSysInfoQuery : GetIndexesFromDBMSSysInfoQu
 {
     public override string Sql =>
 $@"SELECT
-    s.TABLE_NAME AS {nameof(IndexRecord.TableName)},
-    s.INDEX_NAME AS {nameof(IndexRecord.IndexName)},
-    NOT s.NON_UNIQUE AS {nameof(IndexRecord.IsUnique)},
-    s.COLUMN_NAME AS {nameof(IndexRecord.ColumnName)},
-    FALSE AS {nameof(IndexRecord.IsIncludeColumn)},
-    s.SEQ_IN_INDEX AS {nameof(IndexRecord.ColumnPosition)}
+    s.TABLE_NAME AS `{nameof(IndexRecord.TableName)}`,
+    s.INDEX_NAME AS `{nameof(IndexRecord.IndexName)}`,
+    NOT s.NON_UNIQUE AS `{nameof(IndexRecord.IsUnique)}`,
+    s.COLUMN_NAME AS `{nameof(IndexRecord.ColumnName)}`,
+    FALSE AS `{nameof(IndexRecord.IsIncludeColumn)}`,
+    s.SEQ_IN_INDEX AS `{nameof(IndexRecord.ColumnPosition)}`
 FROM INFORMATION_SCHEMA.STATISTICS s
 LEFT JOIN INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc
     ON tc.CONSTRAINT_SCHEMA = s.TABLE_SCHEMA

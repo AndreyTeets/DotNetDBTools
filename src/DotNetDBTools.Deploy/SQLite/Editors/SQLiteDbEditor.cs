@@ -88,7 +88,7 @@ internal class SQLiteDbEditor : DbEditor<
 
     private void DropView(SQLiteView view)
     {
-        QueryExecutor.Execute(new GenericQuery($"DROP VIEW {view.Name};"));
+        QueryExecutor.Execute(new GenericQuery($"DROP VIEW [{view.Name}];"));
         QueryExecutor.Execute(new SQLiteDeleteDNDBTDbObjectRecordQuery(view.ID));
     }
 }

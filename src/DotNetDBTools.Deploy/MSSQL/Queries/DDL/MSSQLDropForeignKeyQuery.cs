@@ -11,7 +11,7 @@ internal class MSSQLDropForeignKeyQuery : DropForeignKeyQuery
     protected override string GetSql(ForeignKey fk, string tableName)
     {
         string query =
-$@"ALTER TABLE {tableName} DROP CONSTRAINT {fk.Name};";
+$@"ALTER TABLE [{tableName}] DROP CONSTRAINT [{fk.Name}];";
 
         return query;
     }

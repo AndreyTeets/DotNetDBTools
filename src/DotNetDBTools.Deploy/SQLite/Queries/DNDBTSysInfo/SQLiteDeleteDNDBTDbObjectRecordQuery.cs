@@ -12,8 +12,8 @@ internal class SQLiteDeleteDNDBTDbObjectRecordQuery : DeleteDNDBTDbObjectRecordQ
     protected override string GetSql(Guid objectID)
     {
         string query =
-$@"DELETE FROM {DNDBTSysTables.DNDBTDbObjects}
-WHERE {DNDBTSysTables.DNDBTDbObjects.ID} = '{objectID}';";
+$@"DELETE FROM [{DNDBTSysTables.DNDBTDbObjects}]
+WHERE [{DNDBTSysTables.DNDBTDbObjects.ID}] = '{objectID}';";
 
         return query;
     }

@@ -8,9 +8,9 @@ internal class SQLiteGetTriggersFromDBMSSysInfoQuery : GetTriggersFromDBMSSysInf
 {
     public override string Sql =>
 $@"SELECT
-    sm.tbl_name AS {nameof(TriggerRecord.TableName)},
-    sm.name AS {nameof(TriggerRecord.TriggerName)},
-    sm.sql AS {nameof(TriggerRecord.TriggerCode)}
+    sm.tbl_name AS [{nameof(TriggerRecord.TableName)}],
+    sm.name AS [{nameof(TriggerRecord.TriggerName)}],
+    sm.sql AS [{nameof(TriggerRecord.TriggerCode)}]
 FROM sqlite_master sm
 WHERE sm.type = 'trigger';";
 

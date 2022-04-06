@@ -9,10 +9,10 @@ internal class SQLiteGetPrimaryKeysFromDBMSSysInfoQuery : GetPrimaryKeysFromDBMS
 {
     public override string Sql =>
 $@"SELECT
-    sm.name AS {nameof(PrimaryKeyRecord.TableName)},
-    'PK_' || sm.name AS {nameof(PrimaryKeyRecord.ConstraintName)},
-    ii.name AS {nameof(PrimaryKeyRecord.ColumnName)},
-    ii.seqno AS {nameof(PrimaryKeyRecord.ColumnPosition)}
+    sm.name AS [{nameof(PrimaryKeyRecord.TableName)}],
+    'PK_' || sm.name AS [{nameof(PrimaryKeyRecord.ConstraintName)}],
+    ii.name AS [{nameof(PrimaryKeyRecord.ColumnName)}],
+    ii.seqno AS [{nameof(PrimaryKeyRecord.ColumnPosition)}]
 FROM sqlite_master sm
 INNER JOIN pragma_index_list(sm.name) il
 INNER JOIN pragma_index_info(il.name) ii
@@ -22,10 +22,10 @@ WHERE sm.type = 'table'
     AND il.origin = 'pk'
 UNION
 SELECT
-    sm.name AS {nameof(PrimaryKeyRecord.TableName)},
-    'PK_' || sm.name AS {nameof(PrimaryKeyRecord.ConstraintName)},
-    ti.name AS {nameof(PrimaryKeyRecord.ColumnName)},
-    0 AS {nameof(PrimaryKeyRecord.ColumnPosition)}
+    sm.name AS [{nameof(PrimaryKeyRecord.TableName)}],
+    'PK_' || sm.name AS [{nameof(PrimaryKeyRecord.ConstraintName)}],
+    ti.name AS [{nameof(PrimaryKeyRecord.ColumnName)}],
+    0 AS [{nameof(PrimaryKeyRecord.ColumnPosition)}]
 FROM sqlite_master sm
 INNER JOIN pragma_table_info(sm.name) ti
 WHERE sm.type = 'table'

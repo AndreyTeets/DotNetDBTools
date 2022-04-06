@@ -9,9 +9,9 @@ internal class MySQLGetCheckConstraintsFromDBMSSysInfoQuery : GetCheckConstraint
 {
     public override string Sql =>
 $@"SELECT
-    tc.TABLE_NAME AS {nameof(CheckConstraintRecord.TableName)},
-    tc.CONSTRAINT_NAME AS {nameof(CheckConstraintRecord.ConstraintName)},
-    CONCAT('CHECK ', cc.CHECK_CLAUSE) AS {nameof(CheckConstraintRecord.ConstraintCode)}
+    tc.TABLE_NAME AS `{nameof(CheckConstraintRecord.TableName)}`,
+    tc.CONSTRAINT_NAME AS `{nameof(CheckConstraintRecord.ConstraintName)}`,
+    CONCAT('CHECK ', cc.CHECK_CLAUSE) AS `{nameof(CheckConstraintRecord.ConstraintCode)}`
 FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc
 INNER JOIN INFORMATION_SCHEMA.CHECK_CONSTRAINTS cc
     ON cc.CONSTRAINT_SCHEMA = tc.CONSTRAINT_SCHEMA

@@ -8,15 +8,15 @@ internal class MSSQLGetIndexesFromDBMSSysInfoQuery : GetIndexesFromDBMSSysInfoQu
 {
     public override string Sql =>
 $@"SELECT
-    t.name AS {nameof(IndexRecord.TableName)},
-    i.name AS {nameof(IndexRecord.IndexName)},
-    i.is_unique AS {nameof(IndexRecord.IsUnique)},
-    col.name AS {nameof(IndexRecord.ColumnName)},
-    ic.is_included_column AS {nameof(IndexRecord.IsIncludeColumn)},
+    t.name AS [{nameof(IndexRecord.TableName)}],
+    i.name AS [{nameof(IndexRecord.IndexName)}],
+    i.is_unique AS [{nameof(IndexRecord.IsUnique)}],
+    col.name AS [{nameof(IndexRecord.ColumnName)}],
+    ic.is_included_column AS [{nameof(IndexRecord.IsIncludeColumn)}],
     CASE WHEN ic.is_included_column = 1
         THEN ic.index_column_id
         ELSE ic.key_ordinal
-    END AS {nameof(IndexRecord.ColumnPosition)}
+    END AS [{nameof(IndexRecord.ColumnPosition)}]
 FROM sys.indexes i
 INNER JOIN sys.tables t
     ON t.object_id = i.object_id

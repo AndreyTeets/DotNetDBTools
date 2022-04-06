@@ -9,9 +9,9 @@ internal class MSSQLGetCheckConstraintsFromDBMSSysInfoQuery : GetCheckConstraint
 {
     public override string Sql =>
 $@"SELECT
-    t.name AS {nameof(CheckConstraintRecord.TableName)},
-    cc.name AS {nameof(CheckConstraintRecord.ConstraintName)},
-    'CHECK ' + cc.definition AS {nameof(CheckConstraintRecord.ConstraintCode)}
+    t.name AS [{nameof(CheckConstraintRecord.TableName)}],
+    cc.name AS [{nameof(CheckConstraintRecord.ConstraintName)}],
+    'CHECK ' + cc.definition AS [{nameof(CheckConstraintRecord.ConstraintCode)}]
 FROM sys.tables t
 INNER JOIN sys.check_constraints cc
       ON cc.parent_object_id = t.object_id

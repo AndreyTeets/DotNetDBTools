@@ -11,9 +11,9 @@ internal class SQLiteGetColumnsFromDBMSSysInfoQuery : GetColumnsFromDBMSSysInfoQ
 {
     public override string Sql =>
 $@"SELECT
-    sm.name AS {nameof(SQLiteColumnRecord.TableName)},
-    ti.name AS {nameof(SQLiteColumnRecord.ColumnName)},
-    ti.type AS {nameof(SQLiteColumnRecord.DataType)},
+    sm.name AS [{nameof(SQLiteColumnRecord.TableName)}],
+    ti.name AS [{nameof(SQLiteColumnRecord.ColumnName)}],
+    ti.type AS [{nameof(SQLiteColumnRecord.DataType)}],
     CASE WHEN ti.[notnull] = 1 THEN 1 ELSE 0 END AS [{nameof(SQLiteColumnRecord.NotNull)}],
     ti.dflt_value AS [{nameof(SQLiteColumnRecord.Default)}]
 FROM sqlite_master sm

@@ -9,15 +9,15 @@ internal class MySQLGetForeignKeysFromDBMSSysInfoQuery : GetForeignKeysFromDBMSS
 {
     public override string Sql =>
 $@"SELECT
-    tc.TABLE_NAME AS {nameof(ForeignKeyRecord.ThisTableName)},
-    tc.CONSTRAINT_NAME AS {nameof(ForeignKeyRecord.ForeignKeyName)},
-    kcu.COLUMN_NAME AS {nameof(ForeignKeyRecord.ThisColumnName)},
-    kcu.ORDINAL_POSITION AS {nameof(ForeignKeyRecord.ThisColumnPosition)},
-    kcu.REFERENCED_TABLE_NAME AS {nameof(ForeignKeyRecord.ReferencedTableName)},
-    kcu.REFERENCED_COLUMN_NAME AS {nameof(ForeignKeyRecord.ReferencedColumnName)},
-    kcu.POSITION_IN_UNIQUE_CONSTRAINT AS {nameof(ForeignKeyRecord.ReferencedColumnPosition)},
-    rc.UPDATE_RULE AS {nameof(ForeignKeyRecord.OnUpdate)},
-    rc.DELETE_RULE AS {nameof(ForeignKeyRecord.OnDelete)}
+    tc.TABLE_NAME AS `{nameof(ForeignKeyRecord.ThisTableName)}`,
+    tc.CONSTRAINT_NAME AS `{nameof(ForeignKeyRecord.ForeignKeyName)}`,
+    kcu.COLUMN_NAME AS `{nameof(ForeignKeyRecord.ThisColumnName)}`,
+    kcu.ORDINAL_POSITION AS `{nameof(ForeignKeyRecord.ThisColumnPosition)}`,
+    kcu.REFERENCED_TABLE_NAME AS `{nameof(ForeignKeyRecord.ReferencedTableName)}`,
+    kcu.REFERENCED_COLUMN_NAME AS `{nameof(ForeignKeyRecord.ReferencedColumnName)}`,
+    kcu.POSITION_IN_UNIQUE_CONSTRAINT AS `{nameof(ForeignKeyRecord.ReferencedColumnPosition)}`,
+    rc.UPDATE_RULE AS `{nameof(ForeignKeyRecord.OnUpdate)}`,
+    rc.DELETE_RULE AS `{nameof(ForeignKeyRecord.OnDelete)}`
 FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc
 INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE kcu
     ON kcu.CONSTRAINT_SCHEMA = tc.CONSTRAINT_SCHEMA

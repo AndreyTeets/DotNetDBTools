@@ -11,7 +11,7 @@ internal class MSSQLDropTableQuery : DropTableQuery
     protected override string GetSql(Table table)
     {
         string query =
-$@"DROP TABLE {table.Name};";
+$@"DROP TABLE [{table.Name}];";
 
         return query;
     }

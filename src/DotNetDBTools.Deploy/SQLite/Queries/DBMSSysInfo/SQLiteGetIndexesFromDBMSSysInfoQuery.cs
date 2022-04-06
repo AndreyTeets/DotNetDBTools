@@ -9,12 +9,12 @@ internal class SQLiteGetIndexesFromDBMSSysInfoQuery : GetIndexesFromDBMSSysInfoQ
 {
     public override string Sql =>
 $@"SELECT
-    sm.name AS {nameof(IndexRecord.TableName)},
-    il.name AS {nameof(IndexRecord.IndexName)},
-    il.[unique] AS {nameof(IndexRecord.IsUnique)},
-    ii.name AS {nameof(IndexRecord.ColumnName)},
-    FALSE AS {nameof(IndexRecord.IsIncludeColumn)},
-    ii.seqno AS {nameof(IndexRecord.ColumnPosition)}
+    sm.name AS [{nameof(IndexRecord.TableName)}],
+    il.name AS [{nameof(IndexRecord.IndexName)}],
+    il.[unique] AS [{nameof(IndexRecord.IsUnique)}],
+    ii.name AS [{nameof(IndexRecord.ColumnName)}],
+    FALSE AS [{nameof(IndexRecord.IsIncludeColumn)}],
+    ii.seqno AS [{nameof(IndexRecord.ColumnPosition)}]
 FROM sqlite_master sm
 INNER JOIN pragma_index_list(sm.name) il
 INNER JOIN pragma_index_info(il.name) ii

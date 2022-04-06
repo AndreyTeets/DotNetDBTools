@@ -9,12 +9,12 @@ internal class MSSQLGetTypesFromDBMSSysInfoQuery : IQuery
 {
     public string Sql =>
 $@"SELECT
-    t.name AS {nameof(UserDefinedTypeRecord.Name)},
-    st.name AS {nameof(UserDefinedTypeRecord.UnderlyingTypeName)},
+    t.name AS [{nameof(UserDefinedTypeRecord.Name)}],
+    st.name AS [{nameof(UserDefinedTypeRecord.UnderlyingTypeName)}],
     ~t.is_nullable AS [{nameof(UserDefinedTypeRecord.NotNull)}],
-    t.max_length AS {nameof(UserDefinedTypeRecord.UnderlyingTypeLength)},
-    t.precision AS {nameof(UserDefinedTypeRecord.UnderlyingTypePrecision)},
-    t.scale AS {nameof(UserDefinedTypeRecord.UnderlyingTypeScale)}
+    t.max_length AS [{nameof(UserDefinedTypeRecord.UnderlyingTypeLength)}],
+    t.precision AS [{nameof(UserDefinedTypeRecord.UnderlyingTypePrecision)}],
+    t.scale AS [{nameof(UserDefinedTypeRecord.UnderlyingTypeScale)}]
 FROM sys.types t
 INNER JOIN sys.types st
     ON st.user_type_id = t.system_type_id

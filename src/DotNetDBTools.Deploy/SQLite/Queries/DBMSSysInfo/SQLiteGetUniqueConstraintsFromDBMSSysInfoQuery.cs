@@ -9,10 +9,10 @@ internal class SQLiteGetUniqueConstraintsFromDBMSSysInfoQuery : GetUniqueConstra
 {
     public override string Sql =>
 $@"SELECT
-    sm.name AS {nameof(UniqueConstraintRecord.TableName)},
-    'UQ_' || sm.name || '_' || il.seq AS {nameof(UniqueConstraintRecord.ConstraintName)},
-    ii.name AS {nameof(UniqueConstraintRecord.ColumnName)},
-    ii.seqno AS {nameof(UniqueConstraintRecord.ColumnPosition)}
+    sm.name AS [{nameof(UniqueConstraintRecord.TableName)}],
+    'UQ_' || sm.name || '_' || il.seq AS [{nameof(UniqueConstraintRecord.ConstraintName)}],
+    ii.name AS [{nameof(UniqueConstraintRecord.ColumnName)}],
+    ii.seqno AS [{nameof(UniqueConstraintRecord.ColumnPosition)}]
 FROM sqlite_master sm
 INNER JOIN pragma_index_list(sm.name) il
 INNER JOIN pragma_index_info(il.name) ii

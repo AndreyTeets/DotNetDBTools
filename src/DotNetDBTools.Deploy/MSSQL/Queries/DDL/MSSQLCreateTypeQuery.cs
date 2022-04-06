@@ -21,7 +21,7 @@ internal class MSSQLCreateTypeQuery : IQuery
     private static string GetSql(MSSQLUserDefinedType userDefinedType)
     {
         string query =
-$@"CREATE TYPE {userDefinedType.Name} FROM {userDefinedType.UnderlyingType.Name};";
+$@"CREATE TYPE [{userDefinedType.Name}] FROM {userDefinedType.UnderlyingType.Name};";
 
         return query;
     }

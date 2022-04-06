@@ -3,7 +3,6 @@ using System.Linq;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Queries.DDL;
 using DotNetDBTools.Models.Core;
-using DotNetDBTools.Models.MSSQL;
 using static DotNetDBTools.Deploy.MSSQL.MSSQLQueriesHelper;
 
 namespace DotNetDBTools.Deploy.MSSQL.Queries.DDL;
@@ -16,7 +15,7 @@ internal class MSSQLCreateTableQuery : CreateTableQuery
     protected override string GetSql(Table table)
     {
         string query =
-$@"CREATE TABLE {table.Name}
+$@"CREATE TABLE [{table.Name}]
 (
 {GetTableDefinitionsText(table)}
 );";
@@ -29,16 +28,16 @@ $@"CREATE TABLE {table.Name}
         List<string> tableDefinitions = new();
 
         tableDefinitions.AddRange(table.Columns.Select(c =>
-$@"    {c.Name} {c.DataType.Name}{GetIdentityStatement(c)} {GetNullabilityStatement(c)}{GetDefaultValStatement(c)}"));
+$@"    [{c.Name}] {c.DataType.Name}{GetIdentityStatement(c)} {GetNullabilityStatement(c)}{GetDefaultValStatement(c)}"));
 
         if (table.PrimaryKey is not null)
         {
             tableDefinitions.Add(
-$@"    CONSTRAINT {table.PrimaryKey.Name} PRIMARY KEY ({string.Join(", ", table.PrimaryKey.Columns)})");
+$@"    CONSTRAINT [{table.PrimaryKey.Name}] PRIMARY KEY ({string.Join(", ", table.PrimaryKey.Columns.Select(x => $@"[{x}]"))})");
         }
 
         tableDefinitions.AddRange(table.UniqueConstraints.Select(uc =>
-$@"    CONSTRAINT {uc.Name} UNIQUE ({string.Join(", ", uc.Columns)})"));
+$@"    CONSTRAINT [{uc.Name}] UNIQUE ({string.Join(", ", uc.Columns.Select(x => $@"[{x}]"))})"));
 
         tableDefinitions.AddRange(table.CheckConstraints.Select(ck =>
 $@"    CONSTRAINT [{ck.Name}] {ck.GetCode()}"));

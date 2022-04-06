@@ -9,10 +9,10 @@ internal class MSSQLGetPrimaryKeysFromDBMSSysInfoQuery : GetPrimaryKeysFromDBMSS
 {
     public override string Sql =>
 $@"SELECT
-    t.name AS {nameof(PrimaryKeyRecord.TableName)},
-    i.name AS {nameof(PrimaryKeyRecord.ConstraintName)},
-    c.name AS {nameof(PrimaryKeyRecord.ColumnName)},
-    ic.key_ordinal AS {nameof(PrimaryKeyRecord.ColumnPosition)}
+    t.name AS [{nameof(PrimaryKeyRecord.TableName)}],
+    i.name AS [{nameof(PrimaryKeyRecord.ConstraintName)}],
+    c.name AS [{nameof(PrimaryKeyRecord.ColumnName)}],
+    ic.key_ordinal AS [{nameof(PrimaryKeyRecord.ColumnPosition)}]
 FROM sys.tables t
 INNER JOIN sys.columns c
       ON c.object_id = t.object_id

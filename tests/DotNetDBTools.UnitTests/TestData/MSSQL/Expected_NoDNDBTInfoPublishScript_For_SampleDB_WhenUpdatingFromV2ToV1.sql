@@ -8,15 +8,15 @@ EXEC sp_executesql N'DROP TRIGGER [TR_MyTable2_MyTrigger1];';
 -- QUERY END: MSSQLDropTriggerQuery
 
 -- QUERY START: GenericQuery
-EXEC sp_executesql N'DROP VIEW MyView1;';
+EXEC sp_executesql N'DROP VIEW [MyView1];';
 -- QUERY END: GenericQuery
 
 -- QUERY START: MSSQLDropForeignKeyQuery
-EXEC sp_executesql N'ALTER TABLE MyTable1NewName DROP CONSTRAINT FK_MyTable1_MyColumn1_MyTable2_MyColumn1;';
+EXEC sp_executesql N'ALTER TABLE [MyTable1NewName] DROP CONSTRAINT [FK_MyTable1_MyColumn1_MyTable2_MyColumn1];';
 -- QUERY END: MSSQLDropForeignKeyQuery
 
 -- QUERY START: MSSQLDropForeignKeyQuery
-EXEC sp_executesql N'ALTER TABLE MyTable2 DROP CONSTRAINT FK_MyTable2_MyColumns34_MyTable3_MyColumns12;';
+EXEC sp_executesql N'ALTER TABLE [MyTable2] DROP CONSTRAINT [FK_MyTable2_MyColumns34_MyTable3_MyColumns12];';
 -- QUERY END: MSSQLDropForeignKeyQuery
 
 -- QUERY START: MSSQLDropIndexQuery
@@ -24,7 +24,7 @@ EXEC sp_executesql N'DROP INDEX [IDX_MyTable2_MyIndex1] ON [MyTable2];';
 -- QUERY END: MSSQLDropIndexQuery
 
 -- QUERY START: MSSQLDropTableQuery
-EXEC sp_executesql N'DROP TABLE MyTable3;';
+EXEC sp_executesql N'DROP TABLE [MyTable3];';
 -- QUERY END: MSSQLDropTableQuery
 
 -- QUERY START: MSSQLRenameUserDefinedDataTypeQuery
@@ -32,7 +32,7 @@ EXEC sp_executesql N'EXEC sp_rename ''MyUserDefinedType1'', ''_DNDBTTemp_MyUserD
 -- QUERY END: MSSQLRenameUserDefinedDataTypeQuery
 
 -- QUERY START: MSSQLCreateTypeQuery
-EXEC sp_executesql N'CREATE TYPE MyUserDefinedType1 FROM NVARCHAR(100);';
+EXEC sp_executesql N'CREATE TYPE [MyUserDefinedType1] FROM NVARCHAR(100);';
 -- QUERY END: MSSQLCreateTypeQuery
 
 -- QUERY START: MSSQLUseNewUDTInAllTablesQuery
@@ -99,7 +99,7 @@ ALTER TABLE [MyTable1] ADD CONSTRAINT [DF_MyTable1_MyColumn1] DEFAULT 15 FOR [My
 ALTER TABLE [MyTable1] DROP CONSTRAINT [DF_MyTable1NewName_MyColumn4];
 ALTER TABLE [MyTable1] ALTER COLUMN [MyColumn4] DECIMAL(19, 2) NOT NULL;
 ALTER TABLE [MyTable1] ADD CONSTRAINT [DF_MyTable1_MyColumn4] DEFAULT 7.36 FOR [MyColumn4];
-ALTER TABLE [MyTable1] ADD [MyColumn2] NVARCHAR(10) NOT NULL CONSTRAINT DF_MyTable1_MyColumn2 DEFAULT ''33'';
+ALTER TABLE [MyTable1] ADD [MyColumn2] NVARCHAR(10) NOT NULL CONSTRAINT [DF_MyTable1_MyColumn2] DEFAULT ''33'';
 ALTER TABLE [MyTable1] ADD [MyColumn3] INT IDENTITY NOT NULL;
 ALTER TABLE [MyTable1] ADD CONSTRAINT [PK_MyTable1] PRIMARY KEY ([MyColumn3]);
 ALTER TABLE [MyTable1] ADD CONSTRAINT [UQ_MyTable1_MyColumn4] UNIQUE ([MyColumn4]);
@@ -119,7 +119,7 @@ ALTER TABLE [MyTable2] DROP COLUMN [MyColumn4];
 ALTER TABLE [MyTable2] DROP CONSTRAINT [DF_MyTable2_MyColumn1NewName];
 ALTER TABLE [MyTable2] ALTER COLUMN [MyColumn1] INT NOT NULL;
 ALTER TABLE [MyTable2] ADD CONSTRAINT [DF_MyTable2_MyColumn1] DEFAULT 333 FOR [MyColumn1];
-ALTER TABLE [MyTable2] ADD [MyColumn2] VARBINARY(22) NULL CONSTRAINT DF_MyTable2_MyColumn2 DEFAULT 0x000408 WITH VALUES;
+ALTER TABLE [MyTable2] ADD [MyColumn2] VARBINARY(22) NULL CONSTRAINT [DF_MyTable2_MyColumn2] DEFAULT 0x000408 WITH VALUES;
 ALTER TABLE [MyTable2] ADD CONSTRAINT [PK_MyTable2_CustomName] PRIMARY KEY ([MyColumn1]);
 ';
 -- QUERY END: MSSQLAlterTableQuery
@@ -132,36 +132,36 @@ ALTER TABLE [MyTable5] ADD CONSTRAINT [UQ_MyTable5_CustomName] UNIQUE ([MyColumn
 -- QUERY END: MSSQLAlterTableQuery
 
 -- QUERY START: MSSQLDropTypeQuery
-EXEC sp_executesql N'DROP TYPE _DNDBTTemp_MyUserDefinedType1;';
+EXEC sp_executesql N'DROP TYPE [_DNDBTTemp_MyUserDefinedType1];';
 -- QUERY END: MSSQLDropTypeQuery
 
 -- QUERY START: MSSQLCreateTableQuery
-EXEC sp_executesql N'CREATE TABLE MyTable6
+EXEC sp_executesql N'CREATE TABLE [MyTable6]
 (
-    MyColumn1 NCHAR(4) NULL,
-    MyColumn2 INT NULL
+    [MyColumn1] NCHAR(4) NULL,
+    [MyColumn2] INT NULL
 );';
 -- QUERY END: MSSQLCreateTableQuery
 
 -- QUERY START: MSSQLCreateIndexQuery
-EXEC sp_executesql N'CREATE UNIQUE INDEX IDX_MyTable2_MyIndex1
-ON MyTable2 (MyColumn1, MyColumn2);';
+EXEC sp_executesql N'CREATE UNIQUE INDEX [IDX_MyTable2_MyIndex1]
+ON [MyTable2] ([MyColumn1], [MyColumn2]);';
 -- QUERY END: MSSQLCreateIndexQuery
 
 -- QUERY START: MSSQLCreateIndexQuery
-EXEC sp_executesql N'CREATE INDEX IDX_MyTable5_CustomName
-ON MyTable5 (MyColumn8);';
+EXEC sp_executesql N'CREATE INDEX [IDX_MyTable5_CustomName]
+ON [MyTable5] ([MyColumn8]);';
 -- QUERY END: MSSQLCreateIndexQuery
 
 -- QUERY START: MSSQLCreateForeignKeyQuery
-EXEC sp_executesql N'ALTER TABLE MyTable6 ADD CONSTRAINT FK_MyTable6_MyTable5_CustomName FOREIGN KEY (MyColumn1, MyColumn2)
-    REFERENCES MyTable5 (MyColumn2, MyColumn1)
+EXEC sp_executesql N'ALTER TABLE [MyTable6] ADD CONSTRAINT [FK_MyTable6_MyTable5_CustomName] FOREIGN KEY ([MyColumn1], [MyColumn2])
+    REFERENCES [MyTable5] ([MyColumn2], [MyColumn1])
     ON UPDATE NO ACTION ON DELETE NO ACTION;';
 -- QUERY END: MSSQLCreateForeignKeyQuery
 
 -- QUERY START: MSSQLCreateForeignKeyQuery
-EXEC sp_executesql N'ALTER TABLE MyTable1 ADD CONSTRAINT FK_MyTable1_MyColumn1_MyTable2_MyColumn1 FOREIGN KEY (MyColumn1)
-    REFERENCES MyTable2 (MyColumn1)
+EXEC sp_executesql N'ALTER TABLE [MyTable1] ADD CONSTRAINT [FK_MyTable1_MyColumn1_MyTable2_MyColumn1] FOREIGN KEY ([MyColumn1])
+    REFERENCES [MyTable2] ([MyColumn1])
     ON UPDATE NO ACTION ON DELETE CASCADE;';
 -- QUERY END: MSSQLCreateForeignKeyQuery
 
