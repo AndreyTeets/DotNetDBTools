@@ -4,13 +4,7 @@ using System.Globalization;
 namespace DotNetDBTools.Definition.Core.CSharpDefaultValues;
 
 /// <summary>
-/// Default value is declared as date according to the used dbms.
-/// <list type="bullet">
-/// <item><term>MSSQL</term> Default value is declared as TODO.</item>
-/// <item><term>MySQL</term> Default value is declared as TODO.</item>
-/// <item><term>PostgreSQL</term> Default value is declared as TODO.</item>
-/// <item><term>SQLite</term> Default value is declared as TODO.</item>
-/// </list>
+/// Default value is declared as date according to the used DBMS and DeclareKind.
 /// </summary>
 public class DateDefaultValue : IDefaultValue
 {
@@ -18,9 +12,10 @@ public class DateDefaultValue : IDefaultValue
     /// Controls how datetime default value is declared.
     /// </summary>
     /// <remarks>
-    /// Default value is <see cref="DateTimeDeclareKind.ISO8601String"/>.
+    /// Default value is <see cref="DateDeclareKind.ISO8601String"/>.
     /// </remarks>
-    public DateTimeDeclareKind DeclareKind { get; set; } = DateTimeDeclareKind.ISO8601String;
+    public DateDeclareKind DeclareKind { get; set; } = DateDeclareKind.ISO8601String;
+
     public DateTime Value { get; private set; }
 
     public DateDefaultValue(DateTime value)
@@ -37,9 +32,26 @@ public class DateDefaultValue : IDefaultValue
     }
 }
 
-public enum DateTimeDeclareKind
+public enum DateDeclareKind
 {
+    /// <summary>
+    /// Default value is declared as ISO8601 date-string according to the used DBMS.
+    /// <list type="bullet">
+    /// <item><term>MSSQL</term> Default value is declared as 'yyyy-MM-dd'.</item>
+    /// <item><term>MySQL</term> Default value is declared as 'yyyy-MM-dd'.</item>
+    /// <item><term>PostgreSQL</term> Default value is declared as 'yyyy-MM-dd'.</item>
+    /// <item><term>SQLite</term> Default value is declared as 'yyyy-MM-dd'.</item>
+    /// </list>
+    /// </summary>
     ISO8601String,
+
+    /// <summary>
+    /// Not implemented.
+    /// </summary>
     JulianDayNumbers,
+
+    /// <summary>
+    /// Not implemented.
+    /// </summary>
     UnixTime,
 }

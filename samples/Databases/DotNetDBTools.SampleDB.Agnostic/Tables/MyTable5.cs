@@ -93,7 +93,7 @@ namespace DotNetDBTools.SampleDB.Agnostic.Tables
             Default = new DateTimeDefaultValue("2022-02-15 16:17:18+01:30"),
         };
 
-        public PrimaryKey PK_MyTable5_CustomName_CustomName = new("79384D48-A39B-4A22-900E-066B2CA67BA2")
+        public PrimaryKey PK_MyTable5_CustomName = new("79384D48-A39B-4A22-900E-066B2CA67BA2")
         {
             Columns = new[] { nameof(MyColumn2), nameof(MyColumn1) },
         };

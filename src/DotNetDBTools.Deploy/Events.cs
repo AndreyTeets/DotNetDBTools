@@ -53,6 +53,14 @@ public enum EventType
     CommitTransactionFinished,
     RollbackTransactionBegan,
     RollbackTransactionFinished,
+
+    /// <remarks>
+    /// EventData is set to the textual description of the query.
+    /// </remarks>
     QueryBegan,
+
+    /// <remarks>
+    /// EventData is set to the name of the query.
+    /// </remarks>
     QueryFinished,
 }

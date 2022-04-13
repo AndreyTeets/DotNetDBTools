@@ -31,7 +31,7 @@ public static class MySQLDefaultValueConverter
     private static string FormatDateTimeOffset(DateTimeOffset val, bool isWithTimeZone)
     {
         return isWithTimeZone
-            ? $"'{val.ToOffset(TimeSpan.FromMinutes(0)).ToString("yyyy-MM-dd HH:mm:ss")}'"
+            ? $"'{val.ToOffset(TimeSpan.Zero).ToString("yyyy-MM-dd HH:mm:ss")}'"
             : $"'{val.ToString("yyyy-MM-dd HH:mm:ss")}'";
     }
 }

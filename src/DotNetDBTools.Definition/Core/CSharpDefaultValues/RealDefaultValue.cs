@@ -3,7 +3,7 @@
 namespace DotNetDBTools.Definition.Core.CSharpDefaultValues;
 
 /// <summary>
-/// Default value is declared as real according to the used dbms.
+/// Default value is declared as real according to the used DBMS.
 /// <list type="bullet">
 /// <item><term>MSSQL</term> Default value is declared as Number.</item>
 /// <item><term>MySQL</term> Default value is declared as Number.</item>

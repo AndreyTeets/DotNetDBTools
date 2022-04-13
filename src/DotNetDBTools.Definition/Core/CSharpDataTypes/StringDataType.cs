@@ -1,7 +1,7 @@
 ﻿namespace DotNetDBTools.Definition.Core.CSharpDataTypes;
 
 /// <summary>
-/// Column is declared with a string type appropriate to the used dbms.
+/// Column is declared with a string type appropriate to the used DBMS.
 /// <list type="bullet">
 /// <item><term>MSSQL</term> Column is declared as 'NCHAR(Length)'/'NVARCHAR(Length/MAX)'.</item>
 /// <item><term>MySQL</term> Column is declared as 'CHAR(Length)'/'VARCHAR(Length)'/'LONGTEXT'.</item>
@@ -12,7 +12,7 @@
 public class StringDataType : IDataType
 {
     /// <summary>
-    /// Length declared for the type if the used dbms supports it.
+    /// Length declared for the type if the used DBMS supports it.
     /// <list type="bullet">
     /// <item><term>MSSQL</term> Column is declared as 'NCHAR(Length)'/'NVARCHAR(Length)' if Length is in range [1,4000] otherwise as 'NVARCHAR(MAX)'</item>
     /// <item><term>MySQL</term> Column is declared as 'CHAR(Length)'/'VARCHAR(Length)' if Length is in range [1,255]/[1,65535], otherwise as 'LONGTEXT'.</item>
@@ -26,7 +26,7 @@ public class StringDataType : IDataType
     public int Length { get; set; } = 50;
 
     /// <summary>
-    /// Controls the exact binary type chosen for the used dbms.
+    /// Controls the exact binary type chosen for the used DBMS.
     /// <list type="bullet">
     /// <item><term>MSSQL</term> Column is declared as 'NCHAR' if IsFixedLength=true and specified Length is in allowed range, otherwise as 'NVARCHAR'.</item>
     /// <item><term>MySQL</term> If specified Length isn't in allowed range property is ignored and Column is declared as 'LONGTEXT'.<br/>

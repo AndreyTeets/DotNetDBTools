@@ -30,7 +30,7 @@ public static class PostgreSQLDefaultValueConverter
     private static string FormatDateTimeOffset(DateTimeOffset val, bool isWithTimeZone)
     {
         return isWithTimeZone
-            ? $"'{val.ToOffset(TimeSpan.FromMinutes(0)).ToString("yyyy-MM-dd HH:mm:sszz")}'"
+            ? $"'{val.ToOffset(TimeSpan.Zero).ToString("yyyy-MM-dd HH:mm:sszz")}'"
             : $"'{val.ToString("yyyy-MM-dd HH:mm:ss")}'";
     }
 }

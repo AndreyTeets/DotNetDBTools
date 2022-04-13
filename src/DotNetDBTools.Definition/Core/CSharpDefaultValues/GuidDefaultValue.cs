@@ -3,7 +3,7 @@
 namespace DotNetDBTools.Definition.Core.CSharpDefaultValues;
 
 /// <summary>
-/// Default value is declared as guid according to the used dbms.
+/// Default value is declared as guid according to the used DBMS.
 /// <list type="bullet">
 /// <item><term>MSSQL</term> Default value is declared as 'GuidString'.</item>
 /// <item><term>MySQL</term> Default value is declared as (0xGuidBytes).</item>
@@ -15,11 +15,13 @@ public class GuidDefaultValue : IDefaultValue
 {
     /// <summary>
     /// Controls how guid is converted to byte array for MySQL and SQLite.
+    /// For MSSQL and PostgreSQL property is ignored.
     /// </summary>
     /// <remarks>
     /// Default value is <see cref="GuidByteOrder.BigEndian"/>.
     /// </remarks>
     public GuidByteOrder ByteOrder { get; set; } = GuidByteOrder.BigEndian;
+
     public Guid Value { get; private set; }
 
     public GuidDefaultValue(Guid value)
@@ -38,5 +40,8 @@ public class GuidDefaultValue : IDefaultValue
 
 public enum GuidByteOrder
 {
+    /// <summary>
+    /// GuidBytes are produced as GuidValue.ToString().Replace("-", "").ToLower().
+    /// </summary>
     BigEndian,
 }

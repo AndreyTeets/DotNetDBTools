@@ -1,7 +1,7 @@
 ﻿namespace DotNetDBTools.Definition.Core.CSharpDataTypes;
 
 /// <summary>
-/// Column is declared with a datetime type appropriate to the used dbms.
+/// Column is declared with a datetime type appropriate to the used DBMS.
 /// <list type="bullet">
 /// <item><term>MSSQL</term> Column is declared as 'DATETIME2'/'DATETIMEOFFSET'.</item>
 /// <item><term>MySQL</term> Column is declared as 'DATETIME'/'TIMESTAMP'.</item>

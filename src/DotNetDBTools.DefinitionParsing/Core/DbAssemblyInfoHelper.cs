@@ -15,26 +15,16 @@ internal static class DbAssemblyInfoHelper
             .GetCustomAttributes<DatabaseSettingsAttribute>()
             .SingleOrDefault();
 
-        DefinitionKind definitionKind;
-        DatabaseKind databaseKind;
-        if (dbSettings is not null)
+        DefinitionKind definitionKind = dbSettings?.DefinitionKind ?? DefinitionKind.CSharp;
+        DatabaseKind databaseKind = definitionKind switch
         {
-            definitionKind = dbSettings.DefinitionKind;
-            databaseKind = dbSettings.DefinitionKind switch
-            {
-                DefinitionKind.CSharp => DeriveDbKindFromAssemblyTypes(dbAssembly),
-                DefinitionKind.MSSQL => DatabaseKind.MSSQL,
-                DefinitionKind.MySQL => DatabaseKind.MySQL,
-                DefinitionKind.PostgreSQL => DatabaseKind.PostgreSQL,
-                DefinitionKind.SQLite => DatabaseKind.SQLite,
-                _ => throw new Exception($"Invalid definition kind: {dbSettings.DefinitionKind}"),
-            };
-        }
-        else
-        {
-            definitionKind = DefinitionKind.CSharp;
-            databaseKind = DeriveDbKindFromAssemblyTypes(dbAssembly);
-        }
+            DefinitionKind.CSharp => DeriveDbKindFromAssemblyTypes(dbAssembly),
+            DefinitionKind.MSSQL => DatabaseKind.MSSQL,
+            DefinitionKind.MySQL => DatabaseKind.MySQL,
+            DefinitionKind.PostgreSQL => DatabaseKind.PostgreSQL,
+            DefinitionKind.SQLite => DatabaseKind.SQLite,
+            _ => throw new Exception($"Invalid definition kind: {dbSettings.DefinitionKind}"),
+        };
 
         return (definitionKind, databaseKind);
     }
