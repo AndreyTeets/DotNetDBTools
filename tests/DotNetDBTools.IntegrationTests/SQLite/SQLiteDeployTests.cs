@@ -18,17 +18,14 @@ public class SQLiteDeployTests : BaseDeployTests<
     SQLiteDbModelConverter,
     SQLiteDeployManager>
 {
-    protected override string AgnosticSampleDbAssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDB.Agnostic.dll";
-    protected override string AgnosticSampleDbV2AssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDBv2.Agnostic.dll";
-    protected override string SpecificDBMSSampleDbAssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDB.SQLite.dll";
-    protected override string SpecificDBMSSampleDbV2AssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDBv2.SQLite.dll";
-    protected override string ActualFilesDir => "./generated/SQLite";
+    protected override string SpecificDbmsSampleDbV1AssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDB.SQLite.dll";
+    protected override string SpecificDbmsSampleDbV2AssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDBv2.SQLite.dll";
     protected override BaseDataTester DataTester { get; set; } = new SQLiteDataTester();
 
     private const string DbFilesFolder = @"./tmp";
 
     protected override EquivalencyAssertionOptions<SQLiteDatabase> AddAdditionalDbModelEquivalenceyOptions(
-        EquivalencyAssertionOptions<SQLiteDatabase> options)
+        EquivalencyAssertionOptions<SQLiteDatabase> options, CompareMode compareMode)
     {
         return options;
     }

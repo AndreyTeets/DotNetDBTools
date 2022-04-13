@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "DotNetDBTools.IntegrationTests.MSSQL": {
+    "DotNetDBTools.IntegrationTests": {
       "commandName": "Project",
       "nativeDebugging": true
     }

@@ -18,19 +18,18 @@ public class PostgreSQLDeployTests : BaseDeployTests<
     PostgreSQLDbModelConverter,
     PostgreSQLDeployManager>
 {
-    protected override string AgnosticSampleDbAssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDB.Agnostic.dll";
-    protected override string AgnosticSampleDbV2AssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDBv2.Agnostic.dll";
-    protected override string SpecificDBMSSampleDbAssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDB.PostgreSQL.dll";
-    protected override string SpecificDBMSSampleDbV2AssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDBv2.PostgreSQL.dll";
-    protected override string ActualFilesDir => "./generated/PostgreSQL";
+    protected override string SpecificDbmsSampleDbV1AssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDB.PostgreSQL.dll";
+    protected override string SpecificDbmsSampleDbV2AssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDBv2.PostgreSQL.dll";
     protected override BaseDataTester DataTester { get; set; } = new PostgreSQLDataTester();
 
     private static string ConnectionStringWithoutDb => PostgreSQLContainerHelper.PostgreSQLContainerConnectionString;
 
     protected override EquivalencyAssertionOptions<PostgreSQLDatabase> AddAdditionalDbModelEquivalenceyOptions(
-        EquivalencyAssertionOptions<PostgreSQLDatabase> options)
+        EquivalencyAssertionOptions<PostgreSQLDatabase> options, CompareMode compareMode)
     {
-        return options.Excluding(database => database.Functions);
+        if (compareMode.HasFlag(CompareMode.NormalizeCodePieces))
+            options = options.Excluding(database => database.Functions);
+        return options;
     }
 
     protected override string GetNormalizedCodeFromCodePiece(CodePiece codePiece)

@@ -29,6 +29,7 @@ internal class MySQLDbModelFromCSharpDefinitionProvider : DbModelFromCSharpDefin
         MySQLDatabase mysqlDatabase = (MySQLDatabase)database;
         MySQLPostBuildProcessingHelper.ReplaceUniqueConstraintsWithUniqueIndexes(mysqlDatabase);
         mysqlDatabase.Functions = BuildFunctionModels(dbAssembly);
+        mysqlDatabase.Functions = new List<MySQLFunction>(); // TODO Need to save/read functions from DBMS
     }
 
     protected override void BuildAdditionalPrimaryKeyModelProperties(Models.Core.PrimaryKey pkModel, BasePrimaryKey pk, string tableName)

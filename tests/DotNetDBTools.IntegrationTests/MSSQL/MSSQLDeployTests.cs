@@ -20,19 +20,18 @@ public class MSSQLDeployTests : BaseDeployTests<
     MSSQLDbModelConverter,
     MSSQLDeployManager>
 {
-    protected override string AgnosticSampleDbAssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDB.Agnostic.dll";
-    protected override string AgnosticSampleDbV2AssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDBv2.Agnostic.dll";
-    protected override string SpecificDBMSSampleDbAssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDB.MSSQL.dll";
-    protected override string SpecificDBMSSampleDbV2AssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDBv2.MSSQL.dll";
-    protected override string ActualFilesDir => "./generated/MSSQL";
+    protected override string SpecificDbmsSampleDbV1AssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDB.MSSQL.dll";
+    protected override string SpecificDbmsSampleDbV2AssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDBv2.MSSQL.dll";
     protected override BaseDataTester DataTester { get; set; } = new MSSQLDataTester();
 
     private static string ConnectionStringWithoutDb => MSSQLContainerHelper.MSSQLContainerConnectionString;
 
     protected override EquivalencyAssertionOptions<MSSQLDatabase> AddAdditionalDbModelEquivalenceyOptions(
-        EquivalencyAssertionOptions<MSSQLDatabase> options)
+        EquivalencyAssertionOptions<MSSQLDatabase> options, CompareMode compareMode)
     {
-        return options.Excluding(database => database.Functions);
+        if (compareMode.HasFlag(CompareMode.NormalizeCodePieces))
+            options = options.Excluding(database => database.Functions);
+        return options;
     }
 
     protected override string GetNormalizedCodeFromCodePiece(CodePiece codePiece)

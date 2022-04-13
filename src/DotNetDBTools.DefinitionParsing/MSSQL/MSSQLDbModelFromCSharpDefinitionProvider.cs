@@ -31,6 +31,7 @@ internal class MSSQLDbModelFromCSharpDefinitionProvider : DbModelFromCSharpDefin
         MSSQLDatabase mssqlDatabase = (MSSQLDatabase)database;
         mssqlDatabase.UserDefinedTypes = BuildUserDefinedTypeModels(dbAssembly);
         mssqlDatabase.Functions = BuildFunctionModels(dbAssembly);
+        mssqlDatabase.Functions = new List<MSSQLFunction>(); // TODO Need to save/read functions from DBMS
     }
 
     protected override void BuildAdditionalColumnModelProperties(MSSQLColumn columnModel, BaseColumn column, string tableName)

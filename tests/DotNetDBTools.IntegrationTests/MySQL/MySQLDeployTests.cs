@@ -20,23 +20,23 @@ public class MySQLDeployTests : BaseDeployTests<
     MySQLDbModelConverter,
     MySQLDeployManager>
 {
-    protected override string AgnosticSampleDbAssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDB.Agnostic.dll";
-    protected override string AgnosticSampleDbV2AssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDBv2.Agnostic.dll";
-    protected override string SpecificDBMSSampleDbAssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDB.MySQL.dll";
-    protected override string SpecificDBMSSampleDbV2AssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDBv2.MySQL.dll";
-    protected override string ActualFilesDir => "./generated/MySQL";
+    protected override string SpecificDbmsSampleDbV1AssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDB.MySQL.dll";
+    protected override string SpecificDbmsSampleDbV2AssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDBv2.MySQL.dll";
     protected override BaseDataTester DataTester { get; set; } = new MySQLDataTester();
 
     private static string ConnectionStringWithoutDb => MySQLContainerHelper.MySQLContainerConnectionString;
 
     protected override EquivalencyAssertionOptions<MySQLDatabase> AddAdditionalDbModelEquivalenceyOptions(
-        EquivalencyAssertionOptions<MySQLDatabase> options)
+        EquivalencyAssertionOptions<MySQLDatabase> options, CompareMode compareMode)
     {
-        return options.Excluding(database => database.Functions);
+        if (compareMode.HasFlag(CompareMode.NormalizeCodePieces))
+            options = options.Excluding(database => database.Functions);
+        return options;
     }
 
     protected override string GetNormalizedCodeFromCodePiece(CodePiece codePiece)
     {
+        string testName = TestContext.CurrentContext.Test.Name;
         string res = codePiece.Code.ToUpper()
             .Replace("\r", "")
             .Replace("\n", "")
@@ -45,7 +45,12 @@ public class MySQLDeployTests : BaseDeployTests<
             .Replace("`", "")
             .Replace("(", "")
             .Replace(")", "")
-            .Replace($"{MangleDbNameIfTooLong(TestContext.CurrentContext.Test.Name).ToUpper()}.", "");
+            .Replace(MangleDbNameIfTooLong($"AGNOSTICV1_{testName}").ToUpper() + ".", "")
+            .Replace(MangleDbNameIfTooLong($"AGNOSTICV2_{testName}").ToUpper() + ".", "")
+            .Replace(MangleDbNameIfTooLong($"SPECIFICDBMSV1_{testName}").ToUpper() + ".", "")
+            .Replace(MangleDbNameIfTooLong($"SPECIFICDBMSV2_{testName}").ToUpper() + ".", "")
+            ;
+
         string identifier = @"[\w|\d|_]+";
         res = Regex.Replace(res, $"AS{identifier},", ",");
         res = Regex.Replace(res, $"AS{identifier}FROM", "FROM");

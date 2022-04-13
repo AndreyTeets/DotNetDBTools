@@ -10,7 +10,7 @@ namespace DotNetDBTools.UnitTests.DefinitionParsing.SQLite;
 public class SQLiteBuildDbModelTests
 {
     [Fact]
-    public void DbModelCreatedFrom_SampleDBv2SqlDef_IsEquivalentTo_DbModelCreatedFrom_SampleDBv2()
+    public void DbModelFromSqlDef_IsEquivalentTo_DbModelFromCSharpDef()
     {
         Assembly dbAssemblyCSharp = TestDbAssembliesHelper.GetSampleDbAssembly("DotNetDBTools.SampleDBv2.SQLite");
         Assembly dbAssemblySql = TestDbAssembliesHelper.GetSampleDbAssembly("DotNetDBTools.SampleDBv2SqlDef.SQLite");

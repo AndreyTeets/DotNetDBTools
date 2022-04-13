@@ -5,6 +5,6 @@ namespace DotNetDBTools.UnitTests.Generation.PostgreSQL;
 
 public class PostgreSQLDefinitionGenerationTests : BaseDefinitionGenerationTests<PostgreSQLDatabase>
 {
-    protected override string SampleDbV1CSharpAssemblyName => "DotNetDBTools.SampleDB.PostgreSQL";
-    protected override string GeneratedFilesDir => "./generated/PostgreSQL";
+    protected override string SpecificDbmsSampleDbV1AssemblyName => "DotNetDBTools.SampleDB.PostgreSQL";
+    protected override string SpecificDbmsSampleDbV2AssemblyName => "DotNetDBTools.SampleDBv2.PostgreSQL";
 }

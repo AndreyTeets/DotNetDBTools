@@ -5,6 +5,6 @@ namespace DotNetDBTools.UnitTests.Generation.MySQL;
 
 public class MySQLDefinitionGenerationTests : BaseDefinitionGenerationTests<MySQLDatabase>
 {
-    protected override string SampleDbV1CSharpAssemblyName => "DotNetDBTools.SampleDB.MySQL";
-    protected override string GeneratedFilesDir => "./generated/MySQL";
+    protected override string SpecificDbmsSampleDbV1AssemblyName => "DotNetDBTools.SampleDB.MySQL";
+    protected override string SpecificDbmsSampleDbV2AssemblyName => "DotNetDBTools.SampleDBv2.MySQL";
 }

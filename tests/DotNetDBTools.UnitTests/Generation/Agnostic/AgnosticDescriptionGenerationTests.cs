@@ -13,7 +13,7 @@ namespace DotNetDBTools.UnitTests.Generation.Agnostic;
 public class AgnosticDescriptionGenerationTests
 {
     [Fact]
-    public void Generate_Description_For_AgnosticSampleDB_CreatesCorrectDescription()
+    public void GenerateDescription_CreatesCorrectDescription()
     {
         Assembly dbAssembly = TestDbAssembliesHelper.GetSampleDbAssembly("DotNetDBTools.SampleDB.Agnostic");
         Database database = new GenericDbModelFromDefinitionProvider().CreateDbModel(dbAssembly);
