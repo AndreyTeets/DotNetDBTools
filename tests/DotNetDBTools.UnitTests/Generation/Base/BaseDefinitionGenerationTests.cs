@@ -17,23 +17,23 @@ public abstract class BaseDefinitionGenerationTests<TDatabase>
     private static string GeneratedFilesDir => "./generated";
 
     [Fact]
-    public void DbModelFromGeneratedDefinition_IsEquivalentTo_DbModelFromDbAssembly()
+    public void DbModelFromGeneratedDefinition_IsEquivalentTo_DbModelFromOriginalDefinition()
     {
         TestCase(SpecificDbmsSampleDbV1AssemblyName);
         TestCase(SpecificDbmsSampleDbV2AssemblyName);
 
         void TestCase(string sampleDbAssemblyName)
         {
-            Assembly initialDbAssembly = TestDbAssembliesHelper.GetSampleDbAssembly(sampleDbAssemblyName);
-            TDatabase originalDbModel = (TDatabase)new GenericDbModelFromDefinitionProvider().CreateDbModel(initialDbAssembly);
+            Assembly origDefDbAssembly = TestDbAssembliesHelper.GetSampleDbAssembly(sampleDbAssemblyName);
+            TDatabase origDefDbModel = (TDatabase)new GenericDbModelFromDefinitionProvider().CreateDbModel(origDefDbAssembly);
 
             string projectDir = $@"{GeneratedFilesDir}/{sampleDbAssemblyName}_GeneratedDefinition";
-            DbDefinitionGenerator.GenerateDefinition(originalDbModel, projectDir);
+            DbDefinitionGenerator.GenerateDefinition(origDefDbModel, projectDir);
             Assembly genDefDbAssembly = TestDatabasesCompiler.CompileSampleDbProject(projectDir);
             TDatabase genDefDbModel = (TDatabase)new GenericDbModelFromDefinitionProvider().CreateDbModel(genDefDbAssembly);
-            genDefDbModel.Version = originalDbModel.Version;
+            genDefDbModel.Version = origDefDbModel.Version;
 
-            genDefDbModel.Should().BeEquivalentTo(originalDbModel, options =>
+            genDefDbModel.Should().BeEquivalentTo(origDefDbModel, options =>
                 options.WithStrictOrdering()
                 .Excluding(database => database.Name)
                 .Excluding(database => database.Scripts));
