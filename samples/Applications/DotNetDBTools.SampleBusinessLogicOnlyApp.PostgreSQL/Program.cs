@@ -9,7 +9,7 @@ namespace DotNetDBTools.SampleBusinessLogicOnlyApp.PostgreSQL
     {
         private const string PostgreSQLServerPassword = "Strong(!)Passw0rd";
         private const string PostgreSQLServerHostPort = "5007";
-        private const string DatabaseName = "AgnosticSampleDB";
+        private const string DatabaseName = "PostgreSQLSampleDB_BusinessLogicOnlyApp";
 
         private static readonly string s_connectionString = $"Host=127.0.0.1;Port={PostgreSQLServerHostPort};Database={DatabaseName};Username=postgres;Password={PostgreSQLServerPassword}";
 

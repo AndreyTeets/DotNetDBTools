@@ -10,7 +10,7 @@ namespace DotNetDBTools.SampleBusinessLogicOnlyApp.SQLite
         private const string RepoRoot = "../../../../../..";
         private static readonly string s_samplesOutputDir = $"{RepoRoot}/SamplesOutput";
 
-        private static readonly string s_connectionString = $"DataSource={s_samplesOutputDir}/sqlite_databases/AgnosticSampleDB.db;Mode=ReadWriteCreate;";
+        private static readonly string s_connectionString = $"DataSource={s_samplesOutputDir}/sqlite_databases/SQLiteSampleDB_BusinessLogicOnlyApp.db;Mode=ReadWriteCreate;";
 
         public static void Main()
         {

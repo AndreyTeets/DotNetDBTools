@@ -9,7 +9,7 @@ namespace DotNetDBTools.SampleBusinessLogicOnlyApp.MySQL
     {
         private const string MySQLServerPassword = "Strong(!)Passw0rd";
         private const string MySQLServerHostPort = "5006";
-        private const string DatabaseName = "AgnosticSampleDB";
+        private const string DatabaseName = "MySQLSampleDB_BusinessLogicOnlyApp";
 
         private static readonly string s_connectionString = $"Host=127.0.0.1;Port={MySQLServerHostPort};Database={DatabaseName};Username=root;Password={MySQLServerPassword}";
 
