@@ -53,12 +53,14 @@ public abstract class DeployManager<TDatabase> : IDeployManager
     }
     public void RegisterAsDNDBT(DbConnection connection, Assembly dbWithDNDBTInfoAssembly)
     {
-        Database actualDb = CreateDbModelFromDBMS(connection, ExpectedRegistrationState.Unregistered, useDNDBTSysInfoIfAvailable: null);
         Database dbWithDNDBTInfo = CreateDbModelFromDefinition(dbWithDNDBTInfoAssembly);
-
+        RegisterAsDNDBT(connection, dbWithDNDBTInfo);
+    }
+    public void RegisterAsDNDBT(DbConnection connection, Database dbWithDNDBTInfo)
+    {
+        Database actualDb = CreateDbModelFromDBMS(connection, ExpectedRegistrationState.Unregistered, useDNDBTSysInfoIfAvailable: null);
         if (!AnalysisHelper.DatabasesAreEquivalentExcludingDNDBTInfo(actualDb, dbWithDNDBTInfo, out string diffLog))
             throw new Exception($"Actual database differs from the one provided for DNDBTInfo. DiffLog:\n{diffLog}");
-
         RegisterAsDNDBTImpl(connection, dbWithDNDBTInfo);
     }
     public void UnregisterAsDNDBT(DbConnection connection)

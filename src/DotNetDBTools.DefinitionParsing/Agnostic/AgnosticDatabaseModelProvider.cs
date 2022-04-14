@@ -1,4 +1,5 @@
-﻿using DotNetDBTools.Definition.Core;
+﻿using DotNetDBTools.Analysis.Agnostic;
+using DotNetDBTools.Definition.Core;
 using DotNetDBTools.DefinitionParsing.Core;
 using DotNetDBTools.Models.Agnostic;
 
@@ -13,7 +14,8 @@ internal class AgnosticDatabaseModelProvider : DbModelFromCSharpDefinitionProvid
     public AgnosticDatabaseModelProvider() : base(
         new AgnosticDataTypeMapper(),
         new AgnosticDbObjectCodeMapper(),
-        new AgnosticDefaultValueMapper())
+        new AgnosticDefaultValueMapper(),
+        new AgnosticDbModelPostProcessor())
     {
     }
 

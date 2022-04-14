@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo;
 using DotNetDBTools.Deploy.Core.Queries.DNDBTSysInfo;
 using DotNetDBTools.Models.Core;
@@ -50,10 +51,14 @@ internal abstract class DbModelFromDBMSProvider<
     where TGetScriptExecutionRecordsFromDNDBTSysInfoQuery : GetDNDBTScriptExecutionRecordsQuery, new()
 {
     protected readonly IQueryExecutor QueryExecutor;
+    protected readonly IDbModelPostProcessor DbModelPostProcessor;
 
-    protected DbModelFromDBMSProvider(IQueryExecutor queryExecutor)
+    protected DbModelFromDBMSProvider(
+        IQueryExecutor queryExecutor,
+        IDbModelPostProcessor dbModelPostProcessor)
     {
         QueryExecutor = queryExecutor;
+        DbModelPostProcessor = dbModelPostProcessor;
     }
 
     public Database CreateDbModelUsingDNDBTSysInfo()
@@ -71,6 +76,7 @@ internal abstract class DbModelFromDBMSProvider<
         database.Tables = BuildTables();
         database.Views = BuildViews();
         BuildAdditionalDbObjects(database);
+        DbModelPostProcessor.OrderDbObjects(database);
         return database;
     }
     protected virtual void BuildAdditionalDbObjects(Database database) { }

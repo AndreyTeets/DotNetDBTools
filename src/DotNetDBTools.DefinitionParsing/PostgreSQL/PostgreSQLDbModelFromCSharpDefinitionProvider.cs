@@ -24,7 +24,8 @@ internal class PostgreSQLDbModelFromCSharpDefinitionProvider : DbModelFromCSharp
     public PostgreSQLDbModelFromCSharpDefinitionProvider() : base(
         new PostgreSQLDataTypeMapper(),
         new SpecificDbmsDbObjectCodeMapper(),
-        new PostgreSQLDefaultValueMapper())
+        new PostgreSQLDefaultValueMapper(),
+        new PostgreSQLDbModelPostProcessor())
     {
     }
 

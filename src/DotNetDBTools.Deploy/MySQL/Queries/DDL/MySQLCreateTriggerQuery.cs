@@ -12,7 +12,7 @@ internal class MySQLCreateTriggerQuery : CreateTriggerQuery
     protected override string GetSql(Trigger trigger)
     {
         string query =
-$@"{trigger.GetCode()}";
+$@"{trigger.GetCode().AppendSemicolonIfAbsent()}";
 
         return query;
     }

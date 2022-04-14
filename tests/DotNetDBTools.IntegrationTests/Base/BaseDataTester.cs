@@ -25,7 +25,7 @@ public abstract class BaseDataTester
     {
         AssertDataInTable2(connection, assertKind);
         AssertDataInTable1(connection, assertKind);
-        AssertDataInTable4(connection);
+        AssertDataInTable4(connection, assertKind);
         AssertDataInTable5(connection);
     }
 
@@ -99,15 +99,16 @@ WHERE {Quote($"MyColumn1{newName}")} = 101 AND {Quote("MyColumn2")} {col2Op} {Bi
 $@"UPDATE {Quote("MyTable4")} SET
     {Quote("MyColumn1")} = {Quote("MyColumn1")} + 500;");
     }
-    private void AssertDataInTable4(DbConnection connection)
+    private void AssertDataInTable4(DbConnection connection, AssertKind assertKind)
     {
         // Init script adds 1,2,3 and trigger on MyTable2 adds 101,201
+        int expectedCount = assertKind == AssertKind.V1NoScripts ? 2 : 5;
         connection.QuerySingle<int>(
 $@"SELECT
     COUNT(*)
 FROM {Quote("MyTable4")}
 WHERE {Quote("MyColumn1")} IN (501,502,503,601,701);")
-            .Should().Be(5);
+            .Should().Be(expectedCount);
     }
 
     private void PopulateTable5(DbConnection connection)
@@ -176,5 +177,6 @@ WHERE {Quote("MyColumn1")} = 101
         V1,
         V2,
         V1Rollbacked,
+        V1NoScripts,
     }
 }

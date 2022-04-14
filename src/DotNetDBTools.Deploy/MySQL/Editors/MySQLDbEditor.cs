@@ -104,7 +104,7 @@ internal class MySQLDbEditor : DbEditor<
 
     private void CreateFunction(MySQLFunction func)
     {
-        QueryExecutor.Execute(new GenericQuery($"{func.GetCode()}"));
+        QueryExecutor.Execute(new GenericQuery($"{func.GetCode().AppendSemicolonIfAbsent()}"));
         QueryExecutor.Execute(new MySQLInsertDNDBTDbObjectRecordQuery(func.ID, null, DbObjectType.Function, func.Name, func.GetCode()));
     }
 
@@ -116,7 +116,7 @@ internal class MySQLDbEditor : DbEditor<
 
     private void CreateView(MySQLView view)
     {
-        QueryExecutor.Execute(new GenericQuery($"{view.GetCode()}"));
+        QueryExecutor.Execute(new GenericQuery($"{view.GetCode().AppendSemicolonIfAbsent()}"));
         QueryExecutor.Execute(new MySQLInsertDNDBTDbObjectRecordQuery(view.ID, null, DbObjectType.View, view.Name, view.GetCode()));
     }
 
@@ -128,7 +128,7 @@ internal class MySQLDbEditor : DbEditor<
 
     private void CreateProcedure(MySQLProcedure proc)
     {
-        QueryExecutor.Execute(new GenericQuery($"{proc.GetCode()}"));
+        QueryExecutor.Execute(new GenericQuery($"{proc.GetCode().AppendSemicolonIfAbsent()}"));
         QueryExecutor.Execute(new MySQLInsertDNDBTDbObjectRecordQuery(proc.ID, null, DbObjectType.Procedure, proc.Name, proc.GetCode()));
     }
 

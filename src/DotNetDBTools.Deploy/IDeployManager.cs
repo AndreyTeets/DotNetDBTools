@@ -29,6 +29,11 @@ public interface IDeployManager
     /// </summary>
     public void RegisterAsDNDBT(DbConnection connection, Assembly dbWithDNDBTInfoAssembly);
     /// <summary>
+    /// Adds DNDBT system tables and populates them with DNDBTInfo taken from provided database model.
+    /// Provided dbAssembly and actual database are first checked for equivalency.
+    /// </summary>
+    public void RegisterAsDNDBT(DbConnection connection, Database dbWithDNDBTInfo);
+    /// <summary>
     /// Deletes all DNDBT system tables.
     /// </summary>
     public void UnregisterAsDNDBT(DbConnection connection);

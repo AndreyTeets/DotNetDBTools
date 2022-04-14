@@ -20,7 +20,8 @@ internal class MySQLDbModelFromCSharpDefinitionProvider : DbModelFromCSharpDefin
     public MySQLDbModelFromCSharpDefinitionProvider() : base(
         new MySQLDataTypeMapper(),
         new SpecificDbmsDbObjectCodeMapper(),
-        new MySQLDefaultValueMapper())
+        new MySQLDefaultValueMapper(),
+        new MySQLDbModelPostProcessor())
     {
     }
 

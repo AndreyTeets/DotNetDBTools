@@ -30,6 +30,14 @@ internal static class HelperExtensions
         }
     }
 
+    public static string AppendSemicolonIfAbsent(this string val)
+    {
+        if (!val.EndsWith(";", StringComparison.Ordinal))
+            return $"{val};";
+        else
+            return val;
+    }
+
     public static void ExecuteInTransaction(this IQueryExecutor queryExecutor, Action action)
     {
         queryExecutor.BeginTransaction();

@@ -82,7 +82,7 @@ internal class SQLiteDbEditor : DbEditor<
 
     private void CreateView(SQLiteView view)
     {
-        QueryExecutor.Execute(new GenericQuery($"{view.GetCode()}"));
+        QueryExecutor.Execute(new GenericQuery($"{view.GetCode().AppendSemicolonIfAbsent()}"));
         QueryExecutor.Execute(new SQLiteInsertDNDBTDbObjectRecordQuery(view.ID, null, DbObjectType.View, view.Name, view.GetCode()));
     }
 

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using DotNetDBTools.Analysis.Core;
+using DotNetDBTools.Analysis.MSSQL;
 using DotNetDBTools.Definition.Core;
 using DotNetDBTools.Definition.MSSQL;
 using DotNetDBTools.Definition.MSSQL.UserDefinedTypes;
@@ -22,7 +23,8 @@ internal class MSSQLDbModelFromCSharpDefinitionProvider : DbModelFromCSharpDefin
     public MSSQLDbModelFromCSharpDefinitionProvider() : base(
         new MSSQLDataTypeMapper(),
         new SpecificDbmsDbObjectCodeMapper(),
-        new MSSQLDefaultValueMapper())
+        new MSSQLDefaultValueMapper(),
+        new MSSQLDbModelPostProcessor())
     {
     }
 

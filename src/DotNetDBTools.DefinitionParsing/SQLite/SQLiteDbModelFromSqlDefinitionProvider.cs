@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using DotNetDBTools.Analysis.Core;
+using DotNetDBTools.Analysis.SQLite;
 using DotNetDBTools.CodeParsing.Core.Models;
 using DotNetDBTools.CodeParsing.SQLite;
 using DotNetDBTools.DefinitionParsing.Core;
@@ -29,6 +30,7 @@ internal class SQLiteDbModelFromSqlDefinitionProvider : IDbModelFromDefinitionPr
         BuildTablesIndexes(tableNameToTableMap, dbObjects.OfType<IndexInfo>());
         BuildTablesTriggers(tableNameToTableMap, dbObjects.OfType<TriggerInfo>());
 
+        new SQLiteDbModelPostProcessor().OrderDbObjects(database);
         return database;
     }
 
@@ -72,7 +74,7 @@ internal class SQLiteDbModelFromSqlDefinitionProvider : IDbModelFromDefinitionPr
             };
             tableModels.Add(tableModel);
         }
-        return tableModels.OrderByName();
+        return tableModels;
     }
 
     private List<SQLiteView> BuildViewModels(IEnumerable<ViewInfo> views)
@@ -91,7 +93,7 @@ internal class SQLiteDbModelFromSqlDefinitionProvider : IDbModelFromDefinitionPr
             };
             viewModels.Add(viewModel);
         }
-        return viewModels.OrderByName();
+        return viewModels;
     }
 
     private List<Script> BuildScriptModels(IEnumerable<ScriptInfo> scripts)
@@ -113,7 +115,7 @@ internal class SQLiteDbModelFromSqlDefinitionProvider : IDbModelFromDefinitionPr
             };
             scriptModels.Add(scriptModel);
         }
-        return scriptModels.OrderByName();
+        return scriptModels;
     }
 
     private List<Column> BuildColumnModels(TableInfo table)
@@ -135,7 +137,7 @@ internal class SQLiteDbModelFromSqlDefinitionProvider : IDbModelFromDefinitionPr
             };
             columnModels.Add(columnModel);
         }
-        return columnModels.OrderByName();
+        return columnModels;
     }
 
     private PrimaryKey BuildPrimaryKeyModels(TableInfo table)
@@ -174,7 +176,7 @@ internal class SQLiteDbModelFromSqlDefinitionProvider : IDbModelFromDefinitionPr
             };
             ucModels.Add(ucModel);
         }
-        return ucModels.OrderByName();
+        return ucModels;
     }
 
     private List<CheckConstraint> BuildCheckConstraintModels(TableInfo table)
@@ -193,7 +195,7 @@ internal class SQLiteDbModelFromSqlDefinitionProvider : IDbModelFromDefinitionPr
             };
             ckModels.Add(ckModel);
         }
-        return ckModels.OrderByName();
+        return ckModels;
     }
 
     private List<ForeignKey> BuildForeignKeyModels(TableInfo table)
@@ -216,7 +218,7 @@ internal class SQLiteDbModelFromSqlDefinitionProvider : IDbModelFromDefinitionPr
             };
             fkModels.Add(fkModel);
         }
-        return fkModels.OrderByName();
+        return fkModels;
     }
 
     private void BuildTablesIndexes(

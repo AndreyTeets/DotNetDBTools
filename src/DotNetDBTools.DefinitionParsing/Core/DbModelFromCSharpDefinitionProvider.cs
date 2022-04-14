@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.Definition.Core;
 using DotNetDBTools.Models.Core;
 
@@ -21,15 +22,18 @@ internal abstract class DbModelFromCSharpDefinitionProvider<
     protected readonly IDataTypeMapper DataTypeMapper;
     protected readonly IDbObjectCodeMapper DbObjectCodeMapper;
     protected readonly IDefaultValueMapper DefaultValueMapper;
+    protected readonly IDbModelPostProcessor DbModelPostProcessor;
 
     protected DbModelFromCSharpDefinitionProvider(
         IDataTypeMapper dataTypeMapper,
         IDbObjectCodeMapper dbObjectCodeMapper,
-        IDefaultValueMapper defaultValueMapper)
+        IDefaultValueMapper defaultValueMapper,
+        IDbModelPostProcessor dbModelPostProcessor)
     {
         DataTypeMapper = dataTypeMapper;
         DbObjectCodeMapper = dbObjectCodeMapper;
         DefaultValueMapper = defaultValueMapper;
+        DbModelPostProcessor = dbModelPostProcessor;
     }
 
     public Database CreateDbModel(Assembly dbAssembly)
@@ -41,6 +45,7 @@ internal abstract class DbModelFromCSharpDefinitionProvider<
         database.Views = BuildViewModels(dbAssembly);
         database.Scripts = BuildScriptModels(dbAssembly);
         BuildAdditionalDbObjects(database, dbAssembly);
+        DbModelPostProcessor.OrderDbObjects(database);
         return database;
     }
     protected virtual void BuildAdditionalDbObjects(Database database, Assembly dbAssembly) { }

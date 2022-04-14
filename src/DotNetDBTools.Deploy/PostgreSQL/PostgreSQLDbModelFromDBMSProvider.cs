@@ -34,7 +34,7 @@ internal class PostgreSQLDbModelFromDBMSProvider : DbModelFromDBMSProvider<
     PostgreSQLGetDNDBTScriptExecutionRecordsQuery>
 {
     public PostgreSQLDbModelFromDBMSProvider(IQueryExecutor queryExecutor)
-        : base(queryExecutor) { }
+        : base(queryExecutor, new PostgreSQLDbModelPostProcessor()) { }
 
     protected override void ReplaceAdditionalDbModelObjectsIDsAndCodeWithDNDBTSysInfo(Database database, Dictionary<string, DNDBTInfo> dbObjectIDsMap)
     {

@@ -36,7 +36,7 @@ $@"DROP TRIGGER [{trigger.Name}];");
         foreach (Trigger trigger in tableDiff.TriggersToCreate)
         {
             createTriggerStatements.Add(
-$@"{AppendSemicolonIfAbsent(trigger.GetCode())}");
+$@"{trigger.GetCode().AppendSemicolonIfAbsent()}");
         }
 
         List<string> createIndexStatements = new();

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DotNetDBTools.Analysis.SQLite;
 using DotNetDBTools.CodeParsing.Core.Models;
 using DotNetDBTools.CodeParsing.SQLite;
 using DotNetDBTools.Deploy.Core;
@@ -29,7 +30,7 @@ internal class SQLiteDbModelFromDBMSProvider : DbModelFromDBMSProvider<
     SQLiteGetDNDBTScriptExecutionRecordsQuery>
 {
     public SQLiteDbModelFromDBMSProvider(IQueryExecutor queryExecutor)
-        : base(queryExecutor) { }
+        : base(queryExecutor, new SQLiteDbModelPostProcessor()) { }
 
     protected override void BuildAdditionalTablesAttributes(Dictionary<string, Table> tables)
     {
