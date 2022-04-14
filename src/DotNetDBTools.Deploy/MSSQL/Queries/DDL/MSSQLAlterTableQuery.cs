@@ -67,6 +67,8 @@ internal class MSSQLAlterTableQuery : AlterTableQuery
             if (columnDiff.OldColumn.Default.Code is not null)
                 sb.Append(Queries.DropDefaultConstraint(tableDiff.NewTable.Name, columnDiff.OldColumn));
 
+            // TODO if (columnDiff.NewColumn.DataType.Name != columnDiff.OldColumn.DataType.Name)
+            // Need to track if custom data type was changed (and so being recreated).
             sb.Append(Queries.AlterColumnTypeAndNullability(tableDiff.NewTable.Name, columnDiff.NewColumn));
 
             if (columnDiff.NewColumn.Default.Code is not null)

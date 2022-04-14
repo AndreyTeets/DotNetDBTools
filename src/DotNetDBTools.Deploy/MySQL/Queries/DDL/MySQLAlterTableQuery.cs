@@ -65,9 +65,9 @@ internal class MySQLAlterTableQuery : AlterTableQuery
 
         foreach (ColumnDiff columnDiff in tableDiff.ChangedColumns)
         {
-            sb.Append(Queries.AlterColumnTypeAndNullability(tableDiff.NewTable.Name, columnDiff.NewColumn));
-
-            if (columnDiff.NewColumn.Default.Code != columnDiff.OldColumn.Default.Code)
+            if (columnDiff.NewColumn.DataType.Name != columnDiff.OldColumn.DataType.Name)
+                sb.Append(Queries.AlterColumnDefinition(tableDiff.NewTable.Name, columnDiff.NewColumn));
+            else if (columnDiff.NewColumn.Default.Code != columnDiff.OldColumn.Default.Code)
                 sb.Append(Queries.AddDefaultConstraint(tableDiff.NewTable.Name, columnDiff.NewColumn));
         }
 
@@ -110,9 +110,9 @@ ALTER TABLE `{tableName}` ADD COLUMN `{c.Name}` {c.DataType.Name}{GetIdentitySta
 $@"
 ALTER TABLE `{tableName}` DROP COLUMN `{columnName}`;"
             ;
-        public static string AlterColumnTypeAndNullability(string tableName, Column c) =>
+        public static string AlterColumnDefinition(string tableName, Column c) =>
 $@"
-ALTER TABLE `{tableName}` MODIFY COLUMN `{c.Name}` {c.DataType.Name} {GetNullabilityStatement(c)};"
+ALTER TABLE `{tableName}` MODIFY COLUMN `{c.Name}` {c.DataType.Name} {GetNullabilityStatement(c)}{GetDefaultValStatement(c)};"
             ;
 
         public static string AddPrimaryKey(string tableName, PrimaryKey pk) =>

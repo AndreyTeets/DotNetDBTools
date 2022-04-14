@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.IO;
+using Dapper;
 using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.DefinitionParsing;
 using DotNetDBTools.DefinitionParsing.Core;
@@ -23,6 +25,7 @@ public abstract class BaseDeployTests<TDatabase, TDbConnection, TDbModelConverte
 {
     protected abstract string SpecificDbmsSampleDbV1AssemblyPath { get; }
     protected abstract string SpecificDbmsSampleDbV2AssemblyPath { get; }
+    protected abstract string GeneratedFilesDir { get; }
     protected abstract BaseDataTester DataTester { get; set; }
 
     private static string AgnosticSampleDbV1AssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDB.Agnostic.dll";
@@ -48,9 +51,9 @@ public abstract class BaseDeployTests<TDatabase, TDbConnection, TDbModelConverte
 
         void TestCase(string sampleDbAssemblyPath, string testCaseId)
         {
-            using DbConnection connection = RecreateDbAndCreateConnection(CreateTestCaseName(testCaseId));
-
             TDatabase dbModelFromDefinition = CreateDbModelFromDefinition(sampleDbAssemblyPath);
+
+            using DbConnection connection = RecreateDbAndCreateConnection(CreateTestCaseName(testCaseId));
 
             _deployManager.RegisterAsDNDBT(connection);
             _deployManager.PublishDatabase(sampleDbAssemblyPath, connection);
@@ -99,6 +102,46 @@ public abstract class BaseDeployTests<TDatabase, TDbConnection, TDbModelConverte
     }
 
     [Test]
+    public void NoDNDBTInfoPublishScript_UpdatesToDesiredState_And_PreservesRelevantData()
+    {
+        DataTester.IsDbmsSpecific = false;
+        TestCase(AgnosticSampleDbV1AssemblyPath, AgnosticSampleDbV2AssemblyPath, "Agnostic");
+
+        DataTester.IsDbmsSpecific = true;
+        TestCase(SpecificDbmsSampleDbV1AssemblyPath, SpecificDbmsSampleDbV2AssemblyPath, "SpecificDbms");
+
+        void TestCase(string assemblyV1Path, string assemblyV2Path, string testCaseId)
+        {
+            string createV1Script = $"{GeneratedFilesDir}/{testCaseId}_CreateV1Script.sql";
+            string updateV1toV2Script = $"{GeneratedFilesDir}/{testCaseId}_UpdateV1toV2Script.sql";
+            string updateV2toV1Script = $"{GeneratedFilesDir}/{testCaseId}_UpdateV2toV1Script.sql";
+
+            _deployManager.GenerateNoDNDBTInfoPublishScript(assemblyV1Path, createV1Script);
+            _deployManager.Options.AllowDataLoss = true;
+            _deployManager.GenerateNoDNDBTInfoPublishScript(assemblyV2Path, assemblyV1Path, updateV1toV2Script);
+            _deployManager.GenerateNoDNDBTInfoPublishScript(assemblyV1Path, assemblyV2Path, updateV2toV1Script);
+
+            TDatabase dbModelFromDefinitionV1 = CreateDbModelFromDefinition(assemblyV1Path);
+            TDatabase dbModelFromDefinitionV2 = CreateDbModelFromDefinition(assemblyV2Path);
+
+            using DbConnection connection = RecreateDbAndCreateConnection(CreateTestCaseName(testCaseId));
+
+            connection.Execute(File.ReadAllText(createV1Script));
+            AssertDbModelEquivalence(CreateDbModelFromDBMSSysInfo(connection), dbModelFromDefinitionV1, CompareMode.IgnoreAllDNDBTSysInfoSpecific);
+            DataTester.Populate_SampleDb_WithData(connection);
+            DataTester.Assert_SampleDb_Data(connection, BaseDataTester.AssertKind.V1);
+
+            connection.Execute(File.ReadAllText(updateV1toV2Script));
+            AssertDbModelEquivalence(CreateDbModelFromDBMSSysInfo(connection), dbModelFromDefinitionV2, CompareMode.IgnoreAllDNDBTSysInfoSpecific);
+            DataTester.Assert_SampleDb_Data(connection, BaseDataTester.AssertKind.V2);
+
+            connection.Execute(File.ReadAllText(updateV2toV1Script));
+            AssertDbModelEquivalence(CreateDbModelFromDBMSSysInfo(connection), dbModelFromDefinitionV1, CompareMode.IgnoreAllDNDBTSysInfoSpecific);
+            DataTester.Assert_SampleDb_Data(connection, BaseDataTester.AssertKind.V1Rollbacked);
+        }
+    }
+
+    [Test]
     public void Publish_UpdatesToDesiredState_And_PreservesRelevantData()
     {
         DataTester.IsDbmsSpecific = false;
@@ -109,34 +152,39 @@ public abstract class BaseDeployTests<TDatabase, TDbConnection, TDbModelConverte
 
         void TestCase(string assemblyV1Path, string assemblyV2Path, string testCaseId)
         {
-            using DbConnection connection = RecreateDbAndCreateConnection(CreateTestCaseName(testCaseId));
-
             TDatabase dbModelFromDefinitionV1 = CreateDbModelFromDefinition(assemblyV1Path);
             TDatabase dbModelFromDefinitionV2 = CreateDbModelFromDefinition(assemblyV2Path);
+
+            using DbConnection connection = RecreateDbAndCreateConnection(CreateTestCaseName(testCaseId));
 
             _deployManager.RegisterAsDNDBT(connection);
             _deployManager.PublishDatabase(assemblyV1Path, connection);
             AssertDbModelEquivalence(CreateDbModelFromDNDBTSysInfo(connection), dbModelFromDefinitionV1, CompareMode.Everything);
+            AssertDbModelEquivalence(CreateDbModelFromDBMSSysInfo(connection), dbModelFromDefinitionV1, CompareMode.IgnoreAllDNDBTSysInfoSpecific);
             DataTester.Populate_SampleDb_WithData(connection);
             DataTester.Assert_SampleDb_Data(connection, BaseDataTester.AssertKind.V1);
 
             _deployManager.PublishDatabase(assemblyV1Path, connection);
             AssertDbModelEquivalence(CreateDbModelFromDNDBTSysInfo(connection), dbModelFromDefinitionV1, CompareMode.Everything);
+            AssertDbModelEquivalence(CreateDbModelFromDBMSSysInfo(connection), dbModelFromDefinitionV1, CompareMode.IgnoreAllDNDBTSysInfoSpecific);
             DataTester.Assert_SampleDb_Data(connection, BaseDataTester.AssertKind.V1);
 
             _deployManager.Options.AllowDataLoss = true;
             _deployManager.PublishDatabase(assemblyV2Path, connection);
             AssertDbModelEquivalence(CreateDbModelFromDNDBTSysInfo(connection), dbModelFromDefinitionV2, CompareMode.Everything);
+            AssertDbModelEquivalence(CreateDbModelFromDBMSSysInfo(connection), dbModelFromDefinitionV2, CompareMode.IgnoreAllDNDBTSysInfoSpecific);
             DataTester.Assert_SampleDb_Data(connection, BaseDataTester.AssertKind.V2);
 
             _deployManager.Options.AllowDataLoss = false;
             _deployManager.PublishDatabase(assemblyV2Path, connection);
             AssertDbModelEquivalence(CreateDbModelFromDNDBTSysInfo(connection), dbModelFromDefinitionV2, CompareMode.Everything);
+            AssertDbModelEquivalence(CreateDbModelFromDBMSSysInfo(connection), dbModelFromDefinitionV2, CompareMode.IgnoreAllDNDBTSysInfoSpecific);
             DataTester.Assert_SampleDb_Data(connection, BaseDataTester.AssertKind.V2);
 
             _deployManager.Options.AllowDataLoss = true;
             _deployManager.PublishDatabase(assemblyV1Path, connection);
             AssertDbModelEquivalence(CreateDbModelFromDNDBTSysInfo(connection), dbModelFromDefinitionV1, CompareMode.Everything);
+            AssertDbModelEquivalence(CreateDbModelFromDBMSSysInfo(connection), dbModelFromDefinitionV1, CompareMode.IgnoreAllDNDBTSysInfoSpecific);
             DataTester.Assert_SampleDb_Data(connection, BaseDataTester.AssertKind.V1Rollbacked);
         }
     }

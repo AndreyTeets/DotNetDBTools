@@ -22,6 +22,7 @@ public class MySQLDeployTests : BaseDeployTests<
 {
     protected override string SpecificDbmsSampleDbV1AssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDB.MySQL.dll";
     protected override string SpecificDbmsSampleDbV2AssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDBv2.MySQL.dll";
+    protected override string GeneratedFilesDir => "./generated/MySQL";
     protected override BaseDataTester DataTester { get; set; } = new MySQLDataTester();
 
     private static string ConnectionStringWithoutDb => MySQLContainerHelper.MySQLContainerConnectionString;
@@ -45,6 +46,8 @@ public class MySQLDeployTests : BaseDeployTests<
             .Replace("`", "")
             .Replace("(", "")
             .Replace(")", "")
+            .Replace(MangleDbNameIfTooLong($"AGNOSTIC_{testName}").ToUpper() + ".", "")
+            .Replace(MangleDbNameIfTooLong($"SPECIFICDBMS_{testName}").ToUpper() + ".", "")
             .Replace(MangleDbNameIfTooLong($"AGNOSTICV1_{testName}").ToUpper() + ".", "")
             .Replace(MangleDbNameIfTooLong($"AGNOSTICV2_{testName}").ToUpper() + ".", "")
             .Replace(MangleDbNameIfTooLong($"SPECIFICDBMSV1_{testName}").ToUpper() + ".", "")
