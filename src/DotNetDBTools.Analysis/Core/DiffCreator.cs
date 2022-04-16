@@ -102,12 +102,18 @@ internal abstract class DiffCreator
                     NewColumn = newColumn,
                     OldColumn = oldColumn,
                 };
+                SetDataTypeChanged(columnDiff);
                 changedColumns.Add(columnDiff);
             });
 
         tableDiff.AddedColumns = addedColumns;
         tableDiff.RemovedColumns = removedColumns;
         tableDiff.ChangedColumns = changedColumns;
+    }
+    protected virtual void SetDataTypeChanged(ColumnDiff columnDiff)
+    {
+        if (columnDiff.NewColumn.DataType.Name != columnDiff.OldColumn.DataType.Name)
+            columnDiff.DataTypeChanged = true;
     }
 
     private void BuildPrimaryKeyDiff<TTableDiff>(TTableDiff tableDiff, Table newDbTable, Table oldDbTable)

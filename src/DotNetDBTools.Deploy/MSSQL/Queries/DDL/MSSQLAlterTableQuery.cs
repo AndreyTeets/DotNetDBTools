@@ -64,14 +64,18 @@ internal class MSSQLAlterTableQuery : AlterTableQuery
 
         foreach (ColumnDiff columnDiff in tableDiff.ChangedColumns)
         {
-            if (columnDiff.OldColumn.Default.Code is not null)
+            bool defaultChagned = columnDiff.NewColumn.Default.Code != columnDiff.OldColumn.Default.Code ||
+                ((MSSQLColumn)columnDiff.NewColumn).DefaultConstraintName != ((MSSQLColumn)columnDiff.OldColumn).DefaultConstraintName;
+            bool typeOrNullabilityChanged = columnDiff.DataTypeChanged ||
+                columnDiff.NewColumn.NotNull != columnDiff.OldColumn.NotNull;
+
+            if (columnDiff.OldColumn.Default.Code is not null && (defaultChagned || typeOrNullabilityChanged))
                 sb.Append(Queries.DropDefaultConstraint(tableDiff.NewTable.Name, columnDiff.OldColumn));
 
-            // TODO if (columnDiff.NewColumn.DataType.Name != columnDiff.OldColumn.DataType.Name)
-            // Need to track if custom data type was changed (and so being recreated).
-            sb.Append(Queries.AlterColumnTypeAndNullability(tableDiff.NewTable.Name, columnDiff.NewColumn));
+            if (typeOrNullabilityChanged)
+                sb.Append(Queries.AlterColumnTypeAndNullability(tableDiff.NewTable.Name, columnDiff.NewColumn));
 
-            if (columnDiff.NewColumn.Default.Code is not null)
+            if (columnDiff.NewColumn.Default.Code is not null && (defaultChagned || typeOrNullabilityChanged))
                 sb.Append(Queries.AddDefaultConstraint(tableDiff.NewTable.Name, columnDiff.NewColumn));
         }
 

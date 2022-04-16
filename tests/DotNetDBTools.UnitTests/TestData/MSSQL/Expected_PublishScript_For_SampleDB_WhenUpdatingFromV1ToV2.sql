@@ -233,8 +233,6 @@ ALTER TABLE [MyTable1NewName] DROP CONSTRAINT [DF_MyTable1_MyColumn1];
 ALTER TABLE [MyTable1NewName] ALTER COLUMN [MyColumn1] BIGINT NULL;
 ALTER TABLE [MyTable1NewName] ADD CONSTRAINT [DF_MyTable1NewName_MyColumn1] DEFAULT 15 FOR [MyColumn1];
 ALTER TABLE [MyTable1NewName] DROP CONSTRAINT [DF_MyTable1_MyColumn4];
-ALTER TABLE [MyTable1NewName] ALTER COLUMN [MyColumn4] DECIMAL(19, 2) NOT NULL;
-ALTER TABLE [MyTable1NewName] ADD CONSTRAINT [DF_MyTable1NewName_MyColumn4] DEFAULT 7.36 FOR [MyColumn4];
 ALTER TABLE [MyTable1NewName] ADD CONSTRAINT [CK_MyTable1_MyCheck1] CHECK (MyColumn4 >= 1);
 ';
 -- QUERY END: MSSQLAlterTableQuery
@@ -287,7 +285,7 @@ WHERE [ID] = @ID;';
 -- QUERY START: MSSQLUpdateDNDBTDbObjectRecordQuery
 EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''867ac528-e87e-4c93-b6e3-dd2fcbbb837f'';
 DECLARE @Name NVARCHAR(MAX) = N''MyColumn4'';
-DECLARE @Code NVARCHAR(MAX) = N''7.36'';
+DECLARE @Code NVARCHAR(MAX) = NULL;
 UPDATE [DNDBTDbObjects] SET
     [Name] = @Name,
     [Code] = @Code

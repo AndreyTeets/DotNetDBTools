@@ -9,6 +9,8 @@ namespace DotNetDBTools.Analysis.MSSQL;
 
 internal class MSSQLDiffCreator : DiffCreator
 {
+    private readonly HashSet<string> _changedUserDefinedTypesNames = new();
+
     public override DatabaseDiff CreateDatabaseDiff(Database newDatabase, Database oldDatabase)
     {
         MSSQLDatabaseDiff dbDiff = new()
@@ -26,6 +28,7 @@ internal class MSSQLDiffCreator : DiffCreator
         };
 
         BuildUserDefinedTypesDiff(dbDiff);
+        FillChangedUserDefinedTypesNames(dbDiff);
 
         BuildTablesDiff<MSSQLTableDiff>(dbDiff);
         IndexesHelper.BuildAllDbIndexesToBeDroppedAndCreated(dbDiff);
@@ -35,6 +38,13 @@ internal class MSSQLDiffCreator : DiffCreator
         BuildViewsDiff(dbDiff);
         BuildScriptsDiff(dbDiff);
         return dbDiff;
+    }
+
+    protected override void SetDataTypeChanged(ColumnDiff columnDiff)
+    {
+        base.SetDataTypeChanged(columnDiff);
+        if (_changedUserDefinedTypesNames.Contains(columnDiff.NewColumn.DataType.Name))
+            columnDiff.DataTypeChanged = true;
     }
 
     private void BuildUserDefinedTypesDiff(MSSQLDatabaseDiff dbDiff)
@@ -58,5 +68,12 @@ internal class MSSQLDiffCreator : DiffCreator
         dbDiff.AddedUserDefinedTypes = addedUserDefinedTypes;
         dbDiff.RemovedUserDefinedTypes = removedUserDefinedTypes;
         dbDiff.ChangedUserDefinedTypes = changedUserDefinedTypes;
+    }
+
+    private void FillChangedUserDefinedTypesNames(MSSQLDatabaseDiff dbDiff)
+    {
+        _changedUserDefinedTypesNames.Clear();
+        foreach (MSSQLUserDefinedTypeDiff typeDiff in dbDiff.ChangedUserDefinedTypes)
+            _changedUserDefinedTypesNames.Add(typeDiff.NewUserDefinedType.Name);
     }
 }

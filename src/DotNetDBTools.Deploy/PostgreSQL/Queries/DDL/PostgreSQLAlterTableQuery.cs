@@ -61,17 +61,19 @@ internal class PostgreSQLAlterTableQuery : AlterTableQuery
 
         foreach (ColumnDiff columnDiff in tableDiff.ChangedColumns)
         {
-            // TODO if (columnDiff.NewColumn.DataType.Name != columnDiff.OldColumn.DataType.Name)
-            // Need to track if custom data type was changed (and so being recreated).
-            sb.Append(Queries.AlterColumnType(columnDiff.NewColumn));
+            if (columnDiff.DataTypeChanged)
+                sb.Append(Queries.AlterColumnType(columnDiff.NewColumn));
 
             if (columnDiff.NewColumn.NotNull && !columnDiff.OldColumn.NotNull)
                 sb.Append(Queries.SetColumnNotNull(columnDiff.NewColumn));
             else if (!columnDiff.NewColumn.NotNull && columnDiff.OldColumn.NotNull)
                 sb.Append(Queries.DropColumnNotNull(columnDiff.NewColumn.Name));
 
-            if (columnDiff.NewColumn.Default.Code != columnDiff.OldColumn.Default.Code)
+            bool defaultChagned = columnDiff.NewColumn.Default.Code != columnDiff.OldColumn.Default.Code;
+            if (columnDiff.NewColumn.Default.Code is not null && defaultChagned)
                 sb.Append(Queries.AddDefaultConstraint(columnDiff.NewColumn));
+            else if (columnDiff.NewColumn.Default.Code is null && defaultChagned)
+                sb.Append(Queries.DropDefaultConstraint(columnDiff.NewColumn.Name));
         }
 
         foreach (Column column in tableDiff.AddedColumns)

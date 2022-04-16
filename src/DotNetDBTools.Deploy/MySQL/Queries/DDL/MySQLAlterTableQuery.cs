@@ -65,10 +65,13 @@ internal class MySQLAlterTableQuery : AlterTableQuery
 
         foreach (ColumnDiff columnDiff in tableDiff.ChangedColumns)
         {
-            if (columnDiff.NewColumn.DataType.Name != columnDiff.OldColumn.DataType.Name)
+            bool defaultChagned = columnDiff.NewColumn.Default.Code != columnDiff.OldColumn.Default.Code;
+            if (columnDiff.DataTypeChanged || columnDiff.NewColumn.NotNull != columnDiff.OldColumn.NotNull)
                 sb.Append(Queries.AlterColumnDefinition(tableDiff.NewTable.Name, columnDiff.NewColumn));
-            else if (columnDiff.NewColumn.Default.Code != columnDiff.OldColumn.Default.Code)
+            else if (columnDiff.NewColumn.Default.Code is not null && defaultChagned)
                 sb.Append(Queries.AddDefaultConstraint(tableDiff.NewTable.Name, columnDiff.NewColumn));
+            else if (columnDiff.NewColumn.Default.Code is null && defaultChagned)
+                sb.Append(Queries.DropDefaultConstraint(tableDiff.NewTable.Name, columnDiff.NewColumn.Name));
         }
 
         bool addedPk = false;
@@ -151,9 +154,9 @@ ALTER TABLE `{tableName}` DROP CONSTRAINT `{ckName}`;"
 $@"
 ALTER TABLE `{tableName}` ALTER COLUMN `{c.Name}` SET DEFAULT {c.Default.Code};"
             ;
-        public static string DropDefaultConstraint(string tableName, Column c) =>
+        public static string DropDefaultConstraint(string tableName, string cName) =>
 $@"
-ALTER TABLE `{tableName}` ALTER COLUMN `{c.Name}` DROP DEFAULT;"
+ALTER TABLE `{tableName}` ALTER COLUMN `{cName}` DROP DEFAULT;"
             ;
     }
 }

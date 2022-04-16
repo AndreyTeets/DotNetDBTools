@@ -83,7 +83,7 @@ WHERE [ID] = 'ae453b22-d270-41fc-8184-9ac26b7a0569';
 CREATE TABLE [_DNDBTTemp_MyTable1NewName]
 (
     [MyColumn1] INTEGER NULL DEFAULT 15,
-    [MyColumn4] NUMERIC NOT NULL DEFAULT 7.36,
+    [MyColumn4] NUMERIC NOT NULL,
     CONSTRAINT [FK_MyTable1_MyColumn1_MyTable2_MyColumn1] FOREIGN KEY ([MyColumn1])
         REFERENCES [MyTable2]([MyColumn1NewName])
         ON UPDATE NO ACTION ON DELETE SET NULL,
@@ -136,6 +136,13 @@ UPDATE [DNDBTDbObjects] SET
     [Name] = 'MyColumn1',
     [Code] = '15'
 WHERE [ID] = 'a2f2a4de-1337-4594-ae41-72ed4d05f317';
+-- QUERY END: SQLiteUpdateDNDBTDbObjectRecordQuery
+
+-- QUERY START: SQLiteUpdateDNDBTDbObjectRecordQuery
+UPDATE [DNDBTDbObjects] SET
+    [Name] = 'MyColumn4',
+    [Code] = NULL
+WHERE [ID] = '867ac528-e87e-4c93-b6e3-dd2fcbbb837f';
 -- QUERY END: SQLiteUpdateDNDBTDbObjectRecordQuery
 
 -- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery

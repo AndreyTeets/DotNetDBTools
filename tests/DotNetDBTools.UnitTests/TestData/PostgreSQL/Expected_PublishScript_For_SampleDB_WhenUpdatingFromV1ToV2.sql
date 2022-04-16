@@ -337,6 +337,7 @@ ALTER TABLE "MyTable1NewName"
     ALTER COLUMN "MyColumn1" SET DATA TYPE BIGINT
         USING ("MyColumn1"::text::BIGINT),
     ALTER COLUMN "MyColumn1" DROP NOT NULL,
+    ALTER COLUMN "MyColumn4" DROP DEFAULT,
     ADD CONSTRAINT "CK_MyTable1_MyCheck1" CHECK ("MyColumn4" >= 1);
 ';
 -- QUERY END: PostgreSQLAlterTableQuery
@@ -378,6 +379,13 @@ EXECUTE 'UPDATE "DNDBTDbObjects" SET
     "Name" = ''MyColumn1'',
     "Code" = ''15''
 WHERE "ID" = ''a2f2a4de-1337-4594-ae41-72ed4d05f317'';';
+-- QUERY END: PostgreSQLUpdateDNDBTDbObjectRecordQuery
+
+-- QUERY START: PostgreSQLUpdateDNDBTDbObjectRecordQuery
+EXECUTE 'UPDATE "DNDBTDbObjects" SET
+    "Name" = ''MyColumn4'',
+    "Code" = NULL
+WHERE "ID" = ''867ac528-e87e-4c93-b6e3-dd2fcbbb837f'';';
 -- QUERY END: PostgreSQLUpdateDNDBTDbObjectRecordQuery
 
 -- QUERY START: PostgreSQLInsertDNDBTDbObjectRecordQuery

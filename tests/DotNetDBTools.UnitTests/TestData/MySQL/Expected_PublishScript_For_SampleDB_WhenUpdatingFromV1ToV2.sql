@@ -143,6 +143,7 @@ ALTER TABLE `MyTable1NewName` DROP PRIMARY KEY,
 ALTER TABLE `MyTable1NewName` DROP COLUMN `MyColumn2`;
 ALTER TABLE `MyTable1NewName` DROP COLUMN `MyColumn3`;
 ALTER TABLE `MyTable1NewName` MODIFY COLUMN `MyColumn1` BIGINT NULL DEFAULT 15;
+ALTER TABLE `MyTable1NewName` ALTER COLUMN `MyColumn4` DROP DEFAULT;
 ALTER TABLE `MyTable1NewName` ADD CONSTRAINT `CK_MyTable1_MyCheck1` CHECK (MyColumn4 >= 1);
 
 -- QUERY END: MySQLAlterTableQuery
@@ -179,6 +180,13 @@ UPDATE `DNDBTDbObjects` SET
     `Name` = 'MyColumn1',
     `Code` = '15'
 WHERE `ID` = 'a2f2a4de-1337-4594-ae41-72ed4d05f317';
+-- QUERY END: MySQLUpdateDNDBTDbObjectRecordQuery
+
+-- QUERY START: MySQLUpdateDNDBTDbObjectRecordQuery
+UPDATE `DNDBTDbObjects` SET
+    `Name` = 'MyColumn4',
+    `Code` = NULL
+WHERE `ID` = '867ac528-e87e-4c93-b6e3-dd2fcbbb837f';
 -- QUERY END: MySQLUpdateDNDBTDbObjectRecordQuery
 
 -- QUERY START: MySQLInsertDNDBTDbObjectRecordQuery

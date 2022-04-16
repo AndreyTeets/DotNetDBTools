@@ -19,7 +19,6 @@ namespace DotNetDBTools.SampleDB.SQLite.Tables
         {
             DataType = new DecimalDataType(),
             NotNull = true,
-            Default = new DecimalDefaultValue(7.36m),
         };
 
         public ForeignKey FK_MyTable1_MyColumn1_MyTable2_MyColumn1 = new("D11B2A53-32DB-432F-BB6B-F91788844BA9")

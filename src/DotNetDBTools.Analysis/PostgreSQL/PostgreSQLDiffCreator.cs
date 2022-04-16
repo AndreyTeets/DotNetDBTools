@@ -42,6 +42,13 @@ internal class PostgreSQLDiffCreator : DiffCreator
         return dbDiff;
     }
 
+    protected override void SetDataTypeChanged(ColumnDiff columnDiff)
+    {
+        base.SetDataTypeChanged(columnDiff);
+        if (_changedUserDefinedTypesNames.Contains(columnDiff.NewColumn.DataType.Name))
+            columnDiff.DataTypeChanged = true;
+    }
+
     protected override bool AdditionalItemsNonEqualityConditionIsTrue<TItem>(TItem newItem, TItem oldItem)
     {
         if (newItem is Table newTable &&
