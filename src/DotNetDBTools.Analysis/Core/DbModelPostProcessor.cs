@@ -17,10 +17,8 @@ public abstract class DbModelPostProcessor : IDbModelPostProcessor
             table.Indexes = table.Indexes.OrderByName();
             table.Triggers = table.Triggers.OrderByName();
             table.ForeignKeys = table.ForeignKeys.OrderByName();
-            OrderAdditionalTableObjects(table);
         }
         OrderAdditionalDbObjects(database);
     }
     protected virtual void OrderAdditionalDbObjects(Database database) { }
-    protected virtual void OrderAdditionalTableObjects(Table table) { }
 }

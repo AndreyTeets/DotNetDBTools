@@ -15,6 +15,6 @@ SELECT
     t2.""{nameof(MyTable2.MyColumn2)}""
 FROM ""{nameof(MyTable1)}"" t1
 LEFT JOIN ""{nameof(MyTable2)}"" t2
-    ON t2.""{nameof(MyTable2.MyColumn1)}"" = t1.""{nameof(MyTable1.MyColumn1)}"";";
+    ON t2.""{nameof(MyTable2.MyColumn1)}"" = t1.""{nameof(MyTable1.MyColumn1)}""";
     }
 }

@@ -192,7 +192,7 @@ public class SQLiteCodeParserTests
         {
             ID = new Guid("3C36AE77-B7E4-40C3-824F-BD20DC270A14"),
             Name = "MyView1",
-            Code = RemoveIdDeclarations(File.ReadAllText($@"{TestDataDir}/CreateView.sql")).NormalizeLineEndings(),
+            Code = ReadStatementFromFile($@"{TestDataDir}/CreateView.sql"),
         };
     }
 
@@ -215,12 +215,26 @@ public class SQLiteCodeParserTests
             ID = new Guid("2C36AE77-B7E4-40C3-824F-BD20DC270A14"),
             Name = "TR_MyTable2_MyTrigger1",
             Table = "MyTable2",
-            Code = RemoveIdDeclarations(File.ReadAllText($@"{TestDataDir}/CreateTrigger.sql")).NormalizeLineEndings(),
+            Code = ReadStatementFromFile($@"{TestDataDir}/CreateTrigger.sql"),
         };
+    }
+
+    private static string ReadStatementFromFile(string filePath)
+    {
+        string fileContent = File.ReadAllText(filePath).NormalizeLineEndings();
+        return RemoveIdDeclarations(RemoveSemicolonIfAny(fileContent));
     }
 
     private static string RemoveIdDeclarations(string input)
     {
         return Regex.Replace(input, @"--ID:#{[\w|-]{36}}#\r?\n", "");
+    }
+
+    private static string RemoveSemicolonIfAny(string input)
+    {
+        if (input.EndsWith(";", StringComparison.OrdinalIgnoreCase))
+            return input.Remove(input.Length - 1, 1);
+        else
+            return input;
     }
 }

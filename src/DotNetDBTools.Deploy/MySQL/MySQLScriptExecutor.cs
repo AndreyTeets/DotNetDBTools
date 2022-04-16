@@ -9,4 +9,6 @@ internal class MySQLScriptExecutor : ScriptExecutor<
 {
     public MySQLScriptExecutor(IQueryExecutor queryExecutor)
         : base(queryExecutor) { }
+
+    protected override bool AppendSemicolon => true;
 }

@@ -9,4 +9,4 @@ INNER JOIN `_MyTable2` AS `t`
     ON `t`.`MyColumn1` = `MyTable2`.`MyColumn1NewName`
 SET `MyTable2`.`MyColumn2` = `t`.`MyColumn2`;
 
-DROP TABLE `_MyTable2`;
+DROP TABLE `_MyTable2`

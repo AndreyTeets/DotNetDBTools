@@ -36,7 +36,7 @@ CREATE TABLE `_MyTable2`
 );
 
 INSERT INTO `_MyTable2` (`MyColumn1`, `MyColumn2`)
-SELECT `MyColumn1`, `MyColumn2` FROM `MyTable2`;',
+SELECT `MyColumn1`, `MyColumn2` FROM `MyTable2`',
     1,
     1,
     1
@@ -528,7 +528,7 @@ SELECT
     t2.MyColumn2
 FROM MyTable1NewName t1
 LEFT JOIN MyTable2 t2
-    ON t2.MyColumn1NewName = t1.MyColumn1;'
+    ON t2.MyColumn1NewName = t1.MyColumn1'
 );
 -- QUERY END: MySQLInsertDNDBTDbObjectRecordQuery
 
@@ -565,7 +565,7 @@ FOR EACH ROW
 BEGIN
     INSERT INTO `MyTable4`(`MyColumn1`)
     VALUES (NEW.`MyColumn1NewName`);
-END;'
+END'
 );
 -- QUERY END: MySQLInsertDNDBTDbObjectRecordQuery
 
@@ -611,7 +611,7 @@ INNER JOIN `_MyTable2` AS `t`
     ON `t`.`MyColumn1` = `MyTable2`.`MyColumn1NewName`
 SET `MyTable2`.`MyColumn2` = `t`.`MyColumn2`;
 
-DROP TABLE `_MyTable2`;',
+DROP TABLE `_MyTable2`',
     1,
     1,
     1

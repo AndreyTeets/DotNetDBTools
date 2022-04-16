@@ -6,4 +6,4 @@ BEGIN
     WHERE [MyTable2].[MyColumn1NewName] = [t].[MyColumn1];
 
     DROP TABLE [_MyTable2];
-END;
+END

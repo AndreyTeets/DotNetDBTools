@@ -802,7 +802,7 @@ SELECT
     t2.MyColumn2
 FROM MyTable1 t1
 LEFT JOIN MyTable2 t2
-    ON t2.MyColumn1 = t1.MyColumn1;'
+    ON t2.MyColumn1 = t1.MyColumn1'
 );
 -- QUERY END: MySQLInsertDNDBTDbObjectRecordQuery
 
@@ -839,7 +839,7 @@ FOR EACH ROW
 BEGIN
     INSERT INTO `MyTable4`(`MyColumn1`)
     VALUES (NEW.`MyColumn1`);
-END;'
+END'
 );
 -- QUERY END: MySQLInsertDNDBTDbObjectRecordQuery
 
@@ -881,7 +881,7 @@ SELECT * FROM
     UNION ALL
     SELECT 3
 ) t
-WHERE NOT EXISTS (SELECT * FROM `MyTable4`);',
+WHERE NOT EXISTS (SELECT * FROM `MyTable4`)',
     0,
     9223372036854775807,
     0

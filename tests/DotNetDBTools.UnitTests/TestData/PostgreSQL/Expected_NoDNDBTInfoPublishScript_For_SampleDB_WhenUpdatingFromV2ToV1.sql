@@ -195,7 +195,7 @@ SELECT
     t2."MyColumn2"
 FROM "MyTable1" t1
 LEFT JOIN "MyTable2" t2
-    ON t2."MyColumn1" = t1."MyColumn1";';
+    ON t2."MyColumn1" = t1."MyColumn1"';
 -- QUERY END: GenericQuery
 
 -- QUERY START: PostgreSQLCreateTriggerQuery
@@ -203,7 +203,7 @@ EXECUTE 'CREATE TRIGGER "TR_MyTable2_MyTrigger1"
 AFTER INSERT
 ON "MyTable2"
 FOR EACH ROW
-EXECUTE FUNCTION "TR_MyTable2_MyTrigger1_Handler"();';
+EXECUTE FUNCTION "TR_MyTable2_MyTrigger1_Handler"()';
 -- QUERY END: PostgreSQLCreateTriggerQuery
 
 END;

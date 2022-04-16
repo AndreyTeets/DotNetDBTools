@@ -14,7 +14,7 @@ CREATE TABLE [_MyTable2]
 );
 
 INSERT INTO [_MyTable2] ([MyColumn1], [MyColumn2])
-SELECT [MyColumn1], [MyColumn2] FROM [MyTable2];';
+SELECT [MyColumn1], [MyColumn2] FROM [MyTable2]';
 -- QUERY END: GenericQuery
 
 -- QUERY START: MSSQLInsertDNDBTScriptExecutionRecordQuery
@@ -31,7 +31,7 @@ CREATE TABLE [_MyTable2]
 );
 
 INSERT INTO [_MyTable2] ([MyColumn1], [MyColumn2])
-SELECT [MyColumn1], [MyColumn2] FROM [MyTable2];'';
+SELECT [MyColumn1], [MyColumn2] FROM [MyTable2]'';
 DECLARE @MinDbVersionToExecute BIGINT = 1;
 DECLARE @MaxDbVersionToExecute BIGINT = 1;
 DECLARE @ExecutedOnDbVersion BIGINT = 1;
@@ -682,7 +682,7 @@ SELECT
     t2.MyColumn2
 FROM MyTable1NewName t1
 LEFT JOIN MyTable2 t2
-    ON t2.MyColumn1NewName = t1.MyColumn1;';
+    ON t2.MyColumn1NewName = t1.MyColumn1';
 -- QUERY END: GenericQuery
 
 -- QUERY START: MSSQLInsertDNDBTDbObjectRecordQuery
@@ -696,7 +696,7 @@ SELECT
     t2.MyColumn2
 FROM MyTable1NewName t1
 LEFT JOIN MyTable2 t2
-    ON t2.MyColumn1NewName = t1.MyColumn1;'';
+    ON t2.MyColumn1NewName = t1.MyColumn1'';
 INSERT INTO [DNDBTDbObjects]
 (
     [ID],
@@ -723,7 +723,7 @@ AS
 BEGIN
     INSERT INTO [MyTable4]([MyColumn1])
     SELECT i.[MyColumn1NewName] FROM inserted i;
-END;';
+END';
 -- QUERY END: MSSQLCreateTriggerQuery
 
 -- QUERY START: MSSQLInsertDNDBTDbObjectRecordQuery
@@ -737,7 +737,7 @@ AS
 BEGIN
     INSERT INTO [MyTable4]([MyColumn1])
     SELECT i.[MyColumn1NewName] FROM inserted i;
-END;'';
+END'';
 INSERT INTO [DNDBTDbObjects]
 (
     [ID],
@@ -765,7 +765,7 @@ BEGIN
     WHERE [MyTable2].[MyColumn1NewName] = [t].[MyColumn1];
 
     DROP TABLE [_MyTable2];
-END;';
+END';
 -- QUERY END: GenericQuery
 
 -- QUERY START: MSSQLInsertDNDBTScriptExecutionRecordQuery
@@ -780,7 +780,7 @@ BEGIN
     WHERE [MyTable2].[MyColumn1NewName] = [t].[MyColumn1];
 
     DROP TABLE [_MyTable2];
-END;'';
+END'';
 DECLARE @MinDbVersionToExecute BIGINT = 1;
 DECLARE @MaxDbVersionToExecute BIGINT = 1;
 DECLARE @ExecutedOnDbVersion BIGINT = 1;

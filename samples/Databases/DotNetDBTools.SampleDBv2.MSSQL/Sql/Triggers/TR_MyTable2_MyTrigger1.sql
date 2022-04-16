@@ -5,4 +5,4 @@ AS
 BEGIN
     INSERT INTO [MyTable4]([MyColumn1])
     SELECT i.[MyColumn1NewName] FROM inserted i;
-END;
+END

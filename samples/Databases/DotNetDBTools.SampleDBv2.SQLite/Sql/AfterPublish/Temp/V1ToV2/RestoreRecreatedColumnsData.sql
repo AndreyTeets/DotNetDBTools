@@ -9,4 +9,4 @@ UPDATE [MyTable2] SET
 FROM [_MyTable2] AS [t]
 WHERE [MyTable2].[MyColumn1NewName] = [t].[MyColumn1];
 
-DROP TABLE [_MyTable2];
+DROP TABLE [_MyTable2]

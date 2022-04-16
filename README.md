@@ -138,6 +138,7 @@ public interface IDeployManager
     public void RegisterAsDNDBT(DbConnection connection);
     public void RegisterAsDNDBT(DbConnection connection, string dbWithDNDBTInfoAssemblyPath);
     public void RegisterAsDNDBT(DbConnection connection, Assembly dbWithDNDBTInfoAssembly);
+    public void RegisterAsDNDBT(DbConnection connection, Database dbWithDNDBTInfo);
     public void UnregisterAsDNDBT(DbConnection connection);
 
     public void PublishDatabase(string dbAssemblyPath, DbConnection connection);

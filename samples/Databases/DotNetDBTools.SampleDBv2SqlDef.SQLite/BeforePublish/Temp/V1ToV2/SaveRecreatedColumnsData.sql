@@ -13,4 +13,4 @@ CREATE TABLE [_MyTable2]
 );
 
 INSERT INTO [_MyTable2] ([MyColumn1], [MyColumn2])
-SELECT [MyColumn1], [MyColumn2] FROM [MyTable2];
+SELECT [MyColumn1], [MyColumn2] FROM [MyTable2]

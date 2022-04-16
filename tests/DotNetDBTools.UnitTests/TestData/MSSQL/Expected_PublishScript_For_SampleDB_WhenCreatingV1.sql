@@ -969,7 +969,7 @@ SELECT
     t2.MyColumn2
 FROM MyTable1 t1
 LEFT JOIN MyTable2 t2
-    ON t2.MyColumn1 = t1.MyColumn1;';
+    ON t2.MyColumn1 = t1.MyColumn1';
 -- QUERY END: GenericQuery
 
 -- QUERY START: MSSQLInsertDNDBTDbObjectRecordQuery
@@ -983,7 +983,7 @@ SELECT
     t2.MyColumn2
 FROM MyTable1 t1
 LEFT JOIN MyTable2 t2
-    ON t2.MyColumn1 = t1.MyColumn1;'';
+    ON t2.MyColumn1 = t1.MyColumn1'';
 INSERT INTO [DNDBTDbObjects]
 (
     [ID],
@@ -1010,7 +1010,7 @@ AS
 BEGIN
     INSERT INTO [MyTable4]([MyColumn1])
     SELECT i.[MyColumn1] FROM inserted i;
-END;';
+END';
 -- QUERY END: MSSQLCreateTriggerQuery
 
 -- QUERY START: MSSQLInsertDNDBTDbObjectRecordQuery
@@ -1024,7 +1024,7 @@ AS
 BEGIN
     INSERT INTO [MyTable4]([MyColumn1])
     SELECT i.[MyColumn1] FROM inserted i;
-END;'';
+END'';
 INSERT INTO [DNDBTDbObjects]
 (
     [ID],
@@ -1053,7 +1053,7 @@ SELECT * FROM
     UNION ALL
     SELECT 3
 ) t(Col1)
-WHERE NOT EXISTS (SELECT * FROM [MyTable4]);';
+WHERE NOT EXISTS (SELECT * FROM [MyTable4])';
 -- QUERY END: GenericQuery
 
 -- QUERY START: MSSQLInsertDNDBTScriptExecutionRecordQuery
@@ -1069,7 +1069,7 @@ SELECT * FROM
     UNION ALL
     SELECT 3
 ) t(Col1)
-WHERE NOT EXISTS (SELECT * FROM [MyTable4]);'';
+WHERE NOT EXISTS (SELECT * FROM [MyTable4])'';
 DECLARE @MinDbVersionToExecute BIGINT = 0;
 DECLARE @MaxDbVersionToExecute BIGINT = 9223372036854775807;
 DECLARE @ExecutedOnDbVersion BIGINT = 0;

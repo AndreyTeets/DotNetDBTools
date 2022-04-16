@@ -16,6 +16,7 @@ internal abstract class ScriptExecutor<
     where TDeleteDNDBTScriptExecutionRecordQuery : DeleteDNDBTScriptExecutionRecordQuery
 {
     protected readonly IQueryExecutor QueryExecutor;
+    protected virtual bool AppendSemicolon => false;
 
     protected ScriptExecutor(IQueryExecutor queryExecutor)
     {
@@ -55,7 +56,8 @@ internal abstract class ScriptExecutor<
 
     private void ExecuteScript(Script script, long executedOnDbVersion)
     {
-        QueryExecutor.Execute(new GenericQuery($"{script.GetCode()}"));
+        string scriptCode = AppendSemicolon ? script.GetCode().AppendSemicolonIfAbsent() : script.GetCode();
+        QueryExecutor.Execute(new GenericQuery(scriptCode));
         AddScriptExecutionRecord(script, executedOnDbVersion);
     }
 

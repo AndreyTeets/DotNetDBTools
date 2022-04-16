@@ -9,4 +9,6 @@ internal class SQLiteScriptExecutor : ScriptExecutor<
 {
     public SQLiteScriptExecutor(IQueryExecutor queryExecutor)
         : base(queryExecutor) { }
+
+    protected override bool AppendSemicolon => true;
 }

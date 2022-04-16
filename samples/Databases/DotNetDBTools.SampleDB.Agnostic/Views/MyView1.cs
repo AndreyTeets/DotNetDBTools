@@ -15,6 +15,6 @@ SELECT
     t2.{nameof(MyTable2.MyColumn2).Quote(dk)}
 FROM {nameof(MyTable1).Quote(dk)} t1
 LEFT JOIN {nameof(MyTable2).Quote(dk)} t2
-    ON t2.{nameof(MyTable2.MyColumn1).Quote(dk)} = t1.{nameof(MyTable1.MyColumn1).Quote(dk)};";
+    ON t2.{nameof(MyTable2.MyColumn1).Quote(dk)} = t1.{nameof(MyTable1.MyColumn1).Quote(dk)}";
     }
 }

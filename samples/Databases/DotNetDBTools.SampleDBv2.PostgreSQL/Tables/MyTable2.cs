@@ -54,7 +54,7 @@ $@"CREATE TRIGGER {nameof(TR_MyTable2_MyTrigger1).Quote()}
 AFTER INSERT
 ON {nameof(MyTable2).Quote()}
 FOR EACH ROW
-EXECUTE FUNCTION {nameof(TR_MyTable2_MyTrigger1_Handler).Quote()}();",
+EXECUTE FUNCTION {nameof(TR_MyTable2_MyTrigger1_Handler).Quote()}()",
         };
 
         public Index IDX_MyTable2_MyIndex1 = new("74390B3C-BC39-4860-A42E-12BAA400F927")

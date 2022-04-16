@@ -20,4 +20,4 @@ CREATE TABLE MyTable2
     CONSTRAINT FK_MyTable2_MyColumns34_MyTable3_MyColumns12 FOREIGN KEY (MyColumn3, MyColumn4)
         REFERENCES MyTable3(MyColumn1, MyColumn2)
         ON UPDATE NO ACTION ON DELETE SET DEFAULT
-);
+)

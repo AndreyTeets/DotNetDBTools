@@ -19,6 +19,6 @@ BEGIN
     VALUES(NEW.{nameof(MyTable2.MyColumn1NewName).Quote()});
     RETURN NULL;
 END;
-$FuncBody$;";
+$FuncBody$";
     }
 }

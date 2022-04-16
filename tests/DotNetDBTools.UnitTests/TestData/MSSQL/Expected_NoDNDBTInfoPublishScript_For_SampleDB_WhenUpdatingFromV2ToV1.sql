@@ -173,7 +173,7 @@ SELECT
     t2.MyColumn2
 FROM MyTable1 t1
 LEFT JOIN MyTable2 t2
-    ON t2.MyColumn1 = t1.MyColumn1;';
+    ON t2.MyColumn1 = t1.MyColumn1';
 -- QUERY END: GenericQuery
 
 -- QUERY START: MSSQLCreateTriggerQuery
@@ -184,7 +184,7 @@ AS
 BEGIN
     INSERT INTO [MyTable4]([MyColumn1])
     SELECT i.[MyColumn1] FROM inserted i;
-END;';
+END';
 -- QUERY END: MSSQLCreateTriggerQuery
 
     COMMIT TRANSACTION;

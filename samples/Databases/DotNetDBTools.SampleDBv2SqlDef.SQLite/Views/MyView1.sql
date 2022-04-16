@@ -6,4 +6,4 @@ SELECT
     t2.MyColumn2
 FROM MyTable1NewName t1
 LEFT JOIN MyTable2 t2
-    ON t2.MyColumn1NewName = t1.MyColumn1;
+    ON t2.MyColumn1NewName = t1.MyColumn1

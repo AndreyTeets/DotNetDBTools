@@ -5,4 +5,4 @@ IMMUTABLE
 AS
 $FuncBody$
 SELECT a + b;
-$FuncBody$;
+$FuncBody$

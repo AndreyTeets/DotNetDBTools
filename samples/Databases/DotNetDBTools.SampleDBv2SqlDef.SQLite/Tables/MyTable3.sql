@@ -9,4 +9,4 @@ CREATE TABLE MyTable3
 
     --ID:#{FD288E38-35BA-4BB1-ACE3-597C99EF26C7}#
     CONSTRAINT UQ_MyTable3_MyColumns12 UNIQUE (MyColumn1, MyColumn2)
-);
+)

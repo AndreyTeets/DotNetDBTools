@@ -15,6 +15,6 @@ SELECT
     t2.{nameof(MyTable2.MyColumn2)}
 FROM {nameof(MyTable1NewName)} t1
 LEFT JOIN {nameof(MyTable2)} t2
-    ON t2.{nameof(MyTable2.MyColumn1NewName)} = t1.{nameof(MyTable1NewName.MyColumn1)};";
+    ON t2.{nameof(MyTable2.MyColumn1NewName)} = t1.{nameof(MyTable1NewName.MyColumn1)}";
     }
 }

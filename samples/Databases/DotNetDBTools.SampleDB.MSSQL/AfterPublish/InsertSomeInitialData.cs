@@ -21,6 +21,6 @@ SELECT * FROM
     UNION ALL
     SELECT 3
 ) t(Col1)
-WHERE NOT EXISTS (SELECT * FROM {nameof(MyTable4).Quote()});";
+WHERE NOT EXISTS (SELECT * FROM {nameof(MyTable4).Quote()})";
     }
 }

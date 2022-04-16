@@ -15,4 +15,4 @@ CREATE TRIGGER "TR_MyTable2_MyTrigger1"
 AFTER INSERT
 ON "MyTable2"
 FOR EACH ROW
-EXECUTE FUNCTION "TR_MyTable2_MyTrigger1_Handler"();
+EXECUTE FUNCTION "TR_MyTable2_MyTrigger1_Handler"()

@@ -21,7 +21,7 @@ SELECT * FROM
     UNION ALL
     SELECT 3
 ) t{ColsDef(dk)}
-WHERE NOT EXISTS (SELECT * FROM {nameof(MyTable4).Quote(dk)});";
+WHERE NOT EXISTS (SELECT * FROM {nameof(MyTable4).Quote(dk)})";
 
         private string ColsDef(DbmsKind dbmsKind)
         {

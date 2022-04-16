@@ -36,7 +36,7 @@ IMMUTABLE
 AS
 $FuncBody$
 SELECT a + b;
-$FuncBody$;';
+$FuncBody$';
 -- QUERY END: GenericQuery
 
 -- QUERY START: PostgreSQLInsertDNDBTDbObjectRecordQuery
@@ -61,7 +61,7 @@ IMMUTABLE
 AS
 $FuncBody$
 SELECT a + b;
-$FuncBody$;''
+$FuncBody$''
 );';
 -- QUERY END: PostgreSQLInsertDNDBTDbObjectRecordQuery
 
@@ -1077,7 +1077,7 @@ SELECT
     t2."MyColumn2"
 FROM "MyTable1" t1
 LEFT JOIN "MyTable2" t2
-    ON t2."MyColumn1" = t1."MyColumn1";';
+    ON t2."MyColumn1" = t1."MyColumn1"';
 -- QUERY END: GenericQuery
 
 -- QUERY START: PostgreSQLInsertDNDBTDbObjectRecordQuery
@@ -1102,7 +1102,7 @@ SELECT
     t2."MyColumn2"
 FROM "MyTable1" t1
 LEFT JOIN "MyTable2" t2
-    ON t2."MyColumn1" = t1."MyColumn1";''
+    ON t2."MyColumn1" = t1."MyColumn1"''
 );';
 -- QUERY END: PostgreSQLInsertDNDBTDbObjectRecordQuery
 
@@ -1111,7 +1111,7 @@ EXECUTE 'CREATE TRIGGER "TR_MyTable2_MyTrigger1"
 AFTER INSERT
 ON "MyTable2"
 FOR EACH ROW
-EXECUTE FUNCTION "TR_MyTable2_MyTrigger1_Handler"();';
+EXECUTE FUNCTION "TR_MyTable2_MyTrigger1_Handler"()';
 -- QUERY END: PostgreSQLCreateTriggerQuery
 
 -- QUERY START: PostgreSQLInsertDNDBTDbObjectRecordQuery
@@ -1133,7 +1133,7 @@ VALUES
 AFTER INSERT
 ON "MyTable2"
 FOR EACH ROW
-EXECUTE FUNCTION "TR_MyTable2_MyTrigger1_Handler"();''
+EXECUTE FUNCTION "TR_MyTable2_MyTrigger1_Handler"()''
 );';
 -- QUERY END: PostgreSQLInsertDNDBTDbObjectRecordQuery
 
@@ -1147,7 +1147,7 @@ SELECT * FROM
     UNION ALL
     SELECT 3
 ) t
-WHERE NOT EXISTS (SELECT * FROM "MyTable4");';
+WHERE NOT EXISTS (SELECT * FROM "MyTable4")';
 -- QUERY END: GenericQuery
 
 -- QUERY START: PostgreSQLInsertDNDBTScriptExecutionRecordQuery
@@ -1175,7 +1175,7 @@ SELECT * FROM
     UNION ALL
     SELECT 3
 ) t
-WHERE NOT EXISTS (SELECT * FROM "MyTable4");'',
+WHERE NOT EXISTS (SELECT * FROM "MyTable4")'',
     0,
     9223372036854775807,
     0
