@@ -90,8 +90,14 @@ CREATE TABLE [_DNDBTTemp_MyTable1NewName]
     CONSTRAINT [CK_MyTable1_MyCheck1] CHECK (MyColumn4 >= 1)
 );
 
-INSERT INTO [_DNDBTTemp_MyTable1NewName]([MyColumn1], [MyColumn4])
-SELECT [MyColumn1], [MyColumn4]
+INSERT INTO [_DNDBTTemp_MyTable1NewName]
+(
+    [MyColumn1],
+    [MyColumn4]
+)
+SELECT
+    [MyColumn1],
+    [MyColumn4]
 FROM [MyTable1];
 
 DROP TABLE [MyTable1];
@@ -204,8 +210,12 @@ CREATE TABLE [_DNDBTTemp_MyTable2]
         ON UPDATE NO ACTION ON DELETE SET DEFAULT
 );
 
-INSERT INTO [_DNDBTTemp_MyTable2]([MyColumn1NewName])
-SELECT [MyColumn1]
+INSERT INTO [_DNDBTTemp_MyTable2]
+(
+    [MyColumn1NewName]
+)
+SELECT
+    [MyColumn1]
 FROM [MyTable2];
 
 DROP TABLE [MyTable2];
@@ -418,8 +428,34 @@ CREATE TABLE [_DNDBTTemp_MyTable5]
     [MyColumn9] NUMERIC NOT NULL DEFAULT '2022-02-15'
 );
 
-INSERT INTO [_DNDBTTemp_MyTable5]([MyColumn1], [MyColumn10], [MyColumn11], [MyColumn12], [MyColumn2], [MyColumn3], [MyColumn4], [MyColumn5], [MyColumn6], [MyColumn7], [MyColumn8], [MyColumn9])
-SELECT [MyColumn1], [MyColumn10], [MyColumn11], [MyColumn12], [MyColumn2], [MyColumn3], [MyColumn4], [MyColumn5], [MyColumn6], [MyColumn7], [MyColumn8], [MyColumn9]
+INSERT INTO [_DNDBTTemp_MyTable5]
+(
+    [MyColumn1],
+    [MyColumn10],
+    [MyColumn11],
+    [MyColumn12],
+    [MyColumn2],
+    [MyColumn3],
+    [MyColumn4],
+    [MyColumn5],
+    [MyColumn6],
+    [MyColumn7],
+    [MyColumn8],
+    [MyColumn9]
+)
+SELECT
+    [MyColumn1],
+    [MyColumn10],
+    [MyColumn11],
+    [MyColumn12],
+    [MyColumn2],
+    [MyColumn3],
+    [MyColumn4],
+    [MyColumn5],
+    [MyColumn6],
+    [MyColumn7],
+    [MyColumn8],
+    [MyColumn9]
 FROM [MyTable5];
 
 DROP TABLE [MyTable5];
