@@ -9,7 +9,7 @@ using static DotNetDBTools.CodeParsing.Generated.SQLiteParser;
 
 namespace DotNetDBTools.CodeParsing.SQLite;
 
-internal class SQLiteGetModelFromCreateStatementVisitor : SQLiteParserBaseVisitor<ObjectInfo>
+internal class SQLiteGetObjectInfoVisitor : SQLiteParserBaseVisitor<ObjectInfo>
 {
     public override ObjectInfo VisitCreate_table_stmt([NotNull] Create_table_stmtContext context)
     {

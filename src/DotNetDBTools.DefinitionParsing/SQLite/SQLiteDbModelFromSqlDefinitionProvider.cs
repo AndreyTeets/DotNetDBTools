@@ -46,7 +46,7 @@ internal class SQLiteDbModelFromSqlDefinitionProvider : IDbModelFromDefinitionPr
             using Stream stream = dbAssembly.GetManifestResourceStream(sqlFileResourcePath);
             using StreamReader sr = new(stream);
             string sqlFileText = sr.ReadToEnd();
-            ObjectInfo objectInfo = parser.GetModelFromCreateStatement(sqlFileText);
+            ObjectInfo objectInfo = parser.GetObjectInfo(sqlFileText);
             dbObjects.Add(objectInfo);
         }
         return dbObjects;

@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Text.RegularExpressions;
-using DotNetDBTools.Analysis.Core;
-using DotNetDBTools.Models.Core;
-using DotNetDBTools.Models.PostgreSQL;
+using DotNetDBTools.CodeParsing.Core.Models;
 
-namespace DotNetDBTools.Analysis.PostgreSQL;
+namespace DotNetDBTools.CodeParsing.PostgreSQL;
 
-public static class PostgreSQLObjectsFromCodeParser
+public static class PostgreSQLGetObjectInfoHelper
 {
     private static readonly RegexOptions s_regexOptions =
         RegexOptions.Singleline |
@@ -18,7 +16,7 @@ public static class PostgreSQLObjectsFromCodeParser
     private const string WS1 = @"(?>\s+)";
     private const string Identifier = @"(?>[""|\w|\d|_]+)";
 
-    public static PostgreSQLFunction ParseFunction(string statement)
+    public static FunctionInfo ParseFunction(string statement)
     {
         string pattern =
 $@"^--FunctionID:\# (?<funcID> (?>[{{|}}|\-|\w|\d]{{32,38}}) ) \#\r?\n
@@ -26,11 +24,11 @@ $@"^--FunctionID:\# (?<funcID> (?>[{{|}}|\-|\w|\d]{{32,38}}) ) \#\r?\n
         Match match = Regex.Match(statement, pattern, s_regexOptions);
         if (match.Groups[0].Success)
         {
-            PostgreSQLFunction func = new()
+            FunctionInfo func = new()
             {
                 ID = Guid.Parse(match.Groups["funcID"].Value),
                 Name = GetIdentifierName(match.Groups["funcName"].Value),
-                CodePiece = new CodePiece { Code = match.Groups["funcCode"].Value.NormalizeLineEndings() },
+                Code = match.Groups["funcCode"].Value,
             };
             return func;
         }

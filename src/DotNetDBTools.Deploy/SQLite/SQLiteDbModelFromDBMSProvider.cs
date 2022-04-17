@@ -39,7 +39,7 @@ internal class SQLiteDbModelFromDBMSProvider : DbModelFromDBMSProvider<
         foreach (TableRecord tableRecord in tableRecords)
         {
             SQLiteCodeParser parser = new();
-            TableInfo tableInfo = (TableInfo)parser.GetModelFromCreateStatement(tableRecord.TableDefinition);
+            TableInfo tableInfo = (TableInfo)parser.GetObjectInfo(tableRecord.TableDefinition);
             Table table = tables[tableRecord.TableName];
             BuildTableCheckConstraints(table, tableInfo);
             BuildTableConstraintNames(table, tableInfo);

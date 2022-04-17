@@ -16,59 +16,59 @@ public class SQLiteCodeParserTests
     private const string TestDataDir = "./TestData/SQLite";
 
     [Fact]
-    public void GetModelFromCreateStatement_ParsesTableCorrectly()
+    public void GetObjectInfo_ParsesTableCorrectly()
     {
         string input = File.ReadAllText($@"{TestDataDir}/CreateTable.sql");
         SQLiteCodeParser parser = new();
-        TableInfo table = (TableInfo)parser.GetModelFromCreateStatement(input);
+        TableInfo table = (TableInfo)parser.GetObjectInfo(input);
 
-        TableInfo expectedTable = GetExpectedTableModel();
+        TableInfo expectedTable = GetExpectedTable();
         table.Should().BeEquivalentTo(expectedTable);
     }
 
     [Fact]
-    public void GetModelFromCreateStatement_ParsesViewCorrectly()
+    public void GetObjectInfo_ParsesViewCorrectly()
     {
         string input = File.ReadAllText($@"{TestDataDir}/CreateView.sql").NormalizeLineEndings();
         SQLiteCodeParser parser = new();
-        ViewInfo view = (ViewInfo)parser.GetModelFromCreateStatement(input);
+        ViewInfo view = (ViewInfo)parser.GetObjectInfo(input);
 
-        ViewInfo expectedView = GetExpectedViewModel();
+        ViewInfo expectedView = GetExpectedView();
         view.Should().BeEquivalentTo(expectedView);
     }
 
     [Fact]
-    public void GetModelFromCreateStatement_ParsesIndexCorrectly()
+    public void GetObjectInfo_ParsesIndexCorrectly()
     {
         string input = File.ReadAllText($@"{TestDataDir}/CreateIndex.sql");
         SQLiteCodeParser parser = new();
-        IndexInfo index = (IndexInfo)parser.GetModelFromCreateStatement(input);
+        IndexInfo index = (IndexInfo)parser.GetObjectInfo(input);
 
-        IndexInfo expectedIndex = GetExpectedIndexModel();
+        IndexInfo expectedIndex = GetExpectedIndex();
         index.Should().BeEquivalentTo(expectedIndex);
     }
 
     [Fact]
-    public void GetModelFromCreateStatement_ParsesTriggerCorrectly()
+    public void GetObjectInfo_ParsesTriggerCorrectly()
     {
         string input = File.ReadAllText($@"{TestDataDir}/CreateTrigger.sql").NormalizeLineEndings();
         SQLiteCodeParser parser = new();
-        TriggerInfo trigger = (TriggerInfo)parser.GetModelFromCreateStatement(input);
+        TriggerInfo trigger = (TriggerInfo)parser.GetObjectInfo(input);
 
-        TriggerInfo expectedTrigger = GetExpectedTriggerModel();
+        TriggerInfo expectedTrigger = GetExpectedTrigger();
         trigger.Should().BeEquivalentTo(expectedTrigger);
     }
 
     [Fact]
-    public void GetModelFromCreateStatement_ThrowsOnMalformedInput()
+    public void GetObjectInfo_ThrowsOnMalformedInput()
     {
         string input = "some trash input";
         SQLiteCodeParser parser = new();
-        FluentActions.Invoking(() => parser.GetModelFromCreateStatement(input))
+        FluentActions.Invoking(() => parser.GetObjectInfo(input))
             .Should().Throw<ParseException>().WithMessage($"ParserError(line=1,pos=0): mismatched input 'some' *");
     }
 
-    private static TableInfo GetExpectedTableModel()
+    private static TableInfo GetExpectedTable()
     {
         return new()
         {
@@ -186,7 +186,7 @@ public class SQLiteCodeParserTests
         };
     }
 
-    private static ViewInfo GetExpectedViewModel()
+    private static ViewInfo GetExpectedView()
     {
         return new()
         {
@@ -196,7 +196,7 @@ public class SQLiteCodeParserTests
         };
     }
 
-    private static IndexInfo GetExpectedIndexModel()
+    private static IndexInfo GetExpectedIndex()
     {
         return new()
         {
@@ -208,7 +208,7 @@ public class SQLiteCodeParserTests
         };
     }
 
-    private static TriggerInfo GetExpectedTriggerModel()
+    private static TriggerInfo GetExpectedTrigger()
     {
         return new()
         {

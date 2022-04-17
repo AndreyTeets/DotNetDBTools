@@ -1,18 +1,18 @@
 ﻿using System.Collections.Generic;
 using Antlr4.Runtime.Tree;
 using DotNetDBTools.CodeParsing.Core;
+using DotNetDBTools.CodeParsing.Core.Models;
 using DotNetDBTools.CodeParsing.Generated;
 
 namespace DotNetDBTools.CodeParsing.PostgreSQL;
 
 public class PostgreSQLCodeParser : CodeParser<PostgreSQLParser, PostgreSQLLexer>
 {
-    public List<string> SplitToStatements(string input)
+    public ObjectInfo GetObjectInfo(string input)
     {
-        IParseTree parseTree = Parse(input, x => x.sql());
-        PostgreSQLSplitToStatementsVisitor visitor = new();
-        parseTree.Accept(visitor);
-        return visitor.GetTopLevelStatements();
+        if (ScriptDeclarationParser.TryParseScriptInfo(input, out ScriptInfo scriptInfo))
+            return scriptInfo;
+        return PostgreSQLGetObjectInfoHelper.ParseFunction(input);
     }
 
     public List<Dependency> GetFunctionDependencies(string input)

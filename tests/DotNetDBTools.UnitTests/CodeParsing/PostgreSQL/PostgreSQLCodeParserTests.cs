@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.CodeParsing.Core;
+using DotNetDBTools.CodeParsing.Core.Models;
 using DotNetDBTools.CodeParsing.PostgreSQL;
 using FluentAssertions;
 using Xunit;
@@ -11,33 +13,39 @@ namespace DotNetDBTools.UnitTests.CodeParsing.PostgreSQL;
 public class PostgreSQLCodeParserTests
 {
     private const string TestDataDir = "./TestData/PostgreSQL";
+    private const string FuncIDDefinition = "--FunctionID:#{A1159A6A-35F1-4B70-86A1-5427E08942DE}#";
 
     [Fact]
-    public void SplitToStatements_GetsCorrectData()
+    public void GetObjectInfo_ParsesFunctionCorrectly()
     {
-        string input = File.ReadAllText($@"{TestDataDir}/StatementsList.sql").NormalizeLineEndings();
+        string functionStatement =
+$@"{FuncIDDefinition}
+CREATE   function ""TR_SomeTriggerFunction"" ()
+bla bla;".NormalizeLineEndings();
+
         PostgreSQLCodeParser parser = new();
-        List<string> statements = parser.SplitToStatements(input);
+        FunctionInfo func = (FunctionInfo)parser.GetObjectInfo(functionStatement);
 
-        statements.Count.Should().Be(3);
-
-        statements[0].Should().StartWith("create TABLE \"Table1\"");
-        statements[0].Should().EndWith("( \"Col3\" >= 0 )\n)");
-
-        statements[1].Should().StartWith("CREATE FUNCTION \"TR_MyTa");
-        statements[1].Should().EndWith("END;\n$FuncBody$");
-
-        statements[2].Should().StartWith("CREATE TRIGGER \"TR_MyTable2_MyTrigger1\"");
-        statements[2].Should().EndWith("EXECUTE FUNCTION \"TR_MyTable2_MyTrigger1_Handler\"()");
+        func.ID.Should().Be(Guid.Parse("A1159A6A-35F1-4B70-86A1-5427E08942DE"));
+        func.Name.Should().Be("TR_SomeTriggerFunction");
+        string functionCode = functionStatement.Replace(FuncIDDefinition, "").Trim();
+        func.Code.Should().Be(functionCode);
     }
 
-    [Fact]
-    public void SplitToStatements_ThrowsOnMalformedInput()
+    [Theory]
+    [InlineData("create function f1() no funcID definition bla bla;", false)]
+    [InlineData("create function f1() no end-statement semicolon bla bla")]
+    [InlineData("create function invalid-func-name() bla bla;")]
+    [InlineData("create function f2 no parantheses bla bla;")]
+    public void ParseFunction_ThrowsOnMalformedInput(string statement, bool prependValidFuncIDDefinition = true)
     {
-        string input = "some trash input";
+        string functionStatement = statement;
+        if (prependValidFuncIDDefinition)
+            functionStatement = $"{FuncIDDefinition}\n{statement}";
+
         PostgreSQLCodeParser parser = new();
-        FluentActions.Invoking(() => parser.SplitToStatements(input))
-            .Should().Throw<ParseException>().WithMessage($"ParserError(line=1,pos=0): mismatched input 'some' *");
+        FluentActions.Invoking(() => parser.GetObjectInfo(functionStatement))
+            .Should().Throw<Exception>().WithMessage($"Failed to parse function from statement [{functionStatement}]");
     }
 
     [Fact]

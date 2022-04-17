@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DotNetDBTools.Analysis.PostgreSQL;
+namespace DotNetDBTools.CodeParsing.PostgreSQL;
 
-public static class PostgreSQLStatementsParser
+public static class PostgreSQLStatementsSplitter
 {
-    public static List<string> ParseToStatementsList(string statementsStr)
+    public static List<string> Split(string statementsStr)
     {
         List<string> statementsList = new();
         string unprocessedStatementsStr = statementsStr;
