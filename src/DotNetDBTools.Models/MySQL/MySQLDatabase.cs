@@ -6,12 +6,8 @@ namespace DotNetDBTools.Models.MySQL;
 public class MySQLDatabase : Database
 {
     public MySQLDatabase()
-       : this(null) { }
-
-    public MySQLDatabase(string name)
     {
         Kind = DatabaseKind.MySQL;
-        Name = name;
         Tables = new List<MySQLTable>();
         Views = new List<MySQLView>();
         Scripts = new List<Script>();

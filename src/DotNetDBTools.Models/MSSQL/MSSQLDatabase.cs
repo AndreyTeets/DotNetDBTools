@@ -7,12 +7,8 @@ namespace DotNetDBTools.Models.MSSQL;
 public class MSSQLDatabase : Database
 {
     public MSSQLDatabase()
-        : this(null) { }
-
-    public MSSQLDatabase(string name)
     {
         Kind = DatabaseKind.MSSQL;
-        Name = name;
         Tables = new List<MSSQLTable>();
         Views = new List<MSSQLView>();
         Scripts = new List<Script>();

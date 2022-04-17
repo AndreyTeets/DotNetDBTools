@@ -14,7 +14,7 @@ public class MSSQLDbModelConverter : DbModelConverter
 
     protected override Database ConvertDatabase(AgnosticDatabase database)
     {
-        return new MSSQLDatabase(database.Name)
+        return new MSSQLDatabase()
         {
             Version = database.Version,
             Tables = database.Tables.Select(x => ConvertToMSSQLModel((AgnosticTable)x)).ToList(),

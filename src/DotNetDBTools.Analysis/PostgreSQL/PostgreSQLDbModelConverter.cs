@@ -14,7 +14,7 @@ public class PostgreSQLDbModelConverter : DbModelConverter
 
     protected override Database ConvertDatabase(AgnosticDatabase database)
     {
-        return new PostgreSQLDatabase(database.Name)
+        return new PostgreSQLDatabase()
         {
             Version = database.Version,
             Tables = database.Tables.Select(x => ConvertToPostgreSQLModel((AgnosticTable)x)).ToList(),

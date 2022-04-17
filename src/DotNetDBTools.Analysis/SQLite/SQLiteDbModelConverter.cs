@@ -14,7 +14,7 @@ public class SQLiteDbModelConverter : DbModelConverter
 
     protected override Database ConvertDatabase(AgnosticDatabase database)
     {
-        return new SQLiteDatabase(database.Name)
+        return new SQLiteDatabase()
         {
             Version = database.Version,
             Tables = database.Tables.Select(x => ConvertToSQLiteModel((AgnosticTable)x)).ToList(),

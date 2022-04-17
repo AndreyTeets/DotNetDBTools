@@ -39,7 +39,6 @@ internal abstract class DbModelFromCSharpDefinitionProvider<
     public Database CreateDbModel(Assembly dbAssembly)
     {
         TDatabase database = new();
-        database.Name = DbAssemblyInfoHelper.GetDbName(dbAssembly);
         database.Version = DbAssemblyInfoHelper.GetDbVersion(dbAssembly);
         database.Tables = BuildTableModels(dbAssembly);
         database.Views = BuildViewModels(dbAssembly);

@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.Generation.Core;
 
 internal static class TablesDescriptionGenerator
 {
-    public static string Create(Database database)
+    public static string Create(Database database, GenerationOptions options)
     {
-        if (string.IsNullOrEmpty(database.Name))
-            throw new InvalidOperationException("Database name is not set when generating description");
-
         List<string> tableDescriptionDefinitions = new();
         List<string> tableDeclarations = new();
         foreach (Table table in database.Tables)
@@ -40,9 +36,9 @@ $@"        public static readonly {table.Name}Description {table.Name} = new();"
         }
 
         string res =
-$@"namespace {database.Name}Description
+$@"namespace {options.DatabaseName}Description
 {{
-    public static class {database.Name}Tables
+    public static class {options.DatabaseName}Tables
     {{
 {string.Join("\n", tableDeclarations)}
 

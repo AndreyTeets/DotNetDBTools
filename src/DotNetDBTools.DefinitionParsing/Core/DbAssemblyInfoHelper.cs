@@ -29,11 +29,6 @@ internal static class DbAssemblyInfoHelper
         return (definitionKind, databaseKind);
     }
 
-    public static string GetDbName(Assembly dbAssembly)
-    {
-        return dbAssembly.GetName().Name.Replace(".", "");
-    }
-
     public static long GetDbVersion(Assembly dbAssembly)
     {
         DatabaseSettingsAttribute dbSettings = dbAssembly

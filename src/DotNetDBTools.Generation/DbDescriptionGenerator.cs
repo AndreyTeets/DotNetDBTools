@@ -16,23 +16,23 @@ namespace DotNetDBTools.Generation;
 
 public static class DbDescriptionGenerator
 {
-    public static void GenerateDescription(Database database, string outputPath)
+    public static void GenerateDescription(Database database, GenerationOptions options, string outputPath)
     {
-        string generatedDescription = GenerateDescription(database);
+        string generatedDescription = GenerateDescription(database, options);
         string fullPath = Path.GetFullPath(outputPath);
         Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
         File.WriteAllText(fullPath, generatedDescription);
     }
 
-    public static string GenerateDescription(Database database)
+    public static string GenerateDescription(Database database, GenerationOptions options)
     {
         return database.Kind switch
         {
-            DatabaseKind.Agnostic => AgnosticDescriptionGenerator.GenerateDescription((AgnosticDatabase)database),
-            DatabaseKind.MSSQL => MSSQLDescriptionGenerator.GenerateDescription((MSSQLDatabase)database),
-            DatabaseKind.MySQL => MySQLDescriptionGenerator.GenerateDescription((MySQLDatabase)database),
-            DatabaseKind.PostgreSQL => PostgreSQLDescriptionGenerator.GenerateDescription((PostgreSQLDatabase)database),
-            DatabaseKind.SQLite => SQLiteDescriptionGenerator.GenerateDescription((SQLiteDatabase)database),
+            DatabaseKind.Agnostic => AgnosticDescriptionGenerator.GenerateDescription((AgnosticDatabase)database, options),
+            DatabaseKind.MSSQL => MSSQLDescriptionGenerator.GenerateDescription((MSSQLDatabase)database, options),
+            DatabaseKind.MySQL => MySQLDescriptionGenerator.GenerateDescription((MySQLDatabase)database, options),
+            DatabaseKind.PostgreSQL => PostgreSQLDescriptionGenerator.GenerateDescription((PostgreSQLDatabase)database, options),
+            DatabaseKind.SQLite => SQLiteDescriptionGenerator.GenerateDescription((SQLiteDatabase)database, options),
             _ => throw new InvalidOperationException($"Invalid dbKind: {database.Kind}"),
         };
     }

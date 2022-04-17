@@ -14,7 +14,7 @@ public class MySQLDbModelConverter : DbModelConverter
 
     protected override Database ConvertDatabase(AgnosticDatabase database)
     {
-        return new MySQLDatabase(database.Name)
+        return new MySQLDatabase()
         {
             Version = database.Version,
             Tables = database.Tables.Select(x => ConvertToMySQLModel((AgnosticTable)x)).ToList(),

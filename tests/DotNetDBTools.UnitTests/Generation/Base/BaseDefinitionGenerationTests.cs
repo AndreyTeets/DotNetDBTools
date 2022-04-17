@@ -35,7 +35,6 @@ public abstract class BaseDefinitionGenerationTests<TDatabase>
 
             genDefDbModel.Should().BeEquivalentTo(origDefDbModel, options =>
                 options.WithStrictOrdering()
-                .Excluding(database => database.Name)
                 .Excluding(database => database.Scripts));
         }
     }

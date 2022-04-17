@@ -190,7 +190,7 @@ public abstract class BaseDeployTests<TDatabase, TDbConnection, TDbModelConverte
     {
         dbModel1.Should().BeEquivalentTo(dbModel2, options =>
         {
-            EquivalencyAssertionOptions<TDatabase> configuredOptions = options.Excluding(database => database.Name);
+            EquivalencyAssertionOptions<TDatabase> configuredOptions = options;
 
             if (compareMode.HasFlag(CompareMode.IgnoreIDs))
                 configuredOptions = configuredOptions.Excluding(database => database.Path.EndsWith(".ID", StringComparison.Ordinal));

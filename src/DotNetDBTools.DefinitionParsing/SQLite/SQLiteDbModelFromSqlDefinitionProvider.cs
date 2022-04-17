@@ -18,7 +18,6 @@ internal class SQLiteDbModelFromSqlDefinitionProvider : IDbModelFromDefinitionPr
     public Database CreateDbModel(Assembly dbAssembly)
     {
         SQLiteDatabase database = new();
-        database.Name = DbAssemblyInfoHelper.GetDbName(dbAssembly);
         database.Version = DbAssemblyInfoHelper.GetDbVersion(dbAssembly);
 
         List<ObjectInfo> dbObjects = ParseDbObjectsFromEmbeddedSqlFiles(dbAssembly);

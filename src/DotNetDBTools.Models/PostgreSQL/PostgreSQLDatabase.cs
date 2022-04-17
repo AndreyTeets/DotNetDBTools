@@ -7,12 +7,8 @@ namespace DotNetDBTools.Models.PostgreSQL;
 public class PostgreSQLDatabase : Database
 {
     public PostgreSQLDatabase()
-        : this(null) { }
-
-    public PostgreSQLDatabase(string name)
     {
         Kind = DatabaseKind.PostgreSQL;
-        Name = name;
         Tables = new List<PostgreSQLTable>();
         Views = new List<PostgreSQLView>();
         Scripts = new List<Script>();

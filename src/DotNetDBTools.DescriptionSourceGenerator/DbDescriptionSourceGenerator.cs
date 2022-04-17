@@ -33,10 +33,12 @@ internal class DbDescriptionSourceGenerator : ISourceGenerator
                 context.AnalyzerConfigOptions,
                 context.AdditionalFiles);
 
+            string databaseName = context.Compilation.AssemblyName.Replace(".", "");
             Assembly dbAssembly = CompilationHelper.CompileInMemoryAnLoad(context.Compilation, resources);
             Database database = new GenericDbModelFromDefinitionProvider().CreateDbModel(dbAssembly);
-            string dbDescriptionCode = DbDescriptionGenerator.GenerateDescription(database);
-            context.AddSource($"{database.Name}Description", dbDescriptionCode);
+            GenerationOptions options = new() { DatabaseName = databaseName };
+            string dbDescriptionCode = DbDescriptionGenerator.GenerateDescription(database, options);
+            context.AddSource($"{databaseName}Description", dbDescriptionCode);
         }
         catch (Exception ex)
         {
