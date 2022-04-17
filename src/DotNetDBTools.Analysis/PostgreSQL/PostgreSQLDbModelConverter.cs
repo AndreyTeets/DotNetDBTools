@@ -10,19 +10,11 @@ namespace DotNetDBTools.Analysis.PostgreSQL;
 public class PostgreSQLDbModelConverter : DbModelConverter
 {
     public PostgreSQLDbModelConverter()
-        : base(DatabaseKind.PostgreSQL) { }
+        : base(DatabaseKind.PostgreSQL, new PostgreSQLDbModelPostProcessor()) { }
 
-    public override Database FromAgnostic(Database database)
+    protected override Database ConvertDatabase(AgnosticDatabase database)
     {
-        PostgreSQLDatabase postgresqlDatabase = ConvertToPostgreSQLModel((AgnosticDatabase)database);
-        PostgreSQLPostBuildProcessingHelper.AddFunctionsFromTriggersCode_And_RemoveFunctionsCodeFromTriggersCode_IfAny(postgresqlDatabase);
-        PostgreSQLDependenciesBuilder.BuildDependencies(postgresqlDatabase);
-        return postgresqlDatabase;
-    }
-
-    private PostgreSQLDatabase ConvertToPostgreSQLModel(AgnosticDatabase database)
-    {
-        return new(database.Name)
+        return new PostgreSQLDatabase(database.Name)
         {
             Version = database.Version,
             Tables = database.Tables.Select(x => ConvertToPostgreSQLModel((AgnosticTable)x)).ToList(),

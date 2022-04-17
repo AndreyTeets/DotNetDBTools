@@ -76,7 +76,7 @@ internal abstract class DbModelFromDBMSProvider<
         database.Tables = BuildTables();
         database.Views = BuildViews();
         BuildAdditionalDbObjects(database);
-        DbModelPostProcessor.OrderDbObjects(database);
+        DbModelPostProcessor.Do_CreateDbModelUsingDBMSSysInfo_PostProcessing(database);
         return database;
     }
     protected virtual void BuildAdditionalDbObjects(Database database) { }

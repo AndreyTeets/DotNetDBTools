@@ -74,7 +74,6 @@ internal class PostgreSQLDbModelFromDBMSProvider : DbModelFromDBMSProvider<
         postgresqlDatabase.EnumTypes = BuildEnumTypes(new PostgreSQLGetEnumTypesFromDBMSSysInfoQuery());
         postgresqlDatabase.RangeTypes = BuildRangeTypes(new PostgreSQLGetRangeTypesFromDBMSSysInfoQuery());
         postgresqlDatabase.Functions = BuildFunctions(new PostgreSQLGetFunctionsFromDBMSSysInfoQuery());
-        PostgreSQLDependenciesBuilder.BuildDependencies(postgresqlDatabase);
     }
 
     private List<PostgreSQLCompositeType> BuildCompositeTypes(PostgreSQLGetCompositeTypesFromDBMSSysInfoQuery query)

@@ -10,16 +10,11 @@ namespace DotNetDBTools.Analysis.MSSQL;
 public class MSSQLDbModelConverter : DbModelConverter
 {
     public MSSQLDbModelConverter()
-        : base(DatabaseKind.MSSQL) { }
+        : base(DatabaseKind.MSSQL, new MSSQLDbModelPostProcessor()) { }
 
-    public override Database FromAgnostic(Database database)
+    protected override Database ConvertDatabase(AgnosticDatabase database)
     {
-        return ConvertToMSSQLModel((AgnosticDatabase)database);
-    }
-
-    private MSSQLDatabase ConvertToMSSQLModel(AgnosticDatabase database)
-    {
-        return new(database.Name)
+        return new MSSQLDatabase(database.Name)
         {
             Version = database.Version,
             Tables = database.Tables.Select(x => ConvertToMSSQLModel((AgnosticTable)x)).ToList(),

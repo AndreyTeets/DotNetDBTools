@@ -28,7 +28,6 @@ internal class MySQLDbModelFromCSharpDefinitionProvider : DbModelFromCSharpDefin
     protected override void BuildAdditionalDbObjects(Database database, Assembly dbAssembly)
     {
         MySQLDatabase mysqlDatabase = (MySQLDatabase)database;
-        MySQLPostBuildProcessingHelper.ReplaceUniqueConstraintsWithUniqueIndexes(mysqlDatabase);
         mysqlDatabase.Functions = BuildFunctionModels(dbAssembly);
         mysqlDatabase.Functions = new List<MySQLFunction>(); // TODO Need to save/read functions from DBMS
     }

@@ -45,7 +45,7 @@ internal abstract class DbModelFromCSharpDefinitionProvider<
         database.Views = BuildViewModels(dbAssembly);
         database.Scripts = BuildScriptModels(dbAssembly);
         BuildAdditionalDbObjects(database, dbAssembly);
-        DbModelPostProcessor.OrderDbObjects(database);
+        DbModelPostProcessor.Do_CreateDbModelFromCSharpDefinition_PostProcessing(database);
         return database;
     }
     protected virtual void BuildAdditionalDbObjects(Database database, Assembly dbAssembly) { }

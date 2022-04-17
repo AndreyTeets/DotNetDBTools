@@ -10,18 +10,11 @@ namespace DotNetDBTools.Analysis.MySQL;
 public class MySQLDbModelConverter : DbModelConverter
 {
     public MySQLDbModelConverter()
-        : base(DatabaseKind.MySQL) { }
+        : base(DatabaseKind.MySQL, new MySQLDbModelPostProcessor()) { }
 
-    public override Database FromAgnostic(Database database)
+    protected override Database ConvertDatabase(AgnosticDatabase database)
     {
-        MySQLDatabase mysqlDatabase = ConvertToMySQLModel((AgnosticDatabase)database);
-        MySQLPostBuildProcessingHelper.ReplaceUniqueConstraintsWithUniqueIndexes(mysqlDatabase);
-        return mysqlDatabase;
-    }
-
-    private MySQLDatabase ConvertToMySQLModel(AgnosticDatabase database)
-    {
-        return new(database.Name)
+        return new MySQLDatabase(database.Name)
         {
             Version = database.Version,
             Tables = database.Tables.Select(x => ConvertToMySQLModel((AgnosticTable)x)).ToList(),

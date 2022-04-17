@@ -30,7 +30,7 @@ internal class SQLiteDbModelFromSqlDefinitionProvider : IDbModelFromDefinitionPr
         BuildTablesIndexes(tableNameToTableMap, dbObjects.OfType<IndexInfo>());
         BuildTablesTriggers(tableNameToTableMap, dbObjects.OfType<TriggerInfo>());
 
-        new SQLiteDbModelPostProcessor().OrderDbObjects(database);
+        new SQLiteDbModelPostProcessor().Do_CreateDbModelFromSqlDefinition_PostProcessing(database);
         return database;
     }
 

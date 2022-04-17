@@ -10,16 +10,11 @@ namespace DotNetDBTools.Analysis.SQLite;
 public class SQLiteDbModelConverter : DbModelConverter
 {
     public SQLiteDbModelConverter()
-        : base(DatabaseKind.SQLite) { }
+        : base(DatabaseKind.SQLite, new SQLiteDbModelPostProcessor()) { }
 
-    public override Database FromAgnostic(Database database)
+    protected override Database ConvertDatabase(AgnosticDatabase database)
     {
-        return ConvertToSQLiteModel((AgnosticDatabase)database);
-    }
-
-    private SQLiteDatabase ConvertToSQLiteModel(AgnosticDatabase database)
-    {
-        return new(database.Name)
+        return new SQLiteDatabase(database.Name)
         {
             Version = database.Version,
             Tables = database.Tables.Select(x => ConvertToSQLiteModel((AgnosticTable)x)).ToList(),
