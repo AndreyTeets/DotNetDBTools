@@ -8,6 +8,7 @@
   <Import Project="$(ProjectDir)..\..\build\props\PKG.xunit.props" />
   <Import Project="$(ProjectDir)..\..\build\props\PKG.coverlet.props" />
   <Import Project="$(ProjectDir)..\..\build\props\PKG.FluentAssertions.props" />
+  <Import Project="$(ProjectDir)..\..\build\props\PKG.Moq.props" />
 
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="$(CodeAnalysisVersion)" PrivateAssets="all" />

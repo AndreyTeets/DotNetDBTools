@@ -20,10 +20,10 @@ public class SQLiteDeployTests : BaseDeployTests<
 {
     protected override string SpecificDbmsSampleDbV1AssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDB.SQLite.dll";
     protected override string SpecificDbmsSampleDbV2AssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDBv2.SQLite.dll";
-    protected override string GeneratedFilesDir => "./generated/SQLite";
+    protected override string GeneratedFilesDir => "./DeployTests_Generated/SQLite";
     protected override BaseDataTester DataTester { get; set; } = new SQLiteDataTester();
 
-    private const string DbFilesFolder = @"./tmp";
+    private const string DbFilesFolder = @"./DeployTests_SQLite_DbFiles";
 
     protected override EquivalencyAssertionOptions<SQLiteDatabase> AddAdditionalDbModelEquivalenceyOptions(
         EquivalencyAssertionOptions<SQLiteDatabase> options, CompareMode compareMode)

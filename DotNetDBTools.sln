@@ -35,6 +35,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "props", "props", "{51CED495
 		build\props\PKG.coverlet.props = build\props\PKG.coverlet.props
 		build\props\PKG.FluentAssertions.props = build\props\PKG.FluentAssertions.props
 		build\props\PKG.Microsoft.NET.Test.Sdk.props = build\props\PKG.Microsoft.NET.Test.Sdk.props
+		build\props\PKG.Moq.props = build\props\PKG.Moq.props
 		build\props\PKG.NUnit.props = build\props\PKG.NUnit.props
 		build\props\PKG.xunit.props = build\props\PKG.xunit.props
 		build\props\PKG_VERSIONS.props = build\props\PKG_VERSIONS.props

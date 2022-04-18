@@ -25,7 +25,7 @@ public abstract class BaseSampleApplicationsTests
     public void DeployTool_Runs_WithoutErrors()
     {
         string dtPath = DeployToolAssemblyPath;
-        string outDir = Path.GetFullPath($"{Directory.GetCurrentDirectory()}/out_{DtDbms}");
+        string outDir = Path.GetFullPath($"{Directory.GetCurrentDirectory()}/DeployTool_Output/{DtDbms}");
         using IDisposable _ = ExclusiveExecutionScope.CreateScope(SyncScopeName);
 
         DropDeployToolDatabaseIfExists();

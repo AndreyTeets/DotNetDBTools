@@ -11,6 +11,7 @@ using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Models.Core;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
+using Newtonsoft.Json;
 using NUnit.Framework;
 using static DotNetDBTools.IntegrationTests.Constants;
 
@@ -56,6 +57,12 @@ public abstract class BaseDeployTests<TDatabase, TDbConnection, TDbModelConverte
             string createV1Script = $"{GeneratedFilesDir}/{testCaseId}_CreateV1Script.sql";
             string updateV1toV2Script = $"{GeneratedFilesDir}/{testCaseId}_UpdateV1toV2Script.sql";
             string updateV2toV1Script = $"{GeneratedFilesDir}/{testCaseId}_UpdateV2toV1Script.sql";
+            string db2_createV1Script = $"{GeneratedFilesDir}/{testCaseId}_Db2_CreateV1Script.sql";
+
+            string serializedDbModelFromDefinitionV1 = $"{GeneratedFilesDir}/{testCaseId}_DbModelFromDefinitionV1.sql";
+            string serializedDbModelFromDefinitionV2 = $"{GeneratedFilesDir}/{testCaseId}_DbModelFromDefinitionV2.sql";
+            string serializedDbModelFromDBMSSysInfoV1 = $"{GeneratedFilesDir}/{testCaseId}_DbModelFromDBMSSysInfoV1.sql";
+            string serializedDbModelFromDBMSSysInfoV2 = $"{GeneratedFilesDir}/{testCaseId}_DbModelFromDBMSSysInfoV2.sql";
 
             File.WriteAllText(createV1Script, _deployManager.GenerateNoDNDBTInfoPublishScript(assemblyV1Path));
             _deployManager.Options.AllowDataLoss = true;
@@ -64,31 +71,38 @@ public abstract class BaseDeployTests<TDatabase, TDbConnection, TDbModelConverte
 
             TDatabase dbModelFromDefinitionV1 = CreateDbModelFromDefinition(assemblyV1Path);
             TDatabase dbModelFromDefinitionV2 = CreateDbModelFromDefinition(assemblyV2Path);
+            TDatabase dbModelFromDBMSSSysInfoV1;
+            TDatabase dbModelFromDBMSSSysInfoV2;
+
+            DumpDbModel(serializedDbModelFromDefinitionV1, dbModelFromDefinitionV1);
+            DumpDbModel(serializedDbModelFromDefinitionV2, dbModelFromDefinitionV2);
 
             using DbConnection connection = RecreateDbAndCreateConnection(CreateTestCaseName(testCaseId));
 
             connection.Execute(File.ReadAllText(createV1Script));
-            AssertDbModelEquivalence(CreateDbModelFromDBMSSysInfo(connection), dbModelFromDefinitionV1, CompareMode.IgnoreAllDNDBT);
+            dbModelFromDBMSSSysInfoV1 = CreateDbModelFromDBMSSysInfo(connection);
+            DumpDbModel(serializedDbModelFromDBMSSysInfoV1, dbModelFromDBMSSSysInfoV1);
+            AssertDbModelEquivalence(dbModelFromDBMSSSysInfoV1, dbModelFromDefinitionV1, CompareMode.IgnoreAllDNDBT);
             DataTester.Populate_SampleDb_WithData(connection);
             DataTester.Assert_SampleDb_Data(connection, BaseDataTester.AssertKind.V1);
 
             connection.Execute(File.ReadAllText(updateV1toV2Script));
-            AssertDbModelEquivalence(CreateDbModelFromDBMSSysInfo(connection), dbModelFromDefinitionV2, CompareMode.IgnoreAllDNDBT);
+            dbModelFromDBMSSSysInfoV2 = CreateDbModelFromDBMSSysInfo(connection);
+            DumpDbModel(serializedDbModelFromDBMSSysInfoV2, dbModelFromDBMSSSysInfoV2);
+            AssertDbModelEquivalence(dbModelFromDBMSSSysInfoV2, dbModelFromDefinitionV2, CompareMode.IgnoreAllDNDBT);
             DataTester.Assert_SampleDb_Data(connection, BaseDataTester.AssertKind.V2);
 
             connection.Execute(File.ReadAllText(updateV2toV1Script));
-            AssertDbModelEquivalence(CreateDbModelFromDBMSSysInfo(connection), dbModelFromDefinitionV1, CompareMode.IgnoreAllDNDBT);
+            dbModelFromDBMSSSysInfoV1 = CreateDbModelFromDBMSSysInfo(connection);
+            AssertDbModelEquivalence(dbModelFromDBMSSSysInfoV1, dbModelFromDefinitionV1, CompareMode.IgnoreAllDNDBT);
             DataTester.Assert_SampleDb_Data(connection, BaseDataTester.AssertKind.V1Rollbacked);
 
-            TDatabase dbModelFromDBMSSysInfoV1 = CreateDbModelFromDBMSSysInfo(connection);
-            dbModelFromDBMSSysInfoV1.Version = 1;
-
-            string db2_createV1Script = $"{GeneratedFilesDir}/{testCaseId}_Db2_CreateV1Script.sql";
-            File.WriteAllText(db2_createV1Script, _deployManager.GenerateNoDNDBTInfoPublishScript(dbModelFromDBMSSysInfoV1));
+            dbModelFromDBMSSSysInfoV1.Version = 1;
+            File.WriteAllText(db2_createV1Script, _deployManager.GenerateNoDNDBTInfoPublishScript(dbModelFromDBMSSSysInfoV1));
             using DbConnection connection2 = RecreateDbAndCreateConnection($"Db2_{CreateTestCaseName(testCaseId)}");
             connection2.Execute(File.ReadAllText(db2_createV1Script));
 
-            AssertDbModelEquivalence(CreateDbModelFromDBMSSysInfo(connection2), dbModelFromDBMSSysInfoV1, CompareMode.IgnoreIDsAndDbAttributes);
+            AssertDbModelEquivalence(CreateDbModelFromDBMSSysInfo(connection2), dbModelFromDBMSSSysInfoV1, CompareMode.IgnoreIDsAndDbAttributes);
             DataTester.Populate_SampleDb_WithData(connection2);
             DataTester.Assert_SampleDb_Data(connection2, BaseDataTester.AssertKind.V1NoScripts);
         }
@@ -218,6 +232,17 @@ public abstract class BaseDeployTests<TDatabase, TDbConnection, TDbModelConverte
         TDbConnection connection = new();
         connection.ConnectionString = CreateConnectionString(testName);
         return connection;
+    }
+
+    private static void DumpDbModel(string filePath, TDatabase dbModel)
+    {
+        JsonSerializerSettings jsonSettings = new()
+        {
+            Formatting = Formatting.Indented,
+            PreserveReferencesHandling = PreserveReferencesHandling.Objects,
+        };
+        string serializedDbModel = JsonConvert.SerializeObject(dbModel, jsonSettings);
+        File.WriteAllText(filePath, serializedDbModel);
     }
 
     private string CreateTestCaseName(string testCaseId)

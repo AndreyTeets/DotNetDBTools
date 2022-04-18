@@ -1,36 +1,14 @@
-﻿using System.Data.Common;
-using DotNetDBTools.Analysis.Core;
-using DotNetDBTools.Analysis.SQLite;
+﻿using DotNetDBTools.Analysis.SQLite;
 using DotNetDBTools.Deploy.Core;
-using DotNetDBTools.Deploy.Core.Editors;
 using DotNetDBTools.Deploy.SQLite.Editors;
 
 namespace DotNetDBTools.Deploy.SQLite;
 
-internal class SQLiteFactory : IFactory
+internal class SQLiteFactory : Factory<
+    SQLiteQueryExecutor,
+    SQLiteGenSqlScriptQueryExecutor,
+    SQLiteDbModelConverter,
+    SQLiteDbEditor,
+    SQLiteDbModelFromDBMSProvider>
 {
-    public IQueryExecutor CreateQueryExecutor(DbConnection connection, Events events)
-    {
-        return new SQLiteQueryExecutor(connection, events);
-    }
-
-    public IGenSqlScriptQueryExecutor CreateGenSqlScriptQueryExecutor()
-    {
-        return new SQLiteGenSqlScriptQueryExecutor();
-    }
-
-    public IDbModelConverter CreateDbModelConverter()
-    {
-        return new SQLiteDbModelConverter();
-    }
-
-    public IDbEditor CreateDbEditor(IQueryExecutor queryExecutor)
-    {
-        return new SQLiteDbEditor(queryExecutor);
-    }
-
-    public IDbModelFromDBMSProvider CreateDbModelFromDBMSProvider(IQueryExecutor queryExecutor)
-    {
-        return new SQLiteDbModelFromDBMSProvider(queryExecutor);
-    }
 }

@@ -37,7 +37,7 @@ public abstract class BasePublishScriptGenerationTests<TDeployManager>
     public void Generate_PublishScript_CreatesCorrectScript_WhenCreatingV1()
     {
         string actualScript = _deployManager.GeneratePublishScript(_specificDbmsDbAssemblyV1);
-        string expectedScript = File.ReadAllText($@"{ExpectedFilesDir}/Expected_PublishScript_For_SampleDB_WhenCreatingV1.sql");
+        string expectedScript = File.ReadAllText($@"{ExpectedFilesDir}/Expected_PublishScript_CreateV1.sql");
         actualScript.NormalizeLineEndings().Should().Be(expectedScript.NormalizeLineEndings());
     }
 
@@ -46,7 +46,7 @@ public abstract class BasePublishScriptGenerationTests<TDeployManager>
     {
         _deployManager.Options = new DeployOptions { AllowDataLoss = true };
         string actualScript = _deployManager.GeneratePublishScript(_specificDbmsDbAssemblyV2, _specificDbmsDbAssemblyV1);
-        string expectedScript = File.ReadAllText($@"{ExpectedFilesDir}/Expected_PublishScript_For_SampleDB_WhenUpdatingFromV1ToV2.sql");
+        string expectedScript = File.ReadAllText($@"{ExpectedFilesDir}/Expected_PublishScript_V1ToV2.sql");
         actualScript.NormalizeLineEndings().Should().Be(expectedScript.NormalizeLineEndings());
     }
 
@@ -55,7 +55,7 @@ public abstract class BasePublishScriptGenerationTests<TDeployManager>
     {
         _deployManager.Options = new DeployOptions { AllowDataLoss = true };
         string actualScript = _deployManager.GenerateNoDNDBTInfoPublishScript(_specificDbmsDbAssemblyV1, _specificDbmsDbAssemblyV2);
-        string expectedScript = File.ReadAllText($@"{ExpectedFilesDir}/Expected_NoDNDBTInfoPublishScript_For_SampleDB_WhenUpdatingFromV2ToV1.sql");
+        string expectedScript = File.ReadAllText($@"{ExpectedFilesDir}/Expected_NoDNDBTInfoPublishScript_V2ToV1.sql");
         actualScript.NormalizeLineEndings().Should().Be(expectedScript.NormalizeLineEndings());
     }
 

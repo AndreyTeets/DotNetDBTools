@@ -14,7 +14,7 @@ public abstract class BaseDefinitionGenerationTests<TDatabase>
     protected abstract string SpecificDbmsSampleDbV1AssemblyName { get; }
     protected abstract string SpecificDbmsSampleDbV2AssemblyName { get; }
 
-    private static string GeneratedFilesDir => "./generated";
+    private static string GeneratedFilesDir => "./DefinitionGenerationTests_Generated";
 
     [Fact]
     public void DbModelFromGeneratedDefinition_IsEquivalentTo_DbModelFromOriginalDefinition()

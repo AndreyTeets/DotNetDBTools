@@ -34,6 +34,7 @@ Agnostic description for standard sql objects (Tables, Views, Indexes, Triggers)
     <InternalsVisibleTo Include="DotNetDBTools.AnalyzersTests" />
     <InternalsVisibleTo Include="DotNetDBTools.IntegrationTests" />
     <InternalsVisibleTo Include="DotNetDBTools.UnitTests" />
+    <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
   </ItemGroup>
 
   <PropertyGroup Condition="'$(CI_BUILD)' == 'true'">
