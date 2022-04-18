@@ -7,6 +7,5 @@ public class PostgreSQLPublishScriptGenerationTests : BasePublishScriptGeneratio
 {
     protected override string SpecificDbmsSampleDbV1AssemblyName => "DotNetDBTools.SampleDB.PostgreSQL";
     protected override string SpecificDbmsSampleDbV2AssemblyName => "DotNetDBTools.SampleDBv2.PostgreSQL";
-    protected override string ActualFilesDir => "./generated/PostgreSQL";
     protected override string ExpectedFilesDir => "./TestData/PostgreSQL";
 }

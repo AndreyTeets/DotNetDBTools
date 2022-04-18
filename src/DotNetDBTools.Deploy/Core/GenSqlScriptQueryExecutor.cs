@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using DotNetDBTools.Deploy.Core.Queries;
+using DotNetDBTools.Generation.Core;
 
 namespace DotNetDBTools.Deploy.Core;
 
@@ -53,7 +54,7 @@ internal abstract class GenSqlScriptQueryExecutor : IGenSqlScriptQueryExecutor
     {
         if (_executeQueriesCount == 0)
             return "";
-        return string.Join("\n\n", _queries);
+        return string.Join("\n\n", _queries).NormalizeLineEndings();
     }
 
     private static bool IsDNDBTDbObjectRecordQuery(IQuery query)

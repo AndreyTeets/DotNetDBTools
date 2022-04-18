@@ -16,20 +16,21 @@ namespace DotNetDBTools.SampleDeployManagerUsage.MSSQL
 
         private const string RepoRoot = "../../../../../..";
         private static readonly string s_samplesOutputDir = $"{RepoRoot}/SamplesOutput";
+        private static readonly string s_generatedOutputDir = $"{s_samplesOutputDir}/mssql_generated";
 
         private static readonly string s_mssqlDbAssemblyPath = $"{s_samplesOutputDir}/DotNetDBTools.SampleDB.MSSQL.dll";
         private static readonly string s_mssqlDbV2AssemblyPath = $"{s_samplesOutputDir}/DotNetDBTools.SampleDBv2.MSSQL.dll";
         private static readonly string s_mssqlConnectionString = $"Data Source=127.0.0.1,{MsSqlServerHostPort};Initial Catalog={MSSQLDatabaseName};Integrated Security=False;User ID=SA;Password={MsSqlServerPassword}";
 
-        private static readonly string s_mssqlGeneratedPublishToEmptyScriptPath = $"{s_samplesOutputDir}/mssql_generated/MSSQLGeneratedPublishToEmptyScript.sql";
-        private static readonly string s_mssqlGeneratedPublishToExistingScriptPath = $"{s_samplesOutputDir}/mssql_generated/MSSQLGeneratedPublishToExistingScript.sql";
-        private static readonly string s_mssqlGeneratedPublishFromV1ToV2ScriptPath = $"{s_samplesOutputDir}/mssql_generated/MSSQLGeneratedPublishFromV1ToV2Script.sql";
-        private static readonly string s_mssqlGeneratedNoDNDBTInfoPublishFromV1ToV2ScriptPath = $"{s_samplesOutputDir}/mssql_generated/MSSQLGeneratedNoDNDBTInfoPublishFromV1ToV2Script.sql";
-        private static readonly string s_mssqlGeneratedPublishFromV2ToV1ScriptPath = $"{s_samplesOutputDir}/mssql_generated/MSSQLGeneratedPublishFromV2ToV1Script.sql";
-        private static readonly string s_mssqlGeneratedNoDNDBTInfoPublishFromV2ToV1ScriptPath = $"{s_samplesOutputDir}/mssql_generated/MSSQLGeneratedNoDNDBTInfoPublishFromV2ToV1Script.sql";
-        private static readonly string s_mssqlGeneratedDefinitionFromUnregisteredDir = $"{s_samplesOutputDir}/mssql_generated/MSSQLGeneratedDefinitionFromUnregistered";
-        private static readonly string s_mssqlGeneratedDefinitionFromRegisteredDir = $"{s_samplesOutputDir}/mssql_generated/MSSQLGeneratedDefinitionFromRegistered";
-        private static readonly string s_mssqlGeneratedPublishRecreateScriptPath = $"{s_samplesOutputDir}/mssql_generated/MSSQLGeneratedPublishRecreateScript.sql";
+        private static readonly string s_publishToEmptyScriptPath = $"{s_generatedOutputDir}/PublishToEmptyScript.sql";
+        private static readonly string s_publishToExistingScriptPath = $"{s_generatedOutputDir}/PublishToExistingScript.sql";
+        private static readonly string s_publishFromV1ToV2ScriptPath = $"{s_generatedOutputDir}/PublishFromV1ToV2Script.sql";
+        private static readonly string s_noDNDBTInfoPublishFromV1ToV2ScriptPath = $"{s_generatedOutputDir}/NoDNDBTInfoPublishFromV1ToV2Script.sql";
+        private static readonly string s_publishFromV2ToV1ScriptPath = $"{s_generatedOutputDir}/PublishFromV2ToV1Script.sql";
+        private static readonly string s_noDNDBTInfoPublishFromV2ToV1ScriptPath = $"{s_generatedOutputDir}/NoDNDBTInfoPublishFromV2ToV1Script.sql";
+        private static readonly string s_definitionFromUnregisteredDir = $"{s_generatedOutputDir}/DefinitionFromUnregistered";
+        private static readonly string s_definitionFromRegisteredDir = $"{s_generatedOutputDir}/DefinitionFromRegistered";
+        private static readonly string s_publishRecreateScriptPath = $"{s_generatedOutputDir}/PublishRecreateScript.sql";
 
         public static void Main()
         {
@@ -40,6 +41,7 @@ namespace DotNetDBTools.SampleDeployManagerUsage.MSSQL
         {
             DropDatabaseIfExists(s_mssqlConnectionString);
             CreateDatabase(s_mssqlConnectionString);
+            Directory.CreateDirectory(s_generatedOutputDir);
 
             Assembly dbAssembly = Assembly.Load(File.ReadAllBytes(s_mssqlDbAssemblyPath));
             Assembly dbAssemblyV2 = Assembly.Load(File.ReadAllBytes(s_mssqlDbV2AssemblyPath));
@@ -54,48 +56,48 @@ namespace DotNetDBTools.SampleDeployManagerUsage.MSSQL
             deployManager.RegisterAsDNDBT(connection);
 
             Console.WriteLine("Generating script to create new MSSQLSampleDB from dbAssembly file...");
-            deployManager.GeneratePublishScript(s_mssqlDbAssemblyPath, connection, s_mssqlGeneratedPublishToEmptyScriptPath);
+            File.WriteAllText(s_publishToEmptyScriptPath, deployManager.GeneratePublishScript(s_mssqlDbAssemblyPath, connection));
             Console.WriteLine("Creating new MSSQLSampleDB from dbAssembly file...");
             deployManager.PublishDatabase(s_mssqlDbAssemblyPath, connection);
 
             Console.WriteLine("Generating script to update(no changes) existing MSSQLSampleDB from dbAssembly file...");
-            deployManager.GeneratePublishScript(s_mssqlDbAssemblyPath, connection, s_mssqlGeneratedPublishToExistingScriptPath);
+            File.WriteAllText(s_publishToExistingScriptPath, deployManager.GeneratePublishScript(s_mssqlDbAssemblyPath, connection));
             Console.WriteLine("Updating(no changes) existing MSSQLSampleDB from dbAssembly file...");
             deployManager.PublishDatabase(s_mssqlDbAssemblyPath, connection);
 
             Console.WriteLine("Generating script to update(from v1 to v2) MSSQLSampleDB from the corresponding assembly files...");
-            dmDataLoss.GeneratePublishScript(dbAssemblyV2, dbAssembly, s_mssqlGeneratedPublishFromV1ToV2ScriptPath);
+            File.WriteAllText(s_publishFromV1ToV2ScriptPath, dmDataLoss.GeneratePublishScript(dbAssemblyV2, dbAssembly));
             Console.WriteLine("Updating(from v1 to v2) existing MSSQLSampleDB from dbAssembly v2 file...");
             dmDataLoss.PublishDatabase(s_mssqlDbV2AssemblyPath, connection);
 
             Console.WriteLine("Generating script to update(rollback from v2 to v1) existing MSSQLSampleDB from dbAssembly file...");
-            dmDataLoss.GeneratePublishScript(s_mssqlDbAssemblyPath, connection, s_mssqlGeneratedPublishFromV2ToV1ScriptPath);
+            File.WriteAllText(s_publishFromV2ToV1ScriptPath, dmDataLoss.GeneratePublishScript(s_mssqlDbAssemblyPath, connection));
             Console.WriteLine("Updating(rollback from v2 to v1) MSSQLSampleDB using previously generated script...");
-            connection.Execute(File.ReadAllText(s_mssqlGeneratedPublishFromV2ToV1ScriptPath));
+            connection.Execute(File.ReadAllText(s_publishFromV2ToV1ScriptPath));
 
             Console.WriteLine("Unregistering(=deleting DNDBT system information from DB) MSSQLSampleDB...");
             deployManager.UnregisterAsDNDBT(connection);
             Console.WriteLine("Generating definition from existing unregistered MSSQLSampleDB...");
-            deployManager.GenerateDefinition(connection, s_mssqlGeneratedDefinitionFromUnregisteredDir);
+            deployManager.GenerateDefinition(connection, s_definitionFromUnregisteredDir);
 
             Console.WriteLine("Generating NoDNDBTInfo script to update(from v1 to v2) MSSQLSampleDB from the corresponding assembly files...");
-            dmDataLoss.GenerateNoDNDBTInfoPublishScript(dbAssemblyV2, dbAssembly, s_mssqlGeneratedNoDNDBTInfoPublishFromV1ToV2ScriptPath);
+            File.WriteAllText(s_noDNDBTInfoPublishFromV1ToV2ScriptPath, dmDataLoss.GenerateNoDNDBTInfoPublishScript(dbAssemblyV2, dbAssembly));
             Console.WriteLine("Updating(from v1 to v2) MSSQLSampleDB using previously generated NoDNDBTInfo script...");
-            connection.Execute(File.ReadAllText(s_mssqlGeneratedNoDNDBTInfoPublishFromV1ToV2ScriptPath));
+            connection.Execute(File.ReadAllText(s_noDNDBTInfoPublishFromV1ToV2ScriptPath));
 
             Console.WriteLine("Generating NoDNDBTInfo script to update(rollback from v2 to v1) MSSQLSampleDB from the corresponding assembly files...");
-            dmDataLoss.GenerateNoDNDBTInfoPublishScript(dbAssembly, dbAssemblyV2, s_mssqlGeneratedNoDNDBTInfoPublishFromV2ToV1ScriptPath);
+            File.WriteAllText(s_noDNDBTInfoPublishFromV2ToV1ScriptPath, dmDataLoss.GenerateNoDNDBTInfoPublishScript(dbAssembly, dbAssemblyV2));
             Console.WriteLine("Updating(rollback from v2 to v1) MSSQLSampleDB using previously generated NoDNDBTInfo script...");
-            connection.Execute(File.ReadAllText(s_mssqlGeneratedNoDNDBTInfoPublishFromV2ToV1ScriptPath));
+            connection.Execute(File.ReadAllText(s_noDNDBTInfoPublishFromV2ToV1ScriptPath));
 
             Console.WriteLine("Registering(=generating and adding new DNDBT system information to DB) MSSQLSampleDB...");
             deployManager.RegisterAsDNDBT(connection);
             Console.WriteLine("Generating definition from existing registered MSSQLSampleDB...");
-            deployManager.GenerateDefinition(connection, s_mssqlGeneratedDefinitionFromRegisteredDir);
+            deployManager.GenerateDefinition(connection, s_definitionFromRegisteredDir);
 
             Console.WriteLine("Newly created DNDBT system information(by registration) has different IDs for all objects");
             Console.WriteLine("Generating script to update(recreate all objects) existing MSSQLSampleDB from dbAssembly file...");
-            dmDataLoss.GeneratePublishScript(s_mssqlDbAssemblyPath, connection, s_mssqlGeneratedPublishRecreateScriptPath);
+            File.WriteAllText(s_publishRecreateScriptPath, dmDataLoss.GeneratePublishScript(s_mssqlDbAssemblyPath, connection));
             Console.WriteLine("Updating(recreate all objects) existing MSSQLSampleDB from dbAssembly file...");
             dmDataLoss.PublishDatabase(s_mssqlDbAssemblyPath, connection);
         }

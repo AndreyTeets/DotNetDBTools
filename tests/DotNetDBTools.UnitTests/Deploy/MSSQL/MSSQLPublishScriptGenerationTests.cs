@@ -7,6 +7,5 @@ public class MSSQLPublishScriptGenerationTests : BasePublishScriptGenerationTest
 {
     protected override string SpecificDbmsSampleDbV1AssemblyName => "DotNetDBTools.SampleDB.MSSQL";
     protected override string SpecificDbmsSampleDbV2AssemblyName => "DotNetDBTools.SampleDBv2.MSSQL";
-    protected override string ActualFilesDir => "./generated/MSSQL";
     protected override string ExpectedFilesDir => "./TestData/MSSQL";
 }

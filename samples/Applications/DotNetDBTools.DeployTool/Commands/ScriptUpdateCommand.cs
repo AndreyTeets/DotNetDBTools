@@ -17,6 +17,7 @@ internal class ScriptUpdateCommand : BaseCommand
         deployManager.Options.AllowDataLoss = allowDataLoss;
         deployManager.Events.EventFired += DeployManagerEventsLogger.LogEvent;
         using DbConnection connection = CreateDbConnection(dbms, connectionString);
-        deployManager.GeneratePublishScript(dbAssemblyPath, connection, outputPath);
+        string script = deployManager.GeneratePublishScript(dbAssemblyPath, connection);
+        SaveToFile(outputPath, script);
     }
 }

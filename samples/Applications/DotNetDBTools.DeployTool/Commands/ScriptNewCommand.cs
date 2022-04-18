@@ -13,9 +13,9 @@ internal class ScriptNewCommand : BaseCommand
     {
         IDeployManager deployManager = CreateDeployManager(dbms);
         deployManager.Events.EventFired += DeployManagerEventsLogger.LogEvent;
-        if (noDNDBTInfo)
-            deployManager.GenerateNoDNDBTInfoPublishScript(dbAssemblyPath, outputPath);
-        else
-            deployManager.GeneratePublishScript(dbAssemblyPath, outputPath);
+        string script = noDNDBTInfo
+            ? deployManager.GenerateNoDNDBTInfoPublishScript(dbAssemblyPath)
+            : deployManager.GeneratePublishScript(dbAssemblyPath);
+        SaveToFile(outputPath, script);
     }
 }

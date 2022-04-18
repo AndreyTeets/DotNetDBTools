@@ -32,4 +32,12 @@ internal abstract class BaseCommand
             _ => throw new Exception($"Invalid dbms '{dbms}'"),
         };
     }
+
+    protected void SaveToFile(string outputPath, string textContent)
+    {
+        string fullPath = Path.GetFullPath(outputPath);
+        string dirPath = Path.GetDirectoryName(fullPath)!;
+        Directory.CreateDirectory(dirPath);
+        File.WriteAllText(fullPath, textContent);
+    }
 }

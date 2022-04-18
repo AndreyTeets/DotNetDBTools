@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using DotNetDBTools.Analysis;
@@ -83,111 +82,99 @@ public abstract class DeployManager<TDatabase> : IDeployManager
     }
     public void PublishDatabase(Database database, DbConnection connection)
     {
-        Events.InvokeEventFired(EventType.PublishBegan);
         Database oldDatabase = CreateDbModelFromDBMS(connection, ExpectedRegistrationState.Registered, useDNDBTSysInfoIfAvailable: true);
+        Events.InvokeEventFired(EventType.PublishBegan);
         DatabaseDiff dbDiff = CreateDbDiff(database, oldDatabase);
         ApplyDbDiff(dbDiff, _factory.CreateQueryExecutor(connection, Events));
         Events.InvokeEventFired(EventType.PublishFinished);
     }
 
-    public void GeneratePublishScript(string dbAssemblyPath, DbConnection connection, string outputPath)
+    public string GeneratePublishScript(string dbAssemblyPath, DbConnection connection)
     {
         Assembly newDbAssembly = LoadDbAssembly(dbAssemblyPath);
-        GeneratePublishScript(newDbAssembly, connection, outputPath);
+        return GeneratePublishScript(newDbAssembly, connection);
     }
-    public void GeneratePublishScript(Assembly dbAssembly, DbConnection connection, string outputPath)
+    public string GeneratePublishScript(Assembly dbAssembly, DbConnection connection)
     {
         Database newDatabase = CreateDbModelFromDefinition(dbAssembly);
-        GeneratePublishScript(newDatabase, connection, outputPath);
+        return GeneratePublishScript(newDatabase, connection);
     }
-    public void GeneratePublishScript(Database database, DbConnection connection, string outputPath)
+    public string GeneratePublishScript(Database database, DbConnection connection)
     {
-        Events.InvokeEventFired(EventType.GeneratePublishScriptBegan);
         Database oldDatabase = CreateDbModelFromDBMS(connection, ExpectedRegistrationState.Registered, useDNDBTSysInfoIfAvailable: true);
-        GeneratePublishScriptImpl(database, oldDatabase, outputPath, noDNDBTInfo: false);
-        Events.InvokeEventFired(EventType.GeneratePublishScriptFinished);
+        return GeneratePublishScriptImpl(database, oldDatabase, noDNDBTInfo: false);
     }
 
-    public void GeneratePublishScript(string dbAssemblyPath, string outputPath)
+    public string GeneratePublishScript(string dbAssemblyPath)
     {
         Assembly dbAssembly = LoadDbAssembly(dbAssemblyPath);
-        GeneratePublishScript(dbAssembly, outputPath);
+        return GeneratePublishScript(dbAssembly);
     }
-    public void GeneratePublishScript(Assembly dbAssembly, string outputPath)
+    public string GeneratePublishScript(Assembly dbAssembly)
     {
         Database newDatabase = CreateDbModelFromDefinition(dbAssembly);
-        GeneratePublishScript(newDatabase, outputPath);
+        return GeneratePublishScript(newDatabase);
     }
-    public void GeneratePublishScript(Database database, string outputPath)
+    public string GeneratePublishScript(Database database)
     {
-        Events.InvokeEventFired(EventType.GeneratePublishScriptBegan);
-        Database oldDatabase = new TDatabase();
-        oldDatabase.InitializeProperties();
-        GeneratePublishScriptImpl(database, oldDatabase, outputPath, noDNDBTInfo: false);
-        Events.InvokeEventFired(EventType.GeneratePublishScriptFinished);
+        Database oldDatabase = CreateEmptyDbModel();
+        return GeneratePublishScriptImpl(database, oldDatabase, noDNDBTInfo: false);
     }
 
-    public void GeneratePublishScript(string newDbAssemblyPath, string oldDbAssemblyPath, string outputPath)
+    public string GeneratePublishScript(string newDbAssemblyPath, string oldDbAssemblyPath)
     {
         Assembly newDbAssembly = LoadDbAssembly(newDbAssemblyPath);
         Assembly oldDbAssembly = LoadDbAssembly(oldDbAssemblyPath);
-        GeneratePublishScript(newDbAssembly, oldDbAssembly, outputPath);
+        return GeneratePublishScript(newDbAssembly, oldDbAssembly);
     }
-    public void GeneratePublishScript(Assembly newDbAssembly, Assembly oldDbAssembly, string outputPath)
+    public string GeneratePublishScript(Assembly newDbAssembly, Assembly oldDbAssembly)
     {
         Database newDatabase = CreateDbModelFromDefinition(newDbAssembly);
         Database oldDatabase = CreateDbModelFromDefinition(oldDbAssembly);
-        GeneratePublishScript(newDatabase, oldDatabase, outputPath);
+        return GeneratePublishScript(newDatabase, oldDatabase);
     }
-    public void GeneratePublishScript(Database newDatabase, Database oldDatabase, string outputPath)
+    public string GeneratePublishScript(Database newDatabase, Database oldDatabase)
     {
-        Events.InvokeEventFired(EventType.GeneratePublishScriptBegan);
-        GeneratePublishScriptImpl(newDatabase, oldDatabase, outputPath, noDNDBTInfo: false);
-        Events.InvokeEventFired(EventType.GeneratePublishScriptFinished);
+        return GeneratePublishScriptImpl(newDatabase, oldDatabase, noDNDBTInfo: false);
     }
 
-    public void GenerateNoDNDBTInfoPublishScript(string dbAssemblyPath, string outputPath)
+    public string GenerateNoDNDBTInfoPublishScript(string dbAssemblyPath)
     {
         Assembly dbAssembly = LoadDbAssembly(dbAssemblyPath);
-        GenerateNoDNDBTInfoPublishScript(dbAssembly, outputPath);
+        return GenerateNoDNDBTInfoPublishScript(dbAssembly);
     }
-    public void GenerateNoDNDBTInfoPublishScript(Assembly dbAssembly, string outputPath)
+    public string GenerateNoDNDBTInfoPublishScript(Assembly dbAssembly)
     {
         Database newDatabase = CreateDbModelFromDefinition(dbAssembly);
-        GenerateNoDNDBTInfoPublishScript(newDatabase, outputPath);
+        return GenerateNoDNDBTInfoPublishScript(newDatabase);
     }
-    public void GenerateNoDNDBTInfoPublishScript(Database database, string outputPath)
+    public string GenerateNoDNDBTInfoPublishScript(Database database)
     {
-        Events.InvokeEventFired(EventType.GeneratePublishScriptBegan);
-        Database oldDatabase = new TDatabase();
-        oldDatabase.InitializeProperties();
-        GeneratePublishScriptImpl(database, oldDatabase, outputPath, noDNDBTInfo: true);
-        Events.InvokeEventFired(EventType.GeneratePublishScriptFinished);
+        Database oldDatabase = CreateEmptyDbModel();
+        return GeneratePublishScriptImpl(database, oldDatabase, noDNDBTInfo: true);
     }
 
-    public void GenerateNoDNDBTInfoPublishScript(string newDbAssemblyPath, string oldDbAssemblyPath, string outputPath)
+    public string GenerateNoDNDBTInfoPublishScript(string newDbAssemblyPath, string oldDbAssemblyPath)
     {
         Assembly newDbAssembly = LoadDbAssembly(newDbAssemblyPath);
         Assembly oldDbAssembly = LoadDbAssembly(oldDbAssemblyPath);
-        GenerateNoDNDBTInfoPublishScript(newDbAssembly, oldDbAssembly, outputPath);
+        return GenerateNoDNDBTInfoPublishScript(newDbAssembly, oldDbAssembly);
     }
-    public void GenerateNoDNDBTInfoPublishScript(Assembly newDbAssembly, Assembly oldDbAssembly, string outputPath)
+    public string GenerateNoDNDBTInfoPublishScript(Assembly newDbAssembly, Assembly oldDbAssembly)
     {
         Database newDatabase = CreateDbModelFromDefinition(newDbAssembly);
         Database oldDatabase = CreateDbModelFromDefinition(oldDbAssembly);
-        GenerateNoDNDBTInfoPublishScript(newDatabase, oldDatabase, outputPath);
+        return GenerateNoDNDBTInfoPublishScript(newDatabase, oldDatabase);
     }
-    public void GenerateNoDNDBTInfoPublishScript(Database newDatabase, Database oldDatabase, string outputPath)
+    public string GenerateNoDNDBTInfoPublishScript(Database newDatabase, Database oldDatabase)
     {
-        Events.InvokeEventFired(EventType.GeneratePublishScriptBegan);
-        GeneratePublishScriptImpl(newDatabase, oldDatabase, outputPath, noDNDBTInfo: true);
-        Events.InvokeEventFired(EventType.GeneratePublishScriptFinished);
+        return GeneratePublishScriptImpl(newDatabase, oldDatabase, noDNDBTInfo: true);
     }
 
     public void GenerateDefinition(DbConnection connection, string outputDirectory)
     {
-        Events.InvokeEventFired(EventType.GenerateDefinitionBegan);
         Database database = CreateDbModelFromDBMS(connection, ExpectedRegistrationState.Any, useDNDBTSysInfoIfAvailable: true);
+        Events.InvokeEventFired(EventType.GenerateDefinitionBegan);
         DbDefinitionGenerator.GenerateDefinition(database, outputDirectory);
         Events.InvokeEventFired(EventType.GenerateDefinitionFinished);
     }
@@ -211,24 +198,25 @@ public abstract class DeployManager<TDatabase> : IDeployManager
         Events.InvokeEventFired(EventType.RegisterFinished);
     }
 
-    private void GeneratePublishScriptImpl(Database newDatabase, Database oldDatabase, string outputPath, bool noDNDBTInfo)
+    private string GeneratePublishScriptImpl(Database newDatabase, Database oldDatabase, bool noDNDBTInfo)
     {
+        Events.InvokeEventFired(EventType.GeneratePublishScriptBegan);
         DatabaseDiff dbDiff = CreateDbDiff(newDatabase, oldDatabase);
 
         IGenSqlScriptQueryExecutor genSqlScriptQueryExecutor = _factory.CreateGenSqlScriptQueryExecutor();
         genSqlScriptQueryExecutor.NoDNDBTInfo = noDNDBTInfo;
 
         ApplyDbDiff(dbDiff, genSqlScriptQueryExecutor);
-        string generatedScript = genSqlScriptQueryExecutor.GetFinalScript();
-
-        SaveToFile(outputPath, generatedScript);
+        string script = genSqlScriptQueryExecutor.GetFinalScript();
+        Events.InvokeEventFired(EventType.GeneratePublishScriptFinished);
+        return script;
     }
 
-    private void SaveToFile(string outputPath, string textContent)
+    private Database CreateEmptyDbModel()
     {
-        string fullPath = Path.GetFullPath(outputPath);
-        Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
-        File.WriteAllText(fullPath, textContent);
+        TDatabase database = new();
+        database.InitializeProperties();
+        return database;
     }
 
     private Database CreateDbModelFromDefinition(Assembly dbAssembly)

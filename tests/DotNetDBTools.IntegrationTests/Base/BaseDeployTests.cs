@@ -37,6 +37,7 @@ public abstract class BaseDeployTests<TDatabase, TDbConnection, TDbModelConverte
 
     protected BaseDeployTests()
     {
+        Directory.CreateDirectory(GeneratedFilesDir);
         _deployManager = new();
         _dbModelFromDefinitionProvider = new GenericDbModelFromDefinitionProvider();
     }
@@ -56,10 +57,10 @@ public abstract class BaseDeployTests<TDatabase, TDbConnection, TDbModelConverte
             string updateV1toV2Script = $"{GeneratedFilesDir}/{testCaseId}_UpdateV1toV2Script.sql";
             string updateV2toV1Script = $"{GeneratedFilesDir}/{testCaseId}_UpdateV2toV1Script.sql";
 
-            _deployManager.GenerateNoDNDBTInfoPublishScript(assemblyV1Path, createV1Script);
+            File.WriteAllText(createV1Script, _deployManager.GenerateNoDNDBTInfoPublishScript(assemblyV1Path));
             _deployManager.Options.AllowDataLoss = true;
-            _deployManager.GenerateNoDNDBTInfoPublishScript(assemblyV2Path, assemblyV1Path, updateV1toV2Script);
-            _deployManager.GenerateNoDNDBTInfoPublishScript(assemblyV1Path, assemblyV2Path, updateV2toV1Script);
+            File.WriteAllText(updateV1toV2Script, _deployManager.GenerateNoDNDBTInfoPublishScript(assemblyV2Path, assemblyV1Path));
+            File.WriteAllText(updateV2toV1Script, _deployManager.GenerateNoDNDBTInfoPublishScript(assemblyV1Path, assemblyV2Path));
 
             TDatabase dbModelFromDefinitionV1 = CreateDbModelFromDefinition(assemblyV1Path);
             TDatabase dbModelFromDefinitionV2 = CreateDbModelFromDefinition(assemblyV2Path);
@@ -83,7 +84,7 @@ public abstract class BaseDeployTests<TDatabase, TDbConnection, TDbModelConverte
             dbModelFromDBMSSysInfoV1.Version = 1;
 
             string db2_createV1Script = $"{GeneratedFilesDir}/{testCaseId}_Db2_CreateV1Script.sql";
-            _deployManager.GenerateNoDNDBTInfoPublishScript(dbModelFromDBMSSysInfoV1, db2_createV1Script);
+            File.WriteAllText(db2_createV1Script, _deployManager.GenerateNoDNDBTInfoPublishScript(dbModelFromDBMSSysInfoV1));
             using DbConnection connection2 = RecreateDbAndCreateConnection($"Db2_{CreateTestCaseName(testCaseId)}");
             connection2.Execute(File.ReadAllText(db2_createV1Script));
 

@@ -58,87 +58,87 @@ public interface IDeployManager
     /// Generates sql script to update database to the state specified in first argument from the state found at connection.
     /// Database must be registered (even if it's empty) during both script-generation and script-execution.
     /// </summary>
-    public void GeneratePublishScript(string dbAssemblyPath, DbConnection connection, string outputPath);
+    public string GeneratePublishScript(string dbAssemblyPath, DbConnection connection);
     /// <summary>
     /// Generates sql script to update database to the state specified in first argument from the state found at connection.
     /// Database must be registered (even if it's empty) during both script-generation and script-execution.
     /// </summary>
-    public void GeneratePublishScript(Assembly dbAssembly, DbConnection connection, string outputPath);
+    public string GeneratePublishScript(Assembly dbAssembly, DbConnection connection);
     /// <summary>
     /// Generates sql script to update database to the state specified in first argument from the state found at connection.
     /// Database must be registered (even if it's empty) during both script-generation and script-execution.
     /// </summary>
-    public void GeneratePublishScript(Database database, DbConnection connection, string outputPath);
+    public string GeneratePublishScript(Database database, DbConnection connection);
 
     /// <summary>
     /// Generates sql script to create all defined DNDBT user objects.
     /// Database must be empty and registered during script-execution.
     /// </summary>
-    public void GeneratePublishScript(string dbAssemblyPath, string outputPath);
+    public string GeneratePublishScript(string dbAssemblyPath);
     /// <summary>
     /// Generates sql script to create all defined DNDBT user objects.
     /// Database must be empty and registered during script-execution.
     /// </summary>
-    public void GeneratePublishScript(Assembly dbAssembly, string outputPath);
+    public string GeneratePublishScript(Assembly dbAssembly);
     /// <summary>
     /// Generates sql script to create all defined DNDBT user objects.
     /// Database must be empty and registered during script-execution.
     /// </summary>
-    public void GeneratePublishScript(Database database, string outputPath);
+    public string GeneratePublishScript(Database database);
 
     /// <summary>
     /// Generates sql script to update database to the state specified in first argument from the state specified in second argument.
     /// Database must be registered (even if it's empty) during script-execution.
     /// </summary>
-    public void GeneratePublishScript(string newDbAssemblyPath, string oldDbAssemblyPath, string outputPath);
+    public string GeneratePublishScript(string newDbAssemblyPath, string oldDbAssemblyPath);
     /// <summary>
     /// Generates sql script to update database to the state specified in first argument from the state specified in second argument.
     /// Database must be registered (even if it's empty) during script-execution.
     /// </summary>
-    public void GeneratePublishScript(Assembly newDbAssembly, Assembly oldDbAssembly, string outputPath);
+    public string GeneratePublishScript(Assembly newDbAssembly, Assembly oldDbAssembly);
     /// <summary>
     /// Generates sql script to update database to the state specified in first argument from the state specified in second argument.
     /// Database must be registered (even if it's empty) during script-execution.
     /// </summary>
-    public void GeneratePublishScript(Database newDatabase, Database oldDatabase, string outputPath);
+    public string GeneratePublishScript(Database newDatabase, Database oldDatabase);
 
     /// <summary>
     /// Generates sql script to create all defined DNDBT user objects.
     /// DNDBT system info changes will not be included.
     /// Database must be empty but doesn't have to be registered during script-execution.
     /// </summary>
-    public void GenerateNoDNDBTInfoPublishScript(string dbAssemblyPath, string outputPath);
+    public string GenerateNoDNDBTInfoPublishScript(string dbAssemblyPath);
     /// <summary>
     /// Generates sql script to create all defined DNDBT user objects.
     /// DNDBT system info changes will not be included.
     /// Database must be empty but doesn't have to be registered during script-execution.
     /// </summary>
-    public void GenerateNoDNDBTInfoPublishScript(Assembly dbAssembly, string outputPath);
+    public string GenerateNoDNDBTInfoPublishScript(Assembly dbAssembly);
     /// <summary>
     /// Generates sql script to create all defined DNDBT user objects.
     /// DNDBT system info changes will not be included.
     /// Database must be empty but doesn't have to be registered during script-execution.
     /// </summary>
-    public void GenerateNoDNDBTInfoPublishScript(Database database, string outputPath);
+    public string GenerateNoDNDBTInfoPublishScript(Database database);
 
     /// <summary>
     /// Generates sql script to update database to the state specified in first argument from the state specified in second argument.
     /// DNDBT system info changes will not be included.
     /// Database doesn't have to be registered during script-execution.
     /// </summary>
-    public void GenerateNoDNDBTInfoPublishScript(string newDbAssemblyPath, string oldDbAssemblyPath, string outputPath);
+    public string GenerateNoDNDBTInfoPublishScript(string newDbAssemblyPath, string oldDbAssemblyPath);
     /// <summary>
     /// Generates sql script to update database to the state specified in first argument from the state specified in second argument.
     /// DNDBT system info changes will not be included.
     /// Database doesn't have to be registered during script-execution.
     /// </summary>
-    public void GenerateNoDNDBTInfoPublishScript(Assembly newDbAssembly, Assembly oldDbAssembly, string outputPath);
+    public string GenerateNoDNDBTInfoPublishScript(Assembly newDbAssembly, Assembly oldDbAssembly);
     /// <summary>
     /// Generates sql script to update database to the state specified in first argument from the state specified in second argument.
     /// DNDBT system info changes will not be included.
     /// Database doesn't have to be registered during script-execution.
     /// </summary>
-    public void GenerateNoDNDBTInfoPublishScript(Database newDatabase, Database oldDatabase, string outputPath);
+    public string GenerateNoDNDBTInfoPublishScript(Database newDatabase, Database oldDatabase);
 
     /// <summary>
     /// Generates dotnet project for a registerd or unregistered database.

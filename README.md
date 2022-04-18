@@ -110,10 +110,10 @@ Also provides declarative means for database structure description with differen
 + SQLite
 
 # State of development
-+ MSSQL - definition (as c#) of only basic "standard relational db entities" and it's deployment+generation seem to work, probably with major bugs, database analysis using just a few example checks.
-+ MySQL - definition (as c#) of only basic "standard relational db entities" and it's deployment+generation seem to work, probably with major bugs, database analysis using just a few example checks.
-+ PostgreSQL - definition (as c#) of most "standard relational db entities" and it's deployment+generation seem to work, probably with major bugs, database analysis using just a few example checks.
-+ SQLite - definition (as c# and as sql) of all "standard sqlite entities" and it's deployment+generation seem to work, probably with bugs, database analysis using just a few example checks.
++ MSSQL - definition (as c#) of only basic "standard relational db entities" and it's deployment+generation seem to work, database analysis using just a few example checks.
++ MySQL - definition (as c#) of only basic "standard relational db entities" and it's deployment+generation seem to work, database analysis using just a few example checks.
++ PostgreSQL - definition (as c#) of most "standard relational db entities" and it's deployment+generation seem to work, database analysis using just a few example checks.
++ SQLite - definition (as c# and as sql) of all "standard sqlite entities" and it's deployment+generation seem to work, database analysis using just a few example checks.
 + Agnostic definition for "standard relational db entities" and it's deployment to all the above DBMS according with corresponding development state of the specific DBMS above.
 
 # How to use
@@ -145,28 +145,28 @@ public interface IDeployManager
     public void PublishDatabase(Assembly dbAssembly, DbConnection connection);
     public void PublishDatabase(Database database, DbConnection connection);
 
-    public void GeneratePublishScript(string dbAssemblyPath, DbConnection connection, string outputPath);
-    public void GeneratePublishScript(Assembly dbAssembly, DbConnection connection, string outputPath);
-    public void GeneratePublishScript(Database database, DbConnection connection, string outputPath);
+    public string GeneratePublishScript(string dbAssemblyPath, DbConnection connection);
+    public string GeneratePublishScript(Assembly dbAssembly, DbConnection connection);
+    public string GeneratePublishScript(Database database, DbConnection connection);
 
-    public void GeneratePublishScript(string dbAssemblyPath, string outputPath);
-    public void GeneratePublishScript(Assembly dbAssembly, string outputPath);
-    public void GeneratePublishScript(Database database, string outputPath);
+    public string GeneratePublishScript(string dbAssemblyPath);
+    public string GeneratePublishScript(Assembly dbAssembly);
+    public string GeneratePublishScript(Database database);
 
-    public void GeneratePublishScript(string newDbAssemblyPath, string oldDbAssemblyPath, string outputPath);
-    public void GeneratePublishScript(Assembly newDbAssembly, Assembly oldDbAssembly, string outputPath);
-    public void GeneratePublishScript(Database newDatabase, Database oldDatabase, string outputPath);
+    public string GeneratePublishScript(string newDbAssemblyPath, string oldDbAssemblyPath);
+    public string GeneratePublishScript(Assembly newDbAssembly, Assembly oldDbAssembly);
+    public string GeneratePublishScript(Database newDatabase, Database oldDatabase);
 
-    public void GenerateNoDNDBTInfoPublishScript(string dbAssemblyPath, string outputPath);
-    public void GenerateNoDNDBTInfoPublishScript(Assembly dbAssembly, string outputPath);
-    public void GenerateNoDNDBTInfoPublishScript(Database database, string outputPath);
+    public string GenerateNoDNDBTInfoPublishScript(string dbAssemblyPath);
+    public string GenerateNoDNDBTInfoPublishScript(Assembly dbAssembly);
+    public string GenerateNoDNDBTInfoPublishScript(Database database);
 
-    public void GenerateNoDNDBTInfoPublishScript(string newDbAssemblyPath, string oldDbAssemblyPath, string outputPath);
-    public void GenerateNoDNDBTInfoPublishScript(Assembly newDbAssembly, Assembly oldDbAssembly, string outputPath);
-    public void GenerateNoDNDBTInfoPublishScript(Database newDatabase, Database oldDatabase, string outputPath);
+    public string GenerateNoDNDBTInfoPublishScript(string newDbAssemblyPath, string oldDbAssemblyPath);
+    public string GenerateNoDNDBTInfoPublishScript(Assembly newDbAssembly, Assembly oldDbAssembly);
+    public string GenerateNoDNDBTInfoPublishScript(Database newDatabase, Database oldDatabase);
 
     public void GenerateDefinition(DbConnection connection, string outputDirectory);
-    
+
     public Database CreateDatabaseModelUsingDNDBTSysInfo(DbConnection connection);
     public Database CreateDatabaseModelUsingDBMSSysInfo(DbConnection connection);
 }
@@ -223,7 +223,8 @@ deployManager.PublishDatabase(typeof(MyDatabase.Tables.MyTable).Assembly, connec
 ```
 Or create publish sql-script and later execute it like this
 ```
-deployManager.GeneratePublishScript("./MyDatabase.dll", connection, "./publishScript.sql");
+string scriptText = deployManager.GeneratePublishScript("./MyDatabase.dll", connection);
+File.WriteAllText("./publishScript.sql", scriptText);
 connection.Execute(File.ReadAllText("./publishScript.sql")); // Dapper call
 ```
 

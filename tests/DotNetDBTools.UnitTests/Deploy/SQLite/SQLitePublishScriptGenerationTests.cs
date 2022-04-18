@@ -7,6 +7,5 @@ public class SQLitePublishScriptGenerationTests : BasePublishScriptGenerationTes
 {
     protected override string SpecificDbmsSampleDbV1AssemblyName => "DotNetDBTools.SampleDB.SQLite";
     protected override string SpecificDbmsSampleDbV2AssemblyName => "DotNetDBTools.SampleDBv2.SQLite";
-    protected override string ActualFilesDir => "./generated/SQLite";
     protected override string ExpectedFilesDir => "./TestData/SQLite";
 }
