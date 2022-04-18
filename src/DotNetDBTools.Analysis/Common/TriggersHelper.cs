@@ -4,7 +4,7 @@ using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.Analysis.Common;
 
-public static class TriggersHelper
+internal static class TriggersHelper
 {
     public static void BuildAllDbTriggersToBeDroppedAndCreated(DatabaseDiff dbDiff)
     {

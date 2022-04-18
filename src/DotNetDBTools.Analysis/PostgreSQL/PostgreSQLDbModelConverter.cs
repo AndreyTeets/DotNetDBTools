@@ -4,7 +4,7 @@ using DotNetDBTools.Models.PostgreSQL;
 
 namespace DotNetDBTools.Analysis.PostgreSQL;
 
-public class PostgreSQLDbModelConverter : DbModelConverter<
+internal class PostgreSQLDbModelConverter : DbModelConverter<
     PostgreSQLDatabase,
     PostgreSQLTable,
     PostgreSQLView,
@@ -14,6 +14,7 @@ public class PostgreSQLDbModelConverter : DbModelConverter<
         DatabaseKind.PostgreSQL,
         new PostgreSQLDataTypeConverter(),
         new PostgreSQLDefaultValueConverter(),
+        new PostgreSQLDependenciesBuilder(),
         new PostgreSQLDbModelPostProcessor())
     {
     }

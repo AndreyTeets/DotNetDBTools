@@ -5,7 +5,7 @@ using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.Analysis.Core;
 
-public abstract class DbModelConverter<
+internal abstract class DbModelConverter<
     TDatabase,
     TTable,
     TView,
@@ -18,6 +18,7 @@ public abstract class DbModelConverter<
 {
     protected readonly IDataTypeConverter DataTypeConverter;
     protected readonly IDefaultValueConverter DefaultValueConverter;
+    protected readonly IDependenciesBuilder DependenciesBuilder;
     protected readonly IDbModelPostProcessor DbModelPostProcessor;
 
     private readonly DatabaseKind _databaseKind;
@@ -26,11 +27,13 @@ public abstract class DbModelConverter<
         DatabaseKind databaseKind,
         IDataTypeConverter dataTypeConverter,
         IDefaultValueConverter defaultValueConverter,
+        IDependenciesBuilder dependenciesBuilder,
         IDbModelPostProcessor dbModelPostProcessor)
     {
         _databaseKind = databaseKind;
         DataTypeConverter = dataTypeConverter;
         DefaultValueConverter = defaultValueConverter;
+        DependenciesBuilder = dependenciesBuilder;
         DbModelPostProcessor = dbModelPostProcessor;
     }
 
@@ -44,7 +47,9 @@ public abstract class DbModelConverter<
             Scripts = database.Scripts.Select(x => ConvertScript(x)).ToList(),
         };
         specificDbmsDatabase.InitializeAdditionalProperties();
-        DbModelPostProcessor.Do_CreateDbModelFromAgnostic_PostProcessing(specificDbmsDatabase);
+        DbModelPostProcessor.DoSpecificDbmsDbModelCreationFromDefinitionPostProcessing(specificDbmsDatabase);
+        DbModelPostProcessor.OrderDbObjects(specificDbmsDatabase);
+        DependenciesBuilder.BuildDependencies(specificDbmsDatabase);
         return specificDbmsDatabase;
     }
 

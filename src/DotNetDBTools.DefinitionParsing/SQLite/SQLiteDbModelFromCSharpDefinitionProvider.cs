@@ -1,5 +1,4 @@
-﻿using DotNetDBTools.Analysis.SQLite;
-using DotNetDBTools.Definition.Core;
+﻿using DotNetDBTools.Definition.Core;
 using DotNetDBTools.DefinitionParsing.Common;
 using DotNetDBTools.DefinitionParsing.Core;
 using DotNetDBTools.Models.SQLite;
@@ -15,8 +14,7 @@ internal class SQLiteDbModelFromCSharpDefinitionProvider : DbModelFromCSharpDefi
     public SQLiteDbModelFromCSharpDefinitionProvider() : base(
         new SQLiteDataTypeMapper(),
         new SpecificDbmsDbObjectCodeMapper(),
-        new SQLiteDefaultValueMapper(),
-        new SQLiteDbModelPostProcessor())
+        new SQLiteDefaultValueMapper())
     {
     }
 

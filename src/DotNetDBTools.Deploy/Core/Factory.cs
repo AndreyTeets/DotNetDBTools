@@ -1,6 +1,6 @@
 ﻿using System.Data;
-using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.Deploy.Core.Editors;
+using DotNetDBTools.Models.Core;
 using static DotNetDBTools.Deploy.Core.InstanceCreator;
 
 namespace DotNetDBTools.Deploy.Core;
@@ -8,16 +8,26 @@ namespace DotNetDBTools.Deploy.Core;
 internal abstract class Factory<
     TQueryExecutor,
     TGenSqlScriptQueryExecutor,
-    TDbModelConverter,
     TDbEditor,
     TDbModelFromDBMSProvider>
     : IFactory
     where TQueryExecutor : IQueryExecutor
     where TGenSqlScriptQueryExecutor : IGenSqlScriptQueryExecutor, new()
-    where TDbModelConverter : IDbModelConverter, new()
     where TDbEditor : IDbEditor
     where TDbModelFromDBMSProvider : IDbModelFromDBMSProvider
 {
+    private readonly DatabaseKind _databaseKind;
+
+    protected Factory(DatabaseKind databaseKind)
+    {
+        _databaseKind = databaseKind;
+    }
+
+    public virtual DatabaseKind GetDatabaseKind()
+    {
+        return _databaseKind;
+    }
+
     public virtual IQueryExecutor CreateQueryExecutor(IDbConnection connection, Events events)
     {
         return Create<TQueryExecutor>(connection, events);
@@ -26,11 +36,6 @@ internal abstract class Factory<
     public virtual IGenSqlScriptQueryExecutor CreateGenSqlScriptQueryExecutor()
     {
         return new TGenSqlScriptQueryExecutor();
-    }
-
-    public virtual IDbModelConverter CreateDbModelConverter()
-    {
-        return new TDbModelConverter();
     }
 
     public virtual IDbEditor CreateDbEditor(IQueryExecutor queryExecutor)

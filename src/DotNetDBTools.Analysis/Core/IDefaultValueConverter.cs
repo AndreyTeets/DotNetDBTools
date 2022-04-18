@@ -2,7 +2,7 @@
 
 namespace DotNetDBTools.Analysis.Core;
 
-public interface IDefaultValueConverter
+internal interface IDefaultValueConverter
 {
-    CodePiece Convert(CSharpDefaultValue defaultValue);
+    public CodePiece Convert(CSharpDefaultValue defaultValue);
 }

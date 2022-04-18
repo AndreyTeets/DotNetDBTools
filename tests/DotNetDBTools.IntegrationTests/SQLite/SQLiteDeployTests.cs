@@ -1,5 +1,4 @@
 ﻿using System.Data;
-using DotNetDBTools.Analysis.SQLite;
 using DotNetDBTools.Deploy;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.SQLite;
@@ -15,15 +14,15 @@ namespace DotNetDBTools.IntegrationTests.SQLite;
 public class SQLiteDeployTests : BaseDeployTests<
     SQLiteDatabase,
     SqliteConnection,
-    SQLiteDbModelConverter,
     SQLiteDeployManager>
 {
     protected override string SpecificDbmsSampleDbV1AssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDB.SQLite.dll";
     protected override string SpecificDbmsSampleDbV2AssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDBv2.SQLite.dll";
-    protected override string GeneratedFilesDir => "./DeployTests_Generated/SQLite";
     protected override BaseDataTester DataTester { get; set; } = new SQLiteDataTester();
 
     private const string DbFilesFolder = @"./DeployTests_SQLite_DbFiles";
+
+    public SQLiteDeployTests() : base(DatabaseKind.SQLite) { }
 
     protected override EquivalencyAssertionOptions<SQLiteDatabase> AddAdditionalDbModelEquivalenceyOptions(
         EquivalencyAssertionOptions<SQLiteDatabase> options, CompareMode compareMode)

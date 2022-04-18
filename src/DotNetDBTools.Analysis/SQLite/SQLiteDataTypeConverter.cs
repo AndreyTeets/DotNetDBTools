@@ -5,7 +5,7 @@ using DotNetDBTools.Models.SQLite;
 
 namespace DotNetDBTools.Analysis.SQLite;
 
-public class SQLiteDataTypeConverter : IDataTypeConverter
+internal class SQLiteDataTypeConverter : IDataTypeConverter
 {
     public DataType Convert(CSharpDataType dataType)
     {

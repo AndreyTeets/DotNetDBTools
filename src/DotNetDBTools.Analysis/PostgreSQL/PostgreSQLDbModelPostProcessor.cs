@@ -8,26 +8,12 @@ using DotNetDBTools.Models.PostgreSQL;
 
 namespace DotNetDBTools.Analysis.PostgreSQL;
 
-public class PostgreSQLDbModelPostProcessor : DbModelPostProcessor
+internal class PostgreSQLDbModelPostProcessor : DbModelPostProcessor
 {
-    protected override void DoAdditional_CreateDbModelFromAgnostic_PostProcessing(Database database)
+    public override void DoSpecificDbmsDbModelCreationFromDefinitionPostProcessing(Database database)
     {
         PostgreSQLDatabase db = (PostgreSQLDatabase)database;
         AddFunctionModelsFromTriggersCodeIfAny(db);
-        PostgreSQLDependenciesBuilder.BuildDependencies(db);
-    }
-
-    protected override void DoAdditional_CreateDbModelFromCSharpDefinition_PostProcessing(Database database)
-    {
-        PostgreSQLDatabase db = (PostgreSQLDatabase)database;
-        AddFunctionModelsFromTriggersCodeIfAny(db);
-        PostgreSQLDependenciesBuilder.BuildDependencies(db);
-    }
-
-    protected override void DoAdditional_CreateDbModelUsingDBMSSysInfo_PostProcessing(Database database)
-    {
-        PostgreSQLDatabase db = (PostgreSQLDatabase)database;
-        PostgreSQLDependenciesBuilder.BuildDependencies(db);
     }
 
     protected override void OrderAdditionalDbObjects(Database database)

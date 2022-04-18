@@ -4,7 +4,7 @@ using DotNetDBTools.Models.MSSQL;
 
 namespace DotNetDBTools.Analysis.MSSQL;
 
-public class MSSQLDbModelConverter : DbModelConverter<
+internal class MSSQLDbModelConverter : DbModelConverter<
     MSSQLDatabase,
     MSSQLTable,
     MSSQLView,
@@ -14,6 +14,7 @@ public class MSSQLDbModelConverter : DbModelConverter<
         DatabaseKind.MSSQL,
         new MSSQLDataTypeConverter(),
         new MSSQLDefaultValueConverter(),
+        new MSSQLDependenciesBuilder(),
         new MSSQLDbModelPostProcessor())
     {
     }

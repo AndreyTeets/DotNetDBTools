@@ -1,5 +1,4 @@
-﻿using DotNetDBTools.Analysis.MySQL;
-using DotNetDBTools.Deploy.MySQL;
+﻿using DotNetDBTools.Deploy.MySQL;
 using DotNetDBTools.Deploy.MySQL.Editors;
 using DotNetDBTools.Models.MySQL;
 using DotNetDBTools.UnitTests.Deploy.Base;
@@ -17,7 +16,6 @@ public class MySQLDeployManagerTests : BaseDeployManagerTests<MySQLDatabase>
         MySQLFactory,
         MySQLQueryExecutor,
         MySQLGenSqlScriptQueryExecutor,
-        MySQLDbModelConverter,
         MySQLDbEditor,
         MySQLDbModelFromDBMSProvider>
     {

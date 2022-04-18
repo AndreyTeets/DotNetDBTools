@@ -5,7 +5,7 @@ using DotNetDBTools.Models.PostgreSQL;
 
 namespace DotNetDBTools.Analysis.PostgreSQL;
 
-public class PostgreSQLDataTypeConverter : IDataTypeConverter
+internal class PostgreSQLDataTypeConverter : IDataTypeConverter
 {
     public DataType Convert(CSharpDataType dataType)
     {

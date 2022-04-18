@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Reflection;
 using DotNetDBTools.Definition;
 using DotNetDBTools.DefinitionParsing.Agnostic;
@@ -11,8 +12,22 @@ using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.DefinitionParsing;
 
-public class GenericDbModelFromDefinitionProvider : IDbModelFromDefinitionProvider
+public class DefinitionParsingManager : IDefinitionParsingManager
 {
+    public Assembly LoadDbAssembly(string dbAssemblyPath)
+    {
+        string fullDbAssemblyPath = Path.GetFullPath(dbAssemblyPath);
+        byte[] assemblyBytes = File.ReadAllBytes(fullDbAssemblyPath);
+        Assembly dbAssembly = Assembly.Load(assemblyBytes);
+        return dbAssembly;
+    }
+
+    public Database CreateDbModel(string dbAssemblyPath)
+    {
+        Assembly dbAssembly = LoadDbAssembly(dbAssemblyPath);
+        return CreateDbModel(dbAssembly);
+    }
+
     public Database CreateDbModel(Assembly dbAssembly)
     {
         (DefinitionKind defKind, DatabaseKind dbKind) = DbAssemblyInfoHelper.GetDbKind(dbAssembly);

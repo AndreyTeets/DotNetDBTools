@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using DotNetDBTools.Analysis;
 using DotNetDBTools.Analysis.Core;
-using DotNetDBTools.Analysis.SQLite;
 using DotNetDBTools.CodeParsing.Core.Models;
 using DotNetDBTools.CodeParsing.SQLite;
 using DotNetDBTools.DefinitionParsing.Core;
@@ -30,7 +30,9 @@ internal class SQLiteDbModelFromSqlDefinitionProvider : IDbModelFromDefinitionPr
         BuildTablesIndexes(tableNameToTableMap, dbObjects.OfType<IndexInfo>());
         BuildTablesTriggers(tableNameToTableMap, dbObjects.OfType<TriggerInfo>());
 
-        new SQLiteDbModelPostProcessor().Do_CreateDbModelFromSqlDefinition_PostProcessing(database);
+        new AnalysisManager().DoCreateSpecificDbmsDbModelFromDefinitionPostProcessing(database);
+        new AnalysisManager().OrderDbObjects(database);
+        new AnalysisManager().BuildDependencies(database);
         return database;
     }
 

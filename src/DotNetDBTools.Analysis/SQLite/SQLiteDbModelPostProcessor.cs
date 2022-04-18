@@ -2,6 +2,6 @@
 
 namespace DotNetDBTools.Analysis.SQLite;
 
-public class SQLiteDbModelPostProcessor : DbModelPostProcessor
+internal class SQLiteDbModelPostProcessor : DbModelPostProcessor
 {
 }

@@ -1,5 +1,5 @@
 ﻿using System;
-using DotNetDBTools.Analysis.SQLite;
+using DotNetDBTools.Analysis;
 using DotNetDBTools.Definition.Core;
 using DotNetDBTools.Definition.Core.CSharpDataTypes;
 using DotNetDBTools.Definition.SQLite;
@@ -29,7 +29,7 @@ internal class SQLiteDataTypeMapper : DataTypeMapper
             case TimeDataType:
             case DateTimeDataType:
                 CSharpDataType csharpDataType = CreateCSharpDataTypeModel(dataType);
-                return new SQLiteDataTypeConverter().Convert(csharpDataType);
+                return new AnalysisManager().ConvertDataType(csharpDataType, DatabaseKind.SQLite);
 
             case VerbatimDataType verbatimDataType:
                 return new DataType { Name = verbatimDataType.Name.ToUpper() };

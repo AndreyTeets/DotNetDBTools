@@ -5,7 +5,7 @@ using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.Analysis.Common;
 
-public static class ForeignKeysHelper
+internal static class ForeignKeysHelper
 {
     public static void BuildAllForeignKeysToBeDroppedAndCreated(DatabaseDiff dbDiff)
     {

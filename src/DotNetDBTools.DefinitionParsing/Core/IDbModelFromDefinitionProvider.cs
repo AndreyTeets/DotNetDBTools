@@ -5,5 +5,5 @@ namespace DotNetDBTools.DefinitionParsing.Core;
 
 internal interface IDbModelFromDefinitionProvider
 {
-    Database CreateDbModel(Assembly dbAssembly);
+    public Database CreateDbModel(Assembly dbAssembly);
 }

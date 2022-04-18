@@ -42,12 +42,12 @@ internal abstract class GenSqlScriptQueryExecutor : IGenSqlScriptQueryExecutor
 
     public IEnumerable<TOut> Query<TOut>(IQuery query)
     {
-        throw new NotImplementedException();
+        throw new NotImplementedException("Method should never be called on this class.");
     }
 
     public TOut QuerySingleOrDefault<TOut>(IQuery query)
     {
-        throw new NotImplementedException();
+        throw new NotImplementedException("Method should never be called on this class.");
     }
 
     public string GetFinalScript()

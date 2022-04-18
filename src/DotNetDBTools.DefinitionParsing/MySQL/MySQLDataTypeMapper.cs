@@ -1,5 +1,5 @@
 ﻿using System;
-using DotNetDBTools.Analysis.MySQL;
+using DotNetDBTools.Analysis;
 using DotNetDBTools.Definition.Core;
 using DotNetDBTools.Definition.Core.CSharpDataTypes;
 using DotNetDBTools.Definition.MySQL;
@@ -29,7 +29,7 @@ internal class MySQLDataTypeMapper : DataTypeMapper
             case TimeDataType:
             case DateTimeDataType:
                 CSharpDataType csharpDataType = CreateCSharpDataTypeModel(dataType);
-                return new MySQLDataTypeConverter().Convert(csharpDataType);
+                return new AnalysisManager().ConvertDataType(csharpDataType, DatabaseKind.MySQL);
 
             case VerbatimDataType verbatimDataType:
                 return new DataType { Name = verbatimDataType.Name.ToUpper() };

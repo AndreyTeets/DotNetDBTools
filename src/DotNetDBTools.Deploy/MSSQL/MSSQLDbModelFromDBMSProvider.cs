@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using DotNetDBTools.Analysis.MSSQL;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.MSSQL.Queries.DBMSSysInfo;
 using DotNetDBTools.Deploy.MSSQL.Queries.DNDBTSysInfo;
@@ -28,7 +27,7 @@ internal class MSSQLDbModelFromDBMSProvider : DbModelFromDBMSProvider<
     MSSQLGetDNDBTScriptExecutionRecordsQuery>
 {
     public MSSQLDbModelFromDBMSProvider(IQueryExecutor queryExecutor)
-        : base(queryExecutor, new MSSQLDbModelPostProcessor()) { }
+        : base(queryExecutor) { }
 
     protected override void ReplaceAdditionalDbModelObjectsIDsAndCodeWithDNDBTSysInfo(Database database, Dictionary<string, DNDBTInfo> dbObjectIDsMap)
     {

@@ -4,7 +4,7 @@ using DotNetDBTools.Models.MySQL;
 
 namespace DotNetDBTools.Analysis.MySQL;
 
-public class MySQLDbModelConverter : DbModelConverter<
+internal class MySQLDbModelConverter : DbModelConverter<
     MySQLDatabase,
     MySQLTable,
     MySQLView,
@@ -14,6 +14,7 @@ public class MySQLDbModelConverter : DbModelConverter<
         DatabaseKind.MySQL,
         new MySQLDataTypeConverter(),
         new MySQLDefaultValueConverter(),
+        new MySQLDependenciesBuilder(),
         new MySQLDbModelPostProcessor())
     {
     }

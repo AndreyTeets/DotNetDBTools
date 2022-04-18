@@ -1,5 +1,5 @@
 ﻿using System;
-using DotNetDBTools.Analysis.PostgreSQL;
+using DotNetDBTools.Analysis;
 using DotNetDBTools.Definition.Core;
 using DotNetDBTools.Definition.Core.CSharpDataTypes;
 using DotNetDBTools.Definition.PostgreSQL;
@@ -30,7 +30,7 @@ internal class PostgreSQLDataTypeMapper : DataTypeMapper
             case TimeDataType:
             case DateTimeDataType:
                 CSharpDataType csharpDataType = CreateCSharpDataTypeModel(dataType);
-                return new PostgreSQLDataTypeConverter().Convert(csharpDataType);
+                return new AnalysisManager().ConvertDataType(csharpDataType, DatabaseKind.PostgreSQL);
 
             case VerbatimDataType verbatimDataType:
                 return new DataType { Name = verbatimDataType.Name.ToUpper() };

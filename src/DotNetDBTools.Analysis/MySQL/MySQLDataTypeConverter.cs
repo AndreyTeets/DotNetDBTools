@@ -5,7 +5,7 @@ using DotNetDBTools.Models.MySQL;
 
 namespace DotNetDBTools.Analysis.MySQL;
 
-public class MySQLDataTypeConverter : IDataTypeConverter
+internal class MySQLDataTypeConverter : IDataTypeConverter
 {
     public DataType Convert(CSharpDataType dataType)
     {

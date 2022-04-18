@@ -2,7 +2,7 @@
 
 namespace DotNetDBTools.Analysis.Core;
 
-public interface IDataTypeConverter
+internal interface IDataTypeConverter
 {
-    DataType Convert(CSharpDataType dataType);
+    public DataType Convert(CSharpDataType dataType);
 }

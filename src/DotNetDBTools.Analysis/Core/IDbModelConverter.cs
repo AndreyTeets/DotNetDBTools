@@ -2,7 +2,7 @@
 
 namespace DotNetDBTools.Analysis.Core;
 
-public interface IDbModelConverter
+internal interface IDbModelConverter
 {
     public Database FromAgnostic(Database database);
 }

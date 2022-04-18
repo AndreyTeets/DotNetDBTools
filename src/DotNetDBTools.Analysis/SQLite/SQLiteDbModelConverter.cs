@@ -4,7 +4,7 @@ using DotNetDBTools.Models.SQLite;
 
 namespace DotNetDBTools.Analysis.SQLite;
 
-public class SQLiteDbModelConverter : DbModelConverter<
+internal class SQLiteDbModelConverter : DbModelConverter<
     SQLiteDatabase,
     SQLiteTable,
     SQLiteView,
@@ -14,6 +14,7 @@ public class SQLiteDbModelConverter : DbModelConverter<
         DatabaseKind.SQLite,
         new SQLiteDataTypeConverter(),
         new SQLiteDefaultValueConverter(),
+        new SQLiteDependenciesBuilder(),
         new SQLiteDbModelPostProcessor())
     {
     }

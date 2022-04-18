@@ -5,7 +5,7 @@ using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.Analysis.MySQL;
 
-public class MySQLDefaultValueConverter : IDefaultValueConverter
+internal class MySQLDefaultValueConverter : IDefaultValueConverter
 {
     public CodePiece Convert(CSharpDefaultValue defaultValue)
     {

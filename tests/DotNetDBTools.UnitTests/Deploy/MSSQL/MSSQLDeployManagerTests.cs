@@ -1,5 +1,4 @@
-﻿using DotNetDBTools.Analysis.MSSQL;
-using DotNetDBTools.Deploy.MSSQL;
+﻿using DotNetDBTools.Deploy.MSSQL;
 using DotNetDBTools.Deploy.MSSQL.Editors;
 using DotNetDBTools.Models.MSSQL;
 using DotNetDBTools.UnitTests.Deploy.Base;
@@ -17,7 +16,6 @@ public class MSSQLDeployManagerTests : BaseDeployManagerTests<MSSQLDatabase>
         MSSQLFactory,
         MSSQLQueryExecutor,
         MSSQLGenSqlScriptQueryExecutor,
-        MSSQLDbModelConverter,
         MSSQLDbEditor,
         MSSQLDbModelFromDBMSProvider>
     {

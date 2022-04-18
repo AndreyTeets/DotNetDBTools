@@ -1,5 +1,4 @@
 ﻿using System.Data;
-using DotNetDBTools.Analysis.PostgreSQL;
 using DotNetDBTools.Deploy;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.PostgreSQL;
@@ -15,15 +14,15 @@ namespace DotNetDBTools.IntegrationTests.PostgreSQL;
 public class PostgreSQLDeployTests : BaseDeployTests<
     PostgreSQLDatabase,
     NpgsqlConnection,
-    PostgreSQLDbModelConverter,
     PostgreSQLDeployManager>
 {
     protected override string SpecificDbmsSampleDbV1AssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDB.PostgreSQL.dll";
     protected override string SpecificDbmsSampleDbV2AssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDBv2.PostgreSQL.dll";
-    protected override string GeneratedFilesDir => "./DeployTests_Generated/PostgreSQL";
     protected override BaseDataTester DataTester { get; set; } = new PostgreSQLDataTester();
 
     private static string ConnectionStringWithoutDb => PostgreSQLContainerHelper.PostgreSQLContainerConnectionString;
+
+    public PostgreSQLDeployTests() : base(DatabaseKind.PostgreSQL) { }
 
     protected override EquivalencyAssertionOptions<PostgreSQLDatabase> AddAdditionalDbModelEquivalenceyOptions(
         EquivalencyAssertionOptions<PostgreSQLDatabase> options, CompareMode compareMode)

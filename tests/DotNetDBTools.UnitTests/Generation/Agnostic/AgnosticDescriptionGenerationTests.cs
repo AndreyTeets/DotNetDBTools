@@ -16,9 +16,9 @@ public class AgnosticDescriptionGenerationTests
     public void GenerateDescription_CreatesCorrectDescription()
     {
         Assembly dbAssembly = TestDbAssembliesHelper.GetSampleDbAssembly("DotNetDBTools.SampleDB.Agnostic");
-        Database database = new GenericDbModelFromDefinitionProvider().CreateDbModel(dbAssembly);
+        Database database = new DefinitionParsingManager().CreateDbModel(dbAssembly);
         GenerationOptions options = new() { DatabaseName = "DotNetDBToolsSampleDBAgnostic" };
-        string actualDescriptionCode = DbDescriptionGenerator.GenerateDescription(database, options);
+        string actualDescriptionCode = new GenerationManager(options).GenerateDescription(database);
         string expectedDescriptionCode = File.ReadAllText(@"TestData/Agnostic/Expected_Description_V1.cs");
         actualDescriptionCode.NormalizeLineEndings().Should().Be(expectedDescriptionCode.NormalizeLineEndings());
     }

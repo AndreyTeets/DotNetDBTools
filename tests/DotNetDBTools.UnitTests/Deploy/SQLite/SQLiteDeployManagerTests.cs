@@ -1,5 +1,4 @@
-﻿using DotNetDBTools.Analysis.SQLite;
-using DotNetDBTools.Deploy.SQLite;
+﻿using DotNetDBTools.Deploy.SQLite;
 using DotNetDBTools.Deploy.SQLite.Editors;
 using DotNetDBTools.Models.SQLite;
 using DotNetDBTools.UnitTests.Deploy.Base;
@@ -17,7 +16,6 @@ public class SQLiteDeployManagerTests : BaseDeployManagerTests<SQLiteDatabase>
         SQLiteFactory,
         SQLiteQueryExecutor,
         SQLiteGenSqlScriptQueryExecutor,
-        SQLiteDbModelConverter,
         SQLiteDbEditor,
         SQLiteDbModelFromDBMSProvider>
     {

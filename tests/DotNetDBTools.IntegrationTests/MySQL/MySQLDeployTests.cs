@@ -1,6 +1,5 @@
 ﻿using System.Data;
 using System.Text.RegularExpressions;
-using DotNetDBTools.Analysis.MySQL;
 using DotNetDBTools.Deploy;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.MySQL;
@@ -17,15 +16,15 @@ namespace DotNetDBTools.IntegrationTests.MySQL;
 public class MySQLDeployTests : BaseDeployTests<
     MySQLDatabase,
     MySqlConnection,
-    MySQLDbModelConverter,
     MySQLDeployManager>
 {
     protected override string SpecificDbmsSampleDbV1AssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDB.MySQL.dll";
     protected override string SpecificDbmsSampleDbV2AssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDBv2.MySQL.dll";
-    protected override string GeneratedFilesDir => "./DeployTests_Generated/MySQL";
     protected override BaseDataTester DataTester { get; set; } = new MySQLDataTester();
 
     private static string ConnectionStringWithoutDb => MySQLContainerHelper.MySQLContainerConnectionString;
+
+    public MySQLDeployTests() : base(DatabaseKind.MySQL) { }
 
     protected override EquivalencyAssertionOptions<MySQLDatabase> AddAdditionalDbModelEquivalenceyOptions(
         EquivalencyAssertionOptions<MySQLDatabase> options, CompareMode compareMode)

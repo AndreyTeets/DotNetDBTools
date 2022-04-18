@@ -5,7 +5,7 @@ using DotNetDBTools.Models.MSSQL;
 
 namespace DotNetDBTools.Analysis.MSSQL;
 
-public class MSSQLDataTypeConverter : IDataTypeConverter
+internal class MSSQLDataTypeConverter : IDataTypeConverter
 {
     public DataType Convert(CSharpDataType dataType)
     {

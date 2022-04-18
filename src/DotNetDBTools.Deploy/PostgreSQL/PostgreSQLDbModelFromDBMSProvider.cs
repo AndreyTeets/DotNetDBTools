@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DotNetDBTools.Analysis.PostgreSQL;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.PostgreSQL.Queries.DBMSSysInfo;
 using DotNetDBTools.Deploy.PostgreSQL.Queries.DNDBTSysInfo;
@@ -34,7 +33,7 @@ internal class PostgreSQLDbModelFromDBMSProvider : DbModelFromDBMSProvider<
     PostgreSQLGetDNDBTScriptExecutionRecordsQuery>
 {
     public PostgreSQLDbModelFromDBMSProvider(IQueryExecutor queryExecutor)
-        : base(queryExecutor, new PostgreSQLDbModelPostProcessor()) { }
+        : base(queryExecutor) { }
 
     protected override void ReplaceAdditionalDbModelObjectsIDsAndCodeWithDNDBTSysInfo(Database database, Dictionary<string, DNDBTInfo> dbObjectIDsMap)
     {

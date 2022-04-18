@@ -4,7 +4,6 @@ using System.Data;
 using System.Linq;
 using System.Reflection;
 using DotNetDBTools.Analysis;
-using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.Analysis.Core.Errors;
 using DotNetDBTools.DefinitionParsing;
 using DotNetDBTools.Deploy.Core.Editors;
@@ -20,7 +19,8 @@ public abstract class DeployManager<TDatabase> : IDeployManager
     public Events Events { get; } = new();
 
     private readonly IFactory _factory;
-    private readonly IDbModelConverter _dbModelConverter;
+    private readonly IAnalysisManager _analysisManager;
+    private readonly IDefinitionParsingManager _definitionParsingManager;
 
     private protected DeployManager(
         DeployOptions options,
@@ -28,7 +28,8 @@ public abstract class DeployManager<TDatabase> : IDeployManager
     {
         Options = options;
         _factory = factory;
-        _dbModelConverter = _factory.CreateDbModelConverter();
+        _analysisManager = new AnalysisManager();
+        _definitionParsingManager = new DefinitionParsingManager();
     }
 
     public bool IsRegisteredAsDNDBT(IDbConnection connection)
@@ -47,7 +48,7 @@ public abstract class DeployManager<TDatabase> : IDeployManager
     }
     public void RegisterAsDNDBT(IDbConnection connection, string dbWithDNDBTInfoAssemblyPath)
     {
-        Assembly dbAssembly = LoadDbAssembly(dbWithDNDBTInfoAssemblyPath);
+        Assembly dbAssembly = _definitionParsingManager.LoadDbAssembly(dbWithDNDBTInfoAssemblyPath);
         RegisterAsDNDBT(connection, dbAssembly);
     }
     public void RegisterAsDNDBT(IDbConnection connection, Assembly dbWithDNDBTInfoAssembly)
@@ -58,7 +59,7 @@ public abstract class DeployManager<TDatabase> : IDeployManager
     public void RegisterAsDNDBT(IDbConnection connection, Database dbWithDNDBTInfo)
     {
         Database actualDb = CreateDbModelFromDBMS(connection, ExpectedRegistrationState.Unregistered, useDNDBTSysInfoIfAvailable: null);
-        if (!AnalysisHelper.DatabasesAreEquivalentExcludingDNDBTInfo(actualDb, dbWithDNDBTInfo, out string diffLog))
+        if (!_analysisManager.DatabasesAreEquivalentExcludingDNDBTInfo(actualDb, dbWithDNDBTInfo, out string diffLog))
             throw new Exception($"Actual database differs from the one provided for DNDBTInfo. DiffLog:\n{diffLog}");
         RegisterAsDNDBTImpl(connection, dbWithDNDBTInfo);
     }
@@ -72,7 +73,7 @@ public abstract class DeployManager<TDatabase> : IDeployManager
 
     public void PublishDatabase(string dbAssemblyPath, IDbConnection connection)
     {
-        Assembly dbAssembly = LoadDbAssembly(dbAssemblyPath);
+        Assembly dbAssembly = _definitionParsingManager.LoadDbAssembly(dbAssemblyPath);
         PublishDatabase(dbAssembly, connection);
     }
     public void PublishDatabase(Assembly dbAssembly, IDbConnection connection)
@@ -91,7 +92,7 @@ public abstract class DeployManager<TDatabase> : IDeployManager
 
     public string GeneratePublishScript(string dbAssemblyPath, IDbConnection connection)
     {
-        Assembly newDbAssembly = LoadDbAssembly(dbAssemblyPath);
+        Assembly newDbAssembly = _definitionParsingManager.LoadDbAssembly(dbAssemblyPath);
         return GeneratePublishScript(newDbAssembly, connection);
     }
     public string GeneratePublishScript(Assembly dbAssembly, IDbConnection connection)
@@ -107,7 +108,7 @@ public abstract class DeployManager<TDatabase> : IDeployManager
 
     public string GeneratePublishScript(string dbAssemblyPath)
     {
-        Assembly dbAssembly = LoadDbAssembly(dbAssemblyPath);
+        Assembly dbAssembly = _definitionParsingManager.LoadDbAssembly(dbAssemblyPath);
         return GeneratePublishScript(dbAssembly);
     }
     public string GeneratePublishScript(Assembly dbAssembly)
@@ -123,8 +124,8 @@ public abstract class DeployManager<TDatabase> : IDeployManager
 
     public string GeneratePublishScript(string newDbAssemblyPath, string oldDbAssemblyPath)
     {
-        Assembly newDbAssembly = LoadDbAssembly(newDbAssemblyPath);
-        Assembly oldDbAssembly = LoadDbAssembly(oldDbAssemblyPath);
+        Assembly newDbAssembly = _definitionParsingManager.LoadDbAssembly(newDbAssemblyPath);
+        Assembly oldDbAssembly = _definitionParsingManager.LoadDbAssembly(oldDbAssemblyPath);
         return GeneratePublishScript(newDbAssembly, oldDbAssembly);
     }
     public string GeneratePublishScript(Assembly newDbAssembly, Assembly oldDbAssembly)
@@ -140,7 +141,7 @@ public abstract class DeployManager<TDatabase> : IDeployManager
 
     public string GenerateNoDNDBTInfoPublishScript(string dbAssemblyPath)
     {
-        Assembly dbAssembly = LoadDbAssembly(dbAssemblyPath);
+        Assembly dbAssembly = _definitionParsingManager.LoadDbAssembly(dbAssemblyPath);
         return GenerateNoDNDBTInfoPublishScript(dbAssembly);
     }
     public string GenerateNoDNDBTInfoPublishScript(Assembly dbAssembly)
@@ -156,8 +157,8 @@ public abstract class DeployManager<TDatabase> : IDeployManager
 
     public string GenerateNoDNDBTInfoPublishScript(string newDbAssemblyPath, string oldDbAssemblyPath)
     {
-        Assembly newDbAssembly = LoadDbAssembly(newDbAssemblyPath);
-        Assembly oldDbAssembly = LoadDbAssembly(oldDbAssemblyPath);
+        Assembly newDbAssembly = _definitionParsingManager.LoadDbAssembly(newDbAssemblyPath);
+        Assembly oldDbAssembly = _definitionParsingManager.LoadDbAssembly(oldDbAssemblyPath);
         return GenerateNoDNDBTInfoPublishScript(newDbAssembly, oldDbAssembly);
     }
     public string GenerateNoDNDBTInfoPublishScript(Assembly newDbAssembly, Assembly oldDbAssembly)
@@ -175,7 +176,7 @@ public abstract class DeployManager<TDatabase> : IDeployManager
     {
         Database database = CreateDbModelFromDBMS(connection, ExpectedRegistrationState.Any, useDNDBTSysInfoIfAvailable: true);
         Events.InvokeEventFired(EventType.GenerateDefinitionBegan);
-        DbDefinitionGenerator.GenerateDefinition(database, outputDirectory);
+        new GenerationManager().GenerateDefinition(database, outputDirectory);
         Events.InvokeEventFired(EventType.GenerateDefinitionFinished);
     }
 
@@ -222,11 +223,11 @@ public abstract class DeployManager<TDatabase> : IDeployManager
     private Database CreateDbModelFromDefinition(Assembly dbAssembly)
     {
         Events.InvokeEventFired(EventType.CreateDbModelFromDefinitionBegan);
-        Database database = new GenericDbModelFromDefinitionProvider().CreateDbModel(dbAssembly);
+        Database database = _definitionParsingManager.CreateDbModel(dbAssembly);
         if (database.Kind == DatabaseKind.Agnostic)
-            database = _dbModelConverter.FromAgnostic(database);
+            database = _analysisManager.ConvertFromAgnostic(database, _factory.GetDatabaseKind());
 
-        if (!AnalysisHelper.DbIsValid(database, out List<DbError> dbErrors))
+        if (!_analysisManager.DbIsValid(database, out List<DbError> dbErrors))
             throw new Exception($"Db is invalid:\n{string.Join("\n", dbErrors.Select(x => x.ErrorMessage))}");
 
         Events.InvokeEventFired(EventType.CreateDbModelFromDefinitionFinished);
@@ -257,7 +258,7 @@ public abstract class DeployManager<TDatabase> : IDeployManager
     private DatabaseDiff CreateDbDiff(Database newDatabase, Database oldDatabase)
     {
         Events.InvokeEventFired(EventType.CreateDbDiffBegan);
-        DatabaseDiff dbDiff = AnalysisHelper.CreateDatabaseDiff(newDatabase, oldDatabase);
+        DatabaseDiff dbDiff = _analysisManager.CreateDatabaseDiff(newDatabase, oldDatabase);
         ValidateDbDiff(dbDiff);
         Events.InvokeEventFired(EventType.CreateDbDiffFinished);
         return dbDiff;
@@ -265,14 +266,14 @@ public abstract class DeployManager<TDatabase> : IDeployManager
 
     private void ValidateDbDiff(DatabaseDiff dbDiff)
     {
-        if (!Options.AllowDataLoss && AnalysisHelper.LeadsToDataLoss(dbDiff))
+        if (!Options.AllowDataLoss && _analysisManager.DiffLeadsToDataLoss(dbDiff))
         {
             throw new Exception(
 "Update would lead to data loss and it's not allowed. This check can be disabled in DeployOptions.");
         }
 
         if (!Options.AllowUnchangedDbVersionForNonEmptyDbDiff &&
-            !AnalysisHelper.DiffIsEmpty(dbDiff) && dbDiff.NewDatabase.Version == dbDiff.OldDatabase.Version)
+            !_analysisManager.DiffIsEmpty(dbDiff) && dbDiff.NewDatabase.Version == dbDiff.OldDatabase.Version)
         {
             throw new Exception(
 "New and old databases are different but their versions are the same. This check can be disabled in DeployOptions.");
@@ -285,11 +286,6 @@ public abstract class DeployManager<TDatabase> : IDeployManager
         IDbEditor dbEditor = _factory.CreateDbEditor(queryExecutor);
         dbEditor.ApplyDatabaseDiff(dbDiff, Options);
         Events.InvokeEventFired(EventType.ApplyDbDiffFinished);
-    }
-
-    private Assembly LoadDbAssembly(string dbAssemblyPath)
-    {
-        return AssemblyLoader.LoadDbAssemblyFromDll(dbAssemblyPath);
     }
 
     private enum ExpectedRegistrationState

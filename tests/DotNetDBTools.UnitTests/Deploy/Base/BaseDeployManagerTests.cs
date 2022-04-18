@@ -2,7 +2,6 @@
 using System.Data;
 using System.Reflection;
 using System.Text;
-using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.Deploy;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Editors;
@@ -111,19 +110,16 @@ GeneratePublishScriptFinished";
         TFactory,
         TQueryExecutor,
         TGenSqlScriptQueryExecutor,
-        TDbModelConverter,
         TDbEditor,
         TDbModelFromDBMSProvider>
         : IMockCreator
         where TFactory : Factory<
             TQueryExecutor,
             TGenSqlScriptQueryExecutor,
-            TDbModelConverter,
             TDbEditor,
             TDbModelFromDBMSProvider>
         where TQueryExecutor : IQueryExecutor
         where TGenSqlScriptQueryExecutor : IGenSqlScriptQueryExecutor, new()
-        where TDbModelConverter : IDbModelConverter, new()
         where TDbEditor : IDbEditor
         where TDbModelFromDBMSProvider : IDbModelFromDBMSProvider
     {

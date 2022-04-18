@@ -25,12 +25,13 @@ public abstract class BaseDefinitionGenerationTests<TDatabase>
         void TestCase(string sampleDbAssemblyName)
         {
             Assembly origDefDbAssembly = TestDbAssembliesHelper.GetSampleDbAssembly(sampleDbAssemblyName);
-            TDatabase origDefDbModel = (TDatabase)new GenericDbModelFromDefinitionProvider().CreateDbModel(origDefDbAssembly);
+            TDatabase origDefDbModel = (TDatabase)new DefinitionParsingManager().CreateDbModel(origDefDbAssembly);
 
             string projectDir = $@"{GeneratedFilesDir}/{sampleDbAssemblyName}_GeneratedDefinition";
-            DbDefinitionGenerator.GenerateDefinition(origDefDbModel, projectDir);
+            GenerationOptions options = new() { DatabaseName = sampleDbAssemblyName };
+            new GenerationManager(options).GenerateDefinition(origDefDbModel, projectDir);
             Assembly genDefDbAssembly = TestDatabasesCompiler.CompileSampleDbProject(projectDir);
-            TDatabase genDefDbModel = (TDatabase)new GenericDbModelFromDefinitionProvider().CreateDbModel(genDefDbAssembly);
+            TDatabase genDefDbModel = (TDatabase)new DefinitionParsingManager().CreateDbModel(genDefDbAssembly);
             genDefDbModel.Version = origDefDbModel.Version;
 
             genDefDbModel.Should().BeEquivalentTo(origDefDbModel, options =>

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using DotNetDBTools.Analysis.Core;
+using DotNetDBTools.Analysis;
 using DotNetDBTools.Definition.Core;
 using DotNetDBTools.Models.Core;
 
@@ -22,18 +22,16 @@ internal abstract class DbModelFromCSharpDefinitionProvider<
     protected readonly IDataTypeMapper DataTypeMapper;
     protected readonly IDbObjectCodeMapper DbObjectCodeMapper;
     protected readonly IDefaultValueMapper DefaultValueMapper;
-    protected readonly IDbModelPostProcessor DbModelPostProcessor;
+    protected readonly IAnalysisManager AnalysisManager = new AnalysisManager();
 
     protected DbModelFromCSharpDefinitionProvider(
         IDataTypeMapper dataTypeMapper,
         IDbObjectCodeMapper dbObjectCodeMapper,
-        IDefaultValueMapper defaultValueMapper,
-        IDbModelPostProcessor dbModelPostProcessor)
+        IDefaultValueMapper defaultValueMapper)
     {
         DataTypeMapper = dataTypeMapper;
         DbObjectCodeMapper = dbObjectCodeMapper;
         DefaultValueMapper = defaultValueMapper;
-        DbModelPostProcessor = dbModelPostProcessor;
     }
 
     public Database CreateDbModel(Assembly dbAssembly)
@@ -46,7 +44,11 @@ internal abstract class DbModelFromCSharpDefinitionProvider<
             Scripts = BuildScriptModels(dbAssembly),
         };
         BuildAdditionalDbObjects(database, dbAssembly);
-        DbModelPostProcessor.Do_CreateDbModelFromCSharpDefinition_PostProcessing(database);
+        if (database.Kind != DatabaseKind.Agnostic)
+            AnalysisManager.DoCreateSpecificDbmsDbModelFromDefinitionPostProcessing(database);
+        AnalysisManager.OrderDbObjects(database);
+        if (database.Kind != DatabaseKind.Agnostic)
+            AnalysisManager.BuildDependencies(database);
         return database;
     }
     protected virtual void BuildAdditionalDbObjects(Database database, Assembly dbAssembly) { }

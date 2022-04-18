@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using DotNetDBTools.Analysis.Core;
-using DotNetDBTools.Analysis.PostgreSQL;
 using DotNetDBTools.Definition.Core;
 using DotNetDBTools.Definition.PostgreSQL;
 using DotNetDBTools.Definition.PostgreSQL.UserDefinedTypes;
@@ -24,8 +23,7 @@ internal class PostgreSQLDbModelFromCSharpDefinitionProvider : DbModelFromCSharp
     public PostgreSQLDbModelFromCSharpDefinitionProvider() : base(
         new PostgreSQLDataTypeMapper(),
         new SpecificDbmsDbObjectCodeMapper(),
-        new PostgreSQLDefaultValueMapper(),
-        new PostgreSQLDbModelPostProcessor())
+        new PostgreSQLDefaultValueMapper())
     {
     }
 

@@ -43,8 +43,8 @@ internal class DbDefinitionAnalyzer : DiagnosticAnalyzer
                 context.Options.AdditionalFiles);
 
             Assembly dbAssembly = CompilationHelper.CompileInMemoryAnLoad(context.Compilation, resources);
-            Database database = new GenericDbModelFromDefinitionProvider().CreateDbModel(dbAssembly);
-            if (!AnalysisHelper.DbIsValid(database, out List<DbError> dbErrors))
+            Database database = new DefinitionParsingManager().CreateDbModel(dbAssembly);
+            if (!new AnalysisManager().DbIsValid(database, out List<DbError> dbErrors))
             {
                 foreach (DbError dbError in dbErrors)
                 {

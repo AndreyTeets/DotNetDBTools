@@ -1,5 +1,4 @@
-﻿using DotNetDBTools.Analysis.PostgreSQL;
-using DotNetDBTools.Deploy.PostgreSQL;
+﻿using DotNetDBTools.Deploy.PostgreSQL;
 using DotNetDBTools.Deploy.PostgreSQL.Editors;
 using DotNetDBTools.Models.PostgreSQL;
 using DotNetDBTools.UnitTests.Deploy.Base;
@@ -17,7 +16,6 @@ public class PostgreSQLDeployManagerTests : BaseDeployManagerTests<PostgreSQLDat
         PostgreSQLFactory,
         PostgreSQLQueryExecutor,
         PostgreSQLGenSqlScriptQueryExecutor,
-        PostgreSQLDbModelConverter,
         PostgreSQLDbEditor,
         PostgreSQLDbModelFromDBMSProvider>
     {

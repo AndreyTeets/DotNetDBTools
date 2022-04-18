@@ -4,15 +4,9 @@ using DotNetDBTools.Models.MySQL;
 
 namespace DotNetDBTools.Analysis.MySQL;
 
-public class MySQLDbModelPostProcessor : DbModelPostProcessor
+internal class MySQLDbModelPostProcessor : DbModelPostProcessor
 {
-    protected override void DoAdditional_CreateDbModelFromAgnostic_PostProcessing(Database database)
-    {
-        MySQLDatabase db = (MySQLDatabase)database;
-        ReplaceUniqueConstraintsWithUniqueIndexes(db);
-    }
-
-    protected override void DoAdditional_CreateDbModelFromCSharpDefinition_PostProcessing(Database database)
+    public override void DoSpecificDbmsDbModelCreationFromDefinitionPostProcessing(Database database)
     {
         MySQLDatabase db = (MySQLDatabase)database;
         ReplaceUniqueConstraintsWithUniqueIndexes(db);

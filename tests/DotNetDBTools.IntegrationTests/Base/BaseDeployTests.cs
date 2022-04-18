@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using Dapper;
-using DotNetDBTools.Analysis.Core;
+using DotNetDBTools.Analysis;
 using DotNetDBTools.DefinitionParsing;
-using DotNetDBTools.DefinitionParsing.Core;
 using DotNetDBTools.Deploy;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Models.Core;
@@ -18,29 +17,30 @@ using static DotNetDBTools.IntegrationTests.Constants;
 namespace DotNetDBTools.IntegrationTests.Base;
 
 [TestFixture]
-public abstract class BaseDeployTests<TDatabase, TDbConnection, TDbModelConverter, TDeployManager>
+public abstract class BaseDeployTests<TDatabase, TDbConnection, TDeployManager>
     where TDatabase : Database
     where TDbConnection : IDbConnection, new()
-    where TDbModelConverter : IDbModelConverter, new()
     where TDeployManager : IDeployManager, new()
 {
     protected abstract string SpecificDbmsSampleDbV1AssemblyPath { get; }
     protected abstract string SpecificDbmsSampleDbV2AssemblyPath { get; }
-    protected abstract string GeneratedFilesDir { get; }
     protected abstract BaseDataTester DataTester { get; set; }
 
     private static string AgnosticSampleDbV1AssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDB.Agnostic.dll";
     private static string AgnosticSampleDbV2AssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDBv2.Agnostic.dll";
     private static string CurrentTestName => TestContext.CurrentContext.Test.Name;
+    private string GeneratedFilesDir => $"./DeployTests_Generated/{_databaseKind}";
 
+    private readonly DatabaseKind _databaseKind;
     private readonly TDeployManager _deployManager;
-    private readonly IDbModelFromDefinitionProvider _dbModelFromDefinitionProvider;
+    private readonly IDefinitionParsingManager _definitionParsingManager;
 
-    protected BaseDeployTests()
+    protected BaseDeployTests(DatabaseKind databaseKind)
     {
-        Directory.CreateDirectory(GeneratedFilesDir);
+        _databaseKind = databaseKind;
         _deployManager = new();
-        _dbModelFromDefinitionProvider = new GenericDbModelFromDefinitionProvider();
+        _definitionParsingManager = new DefinitionParsingManager();
+        Directory.CreateDirectory(GeneratedFilesDir);
     }
 
     [Test]
@@ -182,11 +182,10 @@ public abstract class BaseDeployTests<TDatabase, TDbConnection, TDbModelConverte
 
     private TDatabase CreateDbModelFromDefinition(string sampleDbAssemblyPath)
     {
-        Database database = _dbModelFromDefinitionProvider.CreateDbModel(
-            AssemblyLoader.LoadDbAssemblyFromDll(sampleDbAssemblyPath));
+        Database database = _definitionParsingManager.CreateDbModel(sampleDbAssemblyPath);
 
         if (database.Kind == DatabaseKind.Agnostic)
-            return (TDatabase)new TDbModelConverter().FromAgnostic(database);
+            return (TDatabase)new AnalysisManager().ConvertFromAgnostic(database, _databaseKind);
         else
             return (TDatabase)database;
     }

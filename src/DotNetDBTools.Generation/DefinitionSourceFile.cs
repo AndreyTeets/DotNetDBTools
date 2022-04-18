@@ -1,4 +1,4 @@
-﻿namespace DotNetDBTools.Generation.Core;
+﻿namespace DotNetDBTools.Generation;
 
 public class DefinitionSourceFile
 {

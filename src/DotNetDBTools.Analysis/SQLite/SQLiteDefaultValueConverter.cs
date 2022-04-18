@@ -5,7 +5,7 @@ using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.Analysis.SQLite;
 
-public class SQLiteDefaultValueConverter : IDefaultValueConverter
+internal class SQLiteDefaultValueConverter : IDefaultValueConverter
 {
     public CodePiece Convert(CSharpDefaultValue defaultValue)
     {

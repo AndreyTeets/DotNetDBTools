@@ -1,5 +1,4 @@
-﻿using DotNetDBTools.Analysis.MySQL;
-using DotNetDBTools.Deploy.Core;
+﻿using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.MySQL.Queries.DBMSSysInfo;
 using DotNetDBTools.Deploy.MySQL.Queries.DNDBTSysInfo;
 using DotNetDBTools.Models.Core;
@@ -24,7 +23,7 @@ internal class MySQLDbModelFromDBMSProvider : DbModelFromDBMSProvider<
     MySQLGetDNDBTScriptExecutionRecordsQuery>
 {
     public MySQLDbModelFromDBMSProvider(IQueryExecutor queryExecutor)
-        : base(queryExecutor, new MySQLDbModelPostProcessor()) { }
+        : base(queryExecutor) { }
 
     protected override void BuildAdditionalDbObjects(Database database)
     {

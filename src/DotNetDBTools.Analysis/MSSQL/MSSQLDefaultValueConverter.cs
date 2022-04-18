@@ -5,7 +5,7 @@ using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.Analysis.MSSQL;
 
-public class MSSQLDefaultValueConverter : IDefaultValueConverter
+internal class MSSQLDefaultValueConverter : IDefaultValueConverter
 {
     public CodePiece Convert(CSharpDefaultValue defaultValue)
     {

@@ -1,4 +1,4 @@
-﻿using DotNetDBTools.Analysis.MySQL;
+﻿using DotNetDBTools.Analysis;
 using DotNetDBTools.Definition.Core;
 using DotNetDBTools.Definition.MySQL;
 using DotNetDBTools.DefinitionParsing.Core;
@@ -14,6 +14,6 @@ internal class MySQLDefaultValueMapper : DefaultValueMapper
             return new CodePiece { Code = null };
         if (defaultValue is VerbatimDefaultValue vdv)
             return new CodePiece { Code = vdv.Value };
-        return new MySQLDefaultValueConverter().Convert(CreateCSharpDefaultValueModel(defaultValue));
+        return new AnalysisManager().ConvertDefaultValue(CreateCSharpDefaultValueModel(defaultValue), DatabaseKind.MySQL);
     }
 }

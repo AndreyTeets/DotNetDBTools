@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
-using DotNetDBTools.Analysis.MSSQL;
 using DotNetDBTools.Deploy;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.MSSQL;
@@ -17,15 +16,15 @@ namespace DotNetDBTools.IntegrationTests.MSSQL;
 public class MSSQLDeployTests : BaseDeployTests<
     MSSQLDatabase,
     SqlConnection,
-    MSSQLDbModelConverter,
     MSSQLDeployManager>
 {
     protected override string SpecificDbmsSampleDbV1AssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDB.MSSQL.dll";
     protected override string SpecificDbmsSampleDbV2AssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDBv2.MSSQL.dll";
-    protected override string GeneratedFilesDir => "./DeployTests_Generated/MSSQL";
     protected override BaseDataTester DataTester { get; set; } = new MSSQLDataTester();
 
     private static string ConnectionStringWithoutDb => MSSQLContainerHelper.MSSQLContainerConnectionString;
+
+    public MSSQLDeployTests() : base(DatabaseKind.MSSQL) { }
 
     protected override EquivalencyAssertionOptions<MSSQLDatabase> AddAdditionalDbModelEquivalenceyOptions(
         EquivalencyAssertionOptions<MSSQLDatabase> options, CompareMode compareMode)

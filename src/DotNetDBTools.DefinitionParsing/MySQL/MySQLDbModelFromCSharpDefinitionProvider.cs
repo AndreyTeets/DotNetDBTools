@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
 using DotNetDBTools.Analysis.Core;
-using DotNetDBTools.Analysis.MySQL;
 using DotNetDBTools.Definition.Core;
 using DotNetDBTools.Definition.MySQL;
 using DotNetDBTools.DefinitionParsing.Common;
@@ -20,8 +19,7 @@ internal class MySQLDbModelFromCSharpDefinitionProvider : DbModelFromCSharpDefin
     public MySQLDbModelFromCSharpDefinitionProvider() : base(
         new MySQLDataTypeMapper(),
         new SpecificDbmsDbObjectCodeMapper(),
-        new MySQLDefaultValueMapper(),
-        new MySQLDbModelPostProcessor())
+        new MySQLDefaultValueMapper())
     {
     }
 

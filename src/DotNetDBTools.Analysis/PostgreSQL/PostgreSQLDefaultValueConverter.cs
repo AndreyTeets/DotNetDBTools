@@ -5,7 +5,7 @@ using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.Analysis.PostgreSQL;
 
-public class PostgreSQLDefaultValueConverter : IDefaultValueConverter
+internal class PostgreSQLDefaultValueConverter : IDefaultValueConverter
 {
     public CodePiece Convert(CSharpDefaultValue defaultValue)
     {

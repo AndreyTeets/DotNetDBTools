@@ -4,7 +4,7 @@ using DotNetDBTools.Models.MSSQL;
 
 namespace DotNetDBTools.Analysis.MSSQL;
 
-public class MSSQLDbModelPostProcessor : DbModelPostProcessor
+internal class MSSQLDbModelPostProcessor : DbModelPostProcessor
 {
     protected override void OrderAdditionalDbObjects(Database database)
     {

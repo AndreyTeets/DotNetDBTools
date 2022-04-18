@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.CodeParsing.Core;
 using DotNetDBTools.CodeParsing.PostgreSQL;
 using DotNetDBTools.Models.Core;
@@ -9,16 +10,17 @@ using DotNetDBTools.Models.PostgreSQL.UserDefinedTypes;
 
 namespace DotNetDBTools.Analysis.PostgreSQL;
 
-public class PostgreSQLDependenciesBuilder
+internal class PostgreSQLDependenciesBuilder : IDependenciesBuilder
 {
-    public static void BuildDependencies(PostgreSQLDatabase database)
+    public void BuildDependencies(Database database)
     {
-        Build_DependsOn_Property_ForAllObjects(database);
-        Build_IsDependencyOf_Property_ForAllObjects(database);
-        SetFunctionsSimplicity(database);
+        PostgreSQLDatabase db = (PostgreSQLDatabase)database;
+        Build_DependsOn_Property_ForAllObjects(db);
+        Build_IsDependencyOf_Property_ForAllObjects(db);
+        SetFunctionsSimplicity(db);
     }
 
-    private static void Build_DependsOn_Property_ForAllObjects(PostgreSQLDatabase database)
+    private void Build_DependsOn_Property_ForAllObjects(PostgreSQLDatabase database)
     {
         Dictionary<string, Table> tableNameToTableMap = database.Tables.ToDictionary(x => x.Name, x => x);
         Dictionary<string, View> viewNameToViewMap = database.Views.ToDictionary(x => x.Name, x => x);
@@ -99,7 +101,7 @@ public class PostgreSQLDependenciesBuilder
         }
     }
 
-    private static void Build_IsDependencyOf_Property_ForAllObjects(PostgreSQLDatabase database)
+    private void Build_IsDependencyOf_Property_ForAllObjects(PostgreSQLDatabase database)
     {
         IEnumerable<DbObject> dbObjectsWithDependencies =
             database.Views.Select(x => (DbObject)x)
@@ -130,13 +132,13 @@ public class PostgreSQLDependenciesBuilder
         }
     }
 
-    private static void SetFunctionsSimplicity(PostgreSQLDatabase database)
+    private void SetFunctionsSimplicity(PostgreSQLDatabase database)
     {
         foreach (PostgreSQLFunction func in database.Functions)
             func.IsSimple = !ObjectDependsOnTablesTransitively(func);
     }
 
-    private static bool ObjectDependsOnTablesTransitively(DbObject dbObject)
+    private bool ObjectDependsOnTablesTransitively(DbObject dbObject)
     {
         foreach (DbObject dep in dbObject.DependsOn)
         {
@@ -148,7 +150,7 @@ public class PostgreSQLDependenciesBuilder
         return false;
     }
 
-    private static bool ObjectIsTableOrDependsOnTables(DbObject dbObject)
+    private bool ObjectIsTableOrDependsOnTables(DbObject dbObject)
     {
         if (dbObject is Table || dbObject is View || dbObject is PostgreSQLProcedure)
             return true;
@@ -156,7 +158,7 @@ public class PostgreSQLDependenciesBuilder
             return false;
     }
 
-    private static TResult ExecuteParsingFunc<TResult>(Func<TResult> func, string onParseErrorMessageHeader)
+    private TResult ExecuteParsingFunc<TResult>(Func<TResult> func, string onParseErrorMessageHeader)
     {
         try
         {
