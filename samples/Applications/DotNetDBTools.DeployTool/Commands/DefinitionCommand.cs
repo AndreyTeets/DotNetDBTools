@@ -1,4 +1,4 @@
-﻿using System.Data.Common;
+﻿using System.Data;
 using DotNetDBTools.Deploy;
 using DotNetDBTools.EventsLogger;
 
@@ -13,7 +13,7 @@ internal class DefinitionCommand : BaseCommand
     {
         IDeployManager deployManager = CreateDeployManager(dbms);
         deployManager.Events.EventFired += DeployManagerEventsLogger.LogEvent;
-        using DbConnection connection = CreateDbConnection(dbms, connectionString);
+        using IDbConnection connection = CreateDbConnection(dbms, connectionString);
         deployManager.GenerateDefinition(connection, outputPath);
     }
 }

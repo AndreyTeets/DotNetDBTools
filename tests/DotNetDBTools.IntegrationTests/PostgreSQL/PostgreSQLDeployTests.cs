@@ -1,4 +1,4 @@
-﻿using System.Data.Common;
+﻿using System.Data;
 using DotNetDBTools.Analysis.PostgreSQL;
 using DotNetDBTools.Deploy;
 using DotNetDBTools.Deploy.Core;
@@ -73,7 +73,7 @@ public class PostgreSQLDeployTests : BaseDeployTests<
         return PostgreSQLDatabaseHelper.CreateConnectionString(ConnectionStringWithoutDb, databaseName);
     }
 
-    private protected override IDbModelFromDBMSProvider CreateDbModelFromDBMSProvider(DbConnection connection)
+    private protected override IDbModelFromDBMSProvider CreateDbModelFromDBMSProvider(IDbConnection connection)
     {
         return new PostgreSQLDbModelFromDBMSProvider(new PostgreSQLQueryExecutor(connection, new Events()));
     }

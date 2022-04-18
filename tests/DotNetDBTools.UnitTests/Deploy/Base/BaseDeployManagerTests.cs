@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Data.Common;
+using System.Data;
 using System.Reflection;
 using System.Text;
 using DotNetDBTools.Analysis.Core;
@@ -82,7 +82,7 @@ GeneratePublishScriptFinished";
         TestCase((dm, con) => dm.GeneratePublishScript(_agnosticDbAssemblyV1, con), expectedGenScriptEventsOrder);
 
         void TestCase(
-            Action<IDeployManager, DbConnection> deployManagerAction,
+            Action<IDeployManager, IDbConnection> deployManagerAction,
             string expectedEventsOrder,
             bool unregistered = false)
         {
@@ -92,7 +92,10 @@ GeneratePublishScriptFinished";
 
             StringBuilder sb = new();
             deployManagerMock.Object.Events.EventFired += eventArgs => sb.AppendLine(eventArgs.EventType.ToString());
-            Mock<DbConnection> dbConnectionMock = new(MockBehavior.Strict);
+
+            Mock<IDbConnection> dbConnectionMock = new(MockBehavior.Strict);
+            dbConnectionMock.Setup(x => x.Dispose());
+            using IDisposable _ = dbConnectionMock.Object;
 
             deployManagerAction(deployManagerMock.Object, dbConnectionMock.Object);
             sb.ToString().Trim().Should().Be(expectedEventsOrder);
@@ -149,7 +152,7 @@ GeneratePublishScriptFinished";
             Mock<TFactory> factoryMock = new(MockBehavior.Loose);
             factoryMock.CallBase = true;
             factoryMock
-                .Setup(x => x.CreateQueryExecutor(It.IsAny<DbConnection>(), It.IsAny<Events>()))
+                .Setup(x => x.CreateQueryExecutor(It.IsAny<IDbConnection>(), It.IsAny<Events>()))
                 .Returns(queryExecutorMock.Object);
             factoryMock
                 .Setup(x => x.CreateDbModelFromDBMSProvider(It.IsAny<IQueryExecutor>()))

@@ -1,4 +1,4 @@
-﻿using System.Data.Common;
+﻿using System.Data;
 using DotNetDBTools.Deploy;
 using DotNetDBTools.EventsLogger;
 
@@ -16,7 +16,7 @@ internal class ScriptUpdateCommand : BaseCommand
         IDeployManager deployManager = CreateDeployManager(dbms);
         deployManager.Options.AllowDataLoss = allowDataLoss;
         deployManager.Events.EventFired += DeployManagerEventsLogger.LogEvent;
-        using DbConnection connection = CreateDbConnection(dbms, connectionString);
+        using IDbConnection connection = CreateDbConnection(dbms, connectionString);
         string script = deployManager.GeneratePublishScript(dbAssemblyPath, connection);
         SaveToFile(outputPath, script);
     }

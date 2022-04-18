@@ -1,4 +1,4 @@
-﻿using System.Data.Common;
+﻿using System.Data;
 using System.Text.RegularExpressions;
 using DotNetDBTools.Analysis.MySQL;
 using DotNetDBTools.Deploy;
@@ -78,7 +78,7 @@ public class MySQLDeployTests : BaseDeployTests<
         return MySQLDatabaseHelper.CreateConnectionString(ConnectionStringWithoutDb, databaseName);
     }
 
-    private protected override IDbModelFromDBMSProvider CreateDbModelFromDBMSProvider(DbConnection connection)
+    private protected override IDbModelFromDBMSProvider CreateDbModelFromDBMSProvider(IDbConnection connection)
     {
         return new MySQLDbModelFromDBMSProvider(new MySQLQueryExecutor(connection, new Events()));
     }

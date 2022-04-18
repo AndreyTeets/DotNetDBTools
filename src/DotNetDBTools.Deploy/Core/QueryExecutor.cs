@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
 using Dapper;
 
 namespace DotNetDBTools.Deploy.Core;
@@ -9,10 +8,10 @@ namespace DotNetDBTools.Deploy.Core;
 internal abstract class QueryExecutor : IQueryExecutor
 {
     private readonly Events _events;
-    private readonly DbConnection _connection;
-    private DbTransaction _transaction;
+    private readonly IDbConnection _connection;
+    private IDbTransaction _transaction;
 
-    protected QueryExecutor(DbConnection connection, Events events)
+    protected QueryExecutor(IDbConnection connection, Events events)
     {
         _events = events;
         _connection = connection;
@@ -26,7 +25,7 @@ internal abstract class QueryExecutor : IQueryExecutor
         _transaction = _connection.BeginTransaction();
         _events.InvokeEventFired(EventType.BeginTransactionFinished);
     }
-    protected virtual void BeforeBeginTransaction(DbConnection connection) { }
+    protected virtual void BeforeBeginTransaction(IDbConnection connection) { }
 
     public void CommitTransaction()
     {

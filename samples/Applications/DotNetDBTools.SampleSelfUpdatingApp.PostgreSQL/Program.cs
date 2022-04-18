@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Data.Common;
+using System.Data;
 using Dapper;
 using DotNetDBTools.Deploy;
 using DotNetDBTools.EventsLogger;
@@ -29,7 +29,7 @@ namespace DotNetDBTools.SampleSelfUpdatingApp.PostgreSQL
             SampleBusinessLogic.ReadWriteSomeData(connection, compiler);
         }
 
-        private static void PublishAgnosticSampleDBv2(DbConnection connection)
+        private static void PublishAgnosticSampleDBv2(IDbConnection connection)
         {
             Console.WriteLine("Publishing DotNetDBTools.SampleDBv2.Agnostic from referenced assembly");
             PostgreSQLDeployManager deployManager = new(new DeployOptions());

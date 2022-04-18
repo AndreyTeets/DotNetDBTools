@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Data.Common;
+using System.Data;
 using System.Data.SqlClient;
 using Dapper;
 using DotNetDBTools.Deploy;
@@ -29,7 +29,7 @@ namespace DotNetDBTools.SampleSelfUpdatingApp.MSSQL
             SampleBusinessLogic.ReadWriteSomeData(connection, compiler);
         }
 
-        private static void PublishAgnosticSampleDBv2(DbConnection connection)
+        private static void PublishAgnosticSampleDBv2(IDbConnection connection)
         {
             Console.WriteLine("Publishing DotNetDBTools.SampleDBv2.Agnostic from referenced assembly");
             MSSQLDeployManager deployManager = new(new DeployOptions());

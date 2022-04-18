@@ -1,4 +1,4 @@
-﻿using System.Data.Common;
+﻿using System.Data;
 using System.Data.SqlClient;
 using DotNetDBTools.Deploy;
 using Microsoft.Data.Sqlite;
@@ -21,7 +21,7 @@ internal abstract class BaseCommand
         };
     }
 
-    protected DbConnection CreateDbConnection(Dbms dbms, string connectionString)
+    protected IDbConnection CreateDbConnection(Dbms dbms, string connectionString)
     {
         return dbms switch
         {

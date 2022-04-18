@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Common;
+using System.Data;
 using System.IO;
 using Dapper;
 using DotNetDBTools.Analysis.Core;
@@ -20,7 +20,7 @@ namespace DotNetDBTools.IntegrationTests.Base;
 [TestFixture]
 public abstract class BaseDeployTests<TDatabase, TDbConnection, TDbModelConverter, TDeployManager>
     where TDatabase : Database
-    where TDbConnection : DbConnection, new()
+    where TDbConnection : IDbConnection, new()
     where TDbModelConverter : IDbModelConverter, new()
     where TDeployManager : IDeployManager, new()
 {
@@ -77,7 +77,7 @@ public abstract class BaseDeployTests<TDatabase, TDbConnection, TDbModelConverte
             DumpDbModel(serializedDbModelFromDefinitionV1, dbModelFromDefinitionV1);
             DumpDbModel(serializedDbModelFromDefinitionV2, dbModelFromDefinitionV2);
 
-            using DbConnection connection = RecreateDbAndCreateConnection(CreateTestCaseName(testCaseId));
+            using IDbConnection connection = RecreateDbAndCreateConnection(CreateTestCaseName(testCaseId));
 
             connection.Execute(File.ReadAllText(createV1Script));
             dbModelFromDBMSSSysInfoV1 = CreateDbModelFromDBMSSysInfo(connection);
@@ -99,7 +99,7 @@ public abstract class BaseDeployTests<TDatabase, TDbConnection, TDbModelConverte
 
             dbModelFromDBMSSSysInfoV1.Version = 1;
             File.WriteAllText(db2_createV1Script, _deployManager.GenerateNoDNDBTInfoPublishScript(dbModelFromDBMSSSysInfoV1));
-            using DbConnection connection2 = RecreateDbAndCreateConnection($"Db2_{CreateTestCaseName(testCaseId)}");
+            using IDbConnection connection2 = RecreateDbAndCreateConnection($"Db2_{CreateTestCaseName(testCaseId)}");
             connection2.Execute(File.ReadAllText(db2_createV1Script));
 
             AssertDbModelEquivalence(CreateDbModelFromDBMSSysInfo(connection2), dbModelFromDBMSSSysInfoV1, CompareMode.IgnoreIDsAndDbAttributes);
@@ -122,7 +122,7 @@ public abstract class BaseDeployTests<TDatabase, TDbConnection, TDbModelConverte
             TDatabase dbModelFromDefinitionV1 = CreateDbModelFromDefinition(assemblyV1Path);
             TDatabase dbModelFromDefinitionV2 = CreateDbModelFromDefinition(assemblyV2Path);
 
-            using DbConnection connection = RecreateDbAndCreateConnection(CreateTestCaseName(testCaseId));
+            using IDbConnection connection = RecreateDbAndCreateConnection(CreateTestCaseName(testCaseId));
 
             _deployManager.RegisterAsDNDBT(connection);
             _deployManager.PublishDatabase(assemblyV1Path, connection);
@@ -169,7 +169,7 @@ public abstract class BaseDeployTests<TDatabase, TDbConnection, TDbModelConverte
             TDatabase dbModelFromDBMSSysInfoV1 = CreateDbModelFromDBMSSysInfo(connection);
             dbModelFromDBMSSysInfoV1.Version = 1;
 
-            using DbConnection connection2 = RecreateDbAndCreateConnection($"Db2_{CreateTestCaseName(testCaseId)}");
+            using IDbConnection connection2 = RecreateDbAndCreateConnection($"Db2_{CreateTestCaseName(testCaseId)}");
             _deployManager.RegisterAsDNDBT(connection2);
             _deployManager.PublishDatabase(dbModelFromDBMSSysInfoV1, connection2);
 
@@ -191,12 +191,12 @@ public abstract class BaseDeployTests<TDatabase, TDbConnection, TDbModelConverte
             return (TDatabase)database;
     }
 
-    private TDatabase CreateDbModelFromDBMSSysInfo(DbConnection connection)
+    private TDatabase CreateDbModelFromDBMSSysInfo(IDbConnection connection)
     {
         return (TDatabase)_deployManager.CreateDatabaseModelUsingDBMSSysInfo(connection);
     }
 
-    private TDatabase CreateDbModelFromDNDBTSysInfo(DbConnection connection)
+    private TDatabase CreateDbModelFromDNDBTSysInfo(IDbConnection connection)
     {
         return (TDatabase)_deployManager.CreateDatabaseModelUsingDNDBTSysInfo(connection);
     }
@@ -224,7 +224,7 @@ public abstract class BaseDeployTests<TDatabase, TDbConnection, TDbModelConverte
         });
     }
 
-    private TDbConnection RecreateDbAndCreateConnection(string testName)
+    private IDbConnection RecreateDbAndCreateConnection(string testName)
     {
         DropDatabaseIfExists(testName);
         CreateDatabase(testName);
@@ -256,7 +256,7 @@ public abstract class BaseDeployTests<TDatabase, TDbConnection, TDbModelConverte
     protected abstract void CreateDatabase(string testName);
     protected abstract void DropDatabaseIfExists(string testName);
     protected abstract string CreateConnectionString(string testName);
-    private protected abstract IDbModelFromDBMSProvider CreateDbModelFromDBMSProvider(DbConnection connection);
+    private protected abstract IDbModelFromDBMSProvider CreateDbModelFromDBMSProvider(IDbConnection connection);
 
     protected enum CompareMode
     {

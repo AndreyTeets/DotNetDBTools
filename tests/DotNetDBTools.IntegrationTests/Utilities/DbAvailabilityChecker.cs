@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Data.Common;
+using System.Data;
 using System.Threading.Tasks;
 
 namespace DotNetDBTools.IntegrationTests.Utilities;
 
 public static class DbAvailabilityChecker
 {
-    public static async Task WaitUntilDatabaseAvailableAsync(DbConnection connection, int timeoutSeconds)
+    public static async Task WaitUntilDatabaseAvailableAsync(IDbConnection connection, int timeoutSeconds)
     {
         DateTime start = DateTime.UtcNow;
         bool connectionEstablised = false;
@@ -14,7 +14,7 @@ public static class DbAvailabilityChecker
         {
             try
             {
-                await connection.OpenAsync();
+                connection.Open();
                 connectionEstablised = true;
             }
             catch

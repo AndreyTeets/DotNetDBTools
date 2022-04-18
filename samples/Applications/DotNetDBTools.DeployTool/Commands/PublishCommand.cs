@@ -1,4 +1,4 @@
-﻿using System.Data.Common;
+﻿using System.Data;
 using DotNetDBTools.Deploy;
 using DotNetDBTools.EventsLogger;
 
@@ -15,7 +15,7 @@ internal class PublishCommand : BaseCommand
         IDeployManager deployManager = CreateDeployManager(dbms);
         deployManager.Options.AllowDataLoss = allowDataLoss;
         deployManager.Events.EventFired += DeployManagerEventsLogger.LogEvent;
-        using DbConnection connection = CreateDbConnection(dbms, connectionString);
+        using IDbConnection connection = CreateDbConnection(dbms, connectionString);
         deployManager.PublishDatabase(dbAssemblyPath, connection);
     }
 }

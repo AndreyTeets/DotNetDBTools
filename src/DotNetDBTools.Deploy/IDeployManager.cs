@@ -1,4 +1,4 @@
-﻿using System.Data.Common;
+﻿using System.Data;
 using System.Reflection;
 using DotNetDBTools.Models.Core;
 
@@ -12,63 +12,63 @@ public interface IDeployManager
     /// <summary>
     /// Checks if DNDBT system tables exist.
     /// </summary>
-    public bool IsRegisteredAsDNDBT(DbConnection connection);
+    public bool IsRegisteredAsDNDBT(IDbConnection connection);
     /// <summary>
     /// Adds DNDBT system tables and populates them with DNDBTInfo generated from actual database.
     /// IDs for all objects are generated randomly.
     /// </summary>
-    public void RegisterAsDNDBT(DbConnection connection);
+    public void RegisterAsDNDBT(IDbConnection connection);
     /// <summary>
     /// Adds DNDBT system tables and populates them with DNDBTInfo taken from provided dbAssembly.
     /// Provided dbAssembly and actual database are first checked for equivalency.
     /// </summary>
-    public void RegisterAsDNDBT(DbConnection connection, string dbWithDNDBTInfoAssemblyPath);
+    public void RegisterAsDNDBT(IDbConnection connection, string dbWithDNDBTInfoAssemblyPath);
     /// <summary>
     /// Adds DNDBT system tables and populates them with DNDBTInfo taken from provided dbAssembly.
     /// Provided dbAssembly and actual database are first checked for equivalency.
     /// </summary>
-    public void RegisterAsDNDBT(DbConnection connection, Assembly dbWithDNDBTInfoAssembly);
+    public void RegisterAsDNDBT(IDbConnection connection, Assembly dbWithDNDBTInfoAssembly);
     /// <summary>
     /// Adds DNDBT system tables and populates them with DNDBTInfo taken from provided database model.
     /// Provided dbAssembly and actual database are first checked for equivalency.
     /// </summary>
-    public void RegisterAsDNDBT(DbConnection connection, Database dbWithDNDBTInfo);
+    public void RegisterAsDNDBT(IDbConnection connection, Database dbWithDNDBTInfo);
     /// <summary>
     /// Deletes all DNDBT system tables.
     /// </summary>
-    public void UnregisterAsDNDBT(DbConnection connection);
+    public void UnregisterAsDNDBT(IDbConnection connection);
 
     /// <summary>
     /// Updates database to the state specified in first argument.
     /// Database must be registered (even if it's empty).
     /// </summary>
-    public void PublishDatabase(string dbAssemblyPath, DbConnection connection);
+    public void PublishDatabase(string dbAssemblyPath, IDbConnection connection);
     /// <summary>
     /// Updates database to the state specified in first argument.
     /// Database must be registered (even if it's empty).
     /// </summary>
-    public void PublishDatabase(Assembly dbAssembly, DbConnection connection);
+    public void PublishDatabase(Assembly dbAssembly, IDbConnection connection);
     /// <summary>
     /// Updates database to the state specified in first argument.
     /// Database must be registered (even if it's empty).
     /// </summary>
-    public void PublishDatabase(Database database, DbConnection connection);
+    public void PublishDatabase(Database database, IDbConnection connection);
 
     /// <summary>
     /// Generates sql script to update database to the state specified in first argument from the state found at connection.
     /// Database must be registered (even if it's empty) during both script-generation and script-execution.
     /// </summary>
-    public string GeneratePublishScript(string dbAssemblyPath, DbConnection connection);
+    public string GeneratePublishScript(string dbAssemblyPath, IDbConnection connection);
     /// <summary>
     /// Generates sql script to update database to the state specified in first argument from the state found at connection.
     /// Database must be registered (even if it's empty) during both script-generation and script-execution.
     /// </summary>
-    public string GeneratePublishScript(Assembly dbAssembly, DbConnection connection);
+    public string GeneratePublishScript(Assembly dbAssembly, IDbConnection connection);
     /// <summary>
     /// Generates sql script to update database to the state specified in first argument from the state found at connection.
     /// Database must be registered (even if it's empty) during both script-generation and script-execution.
     /// </summary>
-    public string GeneratePublishScript(Database database, DbConnection connection);
+    public string GeneratePublishScript(Database database, IDbConnection connection);
 
     /// <summary>
     /// Generates sql script to create all defined DNDBT user objects.
@@ -144,15 +144,15 @@ public interface IDeployManager
     /// Generates dotnet project for a registerd or unregistered database.
     /// If database is unregistered IDs for all objects are generated randomly.
     /// </summary>
-    public void GenerateDefinition(DbConnection connection, string outputDirectory);
+    public void GenerateDefinition(IDbConnection connection, string outputDirectory);
 
     /// <summary>
     /// Creates database model using DBMS and DNDBT system tables.
     /// </summary>
-    public Database CreateDatabaseModelUsingDNDBTSysInfo(DbConnection connection);
+    public Database CreateDatabaseModelUsingDNDBTSysInfo(IDbConnection connection);
     /// <summary>
     /// Creates database model using DBMS system tables only.
     /// IDs for all objects are generated randomly.
     /// </summary>
-    public Database CreateDatabaseModelUsingDBMSSysInfo(DbConnection connection);
+    public Database CreateDatabaseModelUsingDBMSSysInfo(IDbConnection connection);
 }

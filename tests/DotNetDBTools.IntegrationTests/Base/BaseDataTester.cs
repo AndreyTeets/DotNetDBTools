@@ -1,4 +1,4 @@
-﻿using System.Data.Common;
+﻿using System.Data;
 using Dapper;
 using FluentAssertions;
 
@@ -13,7 +13,7 @@ public abstract class BaseDataTester
     protected abstract string BinaryLiteral(string hexBase);
     protected abstract string GuidLiteral(string guidString);
 
-    public void Populate_SampleDb_WithData(DbConnection connection)
+    public void Populate_SampleDb_WithData(IDbConnection connection)
     {
         PopulateTable2(connection);
         PopulateTable1(connection);
@@ -21,7 +21,7 @@ public abstract class BaseDataTester
         PopulateTable5(connection);
     }
 
-    public void Assert_SampleDb_Data(DbConnection connection, AssertKind assertKind)
+    public void Assert_SampleDb_Data(IDbConnection connection, AssertKind assertKind)
     {
         AssertDataInTable2(connection, assertKind);
         AssertDataInTable1(connection, assertKind);
@@ -29,7 +29,7 @@ public abstract class BaseDataTester
         AssertDataInTable5(connection);
     }
 
-    private void PopulateTable1(DbConnection connection)
+    private void PopulateTable1(IDbConnection connection)
     {
         connection.Execute(
 $@"INSERT INTO {Quote("MyTable1")}
@@ -50,7 +50,7 @@ VALUES
     200.4
 );");
     }
-    private void AssertDataInTable1(DbConnection connection, AssertKind assertKind)
+    private void AssertDataInTable1(IDbConnection connection, AssertKind assertKind)
     {
         string newName = assertKind == AssertKind.V2 ? "NewName" : "";
         connection.QuerySingle<int>(
@@ -62,7 +62,7 @@ WHERE {Quote("MyColumn1")} = 101 AND {Quote("MyColumn4")} = 100.4
             .Should().Be(2);
     }
 
-    private void PopulateTable2(DbConnection connection)
+    private void PopulateTable2(IDbConnection connection)
     {
         connection.Execute(
 $@"INSERT INTO {Quote("MyTable2")}
@@ -80,7 +80,7 @@ VALUES
     {BinaryLiteral("000202")}
 );");
     }
-    private void AssertDataInTable2(DbConnection connection, AssertKind assertKind)
+    private void AssertDataInTable2(IDbConnection connection, AssertKind assertKind)
     {
         string newName = assertKind == AssertKind.V2 ? "NewName" : "";
         string col2Op = assertKind == AssertKind.V1Rollbacked ? "!=" : "=";
@@ -93,13 +93,13 @@ WHERE {Quote($"MyColumn1{newName}")} = 101 AND {Quote("MyColumn2")} {col2Op} {Bi
             .Should().Be(2);
     }
 
-    private void PopulateTable4(DbConnection connection)
+    private void PopulateTable4(IDbConnection connection)
     {
         connection.Execute(
 $@"UPDATE {Quote("MyTable4")} SET
     {Quote("MyColumn1")} = {Quote("MyColumn1")} + 500;");
     }
-    private void AssertDataInTable4(DbConnection connection, AssertKind assertKind)
+    private void AssertDataInTable4(IDbConnection connection, AssertKind assertKind)
     {
         // Init script adds 1,2,3 and trigger on MyTable2 adds 101,201
         int expectedCount = assertKind == AssertKind.V1NoScripts ? 2 : 5;
@@ -111,7 +111,7 @@ WHERE {Quote("MyColumn1")} IN (501,502,503,601,701);")
             .Should().Be(expectedCount);
     }
 
-    private void PopulateTable5(DbConnection connection)
+    private void PopulateTable5(IDbConnection connection)
     {
         string extraColumns = IsDbmsSpecific ? GetSpecificDbmsTable5ExtraColumns() : "";
         string extraValues = IsDbmsSpecific ? GetSpecificDbmsTable5ExtraValues() : "";
@@ -147,7 +147,7 @@ VALUES
     '2012-12-12 12:12:12+00:30'{extraValues}
 );");
     }
-    private void AssertDataInTable5(DbConnection connection)
+    private void AssertDataInTable5(IDbConnection connection)
     {
         string extraConditions = IsDbmsSpecific ? GetSpecificDbmsTable5ExtraConditions() : "";
         connection.QuerySingle<int>(

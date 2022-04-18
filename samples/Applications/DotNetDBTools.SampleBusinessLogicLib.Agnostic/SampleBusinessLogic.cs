@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Common;
+using System.Data;
 using System.Linq;
 using System.Text;
 using Dapper;
@@ -13,14 +13,14 @@ namespace DotNetDBTools.SampleBusinessLogicLib.Agnostic
 {
     public static class SampleBusinessLogic
     {
-        public static void ReadWriteSomeData(DbConnection connection, Compiler compiler)
+        public static void ReadWriteSomeData(IDbConnection connection, Compiler compiler)
         {
             DropExistingDataIfAny(connection, compiler);
             InsertSomeData(connection, compiler);
             ReadSomeData(connection, compiler);
         }
 
-        private static void DropExistingDataIfAny(DbConnection connection, Compiler compiler)
+        private static void DropExistingDataIfAny(IDbConnection connection, Compiler compiler)
         {
             Query query = new Query(MyTable3).AsDelete();
             SqlResult sqlCompilationResult = compiler.Compile(query);
@@ -28,7 +28,7 @@ namespace DotNetDBTools.SampleBusinessLogicLib.Agnostic
             connection.Execute(sql);
         }
 
-        private static void InsertSomeData(DbConnection connection, Compiler compiler)
+        private static void InsertSomeData(IDbConnection connection, Compiler compiler)
         {
             Query query = new Query(MyTable3)
                 .AsInsert(
@@ -46,7 +46,7 @@ namespace DotNetDBTools.SampleBusinessLogicLib.Agnostic
             connection.Execute(sql, bindings);
         }
 
-        private static void ReadSomeData(DbConnection connection, Compiler compiler)
+        private static void ReadSomeData(IDbConnection connection, Compiler compiler)
         {
             QueryFactory db = new(connection, compiler);
 

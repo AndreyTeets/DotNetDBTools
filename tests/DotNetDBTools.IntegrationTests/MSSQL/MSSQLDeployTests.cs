@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Data.Common;
+using System.Data;
 using System.Data.SqlClient;
 using DotNetDBTools.Analysis.MSSQL;
 using DotNetDBTools.Deploy;
@@ -67,7 +67,7 @@ public class MSSQLDeployTests : BaseDeployTests<
         return MSSQLDatabaseHelper.CreateConnectionString(ConnectionStringWithoutDb, databaseName);
     }
 
-    private protected override IDbModelFromDBMSProvider CreateDbModelFromDBMSProvider(DbConnection connection)
+    private protected override IDbModelFromDBMSProvider CreateDbModelFromDBMSProvider(IDbConnection connection)
     {
         return new MSSQLDbModelFromDBMSProvider(new MSSQLQueryExecutor(connection, new Events()));
     }

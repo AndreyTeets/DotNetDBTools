@@ -1,4 +1,4 @@
-﻿using System.Data.Common;
+﻿using System.Data;
 using DotNetDBTools.Analysis.SQLite;
 using DotNetDBTools.Deploy;
 using DotNetDBTools.Deploy.Core;
@@ -58,7 +58,7 @@ public class SQLiteDeployTests : BaseDeployTests<
         return SQLiteDatabaseHelper.CreateConnectionString(DbFilesFolder, databaseName);
     }
 
-    private protected override IDbModelFromDBMSProvider CreateDbModelFromDBMSProvider(DbConnection connection)
+    private protected override IDbModelFromDBMSProvider CreateDbModelFromDBMSProvider(IDbConnection connection)
     {
         return new SQLiteDbModelFromDBMSProvider(new SQLiteQueryExecutor(connection, new Events()));
     }

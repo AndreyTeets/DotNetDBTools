@@ -1,4 +1,4 @@
-﻿using System.Data.Common;
+﻿using System.Data;
 using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.Deploy.Core.Editors;
 using static DotNetDBTools.Deploy.Core.InstanceCreator;
@@ -18,7 +18,7 @@ internal abstract class Factory<
     where TDbEditor : IDbEditor
     where TDbModelFromDBMSProvider : IDbModelFromDBMSProvider
 {
-    public virtual IQueryExecutor CreateQueryExecutor(DbConnection connection, Events events)
+    public virtual IQueryExecutor CreateQueryExecutor(IDbConnection connection, Events events)
     {
         return Create<TQueryExecutor>(connection, events);
     }

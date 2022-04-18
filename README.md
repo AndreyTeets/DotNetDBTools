@@ -134,20 +134,20 @@ Here is a concise list of all the available database management methods:
 ```
 public interface IDeployManager
 {
-    public bool IsRegisteredAsDNDBT(DbConnection connection);
-    public void RegisterAsDNDBT(DbConnection connection);
-    public void RegisterAsDNDBT(DbConnection connection, string dbWithDNDBTInfoAssemblyPath);
-    public void RegisterAsDNDBT(DbConnection connection, Assembly dbWithDNDBTInfoAssembly);
-    public void RegisterAsDNDBT(DbConnection connection, Database dbWithDNDBTInfo);
-    public void UnregisterAsDNDBT(DbConnection connection);
+    public bool IsRegisteredAsDNDBT(IDbConnection connection);
+    public void RegisterAsDNDBT(IDbConnection connection);
+    public void RegisterAsDNDBT(IDbConnection connection, string dbWithDNDBTInfoAssemblyPath);
+    public void RegisterAsDNDBT(IDbConnection connection, Assembly dbWithDNDBTInfoAssembly);
+    public void RegisterAsDNDBT(IDbConnection connection, Database dbWithDNDBTInfo);
+    public void UnregisterAsDNDBT(IDbConnection connection);
 
-    public void PublishDatabase(string dbAssemblyPath, DbConnection connection);
-    public void PublishDatabase(Assembly dbAssembly, DbConnection connection);
-    public void PublishDatabase(Database database, DbConnection connection);
+    public void PublishDatabase(string dbAssemblyPath, IDbConnection connection);
+    public void PublishDatabase(Assembly dbAssembly, IDbConnection connection);
+    public void PublishDatabase(Database database, IDbConnection connection);
 
-    public string GeneratePublishScript(string dbAssemblyPath, DbConnection connection);
-    public string GeneratePublishScript(Assembly dbAssembly, DbConnection connection);
-    public string GeneratePublishScript(Database database, DbConnection connection);
+    public string GeneratePublishScript(string dbAssemblyPath, IDbConnection connection);
+    public string GeneratePublishScript(Assembly dbAssembly, IDbConnection connection);
+    public string GeneratePublishScript(Database database, IDbConnection connection);
 
     public string GeneratePublishScript(string dbAssemblyPath);
     public string GeneratePublishScript(Assembly dbAssembly);
@@ -165,10 +165,10 @@ public interface IDeployManager
     public string GenerateNoDNDBTInfoPublishScript(Assembly newDbAssembly, Assembly oldDbAssembly);
     public string GenerateNoDNDBTInfoPublishScript(Database newDatabase, Database oldDatabase);
 
-    public void GenerateDefinition(DbConnection connection, string outputDirectory);
+    public void GenerateDefinition(IDbConnection connection, string outputDirectory);
 
-    public Database CreateDatabaseModelUsingDNDBTSysInfo(DbConnection connection);
-    public Database CreateDatabaseModelUsingDBMSSysInfo(DbConnection connection);
+    public Database CreateDatabaseModelUsingDNDBTSysInfo(IDbConnection connection);
+    public Database CreateDatabaseModelUsingDBMSSysInfo(IDbConnection connection);
 }
 ```
 
@@ -203,10 +203,10 @@ public interface IDeployManager
 ## Example code to publish database
 Note: database must exist and has to be registered with DotNetDBTools using `deployManager.RegisterAsDNDBT(connection)` method before using publish methods.
 
-Create an instance of IDeployManager for the appropriate DBMS using non-default options if needed and a DbConnection instance to pass to deployManager methods
+Create an instance of IDeployManager for the appropriate DBMS using non-default options if needed and a IDbConnection instance to pass to deployManager methods
 ```
 IDeployManager deployManager = new MSSQLDeployManager(new DeployOptions() { AllowDataLoss = true });
-using DbConnection connection = new SqlConnection(SomeMSSQLConnectionString);
+using IDbConnection connection = new SqlConnection(SomeMSSQLConnectionString);
 ```
 And then publish database like this
 ```
