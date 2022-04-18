@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Text.RegularExpressions;
-using DotNetDBTools.Analysis.Extensions;
 using DotNetDBTools.CodeParsing;
 using DotNetDBTools.CodeParsing.Models;
+using DotNetDBTools.UnitTests.Utilities;
 using FluentAssertions;
 using Xunit;
 
@@ -17,45 +16,45 @@ public class SQLiteCodeParserTests
     [Fact]
     public void GetObjectInfo_ParsesTableCorrectly()
     {
-        string input = File.ReadAllText($@"{TestDataDir}/CreateTable.sql");
+        string input = FilesHelper.GetFromFile($@"{TestDataDir}/CreateTable.sql");
         SQLiteCodeParser parser = new();
         TableInfo table = (TableInfo)parser.GetObjectInfo(input);
 
         TableInfo expectedTable = GetExpectedTable();
-        table.Should().BeEquivalentTo(expectedTable);
+        table.Should().BeEquivalentTo(expectedTable, options => options.WithStrictOrdering());
     }
 
     [Fact]
     public void GetObjectInfo_ParsesViewCorrectly()
     {
-        string input = File.ReadAllText($@"{TestDataDir}/CreateView.sql").NormalizeLineEndings();
+        string input = FilesHelper.GetFromFile($@"{TestDataDir}/CreateView.sql");
         SQLiteCodeParser parser = new();
         ViewInfo view = (ViewInfo)parser.GetObjectInfo(input);
 
         ViewInfo expectedView = GetExpectedView();
-        view.Should().BeEquivalentTo(expectedView);
+        view.Should().BeEquivalentTo(expectedView, options => options.WithStrictOrdering());
     }
 
     [Fact]
     public void GetObjectInfo_ParsesIndexCorrectly()
     {
-        string input = File.ReadAllText($@"{TestDataDir}/CreateIndex.sql");
+        string input = FilesHelper.GetFromFile($@"{TestDataDir}/CreateIndex.sql");
         SQLiteCodeParser parser = new();
         IndexInfo index = (IndexInfo)parser.GetObjectInfo(input);
 
         IndexInfo expectedIndex = GetExpectedIndex();
-        index.Should().BeEquivalentTo(expectedIndex);
+        index.Should().BeEquivalentTo(expectedIndex, options => options.WithStrictOrdering());
     }
 
     [Fact]
     public void GetObjectInfo_ParsesTriggerCorrectly()
     {
-        string input = File.ReadAllText($@"{TestDataDir}/CreateTrigger.sql").NormalizeLineEndings();
+        string input = FilesHelper.GetFromFile($@"{TestDataDir}/CreateTrigger.sql");
         SQLiteCodeParser parser = new();
         TriggerInfo trigger = (TriggerInfo)parser.GetObjectInfo(input);
 
         TriggerInfo expectedTrigger = GetExpectedTrigger();
-        trigger.Should().BeEquivalentTo(expectedTrigger);
+        trigger.Should().BeEquivalentTo(expectedTrigger, options => options.WithStrictOrdering());
     }
 
     [Fact]
@@ -220,7 +219,7 @@ public class SQLiteCodeParserTests
 
     private static string ReadStatementFromFile(string filePath)
     {
-        string fileContent = File.ReadAllText(filePath).NormalizeLineEndings();
+        string fileContent = FilesHelper.GetFromFile(filePath);
         return RemoveIdDeclarations(RemoveSemicolonIfAny(fileContent));
     }
 

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using DotNetDBTools.Analysis.Extensions;
 using DotNetDBTools.CodeParsing;
 using DotNetDBTools.CodeParsing.Models;
+using DotNetDBTools.UnitTests.Utilities;
 using FluentAssertions;
 using Xunit;
 
@@ -50,7 +50,7 @@ bla bla;".NormalizeLineEndings();
     [Fact]
     public void GetViewDependencies_GetsCorrectData()
     {
-        string input = File.ReadAllText($@"{TestDataDir}/CreateView.sql");
+        string input = FilesHelper.GetFromFile($@"{TestDataDir}/CreateView.sql");
         PostgreSQLCodeParser parser = new();
         List<Dependency> dependencies = parser.GetViewDependencies(input);
 
@@ -60,13 +60,13 @@ bla bla;".NormalizeLineEndings();
             new Dependency { Type = DependencyType.TableOrView, Name = "MyView3".ToLower() },
             new Dependency { Type = DependencyType.Function, Name = "MyFunc4" },
         };
-        dependencies.Should().BeEquivalentTo(expectedDependencies);
+        dependencies.Should().BeEquivalentTo(expectedDependencies, options => options.WithStrictOrdering());
     }
 
     [Fact]
     public void GetFunctionDependencies_GetsCorrectData_FromSQLFunc()
     {
-        string input = File.ReadAllText($@"{TestDataDir}/CreateSQLFunction.sql");
+        string input = FilesHelper.GetFromFile($@"{TestDataDir}/CreateSQLFunction.sql");
         PostgreSQLCodeParser parser = new();
         List<Dependency> dependencies = parser.GetFunctionDependencies(input);
 
@@ -76,13 +76,13 @@ bla bla;".NormalizeLineEndings();
             new Dependency { Type = DependencyType.TableOrView, Name = "MyView2".ToLower() },
             new Dependency { Type = DependencyType.Function, Name = "MyFunc3" },
         };
-        dependencies.Should().BeEquivalentTo(expectedDependencies);
+        dependencies.Should().BeEquivalentTo(expectedDependencies, options => options.WithStrictOrdering());
     }
 
     [Fact]
     public void GetFunctionDependencies_GetsCorrectData_FromPLPGSQLFunc()
     {
-        string input = File.ReadAllText($@"{TestDataDir}/CreatePLPGSQLFunction.sql");
+        string input = FilesHelper.GetFromFile($@"{TestDataDir}/CreatePLPGSQLFunction.sql");
         PostgreSQLCodeParser parser = new();
         List<Dependency> dependencies = parser.GetFunctionDependencies(input);
 
@@ -98,6 +98,6 @@ bla bla;".NormalizeLineEndings();
             new Dependency { Type = DependencyType.Table, Name = "MyTable8" },
             new Dependency { Type = DependencyType.Function, Name = "MyFunc9".ToLower() },
         };
-        dependencies.Should().BeEquivalentTo(expectedDependencies);
+        dependencies.Should().BeEquivalentTo(expectedDependencies, options => options.WithStrictOrdering());
     }
 }

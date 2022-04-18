@@ -2,7 +2,7 @@
 
 namespace DotNetDBTools.IntegrationTests.PostgreSQL;
 
-public class PostgreSQLDataTester : BaseDataTester
+internal class PostgreSQLDataTester : BaseDataTester
 {
     protected override string Quote(string identifier)
     {

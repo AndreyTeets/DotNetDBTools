@@ -1,6 +1,6 @@
 ﻿namespace DotNetDBTools.IntegrationTests;
 
-public static class Constants
+internal static class Constants
 {
     public const string RepoRoot = "../../../../..";
     public static readonly string SamplesOutputDir = $"{RepoRoot}/SamplesOutput";

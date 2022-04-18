@@ -20,6 +20,7 @@
     <!--Tests packages-->
     <FluentAssertionsVersion>6.5.1</FluentAssertionsVersion>
     <MoqVersion>4.17.2</MoqVersion>
+    <NewtonsoftJsonVersion>13.0.1</NewtonsoftJsonVersion>
     <CodeAnalysisTestingVersion>1.1.1</CodeAnalysisTestingVersion>
     <DockerDotNetVersion>3.125.5</DockerDotNetVersion>
 

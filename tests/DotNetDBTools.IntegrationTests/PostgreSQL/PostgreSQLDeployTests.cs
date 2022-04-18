@@ -18,7 +18,7 @@ public class PostgreSQLDeployTests : BaseDeployTests<
 {
     protected override string SpecificDbmsSampleDbV1AssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDB.PostgreSQL.dll";
     protected override string SpecificDbmsSampleDbV2AssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDBv2.PostgreSQL.dll";
-    protected override BaseDataTester DataTester { get; set; } = new PostgreSQLDataTester();
+    private protected override BaseDataTester DataTester { get; set; } = new PostgreSQLDataTester();
 
     private static string ConnectionStringWithoutDb => PostgreSQLContainerHelper.PostgreSQLContainerConnectionString;
 

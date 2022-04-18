@@ -5,7 +5,7 @@ using Npgsql;
 
 namespace DotNetDBTools.IntegrationTests.PostgreSQL;
 
-public class PostgreSQLContainerHelper
+internal class PostgreSQLContainerHelper
 {
     private const string PostgreSQLImage = "docker.io/library/postgres";
     private const string PostgreSQLImageTag = "14.1-alpine3.14";

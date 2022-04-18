@@ -15,6 +15,7 @@
     <PackageReference Include="Npgsql" Version="$(NpgsqlVersion)" />
     <PackageReference Include="Microsoft.Data.Sqlite" Version="$(SqliteVersion)" />
     <PackageReference Include="Docker.DotNet" Version="$(DockerDotNetVersion)" />
+    <PackageReference Include="Newtonsoft.Json" Version="$(NewtonsoftJsonVersion)" />
   </ItemGroup>
 
   <ItemGroup>

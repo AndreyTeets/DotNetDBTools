@@ -189,7 +189,7 @@ public class DNDBTModelsEqualityComparerTests
         string expectedDiffLog =
 @"Values [PK_T1] and [PK_T1NewName] differ at place [ValueOfSimpleProperty:Name].
 Values [DotNetDBTools.Models.Core.PrimaryKey] and [DotNetDBTools.Models.Core.PrimaryKey] differ at place [ComplexValueOfComplexProperty:PrimaryKey].";
-        _comparer.DiffLog.NormalizeLineEndings().Should().Be(expectedDiffLog.NormalizeLineEndings());
+        _comparer.DiffLog.Should().Be(expectedDiffLog.NormalizeLineEndings());
     }
 
     private static AgnosticTable CreateTemplateAgnosticTableModel()

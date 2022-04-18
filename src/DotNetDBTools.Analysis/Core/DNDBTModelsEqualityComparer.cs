@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using DotNetDBTools.Analysis.Extensions;
 using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.Analysis.Core;
@@ -11,7 +12,7 @@ namespace DotNetDBTools.Analysis.Core;
 internal class DNDBTModelsEqualityComparer : IEqualityComparer<object>
 {
     public HashSet<PropInfo> IgnoredProperties { get; set; } = new();
-    public string DiffLog => _diffInfoSb.ToString().TrimEnd();
+    public string DiffLog => _diffInfoSb.ToString().NormalizeLineEndings().TrimEnd();
 
     private readonly StringBuilder _diffInfoSb = new();
 

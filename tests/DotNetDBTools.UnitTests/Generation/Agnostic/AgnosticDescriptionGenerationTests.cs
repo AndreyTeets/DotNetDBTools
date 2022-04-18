@@ -1,6 +1,4 @@
-﻿using System.IO;
-using System.Reflection;
-using DotNetDBTools.Analysis.Extensions;
+﻿using System.Reflection;
 using DotNetDBTools.DefinitionParsing;
 using DotNetDBTools.Generation;
 using DotNetDBTools.Models.Core;
@@ -19,7 +17,7 @@ public class AgnosticDescriptionGenerationTests
         Database database = new DefinitionParsingManager().CreateDbModel(dbAssembly);
         GenerationOptions options = new() { DatabaseName = "DotNetDBToolsSampleDBAgnostic" };
         string actualDescriptionCode = new GenerationManager(options).GenerateDescription(database);
-        string expectedDescriptionCode = File.ReadAllText(@"TestData/Agnostic/Expected_Description_V1.cs");
-        actualDescriptionCode.NormalizeLineEndings().Should().Be(expectedDescriptionCode.NormalizeLineEndings());
+        string expectedDescriptionCode = FilesHelper.GetFromFile(@"TestData/Agnostic/Expected_Description_V1.cs");
+        actualDescriptionCode.Should().Be(expectedDescriptionCode);
     }
 }

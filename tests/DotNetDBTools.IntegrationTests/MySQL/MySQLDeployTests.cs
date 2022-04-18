@@ -20,7 +20,7 @@ public class MySQLDeployTests : BaseDeployTests<
 {
     protected override string SpecificDbmsSampleDbV1AssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDB.MySQL.dll";
     protected override string SpecificDbmsSampleDbV2AssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDBv2.MySQL.dll";
-    protected override BaseDataTester DataTester { get; set; } = new MySQLDataTester();
+    private protected override BaseDataTester DataTester { get; set; } = new MySQLDataTester();
 
     private static string ConnectionStringWithoutDb => MySQLContainerHelper.MySQLContainerConnectionString;
 

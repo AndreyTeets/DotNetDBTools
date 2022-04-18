@@ -1,0 +1,667 @@
+{
+  "$id": "1",
+  "Kind": 4,
+  "Version": 1,
+  "Tables": [
+    {
+      "$id": "2",
+      "Columns": [
+        {
+          "$id": "3",
+          "DataType": {
+            "$id": "4",
+            "Name": "INTEGER",
+            "IsUserDefined": false
+          },
+          "NotNull": true,
+          "Identity": false,
+          "Default": {
+            "$id": "5",
+            "Code": "15"
+          },
+          "ID": "a2f2a4de-1337-4594-ae41-72ed4d05f317",
+          "Name": "MyColumn1",
+          "Parent": null,
+          "DependsOn": null,
+          "IsDependencyOf": null
+        },
+        {
+          "$id": "6",
+          "DataType": {
+            "$id": "7",
+            "Name": "TEXT",
+            "IsUserDefined": false
+          },
+          "NotNull": true,
+          "Identity": false,
+          "Default": {
+            "$id": "8",
+            "Code": "'33'"
+          },
+          "ID": "fe68ee3d-09d0-40ac-93f9-5e441fbb4f70",
+          "Name": "MyColumn2",
+          "Parent": null,
+          "DependsOn": null,
+          "IsDependencyOf": null
+        },
+        {
+          "$id": "9",
+          "DataType": {
+            "$id": "10",
+            "Name": "INTEGER",
+            "IsUserDefined": false
+          },
+          "NotNull": true,
+          "Identity": true,
+          "Default": {
+            "$id": "11",
+            "Code": null
+          },
+          "ID": "6e95de30-e01a-4fb4-b8b7-8f0c40bb682c",
+          "Name": "MyColumn3",
+          "Parent": null,
+          "DependsOn": null,
+          "IsDependencyOf": null
+        },
+        {
+          "$id": "12",
+          "DataType": {
+            "$id": "13",
+            "Name": "NUMERIC",
+            "IsUserDefined": false
+          },
+          "NotNull": true,
+          "Identity": false,
+          "Default": {
+            "$id": "14",
+            "Code": "7.36"
+          },
+          "ID": "867ac528-e87e-4c93-b6e3-dd2fcbbb837f",
+          "Name": "MyColumn4",
+          "Parent": null,
+          "DependsOn": null,
+          "IsDependencyOf": null
+        }
+      ],
+      "PrimaryKey": {
+        "$id": "15",
+        "Columns": [
+          "MyColumn3"
+        ],
+        "ID": "37a45def-f4a0-4be7-8bfb-8fbed4a7d705",
+        "Name": "PK_MyTable1",
+        "Parent": null,
+        "DependsOn": null,
+        "IsDependencyOf": null
+      },
+      "UniqueConstraints": [
+        {
+          "$id": "16",
+          "Columns": [
+            "MyColumn4"
+          ],
+          "ID": "f3f08522-26ee-4950-9135-22edf2e4e0cf",
+          "Name": "UQ_MyTable1_MyColumn4",
+          "Parent": null,
+          "DependsOn": null,
+          "IsDependencyOf": null
+        }
+      ],
+      "CheckConstraints": [
+        {
+          "$id": "17",
+          "CodePiece": {
+            "$id": "18",
+            "Code": "CHECK (MyColumn4 >= 0)"
+          },
+          "ID": "eb9c59b5-bc7e-49d7-adaa-f5600b6a19a2",
+          "Name": "CK_MyTable1_MyCheck1",
+          "Parent": null,
+          "DependsOn": null,
+          "IsDependencyOf": null
+        }
+      ],
+      "ForeignKeys": [
+        {
+          "$id": "19",
+          "ThisColumnNames": [
+            "MyColumn1"
+          ],
+          "ReferencedTableName": "MyTable2",
+          "ReferencedTableColumnNames": [
+            "MyColumn1"
+          ],
+          "OnUpdate": "NO ACTION",
+          "OnDelete": "CASCADE",
+          "ID": "d11b2a53-32db-432f-bb6b-f91788844ba9",
+          "Name": "FK_MyTable1_MyColumn1_MyTable2_MyColumn1",
+          "Parent": null,
+          "DependsOn": null,
+          "IsDependencyOf": null
+        }
+      ],
+      "Indexes": [],
+      "Triggers": [],
+      "ID": "299675e6-4faa-4d0f-a36a-224306ba5bcb",
+      "Name": "MyTable1",
+      "Parent": null,
+      "DependsOn": null,
+      "IsDependencyOf": null
+    },
+    {
+      "$id": "20",
+      "Columns": [
+        {
+          "$id": "21",
+          "DataType": {
+            "$id": "22",
+            "Name": "INTEGER",
+            "IsUserDefined": false
+          },
+          "NotNull": true,
+          "Identity": false,
+          "Default": {
+            "$id": "23",
+            "Code": "333"
+          },
+          "ID": "c480f22f-7c01-4f41-b282-35e9f5cd1fe3",
+          "Name": "MyColumn1",
+          "Parent": null,
+          "DependsOn": null,
+          "IsDependencyOf": null
+        },
+        {
+          "$id": "24",
+          "DataType": {
+            "$id": "25",
+            "Name": "BLOB",
+            "IsUserDefined": false
+          },
+          "NotNull": false,
+          "Identity": false,
+          "Default": {
+            "$id": "26",
+            "Code": "X'000408'"
+          },
+          "ID": "5a0d1926-3270-4eb2-92eb-00be56c7af23",
+          "Name": "MyColumn2",
+          "Parent": null,
+          "DependsOn": null,
+          "IsDependencyOf": null
+        }
+      ],
+      "PrimaryKey": {
+        "$id": "27",
+        "Columns": [
+          "MyColumn1"
+        ],
+        "ID": "3a43615b-40b3-4a13-99e7-93af7c56e8ce",
+        "Name": "PK_MyTable2",
+        "Parent": null,
+        "DependsOn": null,
+        "IsDependencyOf": null
+      },
+      "UniqueConstraints": [],
+      "CheckConstraints": [],
+      "ForeignKeys": [],
+      "Indexes": [
+        {
+          "$id": "28",
+          "Columns": [
+            "MyColumn1",
+            "MyColumn2"
+          ],
+          "IncludeColumns": [],
+          "Unique": true,
+          "ID": "74390b3c-bc39-4860-a42e-12baa400f927",
+          "Name": "IDX_MyTable2_MyIndex1",
+          "Parent": null,
+          "DependsOn": null,
+          "IsDependencyOf": null
+        }
+      ],
+      "Triggers": [
+        {
+          "$id": "29",
+          "CodePiece": {
+            "$id": "30",
+            "Code": "CREATE TRIGGER [TR_MyTable2_MyTrigger1]\nAFTER INSERT\nON [MyTable2]\nFOR EACH ROW\nBEGIN\n    INSERT INTO [MyTable4]([MyColumn1])\n    VALUES(NEW.[MyColumn1]);\nEND"
+          },
+          "ID": "ee64ffc3-5536-4624-beaf-bc3a61d06a1a",
+          "Name": "TR_MyTable2_MyTrigger1",
+          "Parent": null,
+          "DependsOn": null,
+          "IsDependencyOf": null
+        }
+      ],
+      "ID": "bfb9030c-a8c3-4882-9c42-1c6ad025cf8f",
+      "Name": "MyTable2",
+      "Parent": null,
+      "DependsOn": null,
+      "IsDependencyOf": null
+    },
+    {
+      "$id": "31",
+      "Columns": [
+        {
+          "$id": "32",
+          "DataType": {
+            "$id": "33",
+            "Name": "INTEGER",
+            "IsUserDefined": false
+          },
+          "NotNull": true,
+          "Identity": false,
+          "Default": {
+            "$id": "34",
+            "Code": null
+          },
+          "ID": "de0425b8-9f99-4d76-9a64-09e52f8b5d5a",
+          "Name": "MyColumn1",
+          "Parent": null,
+          "DependsOn": null,
+          "IsDependencyOf": null
+        }
+      ],
+      "PrimaryKey": null,
+      "UniqueConstraints": [],
+      "CheckConstraints": [],
+      "ForeignKeys": [],
+      "Indexes": [],
+      "Triggers": [],
+      "ID": "b12a6a37-7739-48e0-a9e1-499ae7d2a395",
+      "Name": "MyTable4",
+      "Parent": null,
+      "DependsOn": null,
+      "IsDependencyOf": null
+    },
+    {
+      "$id": "35",
+      "Columns": [
+        {
+          "$id": "36",
+          "DataType": {
+            "$id": "37",
+            "Name": "INTEGER",
+            "IsUserDefined": false
+          },
+          "NotNull": true,
+          "Identity": false,
+          "Default": {
+            "$id": "38",
+            "Code": "(ABS(-15))"
+          },
+          "ID": "5309d66f-2030-402e-912e-5547babaa072",
+          "Name": "MyColumn1",
+          "Parent": null,
+          "DependsOn": null,
+          "IsDependencyOf": null
+        },
+        {
+          "$id": "39",
+          "DataType": {
+            "$id": "40",
+            "Name": "NUMERIC",
+            "IsUserDefined": false
+          },
+          "NotNull": true,
+          "Identity": false,
+          "Default": {
+            "$id": "41",
+            "Code": "'16:17:18'"
+          },
+          "ID": "cba4849b-3d84-4e38-b2c8-f9dbdff22fa6",
+          "Name": "MyColumn10",
+          "Parent": null,
+          "DependsOn": null,
+          "IsDependencyOf": null
+        },
+        {
+          "$id": "42",
+          "DataType": {
+            "$id": "43",
+            "Name": "NUMERIC",
+            "IsUserDefined": false
+          },
+          "NotNull": true,
+          "Identity": false,
+          "Default": {
+            "$id": "44",
+            "Code": "'2022-02-15 16:17:18'"
+          },
+          "ID": "4dde852d-ec19-4b61-80f9-da428d8ff41a",
+          "Name": "MyColumn11",
+          "Parent": null,
+          "DependsOn": null,
+          "IsDependencyOf": null
+        },
+        {
+          "$id": "45",
+          "DataType": {
+            "$id": "46",
+            "Name": "NUMERIC",
+            "IsUserDefined": false
+          },
+          "NotNull": true,
+          "Identity": false,
+          "Default": {
+            "$id": "47",
+            "Code": "'2022-02-15 16:17:18+01:30'"
+          },
+          "ID": "685faf2e-fef7-4e6b-a960-acd093f1f004",
+          "Name": "MyColumn12",
+          "Parent": null,
+          "DependsOn": null,
+          "IsDependencyOf": null
+        },
+        {
+          "$id": "48",
+          "DataType": {
+            "$id": "49",
+            "Name": "TEXT",
+            "IsUserDefined": false
+          },
+          "NotNull": true,
+          "Identity": false,
+          "Default": {
+            "$id": "50",
+            "Code": "'test'"
+          },
+          "ID": "11ef8e25-3691-42d4-b2fa-88d724f73b61",
+          "Name": "MyColumn2",
+          "Parent": null,
+          "DependsOn": null,
+          "IsDependencyOf": null
+        },
+        {
+          "$id": "51",
+          "DataType": {
+            "$id": "52",
+            "Name": "BLOB",
+            "IsUserDefined": false
+          },
+          "NotNull": true,
+          "Identity": false,
+          "Default": {
+            "$id": "53",
+            "Code": "X'000204'"
+          },
+          "ID": "6ed0ab37-aad3-4294-9ba6-c0921f0e67af",
+          "Name": "MyColumn3",
+          "Parent": null,
+          "DependsOn": null,
+          "IsDependencyOf": null
+        },
+        {
+          "$id": "54",
+          "DataType": {
+            "$id": "55",
+            "Name": "REAL",
+            "IsUserDefined": false
+          },
+          "NotNull": true,
+          "Identity": false,
+          "Default": {
+            "$id": "56",
+            "Code": "123.456"
+          },
+          "ID": "aca57fd6-80d0-4c18-b2ca-aabcb06bea10",
+          "Name": "MyColumn4",
+          "Parent": null,
+          "DependsOn": null,
+          "IsDependencyOf": null
+        },
+        {
+          "$id": "57",
+          "DataType": {
+            "$id": "58",
+            "Name": "REAL",
+            "IsUserDefined": false
+          },
+          "NotNull": true,
+          "Identity": false,
+          "Default": {
+            "$id": "59",
+            "Code": "12345.6789"
+          },
+          "ID": "47666b8b-ca72-4507-86b2-04c47a84aed4",
+          "Name": "MyColumn5",
+          "Parent": null,
+          "DependsOn": null,
+          "IsDependencyOf": null
+        },
+        {
+          "$id": "60",
+          "DataType": {
+            "$id": "61",
+            "Name": "NUMERIC",
+            "IsUserDefined": false
+          },
+          "NotNull": true,
+          "Identity": false,
+          "Default": {
+            "$id": "62",
+            "Code": "12.3"
+          },
+          "ID": "98fded6c-d486-4a2e-9c9a-1ec31c9d5830",
+          "Name": "MyColumn6",
+          "Parent": null,
+          "DependsOn": null,
+          "IsDependencyOf": null
+        },
+        {
+          "$id": "63",
+          "DataType": {
+            "$id": "64",
+            "Name": "INTEGER",
+            "IsUserDefined": false
+          },
+          "NotNull": true,
+          "Identity": false,
+          "Default": {
+            "$id": "65",
+            "Code": "TRUE"
+          },
+          "ID": "2502cade-458a-48ee-9421-e6d7850493f7",
+          "Name": "MyColumn7",
+          "Parent": null,
+          "DependsOn": null,
+          "IsDependencyOf": null
+        },
+        {
+          "$id": "66",
+          "DataType": {
+            "$id": "67",
+            "Name": "BLOB",
+            "IsUserDefined": false
+          },
+          "NotNull": true,
+          "Identity": false,
+          "Default": {
+            "$id": "68",
+            "Code": "X'8e2f99ad0fc8456db0e4ec3ba572dd15'"
+          },
+          "ID": "ed044a8a-6858-41e2-a867-9e5b01f226c8",
+          "Name": "MyColumn8",
+          "Parent": null,
+          "DependsOn": null,
+          "IsDependencyOf": null
+        },
+        {
+          "$id": "69",
+          "DataType": {
+            "$id": "70",
+            "Name": "NUMERIC",
+            "IsUserDefined": false
+          },
+          "NotNull": true,
+          "Identity": false,
+          "Default": {
+            "$id": "71",
+            "Code": "'2022-02-15'"
+          },
+          "ID": "9939d676-73b7-42d1-ba3e-5c13aed5ce34",
+          "Name": "MyColumn9",
+          "Parent": null,
+          "DependsOn": null,
+          "IsDependencyOf": null
+        }
+      ],
+      "PrimaryKey": {
+        "$id": "72",
+        "Columns": [
+          "MyColumn2",
+          "MyColumn1"
+        ],
+        "ID": "79384d48-a39b-4a22-900e-066b2ca67ba2",
+        "Name": "PK_MyTable5",
+        "Parent": null,
+        "DependsOn": null,
+        "IsDependencyOf": null
+      },
+      "UniqueConstraints": [
+        {
+          "$id": "73",
+          "Columns": [
+            "MyColumn6",
+            "MyColumn3",
+            "MyColumn7"
+          ],
+          "ID": "5293b58a-9f63-4f0f-8d6f-18416ebbd751",
+          "Name": "UQ_MyTable5_CustomName",
+          "Parent": null,
+          "DependsOn": null,
+          "IsDependencyOf": null
+        }
+      ],
+      "CheckConstraints": [],
+      "ForeignKeys": [],
+      "Indexes": [
+        {
+          "$id": "74",
+          "Columns": [
+            "MyColumn8"
+          ],
+          "IncludeColumns": [],
+          "Unique": false,
+          "ID": "1d632285-9914-4c5d-98e6-a618a99bd799",
+          "Name": "IDX_MyTable5_CustomName",
+          "Parent": null,
+          "DependsOn": null,
+          "IsDependencyOf": null
+        }
+      ],
+      "Triggers": [],
+      "ID": "6ca51f29-c1bc-4349-b9c1-6f1ea170f162",
+      "Name": "MyTable5",
+      "Parent": null,
+      "DependsOn": null,
+      "IsDependencyOf": null
+    },
+    {
+      "$id": "75",
+      "Columns": [
+        {
+          "$id": "76",
+          "DataType": {
+            "$id": "77",
+            "Name": "TEXT",
+            "IsUserDefined": false
+          },
+          "NotNull": false,
+          "Identity": false,
+          "Default": {
+            "$id": "78",
+            "Code": null
+          },
+          "ID": "bfa08c82-5c8f-4ab4-bd41-1f1d85cf3c85",
+          "Name": "MyColumn1",
+          "Parent": null,
+          "DependsOn": null,
+          "IsDependencyOf": null
+        },
+        {
+          "$id": "79",
+          "DataType": {
+            "$id": "80",
+            "Name": "INTEGER",
+            "IsUserDefined": false
+          },
+          "NotNull": false,
+          "Identity": false,
+          "Default": {
+            "$id": "81",
+            "Code": null
+          },
+          "ID": "a402e2b7-c826-4cfd-a304-97c9bc346ba2",
+          "Name": "MyColumn2",
+          "Parent": null,
+          "DependsOn": null,
+          "IsDependencyOf": null
+        }
+      ],
+      "PrimaryKey": null,
+      "UniqueConstraints": [],
+      "CheckConstraints": [],
+      "ForeignKeys": [
+        {
+          "$id": "82",
+          "ThisColumnNames": [
+            "MyColumn1",
+            "MyColumn2"
+          ],
+          "ReferencedTableName": "MyTable5",
+          "ReferencedTableColumnNames": [
+            "MyColumn2",
+            "MyColumn1"
+          ],
+          "OnUpdate": "NO ACTION",
+          "OnDelete": "NO ACTION",
+          "ID": "ae453b22-d270-41fc-8184-9ac26b7a0569",
+          "Name": "FK_MyTable6_MyTable5_CustomName",
+          "Parent": null,
+          "DependsOn": null,
+          "IsDependencyOf": null
+        }
+      ],
+      "Indexes": [],
+      "Triggers": [],
+      "ID": "f3064a8c-346a-4b3d-af2c-d967b39841e4",
+      "Name": "MyTable6",
+      "Parent": null,
+      "DependsOn": null,
+      "IsDependencyOf": null
+    }
+  ],
+  "Views": [
+    {
+      "$id": "83",
+      "CodePiece": {
+        "$id": "84",
+        "Code": "CREATE VIEW MyView1 AS\nSELECT\n    t1.MyColumn1,\n    t1.MyColumn4,\n    t2.MyColumn2\nFROM MyTable1 t1\nLEFT JOIN MyTable2 t2\n    ON t2.MyColumn1 = t1.MyColumn1"
+      },
+      "ID": "e2569aae-d5da-4a77-b3cd-51adbdb272d9",
+      "Name": "MyView1",
+      "Parent": null,
+      "DependsOn": null,
+      "IsDependencyOf": null
+    }
+  ],
+  "Scripts": [
+    {
+      "$id": "85",
+      "Kind": 1,
+      "MinDbVersionToExecute": 0,
+      "MaxDbVersionToExecute": 9223372036854775807,
+      "CodePiece": {
+        "$id": "86",
+        "Code": "INSERT INTO [MyTable4]([MyColumn1])\nSELECT * FROM\n(\n    SELECT 1\n    UNION ALL\n    SELECT 2\n    UNION ALL\n    SELECT 3\n) t\nWHERE NOT EXISTS (SELECT * FROM [MyTable4])"
+      },
+      "ID": "100d624a-01aa-4730-b86f-f991ac3ed936",
+      "Name": "InsertSomeInitialData",
+      "Parent": null,
+      "DependsOn": null,
+      "IsDependencyOf": null
+    }
+  ]
+}

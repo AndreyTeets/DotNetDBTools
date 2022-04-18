@@ -5,7 +5,7 @@ using MySqlConnector;
 
 namespace DotNetDBTools.IntegrationTests.MySQL;
 
-public class MySQLContainerHelper
+internal class MySQLContainerHelper
 {
     private const string MySQLImage = "docker.io/library/mysql";
     private const string MySQLImageTag = "8.0.27";

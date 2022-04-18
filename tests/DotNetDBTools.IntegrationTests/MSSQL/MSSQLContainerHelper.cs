@@ -5,7 +5,7 @@ using DotNetDBTools.IntegrationTests.Utilities;
 
 namespace DotNetDBTools.IntegrationTests.MSSQL;
 
-public class MSSQLContainerHelper
+internal class MSSQLContainerHelper
 {
     private const string MSSQLImage = "mcr.microsoft.com/mssql/server";
     private const string MSSQLImageTag = "2019-CU13-ubuntu-20.04";

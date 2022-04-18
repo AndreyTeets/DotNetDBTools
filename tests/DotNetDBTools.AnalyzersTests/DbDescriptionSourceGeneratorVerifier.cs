@@ -12,7 +12,7 @@ using Microsoft.CodeAnalysis.Text;
 
 namespace DotNetDBTools.AnalyzersTests;
 
-public static class DbDescriptionSourceGeneratorVerifier<TSourceGenerator>
+internal static class DbDescriptionSourceGeneratorVerifier<TSourceGenerator>
     where TSourceGenerator : ISourceGenerator, new()
 {
     public static async Task VerifyGeneratorAsync(

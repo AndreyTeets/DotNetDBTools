@@ -2,7 +2,7 @@
 
 namespace DotNetDBTools.IntegrationTests.SQLite;
 
-public class SQLiteDataTester : BaseDataTester
+internal class SQLiteDataTester : BaseDataTester
 {
     protected override string Quote(string identifier)
     {

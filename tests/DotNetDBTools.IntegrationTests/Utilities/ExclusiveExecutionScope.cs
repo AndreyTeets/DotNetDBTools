@@ -4,7 +4,7 @@ using System.Threading;
 
 namespace DotNetDBTools.IntegrationTests.Utilities;
 
-public static class ExclusiveExecutionScope
+internal static class ExclusiveExecutionScope
 {
     private static readonly ConcurrentDictionary<string, SemaphoreScope> s_semaphoreScopes = new();
 

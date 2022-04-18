@@ -2,7 +2,7 @@
 
 namespace DotNetDBTools.UnitTests.Utilities;
 
-public static class TestDbAssembliesHelper
+internal static class TestDbAssembliesHelper
 {
     public static Assembly GetSampleDbAssembly(string projectName)
     {

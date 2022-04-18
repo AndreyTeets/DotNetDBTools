@@ -24,7 +24,7 @@ public abstract class BaseDeployTests<TDatabase, TDbConnection, TDeployManager>
 {
     protected abstract string SpecificDbmsSampleDbV1AssemblyPath { get; }
     protected abstract string SpecificDbmsSampleDbV2AssemblyPath { get; }
-    protected abstract BaseDataTester DataTester { get; set; }
+    private protected abstract BaseDataTester DataTester { get; set; }
 
     private static string AgnosticSampleDbV1AssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDB.Agnostic.dll";
     private static string AgnosticSampleDbV2AssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDBv2.Agnostic.dll";
@@ -204,7 +204,7 @@ public abstract class BaseDeployTests<TDatabase, TDbConnection, TDeployManager>
     {
         dbModel1.Should().BeEquivalentTo(dbModel2, options =>
         {
-            EquivalencyAssertionOptions<TDatabase> configuredOptions = options;
+            EquivalencyAssertionOptions<TDatabase> configuredOptions = options.WithStrictOrdering();
 
             if (compareMode.HasFlag(CompareMode.IgnoreIDs))
                 configuredOptions = configuredOptions.Excluding(database => database.Path.EndsWith(".ID", StringComparison.Ordinal));

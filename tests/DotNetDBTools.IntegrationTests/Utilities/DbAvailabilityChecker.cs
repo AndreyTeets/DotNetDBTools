@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace DotNetDBTools.IntegrationTests.Utilities;
 
-public static class DbAvailabilityChecker
+internal static class DbAvailabilityChecker
 {
     public static async Task WaitUntilDatabaseAvailableAsync(IDbConnection connection, int timeoutSeconds)
     {

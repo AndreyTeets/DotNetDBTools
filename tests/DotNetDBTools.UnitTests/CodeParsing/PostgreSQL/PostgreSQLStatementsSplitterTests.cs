@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using DotNetDBTools.Analysis.Extensions;
 using DotNetDBTools.CodeParsing;
+using DotNetDBTools.UnitTests.Utilities;
 using FluentAssertions;
 using Xunit;
 
@@ -15,7 +14,7 @@ public class PostgreSQLStatementsSplitterTests
     [Fact]
     public void ParseToStatementsList_GetsCorrectData()
     {
-        string input = File.ReadAllText($@"{TestDataDir}/StatementsList.sql").NormalizeLineEndings();
+        string input = FilesHelper.GetFromFile($@"{TestDataDir}/StatementsList.sql");
         List<string> statements = PostgreSQLStatementsSplitter.Split(input);
 
         statements.Count.Should().Be(3);

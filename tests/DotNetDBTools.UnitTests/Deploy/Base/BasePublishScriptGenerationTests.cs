@@ -1,6 +1,4 @@
-﻿using System.IO;
-using System.Reflection;
-using DotNetDBTools.Analysis.Extensions;
+﻿using System.Reflection;
 using DotNetDBTools.Deploy;
 using DotNetDBTools.UnitTests.Utilities;
 using FluentAssertions;
@@ -37,8 +35,8 @@ public abstract class BasePublishScriptGenerationTests<TDeployManager>
     public void Generate_PublishScript_CreatesCorrectScript_WhenCreatingV1()
     {
         string actualScript = _deployManager.GeneratePublishScript(_specificDbmsDbAssemblyV1);
-        string expectedScript = File.ReadAllText($@"{ExpectedFilesDir}/Expected_PublishScript_CreateV1.sql");
-        actualScript.NormalizeLineEndings().Should().Be(expectedScript.NormalizeLineEndings());
+        string expectedScript = FilesHelper.GetFromFile($@"{ExpectedFilesDir}/Expected_PublishScript_CreateV1.sql");
+        actualScript.Should().Be(expectedScript);
     }
 
     [Fact]
@@ -46,8 +44,8 @@ public abstract class BasePublishScriptGenerationTests<TDeployManager>
     {
         _deployManager.Options = new DeployOptions { AllowDataLoss = true };
         string actualScript = _deployManager.GeneratePublishScript(_specificDbmsDbAssemblyV2, _specificDbmsDbAssemblyV1);
-        string expectedScript = File.ReadAllText($@"{ExpectedFilesDir}/Expected_PublishScript_V1ToV2.sql");
-        actualScript.NormalizeLineEndings().Should().Be(expectedScript.NormalizeLineEndings());
+        string expectedScript = FilesHelper.GetFromFile($@"{ExpectedFilesDir}/Expected_PublishScript_V1ToV2.sql");
+        actualScript.Should().Be(expectedScript);
     }
 
     [Fact]
@@ -55,8 +53,8 @@ public abstract class BasePublishScriptGenerationTests<TDeployManager>
     {
         _deployManager.Options = new DeployOptions { AllowDataLoss = true };
         string actualScript = _deployManager.GenerateNoDNDBTInfoPublishScript(_specificDbmsDbAssemblyV1, _specificDbmsDbAssemblyV2);
-        string expectedScript = File.ReadAllText($@"{ExpectedFilesDir}/Expected_NoDNDBTInfoPublishScript_V2ToV1.sql");
-        actualScript.NormalizeLineEndings().Should().Be(expectedScript.NormalizeLineEndings());
+        string expectedScript = FilesHelper.GetFromFile($@"{ExpectedFilesDir}/Expected_NoDNDBTInfoPublishScript_V2ToV1.sql");
+        actualScript.Should().Be(expectedScript);
     }
 
     [Fact]

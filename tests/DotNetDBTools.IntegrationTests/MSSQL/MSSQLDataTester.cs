@@ -2,7 +2,7 @@
 
 namespace DotNetDBTools.IntegrationTests.MSSQL;
 
-public class MSSQLDataTester : BaseDataTester
+internal class MSSQLDataTester : BaseDataTester
 {
     protected override string Quote(string identifier)
     {

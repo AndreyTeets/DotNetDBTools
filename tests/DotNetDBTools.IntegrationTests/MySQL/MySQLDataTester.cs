@@ -2,7 +2,7 @@
 
 namespace DotNetDBTools.IntegrationTests.MySQL;
 
-public class MySQLDataTester : BaseDataTester
+internal class MySQLDataTester : BaseDataTester
 {
     protected override string Quote(string identifier)
     {

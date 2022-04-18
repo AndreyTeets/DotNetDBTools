@@ -4,7 +4,7 @@ using FluentAssertions;
 
 namespace DotNetDBTools.IntegrationTests.Base;
 
-public abstract class BaseDataTester
+internal abstract class BaseDataTester
 {
     public bool IsDbmsSpecific { get; set; } = true;
 

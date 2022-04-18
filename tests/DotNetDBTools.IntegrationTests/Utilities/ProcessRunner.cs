@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DotNetDBTools.IntegrationTests.Utilities;
 
-public static class ProcessRunner
+internal static class ProcessRunner
 {
     public static (int, string) RunProcess(string filePath, string args)
     {

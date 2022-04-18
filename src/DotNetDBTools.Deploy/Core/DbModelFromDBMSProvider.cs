@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DotNetDBTools.Analysis;
+using DotNetDBTools.Analysis.Extensions;
 using DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo;
 using DotNetDBTools.Deploy.Core.Queries.DNDBTSysInfo;
 using DotNetDBTools.Models.Core;
@@ -153,6 +154,7 @@ internal abstract class DbModelFromDBMSProvider<
             };
             database.Scripts.Add(script);
         }
+        database.Scripts = database.Scripts.OrderByName();
     }
 
     private void PopulateDbAttributesFromDNDBTSysInfo(Database database)

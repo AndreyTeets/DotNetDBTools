@@ -11,7 +11,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace DotNetDBTools.UnitTests.Utilities;
 
-public static class TestDatabasesCompiler
+internal static class TestDatabasesCompiler
 {
     public static Assembly CompileSampleDbProject(string projectDir)
     {
@@ -34,13 +34,13 @@ public static class TestDatabasesCompiler
         List<SyntaxTree> syntaxTrees = new();
 
         foreach (string filePath in Directory.EnumerateFiles(projectDir, "*.cs", SearchOption.TopDirectoryOnly))
-            syntaxTrees.Add(CreateSyntaxTree(File.ReadAllText(filePath)));
+            syntaxTrees.Add(CreateSyntaxTree(FilesHelper.GetFromFile(filePath)));
 
         foreach (string subdir in Directory.EnumerateDirectories(projectDir, "*", SearchOption.TopDirectoryOnly)
             .Where(dir => !dir.Replace(@"\", "/").EndsWith("obj", StringComparison.OrdinalIgnoreCase)))
         {
             foreach (string filePath in Directory.EnumerateFiles(subdir, "*.cs", SearchOption.AllDirectories))
-                syntaxTrees.Add(CreateSyntaxTree(File.ReadAllText(filePath)));
+                syntaxTrees.Add(CreateSyntaxTree(FilesHelper.GetFromFile(filePath)));
         }
 
         return syntaxTrees;

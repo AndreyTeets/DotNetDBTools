@@ -7,7 +7,7 @@ using Microsoft.CodeAnalysis.Testing.Verifiers;
 
 namespace DotNetDBTools.AnalyzersTests;
 
-public static class DbDefinitionAnalyzerVerifier<TAnalyzer>
+internal static class DbDefinitionAnalyzerVerifier<TAnalyzer>
    where TAnalyzer : DiagnosticAnalyzer, new()
 {
     public static DiagnosticResult Diagnostic(string diagnosticId)
