@@ -30,7 +30,7 @@ internal class MSSQLDataTypeMapper : DataTypeMapper
             case TimeDataType:
             case DateTimeDataType:
                 CSharpDataType csharpDataType = CreateCSharpDataTypeModel(dataType);
-                return MSSQLDataTypeConverter.ConvertToMSSQL(csharpDataType);
+                return new MSSQLDataTypeConverter().Convert(csharpDataType);
 
             case VerbatimDataType verbatimDataType:
                 return new DataType { Name = verbatimDataType.Name.ToUpper() };

@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Globalization;
+using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.Analysis.MSSQL;
 
-public static class MSSQLDefaultValueConverter
+public class MSSQLDefaultValueConverter : IDefaultValueConverter
 {
-    public static CodePiece ConvertToMSSQL(CSharpDefaultValue defaultValue)
+    public CodePiece Convert(CSharpDefaultValue defaultValue)
     {
         object value = defaultValue.CSharpValue;
         string quotedValue = value switch

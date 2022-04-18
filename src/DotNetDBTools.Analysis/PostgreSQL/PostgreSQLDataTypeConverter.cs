@@ -1,12 +1,13 @@
 ﻿using System;
+using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.PostgreSQL;
 
 namespace DotNetDBTools.Analysis.PostgreSQL;
 
-public static class PostgreSQLDataTypeConverter
+public class PostgreSQLDataTypeConverter : IDataTypeConverter
 {
-    public static DataType ConvertToPostgreSQL(CSharpDataType dataType)
+    public DataType Convert(CSharpDataType dataType)
     {
         return dataType.Name switch
         {

@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Globalization;
+using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.Analysis.MySQL;
 
-public static class MySQLDefaultValueConverter
+public class MySQLDefaultValueConverter : IDefaultValueConverter
 {
-    public static CodePiece ConvertToMySQL(CSharpDefaultValue defaultValue)
+    public CodePiece Convert(CSharpDefaultValue defaultValue)
     {
         object value = defaultValue.CSharpValue;
         string quotedValue = value switch

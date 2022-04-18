@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Globalization;
+using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.Analysis.PostgreSQL;
 
-public static class PostgreSQLDefaultValueConverter
+public class PostgreSQLDefaultValueConverter : IDefaultValueConverter
 {
-    public static CodePiece ConvertToPostgreSQL(CSharpDefaultValue defaultValue)
+    public CodePiece Convert(CSharpDefaultValue defaultValue)
     {
         object value = defaultValue.CSharpValue;
         string quotedValue = value switch

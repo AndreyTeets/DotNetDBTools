@@ -38,11 +38,13 @@ internal abstract class DbModelFromCSharpDefinitionProvider<
 
     public Database CreateDbModel(Assembly dbAssembly)
     {
-        TDatabase database = new();
-        database.Version = DbAssemblyInfoHelper.GetDbVersion(dbAssembly);
-        database.Tables = BuildTableModels(dbAssembly);
-        database.Views = BuildViewModels(dbAssembly);
-        database.Scripts = BuildScriptModels(dbAssembly);
+        TDatabase database = new()
+        {
+            Version = DbAssemblyInfoHelper.GetDbVersion(dbAssembly),
+            Tables = BuildTableModels(dbAssembly),
+            Views = BuildViewModels(dbAssembly),
+            Scripts = BuildScriptModels(dbAssembly),
+        };
         BuildAdditionalDbObjects(database, dbAssembly);
         DbModelPostProcessor.Do_CreateDbModelFromCSharpDefinition_PostProcessing(database);
         return database;

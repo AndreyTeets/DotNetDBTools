@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Globalization;
+using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.Analysis.SQLite;
 
-public static class SQLiteDefaultValueConverter
+public class SQLiteDefaultValueConverter : IDefaultValueConverter
 {
-    public static CodePiece ConvertToSQLite(CSharpDefaultValue defaultValue)
+    public CodePiece Convert(CSharpDefaultValue defaultValue)
     {
         object value = defaultValue.CSharpValue;
         string quotedValue = value switch

@@ -1,12 +1,13 @@
 ﻿using System;
+using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.SQLite;
 
 namespace DotNetDBTools.Analysis.SQLite;
 
-public static class SQLiteDataTypeConverter
+public class SQLiteDataTypeConverter : IDataTypeConverter
 {
-    public static DataType ConvertToSQLite(CSharpDataType dataType)
+    public DataType Convert(CSharpDataType dataType)
     {
         return dataType.Name switch
         {

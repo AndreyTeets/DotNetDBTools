@@ -14,6 +14,6 @@ internal class MySQLDefaultValueMapper : DefaultValueMapper
             return new CodePiece { Code = null };
         if (defaultValue is VerbatimDefaultValue vdv)
             return new CodePiece { Code = vdv.Value };
-        return MySQLDefaultValueConverter.ConvertToMySQL(CreateCSharpDefaultValueModel(defaultValue));
+        return new MySQLDefaultValueConverter().Convert(CreateCSharpDefaultValueModel(defaultValue));
     }
 }

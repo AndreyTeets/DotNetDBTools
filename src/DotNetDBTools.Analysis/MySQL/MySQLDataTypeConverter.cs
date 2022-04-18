@@ -1,12 +1,13 @@
 ﻿using System;
+using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.MySQL;
 
 namespace DotNetDBTools.Analysis.MySQL;
 
-public class MySQLDataTypeConverter
+public class MySQLDataTypeConverter : IDataTypeConverter
 {
-    public static DataType ConvertToMySQL(CSharpDataType dataType)
+    public DataType Convert(CSharpDataType dataType)
     {
         return dataType.Name switch
         {

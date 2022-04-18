@@ -14,6 +14,6 @@ internal class PostgreSQLDefaultValueMapper : DefaultValueMapper
             return new CodePiece { Code = null };
         if (defaultValue is VerbatimDefaultValue vdv)
             return new CodePiece { Code = vdv.Value };
-        return PostgreSQLDefaultValueConverter.ConvertToPostgreSQL(CreateCSharpDefaultValueModel(defaultValue));
+        return new PostgreSQLDefaultValueConverter().Convert(CreateCSharpDefaultValueModel(defaultValue));
     }
 }

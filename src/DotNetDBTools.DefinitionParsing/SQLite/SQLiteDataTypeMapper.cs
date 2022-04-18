@@ -29,7 +29,7 @@ internal class SQLiteDataTypeMapper : DataTypeMapper
             case TimeDataType:
             case DateTimeDataType:
                 CSharpDataType csharpDataType = CreateCSharpDataTypeModel(dataType);
-                return SQLiteDataTypeConverter.ConvertToSQLite(csharpDataType);
+                return new SQLiteDataTypeConverter().Convert(csharpDataType);
 
             case VerbatimDataType verbatimDataType:
                 return new DataType { Name = verbatimDataType.Name.ToUpper() };

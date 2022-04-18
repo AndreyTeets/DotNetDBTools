@@ -1,12 +1,13 @@
 ﻿using System;
+using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.MSSQL;
 
 namespace DotNetDBTools.Analysis.MSSQL;
 
-public class MSSQLDataTypeConverter
+public class MSSQLDataTypeConverter : IDataTypeConverter
 {
-    public static DataType ConvertToMSSQL(CSharpDataType dataType)
+    public DataType Convert(CSharpDataType dataType)
     {
         return dataType.Name switch
         {

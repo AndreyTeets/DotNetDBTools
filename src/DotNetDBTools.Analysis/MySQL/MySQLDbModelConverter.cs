@@ -1,55 +1,24 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using DotNetDBTools.Analysis.Core;
-using DotNetDBTools.Models.Agnostic;
+﻿using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.MySQL;
 
 namespace DotNetDBTools.Analysis.MySQL;
 
-public class MySQLDbModelConverter : DbModelConverter
+public class MySQLDbModelConverter : DbModelConverter<
+    MySQLDatabase,
+    MySQLTable,
+    MySQLView,
+    Column>
 {
-    public MySQLDbModelConverter()
-        : base(DatabaseKind.MySQL, new MySQLDbModelPostProcessor()) { }
-
-    protected override Database ConvertDatabase(AgnosticDatabase database)
+    public MySQLDbModelConverter() : base(
+        DatabaseKind.MySQL,
+        new MySQLDataTypeConverter(),
+        new MySQLDefaultValueConverter(),
+        new MySQLDbModelPostProcessor())
     {
-        return new MySQLDatabase()
-        {
-            Version = database.Version,
-            Tables = database.Tables.Select(x => ConvertToMySQLModel((AgnosticTable)x)).ToList(),
-            Views = database.Views.Select(x => ConvertToMySQLModel((AgnosticView)x)).ToList(),
-            Scripts = database.Scripts.Select(x => ConvertScript(x)).ToList(),
-        };
     }
 
-    private MySQLTable ConvertToMySQLModel(AgnosticTable table)
-    {
-        return new()
-        {
-            ID = table.ID,
-            Name = table.Name,
-            Columns = ConvertToMySQLModel(table.Columns),
-            PrimaryKey = ConvertToMySQLModel(table.PrimaryKey, table.Name),
-            UniqueConstraints = table.UniqueConstraints,
-            CheckConstraints = table.CheckConstraints.Select(ck => { ck.CodePiece = ConvertCodePiece(ck.CodePiece); return ck; }).ToList(),
-            Indexes = table.Indexes,
-            Triggers = table.Triggers.Select(trigger => { trigger.CodePiece = ConvertCodePiece(trigger.CodePiece); return trigger; }).ToList(),
-            ForeignKeys = table.ForeignKeys,
-        };
-    }
-
-    private MySQLView ConvertToMySQLModel(AgnosticView view)
-    {
-        return new()
-        {
-            ID = view.ID,
-            Name = view.Name,
-            CodePiece = ConvertCodePiece(view.CodePiece),
-        };
-    }
-
-    private PrimaryKey ConvertToMySQLModel(PrimaryKey pk, string tableName)
+    protected override PrimaryKey ConvertPrimaryKey(PrimaryKey pk, string tableName)
     {
         if (pk is null)
             return null;
@@ -59,22 +28,5 @@ public class MySQLDbModelConverter : DbModelConverter
             Name = $"PK_{tableName}",
             Columns = pk.Columns,
         };
-    }
-
-    private IEnumerable<Column> ConvertToMySQLModel(IEnumerable<Column> columns)
-    {
-        foreach (Column column in columns)
-        {
-            if (column.DataType is AgnosticVerbatimDataType avdt)
-                column.DataType = new DataType { Name = ConvertCodePiece(avdt.NameCodePiece).Code };
-            else
-                column.DataType = MySQLDataTypeConverter.ConvertToMySQL((CSharpDataType)column.DataType);
-
-            if (column.Default is AgnosticCodePiece acp)
-                column.Default = ConvertCodePiece(acp);
-            else
-                column.Default = MySQLDefaultValueConverter.ConvertToMySQL((CSharpDefaultValue)column.Default);
-        }
-        return columns;
     }
 }

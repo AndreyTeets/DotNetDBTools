@@ -14,6 +14,6 @@ internal class MSSQLDefaultValueMapper : DefaultValueMapper
             return new CodePiece { Code = null };
         if (defaultValue is VerbatimDefaultValue vdv)
             return new CodePiece { Code = vdv.Value };
-        return MSSQLDefaultValueConverter.ConvertToMSSQL(CreateCSharpDefaultValueModel(defaultValue));
+        return new MSSQLDefaultValueConverter().Convert(CreateCSharpDefaultValueModel(defaultValue));
     }
 }

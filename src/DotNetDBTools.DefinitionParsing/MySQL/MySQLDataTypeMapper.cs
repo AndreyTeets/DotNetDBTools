@@ -29,7 +29,7 @@ internal class MySQLDataTypeMapper : DataTypeMapper
             case TimeDataType:
             case DateTimeDataType:
                 CSharpDataType csharpDataType = CreateCSharpDataTypeModel(dataType);
-                return MySQLDataTypeConverter.ConvertToMySQL(csharpDataType);
+                return new MySQLDataTypeConverter().Convert(csharpDataType);
 
             case VerbatimDataType verbatimDataType:
                 return new DataType { Name = verbatimDataType.Name.ToUpper() };

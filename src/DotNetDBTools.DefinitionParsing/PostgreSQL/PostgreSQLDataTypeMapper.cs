@@ -30,7 +30,7 @@ internal class PostgreSQLDataTypeMapper : DataTypeMapper
             case TimeDataType:
             case DateTimeDataType:
                 CSharpDataType csharpDataType = CreateCSharpDataTypeModel(dataType);
-                return PostgreSQLDataTypeConverter.ConvertToPostgreSQL(csharpDataType);
+                return new PostgreSQLDataTypeConverter().Convert(csharpDataType);
 
             case VerbatimDataType verbatimDataType:
                 return new DataType { Name = verbatimDataType.Name.ToUpper() };
