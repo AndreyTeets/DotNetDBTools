@@ -19,11 +19,11 @@ internal abstract class TriggerEditor<
     where TCreateTriggerQuery : CreateTriggerQuery
     where TDropTriggerQuery : DropTriggerQuery
 {
-    protected readonly IQueryExecutor QueryExecutor;
+    private readonly IQueryExecutor _queryExecutor;
 
     protected TriggerEditor(IQueryExecutor queryExecutor)
     {
-        QueryExecutor = queryExecutor;
+        _queryExecutor = queryExecutor;
     }
 
     public void CreateTriggers(DatabaseDiff dbDiff)
@@ -42,14 +42,14 @@ internal abstract class TriggerEditor<
 
     private void CreateTrigger(Trigger trg, Table table)
     {
-        QueryExecutor.Execute(Create<TCreateTriggerQuery>(trg));
-        QueryExecutor.Execute(Create<TInsertDNDBTDbObjectRecordQuery>(trg.ID, table.ID, DbObjectType.Trigger, trg.Name, trg.GetCode()));
+        _queryExecutor.Execute(Create<TCreateTriggerQuery>(trg));
+        _queryExecutor.Execute(Create<TInsertDNDBTDbObjectRecordQuery>(trg.ID, table.ID, DbObjectType.Trigger, trg.Name, trg.GetCode()));
     }
 
     private void DropTrigger(Trigger trg, Table table)
     {
-        QueryExecutor.Execute(Create<TDropTriggerQuery>(trg, table));
-        QueryExecutor.Execute(Create<TDeleteDNDBTDbObjectRecordQuery>(trg.ID));
+        _queryExecutor.Execute(Create<TDropTriggerQuery>(trg, table));
+        _queryExecutor.Execute(Create<TDeleteDNDBTDbObjectRecordQuery>(trg.ID));
     }
 
     private static Dictionary<Guid, Table> CreateTriggerToTableMap(IEnumerable<Table> tables)

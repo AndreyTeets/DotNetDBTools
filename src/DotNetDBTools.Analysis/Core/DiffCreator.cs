@@ -7,7 +7,7 @@ namespace DotNetDBTools.Analysis.Core;
 
 internal abstract class DiffCreator
 {
-    protected readonly DNDBTModelsEqualityComparer DNDBTModelsEqualityComparer = new();
+    private readonly DNDBTModelsEqualityComparer _dndbtModelsEqualityComparer = new();
 
     public abstract DatabaseDiff CreateDatabaseDiff(Database newDatabase, Database oldDatabase);
 
@@ -121,7 +121,7 @@ internal abstract class DiffCreator
     {
         PrimaryKey primaryKeyToCreate = null;
         PrimaryKey primaryKeyToDrop = null;
-        if (!DNDBTModelsEqualityComparer.Equals(newDbTable.PrimaryKey, oldDbTable.PrimaryKey))
+        if (!_dndbtModelsEqualityComparer.Equals(newDbTable.PrimaryKey, oldDbTable.PrimaryKey))
         {
             primaryKeyToCreate = newDbTable.PrimaryKey;
             primaryKeyToDrop = oldDbTable.PrimaryKey;
@@ -243,7 +243,7 @@ internal abstract class DiffCreator
         foreach (TItem newCollectionItem in newCollection)
         {
             if (oldCollectionItemIDToItemMap.TryGetValue(newCollectionItem.ID, out TItem oldCollectionItem) &&
-                (!DNDBTModelsEqualityComparer.Equals(newCollectionItem, oldCollectionItem) ||
+                (!_dndbtModelsEqualityComparer.Equals(newCollectionItem, oldCollectionItem) ||
                     AdditionalItemsNonEqualityConditionIsTrue(newCollectionItem, oldCollectionItem)))
             {
                 changedItemFoundAction(newCollectionItem, oldCollectionItem);

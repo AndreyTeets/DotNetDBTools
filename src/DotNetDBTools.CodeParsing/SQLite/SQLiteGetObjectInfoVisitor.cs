@@ -2,9 +2,8 @@
 using System.Linq;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
-using DotNetDBTools.CodeParsing.Core;
-using DotNetDBTools.CodeParsing.Core.Models;
 using DotNetDBTools.CodeParsing.Generated;
+using DotNetDBTools.CodeParsing.Models;
 using static DotNetDBTools.CodeParsing.Generated.SQLiteParser;
 
 namespace DotNetDBTools.CodeParsing.SQLite;

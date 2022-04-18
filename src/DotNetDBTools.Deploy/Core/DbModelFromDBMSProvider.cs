@@ -51,7 +51,7 @@ internal abstract class DbModelFromDBMSProvider<
     where TGetScriptExecutionRecordsFromDNDBTSysInfoQuery : GetDNDBTScriptExecutionRecordsQuery, new()
 {
     protected readonly IQueryExecutor QueryExecutor;
-    protected readonly IAnalysisManager AnalysisManager = new AnalysisManager();
+    private readonly IAnalysisManager _analysisManager = new AnalysisManager();
 
     protected DbModelFromDBMSProvider(IQueryExecutor queryExecutor)
     {
@@ -76,8 +76,8 @@ internal abstract class DbModelFromDBMSProvider<
             Scripts = new(),
         };
         BuildAdditionalDbObjects(database);
-        AnalysisManager.OrderDbObjects(database);
-        AnalysisManager.BuildDependencies(database);
+        _analysisManager.OrderDbObjects(database);
+        _analysisManager.BuildDependencies(database);
         return database;
     }
     protected virtual void BuildAdditionalDbObjects(Database database) { }

@@ -4,7 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Reflection;
 using DotNetDBTools.Analysis;
-using DotNetDBTools.Analysis.Core.Errors;
+using DotNetDBTools.Analysis.Errors;
 using DotNetDBTools.DefinitionParsing;
 using DotNetDBTools.Deploy.Core.Editors;
 using DotNetDBTools.Generation;

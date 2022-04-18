@@ -1,6 +1,6 @@
 ﻿namespace DotNetDBTools.Generation.Core;
 
-public static class StringExtensions
+internal static class StringExtensions
 {
     public static string NormalizeLineEndings(this string value)
     {

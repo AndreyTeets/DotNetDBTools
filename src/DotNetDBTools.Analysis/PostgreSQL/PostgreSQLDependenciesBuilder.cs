@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using DotNetDBTools.Analysis.Core;
-using DotNetDBTools.CodeParsing.Core;
-using DotNetDBTools.CodeParsing.PostgreSQL;
+using DotNetDBTools.CodeParsing;
+using DotNetDBTools.CodeParsing.Models;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.PostgreSQL;
 using DotNetDBTools.Models.PostgreSQL.UserDefinedTypes;

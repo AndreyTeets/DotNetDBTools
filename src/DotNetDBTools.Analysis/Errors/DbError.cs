@@ -1,4 +1,4 @@
-﻿namespace DotNetDBTools.Analysis.Core.Errors;
+﻿namespace DotNetDBTools.Analysis.Errors;
 
 public abstract class DbError
 {

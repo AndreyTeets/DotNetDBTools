@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DotNetDBTools.CodeParsing.PostgreSQL;
+namespace DotNetDBTools.CodeParsing;
 
 public static class PostgreSQLStatementsSplitter
 {

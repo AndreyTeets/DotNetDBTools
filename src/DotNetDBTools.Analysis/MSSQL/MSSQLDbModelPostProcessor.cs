@@ -1,4 +1,5 @@
 ﻿using DotNetDBTools.Analysis.Core;
+using DotNetDBTools.Analysis.Extensions;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.MSSQL;
 

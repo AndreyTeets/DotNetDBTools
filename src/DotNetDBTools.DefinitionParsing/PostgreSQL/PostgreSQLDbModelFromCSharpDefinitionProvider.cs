@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using DotNetDBTools.Analysis.Core;
+using DotNetDBTools.Analysis.Extensions;
 using DotNetDBTools.Definition.Core;
 using DotNetDBTools.Definition.PostgreSQL;
 using DotNetDBTools.Definition.PostgreSQL.UserDefinedTypes;

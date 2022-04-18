@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using DotNetDBTools.Analysis.Core;
+using DotNetDBTools.Analysis.Extensions;
 using DotNetDBTools.Definition.Agnostic;
 using DotNetDBTools.Definition.Core;
 using DotNetDBTools.DefinitionParsing.Core;

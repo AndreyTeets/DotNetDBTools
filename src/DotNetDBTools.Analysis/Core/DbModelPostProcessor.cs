@@ -1,4 +1,5 @@
-﻿using DotNetDBTools.Models.Core;
+﻿using DotNetDBTools.Analysis.Extensions;
+using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.Analysis.Core;
 

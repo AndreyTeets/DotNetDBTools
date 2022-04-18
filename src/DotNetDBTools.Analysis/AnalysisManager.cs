@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DotNetDBTools.Analysis.Agnostic;
 using DotNetDBTools.Analysis.Core;
-using DotNetDBTools.Analysis.Core.Errors;
+using DotNetDBTools.Analysis.Errors;
 using DotNetDBTools.Analysis.MSSQL;
 using DotNetDBTools.Analysis.MySQL;
 using DotNetDBTools.Analysis.PostgreSQL;

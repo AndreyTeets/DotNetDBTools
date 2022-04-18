@@ -1,4 +1,4 @@
-﻿namespace DotNetDBTools.CodeParsing.Core;
+﻿namespace DotNetDBTools.CodeParsing.Models;
 
 public struct Dependency
 {

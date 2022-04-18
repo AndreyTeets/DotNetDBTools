@@ -19,11 +19,11 @@ internal abstract class IndexEditor<
     where TCreateIndexQuery : CreateIndexQuery
     where TDropIndexQuery : DropIndexQuery
 {
-    protected readonly IQueryExecutor QueryExecutor;
+    private readonly IQueryExecutor _queryExecutor;
 
     protected IndexEditor(IQueryExecutor queryExecutor)
     {
-        QueryExecutor = queryExecutor;
+        _queryExecutor = queryExecutor;
     }
 
     public void CreateIndexes(DatabaseDiff dbDiff)
@@ -42,14 +42,14 @@ internal abstract class IndexEditor<
 
     private void CreateIndex(Index index, Table table)
     {
-        QueryExecutor.Execute(Create<TCreateIndexQuery>(index, table));
-        QueryExecutor.Execute(Create<TInsertDNDBTDbObjectRecordQuery>(index.ID, table.ID, DbObjectType.Index, index.Name));
+        _queryExecutor.Execute(Create<TCreateIndexQuery>(index, table));
+        _queryExecutor.Execute(Create<TInsertDNDBTDbObjectRecordQuery>(index.ID, table.ID, DbObjectType.Index, index.Name));
     }
 
     private void DropIndex(Index index, Table table)
     {
-        QueryExecutor.Execute(Create<TDropIndexQuery>(index, table));
-        QueryExecutor.Execute(Create<TDeleteDNDBTDbObjectRecordQuery>(index.ID));
+        _queryExecutor.Execute(Create<TDropIndexQuery>(index, table));
+        _queryExecutor.Execute(Create<TDeleteDNDBTDbObjectRecordQuery>(index.ID));
     }
 
     private static Dictionary<Guid, Table> CreateIndexToTableMap(IEnumerable<Table> tables)

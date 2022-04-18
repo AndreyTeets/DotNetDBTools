@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
-using DotNetDBTools.Analysis.Core;
+using DotNetDBTools.Analysis.Extensions;
 using DotNetDBTools.Definition.Core;
 using DotNetDBTools.Definition.MySQL;
 using DotNetDBTools.DefinitionParsing.Common;

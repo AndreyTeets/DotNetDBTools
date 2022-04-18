@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using DotNetDBTools.Analysis.Core;
-using DotNetDBTools.CodeParsing.Core;
-using DotNetDBTools.CodeParsing.Core.Models;
-using DotNetDBTools.CodeParsing.PostgreSQL;
+using DotNetDBTools.Analysis.Extensions;
+using DotNetDBTools.CodeParsing;
+using DotNetDBTools.CodeParsing.Models;
 using FluentAssertions;
 using Xunit;
 

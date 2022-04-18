@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Text.RegularExpressions;
-using DotNetDBTools.CodeParsing.Core.Models;
+using DotNetDBTools.CodeParsing.Models;
 
 namespace DotNetDBTools.CodeParsing.Core;
 
-public static class ScriptDeclarationParser
+internal static class ScriptDeclarationParser
 {
     private static readonly RegexOptions s_regexOptions =
         RegexOptions.Singleline |

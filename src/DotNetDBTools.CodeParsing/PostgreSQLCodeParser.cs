@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using Antlr4.Runtime.Tree;
 using DotNetDBTools.CodeParsing.Core;
-using DotNetDBTools.CodeParsing.Core.Models;
 using DotNetDBTools.CodeParsing.Generated;
+using DotNetDBTools.CodeParsing.Models;
+using DotNetDBTools.CodeParsing.PostgreSQL;
 
-namespace DotNetDBTools.CodeParsing.PostgreSQL;
+namespace DotNetDBTools.CodeParsing;
 
 public class PostgreSQLCodeParser : CodeParser<PostgreSQLParser, PostgreSQLLexer>
 {

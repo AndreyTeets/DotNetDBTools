@@ -1,4 +1,4 @@
-﻿namespace DotNetDBTools.Analysis.Core;
+﻿namespace DotNetDBTools.Analysis.Extensions;
 
 public static class StringExtensions
 {

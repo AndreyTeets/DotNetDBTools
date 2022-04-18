@@ -22,7 +22,7 @@ internal abstract class DbModelFromCSharpDefinitionProvider<
     protected readonly IDataTypeMapper DataTypeMapper;
     protected readonly IDbObjectCodeMapper DbObjectCodeMapper;
     protected readonly IDefaultValueMapper DefaultValueMapper;
-    protected readonly IAnalysisManager AnalysisManager = new AnalysisManager();
+    private readonly IAnalysisManager _analysisManager = new AnalysisManager();
 
     protected DbModelFromCSharpDefinitionProvider(
         IDataTypeMapper dataTypeMapper,
@@ -45,10 +45,10 @@ internal abstract class DbModelFromCSharpDefinitionProvider<
         };
         BuildAdditionalDbObjects(database, dbAssembly);
         if (database.Kind != DatabaseKind.Agnostic)
-            AnalysisManager.DoCreateSpecificDbmsDbModelFromDefinitionPostProcessing(database);
-        AnalysisManager.OrderDbObjects(database);
+            _analysisManager.DoCreateSpecificDbmsDbModelFromDefinitionPostProcessing(database);
+        _analysisManager.OrderDbObjects(database);
         if (database.Kind != DatabaseKind.Agnostic)
-            AnalysisManager.BuildDependencies(database);
+            _analysisManager.BuildDependencies(database);
         return database;
     }
     protected virtual void BuildAdditionalDbObjects(Database database, Assembly dbAssembly) { }

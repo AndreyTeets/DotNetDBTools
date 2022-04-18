@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Reflection;
 using DotNetDBTools.Analysis;
-using DotNetDBTools.Analysis.Core.Errors;
+using DotNetDBTools.Analysis.Errors;
 using DotNetDBTools.DefinitionParsing;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.RoslynUtilities;

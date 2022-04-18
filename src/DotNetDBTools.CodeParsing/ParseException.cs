@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DotNetDBTools.CodeParsing.Core;
+namespace DotNetDBTools.CodeParsing;
 
 public class ParseException : Exception
 {

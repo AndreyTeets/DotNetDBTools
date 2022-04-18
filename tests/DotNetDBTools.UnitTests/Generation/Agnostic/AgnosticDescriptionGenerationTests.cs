@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using System.Reflection;
-using DotNetDBTools.Analysis.Core;
+using DotNetDBTools.Analysis.Extensions;
 using DotNetDBTools.DefinitionParsing;
 using DotNetDBTools.Generation;
 using DotNetDBTools.Models.Core;

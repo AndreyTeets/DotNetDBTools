@@ -1,6 +1,6 @@
 ﻿using System;
 using DotNetDBTools.CodeParsing.Core;
-using DotNetDBTools.CodeParsing.Core.Models;
+using DotNetDBTools.CodeParsing.Models;
 using FluentAssertions;
 using Xunit;
 

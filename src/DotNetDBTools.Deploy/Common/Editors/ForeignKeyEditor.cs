@@ -19,11 +19,11 @@ internal abstract class ForeignKeyEditor<
     where TCreateForeignKeyQuery : CreateForeignKeyQuery
     where TDropForeignKeyQuery : DropForeignKeyQuery
 {
-    protected readonly IQueryExecutor QueryExecutor;
+    private readonly IQueryExecutor _queryExecutor;
 
     protected ForeignKeyEditor(IQueryExecutor queryExecutor)
     {
-        QueryExecutor = queryExecutor;
+        _queryExecutor = queryExecutor;
     }
 
     public void CreateForeignKeys(DatabaseDiff dbDiff)
@@ -42,14 +42,14 @@ internal abstract class ForeignKeyEditor<
 
     public void CreateForeignKey(ForeignKey fk, Table table)
     {
-        QueryExecutor.Execute(Create<TCreateForeignKeyQuery>(fk, table.Name));
-        QueryExecutor.Execute(Create<TInsertDNDBTDbObjectRecordQuery>(fk.ID, table.ID, DbObjectType.ForeignKey, fk.Name));
+        _queryExecutor.Execute(Create<TCreateForeignKeyQuery>(fk, table.Name));
+        _queryExecutor.Execute(Create<TInsertDNDBTDbObjectRecordQuery>(fk.ID, table.ID, DbObjectType.ForeignKey, fk.Name));
     }
 
     public void DropForeignKey(ForeignKey fk, Table table)
     {
-        QueryExecutor.Execute(Create<TDropForeignKeyQuery>(fk, table.Name));
-        QueryExecutor.Execute(Create<TDeleteDNDBTDbObjectRecordQuery>(fk.ID));
+        _queryExecutor.Execute(Create<TDropForeignKeyQuery>(fk, table.Name));
+        _queryExecutor.Execute(Create<TDeleteDNDBTDbObjectRecordQuery>(fk.ID));
     }
 
     private static Dictionary<Guid, Table> CreateFKToTableMap(IEnumerable<Table> tables)

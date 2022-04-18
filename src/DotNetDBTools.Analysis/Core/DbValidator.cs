@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using DotNetDBTools.Analysis.Core.Errors;
+using DotNetDBTools.Analysis.Errors;
 using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.Analysis.Core;

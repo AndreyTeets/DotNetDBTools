@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace DotNetDBTools.CodeParsing.Core.Models;
+namespace DotNetDBTools.CodeParsing.Models;
 
 public class IndexInfo : ObjectInfo
 {

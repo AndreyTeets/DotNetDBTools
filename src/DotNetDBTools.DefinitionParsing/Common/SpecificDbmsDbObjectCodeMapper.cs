@@ -1,5 +1,5 @@
 ﻿using System;
-using DotNetDBTools.Analysis.Core;
+using DotNetDBTools.Analysis.Extensions;
 using DotNetDBTools.Definition.Common;
 using DotNetDBTools.Definition.Core;
 using DotNetDBTools.DefinitionParsing.Core;

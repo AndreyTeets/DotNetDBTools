@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Antlr4.Runtime.Misc;
-using DotNetDBTools.CodeParsing.Core;
 using DotNetDBTools.CodeParsing.Generated;
+using DotNetDBTools.CodeParsing.Models;
 using static DotNetDBTools.CodeParsing.Generated.PostgreSQLParser;
 
 namespace DotNetDBTools.CodeParsing.PostgreSQL;

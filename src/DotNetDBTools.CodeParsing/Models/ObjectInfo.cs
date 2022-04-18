@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DotNetDBTools.CodeParsing.Core.Models;
+namespace DotNetDBTools.CodeParsing.Models;
 
 public class ObjectInfo
 {

@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using System.Reflection;
-using DotNetDBTools.Analysis.Core;
+using DotNetDBTools.Analysis.Extensions;
 using DotNetDBTools.Deploy;
 using DotNetDBTools.UnitTests.Utilities;
 using FluentAssertions;

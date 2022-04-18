@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using DotNetDBTools.Analysis.Core;
-using DotNetDBTools.Analysis.Core.Errors;
+using DotNetDBTools.Analysis.Errors;
 using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.Analysis.SQLite;

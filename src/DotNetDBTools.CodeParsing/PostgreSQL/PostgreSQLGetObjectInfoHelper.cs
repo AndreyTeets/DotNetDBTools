@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Text.RegularExpressions;
-using DotNetDBTools.CodeParsing.Core.Models;
+using DotNetDBTools.CodeParsing.Models;
 
 namespace DotNetDBTools.CodeParsing.PostgreSQL;
 
-public static class PostgreSQLGetObjectInfoHelper
+internal static class PostgreSQLGetObjectInfoHelper
 {
     private static readonly RegexOptions s_regexOptions =
         RegexOptions.Singleline |

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DotNetDBTools.CodeParsing.Core.Models;
-using DotNetDBTools.CodeParsing.SQLite;
+using DotNetDBTools.CodeParsing;
+using DotNetDBTools.CodeParsing.Models;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.SQLite.Queries.DBMSSysInfo;
 using DotNetDBTools.Deploy.SQLite.Queries.DNDBTSysInfo;

@@ -1,9 +1,10 @@
 ﻿using Antlr4.Runtime.Tree;
 using DotNetDBTools.CodeParsing.Core;
-using DotNetDBTools.CodeParsing.Core.Models;
 using DotNetDBTools.CodeParsing.Generated;
+using DotNetDBTools.CodeParsing.Models;
+using DotNetDBTools.CodeParsing.SQLite;
 
-namespace DotNetDBTools.CodeParsing.SQLite;
+namespace DotNetDBTools.CodeParsing;
 
 public class SQLiteCodeParser : CodeParser<SQLiteParser, SQLiteLexer>
 {

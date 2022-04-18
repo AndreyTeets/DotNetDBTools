@@ -16,12 +16,11 @@ internal abstract class DbModelConverter<
     where TView : View, new()
     where TColumn : Column, new()
 {
-    protected readonly IDataTypeConverter DataTypeConverter;
-    protected readonly IDefaultValueConverter DefaultValueConverter;
-    protected readonly IDependenciesBuilder DependenciesBuilder;
-    protected readonly IDbModelPostProcessor DbModelPostProcessor;
-
     private readonly DatabaseKind _databaseKind;
+    private readonly IDataTypeConverter _dataTypeConverter;
+    private readonly IDefaultValueConverter _defaultValueConverter;
+    private readonly IDependenciesBuilder _dependenciesBuilder;
+    private readonly IDbModelPostProcessor _dbModelPostProcessor;
 
     protected DbModelConverter(
         DatabaseKind databaseKind,
@@ -31,10 +30,10 @@ internal abstract class DbModelConverter<
         IDbModelPostProcessor dbModelPostProcessor)
     {
         _databaseKind = databaseKind;
-        DataTypeConverter = dataTypeConverter;
-        DefaultValueConverter = defaultValueConverter;
-        DependenciesBuilder = dependenciesBuilder;
-        DbModelPostProcessor = dbModelPostProcessor;
+        _dataTypeConverter = dataTypeConverter;
+        _defaultValueConverter = defaultValueConverter;
+        _dependenciesBuilder = dependenciesBuilder;
+        _dbModelPostProcessor = dbModelPostProcessor;
     }
 
     public Database FromAgnostic(Database database)
@@ -47,9 +46,9 @@ internal abstract class DbModelConverter<
             Scripts = database.Scripts.Select(x => ConvertScript(x)).ToList(),
         };
         specificDbmsDatabase.InitializeAdditionalProperties();
-        DbModelPostProcessor.DoSpecificDbmsDbModelCreationFromDefinitionPostProcessing(specificDbmsDatabase);
-        DbModelPostProcessor.OrderDbObjects(specificDbmsDatabase);
-        DependenciesBuilder.BuildDependencies(specificDbmsDatabase);
+        _dbModelPostProcessor.DoSpecificDbmsDbModelCreationFromDefinitionPostProcessing(specificDbmsDatabase);
+        _dbModelPostProcessor.OrderDbObjects(specificDbmsDatabase);
+        _dependenciesBuilder.BuildDependencies(specificDbmsDatabase);
         return specificDbmsDatabase;
     }
 
@@ -86,11 +85,11 @@ internal abstract class DbModelConverter<
         {
             DataType dataType = column.DataType is AgnosticVerbatimDataType avdt
                 ? new DataType { Name = ConvertCodePiece(avdt.NameCodePiece).Code }
-                : DataTypeConverter.Convert((CSharpDataType)column.DataType);
+                : _dataTypeConverter.Convert((CSharpDataType)column.DataType);
 
             CodePiece defaultValue = column.Default is AgnosticCodePiece acp
                 ? ConvertCodePiece(acp)
-                : DefaultValueConverter.Convert((CSharpDefaultValue)column.Default);
+                : _defaultValueConverter.Convert((CSharpDefaultValue)column.Default);
 
             TColumn specificDbmsColumn = new()
             {

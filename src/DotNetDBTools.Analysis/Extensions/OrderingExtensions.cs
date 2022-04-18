@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DotNetDBTools.Models.Core;
 
-namespace DotNetDBTools.Analysis.Core;
+namespace DotNetDBTools.Analysis.Extensions;
 
 public static class OrderingExtensions
 {

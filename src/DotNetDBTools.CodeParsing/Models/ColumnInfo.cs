@@ -1,4 +1,4 @@
-﻿namespace DotNetDBTools.CodeParsing.Core.Models;
+﻿namespace DotNetDBTools.CodeParsing.Models;
 
 public class ColumnInfo : ObjectInfo
 {
