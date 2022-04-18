@@ -43,13 +43,14 @@ public abstract class DbModelConverter<
             Views = database.Views.Select(x => ConvertView((AgnosticView)x)).ToList(),
             Scripts = database.Scripts.Select(x => ConvertScript(x)).ToList(),
         };
+        specificDbmsDatabase.InitializeAdditionalProperties();
         DbModelPostProcessor.Do_CreateDbModelFromAgnostic_PostProcessing(specificDbmsDatabase);
         return specificDbmsDatabase;
     }
 
-    private TTable ConvertTable(AgnosticTable table)
+    private Table ConvertTable(AgnosticTable table)
     {
-        return new()
+        return new TTable()
         {
             ID = table.ID,
             Name = table.Name,
@@ -63,9 +64,9 @@ public abstract class DbModelConverter<
         };
     }
 
-    private TView ConvertView(AgnosticView view)
+    private View ConvertView(AgnosticView view)
     {
-        return new()
+        return new TView()
         {
             ID = view.ID,
             Name = view.Name,
@@ -73,7 +74,7 @@ public abstract class DbModelConverter<
         };
     }
 
-    private IEnumerable<Column> ConvertColumns(IEnumerable<Column> columns, string tableName)
+    private List<Column> ConvertColumns(IEnumerable<Column> columns, string tableName)
     {
         List<Column> specificDbmsColumns = new();
         foreach (Column column in columns)

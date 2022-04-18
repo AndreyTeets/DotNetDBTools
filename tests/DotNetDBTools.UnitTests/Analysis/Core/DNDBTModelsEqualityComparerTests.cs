@@ -136,12 +136,12 @@ public class DNDBTModelsEqualityComparerTests
         {
             ID = new Guid("C51E94AF-3E2D-4D6A-840E-78B8C23C6BE8"),
             Name = "PK_T1NewName",
-            Columns = new[] { "C1", "C2" },
+            Columns = new List<string>() { "C1", "C2" },
         };
         _comparer.Equals(_tableModel1, _tableModel2).Should().BeFalse();
 
         _tableModel2 = CreateTemplateAgnosticTableModel();
-        _tableModel2.Indexes.First().IncludeColumns = new[] { "C2" };
+        _tableModel2.Indexes.First().IncludeColumns = new List<string>() { "C2" };
         _comparer.Equals(_tableModel1, _tableModel2).Should().BeFalse();
 
         _tableModel2 = CreateTemplateAgnosticTableModel();
@@ -181,7 +181,7 @@ public class DNDBTModelsEqualityComparerTests
         {
             ID = new Guid("C51E94AF-3E2D-4D6A-840E-78B8C23C6BE8"),
             Name = "PK_T1NewName",
-            Columns = new[] { "C1", "C2" },
+            Columns = new List<string>() { "C1", "C2" },
         };
         _comparer.Equals(_tableModel1, _tableModel2).Should().BeFalse();
 
@@ -227,7 +227,7 @@ Values [DotNetDBTools.Models.Core.PrimaryKey] and [DotNetDBTools.Models.Core.Pri
             {
                 ID = new Guid("C51E94AF-3E2D-4D6A-840E-78B8C23C6BE8"),
                 Name = "PK_T1",
-                Columns = new[] { "C1", "C2" },
+                Columns = new List<string>() { "C1", "C2" },
             },
             UniqueConstraints = new List<UniqueConstraint>(),
             CheckConstraints = new List<CheckConstraint>()
@@ -245,7 +245,7 @@ Values [DotNetDBTools.Models.Core.PrimaryKey] and [DotNetDBTools.Models.Core.Pri
                 {
                     ID = new Guid("65C65B34-E769-4826-8F06-B8E83BF7D06A"),
                     Name = "IDX_T1_1",
-                    Columns = new[] { "C1" },
+                    Columns = new List<string>() { "C1" },
                     IncludeColumns = new List<string>(),
                     Unique = true,
                 }
@@ -257,9 +257,9 @@ Values [DotNetDBTools.Models.Core.PrimaryKey] and [DotNetDBTools.Models.Core.Pri
                 {
                     ID = new Guid("D23109D4-CB94-40B2-BDB2-BC6292F4A5FA"),
                     Name = "FK_T1_1",
-                    ThisColumnNames = new[] { "C1", "C2" },
+                    ThisColumnNames = new List<string>() { "C1", "C2" },
                     ReferencedTableName = "T2",
-                    ReferencedTableColumnNames = new[] { "C1", "C2" },
+                    ReferencedTableColumnNames = new List<string>() { "C1", "C2" },
                     OnUpdate = "NO ACTION",
                     OnDelete = "SET NULL",
                 }

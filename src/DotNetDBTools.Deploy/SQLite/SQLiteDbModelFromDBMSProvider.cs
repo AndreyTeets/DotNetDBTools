@@ -57,7 +57,7 @@ internal class SQLiteDbModelFromDBMSProvider : DbModelFromDBMSProvider<
                 Name = ckInfo.Name,
                 CodePiece = new CodePiece { Code = ckInfo.Code },
             };
-            ((List<CheckConstraint>)table.CheckConstraints).Add(ck);
+            table.CheckConstraints.Add(ck);
         }
     }
 

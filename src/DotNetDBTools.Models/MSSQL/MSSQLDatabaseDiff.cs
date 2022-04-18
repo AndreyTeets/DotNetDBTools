@@ -6,16 +6,16 @@ namespace DotNetDBTools.Models.MSSQL;
 
 public class MSSQLDatabaseDiff : DatabaseDiff
 {
-    public IEnumerable<MSSQLUserDefinedType> AddedUserDefinedTypes { get; set; }
-    public IEnumerable<MSSQLUserDefinedType> RemovedUserDefinedTypes { get; set; }
-    public IEnumerable<MSSQLUserDefinedTypeDiff> ChangedUserDefinedTypes { get; set; }
+    public List<MSSQLUserDefinedType> AddedUserDefinedTypes { get; set; }
+    public List<MSSQLUserDefinedType> RemovedUserDefinedTypes { get; set; }
+    public List<MSSQLUserDefinedTypeDiff> ChangedUserDefinedTypes { get; set; }
 
-    public IEnumerable<MSSQLUserDefinedTableType> UserDefinedTableTypesToCreate { get; set; }
-    public IEnumerable<MSSQLUserDefinedTableType> UserDefinedTableTypesToDrop { get; set; }
+    public List<MSSQLUserDefinedTableType> UserDefinedTableTypesToCreate { get; set; }
+    public List<MSSQLUserDefinedTableType> UserDefinedTableTypesToDrop { get; set; }
 
-    public IEnumerable<MSSQLFunction> FunctionsToCreate { get; set; }
-    public IEnumerable<MSSQLFunction> FunctionsToDrop { get; set; }
+    public List<MSSQLFunction> FunctionsToCreate { get; set; }
+    public List<MSSQLFunction> FunctionsToDrop { get; set; }
 
-    public IEnumerable<MSSQLProcedure> ProceduresToCreate { get; set; }
-    public IEnumerable<MSSQLProcedure> ProceduresToDrop { get; set; }
+    public List<MSSQLProcedure> ProceduresToCreate { get; set; }
+    public List<MSSQLProcedure> ProceduresToDrop { get; set; }
 }

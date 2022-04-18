@@ -72,9 +72,12 @@ internal abstract class DbModelFromDBMSProvider<
 
     public Database CreateDbModelUsingDBMSSysInfo()
     {
-        TDatabase database = new();
-        database.Tables = BuildTables();
-        database.Views = BuildViews();
+        TDatabase database = new()
+        {
+            Tables = BuildTables(),
+            Views = BuildViews(),
+            Scripts = new(),
+        };
         BuildAdditionalDbObjects(database);
         DbModelPostProcessor.Do_CreateDbModelUsingDBMSSysInfo_PostProcessing(database);
         return database;
@@ -150,7 +153,7 @@ internal abstract class DbModelFromDBMSProvider<
                 MaxDbVersionToExecute = scriptRecord.MaxDbVersionToExecute,
                 CodePiece = new CodePiece { Code = scriptRecord.Code },
             };
-            ((List<Script>)database.Scripts).Add(script);
+            database.Scripts.Add(script);
         }
     }
 
@@ -161,7 +164,7 @@ internal abstract class DbModelFromDBMSProvider<
         database.Version = dbAttributesRecord.Version;
     }
 
-    private IEnumerable<Table> BuildTables()
+    private List<Table> BuildTables()
     {
         Dictionary<string, Table> tables = BuildTablesListWithColumns();
         BuildTablesPrimaryKeys(tables);
@@ -171,11 +174,11 @@ internal abstract class DbModelFromDBMSProvider<
         BuildTablesTriggers(tables);
         BuildTablesForeignKeys(tables);
         BuildAdditionalTablesAttributes(tables);
-        return tables.Select(x => x.Value);
+        return tables.Select(x => x.Value).ToList();
     }
     protected virtual void BuildAdditionalTablesAttributes(Dictionary<string, Table> tables) { }
 
-    private IEnumerable<View> BuildViews()
+    private List<View> BuildViews()
     {
         TGetViewsFromDBMSSysInfoQuery query = new();
         IEnumerable<ViewRecord> viewRecords = QueryExecutor.Query<ViewRecord>(query);
@@ -216,7 +219,7 @@ internal abstract class DbModelFromDBMSProvider<
                 tables.Add(columnRecord.TableName, table);
             }
             Column column = query.Mapper.MapToColumnModel(columnRecord);
-            ((List<Column>)tables[columnRecord.TableName].Columns).Add(column);
+            tables[columnRecord.TableName].Columns.Add(column);
         }
         return tables;
     }
@@ -265,7 +268,7 @@ internal abstract class DbModelFromDBMSProvider<
             if (!addedUniqueConstraints.Contains(ucr.ConstraintName))
             {
                 UniqueConstraint uc = query.Mapper.MapExceptColumnsToUniqueConstraintModel(ucr);
-                ((List<UniqueConstraint>)tables[ucr.TableName].UniqueConstraints).Add(uc);
+                tables[ucr.TableName].UniqueConstraints.Add(uc);
                 addedUniqueConstraints.Add(ucr.ConstraintName);
             }
         }
@@ -286,7 +289,7 @@ internal abstract class DbModelFromDBMSProvider<
         foreach (CheckConstraintRecord ckr in checkConstraintRecords)
         {
             CheckConstraint ck = query.Mapper.MapToCheckConstraintModel(ckr);
-            ((List<CheckConstraint>)tables[ckr.TableName].CheckConstraints).Add(ck);
+            tables[ckr.TableName].CheckConstraints.Add(ck);
         }
     }
 
@@ -312,7 +315,7 @@ internal abstract class DbModelFromDBMSProvider<
             if (!addedIndexes.Contains(ir.IndexName))
             {
                 Index index = query.Mapper.MapExceptColumnsToIndexModel(ir);
-                ((List<Index>)tables[ir.TableName].Indexes).Add(index);
+                tables[ir.TableName].Indexes.Add(index);
                 addedIndexes.Add(ir.IndexName);
             }
         }
@@ -334,7 +337,7 @@ internal abstract class DbModelFromDBMSProvider<
         foreach (TriggerRecord tr in triggerRecords)
         {
             Trigger trigger = query.Mapper.MapToTriggerModel(tr);
-            ((List<Trigger>)tables[tr.TableName].Triggers).Add(trigger);
+            tables[tr.TableName].Triggers.Add(trigger);
         }
     }
 
@@ -358,7 +361,7 @@ internal abstract class DbModelFromDBMSProvider<
             if (!addedForeignKeys.Contains(fkr.ForeignKeyName))
             {
                 ForeignKey fk = query.Mapper.MapExceptColumnsToForeignKeyModel(fkr);
-                ((List<ForeignKey>)tables[fkr.ThisTableName].ForeignKeys).Add(fk);
+                tables[fkr.ThisTableName].ForeignKeys.Add(fk);
                 addedForeignKeys.Add(fkr.ForeignKeyName);
             }
         }

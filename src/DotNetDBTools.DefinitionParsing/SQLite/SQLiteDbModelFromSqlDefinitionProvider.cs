@@ -17,13 +17,14 @@ internal class SQLiteDbModelFromSqlDefinitionProvider : IDbModelFromDefinitionPr
 {
     public Database CreateDbModel(Assembly dbAssembly)
     {
-        SQLiteDatabase database = new();
-        database.Version = DbAssemblyInfoHelper.GetDbVersion(dbAssembly);
-
         List<ObjectInfo> dbObjects = ParseDbObjectsFromEmbeddedSqlFiles(dbAssembly);
-        database.Tables = BuildTableModels(dbObjects.OfType<TableInfo>());
-        database.Views = BuildViewModels(dbObjects.OfType<ViewInfo>());
-        database.Scripts = BuildScriptModels(dbObjects.OfType<ScriptInfo>());
+        SQLiteDatabase database = new()
+        {
+            Version = DbAssemblyInfoHelper.GetDbVersion(dbAssembly),
+            Tables = BuildTableModels(dbObjects.OfType<TableInfo>()),
+            Views = BuildViewModels(dbObjects.OfType<ViewInfo>()),
+            Scripts = BuildScriptModels(dbObjects.OfType<ScriptInfo>()),
+        };
 
         Dictionary<string, Table> tableNameToTableMap = database.Tables.ToDictionary(x => x.Name, x => x);
         BuildTablesIndexes(tableNameToTableMap, dbObjects.OfType<IndexInfo>());
@@ -51,9 +52,9 @@ internal class SQLiteDbModelFromSqlDefinitionProvider : IDbModelFromDefinitionPr
         return dbObjects;
     }
 
-    private List<SQLiteTable> BuildTableModels(IEnumerable<TableInfo> tables)
+    private List<Table> BuildTableModels(IEnumerable<TableInfo> tables)
     {
-        List<SQLiteTable> tableModels = new();
+        List<Table> tableModels = new();
         foreach (TableInfo table in tables)
         {
             if (!table.ID.HasValue)
@@ -76,9 +77,9 @@ internal class SQLiteDbModelFromSqlDefinitionProvider : IDbModelFromDefinitionPr
         return tableModels;
     }
 
-    private List<SQLiteView> BuildViewModels(IEnumerable<ViewInfo> views)
+    private List<View> BuildViewModels(IEnumerable<ViewInfo> views)
     {
-        List<SQLiteView> viewModels = new();
+        List<View> viewModels = new();
         foreach (ViewInfo view in views)
         {
             if (!view.ID.HasValue)
@@ -236,7 +237,7 @@ internal class SQLiteDbModelFromSqlDefinitionProvider : IDbModelFromDefinitionPr
                 Columns = index.Columns,
                 Unique = index.Unique,
             };
-            ((List<Index>)tableNameToTableMap[index.Table].Indexes).Add(indexModel);
+            tableNameToTableMap[index.Table].Indexes.Add(indexModel);
         }
     }
 
@@ -255,7 +256,7 @@ internal class SQLiteDbModelFromSqlDefinitionProvider : IDbModelFromDefinitionPr
                 Name = trigger.Name,
                 CodePiece = new CodePiece { Code = trigger.Code.NormalizeLineEndings() },
             };
-            ((List<Trigger>)tableNameToTableMap[trigger.Table].Triggers).Add(triggerModel);
+            tableNameToTableMap[trigger.Table].Triggers.Add(triggerModel);
         }
     }
 }

@@ -14,8 +14,8 @@ internal class MySQLDiffCreator : DiffCreator
         {
             NewDatabase = newDatabase,
             OldDatabase = oldDatabase,
-            ViewsToCreate = new List<MySQLView>(),
-            ViewsToDrop = new List<MySQLView>(),
+            ViewsToCreate = new List<View>(),
+            ViewsToDrop = new List<View>(),
             FunctionsToCreate = new List<MySQLFunction>(),
             FunctionsToDrop = new List<MySQLFunction>(),
             ProceduresToCreate = new List<MySQLProcedure>(),

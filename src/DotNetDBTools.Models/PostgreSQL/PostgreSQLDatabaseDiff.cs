@@ -6,25 +6,25 @@ namespace DotNetDBTools.Models.PostgreSQL;
 
 public class PostgreSQLDatabaseDiff : DatabaseDiff
 {
-    public IEnumerable<PostgreSQLCompositeType> AddedCompositeTypes { get; set; }
-    public IEnumerable<PostgreSQLCompositeType> RemovedCompositeTypes { get; set; }
-    public IEnumerable<PostgreSQLCompositeTypeDiff> ChangedCompositeTypes { get; set; }
+    public List<PostgreSQLCompositeType> AddedCompositeTypes { get; set; }
+    public List<PostgreSQLCompositeType> RemovedCompositeTypes { get; set; }
+    public List<PostgreSQLCompositeTypeDiff> ChangedCompositeTypes { get; set; }
 
-    public IEnumerable<PostgreSQLDomainType> AddedDomainTypes { get; set; }
-    public IEnumerable<PostgreSQLDomainType> RemovedDomainTypes { get; set; }
-    public IEnumerable<PostgreSQLDomainTypeDiff> ChangedDomainTypes { get; set; }
+    public List<PostgreSQLDomainType> AddedDomainTypes { get; set; }
+    public List<PostgreSQLDomainType> RemovedDomainTypes { get; set; }
+    public List<PostgreSQLDomainTypeDiff> ChangedDomainTypes { get; set; }
 
-    public IEnumerable<PostgreSQLEnumType> AddedEnumTypes { get; set; }
-    public IEnumerable<PostgreSQLEnumType> RemovedEnumTypes { get; set; }
-    public IEnumerable<PostgreSQLEnumTypeDiff> ChangedEnumTypes { get; set; }
+    public List<PostgreSQLEnumType> AddedEnumTypes { get; set; }
+    public List<PostgreSQLEnumType> RemovedEnumTypes { get; set; }
+    public List<PostgreSQLEnumTypeDiff> ChangedEnumTypes { get; set; }
 
-    public IEnumerable<PostgreSQLRangeType> AddedRangeTypes { get; set; }
-    public IEnumerable<PostgreSQLRangeType> RemovedRangeTypes { get; set; }
-    public IEnumerable<PostgreSQLRangeTypeDiff> ChangedRangeTypes { get; set; }
+    public List<PostgreSQLRangeType> AddedRangeTypes { get; set; }
+    public List<PostgreSQLRangeType> RemovedRangeTypes { get; set; }
+    public List<PostgreSQLRangeTypeDiff> ChangedRangeTypes { get; set; }
 
-    public IEnumerable<PostgreSQLFunction> FunctionsToCreate { get; set; }
-    public IEnumerable<PostgreSQLFunction> FunctionsToDrop { get; set; }
+    public List<PostgreSQLFunction> FunctionsToCreate { get; set; }
+    public List<PostgreSQLFunction> FunctionsToDrop { get; set; }
 
-    public IEnumerable<PostgreSQLProcedure> ProceduresToCreate { get; set; }
-    public IEnumerable<PostgreSQLProcedure> ProceduresToDrop { get; set; }
+    public List<PostgreSQLProcedure> ProceduresToCreate { get; set; }
+    public List<PostgreSQLProcedure> ProceduresToDrop { get; set; }
 }

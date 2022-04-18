@@ -7,25 +7,25 @@ public abstract class TableDiff
     public Table NewTable { get; set; }
     public Table OldTable { get; set; }
 
-    public IEnumerable<Column> AddedColumns { get; set; }
-    public IEnumerable<Column> RemovedColumns { get; set; }
-    public IEnumerable<ColumnDiff> ChangedColumns { get; set; }
+    public List<Column> AddedColumns { get; set; }
+    public List<Column> RemovedColumns { get; set; }
+    public List<ColumnDiff> ChangedColumns { get; set; }
 
     public PrimaryKey PrimaryKeyToCreate { get; set; }
     public PrimaryKey PrimaryKeyToDrop { get; set; }
 
-    public IEnumerable<UniqueConstraint> UniqueConstraintsToCreate { get; set; }
-    public IEnumerable<UniqueConstraint> UniqueConstraintsToDrop { get; set; }
+    public List<UniqueConstraint> UniqueConstraintsToCreate { get; set; }
+    public List<UniqueConstraint> UniqueConstraintsToDrop { get; set; }
 
-    public IEnumerable<CheckConstraint> CheckConstraintsToCreate { get; set; }
-    public IEnumerable<CheckConstraint> CheckConstraintsToDrop { get; set; }
+    public List<CheckConstraint> CheckConstraintsToCreate { get; set; }
+    public List<CheckConstraint> CheckConstraintsToDrop { get; set; }
 
-    public IEnumerable<Index> IndexesToCreate { get; set; }
-    public IEnumerable<Index> IndexesToDrop { get; set; }
+    public List<Index> IndexesToCreate { get; set; }
+    public List<Index> IndexesToDrop { get; set; }
 
-    public IEnumerable<Trigger> TriggersToCreate { get; set; }
-    public IEnumerable<Trigger> TriggersToDrop { get; set; }
+    public List<Trigger> TriggersToCreate { get; set; }
+    public List<Trigger> TriggersToDrop { get; set; }
 
-    public IEnumerable<ForeignKey> ForeignKeysToCreate { get; set; }
-    public IEnumerable<ForeignKey> ForeignKeysToDrop { get; set; }
+    public List<ForeignKey> ForeignKeysToCreate { get; set; }
+    public List<ForeignKey> ForeignKeysToDrop { get; set; }
 }

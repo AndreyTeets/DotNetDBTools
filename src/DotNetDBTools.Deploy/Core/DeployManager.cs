@@ -122,6 +122,7 @@ public abstract class DeployManager<TDatabase> : IDeployManager
     {
         Events.InvokeEventFired(EventType.GeneratePublishScriptBegan);
         Database oldDatabase = new TDatabase();
+        oldDatabase.InitializeProperties();
         GeneratePublishScriptImpl(database, oldDatabase, outputPath, noDNDBTInfo: false);
         Events.InvokeEventFired(EventType.GeneratePublishScriptFinished);
     }
@@ -159,6 +160,7 @@ public abstract class DeployManager<TDatabase> : IDeployManager
     {
         Events.InvokeEventFired(EventType.GeneratePublishScriptBegan);
         Database oldDatabase = new TDatabase();
+        oldDatabase.InitializeProperties();
         GeneratePublishScriptImpl(database, oldDatabase, outputPath, noDNDBTInfo: true);
         Events.InvokeEventFired(EventType.GeneratePublishScriptFinished);
     }

@@ -68,7 +68,7 @@ public class PostgreSQLDbModelPostProcessor : DbModelPostProcessor
                             Name = func.Name,
                             CodePiece = new CodePiece { Code = func.Code.NormalizeLineEndings() },
                         };
-                        ((List<PostgreSQLFunction>)database.Functions).Add(funcModel);
+                        database.Functions.Add(funcModel);
                         trg.CodePiece.Code = statements[1].NormalizeLineEndings();
                     }
                     else

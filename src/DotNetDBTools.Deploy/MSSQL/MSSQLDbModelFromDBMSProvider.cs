@@ -32,15 +32,18 @@ internal class MSSQLDbModelFromDBMSProvider : DbModelFromDBMSProvider<
 
     protected override void ReplaceAdditionalDbModelObjectsIDsAndCodeWithDNDBTSysInfo(Database database, Dictionary<string, DNDBTInfo> dbObjectIDsMap)
     {
-        MSSQLDatabase mssqlDatabase = (MSSQLDatabase)database;
-        foreach (MSSQLUserDefinedType udt in mssqlDatabase.UserDefinedTypes)
+        MSSQLDatabase db = (MSSQLDatabase)database;
+        foreach (MSSQLUserDefinedType udt in db.UserDefinedTypes)
             udt.ID = dbObjectIDsMap[$"{DbObjectType.UserDefinedType}_{udt.Name}_{null}"].ID;
     }
 
     protected override void BuildAdditionalDbObjects(Database database)
     {
-        MSSQLDatabase mssqlDatabase = (MSSQLDatabase)database;
-        mssqlDatabase.UserDefinedTypes = BuildUserDefinedTypes(new MSSQLGetTypesFromDBMSSysInfoQuery());
+        MSSQLDatabase db = (MSSQLDatabase)database;
+        db.UserDefinedTypes = BuildUserDefinedTypes(new MSSQLGetTypesFromDBMSSysInfoQuery());
+        db.UserDefinedTableTypes = new();
+        db.Functions = new();
+        db.Procedures = new();
     }
 
     private List<MSSQLUserDefinedType> BuildUserDefinedTypes(MSSQLGetTypesFromDBMSSysInfoQuery query)

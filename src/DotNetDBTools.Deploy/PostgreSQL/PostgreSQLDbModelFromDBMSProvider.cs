@@ -38,10 +38,10 @@ internal class PostgreSQLDbModelFromDBMSProvider : DbModelFromDBMSProvider<
 
     protected override void ReplaceAdditionalDbModelObjectsIDsAndCodeWithDNDBTSysInfo(Database database, Dictionary<string, DNDBTInfo> dbObjectIDsMap)
     {
-        PostgreSQLDatabase postgresqlDatabase = (PostgreSQLDatabase)database;
-        foreach (PostgreSQLCompositeType type in postgresqlDatabase.CompositeTypes)
+        PostgreSQLDatabase db = (PostgreSQLDatabase)database;
+        foreach (PostgreSQLCompositeType type in db.CompositeTypes)
             type.ID = dbObjectIDsMap[$"{DbObjectType.UserDefinedType}_{type.Name}_{null}"].ID;
-        foreach (PostgreSQLDomainType type in postgresqlDatabase.DomainTypes)
+        foreach (PostgreSQLDomainType type in db.DomainTypes)
         {
             DNDBTInfo dndbtInfo = dbObjectIDsMap[$"{DbObjectType.UserDefinedType}_{type.Name}_{null}"];
             type.ID = dndbtInfo.ID;
@@ -54,11 +54,11 @@ internal class PostgreSQLDbModelFromDBMSProvider : DbModelFromDBMSProvider<
                 ck.CodePiece.Code = dndbtInfoCK.Code;
             }
         }
-        foreach (PostgreSQLEnumType type in postgresqlDatabase.EnumTypes)
+        foreach (PostgreSQLEnumType type in db.EnumTypes)
             type.ID = dbObjectIDsMap[$"{DbObjectType.UserDefinedType}_{type.Name}_{null}"].ID;
-        foreach (PostgreSQLRangeType type in postgresqlDatabase.RangeTypes)
+        foreach (PostgreSQLRangeType type in db.RangeTypes)
             type.ID = dbObjectIDsMap[$"{DbObjectType.UserDefinedType}_{type.Name}_{null}"].ID;
-        foreach (PostgreSQLFunction func in postgresqlDatabase.Functions)
+        foreach (PostgreSQLFunction func in db.Functions)
         {
             DNDBTInfo dndbtInfo = dbObjectIDsMap[$"{DbObjectType.Function}_{func.Name}_{null}"];
             func.ID = dndbtInfo.ID;
@@ -68,12 +68,13 @@ internal class PostgreSQLDbModelFromDBMSProvider : DbModelFromDBMSProvider<
 
     protected override void BuildAdditionalDbObjects(Database database)
     {
-        PostgreSQLDatabase postgresqlDatabase = (PostgreSQLDatabase)database;
-        postgresqlDatabase.CompositeTypes = BuildCompositeTypes(new PostgreSQLGetCompositeTypesFromDBMSSysInfoQuery());
-        postgresqlDatabase.DomainTypes = BuildDomainTypes(new PostgreSQLGetDomainTypesFromDBMSSysInfoQuery());
-        postgresqlDatabase.EnumTypes = BuildEnumTypes(new PostgreSQLGetEnumTypesFromDBMSSysInfoQuery());
-        postgresqlDatabase.RangeTypes = BuildRangeTypes(new PostgreSQLGetRangeTypesFromDBMSSysInfoQuery());
-        postgresqlDatabase.Functions = BuildFunctions(new PostgreSQLGetFunctionsFromDBMSSysInfoQuery());
+        PostgreSQLDatabase db = (PostgreSQLDatabase)database;
+        db.CompositeTypes = BuildCompositeTypes(new PostgreSQLGetCompositeTypesFromDBMSSysInfoQuery());
+        db.DomainTypes = BuildDomainTypes(new PostgreSQLGetDomainTypesFromDBMSSysInfoQuery());
+        db.EnumTypes = BuildEnumTypes(new PostgreSQLGetEnumTypesFromDBMSSysInfoQuery());
+        db.RangeTypes = BuildRangeTypes(new PostgreSQLGetRangeTypesFromDBMSSysInfoQuery());
+        db.Functions = BuildFunctions(new PostgreSQLGetFunctionsFromDBMSSysInfoQuery());
+        db.Procedures = new();
     }
 
     private List<PostgreSQLCompositeType> BuildCompositeTypes(PostgreSQLGetCompositeTypesFromDBMSSysInfoQuery query)
@@ -101,7 +102,7 @@ internal class PostgreSQLDbModelFromDBMSProvider : DbModelFromDBMSProvider<
                 typeRecord.AttributeDataTypeLength,
                 typeRecord.AttributeDataTypeIsBaseDataType),
             };
-            ((List<PostgreSQLCompositeTypeAttribute>)typesMap[typeRecord.TypeName].Attributes).Add(attribute);
+            typesMap[typeRecord.TypeName].Attributes.Add(attribute);
         }
         return typesMap.Select(x => x.Value).ToList();
     }
@@ -136,7 +137,7 @@ internal class PostgreSQLDbModelFromDBMSProvider : DbModelFromDBMSProvider<
                 Name = typeRecord.CheckConstrantName,
                 CodePiece = new CodePiece { Code = typeRecord.CheckConstrantCode },
             };
-            ((List<CheckConstraint>)typesMap[typeRecord.TypeName].CheckConstraints).Add(checkConstraint);
+            typesMap[typeRecord.TypeName].CheckConstraints.Add(checkConstraint);
         }
         return typesMap.Select(x => x.Value).ToList();
     }
@@ -158,7 +159,7 @@ internal class PostgreSQLDbModelFromDBMSProvider : DbModelFromDBMSProvider<
                 typesMap.Add(typeRecord.TypeName, type);
             }
 
-            ((List<string>)typesMap[typeRecord.TypeName].AllowedValues).Add(typeRecord.LabelName);
+            typesMap[typeRecord.TypeName].AllowedValues.Add(typeRecord.LabelName);
         }
         return typesMap.Select(x => x.Value).ToList();
     }

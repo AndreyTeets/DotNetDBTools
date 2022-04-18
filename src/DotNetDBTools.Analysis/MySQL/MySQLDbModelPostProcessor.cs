@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using DotNetDBTools.Analysis.Core;
+﻿using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.MySQL;
 
@@ -39,9 +38,9 @@ public class MySQLDbModelPostProcessor : DbModelPostProcessor
                     Columns = uc.Columns,
                     Unique = true,
                 };
-                ((List<Index>)table.Indexes).Add(index);
+                table.Indexes.Add(index);
             }
-            ((List<UniqueConstraint>)table.UniqueConstraints).Clear();
+            table.UniqueConstraints.Clear();
         }
     }
 }

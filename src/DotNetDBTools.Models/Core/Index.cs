@@ -4,7 +4,7 @@ namespace DotNetDBTools.Models.Core;
 
 public class Index : DbObject
 {
-    public IEnumerable<string> Columns { get; set; }
-    public IEnumerable<string> IncludeColumns { get; set; } = new List<string>();
+    public List<string> Columns { get; set; }
+    public List<string> IncludeColumns { get; set; } = new();
     public bool Unique { get; set; }
 }

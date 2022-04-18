@@ -9,17 +9,18 @@ public class MSSQLDatabase : Database
     public MSSQLDatabase()
     {
         Kind = DatabaseKind.MSSQL;
-        Tables = new List<MSSQLTable>();
-        Views = new List<MSSQLView>();
-        Scripts = new List<Script>();
-        UserDefinedTypes = new List<MSSQLUserDefinedType>();
-        UserDefinedTableTypes = new List<MSSQLUserDefinedTableType>();
-        Functions = new List<MSSQLFunction>();
-        Procedures = new List<MSSQLProcedure>();
     }
 
-    public IEnumerable<MSSQLUserDefinedType> UserDefinedTypes { get; set; }
-    public IEnumerable<MSSQLUserDefinedTableType> UserDefinedTableTypes { get; set; }
-    public IEnumerable<MSSQLFunction> Functions { get; set; }
-    public IEnumerable<MSSQLProcedure> Procedures { get; set; }
+    public List<MSSQLUserDefinedType> UserDefinedTypes { get; set; }
+    public List<MSSQLUserDefinedTableType> UserDefinedTableTypes { get; set; }
+    public List<MSSQLFunction> Functions { get; set; }
+    public List<MSSQLProcedure> Procedures { get; set; }
+
+    public override void InitializeAdditionalProperties()
+    {
+        UserDefinedTypes = new();
+        UserDefinedTableTypes = new();
+        Functions = new();
+        Procedures = new();
+    }
 }

@@ -20,8 +20,8 @@ public static class ForeignKeysHelper
         HashSet<ForeignKey> allForeignKeysToCreate = new(allAddedForeignKeys);
         allForeignKeysToCreate.UnionWith(unchangedForeignKeysButReferencingChangedObjects);
 
-        dbDiff.AllForeignKeysToCreate = allForeignKeysToCreate;
-        dbDiff.AllForeignKeysToDrop = allForeignKeysToDrop;
+        dbDiff.AllForeignKeysToCreate = allForeignKeysToCreate.ToList();
+        dbDiff.AllForeignKeysToDrop = allForeignKeysToDrop.ToList();
     }
 
     private static HashSet<ForeignKey> GetAllAddedForeignKeys(DatabaseDiff dbDiff)

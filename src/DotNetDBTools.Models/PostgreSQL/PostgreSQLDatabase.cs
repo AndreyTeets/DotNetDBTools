@@ -9,22 +9,23 @@ public class PostgreSQLDatabase : Database
     public PostgreSQLDatabase()
     {
         Kind = DatabaseKind.PostgreSQL;
-        Tables = new List<PostgreSQLTable>();
-        Views = new List<PostgreSQLView>();
-        Scripts = new List<Script>();
-        CompositeTypes = new List<PostgreSQLCompositeType>();
-        DomainTypes = new List<PostgreSQLDomainType>();
-        EnumTypes = new List<PostgreSQLEnumType>();
-        RangeTypes = new List<PostgreSQLRangeType>();
-        Functions = new List<PostgreSQLFunction>();
-        Procedures = new List<PostgreSQLProcedure>();
     }
 
-    public IEnumerable<PostgreSQLCompositeType> CompositeTypes { get; set; }
-    public IEnumerable<PostgreSQLDomainType> DomainTypes { get; set; }
-    public IEnumerable<PostgreSQLEnumType> EnumTypes { get; set; }
-    public IEnumerable<PostgreSQLRangeType> RangeTypes { get; set; }
+    public List<PostgreSQLCompositeType> CompositeTypes { get; set; }
+    public List<PostgreSQLDomainType> DomainTypes { get; set; }
+    public List<PostgreSQLEnumType> EnumTypes { get; set; }
+    public List<PostgreSQLRangeType> RangeTypes { get; set; }
 
-    public IEnumerable<PostgreSQLFunction> Functions { get; set; }
-    public IEnumerable<PostgreSQLProcedure> Procedures { get; set; }
+    public List<PostgreSQLFunction> Functions { get; set; }
+    public List<PostgreSQLProcedure> Procedures { get; set; }
+
+    public override void InitializeAdditionalProperties()
+    {
+        CompositeTypes = new();
+        DomainTypes = new();
+        EnumTypes = new();
+        RangeTypes = new();
+        Functions = new();
+        Procedures = new();
+    }
 }

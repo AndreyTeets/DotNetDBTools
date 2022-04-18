@@ -31,12 +31,13 @@ internal class PostgreSQLDbModelFromCSharpDefinitionProvider : DbModelFromCSharp
 
     protected override void BuildAdditionalDbObjects(Database database, Assembly dbAssembly)
     {
-        PostgreSQLDatabase postgresqlDatabase = (PostgreSQLDatabase)database;
-        postgresqlDatabase.CompositeTypes = BuildCompositeTypeModels(dbAssembly);
-        postgresqlDatabase.DomainTypes = BuildDomainModels(dbAssembly);
-        postgresqlDatabase.EnumTypes = BuildEnumTypeModels(dbAssembly);
-        postgresqlDatabase.RangeTypes = BuildRangeTypeModels(dbAssembly);
-        postgresqlDatabase.Functions = BuildFunctionModels(dbAssembly);
+        PostgreSQLDatabase db = (PostgreSQLDatabase)database;
+        db.CompositeTypes = BuildCompositeTypeModels(dbAssembly);
+        db.DomainTypes = BuildDomainModels(dbAssembly);
+        db.EnumTypes = BuildEnumTypeModels(dbAssembly);
+        db.RangeTypes = BuildRangeTypeModels(dbAssembly);
+        db.Functions = BuildFunctionModels(dbAssembly);
+        db.Procedures = new();
     }
 
     protected override void BuildAdditionalTableModelProperties(PostgreSQLTable tableModel, IBaseTable table)
@@ -70,7 +71,7 @@ internal class PostgreSQLDbModelFromCSharpDefinitionProvider : DbModelFromCSharp
                 {
                     Name = x.Key,
                     DataType = DataTypeMapper.MapToDataTypeModel(x.Value),
-                }),
+                }).ToList(),
             };
             typeModelsList.Add(typeModel);
         }
@@ -127,7 +128,7 @@ internal class PostgreSQLDbModelFromCSharpDefinitionProvider : DbModelFromCSharp
             {
                 ID = type.ID,
                 Name = type.GetType().Name,
-                AllowedValues = type.AllowedValues,
+                AllowedValues = type.AllowedValues.ToList(),
             };
             typeModelsList.Add(typeModel);
         }

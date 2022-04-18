@@ -27,9 +27,10 @@ internal class MySQLDbModelFromCSharpDefinitionProvider : DbModelFromCSharpDefin
 
     protected override void BuildAdditionalDbObjects(Database database, Assembly dbAssembly)
     {
-        MySQLDatabase mysqlDatabase = (MySQLDatabase)database;
-        mysqlDatabase.Functions = BuildFunctionModels(dbAssembly);
-        mysqlDatabase.Functions = new List<MySQLFunction>(); // TODO Need to save/read functions from DBMS
+        MySQLDatabase db = (MySQLDatabase)database;
+        db.Functions = BuildFunctionModels(dbAssembly);
+        db.Functions = new(); // TODO Need to save/read functions from DBMS
+        db.Procedures = new();
     }
 
     protected override void BuildAdditionalPrimaryKeyModelProperties(Models.Core.PrimaryKey pkModel, BasePrimaryKey pk, string tableName)

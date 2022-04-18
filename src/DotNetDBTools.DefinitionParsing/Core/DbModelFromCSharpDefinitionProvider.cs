@@ -51,10 +51,10 @@ internal abstract class DbModelFromCSharpDefinitionProvider<
     }
     protected virtual void BuildAdditionalDbObjects(Database database, Assembly dbAssembly) { }
 
-    private List<TTable> BuildTableModels(Assembly dbAssembly)
+    private List<Table> BuildTableModels(Assembly dbAssembly)
     {
         IEnumerable<IBaseTable> tables = GetInstancesOfAllTypesImplementingInterface<IBaseTable>(dbAssembly);
-        List<TTable> tableModels = new();
+        List<Table> tableModels = new();
         foreach (IBaseTable table in tables)
         {
             TTable tableModel = new()
@@ -76,10 +76,10 @@ internal abstract class DbModelFromCSharpDefinitionProvider<
     }
     protected virtual void BuildAdditionalTableModelProperties(TTable tableModel, IBaseTable table) { }
 
-    private List<TView> BuildViewModels(Assembly dbAssembly)
+    private List<View> BuildViewModels(Assembly dbAssembly)
     {
         IEnumerable<IBaseView> views = GetInstancesOfAllTypesImplementingInterface<IBaseView>(dbAssembly);
-        List<TView> viewModels = new();
+        List<View> viewModels = new();
         foreach (IBaseView view in views)
         {
             TView viewModel = new()
@@ -115,7 +115,7 @@ internal abstract class DbModelFromCSharpDefinitionProvider<
         return scriptModels;
     }
 
-    private List<TColumn> BuildColumnModels(IBaseTable table)
+    private List<Column> BuildColumnModels(IBaseTable table)
     {
         return table.GetType().GetPropertyOrFieldMembers()
             .Where(x => typeof(BaseColumn).IsAssignableFrom(x.GetPropertyOrFieldType()))
@@ -134,7 +134,7 @@ internal abstract class DbModelFromCSharpDefinitionProvider<
                     Default = DefaultValueMapper.MapToDefaultValueModel(column.Default),
                 };
                 BuildAdditionalColumnModelProperties(columnModel, column, table.GetType().Name);
-                return columnModel;
+                return (Column)columnModel;
             })
             .ToList();
     }

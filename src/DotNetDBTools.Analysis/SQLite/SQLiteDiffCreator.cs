@@ -13,8 +13,8 @@ internal class SQLiteDiffCreator : DiffCreator
         {
             NewDatabase = newDatabase,
             OldDatabase = oldDatabase,
-            ViewsToCreate = new List<SQLiteView>(),
-            ViewsToDrop = new List<SQLiteView>(),
+            ViewsToCreate = new List<View>(),
+            ViewsToDrop = new List<View>(),
         };
 
         BuildTablesDiff<SQLiteTableDiff>(dbDiff);
