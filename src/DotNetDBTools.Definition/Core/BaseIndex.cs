@@ -11,7 +11,7 @@ public abstract class BaseIndex : IDbObject
         _id = new Guid(id);
     }
 
-    public Guid ID => _id;
+    public Guid DNDBT_OBJECT_ID => _id;
     public IEnumerable<string> Columns { get; set; }
     public bool Unique { get; set; }
 }

@@ -19,7 +19,7 @@ Identifiers are there to provide a reliable mapping between what's in the descri
 ```
 public class MyTable : ITable
 {
-    public Guid ID => new("299675E6-4FAA-4D0F-A36A-224306BA5BCB");
+    public Guid DNDBT_OBJECT_ID => new("299675E6-4FAA-4D0F-A36A-224306BA5BCB");
 
     public Column MyKeyColumn = new("A2F2A4DE-1337-4594-AE41-72ED4D05F317")
     {

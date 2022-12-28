@@ -8,7 +8,7 @@ namespace DotNetDBTools.SampleDB.PostgreSQL.Types
 {
     public class MyDomain1 : IDomain
     {
-        public Guid ID => new("A28BCB6C-3CBC-467E-A52C-AC740C98A537");
+        public Guid DNDBT_OBJECT_ID => new("A28BCB6C-3CBC-467E-A52C-AC740C98A537");
         public IDataType UnderlyingType => new StringDataType() { Length = 100 };
         public bool NotNull => false;
         public IDefaultValue Default => null;

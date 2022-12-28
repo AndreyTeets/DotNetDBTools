@@ -6,7 +6,7 @@ namespace DotNetDBTools.SampleDB.MySQL.AfterPublish
 {
     internal class RestoreRecreatedColumnsData : IScript
     {
-        public Guid ID => new("8CCAF36E-E587-466E-86F7-45C0061AE521");
+        public Guid DNDBT_OBJECT_ID => new("8CCAF36E-E587-466E-86F7-45C0061AE521");
         public ScriptType Type => ScriptType.AfterPublishOnce;
         public long MinDbVersionToExecute => 1;
         public long MaxDbVersionToExecute => 1;

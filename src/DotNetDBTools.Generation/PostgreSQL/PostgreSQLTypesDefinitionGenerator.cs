@@ -34,7 +34,7 @@ namespace {projectNamespace}.Types
 {{
     public class {type.Name} : ICompositeType
     {{
-        public Guid ID => new(""{type.ID}"");
+        public Guid DNDBT_OBJECT_ID => new(""{type.ID}"");
         public IDictionary<string, IDataType> Attributes => new Dictionary<string, IDataType>()
         {{
 {string.Join("\n", attributesDeclarations)}
@@ -74,7 +74,7 @@ namespace {projectNamespace}.Types
 {{
     public class {type.Name} : IDomain
     {{
-        public Guid ID => new(""{type.ID}"");
+        public Guid DNDBT_OBJECT_ID => new(""{type.ID}"");
         public IDataType UnderlyingType => {DeclareDataType(type.UnderlyingType)};
         public bool NotNull => {type.NotNull.ToString().ToLower()};
         public IDefaultValue Default => {DeclareDefaultValue(type.Default)};
@@ -106,7 +106,7 @@ namespace {projectNamespace}.Types
 {{
     public class {type.Name} : IEnumType
     {{
-        public Guid ID => new(""{type.ID}"");
+        public Guid DNDBT_OBJECT_ID => new(""{type.ID}"");
         public IEnumerable<string> AllowedValues => new[]
         {{
 {string.Join("\n", allowedValuesDeclarations)}
@@ -134,7 +134,7 @@ namespace {projectNamespace}.Types
 {{
     public class {type.Name} : IRangeType
     {{
-        public Guid ID => new(""{type.ID}"");
+        public Guid DNDBT_OBJECT_ID => new(""{type.ID}"");
         public IDataType Subtype => {DeclareDataType(type.Subtype)};
         public string SubtypeOperatorClass => {DeclareString(type.SubtypeOperatorClass)};
         public string Collation => {DeclareString(type.Collation)};

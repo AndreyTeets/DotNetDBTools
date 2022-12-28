@@ -20,7 +20,7 @@ namespace SampleTestCode
 {
     public class TestTable1 : ITable
     {
-        public Guid ID => new(""250542BA-31D6-49C5-9178-F86319343109"");
+        public Guid DNDBT_OBJECT_ID => new(""250542BA-31D6-49C5-9178-F86319343109"");
 
         public Column TestColumn1 = new(""0C322A6A-7D5F-418C-BC5E-DF120D16CF4C"")
         {

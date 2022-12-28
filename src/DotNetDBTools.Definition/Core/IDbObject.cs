@@ -4,5 +4,5 @@ namespace DotNetDBTools.Definition.Core;
 
 public interface IDbObject
 {
-    public Guid ID { get; }
+    public Guid DNDBT_OBJECT_ID { get; }
 }

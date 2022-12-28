@@ -8,7 +8,7 @@ namespace DotNetDBTools.SampleDB.MSSQL.TableTypes
 {
     public class MyUserDefinedTableType1 : IUserDefinedTableType
     {
-        public Guid ID => new("CDBCE7BC-CAF6-4583-A72C-43AB272F7068");
+        public Guid DNDBT_OBJECT_ID => new("CDBCE7BC-CAF6-4583-A72C-43AB272F7068");
 
         public Column MyColumn1 = new("280FB390-63B7-44A5-8E3B-9961761F20A9")
         {

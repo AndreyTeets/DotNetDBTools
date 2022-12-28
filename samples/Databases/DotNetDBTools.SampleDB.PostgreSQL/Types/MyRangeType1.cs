@@ -7,7 +7,7 @@ namespace DotNetDBTools.SampleDB.PostgreSQL.Types
 {
     public class MyRangeType1 : IRangeType
     {
-        public Guid ID => new("B02DB666-FBBC-4CD7-A14D-4049251B9A7B");
+        public Guid DNDBT_OBJECT_ID => new("B02DB666-FBBC-4CD7-A14D-4049251B9A7B");
         public IDataType Subtype => new DateTimeDataType();
         public string SubtypeOperatorClass => null;
         public string Collation => null;

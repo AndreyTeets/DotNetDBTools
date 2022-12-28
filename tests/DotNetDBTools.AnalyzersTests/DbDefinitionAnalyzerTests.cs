@@ -24,7 +24,7 @@ namespace SampleTestCode
 {
     public class TestCompositeType1 : ICompositeType
     {
-        public Guid ID => new(""AF622311-F791-4DC3-995D-D03C75236A1F"");
+        public Guid DNDBT_OBJECT_ID => new(""AF622311-F791-4DC3-995D-D03C75236A1F"");
         public IDictionary<string, IDataType> Attributes => new Dictionary<string, IDataType>()
         {
             { ""MyAttribute1"", new StringDataType() },
@@ -34,7 +34,7 @@ namespace SampleTestCode
 
     public class TestTable2 : ITable
     {
-        public Guid ID => new(""31347B68-6BE3-4F2B-BCD1-0CC82ECB97FA"");
+        public Guid DNDBT_OBJECT_ID => new(""31347B68-6BE3-4F2B-BCD1-0CC82ECB97FA"");
 
         public Column {|#0:TestColumn1|} = new(""032611EB-AA7C-4FEA-8B3C-BB8609E140F6"")
         {
@@ -57,7 +57,7 @@ namespace SampleTestCode
 
     public class TestTable1 : ITable
     {
-        public Guid ID => new(""250542BA-31D6-49C5-9178-F86319343109"");
+        public Guid DNDBT_OBJECT_ID => new(""250542BA-31D6-49C5-9178-F86319343109"");
 
         public Column TestColumn1 = new(""0C322A6A-7D5F-418C-BC5E-DF120D16CF4C"")
         {

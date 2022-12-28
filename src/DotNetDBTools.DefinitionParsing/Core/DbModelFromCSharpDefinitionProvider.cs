@@ -61,7 +61,7 @@ internal abstract class DbModelFromCSharpDefinitionProvider<
         {
             TTable tableModel = new()
             {
-                ID = table.ID,
+                ID = table.DNDBT_OBJECT_ID,
                 Name = table.GetType().Name,
                 Columns = BuildColumnModels(table),
                 PrimaryKey = BuildPrimaryKeyModels(table),
@@ -86,7 +86,7 @@ internal abstract class DbModelFromCSharpDefinitionProvider<
         {
             TView viewModel = new()
             {
-                ID = view.ID,
+                ID = view.DNDBT_OBJECT_ID,
                 Name = view.GetType().Name,
                 CodePiece = DbObjectCodeMapper.MapToCodePiece(view),
             };
@@ -105,7 +105,7 @@ internal abstract class DbModelFromCSharpDefinitionProvider<
         {
             Script scriptModel = new()
             {
-                ID = script.ID,
+                ID = script.DNDBT_OBJECT_ID,
                 Name = script.GetType().Name,
                 Kind = (ScriptKind)Enum.Parse(typeof(ScriptKind), script.Type.ToString()),
                 MinDbVersionToExecute = script.MinDbVersionToExecute,
@@ -128,7 +128,7 @@ internal abstract class DbModelFromCSharpDefinitionProvider<
                 DataType dataTypeModel = DataTypeMapper.MapToDataTypeModel(column.DataType);
                 TColumn columnModel = new()
                 {
-                    ID = column.ID,
+                    ID = column.DNDBT_OBJECT_ID,
                     Name = x.Name,
                     DataType = dataTypeModel,
                     NotNull = column.NotNull,
@@ -152,7 +152,7 @@ internal abstract class DbModelFromCSharpDefinitionProvider<
                 BasePrimaryKey pk = (BasePrimaryKey)x.GetPropertyOrFieldValue(table);
                 PrimaryKey pkModel = new()
                 {
-                    ID = pk.ID,
+                    ID = pk.DNDBT_OBJECT_ID,
                     Name = x.Name,
                     Columns = pk.Columns.ToList(),
                 };
@@ -173,7 +173,7 @@ internal abstract class DbModelFromCSharpDefinitionProvider<
                 BaseUniqueConstraint uc = (BaseUniqueConstraint)x.GetPropertyOrFieldValue(table);
                 UniqueConstraint ucModel = new()
                 {
-                    ID = uc.ID,
+                    ID = uc.DNDBT_OBJECT_ID,
                     Name = x.Name,
                     Columns = uc.Columns.ToList(),
                 };
@@ -194,7 +194,7 @@ internal abstract class DbModelFromCSharpDefinitionProvider<
                 BaseCheckConstraint ck = (BaseCheckConstraint)x.GetPropertyOrFieldValue(table);
                 CheckConstraint ckModel = new()
                 {
-                    ID = ck.ID,
+                    ID = ck.DNDBT_OBJECT_ID,
                     Name = x.Name,
                     CodePiece = DbObjectCodeMapper.MapToCodePiece(ck),
                 };
@@ -215,7 +215,7 @@ internal abstract class DbModelFromCSharpDefinitionProvider<
                 BaseForeignKey fk = (BaseForeignKey)x.GetPropertyOrFieldValue(table);
                 ForeignKey fkModel = new()
                 {
-                    ID = fk.ID,
+                    ID = fk.DNDBT_OBJECT_ID,
                     Name = x.Name,
                     ThisColumnNames = fk.ThisColumns.ToList(),
                     ReferencedTableName = fk.ReferencedTable,
@@ -255,7 +255,7 @@ internal abstract class DbModelFromCSharpDefinitionProvider<
                 BaseIndex index = (BaseIndex)x.GetPropertyOrFieldValue(table);
                 Index indexModel = new()
                 {
-                    ID = index.ID,
+                    ID = index.DNDBT_OBJECT_ID,
                     Name = x.Name,
                     Columns = index.Columns.ToList(),
                     Unique = index.Unique,
@@ -277,7 +277,7 @@ internal abstract class DbModelFromCSharpDefinitionProvider<
                 BaseTrigger trigger = (BaseTrigger)x.GetPropertyOrFieldValue(table);
                 Trigger triggerModel = new()
                 {
-                    ID = trigger.ID,
+                    ID = trigger.DNDBT_OBJECT_ID,
                     Name = x.Name,
                     CodePiece = DbObjectCodeMapper.MapToCodePiece(trigger),
                 };

@@ -11,7 +11,7 @@ public abstract class BaseForeignKey : IDbObject
         _id = new Guid(id);
     }
 
-    public Guid ID => _id;
+    public Guid DNDBT_OBJECT_ID => _id;
     public IEnumerable<string> ThisColumns { get; set; }
     public string ReferencedTable { get; set; }
     public IEnumerable<string> ReferencedTableColumns { get; set; }

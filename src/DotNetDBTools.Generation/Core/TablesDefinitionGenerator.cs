@@ -139,7 +139,7 @@ namespace {projectNamespace}.Tables
 {{
     public class {table.Name} : ITable
     {{
-        public Guid ID => new(""{table.ID}"");
+        public Guid DNDBT_OBJECT_ID => new(""{table.ID}"");
 
 {string.Join("\n\n", allDeclarations)}
     }}

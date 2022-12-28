@@ -10,7 +10,7 @@ public abstract class BaseColumn : IDbObject
         _id = new Guid(id);
     }
 
-    public Guid ID => _id;
+    public Guid DNDBT_OBJECT_ID => _id;
     public IDataType DataType { get; set; }
     public bool NotNull { get; set; }
     public bool Identity { get; set; }

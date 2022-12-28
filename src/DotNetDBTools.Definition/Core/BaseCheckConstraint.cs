@@ -10,5 +10,5 @@ public abstract class BaseCheckConstraint : IDbObject
         _id = new Guid(id);
     }
 
-    public Guid ID => _id;
+    public Guid DNDBT_OBJECT_ID => _id;
 }

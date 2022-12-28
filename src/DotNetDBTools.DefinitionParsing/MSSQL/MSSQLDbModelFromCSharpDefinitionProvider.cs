@@ -63,7 +63,7 @@ internal class MSSQLDbModelFromCSharpDefinitionProvider : DbModelFromCSharpDefin
             DataType dataType = DataTypeMapper.MapToDataTypeModel(udt.UnderlyingType);
             MSSQLUserDefinedType udtModel = new()
             {
-                ID = udt.ID,
+                ID = udt.DNDBT_OBJECT_ID,
                 Name = udt.GetType().Name,
                 NotNull = udt.NotNull,
                 UnderlyingType = dataType,
@@ -81,7 +81,7 @@ internal class MSSQLDbModelFromCSharpDefinitionProvider : DbModelFromCSharpDefin
         {
             MSSQLFunction functionModel = new()
             {
-                ID = function.ID,
+                ID = function.DNDBT_OBJECT_ID,
                 Name = function.GetType().Name,
                 CodePiece = new CodePiece { Code = function.Code.NormalizeLineEndings() },
             };

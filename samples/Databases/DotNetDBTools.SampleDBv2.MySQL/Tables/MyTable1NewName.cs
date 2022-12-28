@@ -7,7 +7,7 @@ namespace DotNetDBTools.SampleDB.MySQL.Tables
 {
     public class MyTable1NewName : ITable
     {
-        public Guid ID => new("299675E6-4FAA-4D0F-A36A-224306BA5BCB");
+        public Guid DNDBT_OBJECT_ID => new("299675E6-4FAA-4D0F-A36A-224306BA5BCB");
 
         public Column MyColumn1 = new("A2F2A4DE-1337-4594-AE41-72ED4D05F317")
         {

@@ -49,7 +49,7 @@ internal class MySQLDbModelFromCSharpDefinitionProvider : DbModelFromCSharpDefin
         {
             MySQLFunction functionModel = new()
             {
-                ID = function.ID,
+                ID = function.DNDBT_OBJECT_ID,
                 Name = function.GetType().Name,
                 CodePiece = new CodePiece { Code = function.Code.NormalizeLineEndings() },
             };

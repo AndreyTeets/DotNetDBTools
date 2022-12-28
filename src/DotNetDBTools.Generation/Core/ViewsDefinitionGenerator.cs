@@ -18,7 +18,7 @@ namespace {projectNamespace}.Views
 {{
     public class {view.Name} : IView
     {{
-        public Guid ID => new(""{view.ID}"");
+        public Guid DNDBT_OBJECT_ID => new(""{view.ID}"");
         public string Code => ""Views.{view.Name}.sql"".AsSqlResource();
     }}
 }}";

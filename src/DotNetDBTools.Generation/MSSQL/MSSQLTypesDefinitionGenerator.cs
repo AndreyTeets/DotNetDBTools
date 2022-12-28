@@ -26,7 +26,7 @@ namespace {projectNamespace}.Types
 {{
     public class {type.Name} : IUserDefinedType
     {{
-        public Guid ID => new(""{type.ID}"");
+        public Guid DNDBT_OBJECT_ID => new(""{type.ID}"");
         public IDataType UnderlyingType => {DeclareDataType(type.UnderlyingType)};
         public bool NotNull => {DeclareBool(type.NotNull)};
     }}
@@ -63,7 +63,7 @@ namespace {projectNamespace}.TableTypes
 {{
     public class {type.Name} : IUserDefinedTableType
     {{
-        public Guid ID => new(""{type.ID}"");
+        public Guid DNDBT_OBJECT_ID => new(""{type.ID}"");
 
 {string.Join("\n\n", ucDeclarations)}
     }}

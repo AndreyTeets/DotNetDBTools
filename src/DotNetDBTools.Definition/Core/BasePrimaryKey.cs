@@ -11,6 +11,6 @@ public abstract class BasePrimaryKey : IDbObject
         _id = new Guid(id);
     }
 
-    public Guid ID => _id;
+    public Guid DNDBT_OBJECT_ID => _id;
     public IEnumerable<string> Columns { get; set; }
 }

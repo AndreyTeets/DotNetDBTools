@@ -63,7 +63,7 @@ internal class PostgreSQLDbModelFromCSharpDefinitionProvider : DbModelFromCSharp
         {
             PostgreSQLCompositeType typeModel = new()
             {
-                ID = type.ID,
+                ID = type.DNDBT_OBJECT_ID,
                 Name = type.GetType().Name,
                 Attributes = type.Attributes.Select(x => new PostgreSQLCompositeTypeAttribute
                 {
@@ -85,7 +85,7 @@ internal class PostgreSQLDbModelFromCSharpDefinitionProvider : DbModelFromCSharp
             string typeName = type.GetType().Name;
             PostgreSQLDomainType typeModel = new()
             {
-                ID = type.ID,
+                ID = type.DNDBT_OBJECT_ID,
                 Name = typeName,
                 UnderlyingType = DataTypeMapper.MapToDataTypeModel(type.UnderlyingType),
                 NotNull = type.NotNull,
@@ -106,7 +106,7 @@ internal class PostgreSQLDbModelFromCSharpDefinitionProvider : DbModelFromCSharp
                 BaseCheckConstraint ck = (BaseCheckConstraint)x.GetPropertyOrFieldValue(type);
                 Models.Core.CheckConstraint ckModel = new()
                 {
-                    ID = ck.ID,
+                    ID = ck.DNDBT_OBJECT_ID,
                     Name = x.Name,
                     CodePiece = DbObjectCodeMapper.MapToCodePiece(ck),
                 };
@@ -124,7 +124,7 @@ internal class PostgreSQLDbModelFromCSharpDefinitionProvider : DbModelFromCSharp
         {
             PostgreSQLEnumType typeModel = new()
             {
-                ID = type.ID,
+                ID = type.DNDBT_OBJECT_ID,
                 Name = type.GetType().Name,
                 AllowedValues = type.AllowedValues.ToList(),
             };
@@ -144,7 +144,7 @@ internal class PostgreSQLDbModelFromCSharpDefinitionProvider : DbModelFromCSharp
             subtype.Name = subtype.Name.Split('[')[0].Split('(')[0];
             PostgreSQLRangeType typeModel = new()
             {
-                ID = type.ID,
+                ID = type.DNDBT_OBJECT_ID,
                 Name = typeName,
                 Subtype = subtype,
                 SubtypeOperatorClass = type.SubtypeOperatorClass ?? GetDefaultSubtypeOperatorClass(subtype),
@@ -205,7 +205,7 @@ internal class PostgreSQLDbModelFromCSharpDefinitionProvider : DbModelFromCSharp
         {
             PostgreSQLFunction functionModel = new()
             {
-                ID = function.ID,
+                ID = function.DNDBT_OBJECT_ID,
                 Name = function.GetType().Name,
                 CodePiece = new CodePiece { Code = function.Code.NormalizeLineEndings() },
             };

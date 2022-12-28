@@ -6,7 +6,7 @@ namespace DotNetDBTools.SampleDB.Agnostic.Tables
 {
     public class MyTable6 : ITable
     {
-        public Guid ID => new("F3064A8C-346A-4B3D-AF2C-D967B39841E4");
+        public Guid DNDBT_OBJECT_ID => new("F3064A8C-346A-4B3D-AF2C-D967B39841E4");
 
         public Column MyColumn1 = new("BFA08C82-5C8F-4AB4-BD41-1F1D85CF3C85")
         {
