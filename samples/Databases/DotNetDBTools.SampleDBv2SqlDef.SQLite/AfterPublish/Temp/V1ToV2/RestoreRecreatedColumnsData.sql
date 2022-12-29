@@ -11,8 +11,6 @@ CREATE TABLE IF NOT EXISTS [_MyTable2]
 );
 
 UPDATE [MyTable2] SET
-    [MyColumn2] = [t].[MyColumn2]
-FROM [_MyTable2] AS [t]
-WHERE [MyTable2].[MyColumn1NewName] = [t].[MyColumn1];
+    [MyColumn2] = (SELECT [t].[MyColumn2] FROM [_MyTable2] AS [t] WHERE [t].[MyColumn1] = [MyTable2].[MyColumn1NewName]);
 
 DROP TABLE [_MyTable2]
