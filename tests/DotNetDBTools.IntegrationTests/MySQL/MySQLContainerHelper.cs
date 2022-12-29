@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using DotNetDBTools.IntegrationTests.Utilities;
 using MySqlConnector;
@@ -8,10 +9,14 @@ namespace DotNetDBTools.IntegrationTests.MySQL;
 internal class MySQLContainerHelper
 {
     private const string MySQLImage = "docker.io/library/mysql";
-    private const string MySQLImageTag = "8.0.27";
     private const string MySQLContainerName = "DotNetDBTools_IntegrationTests_MySQL";
     private const string MySQLServerPassword = "Strong(!)Passw0rd";
     private const int MySQLServerHostPort = 5006;
+
+    private static string MySQLImageTag =>
+        Environment.GetEnvironmentVariable("USE_LATEST_DBMS_VERSION") != "true"
+        ? "8.0.19"
+        : "8.0.31";
 
     public static string MySQLContainerConnectionString =>
         new MySqlConnectionStringBuilder()
@@ -27,7 +32,7 @@ internal class MySQLContainerHelper
         await DockerRunner.StopAndRemoveContainerIfExistsAndNotRunningOrOld(MySQLContainerName, oldMinutes: 60);
         await CreateAndStartMySQLContainerIfNotExists();
         using MySqlConnection connection = new(MySQLContainerConnectionString);
-        await DbAvailabilityChecker.WaitUntilDatabaseAvailableAsync(connection, timeoutSeconds: 60);
+        await DbAvailabilityChecker.WaitUntilDatabaseAvailableAsync(connection, timeoutSeconds: 90);
     }
 
     private static async Task CreateAndStartMySQLContainerIfNotExists()

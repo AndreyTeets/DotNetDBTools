@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 using DotNetDBTools.IntegrationTests.Utilities;
@@ -8,10 +9,14 @@ namespace DotNetDBTools.IntegrationTests.MSSQL;
 internal class MSSQLContainerHelper
 {
     private const string MSSQLImage = "mcr.microsoft.com/mssql/server";
-    private const string MSSQLImageTag = "2019-CU13-ubuntu-20.04";
     private const string MSSQLContainerName = "DotNetDBTools_IntegrationTests_MSSQL";
     private const string MSSQLServerPassword = "Strong(!)Passw0rd";
     private const int MSSQLServerHostPort = 5005;
+
+    private static string MSSQLImageTag =>
+        Environment.GetEnvironmentVariable("USE_LATEST_DBMS_VERSION") != "true"
+        ? "2017-GA-ubuntu"
+        : "2019-CU18-ubuntu-20.04";
 
     public static string MSSQLContainerConnectionString =>
         new SqlConnectionStringBuilder()
@@ -27,7 +32,7 @@ internal class MSSQLContainerHelper
         await DockerRunner.StopAndRemoveContainerIfExistsAndNotRunningOrOld(MSSQLContainerName, oldMinutes: 60);
         await CreateAndStartMsSqlContainerIfNotExists();
         using SqlConnection connection = new(MSSQLContainerConnectionString);
-        await DbAvailabilityChecker.WaitUntilDatabaseAvailableAsync(connection, timeoutSeconds: 60);
+        await DbAvailabilityChecker.WaitUntilDatabaseAvailableAsync(connection, timeoutSeconds: 90);
     }
 
     private static async Task CreateAndStartMsSqlContainerIfNotExists()

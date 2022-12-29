@@ -29,11 +29,18 @@
     <SqlClientVersion>4.8.3</SqlClientVersion>
     <MySqlConnectorVersion>2.1.6</MySqlConnectorVersion>
     <NpgsqlVersion>6.0.3</NpgsqlVersion>
-    <SqliteVersion>6.0.2</SqliteVersion>
     <SqlKataVersion>2.3.7</SqlKataVersion>
     <SerilogVersion>2.10.0</SerilogVersion>
     <SerilogSinksConsoleVersion>4.0.1</SerilogSinksConsoleVersion>
     <SerilogSinksFileVersion>5.0.0</SerilogSinksFileVersion>
+  </PropertyGroup>
+
+  <!--Samples and tests sqlite version-->
+  <PropertyGroup Condition="'$(USE_LATEST_DBMS_VERSION)'!='True'">
+    <SqliteVersion>6.0.12</SqliteVersion><!--sqlite_v_3.26.0-->
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(USE_LATEST_DBMS_VERSION)'=='True'">
+    <SqliteVersion>6.0.12</SqliteVersion><!--sqlite_v_3.39.2-->
   </PropertyGroup>
 
 </Project>

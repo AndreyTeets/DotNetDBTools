@@ -27,9 +27,16 @@ try {
 
     exec dotnet tool restore
 
-    $env:RECREATE_CONTAINERS = "true"
     exec dotnet test "./tests/DotNetDBTools.UnitTests" @testOptions "-p:CoverletOutputFormat=json"
     exec dotnet test "./tests/DotNetDBTools.AnalyzersTests" @testOptions "-p:CoverletOutputFormat=json"
+
+    $env:RECREATE_CONTAINERS = "true"
+    $env:USE_LATEST_DBMS_VERSION = "false"
+    exec dotnet test "./tests/DotNetDBTools.IntegrationTests" @testOptions "-p:CoverletOutputFormat=json"
+
+    $env:USE_LATEST_DBMS_VERSION = "true"
+    Write-Host "Rebuilding solution with 'USE_LATEST_DBMS_VERSION=true' flag"
+    exec dotnet build DotNetDBTools.sln -c Release -v q
     exec dotnet test "./tests/DotNetDBTools.IntegrationTests" @testOptions "-p:CoverletOutputFormat=opencover"
 
     exec dotnet reportgenerator "-reports:./tests/TestResults/coverage.opencover.xml" "-targetdir:./tests/TestResults/report"

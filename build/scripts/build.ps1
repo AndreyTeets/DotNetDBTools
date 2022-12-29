@@ -23,6 +23,8 @@ try {
     Copy-Item -Path "./NuGet.Config" -Destination "./artifacts/nuget/NuGet.Config" -Force
     exec dotnet nuget enable source "GeneratedDebugPackages" --configfile "./artifacts/nuget/NuGet.Config"
 
+    $env:USE_LATEST_DBMS_VERSION = "false"
+
     exec dotnet build-server shutdown
     exec dotnet build DotNetDBTools.sln -c Debug
     exec dotnet pack --no-build DotNetDBTools.sln -c Debug
