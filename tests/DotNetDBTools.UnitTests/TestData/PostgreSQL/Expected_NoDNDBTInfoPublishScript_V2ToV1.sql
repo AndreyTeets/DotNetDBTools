@@ -38,13 +38,19 @@ EXECUTE 'ALTER DOMAIN "MyDomain1" RENAME TO "_DNDBTTemp_MyDomain1";';
 -- QUERY END: PostgreSQLRenameTypeToTempQuery
 
 -- QUERY START: PostgreSQLRenameTypeToTempQuery
-EXECUTE 'ALTER TYPE "MyRangeType1" RENAME TO "_DNDBTTemp_MyRangeType1";
+EXECUTE 'DO $DNDBTPlPgSqlQueryBlock$
+BEGIN
+ALTER TYPE "MyRangeType1" RENAME TO "_DNDBTTemp_MyRangeType1";
 ALTER FUNCTION "MyRangeType1"(TIMESTAMPTZ,TIMESTAMPTZ) RENAME TO "_DNDBTTemp_MyRangeType1";
 ALTER FUNCTION "MyRangeType1" RENAME TO "_DNDBTTemp_MyRangeType1";
+IF (SELECT current_setting(''server_version_num'')::int) >= 140000 THEN
 ALTER TYPE "MyRangeType1_multirange" RENAME TO "_DNDBTTemp_MyRangeType1_multirange";
 ALTER FUNCTION "MyRangeType1_multirange"() RENAME TO "_DNDBTTemp_MyRangeType1_multirange";
 ALTER FUNCTION "MyRangeType1_multirange"("_DNDBTTemp_MyRangeType1") RENAME TO "_DNDBTTemp_MyRangeType1_multirange";
-ALTER FUNCTION "MyRangeType1_multirange" RENAME TO "_DNDBTTemp_MyRangeType1_multirange";';
+ALTER FUNCTION "MyRangeType1_multirange" RENAME TO "_DNDBTTemp_MyRangeType1_multirange";
+END IF;
+END;
+$DNDBTPlPgSqlQueryBlock$';
 -- QUERY END: PostgreSQLRenameTypeToTempQuery
 
 -- QUERY START: PostgreSQLCreateCompositeTypeQuery
@@ -70,12 +76,24 @@ EXECUTE 'CREATE DOMAIN "MyDomain1" AS VARCHAR(100)    NULL
 -- QUERY END: PostgreSQLCreateDomainTypeQuery
 
 -- QUERY START: PostgreSQLCreateRangeTypeQuery
-EXECUTE 'CREATE TYPE "MyRangeType1" AS RANGE
-(
-    SUBTYPE = TIMESTAMP,
-    SUBTYPE_OPCLASS = "timestamp_ops",
-    MULTIRANGE_TYPE_NAME = "MyRangeType1_multirange"
-);';
+EXECUTE 'DO $DNDBTPlPgSqlQueryBlock$
+BEGIN
+IF (SELECT current_setting(''server_version_num'')::int) >= 140000 THEN
+    CREATE TYPE "MyRangeType1" AS RANGE
+    (
+        SUBTYPE = TIMESTAMP,
+        SUBTYPE_OPCLASS = "timestamp_ops",
+        MULTIRANGE_TYPE_NAME = "MyRangeType1_multirange"
+    );
+ELSE
+    CREATE TYPE "MyRangeType1" AS RANGE
+    (
+        SUBTYPE = TIMESTAMP,
+        SUBTYPE_OPCLASS = "timestamp_ops"
+    );
+END IF;
+END;
+$DNDBTPlPgSqlQueryBlock$';
 -- QUERY END: PostgreSQLCreateRangeTypeQuery
 
 -- QUERY START: PostgreSQLDropTableQuery

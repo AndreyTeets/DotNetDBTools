@@ -147,13 +147,19 @@ WHERE "ID" = ''7905b7a8-cf45-4328-8a2b-00616d98235e'';';
 -- QUERY END: PostgreSQLDeleteDNDBTDbObjectRecordQuery
 
 -- QUERY START: PostgreSQLRenameTypeToTempQuery
-EXECUTE 'ALTER TYPE "MyRangeType1" RENAME TO "_DNDBTTemp_MyRangeType1";
+EXECUTE 'DO $DNDBTPlPgSqlQueryBlock$
+BEGIN
+ALTER TYPE "MyRangeType1" RENAME TO "_DNDBTTemp_MyRangeType1";
 ALTER FUNCTION "MyRangeType1"(TIMESTAMP,TIMESTAMP) RENAME TO "_DNDBTTemp_MyRangeType1";
 ALTER FUNCTION "MyRangeType1" RENAME TO "_DNDBTTemp_MyRangeType1";
+IF (SELECT current_setting(''server_version_num'')::int) >= 140000 THEN
 ALTER TYPE "MyRangeType1_multirange" RENAME TO "_DNDBTTemp_MyRangeType1_multirange";
 ALTER FUNCTION "MyRangeType1_multirange"() RENAME TO "_DNDBTTemp_MyRangeType1_multirange";
 ALTER FUNCTION "MyRangeType1_multirange"("_DNDBTTemp_MyRangeType1") RENAME TO "_DNDBTTemp_MyRangeType1_multirange";
-ALTER FUNCTION "MyRangeType1_multirange" RENAME TO "_DNDBTTemp_MyRangeType1_multirange";';
+ALTER FUNCTION "MyRangeType1_multirange" RENAME TO "_DNDBTTemp_MyRangeType1_multirange";
+END IF;
+END;
+$DNDBTPlPgSqlQueryBlock$';
 -- QUERY END: PostgreSQLRenameTypeToTempQuery
 
 -- QUERY START: PostgreSQLDeleteDNDBTDbObjectRecordQuery
@@ -280,12 +286,24 @@ VALUES
 -- QUERY END: PostgreSQLInsertDNDBTDbObjectRecordQuery
 
 -- QUERY START: PostgreSQLCreateRangeTypeQuery
-EXECUTE 'CREATE TYPE "MyRangeType1" AS RANGE
-(
-    SUBTYPE = TIMESTAMPTZ,
-    SUBTYPE_OPCLASS = "timestamptz_ops",
-    MULTIRANGE_TYPE_NAME = "MyRangeType1_multirange"
-);';
+EXECUTE 'DO $DNDBTPlPgSqlQueryBlock$
+BEGIN
+IF (SELECT current_setting(''server_version_num'')::int) >= 140000 THEN
+    CREATE TYPE "MyRangeType1" AS RANGE
+    (
+        SUBTYPE = TIMESTAMPTZ,
+        SUBTYPE_OPCLASS = "timestamptz_ops",
+        MULTIRANGE_TYPE_NAME = "MyRangeType1_multirange"
+    );
+ELSE
+    CREATE TYPE "MyRangeType1" AS RANGE
+    (
+        SUBTYPE = TIMESTAMPTZ,
+        SUBTYPE_OPCLASS = "timestamptz_ops"
+    );
+END IF;
+END;
+$DNDBTPlPgSqlQueryBlock$';
 -- QUERY END: PostgreSQLCreateRangeTypeQuery
 
 -- QUERY START: PostgreSQLInsertDNDBTDbObjectRecordQuery

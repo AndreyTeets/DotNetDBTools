@@ -15,7 +15,7 @@ internal class PostgreSQLContainerHelper
 
     private static string PostgreSQLImageTag =>
         Environment.GetEnvironmentVariable("USE_LATEST_DBMS_VERSION") != "true"
-        ? "15.1-alpine3.17"
+        ? "11.0-alpine"
         : "15.1-alpine3.17";
 
     public static string PostgreSQLContainerConnectionString =>

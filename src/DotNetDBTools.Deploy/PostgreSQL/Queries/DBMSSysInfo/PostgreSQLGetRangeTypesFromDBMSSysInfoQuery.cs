@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using DotNetDBTools.Deploy.Core;
+using QH = DotNetDBTools.Deploy.PostgreSQL.PostgreSQLQueriesHelper;
 
 namespace DotNetDBTools.Deploy.PostgreSQL.Queries.DBMSSysInfo;
 
@@ -14,16 +15,14 @@ $@"SELECT
     cl.collname AS ""{nameof(RangeTypeRecord.Collation)}"",
     r.rngcanonical::text AS ""{nameof(RangeTypeRecord.CanonicalFunction)}"",
     r.rngsubdiff::text AS ""{nameof(RangeTypeRecord.SubtypeDiff)}"",
-    rmt.typname AS ""{nameof(RangeTypeRecord.MultirangeTypeName)}""
+    {GetMultirangeTypeNameSelectResultStatement()} AS ""{nameof(RangeTypeRecord.MultirangeTypeName)}""
 FROM pg_catalog.pg_type t
 INNER JOIN pg_catalog.pg_namespace n
     ON n.oid = t.typnamespace
 INNER JOIN pg_catalog.pg_range r
     ON r.rngtypid = t.oid
 INNER JOIN pg_catalog.pg_type rst
-    ON rst.oid = r.rngsubtype
-INNER JOIN pg_catalog.pg_type rmt
-    ON rmt.oid = r.rngmultitypid
+    ON rst.oid = r.rngsubtype{GetMultirangeTypeNameExtraJoinStatement()}
 INNER JOIN pg_catalog.pg_opclass oc
     ON oc.oid = r.rngsubopc
 LEFT JOIN pg_catalog.pg_collation cl
@@ -32,6 +31,36 @@ WHERE t.typtype = 'r'
     AND n.nspname NOT IN ('information_schema', 'pg_catalog');";
 
     public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
+
+    private readonly int _dbmsVersion;
+
+    public PostgreSQLGetRangeTypesFromDBMSSysInfoQuery(int dbmsVersion)
+    {
+        _dbmsVersion = dbmsVersion;
+    }
+
+    private string GetMultirangeTypeNameSelectResultStatement()
+    {
+        if (_dbmsVersion >= QH.MultirangeTypeNameAvailableDbmsVersion)
+            return "rmt.typname";
+        else
+            return "t.typname || '_multirange'";
+    }
+
+    private string GetMultirangeTypeNameExtraJoinStatement()
+    {
+        if (_dbmsVersion >= QH.MultirangeTypeNameAvailableDbmsVersion)
+        {
+            return
+@"
+INNER JOIN pg_catalog.pg_type rmt
+    ON rmt.oid = r.rngmultitypid";
+        }
+        else
+        {
+            return "";
+        }
+    }
 
     public class RangeTypeRecord
     {

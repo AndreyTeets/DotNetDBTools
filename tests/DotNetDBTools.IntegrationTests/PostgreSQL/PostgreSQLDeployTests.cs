@@ -51,6 +51,7 @@ public class PostgreSQLDeployTests : BaseDeployTests<
             .Replace("::TIMEWITHOUTTIMEZONE", "")
             .Replace("::TIMESTAMPWITHOUTTIMEZONE", "")
             .Replace("::TIMESTAMPWITHTIMEZONE", "")
+            .Replace("EXECUTEPROCEDURE", "EXECUTEFUNCTION")
             .Replace("PUBLIC.", "");
     }
 

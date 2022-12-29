@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Models.PostgreSQL.UserDefinedTypes;
+using QH = DotNetDBTools.Deploy.PostgreSQL.PostgreSQLQueriesHelper;
 
 namespace DotNetDBTools.Deploy.PostgreSQL.Queries.DDL;
 
@@ -20,16 +21,28 @@ internal class PostgreSQLCreateRangeTypeQuery : IQuery
 
     private static string GetSql(PostgreSQLRangeType type)
     {
-        string query =
-$@"CREATE TYPE ""{type.Name}"" AS RANGE
-(
-{GetRangeTypeDefinitionsText(type)}
-);";
+        string query = QH.PlPgSqlQueryBlock(
+$@"IF ({QH.SelectDbmsVersionStatement}) >= {QH.MultirangeTypeNameAvailableDbmsVersion} THEN
+{GetCreateRangeTypeStatement(type, true)}
+ELSE
+{GetCreateRangeTypeStatement(type, false)}
+END IF;");
 
         return query;
     }
 
-    private static string GetRangeTypeDefinitionsText(PostgreSQLRangeType type)
+    private static string GetCreateRangeTypeStatement(PostgreSQLRangeType type, bool setMultiRangeTypeName)
+    {
+        string res =
+$@"    CREATE TYPE ""{type.Name}"" AS RANGE
+    (
+    {GetRangeTypeDefinitionsText(type, setMultiRangeTypeName)}
+    );";
+
+        return res;
+    }
+
+    private static string GetRangeTypeDefinitionsText(PostgreSQLRangeType type, bool setMultiRangeTypeName)
     {
         List<string> definitions = new();
 
@@ -60,12 +73,12 @@ $@"    CANONICAL  = ""{type.CanonicalFunction}""");
 $@"    SUBTYPE_DIFF  = ""{type.SubtypeDiff}""");
         }
 
-        if (type.MultirangeTypeName is not null)
+        if (type.MultirangeTypeName is not null && setMultiRangeTypeName)
         {
             definitions.Add(
 $@"    MULTIRANGE_TYPE_NAME = ""{type.MultirangeTypeName}""");
         }
 
-        return string.Join(",\n", definitions);
+        return string.Join(",\n    ", definitions);
     }
 }

@@ -6,6 +6,21 @@ namespace DotNetDBTools.Deploy.PostgreSQL;
 
 internal static class PostgreSQLQueriesHelper
 {
+    public const int MultirangeTypeNameAvailableDbmsVersion = 140000;
+    public const string SelectDbmsVersionStatement = "SELECT current_setting('server_version_num')::int";
+
+    public static string PlPgSqlQueryBlock(string innerCode)
+    {
+        string res =
+$@"DO $DNDBTPlPgSqlQueryBlock$
+BEGIN
+{innerCode}
+END;
+$DNDBTPlPgSqlQueryBlock$";
+
+        return res;
+    }
+
     public static string GetIdentityStatement(Column column)
     {
         return column.Identity ? " GENERATED ALWAYS AS IDENTITY" : "";

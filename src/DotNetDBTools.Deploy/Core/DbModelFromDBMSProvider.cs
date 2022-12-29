@@ -70,6 +70,7 @@ internal abstract class DbModelFromDBMSProvider<
 
     public Database CreateDbModelUsingDBMSSysInfo()
     {
+        BeforeReadDbObjects();
         TDatabase database = new()
         {
             Tables = BuildTables(),
@@ -81,6 +82,7 @@ internal abstract class DbModelFromDBMSProvider<
         _analysisManager.BuildDependencies(database);
         return database;
     }
+    protected virtual void BeforeReadDbObjects() { }
     protected virtual void BuildAdditionalDbObjects(Database database) { }
 
     private void ReplaceDbModelObjectsIDsAndCodeWithDNDBTSysInfo(Database database)

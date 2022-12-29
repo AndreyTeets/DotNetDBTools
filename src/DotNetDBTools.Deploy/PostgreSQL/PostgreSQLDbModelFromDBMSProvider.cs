@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DotNetDBTools.Deploy.Core;
+using DotNetDBTools.Deploy.Core.Queries;
 using DotNetDBTools.Deploy.PostgreSQL.Queries.DBMSSysInfo;
 using DotNetDBTools.Deploy.PostgreSQL.Queries.DNDBTSysInfo;
 using DotNetDBTools.Models.Core;
@@ -32,8 +33,27 @@ internal class PostgreSQLDbModelFromDBMSProvider : DbModelFromDBMSProvider<
     PostgreSQLGetDNDBTDbObjectRecordsQuery,
     PostgreSQLGetDNDBTScriptExecutionRecordsQuery>
 {
+    private int _dbmsVersion;
+
     public PostgreSQLDbModelFromDBMSProvider(IQueryExecutor queryExecutor)
         : base(queryExecutor) { }
+
+    protected override void BeforeReadDbObjects()
+    {
+        _dbmsVersion = QueryExecutor.QuerySingleOrDefault<int>(
+            new GenericQuery(PostgreSQLQueriesHelper.SelectDbmsVersionStatement));
+    }
+
+    protected override void BuildAdditionalDbObjects(Database database)
+    {
+        PostgreSQLDatabase db = (PostgreSQLDatabase)database;
+        db.CompositeTypes = BuildCompositeTypes(new PostgreSQLGetCompositeTypesFromDBMSSysInfoQuery());
+        db.DomainTypes = BuildDomainTypes(new PostgreSQLGetDomainTypesFromDBMSSysInfoQuery());
+        db.EnumTypes = BuildEnumTypes(new PostgreSQLGetEnumTypesFromDBMSSysInfoQuery());
+        db.RangeTypes = BuildRangeTypes(new PostgreSQLGetRangeTypesFromDBMSSysInfoQuery(_dbmsVersion));
+        db.Functions = BuildFunctions(new PostgreSQLGetFunctionsFromDBMSSysInfoQuery());
+        db.Procedures = new();
+    }
 
     protected override void ReplaceAdditionalDbModelObjectsIDsAndCodeWithDNDBTSysInfo(Database database, Dictionary<string, DNDBTInfo> dbObjectIDsMap)
     {
@@ -63,17 +83,6 @@ internal class PostgreSQLDbModelFromDBMSProvider : DbModelFromDBMSProvider<
             func.ID = dndbtInfo.ID;
             func.CodePiece.Code = dndbtInfo.Code;
         }
-    }
-
-    protected override void BuildAdditionalDbObjects(Database database)
-    {
-        PostgreSQLDatabase db = (PostgreSQLDatabase)database;
-        db.CompositeTypes = BuildCompositeTypes(new PostgreSQLGetCompositeTypesFromDBMSSysInfoQuery());
-        db.DomainTypes = BuildDomainTypes(new PostgreSQLGetDomainTypesFromDBMSSysInfoQuery());
-        db.EnumTypes = BuildEnumTypes(new PostgreSQLGetEnumTypesFromDBMSSysInfoQuery());
-        db.RangeTypes = BuildRangeTypes(new PostgreSQLGetRangeTypesFromDBMSSysInfoQuery());
-        db.Functions = BuildFunctions(new PostgreSQLGetFunctionsFromDBMSSysInfoQuery());
-        db.Procedures = new();
     }
 
     private List<PostgreSQLCompositeType> BuildCompositeTypes(PostgreSQLGetCompositeTypesFromDBMSSysInfoQuery query)

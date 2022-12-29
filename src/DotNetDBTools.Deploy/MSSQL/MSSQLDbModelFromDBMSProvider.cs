@@ -29,13 +29,6 @@ internal class MSSQLDbModelFromDBMSProvider : DbModelFromDBMSProvider<
     public MSSQLDbModelFromDBMSProvider(IQueryExecutor queryExecutor)
         : base(queryExecutor) { }
 
-    protected override void ReplaceAdditionalDbModelObjectsIDsAndCodeWithDNDBTSysInfo(Database database, Dictionary<string, DNDBTInfo> dbObjectIDsMap)
-    {
-        MSSQLDatabase db = (MSSQLDatabase)database;
-        foreach (MSSQLUserDefinedType udt in db.UserDefinedTypes)
-            udt.ID = dbObjectIDsMap[$"{DbObjectType.UserDefinedType}_{udt.Name}_{null}"].ID;
-    }
-
     protected override void BuildAdditionalDbObjects(Database database)
     {
         MSSQLDatabase db = (MSSQLDatabase)database;
@@ -43,6 +36,13 @@ internal class MSSQLDbModelFromDBMSProvider : DbModelFromDBMSProvider<
         db.UserDefinedTableTypes = new();
         db.Functions = new();
         db.Procedures = new();
+    }
+
+    protected override void ReplaceAdditionalDbModelObjectsIDsAndCodeWithDNDBTSysInfo(Database database, Dictionary<string, DNDBTInfo> dbObjectIDsMap)
+    {
+        MSSQLDatabase db = (MSSQLDatabase)database;
+        foreach (MSSQLUserDefinedType udt in db.UserDefinedTypes)
+            udt.ID = dbObjectIDsMap[$"{DbObjectType.UserDefinedType}_{udt.Name}_{null}"].ID;
     }
 
     private List<MSSQLUserDefinedType> BuildUserDefinedTypes(MSSQLGetTypesFromDBMSSysInfoQuery query)

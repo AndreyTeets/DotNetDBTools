@@ -156,12 +156,24 @@ VALUES
 -- QUERY END: PostgreSQLInsertDNDBTDbObjectRecordQuery
 
 -- QUERY START: PostgreSQLCreateRangeTypeQuery
-EXECUTE 'CREATE TYPE "MyRangeType1" AS RANGE
-(
-    SUBTYPE = TIMESTAMP,
-    SUBTYPE_OPCLASS = "timestamp_ops",
-    MULTIRANGE_TYPE_NAME = "MyRangeType1_multirange"
-);';
+EXECUTE 'DO $DNDBTPlPgSqlQueryBlock$
+BEGIN
+IF (SELECT current_setting(''server_version_num'')::int) >= 140000 THEN
+    CREATE TYPE "MyRangeType1" AS RANGE
+    (
+        SUBTYPE = TIMESTAMP,
+        SUBTYPE_OPCLASS = "timestamp_ops",
+        MULTIRANGE_TYPE_NAME = "MyRangeType1_multirange"
+    );
+ELSE
+    CREATE TYPE "MyRangeType1" AS RANGE
+    (
+        SUBTYPE = TIMESTAMP,
+        SUBTYPE_OPCLASS = "timestamp_ops"
+    );
+END IF;
+END;
+$DNDBTPlPgSqlQueryBlock$';
 -- QUERY END: PostgreSQLCreateRangeTypeQuery
 
 -- QUERY START: PostgreSQLInsertDNDBTDbObjectRecordQuery
