@@ -14,7 +14,7 @@ internal class MSSQLContainerHelper
     private const int MSSQLServerHostPort = 5005;
 
     private static string MSSQLImageTag =>
-        Environment.GetEnvironmentVariable("USE_LATEST_DBMS_VERSION") != "true"
+        Environment.GetEnvironmentVariable("DNDBT_USE_LATEST_DBMS_VERSION") != "true"
         ? "2017-GA-ubuntu"
         : "2019-CU18-ubuntu-20.04";
 

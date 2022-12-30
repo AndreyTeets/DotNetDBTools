@@ -15,7 +15,7 @@ internal static class DockerRunner
         if (container is null)
             return;
 
-        bool recreateContainers = Environment.GetEnvironmentVariable("RECREATE_CONTAINERS") == "true";
+        bool recreateContainers = Environment.GetEnvironmentVariable("DNDBT_RECREATE_CONTAINERS") == "true";
         if (recreateContainers ||
             container.State != "running" ||
             container.Created.AddMinutes(oldMinutes) < DateTime.UtcNow)

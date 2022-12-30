@@ -36,10 +36,10 @@
   </PropertyGroup>
 
   <!--Samples and tests sqlite version-->
-  <PropertyGroup Condition="'$(USE_LATEST_DBMS_VERSION)'!='True'">
+  <PropertyGroup Condition="'$(DNDBT_USE_LATEST_DBMS_VERSION)'!='True'">
     <SqliteVersion>2.2.2</SqliteVersion><!--sqlite_v_3.26.0-->
   </PropertyGroup>
-  <PropertyGroup Condition="'$(USE_LATEST_DBMS_VERSION)'=='True'">
+  <PropertyGroup Condition="'$(DNDBT_USE_LATEST_DBMS_VERSION)'=='True'">
     <SqliteVersion>6.0.12</SqliteVersion><!--sqlite_v_3.39.2-->
   </PropertyGroup>
 

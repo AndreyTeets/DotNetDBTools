@@ -14,7 +14,7 @@ internal class MySQLContainerHelper
     private const int MySQLServerHostPort = 5006;
 
     private static string MySQLImageTag =>
-        Environment.GetEnvironmentVariable("USE_LATEST_DBMS_VERSION") != "true"
+        Environment.GetEnvironmentVariable("DNDBT_USE_LATEST_DBMS_VERSION") != "true"
         ? "8.0.19"
         : "8.0.31";
 

@@ -30,12 +30,12 @@ try {
     exec dotnet test "./tests/DotNetDBTools.UnitTests" @testOptions "-p:CoverletOutputFormat=json"
     exec dotnet test "./tests/DotNetDBTools.AnalyzersTests" @testOptions "-p:CoverletOutputFormat=json"
 
-    $env:RECREATE_CONTAINERS = "true"
-    $env:USE_LATEST_DBMS_VERSION = "false"
+    $env:DNDBT_RECREATE_CONTAINERS = "true"
+    $env:DNDBT_USE_LATEST_DBMS_VERSION = "false"
     exec dotnet test "./tests/DotNetDBTools.IntegrationTests" @testOptions "-p:CoverletOutputFormat=json"
 
-    $env:USE_LATEST_DBMS_VERSION = "true"
-    Write-Host "Rebuilding solution with 'USE_LATEST_DBMS_VERSION=true' flag"
+    $env:DNDBT_USE_LATEST_DBMS_VERSION = "true"
+    Write-Host "Rebuilding solution with 'DNDBT_USE_LATEST_DBMS_VERSION=true' flag"
     exec dotnet build DotNetDBTools.sln -c Release -v q
     exec dotnet test "./tests/DotNetDBTools.IntegrationTests" @testOptions "-p:CoverletOutputFormat=opencover"
 

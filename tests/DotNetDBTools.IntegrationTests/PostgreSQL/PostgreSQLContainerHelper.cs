@@ -14,7 +14,7 @@ internal class PostgreSQLContainerHelper
     private const int PostgreSQLServerHostPort = 5007;
 
     private static string PostgreSQLImageTag =>
-        Environment.GetEnvironmentVariable("USE_LATEST_DBMS_VERSION") != "true"
+        Environment.GetEnvironmentVariable("DNDBT_USE_LATEST_DBMS_VERSION") != "true"
         ? "11.0-alpine"
         : "15.1-alpine3.17";
 
