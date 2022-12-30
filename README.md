@@ -166,6 +166,7 @@ public interface IDeployManager
     public string GenerateNoDNDBTInfoPublishScript(Database newDatabase, Database oldDatabase);
 
     public void GenerateDefinition(IDbConnection connection, string outputDirectory);
+    public void GenerateDefinition(IDbConnection connection, GenerationOptions generationOptions, string outputDirectory);
 
     public Database CreateDatabaseModelUsingDNDBTSysInfo(IDbConnection connection);
     public Database CreateDatabaseModelUsingDBMSSysInfo(IDbConnection connection);

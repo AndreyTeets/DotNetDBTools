@@ -1,5 +1,6 @@
 ﻿using System.Data;
 using System.Reflection;
+using DotNetDBTools.Generation;
 using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.Deploy;
@@ -145,6 +146,11 @@ public interface IDeployManager
     /// If database is unregistered IDs for all objects are generated randomly.
     /// </summary>
     public void GenerateDefinition(IDbConnection connection, string outputDirectory);
+    /// <summary>
+    /// Generates dotnet project for a registerd or unregistered database.
+    /// If database is unregistered IDs for all objects are generated randomly.
+    /// </summary>
+    public void GenerateDefinition(IDbConnection connection, GenerationOptions generationOptions, string outputDirectory);
 
     /// <summary>
     /// Creates database model using DBMS and DNDBT system tables.

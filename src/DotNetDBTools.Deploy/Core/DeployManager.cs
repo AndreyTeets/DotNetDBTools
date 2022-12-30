@@ -174,9 +174,14 @@ public abstract class DeployManager<TDatabase> : IDeployManager
 
     public void GenerateDefinition(IDbConnection connection, string outputDirectory)
     {
+        GenerateDefinition(connection, new GenerationOptions(), outputDirectory);
+    }
+
+    public void GenerateDefinition(IDbConnection connection, GenerationOptions generationOptions, string outputDirectory)
+    {
         Database database = CreateDbModelFromDBMS(connection, ExpectedRegistrationState.Any, useDNDBTSysInfoIfAvailable: true);
         Events.InvokeEventFired(EventType.GenerateDefinitionBegan);
-        new GenerationManager().GenerateDefinition(database, outputDirectory);
+        new GenerationManager(generationOptions).GenerateDefinition(database, outputDirectory);
         Events.InvokeEventFired(EventType.GenerateDefinitionFinished);
     }
 
