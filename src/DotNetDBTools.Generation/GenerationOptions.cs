@@ -8,5 +8,5 @@ public class GenerationOptions
     /// <remarks>
     /// Default value is MyDatabase.
     /// </remarks>
-    public string DatabaseName { get; set; }
+    public string DatabaseName { get; set; } = "MyDatabase";
 }
