@@ -15,8 +15,8 @@ internal class MSSQLContainerHelper
 
     private static string MSSQLImageTag =>
         Environment.GetEnvironmentVariable("DNDBT_USE_LATEST_DBMS_VERSION") != "true"
-        ? "2017-GA-ubuntu"
-        : "2019-CU18-ubuntu-20.04";
+        ? "2017-latest"
+        : "2022-latest";
 
     public static string MSSQLContainerConnectionString =>
         new SqlConnectionStringBuilder()

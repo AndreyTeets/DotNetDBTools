@@ -104,7 +104,7 @@ Although it provides analogous declaritive means for database structure descript
 Also provides declarative means for database structure description with different syntax, but publishing process is entirely different and relies on dragging the whole history of every change done to database. Also DotNetDBTools is not an ORM, it just provides means to describe and deploy database structure and analysis on this structure.
 
 # Supported DBMS
-+ MSSQL (oldest tested - 2017-GA, latest tested - 2019-CU18)
++ MSSQL (oldest tested - 2017, latest tested - 2022)
 + MySQL ((minimal required - 8.0.19, latest tested - 8.0.31)
 + PostgreSQL ((oldest tested - 11.0, latest tested - 15.1)
 + SQLite ((minimal required - 3.26.0, latest tested - 3.39.2)
