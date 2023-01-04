@@ -1,0 +1,12 @@
+-- ===e_delete.test===
+CREATE TABLE t1(a, b);
+INSERT INTO t1 VALUES(1, 'one');
+INSERT INTO t1 VALUES(2, 'two');
+INSERT INTO t1 VALUES(3, 'three');
+INSERT INTO t1 VALUES(4, 'four');
+INSERT INTO t1 VALUES(5, 'five');
+
+CREATE TABLE t1log(x);
+CREATE TRIGGER tr1 AFTER DELETE ON t1 BEGIN
+INSERT INTO t1log VALUES(old.a);
+END;

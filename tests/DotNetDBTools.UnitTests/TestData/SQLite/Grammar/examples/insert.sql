@@ -1,0 +1,502 @@
+-- ===insert.test===
+INSERT INTO test1 VALUES(1,2,3);
+
+SELECT * FROM test1;
+
+INSERT INTO test1 VALUES(4,5,6);
+
+SELECT * FROM test1 ORDER BY one;
+
+INSERT INTO test1 VALUES(7,8,9);
+
+SELECT * FROM test1 ORDER BY one;
+
+DELETE FROM test1;
+
+INSERT INTO test1(one,two) VALUES(1,2);
+
+SELECT * FROM test1 ORDER BY one;
+
+INSERT INTO test1(two,three) VALUES(5,6);
+
+SELECT * FROM test1 ORDER BY one;
+
+INSERT INTO sqlite_master VALUES(1,2,3,4);
+
+INSERT INTO test1(three,one) VALUES(7,8);
+
+SELECT * FROM test1 ORDER BY one;
+
+CREATE TABLE test2(
+f1 int default -111, 
+f2 real default +4.32,
+f3 int default +222,
+f4 int default 7.89
+);
+
+SELECT * from test2;
+
+INSERT INTO test2(f1,f3) VALUES(+10,-10);
+
+SELECT * FROM test2;
+
+INSERT INTO test2(f2,f4) VALUES(1.23,-3.45);
+
+SELECT * FROM test2 WHERE f1==-111;
+
+INSERT INTO test2(f1,f2,f4) VALUES(77,+1.23,3.45);
+
+SELECT * FROM test2 WHERE f1==77;
+
+CREATE TABLE test1(one int, two int, three int);
+
+DROP TABLE test2;
+CREATE TABLE test2(
+f1 int default 111, 
+f2 real default -4.32,
+f3 text default hi,
+f4 text default 'abc-123',
+f5 varchar(10)
+);
+
+SELECT * from test2;
+
+INSERT INTO test2(f2,f4) VALUES(-2.22,'hi!');
+
+SELECT * FROM test2;
+
+INSERT INTO test2(f1,f5) VALUES(1,'xyzzy');
+
+SELECT * FROM test2 ORDER BY f1;
+
+DELETE FROM test2;
+CREATE INDEX index9 ON test2(f1,f2);
+CREATE INDEX indext ON test2(f4,f5);
+SELECT * from test2;
+
+INSERT INTO test2(f2,f4) VALUES(-3.33,'hum');
+
+SELECT * FROM test2 WHERE f1='111' AND f2=-3.33;
+
+INSERT INTO test2(f1,f2,f5) VALUES(22,-4.44,'wham');
+
+INSERT INTO test1 VALUES(1,2);
+
+SELECT * FROM test2 WHERE f1='111' AND f2=-3.33;
+
+SELECT * FROM test2 WHERE f1=22 AND f2=-4.44;
+
+CREATE TABLE t3(a,b,c);
+INSERT INTO t3 VALUES(1+2+3,4,5);
+SELECT * FROM t3;
+
+INSERT INTO t3 VALUES((SELECT max(a) FROM t3)+1,5,6);
+
+SELECT max(a) FROM t3;
+
+SELECT * FROM t3 ORDER BY a;
+
+INSERT INTO t3 VALUES((SELECT b FROM t3 WHERE a=0),6,7);
+
+SELECT b FROM t3 WHERE a = 0;
+
+SELECT * FROM t3 ORDER BY a;
+
+SELECT b,c FROM t3 WHERE a IS NULL;
+
+INSERT INTO test1 VALUES(1,2,3,4);
+
+INSERT INTO t3 VALUES(min(1,2,3),max(1,2,3),99);
+SELECT * FROM t3 WHERE c=99;
+
+CREATE TEMP TABLE t4(x);
+INSERT INTO t4 VALUES(1);
+SELECT * FROM t4;
+
+INSERT INTO t4 SELECT x+1 FROM t4;
+SELECT * FROM t4;
+
+EXPLAIN INSERT INTO t4 SELECT x+2 FROM t4;
+
+SELECT rootpage FROM sqlite_master WHERE name='test1';
+
+SELECT rootpage FROM sqlite_temp_master WHERE name='t4';
+
+INSERT INTO t4 SELECT one FROM test1 WHERE three=7;
+SELECT * FROM t4;
+
+EXPLAIN INSERT INTO t4 SELECT one FROM test1;
+
+CREATE TABLE t1(a INTEGER PRIMARY KEY, b UNIQUE);
+INSERT INTO t1 VALUES(1,2);
+INSERT INTO t1 VALUES(2,3);
+SELECT b FROM t1 WHERE b=2;
+
+REPLACE INTO t1 VALUES(1,4);
+SELECT b FROM t1 WHERE b=2;
+
+INSERT INTO test1(one,two) VALUES(1,2,3,4);
+
+UPDATE OR REPLACE t1 SET a=2 WHERE b=4;
+SELECT * FROM t1 WHERE b=4;
+
+SELECT * FROM t1 WHERE b=3;
+
+DROP TABLE t1;
+
+CREATE TABLE t1(a);
+INSERT INTO t1 VALUES(1);
+INSERT INTO t1 VALUES(2);
+CREATE INDEX i1 ON t1(a);
+
+INSERT INTO t1 SELECT max(a) FROM t1;
+
+SELECT a FROM t1;
+
+INSERT INTO t3 SELECT * FROM (SELECT * FROM t3 UNION ALL SELECT 1,2,3);
+
+CREATE TABLE t5(x);
+INSERT INTO t5 VALUES(1);
+INSERT INTO t5 VALUES(2);
+INSERT INTO t5 VALUES(3);
+INSERT INTO t5(rowid, x) SELECT nullif(x*2+10,14), x+100 FROM t5;
+SELECT rowid, x FROM t5;
+
+CREATE TABLE t6(x INTEGER PRIMARY KEY, y);
+INSERT INTO t6 VALUES(1,1);
+INSERT INTO t6 VALUES(2,2);
+INSERT INTO t6 VALUES(3,3);
+INSERT INTO t6 SELECT nullif(y*2+10,14), y+100 FROM t6;
+SELECT x, y FROM t6;
+
+INSERT INTO test1(one,two) VALUES(1);
+
+INSERT INTO test1(one,four) VALUES(1,2);
+
+INSERT INTO test1 VALUES(1,2,3);
+
+-- ===insert2.test===
+CREATE TABLE d1(n int, log int);
+
+DROP TABLE t1;
+
+CREATE TABLE t1(log int, cnt int);
+PRAGMA count_changes=off;
+INSERT INTO t1 
+SELECT log, count(*) FROM d1 GROUP BY log
+INTERSECT SELECT n-1,log FROM d1;
+
+SELECT * FROM t1 ORDER BY log;
+
+PRAGMA count_changes=off;
+
+DROP TABLE t1;
+
+CREATE TABLE t1(log int, cnt int);
+CREATE INDEX i1 ON t1(log);
+CREATE INDEX i2 ON t1(cnt);
+INSERT INTO t1 SELECT log, count() FROM d1 GROUP BY log;
+SELECT * FROM t1 ORDER BY log;
+
+SELECT cnt FROM t1 WHERE log=3;
+
+SELECT log FROM t1 WHERE cnt=4 ORDER BY log;
+
+CREATE TABLE t3(a,b,c);
+CREATE TABLE t4(x,y);
+INSERT INTO t4 VALUES(1,2);
+SELECT * FROM t4;
+
+INSERT INTO t3(a,c) SELECT * FROM t4;
+SELECT * FROM t3;
+
+SELECT * FROM d1 ORDER BY n;
+
+DELETE FROM t3;
+INSERT INTO t3(c,b) SELECT * FROM t4;
+SELECT * FROM t3;
+
+DELETE FROM t3;
+INSERT INTO t3(c,a,b) SELECT x, 'hi', y FROM t4;
+SELECT * FROM t3;
+
+SELECT * from t4;
+
+BEGIN;
+INSERT INTO t4 VALUES(2,4);
+INSERT INTO t4 VALUES(3,6);
+INSERT INTO t4 VALUES(4,8);
+INSERT INTO t4 VALUES(5,10);
+INSERT INTO t4 VALUES(6,12);
+INSERT INTO t4 VALUES(7,14);
+INSERT INTO t4 VALUES(8,16);
+INSERT INTO t4 VALUES(9,18);
+INSERT INTO t4 VALUES(10,20);
+COMMIT;
+
+SELECT count(*) FROM t4;
+
+BEGIN;
+INSERT INTO t4 SELECT x+(SELECT max(x) FROM t4),y FROM t4;
+INSERT INTO t4 SELECT x+(SELECT max(x) FROM t4),y FROM t4;
+INSERT INTO t4 SELECT x+(SELECT max(x) FROM t4),y FROM t4;
+INSERT INTO t4 SELECT x+(SELECT max(x) FROM t4),y FROM t4;
+COMMIT;
+SELECT count(*) FROM t4;
+
+SELECT max(x) FROM t4;
+
+BEGIN;
+INSERT INTO t4 SELECT x+max_x_t4() ,y FROM t4;
+INSERT INTO t4 SELECT x+max_x_t4() ,y FROM t4;
+INSERT INTO t4 SELECT x+max_x_t4() ,y FROM t4;
+INSERT INTO t4 SELECT x+max_x_t4() ,y FROM t4;
+COMMIT;
+SELECT count(*) FROM t4;
+
+BEGIN;
+UPDATE t4 SET y='lots of data for the row where x=' || x
+|| ' and y=' || y || ' - even more data to fill space';
+COMMIT;
+SELECT count(*) FROM t4;
+
+BEGIN;
+INSERT INTO t4 SELECT x+(SELECT max(x)+1 FROM t4),y FROM t4;
+SELECT count(*) from t4;
+ROLLBACK;
+
+CREATE TABLE t1(log int, cnt int);
+PRAGMA count_changes=on;
+
+BEGIN;
+INSERT INTO t4 SELECT x+max_x_t4()+1,y FROM t4;
+SELECT count(*) from t4;
+ROLLBACK;
+
+SELECT count(*) FROM t4;
+
+BEGIN;
+DELETE FROM t4 WHERE x!=123;
+SELECT count(*) FROM t4;
+ROLLBACK;
+
+CREATE TABLE Dependencies(depId integer primary key,
+class integer, name str, flag str);
+CREATE TEMPORARY TABLE DepCheck(troveId INT, depNum INT,
+flagCount INT, isProvides BOOL, class INTEGER, name STRING,
+flag STRING);
+INSERT INTO DepCheck 
+VALUES(-1, 0, 1, 0, 2, 'libc.so.6', 'GLIBC_2.0');
+INSERT INTO Dependencies 
+SELECT DISTINCT 
+NULL, 
+DepCheck.class, 
+DepCheck.name, 
+DepCheck.flag 
+FROM DepCheck LEFT OUTER JOIN Dependencies ON 
+DepCheck.class == Dependencies.class AND 
+DepCheck.name == Dependencies.name AND 
+DepCheck.flag == Dependencies.flag 
+WHERE 
+Dependencies.depId is NULL;
+
+CREATE TABLE t2(a, b);
+INSERT INTO t2 VALUES(1, 2);
+CREATE INDEX t2i1 ON t2(a);
+INSERT INTO t2 SELECT a, 3 FROM t2 WHERE a = 1;
+SELECT * FROM t2;
+
+INSERT INTO t2 SELECT (SELECT a FROM t2), 4;
+SELECT * FROM t2;
+
+EXPLAIN INSERT INTO t1 SELECT log, count(*) FROM d1 GROUP BY log;
+
+INSERT INTO t1 SELECT log, count(*) FROM d1 GROUP BY log;
+
+SELECT * FROM t1 ORDER BY log;
+
+DROP TABLE t1;
+
+CREATE TABLE t1(log int, cnt int);
+INSERT INTO t1 
+SELECT log, count(*) FROM d1 GROUP BY log
+EXCEPT SELECT n-1,log FROM d1;
+
+SELECT * FROM t1 ORDER BY log;
+
+-- ===insert3.test===
+CREATE TABLE t1(a,b);
+CREATE TABLE log(x UNIQUE, y);
+CREATE TRIGGER r1 AFTER INSERT ON t1 BEGIN
+UPDATE log SET y=y+1 WHERE x=new.a;
+INSERT OR IGNORE INTO log VALUES(new.a, 1);
+END;
+INSERT INTO t1 VALUES('hello','world');
+INSERT INTO t1 VALUES(5,10);
+SELECT * FROM log ORDER BY x;
+
+CREATE TABLE t3(a,b,c);
+CREATE TRIGGER t3r1 BEFORE INSERT on t3 WHEN nosuchcol BEGIN
+SELECT 'illegal WHEN clause';
+END;
+
+CREATE TABLE t4(a,b,c);
+CREATE TRIGGER t4r1 AFTER INSERT on t4 WHEN nosuchcol BEGIN
+SELECT 'illegal WHEN clause';
+END;
+
+CREATE TABLE t5(
+a INTEGER PRIMARY KEY,
+b DEFAULT 'xyz'
+);
+INSERT INTO t5 DEFAULT VALUES;
+SELECT * FROM t5;
+
+INSERT INTO t5 DEFAULT VALUES;
+SELECT * FROM t5;
+
+CREATE TABLE t6(x,y DEFAULT 4.3, z DEFAULT x'6869');
+INSERT INTO t6 DEFAULT VALUES;
+SELECT * FROM t6;
+
+SELECT name FROM sqlite_master WHERE type = 'table';
+
+CREATE TABLE t1(a, b, c);
+CREATE INDEX i1 ON t1(a, b);
+BEGIN;
+INSERT INTO t1 VALUES(randstr(10,400),randstr(10,400),randstr(10,400));
+
+COMMIT;
+
+PRAGMA cache_size = 10;
+BEGIN;
+UPDATE t1 SET a = randstr(10,10) WHERE (rowid%4)==0;
+DELETE FROM t1 WHERE rowid%2;
+INSERT INTO t1 SELECT randstr(10,400), randstr(10,400), c FROM t1;
+COMMIT;
+
+INSERT INTO t1 SELECT a, b+10 FROM t1;
+SELECT * FROM log ORDER BY x;
+
+CREATE TABLE log2(x PRIMARY KEY,y);
+CREATE TRIGGER r2 BEFORE INSERT ON t1 BEGIN
+UPDATE log2 SET y=y+1 WHERE x=new.b;
+INSERT OR IGNORE INTO log2 VALUES(new.b,1);
+END;
+INSERT INTO t1 VALUES(453,'hi');
+SELECT * FROM log ORDER BY x;
+
+SELECT * FROM log2 ORDER BY x;
+
+INSERT INTO t1 SELECT * FROM t1;
+SELECT 'a:', x, y FROM log UNION ALL 
+SELECT 'b:', x, y FROM log2 ORDER BY x;
+
+SELECT 'a:', x, y FROM log UNION ALL 
+SELECT 'b:', x, y FROM log2 ORDER BY x, y;
+
+INSERT INTO t1(a) VALUES('xyz');
+SELECT * FROM log ORDER BY x;
+
+CREATE TABLE t2(
+a INTEGER PRIMARY KEY,
+b DEFAULT 'b',
+c DEFAULT 'c'
+);
+CREATE TABLE t2dup(a,b,c);
+CREATE TRIGGER t2r1 BEFORE INSERT ON t2 BEGIN
+INSERT INTO t2dup(a,b,c) VALUES(new.a,new.b,new.c);
+END;
+INSERT INTO t2(a) VALUES(123);
+INSERT INTO t2(b) VALUES(234);
+INSERT INTO t2(c) VALUES(345);
+SELECT * FROM t2dup;
+
+DELETE FROM t2dup;
+INSERT INTO t2(a) SELECT 1 FROM t1 LIMIT 1;
+INSERT INTO t2(b) SELECT 987 FROM t1 LIMIT 1;
+INSERT INTO t2(c) SELECT 876 FROM t1 LIMIT 1;
+SELECT * FROM t2dup;
+
+-- ===insert4.test===
+PRAGMA legacy_file_format = 0;
+CREATE TABLE t1(a int, b int, check(b>a));
+CREATE TABLE t2(x int, y int);
+CREATE VIEW v2 AS SELECT y, x FROM t2;
+CREATE TABLE t3(a int, b int);
+
+INSERT INTO t4 VALUES(NULL,0);
+INSERT INTO t4 VALUES(NULL,1);
+INSERT INTO t4 VALUES(NULL,1);
+VACUUM;
+
+CREATE INDEX t2_i2 ON t2(x, y COLLATE nocase); 
+CREATE INDEX t2_i1 ON t2(x ASC, y DESC);
+CREATE INDEX t3_i1 ON t3(a, b);
+INSERT INTO t2 SELECT * FROM t3;
+
+DROP INDEX t2_i2;
+INSERT INTO t2 SELECT * FROM t3;
+
+DROP INDEX t2_i1;
+CREATE INDEX t2_i1 ON t2(x ASC, y ASC);
+INSERT INTO t2 SELECT * FROM t3;
+
+DROP INDEX t2_i1;
+CREATE INDEX t2_i1 ON t2(x ASC, y COLLATE RTRIM);
+INSERT INTO t2 SELECT * FROM t3;
+
+CREATE TABLE t6a(x CHECK( x<>'abc' ));
+INSERT INTO t6a VALUES('ABC');
+SELECT * FROM t6a;
+
+CREATE TABLE t6b(x CHECK( x<>'abc' COLLATE nocase ));
+
+DROP TABLE t6b;
+CREATE TABLE t6b(x CHECK( x COLLATE nocase <>'abc' ));
+
+DELETE FROM t1;
+DELETE FROM t2;
+INSERT INTO t2 VALUES(9,1);
+
+SELECT * FROM t1;
+
+DELETE FROM t1;
+INSERT INTO t1 SELECT 4, 8;
+SELECT * FROM t1;
+
+DELETE FROM t2;
+INSERT INTO t2 VALUES(9,1);
+INSERT INTO t2 SELECT y, x FROM t2;
+INSERT INTO t3 SELECT * FROM t2 LIMIT 1;
+SELECT * FROM t3;
+
+DELETE FROM t3;
+INSERT INTO t3 SELECT DISTINCT * FROM t2;
+SELECT * FROM t3;
+
+INSERT INTO dest SELECT * FROM src;
+SELECT * FROM dest;
+
+DROP TABLE dest;
+DROP TABLE src;
+
+CREATE TABLE t4(a, b, UNIQUE(a,b));
+
+-- ===insert5.test===
+CREATE TABLE MAIN(Id INTEGER, Id1 INTEGER); 
+CREATE TABLE B(Id INTEGER, Id1 INTEGER); 
+CREATE VIEW v1 AS SELECT * FROM B;
+CREATE VIEW v2 AS SELECT * FROM MAIN;
+INSERT INTO MAIN(Id,Id1) VALUES(2,3); 
+INSERT INTO B(Id,Id1) VALUES(2,3);
+
+INSERT INTO B 
+SELECT * FROM B UNION ALL 
+SELECT * FROM MAIN WHERE exists (select * FROM B WHERE B.Id = MAIN.Id);
+SELECT * FROM B;
+
+INSERT INTO B SELECT * FROM B;
+INSERT INTO B
+SELECT * FROM MAIN WHERE exists (select * FROM B WHERE B.Id = MAIN.Id);
+SELECT * FROM B;

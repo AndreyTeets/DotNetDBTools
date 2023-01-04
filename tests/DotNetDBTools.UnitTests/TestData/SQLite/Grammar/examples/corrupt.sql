@@ -1,0 +1,254 @@
+-- ===corrupt.test===
+BEGIN;
+CREATE TABLE t1(x);
+INSERT INTO t1 VALUES(randstr(100,100));
+INSERT INTO t1 VALUES(randstr(90,90));
+INSERT INTO t1 VALUES(randstr(80,80));
+INSERT INTO t1 SELECT x || randstr(5,5) FROM t1;
+INSERT INTO t1 SELECT x || randstr(6,6) FROM t1;
+INSERT INTO t1 SELECT x || randstr(7,7) FROM t1;
+INSERT INTO t1 SELECT x || randstr(8,8) FROM t1;
+INSERT INTO t1 VALUES(randstr(3000,3000));
+INSERT INTO t1 SELECT x || randstr(9,9) FROM t1;
+INSERT INTO t1 SELECT x || randstr(10,10) FROM t1;
+INSERT INTO t1 SELECT x || randstr(11,11) FROM t1;
+INSERT INTO t1 SELECT x || randstr(12,12) FROM t1;
+CREATE INDEX t1i1 ON t1(x);
+CREATE TABLE t2 AS SELECT * FROM t1;
+DELETE FROM t2 WHERE rowid%5!=0;
+COMMIT;
+
+INSERT INTO t1 VALUES( randomblob(10) );
+
+DELETE FROM t1 WHERE rowid=1;
+
+PRAGMA page_size = 1024; CREATE TABLE t1(x);
+
+INSERT INTO t1 VALUES(X'000100020003000400050006000700080009000A');
+
+UPDATE t1 SET x = X'870400020003000400050006000700080009000A' 
+WHERE rowid = 10;
+
+PRAGMA page_size = 1024;
+PRAGMA secure_delete = on;
+PRAGMA auto_vacuum = 0;
+CREATE TABLE t1(x INTEGER PRIMARY KEY, y);
+INSERT INTO t1 VALUES(5, randomblob(1900));
+
+PRAGMA page_size = 1024;
+PRAGMA secure_delete = on;
+PRAGMA auto_vacuum = 0;
+CREATE TABLE t1(x INTEGER PRIMARY KEY, y);
+INSERT INTO t1 VALUES(5, randomblob(900));
+INSERT INTO t1 VALUES(6, randomblob(900));
+
+SELECT rootpage FROM sqlite_master WHERE name = 't1i1';
+
+SELECT rootpage FROM sqlite_master WHERE name = 't1';
+
+PRAGMA schema_version;
+
+PRAGMA page_size = 1024;
+CREATE TABLE t1(a INTEGER PRIMARY KEY, b TEXT);
+
+INSERT INTO t1 VALUES(i, text);
+
+CREATE INDEX i1 ON t1(b);
+
+PRAGMA page_size = 1024;
+
+PRAGMA page_size = 1024; CREATE TABLE t1(x);
+
+-- ===corrupt2.test===
+PRAGMA auto_vacuum=0;
+PRAGMA page_size=1024;
+CREATE TABLE abc(a, b, c);
+
+PRAGMA auto_vacuum = full;
+PRAGMA page_size = 1024;
+CREATE TABLE t1(a INTEGER PRIMARY KEY, b);
+INSERT INTO t1 VALUES(NULL, randstr(50,50));
+
+-- ===corrupt3.test===
+PRAGMA auto_vacuum=OFF;
+PRAGMA page_size=1024;
+CREATE TABLE t1(x);
+INSERT INTO t1 VALUES(bigstring);
+
+-- ===corrupt4.test===
+PRAGMA auto_vacuum=OFF;
+PRAGMA page_size=1024;
+CREATE TABLE t1(x);
+INSERT INTO t1 VALUES(bigstring);
+CREATE TABLE t2(y);
+INSERT INTO t2 VALUES(1);
+DROP TABLE t1;
+
+PRAGMA freelist_count;
+
+-- ===corrupt5.test===
+CREATE TABLE t1(a,b,c);
+CREATE INDEX i1 ON t1(a,b);
+PRAGMA writable_schema=ON;
+UPDATE sqlite_master SET name=NULL, sql=NULL WHERE name='i1';
+
+-- ===corrupt6.test===
+PRAGMA auto_vacuum=OFF;
+PRAGMA page_size=1024;
+CREATE TABLE t1(x);
+INSERT INTO t1(x) VALUES('varint32-01234567890123456789012345678901234567890123456789');
+INSERT INTO t1(x) VALUES('varint32-01234567890123456789012345678901234567890123456789');
+
+-- ===corrupt7.test===
+PRAGMA auto_vacuum=OFF;
+PRAGMA page_size=1024;
+CREATE TABLE t1(x);
+INSERT INTO t1(x) VALUES(1);
+INSERT INTO t1(x) VALUES(2);
+INSERT INTO t1(x) SELECT x+2 FROM t1;
+INSERT INTO t1(x) SELECT x+4 FROM t1;
+INSERT INTO t1(x) SELECT x+8 FROM t1;
+
+PRAGMA integrity_check(1);
+
+PRAGMA integrity_check(1);
+
+PRAGMA integrity_check(1);
+
+PRAGMA integrity_check(1);
+
+DROP TABLE t1;
+CREATE TABLE t1(a, b);
+INSERT INTO t1 VALUES(1, 'one');
+INSERT INTO t1 VALUES(100, 'one hundred');
+INSERT INTO t1 VALUES(100000, 'one hundred thousand');
+CREATE INDEX i1 ON t1(b);
+
+-- ===corrupt8.test===
+PRAGMA auto_vacuum=1;
+PRAGMA page_size=1024;
+CREATE TABLE t1(x);
+INSERT INTO t1(x) VALUES(1);
+INSERT INTO t1(x) VALUES(2);
+INSERT INTO t1(x) SELECT x+2 FROM t1;
+INSERT INTO t1(x) SELECT x+4 FROM t1;
+INSERT INTO t1(x) SELECT x+8 FROM t1;
+INSERT INTO t1(x) SELECT x+16 FROM t1;
+INSERT INTO t1(x) SELECT x+32 FROM t1;
+INSERT INTO t1(x) SELECT x+64 FROM t1;
+INSERT INTO t1(x) SELECT x+128 FROM t1;
+INSERT INTO t1(x) SELECT x+256 FROM t1;
+CREATE TABLE t2(a,b);
+INSERT INTO t2 SELECT x, x*x FROM t1;
+
+PRAGMA integrity_check;
+
+PRAGMA integrity_check;
+
+PRAGMA integrity_check;
+
+PRAGMA integrity_check;
+
+-- ===corrupt9.test===
+PRAGMA auto_vacuum=NONE;
+PRAGMA page_size=1024;
+CREATE TABLE t1(x);
+INSERT INTO t1(x) VALUES(1);
+INSERT INTO t1(x) VALUES(2);
+INSERT INTO t1(x) SELECT x+2 FROM t1;
+INSERT INTO t1(x) SELECT x+4 FROM t1;
+INSERT INTO t1(x) SELECT x+8 FROM t1;
+INSERT INTO t1(x) SELECT x+16 FROM t1;
+INSERT INTO t1(x) SELECT x+32 FROM t1;
+INSERT INTO t1(x) SELECT x+64 FROM t1;
+INSERT INTO t1(x) SELECT x+128 FROM t1;
+INSERT INTO t1(x) SELECT x+256 FROM t1;
+CREATE TABLE t2(a,b);
+INSERT INTO t2 SELECT x, x*x FROM t1;
+CREATE INDEX i1 ON t1(x);
+CREATE INDEX i2 ON t2(b,a);
+DROP INDEX i2;
+
+PRAGMA integrity_check;
+
+PRAGMA integrity_check;
+
+PRAGMA integrity_check;
+
+-- ===corruptA.test===
+CREATE TABLE t1(x);
+INSERT INTO t1(x) VALUES(1);
+
+-- ===corruptB.test===
+PRAGMA auto_vacuum = 1;
+CREATE TABLE t1(x);
+INSERT INTO t1 VALUES(randomblob(200));
+INSERT INTO t1 SELECT randomblob(200) FROM t1;
+INSERT INTO t1 SELECT randomblob(200) FROM t1;
+INSERT INTO t1 SELECT randomblob(200) FROM t1;
+INSERT INTO t1 SELECT randomblob(200) FROM t1;
+INSERT INTO t1 SELECT randomblob(200) FROM t1;
+
+SELECT rootpage FROM sqlite_master;
+
+INSERT INTO t1 SELECT randomblob(200) FROM t1;
+INSERT INTO t1 SELECT randomblob(200) FROM t1;
+INSERT INTO t1 SELECT randomblob(200) FROM t1;
+INSERT INTO t1 SELECT randomblob(200) FROM t1;
+INSERT INTO t1 SELECT randomblob(200) FROM t1;
+INSERT INTO t1 SELECT randomblob(200) FROM t1;
+INSERT INTO t1 SELECT randomblob(200) FROM t1;
+
+CREATE TABLE t2(a);
+INSERT INTO t2 VALUES(v);
+
+SELECT rootpage FROM sqlite_master WHERE name = 't2';
+
+-- ===corruptC.test===
+PRAGMA auto_vacuum = 0;
+PRAGMA legacy_file_format=1;
+BEGIN;
+CREATE TABLE t1(x,y);
+INSERT INTO t1 VALUES(1,1);
+INSERT OR IGNORE INTO t1 SELECT x*2,y FROM t1;
+INSERT OR IGNORE INTO t1 SELECT x*3,y FROM t1;
+INSERT OR IGNORE INTO t1 SELECT x*5,y FROM t1;
+INSERT OR IGNORE INTO t1 SELECT x*7,y FROM t1;
+INSERT OR IGNORE INTO t1 SELECT x*11,y FROM t1;
+INSERT OR IGNORE INTO t1 SELECT x*13,y FROM t1;
+CREATE INDEX t1i1 ON t1(x);
+CREATE TABLE t2 AS SELECT x,2 as y FROM t1 WHERE rowid%5!=0;
+COMMIT;
+
+INSERT INTO t1 VALUES (1, blob);
+
+-- ===corruptD.test===
+PRAGMA auto_vacuum = 0;
+PRAGMA page_size = 1024;
+CREATE TABLE t1(a, b);
+CREATE INDEX i1 ON t1(a, b);
+
+INSERT INTO t1 VALUES(ii, ii * ii);
+
+DELETE FROM t1 WHERE a = 10;
+DELETE FROM t1 WHERE a = 20;
+DELETE FROM t1 WHERE a = 30;
+DELETE FROM t1 WHERE a = 40;
+
+-- ===corruptE.test===
+PRAGMA auto_vacuum = 0;
+PRAGMA legacy_file_format=1;
+BEGIN;
+CREATE TABLE t1(x,y);
+INSERT INTO t1 VALUES(1,1);
+INSERT OR IGNORE INTO t1 SELECT x*2,y FROM t1;
+INSERT OR IGNORE INTO t1 SELECT x*3,y FROM t1;
+INSERT OR IGNORE INTO t1 SELECT x*5,y FROM t1;
+INSERT OR IGNORE INTO t1 SELECT x*7,y FROM t1;
+INSERT OR IGNORE INTO t1 SELECT x*11,y FROM t1;
+INSERT OR IGNORE INTO t1 SELECT x*13,y FROM t1;
+INSERT OR IGNORE INTO t1 SELECT x*17,y FROM t1;
+INSERT OR IGNORE INTO t1 SELECT x*19,y FROM t1;
+CREATE INDEX t1i1 ON t1(x);
+CREATE TABLE t2 AS SELECT x,2 as y FROM t1 WHERE rowid%5!=0;
+COMMIT;

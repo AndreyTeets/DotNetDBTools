@@ -1,0 +1,2101 @@
+-- ===select1.test===
+SELECT * FROM test1;
+
+SELECT * FROM test1;
+
+SELECT f1 FROM test1 ORDER BY f2, f1;
+
+SELECT f1 FROM test1 WHERE 4.3+2.4 OR 1 ORDER BY f1;
+
+SELECT f1 FROM test1 WHERE ('x' || f1) BETWEEN 'x10' AND 'x20'
+ORDER BY f1;
+
+SELECT f1 FROM test1 WHERE 5-3==2
+ORDER BY f1;
+
+SELECT coalesce(f1/(f1-11),'x'),
+coalesce(min(f1/(f1-11),5),'y'),
+coalesce(max(f1/(f1-33),6),'z')
+FROM test1 ORDER BY f1;
+
+SELECT min(1,2,3), -max(1,2,3)
+FROM test1 ORDER BY f1;
+
+SELECT * FROM test1 WHERE f1<0;
+
+PRAGMA empty_result_callbacks=on;
+
+SELECT * FROM test1 WHERE f1<0;
+
+SELECT * FROM test1 WHERE f1<(select count(*) from test2);
+
+SELECT *, * FROM test1;
+
+SELECT * FROM test1 ORDER BY f1;
+
+SELECT * FROM test1 WHERE f1<0 ORDER BY f1;
+
+SELECT f1 AS x FROM test1 ORDER BY x;
+
+SELECT f1 AS x FROM test1 ORDER BY -x;
+
+SELECT f1-23 AS x FROM test1 ORDER BY abs(x);
+
+SELECT f1-23 AS x FROM test1 ORDER BY -abs(x);
+
+SELECT f1-22 AS x, f2-22 as y FROM test1;
+
+SELECT f1-22 AS x, f2-22 as y FROM test1 WHERE x>0 AND y<50;
+
+SELECT f1 COLLATE nocase AS x FROM test1 ORDER BY x;
+
+DELETE FROM t3;
+DELETE FROM t4;
+INSERT INTO t3 VALUES(1,2);
+INSERT INTO t4 VALUES(3,4);
+SELECT * FROM t3, t4;
+
+SELECT *, min(f1,f2), max(f1,f2) FROM test1;
+
+SELECT * FROM t3, t4;
+
+SELECT t3.*, t4.b FROM t3, t4;
+
+SELECT "t3".*, t4.b FROM t3, t4;
+
+SELECT t3.b, t4.* FROM t3, t4;
+
+DELETE FROM t3;
+INSERT INTO t3 VALUES(1,2);
+
+SELECT * FROM t3 UNION SELECT 3 AS 'a', 4 ORDER BY a;
+
+SELECT 3, 4 UNION SELECT * FROM t3;
+
+SELECT * FROM t3 WHERE a=(SELECT 1);
+
+SELECT * FROM t3 WHERE a=(SELECT 2);
+
+BEGIN;
+create TABLE abc(a, b, c, PRIMARY KEY(a, b));
+INSERT INTO abc VALUES(1, 1, 1);
+
+SELECT 'one', *, 'two', * FROM test1;
+
+INSERT INTO abc SELECT a+(select max(a) FROM abc), 
+b+(select max(a) FROM abc), c+(select max(a) FROM abc) FROM abc;
+
+COMMIT;
+
+SELECT count(
+(SELECT a FROM abc WHERE a = NULL AND b >= upper.c) 
+) FROM abc AS upper;
+
+SELECT name FROM sqlite_master WHERE type = 'table';
+
+SELECT * FROM sqlite_master WHERE rowid>10; 
+SELECT * FROM sqlite_master WHERE rowid=10;
+SELECT * FROM sqlite_master WHERE rowid<10;
+SELECT * FROM sqlite_master WHERE rowid<=10;
+SELECT * FROM sqlite_master WHERE rowid>=10;
+SELECT * FROM sqlite_master;
+
+SELECT 10 IN (SELECT rowid FROM sqlite_master);
+
+CREATE TABLE t1(a);
+CREATE INDEX i1 ON t1(a);
+INSERT INTO t1 VALUES(1);
+INSERT INTO t1 VALUES(2);
+INSERT INTO t1 VALUES(3);
+
+DROP INDEX i1;
+
+SELECT 2 IN (SELECT a FROM t1);
+
+CREATE TABLE test2(r1 real, r2 real);
+
+INSERT INTO test2(r1,r2) VALUES(1.1,2.2);
+
+SELECT * FROM test1, test2;
+
+SELECT *, 'hi' FROM test1, test2;
+
+SELECT 'one', *, 'two', * FROM test1, test2;
+
+SELECT test1.f1, test2.r1 FROM test1, test2;
+
+CREATE TABLE test1(f1 int, f2 int);
+
+SELECT test1.f1, test2.r1 FROM test2, test1;
+
+SELECT * FROM test2, test1;
+
+SELECT * FROM test1 AS a, test1 AS b;
+
+SELECT max(test1.f1,test2.r1), min(test1.f2,test2.r2)
+FROM test2, test1;
+
+SELECT min(test1.f1,test2.r1), max(test1.f2,test2.r2)
+FROM test1, test2;
+
+SELECT count(f1,f2) FROM test1;
+
+SELECT count(f1) FROM test1;
+
+SELECT Count() FROM test1;
+
+SELECT COUNT(*) FROM test1;
+
+SELECT COUNT(*)+1 FROM test1;
+
+SELECT * FROM test1, test2;
+
+SELECT count(*),count(a),count(b) FROM t3;
+
+SELECT count(*),count(a),count(b) FROM t4;
+
+SELECT count(*),count(a),count(b) FROM t4 WHERE b=5;
+
+SELECT min(*) FROM test1;
+
+SELECT Min(f1) FROM test1;
+
+SELECT MIN(f1,f2) FROM test1;
+
+SELECT coalesce(min(a),'xyzzy') FROM t3;
+
+SELECT min(coalesce(a,'xyzzy')) FROM t3;
+
+SELECT min(b), min(b) FROM t4;
+
+SELECT MAX(*) FROM test1;
+
+SELECT * FROM test2, test1;
+
+SELECT Max(f1) FROM test1;
+
+SELECT max(f1,f2) FROM test1;
+
+SELECT MAX(f1,f2)+1 FROM test1;
+
+SELECT MAX(f1)+1 FROM test1;
+
+SELECT coalesce(max(a),'xyzzy') FROM t3;
+
+SELECT max(coalesce(a,'xyzzy')) FROM t3;
+
+SELECT SUM(*) FROM test1;
+
+SELECT Sum(f1) FROM test1;
+
+SELECT sum(f1,f2) FROM test1;
+
+SELECT SUM(f1)+1 FROM test1;
+
+INSERT INTO test1(f1,f2) VALUES(11,22);
+
+SELECT sum(a) FROM t3;
+
+SELECT XYZZY(f1) FROM test1;
+
+SELECT SUM(min(f1,f2)) FROM test1;
+
+SELECT SUM(min(f1)) FROM test1;
+
+CREATE TABLE tkt2526(a,b,c PRIMARY KEY);
+INSERT INTO tkt2526 VALUES('x','y',NULL);
+INSERT INTO tkt2526 VALUES('x','z',NULL);
+
+SELECT f1 FROM test1 WHERE f1<11;
+
+SELECT f1 FROM test1 WHERE f1<=11;
+
+SELECT f1 FROM test1 WHERE f1=11;
+
+SELECT f1 FROM test1 WHERE f1>=11;
+
+SELECT f1 FROM test1 WHERE f1>11;
+
+SELECT f1 FROM test1;
+
+SELECT f1 FROM test1 WHERE f1!=11;
+
+SELECT f1 FROM test1 WHERE min(f1,f2)!=11;
+
+SELECT f1 FROM test1 WHERE max(f1,f2)!=11;
+
+SELECT f1 FROM test1 WHERE count(f1,f2)!=11;
+
+SELECT f1 FROM test1 ORDER BY f1;
+
+SELECT f1 FROM test1 ORDER BY -f1;
+
+SELECT f1 FROM test1 ORDER BY min(f1,f2);
+
+SELECT f1 FROM test1 ORDER BY min(f1);
+
+SELECT f1 FROM test1 ORDER BY 8.4;
+
+SELECT f1 FROM test1 ORDER BY '8.4';
+
+SELECT f2 FROM test1;
+
+CREATE TABLE t5(a,b);
+INSERT INTO t5 VALUES(1,10);
+INSERT INTO t5 VALUES(2,9);
+SELECT * FROM t5 ORDER BY 1;
+
+SELECT * FROM t5 ORDER BY 2;
+
+SELECT * FROM t5 ORDER BY +2;
+
+INSERT INTO t5 VALUES(3,10);
+SELECT * FROM t5 ORDER BY 2, 1 DESC;
+
+SELECT * FROM t5 ORDER BY 1 DESC, b;
+
+SELECT * FROM t5 ORDER BY b DESC, 1;
+
+SELECT max(f1) FROM test1 ORDER BY f2;
+
+CREATE TABLE test2(t1 text, t2 text);
+
+INSERT INTO test2 VALUES('abc','xyz');
+
+PRAGMA full_column_names=on;
+
+SELECT f2, f1 FROM test1;
+
+PRAGMA full_column_names=off;
+
+SELECT A.f1, B.f1 FROM test1 as A, test1 as B 
+ORDER BY A.f1, B.f1;
+
+PRAGMA short_column_names=OFF;
+PRAGMA full_column_names=OFF;
+
+PRAGMA short_column_names=OFF;
+PRAGMA full_column_names=ON;
+
+PRAGMA short_column_names=OFF;
+PRAGMA full_column_names=ON;
+
+PRAGMA short_column_names=ON;
+PRAGMA full_column_names=ON;
+
+PRAGMA short_column_names=ON;
+PRAGMA full_column_names=OFF;
+
+PRAGMA short_column_names=OFF;
+PRAGMA full_column_names=ON;
+
+PRAGMA short_column_names=ON;
+PRAGMA full_column_names=OFF;
+
+CREATE TABLE t6(a TEXT, b TEXT);
+INSERT INTO t6 VALUES('a','0');
+INSERT INTO t6 VALUES('b','1');
+INSERT INTO t6 VALUES('c','2');
+INSERT INTO t6 VALUES('d','3');
+SELECT a FROM t6 WHERE b IN 
+(SELECT b FROM t6 WHERE a<='b' UNION SELECT '3' AS x
+ORDER BY 1 LIMIT 1);
+
+SELECT f1, f2 FROM test1;
+
+SELECT a FROM t6 WHERE b IN 
+(SELECT b FROM t6 WHERE a<='b' UNION SELECT '3' AS x
+ORDER BY 1 DESC LIMIT 1);
+
+SELECT a FROM t6 WHERE b IN 
+(SELECT b FROM t6 WHERE a<='b' UNION SELECT '3' AS x
+ORDER BY b LIMIT 2)
+ORDER BY a;
+
+SELECT a FROM t6 WHERE b IN 
+(SELECT b FROM t6 WHERE a<='b' UNION SELECT '3' AS x
+ORDER BY x DESC LIMIT 2)
+ORDER BY a;
+
+SELECT f1 FROM test1 UNION SELECT WHERE;
+
+SELECT f1 FROM test1 as 'hi', test2 as;
+
+SELECT count(f1,f2) FROM test1;
+
+SELECT count(f1,f2) FROM test1;
+
+-- ===select2.test===
+CREATE TABLE tbl1(f1 int, f2 int);
+
+SELECT count(*) FROM tbl2;
+
+SELECT count(*) FROM tbl2 WHERE f2>1000;
+
+SELECT f1 FROM tbl2 WHERE 1000=f2;
+
+CREATE INDEX idx1 ON tbl2(f2);
+
+SELECT f1 FROM tbl2 WHERE 1000=f2;
+
+SELECT f1 FROM tbl2 WHERE f2=1000;
+
+SELECT * FROM tbl2 WHERE 1000=f2;
+
+SELECT * FROM tbl2 WHERE f2=1000;
+
+DROP INDEX idx1;
+
+SELECT f1 FROM tbl2 WHERE f2==2000;
+
+BEGIN;
+
+CREATE TABLE aa(a);
+CREATE TABLE bb(b);
+INSERT INTO aa VALUES(1);
+INSERT INTO aa VALUES(3);
+INSERT INTO bb VALUES(2);
+INSERT INTO bb VALUES(4);
+SELECT * FROM aa, bb WHERE max(a,b)>2;
+
+INSERT INTO bb VALUES(0);
+SELECT * FROM aa CROSS JOIN bb WHERE b;
+
+SELECT * FROM aa CROSS JOIN bb WHERE NOT b;
+
+SELECT * FROM aa, bb WHERE min(a,b);
+
+SELECT * FROM aa, bb WHERE NOT min(a,b);
+
+SELECT * FROM aa, bb WHERE CASE WHEN a=b-1 THEN 1 END;
+
+SELECT * FROM aa, bb WHERE CASE WHEN a=b-1 THEN 0 ELSE 1 END;
+
+COMMIT;
+
+CREATE TABLE tbl2(f1 int, f2 int, f3 int); BEGIN;
+
+INSERT INTO tbl2 VALUES(i,i2,i3);
+
+COMMIT;
+
+DROP TABLE tbl2;
+
+CREATE TABLE tbl2(f1 int, f2 int, f3 int); BEGIN;
+
+COMMIT;
+
+-- ===select3.test===
+CREATE TABLE t1(n int, log int);
+BEGIN;
+
+SELECT log, avg(n)+1 FROM t1 GROUP BY log ORDER BY log;
+
+SELECT log, avg(n)-min(n) FROM t1 GROUP BY log ORDER BY log;
+
+SELECT log*2+1, avg(n)-min(n) FROM t1 GROUP BY log ORDER BY log;
+
+SELECT log*2+1 as x, count(*) FROM t1 GROUP BY x ORDER BY x;
+
+SELECT log*2+1 AS x, count(*) AS y FROM t1 GROUP BY x ORDER BY y, x;
+
+SELECT log*2+1 AS x, count(*) AS y FROM t1 GROUP BY x ORDER BY 10-(x+y);
+
+SELECT log, count(*) FROM t1 GROUP BY something HAVING log>=4;
+
+SELECT log, count(*) FROM t1 GROUP BY log HAVING log>=4 ORDER BY log;
+
+SELECT log, count(*) FROM t1 
+GROUP BY log 
+HAVING count(*)>=4 
+ORDER BY log;
+
+SELECT log, count(*) FROM t1 
+GROUP BY log 
+HAVING count(*)>=4 
+ORDER BY max(n)+0;
+
+COMMIT;
+
+SELECT log AS x, count(*) AS y FROM t1 
+GROUP BY x
+HAVING y>=4 
+ORDER BY max(n)+0;
+
+SELECT log AS x FROM t1 
+GROUP BY x
+HAVING count(*)>=4 
+ORDER BY max(n)+0;
+
+SELECT log, count(*), avg(n), max(n+log*2) FROM t1 
+GROUP BY log 
+ORDER BY max(n+log*2)+0, avg(n)+0;
+
+SELECT log, count(*), avg(n), max(n+log*2) FROM t1 
+GROUP BY log 
+ORDER BY max(n+log*2)+0, min(log,avg(n))+0;
+
+SELECT log, min(n) FROM t1 GROUP BY log ORDER BY log;
+
+SELECT log, min(n) FROM t1 GROUP BY log ORDER BY log DESC;
+
+SELECT log, min(n) FROM t1 GROUP BY log ORDER BY 1;
+
+SELECT log, min(n) FROM t1 GROUP BY log ORDER BY 1 DESC;
+
+CREATE INDEX i1 ON t1(log);
+SELECT log, min(n) FROM t1 GROUP BY log ORDER BY log;
+
+SELECT log, min(n) FROM t1 GROUP BY log ORDER BY log DESC;
+
+SELECT DISTINCT log FROM t1 ORDER BY log;
+
+SELECT log, min(n) FROM t1 GROUP BY log ORDER BY 1;
+
+SELECT log, min(n) FROM t1 GROUP BY log ORDER BY 1 DESC;
+
+CREATE TABLE t2(a,b);
+INSERT INTO t2 VALUES(1,2);
+SELECT a, sum(b) FROM t2 WHERE b=5 GROUP BY a;
+
+SELECT a, sum(b) FROM t2 WHERE b=5;
+
+CREATE TABLE A (
+A1 DOUBLE,
+A2 VARCHAR COLLATE NOCASE,
+A3 DOUBLE
+);
+INSERT INTO A VALUES(39136,'ABC',1201900000);
+INSERT INTO A VALUES(39136,'ABC',1207000000);
+SELECT typeof(sum(a3)) FROM a;
+
+SELECT typeof(sum(a3)) FROM a GROUP BY a1;
+
+SELECT count(*) FROM t1;
+
+SELECT min(n),min(log),max(n),max(log),sum(n),sum(log),avg(n),avg(log)
+FROM t1;
+
+SELECT max(n)/avg(n), max(log)/avg(log) FROM t1;
+
+SELECT log, count(*) FROM t1 GROUP BY log ORDER BY log;
+
+SELECT log, min(n) FROM t1 GROUP BY log ORDER BY log;
+
+SELECT log, avg(n) FROM t1 GROUP BY log ORDER BY log;
+
+-- ===select4.test===
+CREATE TABLE t1(n int, log int);
+BEGIN;
+
+DROP TABLE t2;
+
+SELECT DISTINCT log FROM t1
+UNION ALL
+SELECT n FROM t1 WHERE log=2;
+
+CREATE TABLE t2 AS 
+SELECT DISTINCT log FROM t1
+UNION ALL
+SELECT n FROM t1 WHERE log=2;
+SELECT * FROM t2;
+
+DROP TABLE t2;
+
+SELECT log FROM t1 WHERE n IN 
+(SELECT DISTINCT log FROM t1 UNION ALL
+SELECT n FROM t1 WHERE log=3)
+ORDER BY log;
+
+SELECT DISTINCT log FROM t1 
+UNION ALL
+SELECT n FROM t1 WHERE log=3
+ORDER BY log;
+
+SELECT DISTINCT log FROM t1
+UNION
+SELECT n FROM t1 WHERE log=3
+ORDER BY log;
+
+SELECT log FROM t1 WHERE n IN 
+(SELECT DISTINCT log FROM t1 UNION
+SELECT n FROM t1 WHERE log=3)
+ORDER BY log;
+
+SELECT DISTINCT log FROM t1
+UNION
+SELECT n FROM t1 WHERE log=3
+ORDER BY log;
+
+SELECT DISTINCT log FROM t1
+EXCEPT
+SELECT n FROM t1 WHERE log=3
+ORDER BY log;
+
+COMMIT;
+
+CREATE TABLE t2 AS 
+SELECT DISTINCT log FROM t1
+EXCEPT
+SELECT n FROM t1 WHERE log=3
+ORDER BY log;
+SELECT * FROM t2;
+
+DROP TABLE t2;
+
+CREATE TABLE t2 AS 
+SELECT DISTINCT log FROM t1
+EXCEPT
+SELECT n FROM t1 WHERE log=3
+ORDER BY log DESC;
+SELECT * FROM t2;
+
+DROP TABLE t2;
+
+SELECT log FROM t1 WHERE n IN 
+(SELECT DISTINCT log FROM t1 EXCEPT
+SELECT n FROM t1 WHERE log=3)
+ORDER BY log;
+
+SELECT DISTINCT log FROM t1
+INTERSECT
+SELECT n FROM t1 WHERE log=3
+ORDER BY log;
+
+SELECT DISTINCT log FROM t1
+UNION ALL
+SELECT 6
+INTERSECT
+SELECT n FROM t1 WHERE log=3
+ORDER BY t1.log;
+
+CREATE TABLE t2 AS
+SELECT DISTINCT log FROM t1 UNION ALL SELECT 6
+INTERSECT
+SELECT n FROM t1 WHERE log=3
+ORDER BY log;
+SELECT * FROM t2;
+
+DROP TABLE t2;
+
+SELECT DISTINCT log FROM t1 ORDER BY log;
+
+CREATE TABLE t2 AS
+SELECT DISTINCT log FROM t1 UNION ALL SELECT 6
+INTERSECT
+SELECT n FROM t1 WHERE log=3
+ORDER BY log DESC;
+SELECT * FROM t2;
+
+DROP TABLE t2;
+
+SELECT log FROM t1 WHERE n IN 
+(SELECT DISTINCT log FROM t1 INTERSECT
+SELECT n FROM t1 WHERE log=3)
+ORDER BY log;
+
+SELECT DISTINCT log FROM t2
+UNION ALL
+SELECT n FROM t1 WHERE log=3
+ORDER BY log;
+
+SELECT DISTINCT log AS "xyzzy" FROM t1
+UNION ALL
+SELECT n FROM t1 WHERE log=3
+ORDER BY xyzzy;
+
+SELECT DISTINCT log AS xyzzy FROM t1
+UNION ALL
+SELECT n FROM t1 WHERE log=3
+ORDER BY "xyzzy";
+
+SELECT DISTINCT log FROM t1
+UNION ALL
+SELECT n FROM t1 WHERE log=3
+ORDER BY "xyzzy";
+
+SELECT DISTINCT log FROM t1
+INTERSECT
+SELECT n FROM t1 WHERE log=3
+ORDER BY "xyzzy";
+
+SELECT DISTINCT log FROM t1
+UNION ALL
+SELECT n FROM t1 WHERE log=3
+ORDER BY n;
+
+SELECT DISTINCT log FROM t1;
+
+SELECT DISTINCT log, n FROM t1
+UNION ALL
+SELECT n FROM t1 WHERE log=3
+ORDER BY log;
+
+SELECT log FROM t1 WHERE n=2
+UNION ALL
+SELECT log FROM t1 WHERE n=3
+UNION ALL
+SELECT log FROM t1 WHERE n=4
+UNION ALL
+SELECT log FROM t1 WHERE n=5
+ORDER BY log;
+
+SELECT log, count(*) as cnt FROM t1 GROUP BY log
+UNION
+SELECT log, n FROM t1 WHERE n=7
+ORDER BY cnt, log;
+
+SELECT log, count(*) FROM t1 GROUP BY log
+UNION
+SELECT log, n FROM t1 WHERE n=7
+ORDER BY count(*), log;
+
+SELECT NULL UNION SELECT NULL UNION
+SELECT 1 UNION SELECT 2 AS 'x'
+ORDER BY x;
+
+SELECT NULL UNION ALL SELECT NULL UNION ALL
+SELECT 1 UNION ALL SELECT 2 AS 'x'
+ORDER BY x;
+
+SELECT * FROM (
+SELECT NULL, 1 UNION ALL SELECT NULL, 1
+);
+
+SELECT DISTINCT * FROM (
+SELECT NULL, 1 UNION ALL SELECT NULL, 1
+);
+
+SELECT DISTINCT * FROM (
+SELECT 1,2  UNION ALL SELECT 1,2
+);
+
+SELECT NULL EXCEPT SELECT NULL;
+
+SELECT n FROM t1 WHERE log=3;
+
+CREATE TABLE t2 AS SELECT log AS 'x', count(*) AS 'y' FROM t1 GROUP BY log;
+SELECT * FROM t2 ORDER BY x;
+
+BEGIN;
+CREATE TABLE t3(a text, b float, c text);
+INSERT INTO t3 VALUES(1, 1.1, '1.1');
+INSERT INTO t3 VALUES(2, 1.10, '1.10');
+INSERT INTO t3 VALUES(3, 1.10, '1.1');
+INSERT INTO t3 VALUES(4, 1.1, '1.10');
+INSERT INTO t3 VALUES(5, 1.2, '1.2');
+INSERT INTO t3 VALUES(6, 1.3, '1.3');
+COMMIT;
+
+SELECT DISTINCT b FROM t3 ORDER BY c;
+
+SELECT DISTINCT c FROM t3 ORDER BY c;
+
+SELECT 0 AS x, 1 AS y
+UNION
+SELECT 2 AS y, -3 AS x
+ORDER BY x LIMIT 1;
+
+SELECT DISTINCT log FROM t1 ORDER BY log;
+
+SELECT DISTINCT log FROM t1 ORDER BY log LIMIT 4;
+
+SELECT DISTINCT log FROM t1 ORDER BY log LIMIT 0;
+
+SELECT DISTINCT log FROM t1 ORDER BY log LIMIT -1;
+
+SELECT DISTINCT log FROM t1 ORDER BY log LIMIT -1 OFFSET 2;
+
+SELECT DISTINCT log FROM t1
+UNION ALL
+SELECT n FROM t1 WHERE log=3
+ORDER BY log;
+
+SELECT DISTINCT log FROM t1 ORDER BY log LIMIT 3 OFFSET 2;
+
+SELECT DISTINCT log FROM t1 ORDER BY +log LIMIT 3 OFFSET 20;
+
+SELECT DISTINCT log FROM t1 ORDER BY log LIMIT 0 OFFSET 3;
+
+SELECT DISTINCT max(n), log FROM t1 ORDER BY +log; -- LIMIT 2 OFFSET 1;
+
+CREATE TABLE t2 AS
+SELECT DISTINCT log FROM t1
+UNION ALL
+SELECT n FROM t1 WHERE log=3
+ORDER BY log;
+SELECT * FROM t2;
+
+DROP TABLE t2;
+
+CREATE TABLE t2 AS
+SELECT DISTINCT log FROM t1
+UNION ALL
+SELECT n FROM t1 WHERE log=3
+ORDER BY log DESC;
+SELECT * FROM t2;
+
+-- ===select5.test===
+CREATE TABLE t1(x int, y int);
+BEGIN;
+
+SELECT y, count(*) FROM t1 GROUP BY y HAVING count(*)<z ORDER BY y;
+
+SELECT x, count(*), avg(y) FROM t1 GROUP BY x HAVING x<4 ORDER BY x;
+
+SELECT avg(x) FROM t1 WHERE x>100;
+
+SELECT count(x) FROM t1 WHERE x>100;
+
+SELECT min(x) FROM t1 WHERE x>100;
+
+SELECT max(x) FROM t1 WHERE x>100;
+
+SELECT sum(x) FROM t1 WHERE x>100;
+
+CREATE TABLE t2(a, b, c);
+INSERT INTO t2 VALUES(1, 2, 3);
+INSERT INTO t2 VALUES(1, 4, 5);
+INSERT INTO t2 VALUES(6, 4, 7);
+CREATE INDEX t2_idx ON t2(a);
+
+SELECT a FROM t2 GROUP BY a;
+
+SELECT a FROM t2 WHERE a>2 GROUP BY a;
+
+COMMIT;
+
+SELECT a, b FROM t2 GROUP BY a, b;
+
+SELECT a, b FROM t2 GROUP BY a;
+
+SELECT max(c), b*a, b, a FROM t2 GROUP BY b*a, b, a;
+
+CREATE TABLE t3(x,y);
+INSERT INTO t3 VALUES(1,NULL);
+INSERT INTO t3 VALUES(2,NULL);
+INSERT INTO t3 VALUES(3,4);
+SELECT count(x), y FROM t3 GROUP BY y ORDER BY 1;
+
+CREATE TABLE t4(x,y,z);
+INSERT INTO t4 VALUES(1,2,NULL);
+INSERT INTO t4 VALUES(2,3,NULL);
+INSERT INTO t4 VALUES(3,NULL,5);
+INSERT INTO t4 VALUES(4,NULL,6);
+INSERT INTO t4 VALUES(4,NULL,6);
+INSERT INTO t4 VALUES(5,NULL,NULL);
+INSERT INTO t4 VALUES(5,NULL,NULL);
+INSERT INTO t4 VALUES(6,7,8);
+SELECT max(x), count(x), y, z FROM t4 GROUP BY y, z ORDER BY 1;
+
+SELECT count(*), count(x) as cnt FROM t4 GROUP BY y ORDER BY cnt;
+
+CREATE TABLE t8a(a,b);
+CREATE TABLE t8b(x);
+INSERT INTO t8a VALUES('one', 1);
+INSERT INTO t8a VALUES('one', 2);
+INSERT INTO t8a VALUES('two', 3);
+INSERT INTO t8a VALUES('one', NULL);
+INSERT INTO t8b(rowid,x) VALUES(1,111);
+INSERT INTO t8b(rowid,x) VALUES(2,222);
+INSERT INTO t8b(rowid,x) VALUES(3,333);
+SELECT a, count(b) FROM t8a, t8b WHERE b=t8b.rowid GROUP BY a ORDER BY a;
+
+SELECT a, count(b) FROM t8a, t8b WHERE b=+t8b.rowid GROUP BY a ORDER BY a;
+
+SELECT t8a.a, count(t8a.b) FROM t8a, t8b WHERE t8a.b=t8b.rowid
+GROUP BY 1 ORDER BY 1;
+
+SELECT a, count(*) FROM t8a, t8b WHERE b=+t8b.rowid GROUP BY a ORDER BY a;
+
+SELECT DISTINCT y FROM t1 ORDER BY y;
+
+SELECT a, count(b) FROM t8a, t8b WHERE b<x GROUP BY a ORDER BY a;
+
+SELECT a, count(t8a.b) FROM t8a, t8b WHERE b=t8b.rowid 
+GROUP BY a ORDER BY 2;
+
+SELECT a, count(b) FROM t8a, t8b GROUP BY a ORDER BY 2;
+
+SELECT a, count(*) FROM t8a, t8b GROUP BY a ORDER BY 2;
+
+SELECT y, count(*) FROM t1 GROUP BY y ORDER BY y;
+
+SELECT y, count(*) FROM t1 GROUP BY y ORDER BY count(*), y;
+
+SELECT count(*), y FROM t1 GROUP BY y ORDER BY count(*), y;
+
+SELECT y, count(*) FROM t1 GROUP BY z(y) ORDER BY y;
+
+SELECT y, count(*) FROM t1 GROUP BY y HAVING count(*)<3 ORDER BY y;
+
+SELECT y, count(*) FROM t1 GROUP BY y HAVING z(y)<3 ORDER BY y;
+
+-- ===select6.test===
+BEGIN;
+CREATE TABLE t1(x, y);
+INSERT INTO t1 VALUES(1,1);
+INSERT INTO t1 VALUES(2,2);
+INSERT INTO t1 VALUES(3,2);
+INSERT INTO t1 VALUES(4,3);
+INSERT INTO t1 VALUES(5,3);
+INSERT INTO t1 VALUES(6,3);
+INSERT INTO t1 VALUES(7,3);
+INSERT INTO t1 VALUES(8,4);
+INSERT INTO t1 VALUES(9,4);
+INSERT INTO t1 VALUES(10,4);
+INSERT INTO t1 VALUES(11,4);
+INSERT INTO t1 VALUES(12,4);
+INSERT INTO t1 VALUES(13,4);
+INSERT INTO t1 VALUES(14,4);
+INSERT INTO t1 VALUES(15,4);
+INSERT INTO t1 VALUES(16,5);
+INSERT INTO t1 VALUES(17,5);
+INSERT INTO t1 VALUES(18,5);
+INSERT INTO t1 VALUES(19,5);
+INSERT INTO t1 VALUES(20,5);
+COMMIT;
+SELECT DISTINCT y FROM t1 ORDER BY y;
+
+CREATE TABLE t2(a INTEGER PRIMARY KEY, b);
+INSERT INTO t2 SELECT * FROM t1;
+SELECT DISTINCT b FROM t2 ORDER BY b;
+
+SELECT count(*) FROM (SELECT b FROM t2);
+
+SELECT count(*) FROM (SELECT DISTINCT b FROM t2);
+
+SELECT count(*) FROM (SELECT DISTINCT * FROM (SELECT b FROM t2));
+
+SELECT count(*) FROM (SELECT * FROM (SELECT DISTINCT b FROM t2));
+
+SELECT * 
+FROM (SELECT count(*),b FROM t2 GROUP BY b) AS a,
+(SELECT max(a),b FROM t2 GROUP BY b) as b
+WHERE a.b=b.b ORDER BY a.b;
+
+SELECT a.b, a.[count(*)], [max(a)], [count(*)]
+FROM (SELECT count(*),b FROM t2 GROUP BY b) AS a,
+(SELECT max(a),b FROM t2 GROUP BY b) as b
+WHERE a.b=b.b ORDER BY a.b;
+
+SELECT q, p, r
+FROM (SELECT count(*) as p , b as q FROM t2 GROUP BY b) AS a,
+(SELECT max(a) as r, b as s FROM t2 GROUP BY b) as b
+WHERE q=s ORDER BY s;
+
+SELECT a.q, a.p, b.r
+FROM (SELECT count(*) as p , b as q FROM t2 GROUP BY q) AS a,
+(SELECT max(a) as r, b as s FROM t2 GROUP BY s) as b
+WHERE a.q=b.s ORDER BY a.q;
+
+SELECT * FROM
+(SELECT a.q, a.p, b.r
+FROM (SELECT count(*) as p , b as q FROM t2 GROUP BY q) AS a,
+(SELECT max(a) as r, b as s FROM t2 GROUP BY s) as b
+WHERE a.q=b.s ORDER BY a.q)
+ORDER BY "a.q";
+
+SELECT count(*) FROM (SELECT y FROM t1);
+
+SELECT a,b,a+b FROM (SELECT avg(x) as 'a', avg(y) as 'b' FROM t1);
+
+SELECT a,b,a+b FROM (SELECT avg(x) as 'a', avg(y) as 'b' FROM t1 WHERE y=4);
+
+SELECT x,y,x+y FROM (SELECT avg(a) as 'x', avg(b) as 'y' FROM t2 WHERE a=4);
+
+SELECT a,b,a+b FROM (SELECT avg(x) as 'a', avg(y) as 'b' FROM t1)
+WHERE a>10;
+
+SELECT a,b,a+b FROM (SELECT avg(x) as 'a', avg(y) as 'b' FROM t1)
+WHERE a<10;
+
+SELECT a,b,a+b FROM (SELECT avg(x) as 'a', avg(y) as 'b' FROM t1 WHERE y=4)
+WHERE a>10;
+
+SELECT a,b,a+b FROM (SELECT avg(x) as 'a', avg(y) as 'b' FROM t1 WHERE y=4)
+WHERE a<10;
+
+SELECT a,b,a+b FROM (SELECT avg(x) as 'a', y as 'b' FROM t1 GROUP BY b)
+ORDER BY a;
+
+SELECT a,b,a+b FROM 
+(SELECT avg(x) as 'a', y as 'b' FROM t1 GROUP BY b)
+WHERE b<4 ORDER BY a;
+
+SELECT a,b,a+b FROM 
+(SELECT avg(x) as 'a', y as 'b' FROM t1 GROUP BY b HAVING a>1)
+WHERE b<4 ORDER BY a;
+
+SELECT count(*) FROM (SELECT DISTINCT y FROM t1);
+
+SELECT a,b,a+b FROM 
+(SELECT avg(x) as 'a', y as 'b' FROM t1 GROUP BY b HAVING a>1)
+ORDER BY a;
+
+SELECT [count(*)],y FROM (SELECT count(*), y FROM t1 GROUP BY y)
+ORDER BY [count(*)];
+
+SELECT [count(*)],y FROM (SELECT count(*), y FROM t1 GROUP BY y)
+ORDER BY y;
+
+SELECT a,b,c FROM 
+(SELECT x AS 'a', y AS 'b', x+y AS 'c' FROM t1 WHERE y=4)
+WHERE a<10 ORDER BY a;
+
+SELECT y FROM (SELECT DISTINCT y FROM t1) WHERE y<5 ORDER BY y;
+
+SELECT DISTINCT y FROM (SELECT y FROM t1) WHERE y<5 ORDER BY y;
+
+SELECT avg(y) FROM (SELECT DISTINCT y FROM t1) WHERE y<5 ORDER BY y;
+
+SELECT avg(y) FROM (SELECT DISTINCT y FROM t1 WHERE y<5) ORDER BY y;
+
+SELECT a,x,b FROM
+(SELECT x+3 AS 'a', x FROM t1 WHERE y=3) AS 'p',
+(SELECT x AS 'b' FROM t1 WHERE y=4) AS 'q'
+WHERE a=b
+ORDER BY a;
+
+SELECT a,x,b FROM
+(SELECT x+3 AS 'a', x FROM t1 WHERE y=3),
+(SELECT x AS 'b' FROM t1 WHERE y=4)
+WHERE a=b
+ORDER BY a;
+
+SELECT count(*) FROM (SELECT DISTINCT * FROM (SELECT y FROM t1));
+
+DELETE FROM t1 WHERE x>4;
+SELECT * FROM t1;
+
+SELECT * FROM (
+SELECT x AS 'a' FROM t1 UNION ALL SELECT x+10 AS 'a' FROM t1
+) ORDER BY a;
+
+SELECT * FROM (
+SELECT x AS 'a' FROM t1 UNION ALL SELECT x+1 AS 'a' FROM t1
+) ORDER BY a;
+
+SELECT * FROM (
+SELECT x AS 'a' FROM t1 UNION SELECT x+1 AS 'a' FROM t1
+) ORDER BY a;
+
+SELECT * FROM (
+SELECT x AS 'a' FROM t1 INTERSECT SELECT x+1 AS 'a' FROM t1
+) ORDER BY a;
+
+SELECT * FROM (
+SELECT x AS 'a' FROM t1 EXCEPT SELECT x*2 AS 'a' FROM t1
+) ORDER BY a;
+
+SELECT * FROM (SELECT 1);
+
+SELECT c,b,a,* FROM (SELECT 1 AS 'a', 2 AS 'b', 'abc' AS 'c');
+
+SELECT c,b,a,* FROM (SELECT 1 AS 'a', 2 AS 'b', 'abc' AS 'c' WHERE 0);
+
+BEGIN;
+CREATE TABLE t3(p,q);
+INSERT INTO t3 VALUES(1,11);
+INSERT INTO t3 VALUES(2,22);
+CREATE TABLE t4(q,r);
+INSERT INTO t4 VALUES(11,111);
+INSERT INTO t4 VALUES(22,222);
+COMMIT;
+SELECT * FROM t3 NATURAL JOIN t4;
+
+SELECT count(*) FROM (SELECT * FROM (SELECT DISTINCT y FROM t1));
+
+SELECT y, p, q, r FROM
+(SELECT t1.y AS y, t2.b AS b FROM t1, t2 WHERE t1.x=t2.a) AS m,
+(SELECT t3.p AS p, t3.q AS q, t4.r AS r FROM t3 NATURAL JOIN t4) as n
+WHERE  y=p;
+
+SELECT DISTINCT y, p, q, r FROM
+(SELECT t1.y AS y, t2.b AS b FROM t1, t2 WHERE t1.x=t2.a) AS m,
+(SELECT t3.p AS p, t3.q AS q, t4.r AS r FROM t3 NATURAL JOIN t4) as n
+WHERE  y=p;
+
+SELECT * FROM 
+(SELECT y, p, q, r FROM
+(SELECT t1.y AS y, t2.b AS b FROM t1, t2 WHERE t1.x=t2.a) AS m,
+(SELECT t3.p AS p, t3.q AS q, t4.r AS r FROM t3 NATURAL JOIN t4) as n
+WHERE  y=p) AS e,
+(SELECT r AS z FROM t4 WHERE q=11) AS f
+WHERE e.r=f.z;
+
+SELECT a.x, b.x FROM t1 AS a, (SELECT x FROM t1 LIMIT 2) AS b
+ORDER BY 1, 2;
+
+SELECT x FROM (SELECT x FROM t1 LIMIT 2);
+
+SELECT x FROM (SELECT x FROM t1 LIMIT 2 OFFSET 1);
+
+SELECT x FROM (SELECT x FROM t1) LIMIT 2;
+
+SELECT x FROM (SELECT x FROM t1) LIMIT 2 OFFSET 1;
+
+SELECT x FROM (SELECT x FROM t1 LIMIT 2) LIMIT 3;
+
+SELECT x FROM (SELECT x FROM t1 LIMIT -1) LIMIT 3;
+
+SELECT * 
+FROM (SELECT count(*),y FROM t1 GROUP BY y) AS a,
+(SELECT max(x),y FROM t1 GROUP BY y) as b
+WHERE a.y=b.y ORDER BY a.y;
+
+SELECT x FROM (SELECT x FROM t1 LIMIT -1);
+
+SELECT x FROM (SELECT x FROM t1 LIMIT -1 OFFSET 1);
+
+SELECT x, y FROM (SELECT x, (SELECT 10+x) y FROM t1 LIMIT -1 OFFSET 1);
+
+SELECT x, y FROM (SELECT x, (SELECT 10)+x y FROM t1 LIMIT -1 OFFSET 1);
+
+SELECT a.y, a.[count(*)], [max(x)], [count(*)]
+FROM (SELECT count(*),y FROM t1 GROUP BY y) AS a,
+(SELECT max(x),y FROM t1 GROUP BY y) as b
+WHERE a.y=b.y ORDER BY a.y;
+
+SELECT q, p, r
+FROM (SELECT count(*) as p , y as q FROM t1 GROUP BY y) AS a,
+(SELECT max(x) as r, y as s FROM t1 GROUP BY y) as b
+WHERE q=s ORDER BY s;
+
+SELECT q, p, r, b.[min(x)+y]
+FROM (SELECT count(*) as p , y as q FROM t1 GROUP BY y) AS a,
+(SELECT max(x) as r, y as s, min(x)+y FROM t1 GROUP BY y) as b
+WHERE q=s ORDER BY s;
+
+-- ===select7.test===
+create temp table t1(x);
+insert into t1 values('amx');
+insert into t1 values('anx');
+insert into t1 values('amy');
+insert into t1 values('bmy');
+select * from t1 where x like 'a__'
+intersect select * from t1 where x like '_m_'
+intersect select * from t1 where x like '__x';
+
+SELECT a=0, typeof(a) FROM t4;
+
+SELECT a=0, typeof(a) FROM t4 GROUP BY a;
+
+CREATE TABLE t5(a TEXT, b INT);
+INSERT INTO t5 VALUES(123, 456);
+SELECT typeof(a), a FROM t5 GROUP BY a HAVING a<b;
+
+CREATE TABLE x(id integer primary key, a TEXT NULL);
+INSERT INTO x (a) VALUES ('first');
+CREATE TABLE tempx(id integer primary key, a TEXT NULL);
+INSERT INTO tempx (a) VALUES ('t-first');
+CREATE VIEW tv1 AS SELECT x.id, tx.id FROM x JOIN tempx tx ON tx.id=x.id;
+CREATE VIEW tv1b AS SELECT x.id, tx.id FROM x JOIN tempx tx on tx.id=x.id;
+CREATE VIEW tv2 AS SELECT * FROM tv1 UNION SELECT * FROM tv1b;
+SELECT * FROM tv2;
+
+SELECT * FROM sqlite_master ORDER BY name;
+
+CREATE TABLE IF NOT EXISTS photo(pk integer primary key, x);
+CREATE TABLE IF NOT EXISTS tag(pk integer primary key, fk int, name);
+SELECT P.pk from PHOTO P WHERE NOT EXISTS ( 
+SELECT T2.pk from TAG T2 WHERE T2.fk = P.pk 
+EXCEPT 
+SELECT T3.pk from TAG T3 WHERE T3.fk = P.pk AND T3.name LIKE '%foo%'
+);
+
+INSERT INTO photo VALUES(1,1);
+INSERT INTO photo VALUES(2,2);
+INSERT INTO photo VALUES(3,3);
+INSERT INTO tag VALUES(11,1,'one');
+INSERT INTO tag VALUES(12,1,'two');
+INSERT INTO tag VALUES(21,1,'one-b');
+SELECT P.pk from PHOTO P WHERE NOT EXISTS ( 
+SELECT T2.pk from TAG T2 WHERE T2.fk = P.pk 
+EXCEPT 
+SELECT T3.pk from TAG T3 WHERE T3.fk = P.pk AND T3.name LIKE '%foo%'
+);
+
+CREATE TABLE t3(a REAL);
+INSERT INTO t3 VALUES(44.0);
+INSERT INTO t3 VALUES(56.0);
+
+pragma vdbe_trace = 0;
+SELECT (CASE WHEN a=0 THEN 0 ELSE (a + 25) / 50 END) AS categ, count(*)
+FROM t3 GROUP BY categ;
+
+CREATE TABLE t4(a REAL);
+INSERT INTO t4 VALUES( 2.0 );
+INSERT INTO t4 VALUES( 3.0 );
+
+SELECT (CASE WHEN a=0 THEN 'zero' ELSE a/2 END) AS t FROM t4 GROUP BY t;
+
+-- ===select8.test===
+CREATE TABLE songs(songid, artist, timesplayed);
+INSERT INTO songs VALUES(1,'one',1);
+INSERT INTO songs VALUES(2,'one',2);
+INSERT INTO songs VALUES(3,'two',3);
+INSERT INTO songs VALUES(4,'three',5);
+INSERT INTO songs VALUES(5,'one',7);
+INSERT INTO songs VALUES(6,'two',11);
+
+SELECT DISTINCT artist,sum(timesplayed) AS total      
+FROM songs      
+GROUP BY LOWER(artist);
+
+SELECT DISTINCT artist,sum(timesplayed) AS total      
+FROM songs      
+GROUP BY LOWER(artist)      
+LIMIT 1 OFFSET 1;
+
+SELECT DISTINCT artist,sum(timesplayed) AS total      
+FROM songs      
+GROUP BY LOWER(artist)      
+LIMIT 2 OFFSET 1;
+
+SELECT DISTINCT artist,sum(timesplayed) AS total      
+FROM songs      
+GROUP BY LOWER(artist)      
+LIMIT -1 OFFSET 2;
+
+-- ===select9.test===
+CREATE TABLE t1(a, b, c);
+CREATE TABLE t2(d, e, f);
+BEGIN;
+INSERT INTO t1 VALUES(1,  'one',   'I');
+INSERT INTO t1 VALUES(3,  NULL,    NULL);
+INSERT INTO t1 VALUES(5,  'five',  'V');
+INSERT INTO t1 VALUES(7,  'seven', 'VII');
+INSERT INTO t1 VALUES(9,  NULL,    NULL);
+INSERT INTO t1 VALUES(2,  'two',   'II');
+INSERT INTO t1 VALUES(4,  'four',  'IV');
+INSERT INTO t1 VALUES(6,  NULL,    NULL);
+INSERT INTO t1 VALUES(8,  'eight', 'VIII');
+INSERT INTO t1 VALUES(10, 'ten',   'X');
+INSERT INTO t2 VALUES(1,  'two',      'IV');
+INSERT INTO t2 VALUES(2,  'four',     'VIII');
+INSERT INTO t2 VALUES(3,  NULL,       NULL);
+INSERT INTO t2 VALUES(4,  'eight',    'XVI');
+INSERT INTO t2 VALUES(5,  'ten',      'XX');
+INSERT INTO t2 VALUES(6,  NULL,       NULL);
+INSERT INTO t2 VALUES(7,  'fourteen', 'XXVIII');
+INSERT INTO t2 VALUES(8,  'sixteen',  'XXXII');
+INSERT INTO t2 VALUES(9,  NULL,       NULL);
+INSERT INTO t2 VALUES(10, 'twenty',   'XL');
+COMMIT;
+
+CREATE VIEW v1 AS SELECT a FROM t1 UNION SELECT d FROM t2;
+
+DROP INDEX i1;
+DROP INDEX i2;
+DROP VIEW v1;
+
+DROP INDEX i1;
+DROP INDEX i2;
+DROP INDEX i3;
+DROP INDEX i4;
+
+DROP INDEX i1;
+DROP INDEX i2;
+DROP INDEX i3;
+
+CREATE INDEX i1 ON t1(a);
+
+CREATE INDEX i2 ON t2(d);
+
+CREATE VIEW v1 AS SELECT a FROM t1 UNION ALL SELECT d FROM t2;
+
+DROP INDEX i1;
+DROP INDEX i2;
+DROP VIEW v1;
+
+CREATE INDEX i1 ON t1(a);
+
+CREATE INDEX i2 ON t2(d);
+
+-- ===selectA.test===
+CREATE TABLE t1(a,b,c COLLATE NOCASE);
+INSERT INTO t1 VALUES(1,'a','a');
+INSERT INTO t1 VALUES(9.9, 'b', 'B');
+INSERT INTO t1 VALUES(NULL, 'C', 'c');
+INSERT INTO t1 VALUES('hello', 'd', 'D');
+INSERT INTO t1 VALUES(x'616263', 'e', 'e');
+SELECT * FROM t1;
+
+SELECT a,b,c FROM t1 UNION ALL SELECT x,y,z FROM t2
+ORDER BY b COLLATE NOCASE,a,c;
+
+SELECT lower((SELECT c FROM t1 INTERSECT SELECT z FROM t2 ORDER BY 1));
+
+SELECT lower((SELECT z FROM t2 EXCEPT SELECT c FROM t1 ORDER BY 1));
+
+CREATE UNIQUE INDEX t1a ON t1(a);
+CREATE UNIQUE INDEX t1b ON t1(b);
+CREATE UNIQUE INDEX t1c ON t1(c);
+CREATE UNIQUE INDEX t2x ON t2(x);
+CREATE UNIQUE INDEX t2y ON t2(y);
+CREATE UNIQUE INDEX t2z ON t2(z);
+SELECT name FROM sqlite_master WHERE type='index';
+
+SELECT a,b,c FROM t1 UNION ALL SELECT x,y,z FROM t2
+ORDER BY a,b,c;
+
+SELECT t1.a,b,t1.c FROM t1 UNION ALL SELECT x,y,z FROM t2
+ORDER BY a,t1.b,t1.c;
+
+SELECT a,b,c FROM t1 UNION ALL SELECT x,y,z FROM t2
+ORDER BY a DESC,b,c;
+
+SELECT a,b,c FROM t1 UNION ALL SELECT x,y,z FROM t2
+ORDER BY a,c,b;
+
+SELECT a,b,c FROM t1 UNION ALL SELECT x,y,z FROM t2
+ORDER BY b,a,c;
+
+SELECT a,b,c FROM t1 UNION ALL SELECT x,y,z FROM t2
+ORDER BY b COLLATE NOCASE,a,c;
+
+SELECT a,b,c FROM t1 UNION ALL SELECT x,y,z FROM t2
+ORDER BY b COLLATE NOCASE DESC,a,c;
+
+SELECT a,b,c FROM t1 UNION ALL SELECT x,y,z FROM t2
+ORDER BY b COLLATE NOCASE DESC,a,c;
+
+SELECT a,b,c FROM t1 UNION ALL SELECT x,y,z FROM t2
+ORDER BY c,b,a;
+
+SELECT a,b,c FROM t1 UNION ALL SELECT x,y,z FROM t2
+ORDER BY c,a,b;
+
+SELECT a,b,c FROM t1 UNION ALL SELECT x,y,z FROM t2
+ORDER BY c DESC,a,b;
+
+SELECT a,b,c FROM t1 UNION ALL SELECT x,y,z FROM t2
+ORDER BY c COLLATE BINARY DESC,a,b;
+
+SELECT x,y,z FROM t2 UNION ALL SELECT a,b,c FROM t1
+ORDER BY a,b,c;
+
+SELECT x,y,z FROM t2 UNION ALL SELECT a,b,c FROM t1
+ORDER BY a DESC,b,c;
+
+SELECT x,y,z FROM t2 UNION ALL SELECT a,b,c FROM t1
+ORDER BY a,c,b;
+
+SELECT x,y,z FROM t2 UNION ALL SELECT a,b,c FROM t1
+ORDER BY b,a,c;
+
+SELECT x,y,z FROM t2 UNION ALL SELECT a,b,c FROM t1
+ORDER BY b COLLATE NOCASE,a,c;
+
+SELECT x,y,z FROM t2 UNION ALL SELECT a,b,c FROM t1
+ORDER BY b COLLATE NOCASE DESC,a,c;
+
+SELECT a,b,c FROM t1 UNION ALL SELECT x,y,z FROM t2
+ORDER BY c,b,a;
+
+SELECT x,y,z FROM t2 UNION ALL SELECT a,b,c FROM t1
+ORDER BY c,b,a;
+
+SELECT x,y,z FROM t2 UNION ALL SELECT a,b,c FROM t1
+ORDER BY c,a,b;
+
+SELECT x,y,z FROM t2 UNION ALL SELECT a,b,c FROM t1
+ORDER BY c DESC,a,b;
+
+SELECT x,y,z FROM t2 UNION ALL SELECT a,b,c FROM t1
+ORDER BY c COLLATE BINARY DESC,a,b;
+
+SELECT a,b,c FROM t1 UNION SELECT x,y,z FROM t2
+ORDER BY a,b,c;
+
+SELECT a,b,c FROM t1 UNION SELECT x,y,z FROM t2
+ORDER BY a DESC,b,c;
+
+SELECT a,b,c FROM t1 UNION SELECT x,y,z FROM t2
+ORDER BY a,c,b;
+
+SELECT a,b,c FROM t1 UNION SELECT x,y,z FROM t2
+ORDER BY b,a,c;
+
+SELECT a,b,c FROM t1 UNION SELECT x,y,z FROM t2
+ORDER BY b COLLATE NOCASE,a,c;
+
+SELECT a,b,c FROM t1 UNION SELECT x,y,z FROM t2
+ORDER BY b COLLATE NOCASE DESC,a,c;
+
+SELECT a,b,c FROM t1 UNION ALL SELECT x,y,z FROM t2
+ORDER BY c,a,b;
+
+SELECT a,b,c FROM t1 UNION SELECT x,y,z FROM t2
+ORDER BY c,b,a;
+
+SELECT a,b,c FROM t1 UNION SELECT x,y,z FROM t2
+ORDER BY c,a,b;
+
+SELECT a,b,c FROM t1 UNION SELECT x,y,z FROM t2
+ORDER BY c DESC,a,b;
+
+SELECT a,b,c FROM t1 UNION SELECT x,y,z FROM t2
+ORDER BY c COLLATE BINARY DESC,a,b;
+
+SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t1
+ORDER BY a,b,c;
+
+SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t1
+ORDER BY a DESC,b,c;
+
+SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t1
+ORDER BY a,c,b;
+
+SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t1
+ORDER BY b,a,c;
+
+SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t1
+ORDER BY b COLLATE NOCASE,a,c;
+
+SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t1
+ORDER BY b COLLATE NOCASE DESC,a,c;
+
+SELECT a,b,c FROM t1 UNION ALL SELECT x,y,z FROM t2
+ORDER BY c DESC,a,b;
+
+SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t1
+ORDER BY c,b,a;
+
+SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t1
+ORDER BY c,a,b;
+
+SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t1
+ORDER BY c DESC,a,b;
+
+SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t1
+ORDER BY c COLLATE BINARY DESC,a,b;
+
+SELECT a,b,c FROM t1 EXCEPT SELECT a,b,c FROM t1 WHERE b>='d'
+ORDER BY a,b,c;
+
+SELECT a,b,c FROM t1 INTERSECT SELECT a,b,c FROM t1 WHERE b>='d'
+ORDER BY a,b,c;
+
+SELECT a,b,c FROM t1 WHERE b>='d' INTERSECT SELECT a,b,c FROM t1
+ORDER BY a,b,c;
+
+SELECT a,b,c FROM t1 EXCEPT SELECT a,b,c FROM t1 WHERE b<'d'
+ORDER BY a,b,c;
+
+SELECT a,b,c FROM t1 INTERSECT SELECT a,b,c FROM t1 WHERE b<'d'
+ORDER BY a,b,c;
+
+SELECT a,b,c FROM t1 WHERE b<'d' INTERSECT SELECT a,b,c FROM t1
+ORDER BY a,b,c;
+
+SELECT a,b,c FROM t1 UNION ALL SELECT x,y,z FROM t2
+ORDER BY c COLLATE BINARY DESC,a,b;
+
+SELECT a,b,c FROM t1 EXCEPT SELECT a,b,c FROM t1 WHERE b>='d'
+ORDER BY a DESC;
+
+SELECT a,b,c FROM t1 INTERSECT SELECT a,b,c FROM t1 WHERE b>='d'
+ORDER BY a DESC;
+
+SELECT a,b,c FROM t1 WHERE b>='d' INTERSECT SELECT a,b,c FROM t1
+ORDER BY a DESC;
+
+SELECT a,b,c FROM t1 EXCEPT SELECT a,b,c FROM t1 WHERE b<'d'
+ORDER BY a DESC;
+
+SELECT a,b,c FROM t1 INTERSECT SELECT a,b,c FROM t1 WHERE b<'d'
+ORDER BY a DESC;
+
+SELECT a,b,c FROM t1 WHERE b<'d' INTERSECT SELECT a,b,c FROM t1
+ORDER BY a DESC;
+
+SELECT a,b,c FROM t1 EXCEPT SELECT a,b,c FROM t1 WHERE b>='d'
+ORDER BY b, a DESC;
+
+SELECT a,b,c FROM t1 INTERSECT SELECT a,b,c FROM t1 WHERE b>='d'
+ORDER BY b;
+
+SELECT a,b,c FROM t1 WHERE b>='d' INTERSECT SELECT a,b,c FROM t1
+ORDER BY b DESC, c;
+
+SELECT a,b,c FROM t1 EXCEPT SELECT a,b,c FROM t1 WHERE b<'d'
+ORDER BY b, c DESC, a;
+
+SELECT x,y,z FROM t2 UNION ALL SELECT a,b,c FROM t1
+ORDER BY a,b,c;
+
+SELECT a,b,c FROM t1 INTERSECT SELECT a,b,c FROM t1 WHERE b<'d'
+ORDER BY b COLLATE NOCASE;
+
+SELECT a,b,c FROM t1 WHERE b<'d' INTERSECT SELECT a,b,c FROM t1
+ORDER BY b;
+
+SELECT a,b,c FROM t1 EXCEPT SELECT a,b,c FROM t1 WHERE b>='d'
+ORDER BY c, a DESC;
+
+SELECT a,b,c FROM t1 INTERSECT SELECT a,b,c FROM t1 WHERE b>='d'
+ORDER BY c;
+
+SELECT a,b,c FROM t1 WHERE b>='d' INTERSECT SELECT a,b,c FROM t1
+ORDER BY c COLLATE BINARY, b DESC, c, a, b, c, a, b, c;
+
+SELECT a,b,c FROM t1 EXCEPT SELECT a,b,c FROM t1 WHERE b<'d'
+ORDER BY c DESC, a;
+
+SELECT a,b,c FROM t1 INTERSECT SELECT a,b,c FROM t1 WHERE b<'d'
+ORDER BY c COLLATE NOCASE;
+
+SELECT a,b,c FROM t1 WHERE b<'d' INTERSECT SELECT a,b,c FROM t1
+ORDER BY c;
+
+SELECT a,b,c FROM t3 INTERSECT SELECT a,b,c FROM t1 WHERE b<'d'
+ORDER BY c COLLATE NOCASE;
+
+SELECT a,b,c FROM t1 WHERE b<'d' INTERSECT SELECT a,b,c FROM t3
+ORDER BY c;
+
+SELECT x,y,z FROM t2 UNION ALL SELECT a,b,c FROM t1
+ORDER BY a DESC,b,c;
+
+SELECT a,b,c FROM t1 EXCEPT SELECT a,b,c FROM t3 WHERE b<'d'
+ORDER BY c DESC, a;
+
+SELECT a,b,c FROM t1 EXCEPT SELECT a,b,c FROM t1 WHERE b<'d'
+INTERSECT SELECT a,b,c FROM t3
+EXCEPT SELECT b,c,a FROM t3
+ORDER BY c DESC, a;
+
+SELECT a,b,c FROM t1 INTERSECT SELECT a,b,c FROM t1 WHERE b<'d'
+INTERSECT SELECT a,b,c FROM t3
+EXCEPT SELECT b,c,a FROM t3
+ORDER BY c COLLATE NOCASE;
+
+SELECT a,b,c FROM t1 WHERE b<'d' INTERSECT SELECT a,b,c FROM t1
+INTERSECT SELECT a,b,c FROM t3
+EXCEPT SELECT b,c,a FROM t3
+ORDER BY c;
+
+SELECT a,b,c FROM t1 WHERE b<'d'
+INTERSECT SELECT a,b,c FROM t1
+INTERSECT SELECT a,b,c FROM t3
+EXCEPT SELECT b,c,a FROM t3
+INTERSECT SELECT a,b,c FROM t1
+EXCEPT SELECT x,y,z FROM t2
+INTERSECT SELECT a,b,c FROM t3
+EXCEPT SELECT y,x,z FROM t2
+INTERSECT SELECT a,b,c FROM t1
+EXCEPT SELECT c,b,a FROM t3
+ORDER BY c;
+
+SELECT a,b,c FROM t3 UNION SELECT x,y,z FROM t2
+ORDER BY a,b,c;
+
+SELECT a,b,c FROM t3 UNION SELECT x,y,z FROM t2
+ORDER BY a DESC,b,c;
+
+SELECT a,b,c FROM t3 UNION SELECT x,y,z FROM t2
+ORDER BY a,c,b;
+
+SELECT a,b,c FROM t3 UNION SELECT x,y,z FROM t2
+ORDER BY b,a,c;
+
+SELECT a,b,c FROM t3 UNION SELECT x,y,z FROM t2
+ORDER BY b COLLATE NOCASE,a,c;
+
+SELECT x,y,z FROM t2 UNION ALL SELECT a,b,c FROM t1
+ORDER BY a,c,b;
+
+SELECT a,b,c FROM t3 UNION SELECT x,y,z FROM t2
+ORDER BY b COLLATE NOCASE DESC,a,c;
+
+SELECT a,b,c FROM t3 UNION SELECT x,y,z FROM t2
+ORDER BY c,b,a;
+
+SELECT a,b,c FROM t3 UNION SELECT x,y,z FROM t2
+ORDER BY c,a,b;
+
+SELECT a,b,c FROM t3 UNION SELECT x,y,z FROM t2
+ORDER BY c DESC,a,b;
+
+SELECT a,b,c FROM t3 UNION SELECT x,y,z FROM t2
+ORDER BY c COLLATE BINARY DESC,a,b;
+
+SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t3
+ORDER BY a,b,c;
+
+SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t3
+ORDER BY a DESC,b,c;
+
+SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t3
+ORDER BY a,c,b;
+
+SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t3
+ORDER BY b,a,c;
+
+SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t3
+ORDER BY b COLLATE NOCASE,a,c;
+
+SELECT x,y,z FROM t2 UNION ALL SELECT a,b,c FROM t1
+ORDER BY b,a,c;
+
+SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t3
+ORDER BY y COLLATE NOCASE DESC,x,z;
+
+SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t3
+ORDER BY c,b,a;
+
+SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t3
+ORDER BY c,a,b;
+
+SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t3
+ORDER BY c DESC,a,b;
+
+SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t3
+ORDER BY c COLLATE BINARY DESC,a,b;
+
+SELECT x,y,z FROM t2
+INTERSECT SELECT a,b,c FROM t3
+EXCEPT SELECT c,b,a FROM t1
+UNION SELECT a,b,c FROM t3
+INTERSECT SELECT a,b,c FROM t3
+EXCEPT SELECT c,b,a FROM t1
+UNION SELECT a,b,c FROM t3
+ORDER BY y COLLATE NOCASE DESC,x,z;
+
+SELECT upper((SELECT c FROM t1 UNION SELECT z FROM t2 ORDER BY 1));
+
+SELECT lower((SELECT c FROM t1 UNION ALL SELECT z FROM t2 ORDER BY 1));
+
+SELECT lower((SELECT c FROM t1 INTERSECT SELECT z FROM t2 ORDER BY 1));
+
+SELECT lower((SELECT z FROM t2 EXCEPT SELECT c FROM t1 ORDER BY 1));
+
+CREATE TABLE t2(x,y,z COLLATE NOCASE);
+INSERT INTO t2 VALUES(NULL,'U','u');
+INSERT INTO t2 VALUES('mad', 'Z', 'z');
+INSERT INTO t2 VALUES(x'68617265', 'm', 'M');
+INSERT INTO t2 VALUES(5.2e6, 'X', 'x');
+INSERT INTO t2 VALUES(-23, 'Y', 'y');
+SELECT * FROM t2;
+
+SELECT x,y,z FROM t2 UNION ALL SELECT a,b,c FROM t1
+ORDER BY b COLLATE NOCASE,a,c;
+
+SELECT upper((SELECT x FROM (
+SELECT x,y,z FROM t2
+INTERSECT SELECT a,b,c FROM t3
+EXCEPT SELECT c,b,a FROM t1
+UNION SELECT a,b,c FROM t3
+INTERSECT SELECT a,b,c FROM t3
+EXCEPT SELECT c,b,a FROM t1
+UNION SELECT a,b,c FROM t3
+ORDER BY y COLLATE NOCASE DESC,x,z)));
+
+SELECT x,y,z FROM t2 UNION ALL SELECT a,b,c FROM t1
+ORDER BY b COLLATE NOCASE DESC,a,c;
+
+SELECT x,y,z FROM t2 UNION ALL SELECT a,b,c FROM t1
+ORDER BY c,b,a;
+
+SELECT x,y,z FROM t2 UNION ALL SELECT a,b,c FROM t1
+ORDER BY c,a,b;
+
+SELECT x,y,z FROM t2 UNION ALL SELECT a,b,c FROM t1
+ORDER BY c DESC,a,b;
+
+SELECT x,y,z FROM t2 UNION ALL SELECT a,b,c FROM t1
+ORDER BY c COLLATE BINARY DESC,a,b;
+
+SELECT a,b,c FROM t1 UNION SELECT x,y,z FROM t2
+ORDER BY a,b,c;
+
+SELECT a,b,c FROM t1 UNION SELECT x,y,z FROM t2
+ORDER BY a DESC,b,c;
+
+SELECT a,b,c FROM t1 UNION SELECT x,y,z FROM t2
+ORDER BY a,c,b;
+
+SELECT a,b,c FROM t1 UNION SELECT x,y,z FROM t2
+ORDER BY b,a,c;
+
+CREATE TABLE t3(a,b,c COLLATE NOCASE);
+INSERT INTO t3 SELECT * FROM t1;
+INSERT INTO t3 SELECT * FROM t2;
+INSERT INTO t3 SELECT * FROM t1;
+INSERT INTO t3 SELECT * FROM t2;
+INSERT INTO t3 SELECT * FROM t1;
+INSERT INTO t3 SELECT * FROM t2;
+SELECT count(*) FROM t3;
+
+SELECT a,b,c FROM t1 UNION SELECT x,y,z FROM t2
+ORDER BY b COLLATE NOCASE,a,c;
+
+SELECT a,b,c FROM t1 UNION SELECT x,y,z FROM t2
+ORDER BY b COLLATE NOCASE DESC,a,c;
+
+SELECT a,b,c FROM t1 UNION SELECT x,y,z FROM t2
+ORDER BY c,b,a;
+
+SELECT a,b,c FROM t1 UNION SELECT x,y,z FROM t2
+ORDER BY c,a,b;
+
+SELECT a,b,c FROM t1 UNION SELECT x,y,z FROM t2
+ORDER BY c DESC,a,b;
+
+SELECT a,b,c FROM t1 UNION SELECT x,y,z FROM t2
+ORDER BY c COLLATE BINARY DESC,a,b;
+
+SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t1
+ORDER BY a,b,c;
+
+SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t1
+ORDER BY a DESC,b,c;
+
+SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t1
+ORDER BY a,c,b;
+
+SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t1
+ORDER BY b,a,c;
+
+SELECT a,b,c FROM t1 UNION ALL SELECT x,y,z FROM t2
+ORDER BY a,b,c;
+
+SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t1
+ORDER BY b COLLATE NOCASE,a,c;
+
+SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t1
+ORDER BY b COLLATE NOCASE DESC,a,c;
+
+SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t1
+ORDER BY c,b,a;
+
+SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t1
+ORDER BY c,a,b;
+
+SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t1
+ORDER BY c DESC,a,b;
+
+SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t1
+ORDER BY c COLLATE BINARY DESC,a,b;
+
+SELECT a,b,c FROM t1 EXCEPT SELECT a,b,c FROM t1 WHERE b>='d'
+ORDER BY a,b,c;
+
+SELECT a,b,c FROM t1 INTERSECT SELECT a,b,c FROM t1 WHERE b>='d'
+ORDER BY a,b,c;
+
+SELECT a,b,c FROM t1 WHERE b>='d' INTERSECT SELECT a,b,c FROM t1
+ORDER BY a,b,c;
+
+SELECT a,b,c FROM t1 EXCEPT SELECT a,b,c FROM t1 WHERE b<'d'
+ORDER BY a,b,c;
+
+SELECT t1.a, t1.b, t1.c FROM t1 UNION ALL SELECT x,y,z FROM t2
+ORDER BY a,b,c;
+
+SELECT a,b,c FROM t1 INTERSECT SELECT a,b,c FROM t1 WHERE b<'d'
+ORDER BY a,b,c;
+
+SELECT a,b,c FROM t1 WHERE b<'d' INTERSECT SELECT a,b,c FROM t1
+ORDER BY a,b,c;
+
+SELECT a,b,c FROM t1 EXCEPT SELECT a,b,c FROM t1 WHERE b>='d'
+ORDER BY a DESC;
+
+SELECT a,b,c FROM t1 INTERSECT SELECT a,b,c FROM t1 WHERE b>='d'
+ORDER BY a DESC;
+
+SELECT a,b,c FROM t1 WHERE b>='d' INTERSECT SELECT a,b,c FROM t1
+ORDER BY a DESC;
+
+SELECT a,b,c FROM t1 EXCEPT SELECT a,b,c FROM t1 WHERE b<'d'
+ORDER BY a DESC;
+
+SELECT a,b,c FROM t1 INTERSECT SELECT a,b,c FROM t1 WHERE b<'d'
+ORDER BY a DESC;
+
+SELECT a,b,c FROM t1 WHERE b<'d' INTERSECT SELECT a,b,c FROM t1
+ORDER BY a DESC;
+
+SELECT a,b,c FROM t1 EXCEPT SELECT a,b,c FROM t1 WHERE b>='d'
+ORDER BY b, a DESC;
+
+SELECT a,b,c FROM t1 INTERSECT SELECT a,b,c FROM t1 WHERE b>='d'
+ORDER BY b;
+
+SELECT a,b,c FROM t1 UNION ALL SELECT x,y,z FROM t2
+ORDER BY t1.a, t1.b, t1.c;
+
+SELECT a,b,c FROM t1 WHERE b>='d' INTERSECT SELECT a,b,c FROM t1
+ORDER BY b DESC, c;
+
+SELECT a,b,c FROM t1 EXCEPT SELECT a,b,c FROM t1 WHERE b<'d'
+ORDER BY b, c DESC, a;
+
+SELECT a,b,c FROM t1 INTERSECT SELECT a,b,c FROM t1 WHERE b<'d'
+ORDER BY b COLLATE NOCASE;
+
+SELECT a,b,c FROM t1 WHERE b<'d' INTERSECT SELECT a,b,c FROM t1
+ORDER BY b;
+
+SELECT a,b,c FROM t1 EXCEPT SELECT a,b,c FROM t1 WHERE b>='d'
+ORDER BY c, a DESC;
+
+SELECT a,b,c FROM t1 INTERSECT SELECT a,b,c FROM t1 WHERE b>='d'
+ORDER BY c;
+
+SELECT a,b,c FROM t1 WHERE b>='d' INTERSECT SELECT a,b,c FROM t1
+ORDER BY c COLLATE BINARY, b DESC, c, a, b, c, a, b, c;
+
+SELECT a,b,c FROM t1 EXCEPT SELECT a,b,c FROM t1 WHERE b<'d'
+ORDER BY c DESC, a;
+
+SELECT a,b,c FROM t1 INTERSECT SELECT a,b,c FROM t1 WHERE b<'d'
+ORDER BY c COLLATE NOCASE;
+
+SELECT a,b,c FROM t1 WHERE b<'d' INTERSECT SELECT a,b,c FROM t1
+ORDER BY c;
+
+SELECT a,b,c FROM t1 UNION ALL SELECT x,y,z FROM t2
+ORDER BY a DESC,b,c;
+
+SELECT a,b,c FROM t3 INTERSECT SELECT a,b,c FROM t1 WHERE b<'d'
+ORDER BY c COLLATE NOCASE;
+
+SELECT a,b,c FROM t1 WHERE b<'d' INTERSECT SELECT a,b,c FROM t3
+ORDER BY c;
+
+SELECT a,b,c FROM t1 EXCEPT SELECT a,b,c FROM t3 WHERE b<'d'
+ORDER BY c DESC, a;
+
+SELECT a,b,c FROM t1 EXCEPT SELECT a,b,c FROM t1 WHERE b<'d'
+INTERSECT SELECT a,b,c FROM t3
+EXCEPT SELECT b,c,a FROM t3
+ORDER BY c DESC, a;
+
+SELECT a,b,c FROM t1 INTERSECT SELECT a,b,c FROM t1 WHERE b<'d'
+INTERSECT SELECT a,b,c FROM t3
+EXCEPT SELECT b,c,a FROM t3
+ORDER BY c COLLATE NOCASE;
+
+SELECT a,b,c FROM t1 WHERE b<'d' INTERSECT SELECT a,b,c FROM t1
+INTERSECT SELECT a,b,c FROM t3
+EXCEPT SELECT b,c,a FROM t3
+ORDER BY c;
+
+SELECT a,b,c FROM t1 WHERE b<'d'
+INTERSECT SELECT a,b,c FROM t1
+INTERSECT SELECT a,b,c FROM t3
+EXCEPT SELECT b,c,a FROM t3
+INTERSECT SELECT a,b,c FROM t1
+EXCEPT SELECT x,y,z FROM t2
+INTERSECT SELECT a,b,c FROM t3
+EXCEPT SELECT y,x,z FROM t2
+INTERSECT SELECT a,b,c FROM t1
+EXCEPT SELECT c,b,a FROM t3
+ORDER BY c;
+
+SELECT a,b,c FROM t3 UNION SELECT x,y,z FROM t2
+ORDER BY a,b,c;
+
+SELECT a,b,c FROM t3 UNION SELECT x,y,z FROM t2
+ORDER BY a DESC,b,c;
+
+SELECT a,b,c FROM t3 UNION SELECT x,y,z FROM t2
+ORDER BY a,c,b;
+
+SELECT a,b,c FROM t1 UNION ALL SELECT x,y,z FROM t2
+ORDER BY a,c,b;
+
+SELECT a,b,c FROM t3 UNION SELECT x,y,z FROM t2
+ORDER BY b,a,c;
+
+SELECT a,b,c FROM t3 UNION SELECT x,y,z FROM t2
+ORDER BY b COLLATE NOCASE,a,c;
+
+SELECT a,b,c FROM t3 UNION SELECT x,y,z FROM t2
+ORDER BY b COLLATE NOCASE DESC,a,c;
+
+SELECT a,b,c FROM t3 UNION SELECT x,y,z FROM t2
+ORDER BY c,b,a;
+
+SELECT a,b,c FROM t3 UNION SELECT x,y,z FROM t2
+ORDER BY c,a,b;
+
+SELECT a,b,c FROM t3 UNION SELECT x,y,z FROM t2
+ORDER BY c DESC,a,b;
+
+SELECT a,b,c FROM t3 UNION SELECT x,y,z FROM t2
+ORDER BY c COLLATE BINARY DESC,a,b;
+
+SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t3
+ORDER BY a,b,c;
+
+SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t3
+ORDER BY a DESC,b,c;
+
+SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t3
+ORDER BY a,c,b;
+
+SELECT a,b,c FROM t1 UNION ALL SELECT x,y,z FROM t2
+ORDER BY b,a,c;
+
+SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t3
+ORDER BY b,a,c;
+
+SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t3
+ORDER BY b COLLATE NOCASE,a,c;
+
+SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t3
+ORDER BY y COLLATE NOCASE DESC,x,z;
+
+SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t3
+ORDER BY c,b,a;
+
+SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t3
+ORDER BY c,a,b;
+
+SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t3
+ORDER BY c DESC,a,b;
+
+SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t3
+ORDER BY c COLLATE BINARY DESC,a,b;
+
+SELECT x,y,z FROM t2
+INTERSECT SELECT a,b,c FROM t3
+EXCEPT SELECT c,b,a FROM t1
+UNION SELECT a,b,c FROM t3
+INTERSECT SELECT a,b,c FROM t3
+EXCEPT SELECT c,b,a FROM t1
+UNION SELECT a,b,c FROM t3
+ORDER BY y COLLATE NOCASE DESC,x,z;
+
+SELECT upper((SELECT c FROM t1 UNION SELECT z FROM t2 ORDER BY 1));
+
+SELECT lower((SELECT c FROM t1 UNION ALL SELECT z FROM t2 ORDER BY 1));
+
+-- ===selectB.test===
+CREATE TABLE t1(a, b, c);
+CREATE TABLE t2(d, e, f);
+INSERT INTO t1 VALUES( 2,  4,  6);
+INSERT INTO t1 VALUES( 8, 10, 12);
+INSERT INTO t1 VALUES(14, 16, 18);
+INSERT INTO t2 VALUES(3,   6,  9);
+INSERT INTO t2 VALUES(12, 15, 18);
+INSERT INTO t2 VALUES(21, 24, 27);
+
+SELECT * FROM (SELECT a FROM t1 UNION ALL SELECT d FROM t2)
+EXCEPT 
+SELECT * FROM (SELECT a FROM t1 UNION ALL SELECT d FROM t2);
+
+SELECT c FROM t1
+EXCEPT 
+SELECT * FROM (SELECT e FROM t2 UNION ALL SELECT f FROM t2);
+
+SELECT * FROM (SELECT e FROM t2 UNION ALL SELECT f FROM t2)
+EXCEPT 
+SELECT c FROM t1;
+
+SELECT * FROM (SELECT e FROM t2 UNION ALL SELECT f FROM t2)
+EXCEPT 
+SELECT c FROM t1
+ORDER BY c DESC;
+
+SELECT * FROM (SELECT e FROM t2 UNION ALL SELECT f FROM t2)
+UNION 
+SELECT c FROM t1
+ORDER BY c DESC;
+
+SELECT c FROM t1
+UNION 
+SELECT * FROM (SELECT e FROM t2 UNION ALL SELECT f FROM t2)
+ORDER BY c;
+
+SELECT c FROM t1 UNION SELECT e FROM t2 UNION ALL SELECT f FROM t2
+ORDER BY c;
+
+SELECT * FROM (SELECT e FROM t2 UNION ALL SELECT f FROM t2)
+UNION 
+SELECT * FROM (SELECT e FROM t2 UNION ALL SELECT f FROM t2)
+ORDER BY 1;
+
+SELECT c FROM t1
+INTERSECT 
+SELECT * FROM (SELECT e FROM t2 UNION ALL SELECT f FROM t2)
+ORDER BY 1;
+
+SELECT * FROM (SELECT e FROM t2 UNION ALL SELECT f FROM t2)
+INTERSECT 
+SELECT c FROM t1
+ORDER BY 1;
+
+CREATE INDEX i1 ON t1(a);
+CREATE INDEX i2 ON t2(d);
+
+SELECT * FROM (SELECT e FROM t2 UNION ALL SELECT f FROM t2)
+INTERSECT 
+SELECT * FROM (SELECT e FROM t2 UNION ALL SELECT f FROM t2)
+ORDER BY 1;
+
+SELECT * FROM (
+SELECT a FROM t1 UNION ALL SELECT d FROM t2 LIMIT 4
+) LIMIT 2;
+
+SELECT * FROM (
+SELECT a FROM t1 UNION ALL SELECT d FROM t2 LIMIT 4 OFFSET 2
+) LIMIT 2;
+
+SELECT * FROM (
+SELECT DISTINCT (a/10) FROM t1 UNION ALL SELECT DISTINCT(d%2) FROM t2
+);
+
+SELECT DISTINCT * FROM (
+SELECT DISTINCT (a/10) FROM t1 UNION ALL SELECT DISTINCT(d%2) FROM t2
+);
+
+SELECT * FROM (SELECT * FROM t1 UNION ALL SELECT * FROM t2) ORDER BY a+b;
+
+SELECT * FROM (SELECT 345 UNION ALL SELECT d FROM t2) ORDER BY 1;
+
+DROP INDEX i1;
+DROP INDEX i2;
+
+CREATE INDEX i1 ON t1(a);
+CREATE INDEX i2 ON t1(b);
+CREATE INDEX i3 ON t1(c);
+CREATE INDEX i4 ON t2(d);
+CREATE INDEX i5 ON t2(e);
+CREATE INDEX i6 ON t2(f);
+
+SELECT DISTINCT * FROM 
+(SELECT c FROM t1 UNION ALL SELECT e FROM t2) 
+ORDER BY 1;
+
+SELECT c, count(*) FROM 
+(SELECT c FROM t1 UNION ALL SELECT e FROM t2) 
+GROUP BY c ORDER BY 1;
+
+SELECT c, count(*) FROM 
+(SELECT c FROM t1 UNION ALL SELECT e FROM t2) 
+GROUP BY c HAVING count(*)>1;
+
+SELECT t4.c, t3.a FROM 
+(SELECT c FROM t1 UNION ALL SELECT e FROM t2) AS t4, t1 AS t3
+WHERE t3.a=14
+ORDER BY 1;
+
+SELECT d FROM t2 
+EXCEPT 
+SELECT a FROM (SELECT a FROM t1 UNION ALL SELECT d FROM t2);
+
+-- ===selectC.test===
+CREATE TABLE t1(a, b, c);
+INSERT INTO t1 VALUES(1,'aaa','bbb');
+INSERT INTO t1 SELECT * FROM t1;
+INSERT INTO t1 VALUES(2,'ccc','ddd');
+SELECT DISTINCT a AS x, b||c AS y
+FROM t1
+WHERE y IN ('aaabbb','xxx');
+
+SELECT a AS x, b||c AS y
+FROM t1
+WHERE y='aaabbb'
+GROUP BY x, y;
+
+SELECT a AS x, b||c AS y
+FROM t1
+WHERE b||c='aaabbb'
+GROUP BY x, y;
+
+SELECT DISTINCT upper(b) AS x
+FROM t1
+ORDER BY x;
+
+SELECT DISTINCT uppercaseconversionfunctionwithaverylongname(b) AS x
+FROM t1
+ORDER BY x;
+
+SELECT upper(b) AS x
+FROM t1
+GROUP BY x
+ORDER BY x;
+
+SELECT uppercaseconversionfunctionwithaverylongname(b) AS x
+FROM t1
+GROUP BY x
+ORDER BY x;
+
+SELECT upper(b) AS x
+FROM t1
+ORDER BY x DESC;
+
+SELECT uppercaseconversionfunctionwithaverylongname(b) AS x
+FROM t1
+ORDER BY x DESC;
+
+CREATE TABLE person (
+org_id          TEXT NOT NULL,
+nickname        TEXT NOT NULL,
+license         TEXT,
+CONSTRAINT person_pk PRIMARY KEY (org_id, nickname),
+CONSTRAINT person_license_uk UNIQUE (license)
+);
+INSERT INTO person VALUES('meyers', 'jack', '2GAT123');
+INSERT INTO person VALUES('meyers', 'hill', 'V345FMP');
+INSERT INTO person VALUES('meyers', 'jim', '2GAT138');
+INSERT INTO person VALUES('smith', 'maggy', '');
+INSERT INTO person VALUES('smith', 'jose', 'JJZ109');
+INSERT INTO person VALUES('smith', 'jack', 'THX138');
+INSERT INTO person VALUES('lakeside', 'dave', '953OKG');
+INSERT INTO person VALUES('lakeside', 'amy', NULL);
+INSERT INTO person VALUES('lake-apts', 'tom', NULL);
+INSERT INTO person VALUES('acorn', 'hideo', 'CQB421');
+SELECT 
+org_id, 
+count((NOT (org_id IS NULL)) AND (NOT (nickname IS NULL)))
+FROM person 
+WHERE (CASE WHEN license != '' THEN 1 ELSE 0 END)
+GROUP BY 1;
+
+CREATE TABLE t2(a PRIMARY KEY, b);
+INSERT INTO t2 VALUES('abc', 'xxx');
+INSERT INTO t2 VALUES('def', 'yyy');
+SELECT a, max(b || a) FROM t2 WHERE (b||b||b)!='value' GROUP BY a;
+
+SELECT DISTINCT a AS x, b||c AS y
+FROM t1
+WHERE b||c IN ('aaabbb','xxx');
+
+SELECT b, max(a || b) FROM t2 WHERE (b||b||b)!='value' GROUP BY a;
+
+SELECT DISTINCT a AS x, b||c AS y
+FROM t1
+WHERE y='aaabbb';
+
+SELECT DISTINCT a AS x, b||c AS y
+FROM t1
+WHERE b||c='aaabbb';
+
+SELECT DISTINCT a AS x, b||c AS y
+FROM t1
+WHERE x=2;
+
+SELECT DISTINCT a AS x, b||c AS y
+FROM t1
+WHERE a=2;
+
+SELECT DISTINCT a AS x, b||c AS y
+FROM t1
+WHERE +y='aaabbb';
+
+SELECT a AS x, b||c AS y
+FROM t1
+GROUP BY x, y
+HAVING y='aaabbb';
+
+SELECT a AS x, b||c AS y
+FROM t1
+GROUP BY x, y
+HAVING b||c='aaabbb'

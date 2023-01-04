@@ -1,0 +1,2 @@
+-- ===attachmalloc.test===
+DETACH three

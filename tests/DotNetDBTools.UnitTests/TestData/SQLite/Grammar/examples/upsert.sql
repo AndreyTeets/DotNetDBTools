@@ -1,0 +1,339 @@
+-- ===upsert1.test===
+CREATE TABLE t1(a INTEGER PRIMARY KEY, b TEXT, c DEFAULT 0);
+CREATE UNIQUE INDEX t1x1 ON t1(b);
+INSERT INTO t1(a,b) VALUES(1,2) ON CONFLICT DO NOTHING;
+INSERT INTO t1(a,b) VALUES(1,99),(99,2) ON CONFLICT DO NOTHING;
+SELECT * FROM t1;
+
+DELETE FROM t1;
+INSERT INTO t1(a,b) VALUES(2,3) ON CONFLICT(a) DO NOTHING;
+INSERT INTO t1(a,b) VALUES(2,99) ON CONFLICT(a) DO NOTHING;
+SELECT * FROM t1;
+
+DELETE FROM t1;
+INSERT INTO t1(a,b) VALUES(3,4) ON CONFLICT(b) DO NOTHING;
+INSERT INTO t1(a,b) VALUES(99,4) ON CONFLICT(b) DO NOTHING;
+SELECT * FROM t1;
+
+INSERT INTO t1(a,b) VALUES(5,6) ON CONFLICT(x) DO NOTHING;
+SELECT * FROM t1;
+
+INSERT INTO t1(a,b) VALUES(5,6) ON CONFLICT(c) DO NOTHING;
+SELECT * FROM t1;
+
+INSERT INTO t1(a,b) VALUES(5,6) ON CONFLICT(b COLLATE nocase) DO NOTHING;
+SELECT * FROM t1;
+
+DELETE FROM t1;
+INSERT INTO t1(a,b) VALUES(5,6) ON CONFLICT(b COLLATE binary) DO NOTHING;
+SELECT * FROM t1;
+
+DROP TABLE t1;
+CREATE TABLE t1(a INTEGER PRIMARY KEY, b INT, c DEFAULT 0);
+CREATE UNIQUE INDEX t1x1 ON t1(a+b);
+INSERT INTO t1(a,b) VALUES(7,8) ON CONFLICT(a+b) DO NOTHING;
+INSERT INTO t1(a,b) VALUES(8,7),(9,6) ON CONFLICT(a+b) DO NOTHING;
+SELECT * FROM t1;
+
+INSERT INTO t1(a,b) VALUES(8,7),(9,6) ON CONFLICT(a) DO NOTHING;
+
+DELETE FROM t1;
+INSERT INTO t1(a,b) VALUES(9,10) ON CONFLICT(a+(+b)) DO NOTHING;
+SELECT * FROM t1;
+
+DROP INDEX t1x1;
+DELETE FROM t1;
+CREATE UNIQUE INDEX t1x1 ON t1(b) WHERE b>10;
+INSERT INTO t1(a,b) VALUES(1,2),(3,2) ON CONFLICT(b) DO NOTHING;
+SELECT * FROM t1;
+
+DELETE FROM t1;
+INSERT INTO t1(a,b) VALUES(1,2),(3,2) ON CONFLICT(b) WHERE b!=10 DO NOTHING;
+SELECT * FROM t1;
+
+DELETE FROM t1;
+INSERT INTO t1(a,b) VALUES(1,2),(3,2),(4,20),(5,20)
+       ON CONFLICT(b) WHERE b>10 DO NOTHING;
+SELECT *, 'x' FROM t1 ORDER BY b, a;
+
+DROP TABLE IF EXISTS t2;
+CREATE TABLE t2(a TEXT UNIQUE, b INT DEFAULT 1);
+INSERT INTO t2(a) VALUES('one'),('two'),('three');
+PRAGMA count_changes=ON;
+INSERT INTO t2(a) VALUES('one'),('one'),('three'),('four')
+    ON CONFLICT(a) DO UPDATE SET b=b+1;
+
+PRAGMA count_changes=OFF;
+SELECT a, b FROM t2 ORDER BY a;
+
+DROP TABLE t1;
+CREATE TABLE t1(x INTEGER PRIMARY KEY, y INT UNIQUE);
+INSERT INTO t1(x,y) SELECT 1,2 WHERE true
+  ON CONFLICT(x) DO UPDATE SET y=max(t1.y,excluded.y) AND true;
+SELECT * FROM t1;
+
+DROP TABLE t1;
+CREATE TABLE t1(b UNIQUE, a INT PRIMARY KEY) WITHOUT ROWID;
+INSERT OR IGNORE INTO t1(a) VALUES('1') ON CONFLICT(a) DO NOTHING;
+PRAGMA integrity_check;
+
+DELETE FROM t1;
+INSERT OR IGNORE INTO t1(a) VALUES('1'),(1) ON CONFLICT(a) DO NOTHING;
+PRAGMA integrity_check;
+
+DROP TABLE t1;
+CREATE TABLE t1(a INTEGER PRIMARY KEY, b INT, c INT, d INT, e INT);
+CREATE UNIQUE INDEX t1b ON t1(b);
+CREATE UNIQUE INDEX t1e ON t1(e);
+INSERT INTO t1(a,b,c,d,e) VALUES(1,2,3,4,5);
+INSERT INTO t1(a,b,c,d,e) VALUES(1,2,33,44,5)
+  ON CONFLICT(e) DO UPDATE SET c=excluded.c;
+SELECT * FROM t1;
+
+DELETE FROM t1;
+INSERT INTO t1(a,b,c,d,e) VALUES(1,2,3,4,5);
+INSERT INTO t1(a,b,c,d,e) VALUES(1,2,33,44,5)
+  ON CONFLICT(a) DO UPDATE SET c=excluded.c;
+SELECT * FROM t1;
+
+DELETE FROM t1;
+INSERT INTO t1(a,b,c,d,e) VALUES(1,2,3,4,5);
+INSERT INTO t1(a,b,c,d,e) VALUES(1,2,33,44,5)
+  ON CONFLICT(b) DO UPDATE SET c=excluded.c;
+SELECT * FROM t1;
+
+DROP TABLE t1;
+CREATE TABLE t1(a INT, b INT, c INT, d INT, e INT);
+CREATE UNIQUE INDEX t1a ON t1(a);
+CREATE UNIQUE INDEX t1b ON t1(b);
+CREATE UNIQUE INDEX t1e ON t1(e);
+INSERT INTO t1(a,b,c,d,e) VALUES(1,2,3,4,5);
+INSERT INTO t1(a,b,c,d,e) VALUES(1,2,33,44,5)
+  ON CONFLICT(e) DO UPDATE SET c=excluded.c;
+SELECT * FROM t1;
+
+DELETE FROM t1;
+INSERT INTO t1(a,b,c,d,e) VALUES(1,2,3,4,5);
+INSERT INTO t1(a,b,c,d,e) VALUES(1,2,33,44,5)
+  ON CONFLICT(a) DO UPDATE SET c=excluded.c;
+SELECT * FROM t1;
+
+DELETE FROM t1;
+INSERT INTO t1(a,b,c,d,e) VALUES(1,2,3,4,5);
+INSERT INTO t1(a,b,c,d,e) VALUES(1,2,33,44,5)
+  ON CONFLICT(b) DO UPDATE SET c=excluded.c;
+SELECT * FROM t1;
+
+DROP TABLE t1;
+CREATE TABLE t1(a INT PRIMARY KEY, b INT, c INT, d INT, e INT) WITHOUT ROWID;
+CREATE UNIQUE INDEX t1a ON t1(a);
+CREATE UNIQUE INDEX t1b ON t1(b);
+CREATE UNIQUE INDEX t1e ON t1(e);
+INSERT INTO t1(a,b,c,d,e) VALUES(1,2,3,4,5);
+INSERT INTO t1(a,b,c,d,e) VALUES(1,2,33,44,5)
+  ON CONFLICT(e) DO UPDATE SET c=excluded.c;
+SELECT * FROM t1;
+
+DELETE FROM t1;
+INSERT INTO t1(a,b,c,d,e) VALUES(1,2,3,4,5);
+INSERT INTO t1(a,b,c,d,e) VALUES(1,2,33,44,5)
+  ON CONFLICT(a) DO UPDATE SET c=excluded.c;
+SELECT * FROM t1;
+
+DELETE FROM t1;
+INSERT INTO t1(a,b,c,d,e) VALUES(1,2,3,4,5);
+INSERT INTO t1(a,b,c,d,e) VALUES(1,2,33,44,5)
+  ON CONFLICT(b) DO UPDATE SET c=excluded.c;
+SELECT * FROM t1;
+
+DROP TABLE IF EXISTS t0;
+CREATE TABLE t0(c0 REAL UNIQUE, c1);
+CREATE UNIQUE INDEX test800i0 ON t0(0 || c1);
+INSERT INTO t0(c0, c1) VALUES (1, 2),  (2, 1);
+INSERT INTO t0(c0) VALUES (1) ON CONFLICT(c0) DO UPDATE SET c1=excluded.c0;
+PRAGMA integrity_check;
+REINDEX;
+
+CREATE VIEW t1(a) AS SELECT 1;
+CREATE TRIGGER t1r1 INSTEAD OF INSERT ON t1 BEGIN
+   SELECT 2;
+END;
+
+INSERT INTO t1 VALUES(3) ON CONFLICT(x) DO NOTHING;
+
+CREATE TABLE t0(c0 PRIMARY KEY, c1, c2 UNIQUE) WITHOUT ROWID;
+INSERT OR FAIL INTO t0(c2) VALUES (0), (NULL)
+  ON CONFLICT(c2) DO UPDATE SET c1 = c0;
+
+CREATE TABLE t1(a INTEGER PRIMARY KEY ON CONFLICT REPLACE, b UNIQUE);
+INSERT INTO t1(b) VALUES(22);
+INSERT INTO t1 VALUES(2,22) ON CONFLICT (b) DO NOTHING;
+SELECT * FROM t1;
+
+-- ===upsert2.test===
+CREATE TABLE t1(a INTEGER PRIMARY KEY, b int, c DEFAULT 0);
+INSERT INTO t1(a,b) VALUES(1,2),(3,4);
+INSERT INTO t1(a,b) VALUES(1,8),(2,11),(3,1)
+  ON CONFLICT(a) DO UPDATE SET b=excluded.b, c=c+1 WHERE t1.b<excluded.b;
+SELECT *, 'x' FROM t1 ORDER BY a;
+
+DROP TABLE t1;
+CREATE TABLE t1(a INT PRIMARY KEY, b int, c DEFAULT 0) WITHOUT ROWID;
+INSERT INTO t1(a,b) VALUES(1,2),(3,4);
+INSERT INTO t1(a,b) VALUES(1,8),(2,11),(3,1)
+  ON CONFLICT(a) DO UPDATE SET b=excluded.b, c=c+1 WHERE t1.b<excluded.b;
+SELECT *, 'x' FROM t1 ORDER BY a;
+
+DROP TABLE t1;
+CREATE TABLE t1(a INTEGER PRIMARY KEY, b int, c DEFAULT 0);
+INSERT INTO t1(a,b) VALUES(1,2),(3,4);
+WITH nx(a,b) AS (VALUES(1,8),(2,11),(3,1),(2,15),(1,4),(1,99))
+INSERT INTO t1(a,b) SELECT a, b FROM nx WHERE true
+  ON CONFLICT(a) DO UPDATE SET b=excluded.b, c=c+1 WHERE t1.b<excluded.b;
+SELECT *, 'x' FROM t1 ORDER BY a;
+
+DELETE FROM t1;
+INSERT INTO t1(a,b) VALUES(1,2),(3,4);
+WITH nx(a,b) AS (VALUES(1,8),(2,11),(3,1),(2,15),(1,4),(1,99))
+INSERT INTO main.t1 AS t2(a,b) SELECT a, b FROM nx WHERE true
+  ON CONFLICT(a) DO UPDATE SET b=excluded.b, c=t2.c+1 WHERE t2.b<excluded.b;
+SELECT *, 'x' FROM t1 ORDER BY a;
+
+WITH nx(a,b) AS (VALUES(1,8),(2,11),(3,1),(2,15),(1,4),(1,99))
+INSERT INTO t1 AS t2(a,b) SELECT a, b FROM nx WHERE true
+  ON CONFLICT(a) DO UPDATE SET b=excluded.b, c=t1.c+1 WHERE t1.b<excluded.b;
+
+DROP TABLE t1;
+CREATE TABLE t1(a INT PRIMARY KEY, b int, c DEFAULT 0) WITHOUT ROWID;
+INSERT INTO t1(a,b) VALUES(1,2),(3,4);
+WITH nx(a,b) AS (VALUES(1,8),(2,11),(3,1),(2,15),(1,4),(1,99))
+INSERT INTO t1(a,b) SELECT a, b FROM nx WHERE true
+  ON CONFLICT(a) DO UPDATE SET b=excluded.b, c=c+1 WHERE t1.b<excluded.b;
+SELECT *, 'x' FROM t1 ORDER BY a;
+
+DROP TABLE t1;
+CREATE TABLE t1(a INTEGER PRIMARY KEY, b int, c DEFAULT 0);
+CREATE TABLE record(x TEXT, y TEXT);
+CREATE TRIGGER r1 BEFORE INSERT ON t1 BEGIN
+  INSERT INTO record(x,y)
+      VALUES('before-insert',format('%d,%d,%d',new.a,new.b,new.c));
+END;
+CREATE TRIGGER r2 AFTER INSERT ON t1 BEGIN
+  INSERT INTO record(x,y)
+      VALUES('after-insert',printf('%d,%d,%d',new.a,new.b,new.c));
+END;
+CREATE TRIGGER r3 BEFORE UPDATE ON t1 BEGIN
+  INSERT INTO record(x,y)
+      VALUES('before-update',format('%d,%d,%d/%d,%d,%d',
+                                    old.a,old.b,old.c,new.a,new.b,new.c));
+END;
+CREATE TRIGGER r4 AFTER UPDATE ON t1 BEGIN
+  INSERT INTO record(x,y)
+      VALUES('after-update',printf('%d,%d,%d/%d,%d,%d',
+                                    old.a,old.b,old.c,new.a,new.b,new.c));
+END;
+INSERT INTO t1(a,b) VALUES(1,2);
+DELETE FROM record;
+INSERT INTO t1(a,b) VALUES(1,2)
+  ON CONFLICT(a) DO UPDATE SET c=t1.c+1;
+SELECT * FROM record;
+
+DELETE FROM record;
+INSERT INTO t1(a,b) VALUES(1,2) ON CONFLICT DO NOTHING;
+SELECT * FROM record;
+
+DELETE FROM record;
+INSERT INTO t1(a,b) VALUES(1,2)
+  ON CONFLICT(a) DO UPDATE SET c=c+1 WHERE c<0;
+SELECT * FROM record;
+
+SELECT * FROM t1;
+
+DROP TABLE t1;
+CREATE TABLE t1(a INT PRIMARY KEY, b int, c DEFAULT 0) WITHOUT ROWID;
+CREATE TRIGGER r1 BEFORE INSERT ON t1 BEGIN
+  INSERT INTO record(x,y)
+      VALUES('before-insert',format('%d,%d,%d',new.a,new.b,new.c));
+END;
+CREATE TRIGGER r2 AFTER INSERT ON t1 BEGIN
+  INSERT INTO record(x,y)
+      VALUES('after-insert',printf('%d,%d,%d',new.a,new.b,new.c));
+END;
+CREATE TRIGGER r3 BEFORE UPDATE ON t1 BEGIN
+  INSERT INTO record(x,y)
+      VALUES('before-update',format('%d,%d,%d/%d,%d,%d',
+                                    old.a,old.b,old.c,new.a,new.b,new.c));
+END;
+CREATE TRIGGER r4 AFTER UPDATE ON t1 BEGIN
+  INSERT INTO record(x,y)
+      VALUES('after-update',printf('%d,%d,%d/%d,%d,%d',
+                                    old.a,old.b,old.c,new.a,new.b,new.c));
+END;
+INSERT INTO t1(a,b) VALUES(1,2);
+DELETE FROM record;
+INSERT INTO t1(a,b) VALUES(1,2)
+  ON CONFLICT(a) DO UPDATE SET c=t1.c+1;
+SELECT * FROM record;
+
+DELETE FROM record;
+INSERT INTO t1(a,b) VALUES(1,2) ON CONFLICT DO NOTHING;
+SELECT * FROM record;
+
+DELETE FROM record;
+INSERT INTO t1(a,b) VALUES(1,2)
+  ON CONFLICT(a) DO UPDATE SET c=c+1 WHERE c<0;
+SELECT * FROM record;
+
+SELECT * FROM t1;
+
+-- ===upsert3.test===
+CREATE TABLE t1(k int, v text);
+CREATE UNIQUE INDEX x1 ON t1(k, v);
+
+INSERT INTO t1 VALUES(0,'abcdefghij')
+   ON CONFLICT(k) DO NOTHING;
+
+INSERT INTO t1 VALUES(0,'abcdefghij')
+   ON CONFLICT(v) DO NOTHING;
+
+INSERT INTO t1 VALUES(0, 'abcdefghij')
+    ON CONFLICT(k,v) DO NOTHING;
+SELECT * FROM t1;
+
+INSERT INTO t1 VALUES(0, 'abcdefghij')
+    ON CONFLICT(v,k) DO NOTHING;
+SELECT * FROM t1;
+
+CREATE TABLE excluded(a INT, b INT, c INT DEFAULT 0);
+CREATE UNIQUE INDEX excludedab ON excluded(a,b);
+INSERT INTO excluded(a,b) VALUES(1,2),(1,2),(3,4),(1,2),(5,6),(3,4)
+  ON CONFLICT(b,a) DO UPDATE SET c=excluded.c+1;
+SELECT *, 'x' FROM excluded ORDER BY a;
+
+INSERT INTO excluded AS base(a,b,c) VALUES(1,2,8),(1,2,3)
+  ON CONFLICT(b,a) DO UPDATE SET c=excluded.c+1 WHERE base.c<excluded.c;
+SELECT *, 'x' FROM excluded ORDER BY a;
+
+-- ===upsert4.test===
+CREATE TABLE w1(a INT PRIMARY KEY, x, y);
+CREATE UNIQUE INDEX w1expr ON w1(('x' || x));
+INSERT INTO w1 VALUES(2, 'one', NULL)
+  ON CONFLICT (('x' || x) COLLATE nocase) DO NOTHING;
+
+CREATE TABLE v(x INTEGER);
+CREATE TABLE hist(x INTEGER PRIMARY KEY, cnt INTEGER);
+CREATE TRIGGER vt AFTER INSERT ON v BEGIN
+  INSERT INTO hist VALUES(new.x, 1) ON CONFLICT(x) DO
+    UPDATE SET cnt=cnt+1;
+END;
+
+INSERT INTO v VALUES(1), (4), (1), (5), (5), (8), (9), (1);
+SELECT * FROM hist;
+
+-- ===upsert5.test===
+CREATE TABLE t2(a, b, c REAL, d, e, PRIMARY KEY(a,b)) WITHOUT ROWID;
+CREATE UNIQUE INDEX t2c ON t2(c);
+
+INSERT INTO t2(a,b,c,e,d) VALUES(1,2,3,4,5)
+    ON CONFLICT(c) DO UPDATE SET b=''
+    ON CONFLICT((SELECT t2 FROM nosuchtable)) DO NOTHING;
