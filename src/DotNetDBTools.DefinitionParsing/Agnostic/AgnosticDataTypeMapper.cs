@@ -43,7 +43,7 @@ internal class AgnosticDataTypeMapper : DataTypeMapper
         return new AgnosticVerbatimDataType
         {
             NameCodePiece = AgnosticDbObjectCodeMapper.CreateAgnosticCodePiece(
-                dk => verbatimDataType.Name(dk).ToUpper()),
+                dk => verbatimDataType.Name(dk)),
         };
     }
 }

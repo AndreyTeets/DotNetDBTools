@@ -10,4 +10,6 @@ internal class AgnosticDbModelPostProcessor : DbModelPostProcessor
     {
         throw new NotImplementedException("Method should never be called on this class.");
     }
+
+    protected override void PostProcessDataTypes(Database database) { }
 }

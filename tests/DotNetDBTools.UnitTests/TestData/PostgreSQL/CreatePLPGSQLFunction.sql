@@ -1,3 +1,4 @@
+--ID:#{316C7688-D510-4A61-9D09-E15D465D0EFF}#
 CREATE OR REPLACE FUNCTION public."_Some_Complex_PLPGSQL_Function"(
         var1 timestamp with time zone,
         OUT var2 boolean

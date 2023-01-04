@@ -7,7 +7,16 @@ internal abstract class DbModelPostProcessor : IDbModelPostProcessor
 {
     public virtual void DoSpecificDbmsDbModelCreationFromDefinitionPostProcessing(Database database) { }
 
-    public void OrderDbObjects(Database database)
+    public void DoPostProcessing(Database database)
+    {
+        PostProcessDataTypes(database);
+        DoAdditionalPostProcessing(database);
+        OrderDbObjectsByName(database);
+    }
+    protected abstract void PostProcessDataTypes(Database database);
+    protected virtual void DoAdditionalPostProcessing(Database database) { }
+
+    private void OrderDbObjectsByName(Database database)
     {
         database.Tables = database.Tables.OrderByName();
         database.Views = database.Views.OrderByName();

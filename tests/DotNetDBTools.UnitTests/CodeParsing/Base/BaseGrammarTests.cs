@@ -5,6 +5,7 @@ using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
 using DotNetDBTools.CodeParsing;
 using DotNetDBTools.CodeParsing.Core;
+using DotNetDBTools.CodeParsing.Models;
 using DotNetDBTools.UnitTests.Utilities;
 using FluentAssertions;
 using Xunit;
@@ -55,6 +56,11 @@ public abstract class BaseGrammarTests<TParser, TLexer>
 
     protected class TestCodeParser : CodeParser<TParser, TLexer>
     {
+        public override ObjectInfo GetObjectInfo(string input)
+        {
+            throw new NotImplementedException();
+        }
+
         public IParseTree ParseToTree(string input, Func<TParser, IParseTree> startRule)
         {
             return Parse(input, startRule);

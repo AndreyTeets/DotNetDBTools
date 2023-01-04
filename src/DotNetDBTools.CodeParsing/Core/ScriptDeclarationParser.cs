@@ -47,7 +47,7 @@ $@"^--ScriptID:\#{{ (?<scriptID> {AnyGuid} ) }}\#\r?\n
         {
             string malformedInputPattern = $@"^{WS0}--ScriptID:\# {AnyText}$";
             if (Regex.IsMatch(input, malformedInputPattern, s_regexOptions))
-                throw new Exception($"Failed to parse script info from input [{input}]");
+                throw new ParseException($"Failed to parse script info\ninput=[{input}]");
 
             scriptInfo = null;
             return false;

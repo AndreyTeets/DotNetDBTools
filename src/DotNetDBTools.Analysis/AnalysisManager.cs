@@ -118,7 +118,7 @@ public class AnalysisManager : IAnalysisManager
         dbModelPostProcessor.DoSpecificDbmsDbModelCreationFromDefinitionPostProcessing(database);
     }
 
-    public void OrderDbObjects(Database database)
+    public void DoPostProcessing(Database database)
     {
         IDbModelPostProcessor dbModelPostProcessor = database.Kind switch
         {
@@ -127,9 +127,9 @@ public class AnalysisManager : IAnalysisManager
             DatabaseKind.MySQL => new MySQLDbModelPostProcessor(),
             DatabaseKind.PostgreSQL => new PostgreSQLDbModelPostProcessor(),
             DatabaseKind.SQLite => new SQLiteDbModelPostProcessor(),
-            _ => throw new InvalidOperationException($"Invalid {nameof(OrderDbObjects)} dbKind: {database.Kind}"),
+            _ => throw new InvalidOperationException($"Invalid {nameof(DoPostProcessing)} dbKind: {database.Kind}"),
         };
-        dbModelPostProcessor.OrderDbObjects(database);
+        dbModelPostProcessor.DoPostProcessing(database);
     }
 
     public void BuildDependencies(Database database)

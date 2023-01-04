@@ -3,5 +3,5 @@
 public class DataType
 {
     public string Name { get; set; }
-    public bool IsUserDefined { get; set; } = false;
+    public bool IsUserDefined { get; set; }
 }

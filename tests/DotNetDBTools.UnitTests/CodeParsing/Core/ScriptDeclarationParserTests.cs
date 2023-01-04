@@ -46,6 +46,6 @@ bla bla";
     public void ParseFunction_ThrowsOnMalformedInput(string input)
     {
         FluentActions.Invoking(() => ScriptDeclarationParser.TryParseScriptInfo(input, out ScriptInfo _))
-            .Should().Throw<Exception>().WithMessage($"Failed to parse script info from input [{input}]");
+            .Should().Throw<Exception>().WithMessage($"Failed to parse script info\ninput=[{input}]");
     }
 }

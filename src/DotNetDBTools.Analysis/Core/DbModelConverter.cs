@@ -47,7 +47,7 @@ internal abstract class DbModelConverter<
         };
         specificDbmsDatabase.InitializeAdditionalProperties();
         _dbModelPostProcessor.DoSpecificDbmsDbModelCreationFromDefinitionPostProcessing(specificDbmsDatabase);
-        _dbModelPostProcessor.OrderDbObjects(specificDbmsDatabase);
+        _dbModelPostProcessor.DoPostProcessing(specificDbmsDatabase);
         _dependenciesBuilder.BuildDependencies(specificDbmsDatabase);
         return specificDbmsDatabase;
     }

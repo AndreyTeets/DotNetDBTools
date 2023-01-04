@@ -33,13 +33,13 @@ internal class PostgreSQLDataTypeMapper : DataTypeMapper
                 return new AnalysisManager().ConvertDataType(csharpDataType, DatabaseKind.PostgreSQL);
 
             case VerbatimDataType verbatimDataType:
-                return new DataType { Name = verbatimDataType.Name.ToUpper() };
+                return new DataType { Name = verbatimDataType.Name };
 
             case ICompositeType:
             case IDomain:
             case IEnumType:
             case IRangeType:
-                return new DataType { Name = dataType.GetType().Name, IsUserDefined = true };
+                return new DataType { Name = dataType.GetType().Name };
 
             // TODO handle user defined base data types (probalby will require declaring their names in definition)
             default:

@@ -2,14 +2,34 @@
 using System.Collections.Generic;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
+using DotNetDBTools.CodeParsing.Models;
 
 namespace DotNetDBTools.CodeParsing.Core;
 
-public abstract class CodeParser<TParser, TLexer>
+public abstract class CodeParser<TParser, TLexer> : ICodeParser
     where TParser : Parser
     where TLexer : Lexer
 {
+    public bool IgnoreIdsWhenParsingObjectInfo { get; set; } = false;
+    public abstract ObjectInfo GetObjectInfo(string input);
+
     private readonly ErrorListener _errorListener = new();
+
+    protected ObjectInfo ParseObjectInfo<TGetObjectInfoVisitor>(string input, Func<TParser, IParseTree> startRule)
+        where TGetObjectInfoVisitor : AbstractParseTreeVisitor<ObjectInfo>
+    {
+        try
+        {
+            IParseTree parseTree = Parse(input, startRule);
+            TGetObjectInfoVisitor visitor = (TGetObjectInfoVisitor)Activator.CreateInstance(
+                typeof(TGetObjectInfoVisitor), new object[] { IgnoreIdsWhenParsingObjectInfo });
+            return visitor.Visit(parseTree);
+        }
+        catch (ParseException ex)
+        {
+            throw new ParseException($"Failed to parse object info: {ex.Message}\ninput=[{input}]");
+        }
+    }
 
     protected IParseTree Parse(string input, Func<TParser, IParseTree> startRule)
     {

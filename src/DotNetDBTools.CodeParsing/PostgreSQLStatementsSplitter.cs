@@ -100,7 +100,7 @@ public static class PostgreSQLStatementsSplitter
 
             prevChar = c;
         }
-        throw new Exception($"Failed to find first statement length in [{statementsStr}]");
+        throw new ParseException($"Failed to find first statement length in [{statementsStr}]");
     }
 
     private enum State

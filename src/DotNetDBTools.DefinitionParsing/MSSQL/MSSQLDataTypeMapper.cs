@@ -33,10 +33,10 @@ internal class MSSQLDataTypeMapper : DataTypeMapper
                 return new AnalysisManager().ConvertDataType(csharpDataType, DatabaseKind.MSSQL);
 
             case VerbatimDataType verbatimDataType:
-                return new DataType { Name = verbatimDataType.Name.ToUpper() };
+                return new DataType { Name = verbatimDataType.Name };
 
             case IUserDefinedType:
-                return new DataType { Name = dataType.GetType().Name, IsUserDefined = true };
+                return new DataType { Name = dataType.GetType().Name };
 
             default:
                 throw new InvalidOperationException($"Invalid dataType: {dataType}");

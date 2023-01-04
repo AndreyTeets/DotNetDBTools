@@ -839,6 +839,10 @@ BlockComment
     :   '/*' (BlockComment |.)*? '*/' -> channel(HIDDEN)
     ;
 
+DNDBT_ID_DECLARATION_COMMENT:
+    '--ID:#{' ~[\r\n]* '}#' (('\r'? '\n') | EOF)
+    ;
+
 LineComment
     :   '--' ~[\r\n]* -> channel(HIDDEN)
     ;

@@ -1049,7 +1049,7 @@ BEGIN
     VALUES(NEW."MyColumn1");
     RETURN NULL;
 END;
-$FuncBody$;';
+$FuncBody$';
 -- QUERY END: GenericQuery
 
 -- QUERY START: PostgreSQLInsertDNDBTDbObjectRecordQuery
@@ -1077,7 +1077,7 @@ BEGIN
     VALUES(NEW."MyColumn1");
     RETURN NULL;
 END;
-$FuncBody$;''
+$FuncBody$''
 );';
 -- QUERY END: PostgreSQLInsertDNDBTDbObjectRecordQuery
 

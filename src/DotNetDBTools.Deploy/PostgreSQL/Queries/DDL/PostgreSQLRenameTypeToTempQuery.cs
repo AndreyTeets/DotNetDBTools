@@ -30,15 +30,16 @@ internal class PostgreSQLRenameTypeToTempQuery : IQuery
             case PostgreSQLEnumType:
                 return $@"ALTER TYPE ""{type.Name}"" RENAME TO ""{tempPrefix}{type.Name}"";";
             case PostgreSQLRangeType rt:
+                string multirangeTypeName = rt.MultirangeTypeName ?? $"{rt.Name}_multirange";
                 return QH.PlPgSqlQueryBlock(
 $@"ALTER TYPE ""{rt.Name}"" RENAME TO ""{tempPrefix}{type.Name}"";
 ALTER FUNCTION ""{rt.Name}""({rt.Subtype.GetQuotedName()},{rt.Subtype.GetQuotedName()}) RENAME TO ""{tempPrefix}{type.Name}"";
 ALTER FUNCTION ""{rt.Name}"" RENAME TO ""{tempPrefix}{type.Name}"";
 IF ({QH.SelectDbmsVersionStatement}) >= {QH.MultirangeTypeNameAvailableDbmsVersion} THEN
-ALTER TYPE ""{rt.MultirangeTypeName}"" RENAME TO ""{tempPrefix}{rt.MultirangeTypeName}"";
-ALTER FUNCTION ""{rt.MultirangeTypeName}""() RENAME TO ""{tempPrefix}{rt.MultirangeTypeName}"";
-ALTER FUNCTION ""{rt.MultirangeTypeName}""(""{tempPrefix}{type.Name}"") RENAME TO ""{tempPrefix}{rt.MultirangeTypeName}"";
-ALTER FUNCTION ""{rt.MultirangeTypeName}"" RENAME TO ""{tempPrefix}{rt.MultirangeTypeName}"";
+ALTER TYPE ""{multirangeTypeName}"" RENAME TO ""{tempPrefix}{multirangeTypeName}"";
+ALTER FUNCTION ""{multirangeTypeName}""() RENAME TO ""{tempPrefix}{multirangeTypeName}"";
+ALTER FUNCTION ""{multirangeTypeName}""(""{tempPrefix}{type.Name}"") RENAME TO ""{tempPrefix}{multirangeTypeName}"";
+ALTER FUNCTION ""{multirangeTypeName}"" RENAME TO ""{tempPrefix}{multirangeTypeName}"";
 END IF;");
             default:
                 throw new InvalidOperationException($"Invalid user defined type csharp-type: '{type.GetType()}'");

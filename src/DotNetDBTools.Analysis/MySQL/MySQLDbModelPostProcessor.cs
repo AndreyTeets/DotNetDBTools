@@ -13,6 +13,17 @@ internal class MySQLDbModelPostProcessor : DbModelPostProcessor
         ReplaceUniqueConstraintsWithUniqueIndexes(db);
     }
 
+    protected override void PostProcessDataTypes(Database database)
+    {
+        foreach (Table table in database.Tables)
+        {
+            foreach (Column column in table.Columns)
+            {
+                column.DataType.Name = column.DataType.Name.ToUpper();
+            }
+        }
+    }
+
     protected override void OrderAdditionalDbObjects(Database database)
     {
         MySQLDatabase db = (MySQLDatabase)database;

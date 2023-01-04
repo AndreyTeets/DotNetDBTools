@@ -78,7 +78,7 @@ internal abstract class DbModelFromDBMSProvider<
             Scripts = new(),
         };
         BuildAdditionalDbObjects(database);
-        _analysisManager.OrderDbObjects(database);
+        _analysisManager.DoPostProcessing(database);
         _analysisManager.BuildDependencies(database);
         return database;
     }

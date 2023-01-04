@@ -44,6 +44,17 @@ plpgsql_function_def
     : comp_options? function_block SEMI_COLON? EOF
     ;
 
+dndbt_sqldef_create_statement
+    : ( create_table_statement
+      | create_view_statement
+      | create_index_statement
+      | create_trigger_statement
+      | create_type_statement
+      | create_domain_statement
+      | create_function_statement)
+      SEMI_COLON? EOF
+    ;
+
 /******* END Start symbols *******/
 
 statement
@@ -664,7 +675,8 @@ drop_def
     ;
 
 create_index_statement
-    : CREATE UNIQUE? INDEX CONCURRENTLY? if_not_exists? name=identifier? ON ONLY? table_name=schema_qualified_name
+    : dndbt_id=DNDBT_ID_DECLARATION_COMMENT?
+      CREATE UNIQUE? INDEX CONCURRENTLY? if_not_exists? name=identifier? ON ONLY? table_name=schema_qualified_name
       (USING method=identifier)? index_columns including_index? with_storage_parameter? table_space? index_where?
     ;
 
@@ -707,7 +719,8 @@ create_event_trigger_statement
     ;
 
 create_type_statement
-    : CREATE TYPE name=schema_qualified_name (AS(
+    : dndbt_id=DNDBT_ID_DECLARATION_COMMENT?
+      CREATE TYPE name=schema_qualified_name (AS(
         LEFT_PAREN (attrs+=table_column_definition (COMMA attrs+=table_column_definition)*)? RIGHT_PAREN
         | ENUM LEFT_PAREN ( enums+=character_string (COMMA enums+=character_string)* )? RIGHT_PAREN
         | RANGE LEFT_PAREN
@@ -750,7 +763,8 @@ create_type_statement
     ;
 
 create_domain_statement
-    : CREATE DOMAIN name=schema_qualified_name AS? dat_type=data_type
+    : dndbt_id=DNDBT_ID_DECLARATION_COMMENT?
+    CREATE DOMAIN name=schema_qualified_name AS? dat_type=data_type
     (collate_identifier | DEFAULT def_value=vex | dom_constraint+=domain_constraint)*
     ;
 
@@ -912,7 +926,8 @@ target_operator
     ;
 
 domain_constraint
-    : (CONSTRAINT name=identifier)? (ck_code=domain_constraint_code | NOT? NULL)
+    : dndbt_id=DNDBT_ID_DECLARATION_COMMENT?
+        (CONSTRAINT name=identifier)? (ck_code=domain_constraint_code | NOT? NULL)
     ;
 
 domain_constraint_code
@@ -1102,7 +1117,8 @@ rewrite_command
     ;
 
 create_trigger_statement
-    : CREATE (OR REPLACE)? CONSTRAINT? TRIGGER name=identifier (before_true=BEFORE | (INSTEAD OF) | AFTER)
+    : dndbt_id=DNDBT_ID_DECLARATION_COMMENT?
+    CREATE (OR REPLACE)? CONSTRAINT? TRIGGER name=identifier (before_true=BEFORE | (INSTEAD OF) | AFTER)
     (((insert_true=INSERT | delete_true=DELETE | truncate_true=TRUNCATE) 
       | update_true=UPDATE (OF identifier_list)?)OR?)+
     ON table_name=schema_qualified_name
@@ -1269,7 +1285,8 @@ label_member_object
 ===============================================================================
 */
 create_function_statement
-    : CREATE (OR REPLACE)? (FUNCTION | PROCEDURE) function_parameters
+    : dndbt_id=DNDBT_ID_DECLARATION_COMMENT?
+    CREATE (OR REPLACE)? (FUNCTION | PROCEDURE) function_parameters
     (RETURNS (rettype_data=data_type_for_func_args_or_retval | ret_table=function_ret_table))?
     (function_actions_common+ with_storage_parameter? | function_actions_common* function_body)
     ;
@@ -1550,7 +1567,8 @@ copy_option
     ;
 
 create_view_statement
-    : CREATE (OR REPLACE)? (TEMP | TEMPORARY)? RECURSIVE? MATERIALIZED? VIEW 
+    : dndbt_id=DNDBT_ID_DECLARATION_COMMENT?
+    CREATE (OR REPLACE)? (TEMP | TEMPORARY)? RECURSIVE? MATERIALIZED? VIEW 
     if_not_exists? name=schema_qualified_name column_names=view_columns?
     (USING identifier)?
     (WITH storage_parameter)?
@@ -1609,7 +1627,8 @@ alter_database_option
     ;
 
 create_table_statement
-    : CREATE ((GLOBAL | LOCAL)? (TEMPORARY | TEMP) | UNLOGGED)? TABLE if_not_exists? name=schema_qualified_name
+    : dndbt_id=DNDBT_ID_DECLARATION_COMMENT?
+    CREATE ((GLOBAL | LOCAL)? (TEMPORARY | TEMP) | UNLOGGED)? TABLE if_not_exists? name=schema_qualified_name
     define_table
     partition_by?
     (USING identifier)?
@@ -1704,8 +1723,10 @@ list_of_type_column_def
     ;
 
 table_item_definition
-    : table_column_definition
-    | tabl_constraint=constraint_common
+    : dndbt_id=DNDBT_ID_DECLARATION_COMMENT?
+        table_column_definition
+    | dndbt_id=DNDBT_ID_DECLARATION_COMMENT?
+        tabl_constraint=constraint_common
     | LIKE schema_qualified_name like_option*
     ;
 

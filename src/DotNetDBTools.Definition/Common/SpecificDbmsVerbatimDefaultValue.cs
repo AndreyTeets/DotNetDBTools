@@ -2,11 +2,11 @@
 
 namespace DotNetDBTools.Definition.Common;
 
-public class SpecificDbmsVerbatimDefaultValue : IDefaultValue
+public abstract class SpecificDbmsVerbatimDefaultValue : IDefaultValue
 {
     public string Value { get; private set; }
 
-    public SpecificDbmsVerbatimDefaultValue(string value)
+    protected SpecificDbmsVerbatimDefaultValue(string value)
     {
         Value = value;
     }

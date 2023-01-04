@@ -22,7 +22,7 @@ public class PostgreSQLStatementsSplitterTests
         statements[0].Should().StartWith("create TABLE \"Table1\"");
         statements[0].Should().EndWith("( \"Col3\" >= 0 )\n);");
 
-        statements[1].Should().StartWith("--FunctionID:#{DC36AE77-B7E4-40C3-824F-BD20DC270A14}#\nCREATE FUNCTION \"TR_MyTa");
+        statements[1].Should().StartWith("--ID:#{DC36AE77-B7E4-40C3-824F-BD20DC270A14}#\nCREATE FUNCTION \"TR_MyTa");
         statements[1].Should().EndWith("END;\n$FuncBody$;");
 
         statements[2].Should().StartWith("CREATE TRIGGER \"TR_MyTable2_MyTrigger1\"");

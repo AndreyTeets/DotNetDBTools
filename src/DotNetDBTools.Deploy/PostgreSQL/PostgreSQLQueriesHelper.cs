@@ -46,7 +46,7 @@ $DNDBTPlPgSqlQueryBlock$";
     public static DataType CreateDataTypeModel(string dataType, string lengthStr, bool isBaseDataType)
     {
         if (!isBaseDataType)
-            return new DataType { Name = dataType, IsUserDefined = true };
+            return new DataType { Name = dataType };
 
         int length = int.Parse(lengthStr);
         string normalizedDataType = NormalizeTypeName(dataType);

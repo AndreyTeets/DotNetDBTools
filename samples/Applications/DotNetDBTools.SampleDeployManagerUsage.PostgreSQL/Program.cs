@@ -20,12 +20,14 @@ namespace DotNetDBTools.SampleDeployManagerUsage.PostgreSQL
 
         private static readonly string s_postgresqlDbAssemblyPath = $"{s_samplesOutputDir}/DotNetDBTools.SampleDB.PostgreSQL.dll";
         private static readonly string s_postgresqlDbV2AssemblyPath = $"{s_samplesOutputDir}/DotNetDBTools.SampleDBv2.PostgreSQL.dll";
+        private static readonly string s_postgresqlDbV2SqlDefAssemblyPath = $"{s_samplesOutputDir}/DotNetDBTools.SampleDBv2SqlDef.PostgreSQL.dll";
         private static readonly string s_postgresqlConnectionString = $"Host=127.0.0.1;Port={PostgreSQLServerHostPort};Database={PostgreSQLDatabaseName};Username=postgres;Password={PostgreSQLServerPassword}";
 
         private static readonly string s_publishToEmptyScriptPath = $"{s_generatedOutputDir}/PublishToEmptyScript.sql";
         private static readonly string s_publishToExistingScriptPath = $"{s_generatedOutputDir}/PublishToExistingScript.sql";
         private static readonly string s_publishFromV1ToV2ScriptPath = $"{s_generatedOutputDir}/PublishFromV1ToV2Script.sql";
         private static readonly string s_noDNDBTInfoPublishFromV1ToV2ScriptPath = $"{s_generatedOutputDir}/NoDNDBTInfoPublishFromV1ToV2Script.sql";
+        private static readonly string s_publishFromV1ToV2SqlDefScriptPath = $"{s_generatedOutputDir}/PublishFromV1ToV2SqlDefScript.sql";
         private static readonly string s_publishFromV2ToV1ScriptPath = $"{s_generatedOutputDir}/PublishFromV2ToV1Script.sql";
         private static readonly string s_noDNDBTInfoPublishFromV2ToV1ScriptPath = $"{s_generatedOutputDir}/NoDNDBTInfoPublishFromV2ToV1Script.sql";
         private static readonly string s_definitionFromUnregisteredDir = $"{s_generatedOutputDir}/DefinitionFromUnregistered";
@@ -67,6 +69,7 @@ namespace DotNetDBTools.SampleDeployManagerUsage.PostgreSQL
 
             Console.WriteLine("Generating script to update(from v1 to v2) PostgreSQLSampleDB from the corresponding assembly files...");
             File.WriteAllText(s_publishFromV1ToV2ScriptPath, dmDataLoss.GeneratePublishScript(dbAssemblyV2, dbAssembly));
+            File.WriteAllText(s_publishFromV1ToV2SqlDefScriptPath, dmDataLoss.GeneratePublishScript(s_postgresqlDbV2SqlDefAssemblyPath, s_postgresqlDbAssemblyPath));
             Console.WriteLine("Updating(from v1 to v2) existing PostgreSQLSampleDB from dbAssembly v2 file...");
             dmDataLoss.PublishDatabase(s_postgresqlDbV2AssemblyPath, connection);
 

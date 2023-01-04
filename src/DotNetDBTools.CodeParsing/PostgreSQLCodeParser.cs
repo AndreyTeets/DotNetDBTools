@@ -10,11 +10,37 @@ namespace DotNetDBTools.CodeParsing;
 
 public class PostgreSQLCodeParser : CodeParser<PostgreSQLParser, PostgreSQLLexer>
 {
-    public ObjectInfo GetObjectInfo(string input)
+    public override ObjectInfo GetObjectInfo(string input)
     {
         if (ScriptDeclarationParser.TryParseScriptInfo(input, out ScriptInfo scriptInfo))
             return scriptInfo;
-        return PostgreSQLGetObjectInfoHelper.ParseFunction(input);
+        else if (ParseTriggerInfoWhenTwoStatements(input, out TriggerInfo triggerInfo))
+            return triggerInfo;
+        return ParseObjectInfo<PostgreSQLGetObjectInfoVisitor>(input, x => x.dndbt_sqldef_create_statement());
+
+        bool ParseTriggerInfoWhenTwoStatements(string input, out TriggerInfo triggerInfo)
+        {
+            List<string> statements = PostgreSQLStatementsSplitter.Split(input);
+            if (statements.Count == 2)
+            {
+                string expectedCreateFunctionStatement = statements[0];
+                string expectedCreateTriggerStatement = statements[1];
+
+                ObjectInfo objectInfo = ParseObjectInfo<PostgreSQLGetObjectInfoVisitor>(
+                    expectedCreateTriggerStatement, x => x.dndbt_sqldef_create_statement());
+                if (objectInfo is not TriggerInfo triggerInfoRes)
+                    throw new ParseException($"Trigger object code contains 2 statements and second one is not a trigger\ninput=[{input}]");
+
+                triggerInfoRes.Code = $"{expectedCreateFunctionStatement}{triggerInfoRes.Code}";
+                triggerInfo = triggerInfoRes;
+                return true;
+            }
+            else
+            {
+                triggerInfo = null;
+                return false;
+            }
+        }
     }
 
     public List<Dependency> GetFunctionDependencies(string input)
@@ -29,7 +55,7 @@ public class PostgreSQLCodeParser : CodeParser<PostgreSQLParser, PostgreSQLLexer
         else if (visitor.FunctionLanguage == "PLPGSQL")
             bodyParseTree = Parse(visitor.FunctionBody, x => x.plpgsql_function_def());
         else
-            throw new Exception($"Invalid function language '{visitor.FunctionLanguage}'");
+            throw new ParseException($"Invalid function language '{visitor.FunctionLanguage}'");
 
         PostgreSQLGetFunctionDependenciesVisitor bodyVisitor = new();
         bodyVisitor.Visit(bodyParseTree);

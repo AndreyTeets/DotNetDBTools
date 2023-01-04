@@ -112,7 +112,7 @@ Also provides declarative means for database structure description with differen
 # State of development
 + MSSQL - definition (as c#) of only basic "standard relational db entities" and it's deployment+generation seem to work, database analysis using just a few example checks.
 + MySQL - definition (as c#) of only basic "standard relational db entities" and it's deployment+generation seem to work, database analysis using just a few example checks.
-+ PostgreSQL - definition (as c#) of most "standard relational db entities" and it's deployment+generation seem to work, database analysis using just a few example checks.
++ PostgreSQL - definition (as c# and as sql) of most "standard relational db entities" and it's deployment+generation seem to work, database analysis using just a few example checks.
 + SQLite - definition (as c# and as sql) of all "standard sqlite entities" and it's deployment+generation seem to work, database analysis using just a few example checks.
 + Agnostic definition for "standard relational db entities" and it's deployment to all the above DBMS according with corresponding development state of the specific DBMS above.
 

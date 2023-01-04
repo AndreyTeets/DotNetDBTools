@@ -36,7 +36,7 @@ public class DefinitionParsingManager : IDefinitionParsingManager
             DefinitionKind.CSharp => BuildDatabaseModelFromCSharpDefinition(dbAssembly, dbKind),
             DefinitionKind.MSSQL => throw new NotImplementedException(),
             DefinitionKind.MySQL => throw new NotImplementedException(),
-            DefinitionKind.PostgreSQL => throw new NotImplementedException(),
+            DefinitionKind.PostgreSQL => new PostgreSQLDbModelFromSqlDefinitionProvider().CreateDbModel(dbAssembly),
             DefinitionKind.SQLite => new SQLiteDbModelFromSqlDefinitionProvider().CreateDbModel(dbAssembly),
             _ => throw new InvalidOperationException($"Invalid defKind: {defKind}"),
         };

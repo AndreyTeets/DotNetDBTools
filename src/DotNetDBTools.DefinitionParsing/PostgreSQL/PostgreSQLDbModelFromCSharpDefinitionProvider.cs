@@ -147,54 +147,15 @@ internal class PostgreSQLDbModelFromCSharpDefinitionProvider : DbModelFromCSharp
                 ID = type.DNDBT_OBJECT_ID,
                 Name = typeName,
                 Subtype = subtype,
-                SubtypeOperatorClass = type.SubtypeOperatorClass ?? GetDefaultSubtypeOperatorClass(subtype),
-                Collation = type.Collation ?? GetDefaultCollation(subtype),
-                CanonicalFunction = type.CanonicalFunction ?? null,
-                SubtypeDiff = type.SubtypeDiff ?? null,
-                MultirangeTypeName = type.MultirangeTypeName ?? $"{typeName}_multirange",
+                SubtypeOperatorClass = type.SubtypeOperatorClass,
+                Collation = type.Collation,
+                CanonicalFunction = type.CanonicalFunction,
+                SubtypeDiff = type.SubtypeDiff,
+                MultirangeTypeName = type.MultirangeTypeName,
             };
             typeModelsList.Add(typeModel);
         }
         return typeModelsList;
-
-        string GetDefaultSubtypeOperatorClass(DataType subtype)
-        {
-            return subtype.Name switch
-            {
-                PostgreSQLDataTypeNames.SMALLINT => "int2_ops",
-                PostgreSQLDataTypeNames.INT => "int4_ops",
-                PostgreSQLDataTypeNames.BIGINT => "int8_ops",
-                PostgreSQLDataTypeNames.FLOAT4 => "float4_ops",
-                PostgreSQLDataTypeNames.FLOAT8 => "float8_ops",
-                PostgreSQLDataTypeNames.DECIMAL => "numeric_ops",
-                PostgreSQLDataTypeNames.BOOL => "bool_ops",
-                PostgreSQLDataTypeNames.MONEY => "money_ops",
-                PostgreSQLDataTypeNames.CHAR => "char_ops",
-                PostgreSQLDataTypeNames.VARCHAR => "text_ops",
-                PostgreSQLDataTypeNames.TEXT => "text_ops",
-                PostgreSQLDataTypeNames.BYTEA => "bytea_ops",
-                PostgreSQLDataTypeNames.DATE => "date_ops",
-                PostgreSQLDataTypeNames.TIME => "time_ops",
-                PostgreSQLDataTypeNames.TIMETZ => "timetz_ops",
-                PostgreSQLDataTypeNames.TIMESTAMP => "timestamp_ops",
-                PostgreSQLDataTypeNames.TIMESTAMPTZ => "timestamptz_ops",
-                PostgreSQLDataTypeNames.UUID => "uuid_ops",
-                PostgreSQLDataTypeNames.BIT => "bit_ops",
-                PostgreSQLDataTypeNames.VARBIT => "varbit_ops",
-                _ => null,
-            };
-        }
-
-        string GetDefaultCollation(DataType subtype)
-        {
-            return subtype.Name switch
-            {
-                PostgreSQLDataTypeNames.CHAR => "default",
-                PostgreSQLDataTypeNames.VARCHAR => "default",
-                PostgreSQLDataTypeNames.TEXT => "default",
-                _ => null,
-            };
-        }
     }
 
     private static List<PostgreSQLFunction> BuildFunctionModels(Assembly dbAssembly)

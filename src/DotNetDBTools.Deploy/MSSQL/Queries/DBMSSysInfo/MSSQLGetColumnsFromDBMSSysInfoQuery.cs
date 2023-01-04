@@ -71,7 +71,7 @@ WHERE t.name NOT IN ({DNDBTSysTables.AllTablesForInClause});";
         private static DataType ParseDataType(MSSQLColumnRecord columnRecord)
         {
             if (columnRecord.UserDefinedDataType is not null)
-                return new DataType { Name = columnRecord.UserDefinedDataType, IsUserDefined = true };
+                return new DataType { Name = columnRecord.UserDefinedDataType };
 
             return MSSQLQueriesHelper.CreateDataTypeModel(
                 columnRecord.DataType.ToUpper(),

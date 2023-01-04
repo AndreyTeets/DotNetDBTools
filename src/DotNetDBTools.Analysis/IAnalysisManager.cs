@@ -18,6 +18,6 @@ public interface IAnalysisManager
     public CodePiece ConvertDefaultValue(CSharpDefaultValue defaultValue, DatabaseKind targetKind);
 
     public void DoCreateSpecificDbmsDbModelFromDefinitionPostProcessing(Database database);
-    public void OrderDbObjects(Database database);
+    public void DoPostProcessing(Database database);
     public void BuildDependencies(Database database);
 }

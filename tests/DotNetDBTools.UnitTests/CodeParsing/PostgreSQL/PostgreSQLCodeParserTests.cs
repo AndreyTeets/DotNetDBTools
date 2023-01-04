@@ -1,57 +1,59 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using DotNetDBTools.Analysis.Extensions;
 using DotNetDBTools.CodeParsing;
 using DotNetDBTools.CodeParsing.Models;
+using DotNetDBTools.UnitTests.CodeParsing.Base;
 using DotNetDBTools.UnitTests.Utilities;
 using FluentAssertions;
 using Xunit;
 
 namespace DotNetDBTools.UnitTests.CodeParsing.PostgreSQL;
 
-public class PostgreSQLCodeParserTests
+public class PostgreSQLCodeParserTests : BaseCodeParserTests<PostgreSQLCodeParser>
 {
-    private const string TestDataDir = "./TestData/PostgreSQL";
-    private const string FuncIDDefinition = "--FunctionID:#{A1159A6A-35F1-4B70-86A1-5427E08942DE}#";
+    protected override BaseCodeParserTestsData TestData => new PostgreSQLCodeParserTestsData();
+    protected PostgreSQLCodeParserTestsData TD => (PostgreSQLCodeParserTestsData)TestData;
 
     [Fact]
-    public void GetObjectInfo_ParsesFunctionCorrectly()
+    public void GetObjectInfo_ParsesCompositeTypeCorrectly()
     {
-        string functionStatement =
-$@"{FuncIDDefinition}
-CREATE   function ""TR_SomeTriggerFunction"" ()
-bla bla;".NormalizeLineEndings();
-
-        PostgreSQLCodeParser parser = new();
-        FunctionInfo func = (FunctionInfo)parser.GetObjectInfo(functionStatement);
-
-        func.ID.Should().Be(Guid.Parse("A1159A6A-35F1-4B70-86A1-5427E08942DE"));
-        func.Name.Should().Be("TR_SomeTriggerFunction");
-        string functionCode = functionStatement.Replace(FuncIDDefinition, "").Trim();
-        func.Code.Should().Be(functionCode);
+        Assert_GetObjectInfo_ParsesObjectCorrectly("CreateCompositeType.sql", TD.ExpectedCompositeType);
     }
 
-    [Theory]
-    [InlineData("create function f1() no funcID definition bla bla;", false)]
-    [InlineData("create function f1() no end-statement semicolon bla bla")]
-    [InlineData("create function invalid-func-name() bla bla;")]
-    [InlineData("create function f2 no parantheses bla bla;")]
-    public void ParseFunction_ThrowsOnMalformedInput(string statement, bool prependValidFuncIDDefinition = true)
+    [Fact]
+    public void GetObjectInfo_ParsesDomainTypeCorrectly()
     {
-        string functionStatement = statement;
-        if (prependValidFuncIDDefinition)
-            functionStatement = $"{FuncIDDefinition}\n{statement}";
+        Assert_GetObjectInfo_ParsesObjectCorrectly("CreateDomainType.sql", TD.ExpectedDomainType);
+    }
 
-        PostgreSQLCodeParser parser = new();
-        FluentActions.Invoking(() => parser.GetObjectInfo(functionStatement))
-            .Should().Throw<Exception>().WithMessage($"Failed to parse function from statement [{functionStatement}]");
+    [Fact]
+    public void GetObjectInfo_ParsesEnumTypeCorrectly()
+    {
+        Assert_GetObjectInfo_ParsesObjectCorrectly("CreateEnumType.sql", TD.ExpectedEnumType);
+    }
+
+    [Fact]
+    public void GetObjectInfo_ParsesRangeTypeCorrectly()
+    {
+        Assert_GetObjectInfo_ParsesObjectCorrectly("CreateRangeType.sql", TD.ExpectedRangeType);
+    }
+
+    [Fact]
+    public void GetObjectInfo_ParsesSQLFunctionCorrectly()
+    {
+        Assert_GetObjectInfo_ParsesObjectCorrectly("CreateSQLFunction.sql", TD.ExpectedSQLFunction);
+    }
+
+    [Fact]
+    public void GetObjectInfo_ParsesPLPGSQLFunctionCorrectly()
+    {
+        Assert_GetObjectInfo_ParsesObjectCorrectly("CreatePLPGSQLFunction.sql", TD.ExpectedPLPGSQLFunction);
     }
 
     [Fact]
     public void GetViewDependencies_GetsCorrectData()
     {
-        string input = FilesHelper.GetFromFile($@"{TestDataDir}/CreateView.sql");
+        string input = FilesHelper.GetFromFile($@"{TestData.TestDataDir}/CreateView.sql");
         PostgreSQLCodeParser parser = new();
         List<Dependency> dependencies = parser.GetViewDependencies(input);
 
@@ -67,7 +69,7 @@ bla bla;".NormalizeLineEndings();
     [Fact]
     public void GetFunctionDependencies_GetsCorrectData_FromSQLFunc()
     {
-        string input = FilesHelper.GetFromFile($@"{TestDataDir}/CreateSQLFunction.sql");
+        string input = FilesHelper.GetFromFile($@"{TestData.TestDataDir}/CreateSQLFunction.sql");
         PostgreSQLCodeParser parser = new();
         List<Dependency> dependencies = parser.GetFunctionDependencies(input);
 
@@ -83,7 +85,7 @@ bla bla;".NormalizeLineEndings();
     [Fact]
     public void GetFunctionDependencies_GetsCorrectData_FromPLPGSQLFunc()
     {
-        string input = FilesHelper.GetFromFile($@"{TestDataDir}/CreatePLPGSQLFunction.sql");
+        string input = FilesHelper.GetFromFile($@"{TestData.TestDataDir}/CreatePLPGSQLFunction.sql");
         PostgreSQLCodeParser parser = new();
         List<Dependency> dependencies = parser.GetFunctionDependencies(input);
 

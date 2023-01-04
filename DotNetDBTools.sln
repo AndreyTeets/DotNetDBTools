@@ -15,16 +15,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_SolutionItems", "_Solution
 		.editorconfig = .editorconfig
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
-		_build.bat = _build.bat
-		_build.sh = _build.sh
-		_test.bat = _test.bat
-		_test.sh = _test.sh
 		Directory.Build.props = Directory.Build.props
 		global.json = global.json
 		LICENSE = LICENSE
 		NuGet.Config = NuGet.Config
 		README.md = README.md
 		tests.runsettings = tests.runsettings
+		_build.sh = _build.sh
+		_build.bat = _build.bat
+		_test.bat = _test.bat
+		_test.sh = _test.sh
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{D2572AC4-083E-4C75-B25D-A969F76B63E2}"
@@ -109,6 +109,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.SampleDeployM
 		{B258DC47-A46F-4C53-99DF-A8DEDE81F7D5} = {B258DC47-A46F-4C53-99DF-A8DEDE81F7D5}
 		{B0268B65-50BB-47BF-B798-0B04DCCF6A64} = {B0268B65-50BB-47BF-B798-0B04DCCF6A64}
 		{51A89E8B-3C98-4D47-B48D-4CA665AEF833} = {51A89E8B-3C98-4D47-B48D-4CA665AEF833}
+		{9B57FBD4-B25F-4B9C-9463-DE674BE1207B} = {9B57FBD4-B25F-4B9C-9463-DE674BE1207B}
 		{8E1B4198-955B-4E3C-ABC1-4D841B332B77} = {8E1B4198-955B-4E3C-ABC1-4D841B332B77}
 		{D1725C44-3760-4582-B7E8-FAE22477245A} = {D1725C44-3760-4582-B7E8-FAE22477245A}
 	EndProjectSection
@@ -140,6 +141,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.SampleDBv2.MySQL", "samples\Databases\DotNetDBTools.SampleDBv2.MySQL\DotNetDBTools.SampleDBv2.MySQL.csproj", "{A59BF064-A8DF-41D1-88F0-F254EB352834}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.SampleDBv2.PostgreSQL", "samples\Databases\DotNetDBTools.SampleDBv2.PostgreSQL\DotNetDBTools.SampleDBv2.PostgreSQL.csproj", "{718ACBE7-4611-45E1-97ED-BE6CC3F7A7AC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.SampleDBv2SqlDef.PostgreSQL", "samples\Databases\DotNetDBTools.SampleDBv2SqlDef.PostgreSQL\DotNetDBTools.SampleDBv2SqlDef.PostgreSQL.csproj", "{9B57FBD4-B25F-4B9C-9463-DE674BE1207B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.SampleDBv2.SQLite", "samples\Databases\DotNetDBTools.SampleDBv2.SQLite\DotNetDBTools.SampleDBv2.SQLite.csproj", "{8E1B4198-955B-4E3C-ABC1-4D841B332B77}"
 EndProject
@@ -192,6 +195,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.IntegrationTe
 		{A59BF064-A8DF-41D1-88F0-F254EB352834} = {A59BF064-A8DF-41D1-88F0-F254EB352834}
 		{B0268B65-50BB-47BF-B798-0B04DCCF6A64} = {B0268B65-50BB-47BF-B798-0B04DCCF6A64}
 		{51A89E8B-3C98-4D47-B48D-4CA665AEF833} = {51A89E8B-3C98-4D47-B48D-4CA665AEF833}
+		{9B57FBD4-B25F-4B9C-9463-DE674BE1207B} = {9B57FBD4-B25F-4B9C-9463-DE674BE1207B}
 		{8E1B4198-955B-4E3C-ABC1-4D841B332B77} = {8E1B4198-955B-4E3C-ABC1-4D841B332B77}
 		{D1725C44-3760-4582-B7E8-FAE22477245A} = {D1725C44-3760-4582-B7E8-FAE22477245A}
 		{7D467CA3-E65D-42A4-8149-A2247C7CCF34} = {7D467CA3-E65D-42A4-8149-A2247C7CCF34}
@@ -205,22 +209,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetDBTools.UnitTests", "tests\DotNetDBTools.UnitTests\DotNetDBTools.UnitTests.csproj", "{F4863F2B-7A90-42A0-A23B-CBEC729EC3D3}"
 EndProject
 Global
-	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		samples\Applications\DotNetDBTools.EventsLogger\DotNetDBTools.EventsLogger.projitems*{0edfdeaf-4dc4-441e-b3b9-8dc20495105c}*SharedItemsImports = 5
-		src\DotNetDBTools.RoslynUtilities\DotNetDBTools.RoslynUtilities.projitems*{35980423-0df6-4d5f-a8bf-9d57ee14b5be}*SharedItemsImports = 5
-		samples\Applications\DotNetDBTools.EventsLogger\DotNetDBTools.EventsLogger.projitems*{4446c6a5-51fd-4b45-a08b-498176cb71f0}*SharedItemsImports = 5
-		samples\Applications\DotNetDBTools.EventsLogger\DotNetDBTools.EventsLogger.projitems*{4d1eb939-a0a9-4023-9732-23479fe7f186}*SharedItemsImports = 5
-		samples\Applications\DotNetDBTools.EventsLogger\DotNetDBTools.EventsLogger.projitems*{7d467ca3-e65d-42a4-8149-a2247c7ccf34}*SharedItemsImports = 5
-		samples\Applications\DotNetDBTools.EventsLogger\DotNetDBTools.EventsLogger.projitems*{9a07c740-5cb3-49a4-9422-ede3bb2a7d22}*SharedItemsImports = 5
-		samples\Applications\DotNetDBTools.EventsLogger\DotNetDBTools.EventsLogger.projitems*{a2e6bbfc-9cfc-47f7-9878-dc496159d838}*SharedItemsImports = 5
-		samples\Applications\DotNetDBTools.EventsLogger\DotNetDBTools.EventsLogger.projitems*{a5722c3b-0fb2-4426-8e32-c6cb4fe3d50e}*SharedItemsImports = 5
-		src\DotNetDBTools.RoslynUtilities\DotNetDBTools.RoslynUtilities.projitems*{b2d848ba-9538-45e3-9f9d-35937cdecb7a}*SharedItemsImports = 5
-		samples\Applications\DotNetDBTools.EventsLogger\DotNetDBTools.EventsLogger.projitems*{c347ec54-b6e4-433a-95a8-7c5530fb8c3a}*SharedItemsImports = 5
-		samples\Applications\DotNetDBTools.EventsLogger\DotNetDBTools.EventsLogger.projitems*{d3a2d253-7b2d-4d27-ae47-cf8310e36cd6}*SharedItemsImports = 5
-		src\DotNetDBTools.RoslynUtilities\DotNetDBTools.RoslynUtilities.projitems*{d82b0851-c14a-45bd-a04a-80e7688afc4a}*SharedItemsImports = 13
-		samples\Applications\DotNetDBTools.EventsLogger\DotNetDBTools.EventsLogger.projitems*{eb32e580-a62f-4094-b202-3dd523340574}*SharedItemsImports = 13
-		src\DotNetDBTools.RoslynUtilities\DotNetDBTools.RoslynUtilities.projitems*{f4863f2b-7a90-42a0-a23b-cbec729ec3d3}*SharedItemsImports = 5
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -318,6 +306,10 @@ Global
 		{718ACBE7-4611-45E1-97ED-BE6CC3F7A7AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{718ACBE7-4611-45E1-97ED-BE6CC3F7A7AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{718ACBE7-4611-45E1-97ED-BE6CC3F7A7AC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B57FBD4-B25F-4B9C-9463-DE674BE1207B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B57FBD4-B25F-4B9C-9463-DE674BE1207B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B57FBD4-B25F-4B9C-9463-DE674BE1207B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B57FBD4-B25F-4B9C-9463-DE674BE1207B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8E1B4198-955B-4E3C-ABC1-4D841B332B77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8E1B4198-955B-4E3C-ABC1-4D841B332B77}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8E1B4198-955B-4E3C-ABC1-4D841B332B77}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -409,6 +401,7 @@ Global
 		{96549CFF-BE53-4C80-A0E1-CBA086C2D497} = {80C1202A-276C-493E-821E-9DB63164F2BE}
 		{A59BF064-A8DF-41D1-88F0-F254EB352834} = {80C1202A-276C-493E-821E-9DB63164F2BE}
 		{718ACBE7-4611-45E1-97ED-BE6CC3F7A7AC} = {80C1202A-276C-493E-821E-9DB63164F2BE}
+		{9B57FBD4-B25F-4B9C-9463-DE674BE1207B} = {80C1202A-276C-493E-821E-9DB63164F2BE}
 		{8E1B4198-955B-4E3C-ABC1-4D841B332B77} = {80C1202A-276C-493E-821E-9DB63164F2BE}
 		{D1725C44-3760-4582-B7E8-FAE22477245A} = {80C1202A-276C-493E-821E-9DB63164F2BE}
 		{3162A36E-F7D2-4A11-9DEA-7C0961397999} = {B7ABF1B7-9417-4762-8EE3-AE1548F3C2DB}
@@ -427,5 +420,21 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C5DA5397-E6DE-4CB0-AB7D-C319C3759CBC}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		samples\Applications\DotNetDBTools.EventsLogger\DotNetDBTools.EventsLogger.projitems*{0edfdeaf-4dc4-441e-b3b9-8dc20495105c}*SharedItemsImports = 5
+		src\DotNetDBTools.RoslynUtilities\DotNetDBTools.RoslynUtilities.projitems*{35980423-0df6-4d5f-a8bf-9d57ee14b5be}*SharedItemsImports = 5
+		samples\Applications\DotNetDBTools.EventsLogger\DotNetDBTools.EventsLogger.projitems*{4446c6a5-51fd-4b45-a08b-498176cb71f0}*SharedItemsImports = 5
+		samples\Applications\DotNetDBTools.EventsLogger\DotNetDBTools.EventsLogger.projitems*{4d1eb939-a0a9-4023-9732-23479fe7f186}*SharedItemsImports = 5
+		samples\Applications\DotNetDBTools.EventsLogger\DotNetDBTools.EventsLogger.projitems*{7d467ca3-e65d-42a4-8149-a2247c7ccf34}*SharedItemsImports = 5
+		samples\Applications\DotNetDBTools.EventsLogger\DotNetDBTools.EventsLogger.projitems*{9a07c740-5cb3-49a4-9422-ede3bb2a7d22}*SharedItemsImports = 5
+		samples\Applications\DotNetDBTools.EventsLogger\DotNetDBTools.EventsLogger.projitems*{a2e6bbfc-9cfc-47f7-9878-dc496159d838}*SharedItemsImports = 5
+		samples\Applications\DotNetDBTools.EventsLogger\DotNetDBTools.EventsLogger.projitems*{a5722c3b-0fb2-4426-8e32-c6cb4fe3d50e}*SharedItemsImports = 5
+		src\DotNetDBTools.RoslynUtilities\DotNetDBTools.RoslynUtilities.projitems*{b2d848ba-9538-45e3-9f9d-35937cdecb7a}*SharedItemsImports = 5
+		samples\Applications\DotNetDBTools.EventsLogger\DotNetDBTools.EventsLogger.projitems*{c347ec54-b6e4-433a-95a8-7c5530fb8c3a}*SharedItemsImports = 5
+		samples\Applications\DotNetDBTools.EventsLogger\DotNetDBTools.EventsLogger.projitems*{d3a2d253-7b2d-4d27-ae47-cf8310e36cd6}*SharedItemsImports = 5
+		src\DotNetDBTools.RoslynUtilities\DotNetDBTools.RoslynUtilities.projitems*{d82b0851-c14a-45bd-a04a-80e7688afc4a}*SharedItemsImports = 13
+		samples\Applications\DotNetDBTools.EventsLogger\DotNetDBTools.EventsLogger.projitems*{eb32e580-a62f-4094-b202-3dd523340574}*SharedItemsImports = 13
+		src\DotNetDBTools.RoslynUtilities\DotNetDBTools.RoslynUtilities.projitems*{f4863f2b-7a90-42a0-a23b-cbec729ec3d3}*SharedItemsImports = 5
 	EndGlobalSection
 EndGlobal

@@ -44,6 +44,14 @@ sql:
     SCOL* sql_stmt (SCOL+ sql_stmt)* SCOL* EOF
     ;
 
+dndbt_sqldef_create_statement
+    : ( create_table_stmt
+      | create_view_stmt
+      | create_index_stmt
+      | create_trigger_stmt)
+      SCOL? EOF
+    ;
+
 /******* END Start symbols *******/
 
 sql_stmt: (EXPLAIN_ (QUERY_ PLAN_)?)? (
@@ -114,7 +122,7 @@ release_stmt:
 ;
 
 create_index_stmt:
-    ID_DECLARATION_COMMENT?
+    dndbt_id=DNDBT_ID_DECLARATION_COMMENT?
     CREATE_ UNIQUE_? INDEX_ (IF_ NOT_ EXISTS_)? (schema_name DOT)? index_name ON_ table_name OPEN_PAR
         indexed_column (COMMA indexed_column)* CLOSE_PAR (WHERE_ expr)?
 ;
@@ -123,7 +131,7 @@ indexed_column: (column_name | expr) (COLLATE_ collation_name)? asc_desc?
 ;
 
 create_table_stmt:
-    ID_DECLARATION_COMMENT?
+    dndbt_id=DNDBT_ID_DECLARATION_COMMENT?
     CREATE_ (TEMP_ | TEMPORARY_)? TABLE_ (IF_ NOT_ EXISTS_)? (
         schema_name DOT
     )? table_name (
@@ -135,7 +143,7 @@ create_table_stmt:
 ;
 
 column_def:
-    ID_DECLARATION_COMMENT? column_name type_name? column_constraint*
+    dndbt_id=DNDBT_ID_DECLARATION_COMMENT? column_name type_name? column_constraint*
 ;
 
 type_name:
@@ -164,7 +172,7 @@ signed_number: (PLUS | MINUS)? NUMERIC_LITERAL
 ;
 
 table_constraint:
-    ID_DECLARATION_COMMENT?
+    dndbt_id=DNDBT_ID_DECLARATION_COMMENT?
     (CONSTRAINT_ name)? (
         (PRIMARY_ KEY_ | UNIQUE_) OPEN_PAR indexed_column (
             COMMA indexed_column
@@ -206,7 +214,7 @@ conflict_clause:
 ;
 
 create_trigger_stmt:
-    ID_DECLARATION_COMMENT?
+    dndbt_id=DNDBT_ID_DECLARATION_COMMENT?
     CREATE_ (TEMP_ | TEMPORARY_)? TRIGGER_ (IF_ NOT_ EXISTS_)? (
         schema_name DOT
     )? trigger_name (BEFORE_ | AFTER_ | INSTEAD_ OF_)? (
@@ -219,7 +227,7 @@ create_trigger_stmt:
 ;
 
 create_view_stmt:
-    ID_DECLARATION_COMMENT?
+    dndbt_id=DNDBT_ID_DECLARATION_COMMENT?
     CREATE_ (TEMP_ | TEMPORARY_)? VIEW_ (IF_ NOT_ EXISTS_)? (
         schema_name DOT
     )? view_name (OPEN_PAR column_name (COMMA column_name)* CLOSE_PAR)? AS_ select_stmt

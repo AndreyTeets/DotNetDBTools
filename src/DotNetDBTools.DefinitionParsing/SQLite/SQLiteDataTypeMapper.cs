@@ -32,7 +32,7 @@ internal class SQLiteDataTypeMapper : DataTypeMapper
                 return new AnalysisManager().ConvertDataType(csharpDataType, DatabaseKind.SQLite);
 
             case VerbatimDataType verbatimDataType:
-                return new DataType { Name = verbatimDataType.Name.ToUpper() };
+                return new DataType { Name = verbatimDataType.Name };
 
             default:
                 throw new InvalidOperationException($"Invalid dataType: {dataType}");

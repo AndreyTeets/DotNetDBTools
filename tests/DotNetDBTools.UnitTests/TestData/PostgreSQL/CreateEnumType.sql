@@ -1,0 +1,6 @@
+--ID:#{2678DE76-0BA4-4794-BB29-C072FA4A60E9}#
+CREATE TYPE "MyEnumType1" AS ENUM
+(
+    'Label1',
+    $x$Label2$x$
+);

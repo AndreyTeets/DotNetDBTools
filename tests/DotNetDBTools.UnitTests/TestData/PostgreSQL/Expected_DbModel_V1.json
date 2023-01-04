@@ -128,7 +128,7 @@
       "$id": "19",
       "CodePiece": {
         "$id": "20",
-        "Code": "CREATE FUNCTION \"TR_MyTable2_MyTrigger1_Handler\"()\nRETURNS TRIGGER\nLANGUAGE PLPGSQL\nAS\n$FuncBody$\nBEGIN\n    INSERT INTO \"MyTable4\"(\"MyColumn1\")\n    VALUES(NEW.\"MyColumn1\");\n    RETURN NULL;\nEND;\n$FuncBody$;"
+        "Code": "CREATE FUNCTION \"TR_MyTable2_MyTrigger1_Handler\"()\nRETURNS TRIGGER\nLANGUAGE PLPGSQL\nAS\n$FuncBody$\nBEGIN\n    INSERT INTO \"MyTable4\"(\"MyColumn1\")\n    VALUES(NEW.\"MyColumn1\");\n    RETURN NULL;\nEND;\n$FuncBody$"
       },
       "IsSimple": false,
       "ID": "8edd4469-e048-48bd-956e-a26113355f80",

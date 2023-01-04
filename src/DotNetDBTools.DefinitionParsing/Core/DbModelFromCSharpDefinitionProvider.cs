@@ -46,7 +46,7 @@ internal abstract class DbModelFromCSharpDefinitionProvider<
         BuildAdditionalDbObjects(database, dbAssembly);
         if (database.Kind != DatabaseKind.Agnostic)
             _analysisManager.DoCreateSpecificDbmsDbModelFromDefinitionPostProcessing(database);
-        _analysisManager.OrderDbObjects(database);
+        _analysisManager.DoPostProcessing(database);
         if (database.Kind != DatabaseKind.Agnostic)
             _analysisManager.BuildDependencies(database);
         return database;

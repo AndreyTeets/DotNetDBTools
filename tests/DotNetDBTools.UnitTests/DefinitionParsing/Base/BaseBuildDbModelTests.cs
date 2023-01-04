@@ -12,8 +12,8 @@ namespace DotNetDBTools.UnitTests.DefinitionParsing.Base;
 public abstract class BaseBuildDbModelTests<TDatabase>
     where TDatabase : Database, new()
 {
-    protected abstract string SpecificDbmsSampleDbV1AssemblyName { get; }
     protected abstract string ExpectedFilesDir { get; }
+    protected abstract string SpecificDbmsSampleDbV1AssemblyName { get; }
 
     private readonly Assembly _specificDbmsDbAssemblyV1;
 
