@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using DotNetDBTools.Definition;
@@ -40,6 +41,19 @@ public class DefinitionParsingManager : IDefinitionParsingManager
             DefinitionKind.SQLite => new SQLiteDbModelFromSqlDefinitionProvider().CreateDbModel(dbAssembly),
             _ => throw new InvalidOperationException($"Invalid defKind: {defKind}"),
         };
+    }
+
+    public Database CreateDbModel(IEnumerable<string> definitionSqlStatements, long dbVersion, DatabaseKind dbKind)
+    {
+        IDbModelFromSqlDefinitionProvider dbModelFromDefinitionProvider = dbKind switch
+        {
+            DatabaseKind.MSSQL => throw new NotImplementedException(),
+            DatabaseKind.MySQL => throw new NotImplementedException(),
+            DatabaseKind.PostgreSQL => new PostgreSQLDbModelFromSqlDefinitionProvider(),
+            DatabaseKind.SQLite => new SQLiteDbModelFromSqlDefinitionProvider(),
+            _ => throw new InvalidOperationException($"Invalid dbKind: {dbKind}"),
+        };
+        return dbModelFromDefinitionProvider.CreateDbModel(definitionSqlStatements, dbVersion);
     }
 
     private Database BuildDatabaseModelFromCSharpDefinition(Assembly dbAssembly, DatabaseKind dbKind)

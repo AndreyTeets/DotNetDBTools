@@ -16,7 +16,7 @@ internal abstract class DbModelFromSqlDefinitionProvider<
     TTable,
     TView,
     TColumn>
-    : IDbModelFromDefinitionProvider
+    : IDbModelFromSqlDefinitionProvider
     where TDatabase : Database, new()
     where TTable : Table, new()
     where TView : View, new()
@@ -34,25 +34,15 @@ internal abstract class DbModelFromSqlDefinitionProvider<
     public Database CreateDbModel(Assembly dbAssembly)
     {
         List<ObjectInfo> dbObjects = ParseDbObjectsFromEmbeddedSqlFiles(dbAssembly);
-        TDatabase database = new()
-        {
-            Version = DbAssemblyInfoHelper.GetDbVersion(dbAssembly),
-            Tables = BuildTableModels(dbObjects.OfType<TableInfo>()),
-            Views = BuildViewModels(dbObjects.OfType<ViewInfo>()),
-            Scripts = BuildScriptModels(dbObjects.OfType<ScriptInfo>()),
-        };
-
-        Dictionary<string, Table> tableNameToTableMap = database.Tables.ToDictionary(x => x.Name, x => x);
-        BuildTablesIndexes(tableNameToTableMap, dbObjects.OfType<IndexInfo>());
-        BuildTablesTriggers(tableNameToTableMap, dbObjects.OfType<TriggerInfo>());
-
-        BuildAdditionalDbObjects(database, dbObjects);
-        _analysisManager.DoCreateSpecificDbmsDbModelFromDefinitionPostProcessing(database);
-        _analysisManager.DoPostProcessing(database);
-        _analysisManager.BuildDependencies(database);
-        return database;
+        long dbVersion = DbAssemblyInfoHelper.GetDbVersion(dbAssembly);
+        return CreateDbModel(dbObjects, dbVersion);
     }
-    protected virtual void BuildAdditionalDbObjects(Database database, List<ObjectInfo> dbObjects) { }
+
+    public Database CreateDbModel(IEnumerable<string> definitionSqlStatements, long dbVersion)
+    {
+        List<ObjectInfo> dbObjects = ParseDbObjectsFromDefinitionSqlStatements(definitionSqlStatements);
+        return CreateDbModel(dbObjects, dbVersion);
+    }
 
     private List<ObjectInfo> ParseDbObjectsFromEmbeddedSqlFiles(Assembly dbAssembly)
     {
@@ -70,6 +60,39 @@ internal abstract class DbModelFromSqlDefinitionProvider<
         }
         return dbObjects;
     }
+
+    private List<ObjectInfo> ParseDbObjectsFromDefinitionSqlStatements(IEnumerable<string> definitionSqlStatements)
+    {
+        List<ObjectInfo> dbObjects = new();
+        foreach (string statement in definitionSqlStatements)
+        {
+            ObjectInfo objectInfo = CodeParser.GetObjectInfo(statement);
+            dbObjects.Add(objectInfo);
+        }
+        return dbObjects;
+    }
+
+    private Database CreateDbModel(List<ObjectInfo> dbObjects, long dbVersion)
+    {
+        TDatabase database = new()
+        {
+            Version = dbVersion,
+            Tables = BuildTableModels(dbObjects.OfType<TableInfo>()),
+            Views = BuildViewModels(dbObjects.OfType<ViewInfo>()),
+            Scripts = BuildScriptModels(dbObjects.OfType<ScriptInfo>()),
+        };
+
+        Dictionary<string, Table> tableNameToTableMap = database.Tables.ToDictionary(x => x.Name, x => x);
+        BuildTablesIndexes(tableNameToTableMap, dbObjects.OfType<IndexInfo>());
+        BuildTablesTriggers(tableNameToTableMap, dbObjects.OfType<TriggerInfo>());
+
+        BuildAdditionalDbObjects(database, dbObjects);
+        _analysisManager.DoCreateSpecificDbmsDbModelFromDefinitionPostProcessing(database);
+        _analysisManager.DoPostProcessing(database);
+        _analysisManager.BuildDependencies(database);
+        return database;
+    }
+    protected virtual void BuildAdditionalDbObjects(Database database, List<ObjectInfo> dbObjects) { }
 
     private List<Table> BuildTableModels(IEnumerable<TableInfo> tables)
     {
