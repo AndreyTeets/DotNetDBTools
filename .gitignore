@@ -1,8 +1,8 @@
 bin/
 obj/
 *.user
-/.vs/
-/.idea/
+.vs/
+.idea/
 /.vscode/
 !.vscode/*sample
 .sonarqube/

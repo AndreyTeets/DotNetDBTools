@@ -2,7 +2,6 @@
 
 public enum DependencyType
 {
-    Table,
     TableOrView,
     Function,
 }

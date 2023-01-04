@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using DotNetDBTools.Analysis.Extensions;
 using DotNetDBTools.CodeParsing;
 using DotNetDBTools.CodeParsing.Models;
@@ -72,7 +73,7 @@ bla bla;".NormalizeLineEndings();
 
         List<Dependency> expectedDependencies = new()
         {
-            new Dependency { Type = DependencyType.Table, Name = "MyTable1" },
+            new Dependency { Type = DependencyType.TableOrView, Name = "MyTable1" },
             new Dependency { Type = DependencyType.TableOrView, Name = "MyView2".ToLower() },
             new Dependency { Type = DependencyType.Function, Name = "MyFunc3" },
         };
@@ -88,16 +89,63 @@ bla bla;".NormalizeLineEndings();
 
         List<Dependency> expectedDependencies = new()
         {
-            new Dependency { Type = DependencyType.Table, Name = "MyTable1" },
-            new Dependency { Type = DependencyType.Function, Name = "MyFunc2" },
-            new Dependency { Type = DependencyType.TableOrView, Name = "MyView3" },
+            new Dependency { Type = DependencyType.TableOrView, Name = "MyTable01" },
+            new Dependency { Type = DependencyType.TableOrView, Name = "MyTable02" },
+            new Dependency { Type = DependencyType.TableOrView, Name = "MyTable03".ToLower() },
+            new Dependency { Type = DependencyType.TableOrView, Name = "MyTable04" },
+            new Dependency { Type = DependencyType.TableOrView, Name = "MyTable1" },
+            new Dependency { Type = DependencyType.TableOrView, Name = "MyTable2" },
+            new Dependency { Type = DependencyType.TableOrView, Name = "MyTable3" },
             new Dependency { Type = DependencyType.TableOrView, Name = "MyTable4" },
-            new Dependency { Type = DependencyType.TableOrView, Name = "MyView5".ToLower() },
-            new Dependency { Type = DependencyType.Table, Name = "MyTable6" },
-            new Dependency { Type = DependencyType.TableOrView, Name = "MyView7".ToLower() },
-            new Dependency { Type = DependencyType.Table, Name = "MyTable8" },
-            new Dependency { Type = DependencyType.Function, Name = "MyFunc9".ToLower() },
+            new Dependency { Type = DependencyType.TableOrView, Name = "MyTable5" },
+            new Dependency { Type = DependencyType.TableOrView, Name = "MyTable6" },
+            new Dependency { Type = DependencyType.TableOrView, Name = "MyTable7" },
+            new Dependency { Type = DependencyType.TableOrView, Name = "MyTable8" },
+            new Dependency { Type = DependencyType.TableOrView, Name = "MyTable9".ToLower() },
+            new Dependency { Type = DependencyType.TableOrView, Name = "MyTable10".ToLower() },
+            new Dependency { Type = DependencyType.TableOrView, Name = "MyTable11" },
+            new Dependency { Type = DependencyType.TableOrView, Name = "MyTable12".ToLower() },
+            new Dependency { Type = DependencyType.TableOrView, Name = "MyTable13" },
+            new Dependency { Type = DependencyType.TableOrView, Name = "MyTable14".ToLower() },
+            new Dependency { Type = DependencyType.TableOrView, Name = "MyTable15" },
+            new Dependency { Type = DependencyType.TableOrView, Name = "_some_table" },
+            new Dependency { Type = DependencyType.TableOrView, Name = "WithRes" },
+            new Dependency { Type = DependencyType.TableOrView, Name = "WithRes2" },
+            new Dependency { Type = DependencyType.TableOrView, Name = "_with_res" },
+            new Dependency { Type = DependencyType.TableOrView, Name = "pg_proc" },
+            new Dependency { Type = DependencyType.TableOrView, Name = "MyView1" },
+            new Dependency { Type = DependencyType.TableOrView, Name = "MyView2".ToLower() },
+            new Dependency { Type = DependencyType.TableOrView, Name = "MyView3".ToLower() },
+            new Dependency { Type = DependencyType.TableOrView, Name = "MyView4" },
+            new Dependency { Type = DependencyType.TableOrView, Name = "MyView5" },
+            new Dependency { Type = DependencyType.TableOrView, Name = "MyView6" },
+            new Dependency { Type = DependencyType.Function, Name = "MyFunc1" },
+            new Dependency { Type = DependencyType.Function, Name = "MyFunc2".ToLower() },
+            new Dependency { Type = DependencyType.Function, Name = "MyFunc3" },
+            new Dependency { Type = DependencyType.Function, Name = "_some_func" },
+            new Dependency { Type = DependencyType.Function, Name = "min" },
+            new Dependency { Type = DependencyType.Function, Name = "max" },
+            new Dependency { Type = DependencyType.Function, Name = "count" },
+            new Dependency { Type = DependencyType.Function, Name = "now" },
+            new Dependency { Type = DependencyType.Function, Name = "round" },
+            new Dependency { Type = DependencyType.Function, Name = "length" },
+            new Dependency { Type = DependencyType.Function, Name = "strpos" },
+            new Dependency { Type = DependencyType.Function, Name = "unnest" },
+            new Dependency { Type = DependencyType.Function, Name = "array_append" },
+            new Dependency { Type = DependencyType.Function, Name = "array_upper" },
+            new Dependency { Type = DependencyType.Function, Name = "array_cat" },
+            new Dependency { Type = DependencyType.Function, Name = "concat" },
+            new Dependency { Type = DependencyType.Function, Name = "string_agg" },
+            new Dependency { Type = DependencyType.Function, Name = "generate_series" },
+            new Dependency { Type = DependencyType.Function, Name = "abs" },
+            new Dependency { Type = DependencyType.Function, Name = "pg_sleep" },
+            new Dependency { Type = DependencyType.Function, Name = "pg_function_is_visible" },
         };
-        dependencies.Should().BeEquivalentTo(expectedDependencies, options => options.WithStrictOrdering());
+
+        IEnumerable<Dependency> excessDeps = dependencies.Where(dep => !expectedDependencies.Contains(dep));
+        IEnumerable<Dependency> missingDeps = expectedDependencies.Where(dep => !dependencies.Contains(dep));
+
+        excessDeps.Should().BeEmpty();
+        missingDeps.Should().BeEmpty();
     }
 }

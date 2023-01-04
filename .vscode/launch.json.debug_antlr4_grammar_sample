@@ -7,7 +7,7 @@
             "request": "launch",
             "grammar": "src/DotNetDBTools.CodeParsing/Grammars/PostgreSQL/PostgreSQLParser.g4",
             "input": "src/DotNetDBTools.CodeParsing/Grammars/PostgreSQL/.antlr/input.sql",
-            "startRule": "plpgsql_function",
+            "startRule": "plpgsql_function_statements",
             "printParseTree": true,
             "visualParseTree": true
         }

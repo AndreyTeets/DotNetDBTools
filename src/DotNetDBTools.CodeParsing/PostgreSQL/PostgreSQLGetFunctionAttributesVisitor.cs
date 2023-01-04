@@ -1,4 +1,5 @@
 ﻿using Antlr4.Runtime.Misc;
+using DotNetDBTools.CodeParsing.Core;
 using DotNetDBTools.CodeParsing.Generated;
 using static DotNetDBTools.CodeParsing.Generated.PostgreSQLParser;
 
@@ -8,6 +9,12 @@ internal class PostgreSQLGetFunctionAttributesVisitor : PostgreSQLParserBaseVisi
 {
     public string FunctionLanguage { get; set; }
     public string FunctionBody { get; set; }
+
+    public override object VisitFunction_body([NotNull] Function_bodyContext context)
+    {
+        FunctionBody = HelperMethods.GetInitialText(context);
+        return base.VisitFunction_body(context);
+    }
 
     public override object VisitFunction_def([NotNull] Function_defContext context)
     {
@@ -30,8 +37,14 @@ internal class PostgreSQLGetFunctionAttributesVisitor : PostgreSQLParserBaseVisi
 
     public override object VisitFunction_actions_common([NotNull] Function_actions_commonContext context)
     {
-        if (context.LANGUAGE() != null)
-            FunctionLanguage = context.GetText().Replace(context.LANGUAGE().GetText(), "").Trim().ToUpper();
+        if (context.lang_name != null)
+        {
+            string lang = context.lang_name.GetText().ToUpper();
+            if (context.lang_name.Character_String_Literal() != null)
+                FunctionLanguage = lang.Substring(1, lang.Length - 2).Replace("''", "'");
+            else
+                FunctionLanguage = lang;
+        }
         return base.VisitFunction_actions_common(context);
     }
 }

@@ -1,4 +1,6 @@
 /*
+ * This file includes work originally covered by the following copyright and permission notices:
+ *
  * The MIT License (MIT)
  *
  * Copyright (c) 2020 by Martin Mirchev

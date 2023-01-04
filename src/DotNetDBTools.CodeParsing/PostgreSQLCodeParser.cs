@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Antlr4.Runtime.Tree;
 using DotNetDBTools.CodeParsing.Core;
 using DotNetDBTools.CodeParsing.Generated;
@@ -22,9 +23,14 @@ public class PostgreSQLCodeParser : CodeParser<PostgreSQLParser, PostgreSQLLexer
         PostgreSQLGetFunctionAttributesVisitor visitor = new();
         visitor.Visit(parseTree);
 
-        IParseTree bodyParseTree = visitor.FunctionLanguage == "SQL"
-            ? Parse(visitor.FunctionBody, x => x.statement())
-            : Parse(visitor.FunctionBody, x => x.plpgsql_function());
+        IParseTree bodyParseTree;
+        if (visitor.FunctionLanguage == "SQL" || visitor.FunctionLanguage is null)
+            bodyParseTree = Parse(visitor.FunctionBody, x => x.sql_function_def());
+        else if (visitor.FunctionLanguage == "PLPGSQL")
+            bodyParseTree = Parse(visitor.FunctionBody, x => x.plpgsql_function_def());
+        else
+            throw new Exception($"Invalid function language '{visitor.FunctionLanguage}'");
+
         PostgreSQLGetFunctionDependenciesVisitor bodyVisitor = new();
         bodyVisitor.Visit(bodyParseTree);
         return bodyVisitor.GetDependencies();

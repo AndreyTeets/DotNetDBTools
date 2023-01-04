@@ -71,28 +71,19 @@ internal class PostgreSQLDependenciesBuilder : IDependenciesBuilder
 
         void AddDependency(List<DbObject> dependencies, Dependency dep, string referencingObjectName)
         {
-            if (dep.Type == DependencyType.Table)
-            {
-                if (tableNameToTableMap.ContainsKey(dep.Name))
-                    dependencies.Add(tableNameToTableMap[dep.Name]);
-                else
-                    throw new Exception($"Failed to find table '{dep.Name}' referenced by {referencingObjectName}");
-            }
-            else if (dep.Type == DependencyType.TableOrView)
+            if (dep.Type == DependencyType.TableOrView)
             {
                 if (tableNameToTableMap.ContainsKey(dep.Name))
                     dependencies.Add(tableNameToTableMap[dep.Name]);
                 else if (viewNameToViewMap.ContainsKey(dep.Name))
                     dependencies.Add(viewNameToViewMap[dep.Name]);
-                else
-                    throw new Exception($"Failed to find table or view '{dep.Name}' referenced by {referencingObjectName}");
+                // Otherwise it may be a system table or view
             }
             else if (dep.Type == DependencyType.Function)
             {
                 if (funcNameToFuncMap.ContainsKey(dep.Name))
                     dependencies.Add(funcNameToFuncMap[dep.Name]);
-                else
-                    throw new Exception($"Failed to find function '{dep.Name}' referenced by {referencingObjectName}");
+                // Otherwise it may be a system function
             }
             else
             {

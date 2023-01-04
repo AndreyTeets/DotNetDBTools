@@ -2,6 +2,7 @@
 using System.Linq;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
+using DotNetDBTools.CodeParsing.Core;
 using DotNetDBTools.CodeParsing.Generated;
 using DotNetDBTools.CodeParsing.Models;
 using static DotNetDBTools.CodeParsing.Generated.SQLiteParser;
@@ -27,7 +28,7 @@ internal class SQLiteGetObjectInfoVisitor : SQLiteParserBaseVisitor<ObjectInfo>
         ViewInfo view = new();
         view.ID = GetObjectID(context.ID_DECLARATION_COMMENT()?.GetText());
         view.Name = UnquoteIdentifier(context.view_name().GetText());
-        view.Code = GetInitialText(context);
+        view.Code = HelperMethods.GetInitialText(context);
         if (context.ID_DECLARATION_COMMENT() != null)
             view.Code = view.Code.Remove(0, context.ID_DECLARATION_COMMENT().GetText().Length);
         return view;
@@ -52,7 +53,7 @@ internal class SQLiteGetObjectInfoVisitor : SQLiteParserBaseVisitor<ObjectInfo>
         trigger.ID = GetObjectID(context.ID_DECLARATION_COMMENT()?.GetText());
         trigger.Name = UnquoteIdentifier(context.trigger_name().GetText());
         trigger.Table = UnquoteIdentifier(context.table_name().GetText());
-        trigger.Code = GetInitialText(context);
+        trigger.Code = HelperMethods.GetInitialText(context);
         if (context.ID_DECLARATION_COMMENT() != null)
             trigger.Code = trigger.Code.Remove(0, context.ID_DECLARATION_COMMENT().GetText().Length);
         return trigger;
@@ -78,8 +79,6 @@ internal class SQLiteGetObjectInfoVisitor : SQLiteParserBaseVisitor<ObjectInfo>
                 column.Unique = true;
             else if (context.DEFAULT_() != null)
                 AddColumnDefault(column, context);
-            else
-                throw new ParseException("Invalid column constraint context");
 
             if (column.PrimaryKey && context.AUTOINCREMENT_() != null)
                 column.Identity = true;
@@ -91,9 +90,7 @@ internal class SQLiteGetObjectInfoVisitor : SQLiteParserBaseVisitor<ObjectInfo>
                 else if (context.literal_value() != null)
                     column.Default = context.literal_value().GetText();
                 else if (context.expr() != null)
-                    column.Default = $"({GetInitialText(context.expr())})";
-                else
-                    throw new ParseException("Invalid column default constraint context");
+                    column.Default = $"({HelperMethods.GetInitialText(context.expr())})";
             }
         }
     }
@@ -113,15 +110,13 @@ internal class SQLiteGetObjectInfoVisitor : SQLiteParserBaseVisitor<ObjectInfo>
             AddUniqueConstraintInfo(constraint, context);
         else if (context.FOREIGN_() != null && context.KEY_() != null)
             AddForeignKeyConstraintInfo(constraint, context);
-        else
-            throw new ParseException("Invalid table constraint context");
 
         return constraint;
 
         static void AddCheckConstraintInfo(ConstraintInfo constraint, Table_constraintContext context)
         {
             constraint.Type = ConstraintType.Check;
-            constraint.Code = $"CHECK ({GetInitialText(context.expr())})";
+            constraint.Code = $"CHECK ({HelperMethods.GetInitialText(context.expr())})";
         }
 
         static void AddPrimaryKeyConstraintInfo(ConstraintInfo constraint, Table_constraintContext context)
@@ -152,17 +147,11 @@ internal class SQLiteGetObjectInfoVisitor : SQLiteParserBaseVisitor<ObjectInfo>
             foreach (Foreign_key_action_clauseContext fkActionClause in fkClause.foreign_key_action_clause())
             {
                 if (fkActionClause.ON_() != null && fkActionClause.UPDATE_() != null)
-                    constraint.UpdateAction = GetInitialText(fkActionClause.foreign_key_action());
+                    constraint.UpdateAction = HelperMethods.GetInitialText(fkActionClause.foreign_key_action());
                 if (fkActionClause.ON_() != null && fkActionClause.DELETE_() != null)
-                    constraint.DeleteAction = GetInitialText(fkActionClause.foreign_key_action());
+                    constraint.DeleteAction = HelperMethods.GetInitialText(fkActionClause.foreign_key_action());
             }
         }
-    }
-
-    private static string GetInitialText(ParserRuleContext context)
-    {
-        return context.Start.InputStream.GetText(
-            new Interval(context.Start.StartIndex, context.Stop.StopIndex));
     }
 
     private static Guid? GetObjectID(string idDeclarationComment)

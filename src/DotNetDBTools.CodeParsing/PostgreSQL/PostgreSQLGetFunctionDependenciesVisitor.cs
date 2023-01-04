@@ -15,8 +15,11 @@ internal class PostgreSQLGetFunctionDependenciesVisitor : PostgreSQLParserBaseVi
 
     public override object VisitFunction_call([NotNull] Function_callContext context)
     {
-        string functionName = Unquote(context.schema_qualified_name_nontype().GetText());
-        _dependencies.Add(new Dependency { Type = DependencyType.Function, Name = functionName });
+        if (context.schema_qualified_name_for_func_name() != null)
+        {
+            string functionName = Unquote(context.schema_qualified_name_for_func_name().GetText());
+            _dependencies.Add(new Dependency { Type = DependencyType.Function, Name = functionName });
+        }
         return base.VisitFunction_call(context);
     }
 
@@ -30,14 +33,25 @@ internal class PostgreSQLGetFunctionDependenciesVisitor : PostgreSQLParserBaseVi
         return base.VisitFrom_primary(context);
     }
 
-    public override object VisitInsert_stmt_for_psql([NotNull] Insert_stmt_for_psqlContext context)
+    public override object VisitInsert_stmt([NotNull] Insert_stmtContext context)
     {
-        if (context.schema_qualified_name() != null)
-        {
-            string tableName = Unquote(context.schema_qualified_name().GetText());
-            _dependencies.Add(new Dependency { Type = DependencyType.Table, Name = tableName });
-        }
-        return base.VisitInsert_stmt_for_psql(context);
+        string tableName = Unquote(context.schema_qualified_name().GetText());
+        _dependencies.Add(new Dependency { Type = DependencyType.TableOrView, Name = tableName });
+        return base.VisitInsert_stmt(context);
+    }
+
+    public override object VisitUpdate_stmt([NotNull] Update_stmtContext context)
+    {
+        string tableName = Unquote(context.schema_qualified_name().GetText());
+        _dependencies.Add(new Dependency { Type = DependencyType.TableOrView, Name = tableName });
+        return base.VisitUpdate_stmt(context);
+    }
+
+    public override object VisitDelete_stmt([NotNull] Delete_stmtContext context)
+    {
+        string tableName = Unquote(context.schema_qualified_name().GetText());
+        _dependencies.Add(new Dependency { Type = DependencyType.TableOrView, Name = tableName });
+        return base.VisitDelete_stmt(context);
     }
 
     private static string Unquote(string quotedIdentifier)

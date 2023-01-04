@@ -22,7 +22,7 @@ internal class PostgreSQLGetViewDependenciesVisitor : PostgreSQLParserBaseVisito
         }
         else if (context.function_call().Any())
         {
-            string functionName = Unquote(context.function_call(0).schema_qualified_name_nontype().GetText());
+            string functionName = Unquote(context.function_call(0).schema_qualified_name_for_func_name().GetText());
             _dependencies.Add(new Dependency { Type = DependencyType.Function, Name = functionName });
         }
         return base.VisitFrom_primary(context);

@@ -1,4 +1,6 @@
 /*
+ * This file includes work originally covered by the following copyright and permission notices:
+ *
  * The MIT License (MIT)
  *
  * Copyright (c) 2014 by Bart Kiers
@@ -34,12 +36,15 @@ options {
     tokenVocab = SQLiteLexer;
 }
 
-parse: (sql_stmt_list)* EOF
-;
+// to start parsing, it is recommended to use only rules with EOF
+// this eliminates the ambiguous parsing options and speeds up the process
+/******* Start symbols *******/
 
-sql_stmt_list:
-    SCOL* sql_stmt (SCOL+ sql_stmt)* SCOL*
-;
+sql:
+    SCOL* sql_stmt (SCOL+ sql_stmt)* SCOL* EOF
+    ;
+
+/******* END Start symbols *******/
 
 sql_stmt: (EXPLAIN_ (QUERY_ PLAN_)?)? (
         alter_table_stmt
@@ -97,7 +102,7 @@ commit_stmt: (COMMIT_ | END_) TRANSACTION_?
 ;
 
 rollback_stmt:
-    ROLLBACK_ TRANSACTION_? (TO_ SAVEPOINT_? savepoint_name)?
+    ROLLBACK_ (TRANSACTION_ transaction_name?)? (TO_ SAVEPOINT_? savepoint_name)?
 ;
 
 savepoint_stmt:
@@ -143,7 +148,7 @@ type_name:
 column_constraint:
     (CONSTRAINT_ name)? (
         (PRIMARY_ KEY_ asc_desc? conflict_clause? AUTOINCREMENT_?)
-        | (NOT_ NULL_ | UNIQUE_) conflict_clause?
+        | (NOT_? NULL_ | UNIQUE_) conflict_clause?
         | CHECK_ OPEN_PAR expr CLOSE_PAR
         | DEFAULT_ (signed_number | literal_value | OPEN_PAR expr CLOSE_PAR)
         | COLLATE_ collation_name
@@ -208,7 +213,7 @@ create_trigger_stmt:
         DELETE_
         | INSERT_
         | UPDATE_ (OF_ column_name ( COMMA column_name)*)?
-    ) ON_ table_name (FOR_ EACH_ ROW_)? (WHEN_ expr)? BEGIN_ (
+    ) ON_ (schema_name DOT)? table_name (FOR_ EACH_ ROW_)? (WHEN_ expr)? BEGIN_ (
         (update_stmt | insert_stmt | delete_stmt | select_stmt) SCOL
     )+ END_
 ;
@@ -357,8 +362,9 @@ insert_stmt:
             VALUES_ OPEN_PAR expr (COMMA expr)* CLOSE_PAR (
                 COMMA OPEN_PAR expr ( COMMA expr)* CLOSE_PAR
             )*
+            | DEFAULT_ VALUES_
             | select_stmt
-        ) upsert_clause?
+        ) upsert_clause*
     )
     | DEFAULT_ VALUES_
 ;
@@ -369,8 +375,8 @@ upsert_clause:
     )? DO_ (
         NOTHING_
         | UPDATE_ SET_ (
-            (column_name | column_name_list) EQ expr (
-                COMMA (column_name | column_name_list) EQ expr
+            (column_name | column_name_list) ASSIGN expr (
+                COMMA (column_name | column_name_list) ASSIGN expr
             )* (WHERE_ expr)?
         )
     )
@@ -451,7 +457,7 @@ result_column:
 
 join_operator:
     COMMA
-    | NATURAL_? (LEFT_ OUTER_? | INNER_ | CROSS_)? JOIN_
+    | NATURAL_? ((LEFT_ | RIGHT_ | FULL_) OUTER_? | INNER_ | CROSS_)? JOIN_
 ;
 
 join_constraint:

@@ -1,4 +1,6 @@
 /*
+ This file includes work originally covered by the following copyright and permission notices:
+
  Licensed to the Apache Software Foundation (ASF) under one
  or more contributor license agreements.  See the NOTICE file
  distributed with this work for additional information
@@ -203,8 +205,10 @@ private readonly Stack<String> _tags = new Stack<String>();
 
     MAPPING: [mM] [aA] [pP] [pP] [iI] [nN] [gG];
     MATCH: [mM] [aA] [tT] [cC] [hH];
+    MATCHED: [mM] [aA] [tT] [cC] [hH] [eE] [dD];
     MATERIALIZED: [mM] [aA] [tT] [eE] [rR] [iI] [aA] [lL] [iI] [zZ] [eE] [dD];
     MAXVALUE: [mM] [aA] [xX] [vV] [aA] [lL] [uU] [eE];
+    MERGE: [mM] [eE] [rR] [gG] [eE];
     METHOD: [mM] [eE] [tT] [hH] [oO] [dD];
     MINUTE: [mM] [iI] [nN] [uU] [tT] [eE];
     MINVALUE: [mM] [iI] [nN] [vV] [aA] [lL] [uU] [eE];
@@ -637,6 +641,7 @@ private readonly Stack<String> _tags = new Stack<String>();
     FORMAT: [fF] [oO] [rR] [mM] [aA] [tT]; 
 
     GETTOKEN: [gG] [eE] [tT] [tT] [oO] [kK] [eE] [nN];
+    GTCMP: [gG] [tT] [cC] [mM] [pP];
 
     HASH: [hH] [aA] [sS] [hH];
     HASHES: [hH] [aA] [sS] [hH] [eE] [sS];
@@ -646,6 +651,8 @@ private readonly Stack<String> _tags = new Stack<String>();
     INDEX_CLEANUP: [iI] [nN] [dD] [eE] [xX] UNDERLINE [cC] [lL] [eE] [aA] [nN] [uU] [pP];
     INIT: [iI] [nN] [iI] [tT];
     INITCOND: [iI] [nN] [iI] [tT] [cC] [oO] [nN] [dD];
+    INITCOND1: [iI] [nN] [iI] [tT] [cC] [oO] [nN] [dD] '1';
+    INITCOND2: [iI] [nN] [iI] [tT] [cC] [oO] [nN] [dD] '2';
     INTERNALLENGTH: [iI] [nN] [tT] [eE] [rR] [nN] [aA] [lL] [lL] [eE] [nN] [gG] [tT] [hH];
     IS_TEMPLATE: [iI] [sS] UNDERLINE [tT] [eE] [mM] [pP] [lL] [aA] [tT] [eE];
 
@@ -659,6 +666,7 @@ private readonly Stack<String> _tags = new Stack<String>();
     LIST: [lL] [iI] [sS] [tT];
     LOCALE: [lL] [oO] [cC] [aA] [lL] [eE]; 
     LOGIN: [lL] [oO] [gG] [iI] [nN];
+    LTCMP: [lL] [tT] [cC] [mM] [pP];
 
     MAIN: [mM] [aA] [iI]  [nN];
     MERGES: [mM] [eE] [rR] [gG] [eE] [sS];
@@ -705,11 +713,17 @@ private readonly Stack<String> _tags = new Stack<String>();
     SERIALFUNC: [sS] [eE] [rR] [iI] [aA] [lL] [fF] [uU] [nN] [cC];
     SETTINGS: [sS] [eE] [tT] [tT] [iI] [nN] [gG] [sS];
     SFUNC: [sS] [fF] [uU] [nN] [cC];
+    SFUNC1: [sS] [fF] [uU] [nN] [cC] '1';
+    SFUNC2: [sS] [fF] [uU] [nN] [cC] '2';
     SHAREABLE: [sS] [hH] [aA] [rR] [eE] [aA] [bB] [lL] [eE];
     SKIP_LOCKED: [sS] [kK] [iI] [pP] UNDERLINE [lL] [oO] [cC] [kK] [eE] [dD];
+    SORT1: [sS] [oO] [rR] [tT] '1';
+    SORT2: [sS] [oO] [rR] [tT] '2';
     SORTOP: [sS] [oO] [rR] [tT] [oO] [pP];
     SSPACE: [sS] [sS] [pP] [aA] [cC] [eE];
     STYPE: [sS] [tT] [yY] [pP] [eE];
+    STYPE1: [sS] [tT] [yY] [pP] [eE] '1';
+    STYPE2: [sS] [tT] [yY] [pP] [eE] '2';
     SUBTYPE_DIFF: [sS] [uU] [bB] [tT] [yY] [pP] [eE] UNDERLINE [dD] [iI] [fF] [fF];
     SUBTYPE_OPCLASS: [sS] [uU] [bB] [tT] [yY] [pP] [eE] UNDERLINE [oO] [pP] [cC] [lL] [aA] [sS] [sS];
     SUBTYPE: [sS] [uU] [bB] [tT] [yY] [pP] [eE];
