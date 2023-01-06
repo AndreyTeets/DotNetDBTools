@@ -107,7 +107,7 @@
         },
         {
           "$id": "17",
-          "DefaultConstraintName": null,
+          "DefaultConstraintName": "DF_MyTable1_MyColumn5",
           "DataType": {
             "$id": "18",
             "Name": "VARCHAR(1000)",
@@ -117,7 +117,7 @@
           "Identity": false,
           "Default": {
             "$id": "19",
-            "Code": null
+            "Code": "'some text'"
           },
           "ID": "ebbef06c-c7de-4b36-a911-827566639630",
           "Name": "MyColumn5",

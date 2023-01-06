@@ -8,7 +8,7 @@ CREATE TABLE "MyTable1NewName"
     "MyColumn4" DECIMAL(19, 2) NOT NULL,
 
     --ID:#{EBBEF06C-C7DE-4B36-A911-827566639630}#
-    "MyColumn5" varchar ( 1000 ),
+    "MyColumn5" varchar ( 1000 ) default 'some text',
 
     --ID:#{D11B2A53-32DB-432F-BB6B-F91788844BA9}#
     CONSTRAINT "FK_MyTable1_MyColumn1_MyTable2_MyColumn1" FOREIGN KEY ("MyColumn1")

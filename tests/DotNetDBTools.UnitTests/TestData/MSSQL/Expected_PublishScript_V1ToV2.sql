@@ -233,6 +233,8 @@ ALTER TABLE [MyTable1NewName] DROP CONSTRAINT [DF_MyTable1_MyColumn1];
 ALTER TABLE [MyTable1NewName] ALTER COLUMN [MyColumn1] BIGINT NULL;
 ALTER TABLE [MyTable1NewName] ADD CONSTRAINT [DF_MyTable1NewName_MyColumn1] DEFAULT 15 FOR [MyColumn1];
 ALTER TABLE [MyTable1NewName] DROP CONSTRAINT [DF_MyTable1_MyColumn4];
+ALTER TABLE [MyTable1NewName] DROP CONSTRAINT [DF_MyTable1_MyColumn5];
+ALTER TABLE [MyTable1NewName] ADD CONSTRAINT [DF_MyTable1NewName_MyColumn5] DEFAULT ''some text'' FOR [MyColumn5];
 ALTER TABLE [MyTable1NewName] ADD CONSTRAINT [CK_MyTable1_MyCheck1] CHECK (MyColumn4 >= 1);';
 -- QUERY END: AlterTableQuery
 
@@ -285,6 +287,16 @@ WHERE [ID] = @ID;';
 EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''867ac528-e87e-4c93-b6e3-dd2fcbbb837f'';
 DECLARE @Name NVARCHAR(MAX) = N''MyColumn4'';
 DECLARE @Code NVARCHAR(MAX) = NULL;
+UPDATE [DNDBTDbObjects] SET
+    [Name] = @Name,
+    [Code] = @Code
+WHERE [ID] = @ID;';
+-- QUERY END: UpdateDNDBTDbObjectRecordQuery
+
+-- QUERY START: UpdateDNDBTDbObjectRecordQuery
+EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''ebbef06c-c7de-4b36-a911-827566639630'';
+DECLARE @Name NVARCHAR(MAX) = N''MyColumn5'';
+DECLARE @Code NVARCHAR(MAX) = N''''''some text'''''';
 UPDATE [DNDBTDbObjects] SET
     [Name] = @Name,
     [Code] = @Code

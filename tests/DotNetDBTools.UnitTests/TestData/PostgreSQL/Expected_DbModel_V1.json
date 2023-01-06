@@ -299,7 +299,7 @@
           "Identity": false,
           "Default": {
             "$id": "44",
-            "Code": null
+            "Code": "'some text'"
           },
           "ID": "ebbef06c-c7de-4b36-a911-827566639630",
           "Name": "MyColumn5",

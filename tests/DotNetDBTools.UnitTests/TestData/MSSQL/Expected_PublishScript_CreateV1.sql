@@ -37,7 +37,7 @@ EXEC sp_executesql N'CREATE TABLE [MyTable1]
     [MyColumn2] NVARCHAR(10) NOT NULL CONSTRAINT [DF_MyTable1_MyColumn2] DEFAULT ''33'',
     [MyColumn3] INT IDENTITY NOT NULL,
     [MyColumn4] DECIMAL(19,2) NOT NULL CONSTRAINT [DF_MyTable1_MyColumn4] DEFAULT 7.36,
-    [MyColumn5] VARCHAR(1000) NULL,
+    [MyColumn5] VARCHAR(1000) NULL CONSTRAINT [DF_MyTable1_MyColumn5] DEFAULT ''some text'',
     CONSTRAINT [PK_MyTable1] PRIMARY KEY ([MyColumn3]),
     CONSTRAINT [UQ_MyTable1_MyColumn4] UNIQUE ([MyColumn4]),
     CONSTRAINT [CK_MyTable1_MyCheck1] CHECK (MyColumn4 >= 0)
@@ -163,7 +163,7 @@ VALUES
 EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''ebbef06c-c7de-4b36-a911-827566639630'';
 DECLARE @ParentID UNIQUEIDENTIFIER = N''299675e6-4faa-4d0f-a36a-224306ba5bcb'';
 DECLARE @Name NVARCHAR(MAX) = N''MyColumn5'';
-DECLARE @Code NVARCHAR(MAX) = NULL;
+DECLARE @Code NVARCHAR(MAX) = N''''''some text'''''';
 INSERT INTO [DNDBTDbObjects]
 (
     [ID],

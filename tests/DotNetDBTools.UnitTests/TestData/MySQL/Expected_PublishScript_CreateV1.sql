@@ -5,7 +5,7 @@ CREATE TABLE `MyTable1`
     `MyColumn2` VARCHAR(10) NOT NULL DEFAULT '33',
     `MyColumn3` INT AUTO_INCREMENT NOT NULL,
     `MyColumn4` DECIMAL(19,2) NOT NULL DEFAULT 7.36,
-    `MyColumn5` VARCHAR(1000) NULL,
+    `MyColumn5` VARCHAR(1000) NULL DEFAULT 'some text',
     CONSTRAINT `PK_MyTable1` PRIMARY KEY (`MyColumn3`),
     CONSTRAINT `CK_MyTable1_MyCheck1` CHECK (MyColumn4 >= 0)
 );
@@ -121,7 +121,7 @@ VALUES
     '299675e6-4faa-4d0f-a36a-224306ba5bcb',
     'Column',
     'MyColumn5',
-    NULL
+    '''some text'''
 );
 -- QUERY END: InsertDNDBTDbObjectRecordQuery
 

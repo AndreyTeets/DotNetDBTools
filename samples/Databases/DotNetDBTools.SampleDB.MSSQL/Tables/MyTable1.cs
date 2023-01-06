@@ -40,6 +40,7 @@ namespace DotNetDBTools.SampleDB.MSSQL.Tables
         public Column MyColumn5 = new("EBBEF06C-C7DE-4B36-A911-827566639630")
         {
             DataType = new VerbatimDataType("VARCHAR(1000)"),
+            Default = new VerbatimDefaultValue("'some text'"),
         };
 
         public PrimaryKey PK_MyTable1 = new("37A45DEF-F4A0-4BE7-8BFB-8FBED4A7D705")

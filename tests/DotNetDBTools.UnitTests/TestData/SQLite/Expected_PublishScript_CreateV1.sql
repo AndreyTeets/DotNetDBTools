@@ -8,7 +8,7 @@ CREATE TABLE [MyTable1]
     [MyColumn2] TEXT NOT NULL DEFAULT '33',
     [MyColumn3] INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     [MyColumn4] NUMERIC NOT NULL DEFAULT 7.36,
-    [MyColumn5] TEXT NULL,
+    [MyColumn5] TEXT NULL DEFAULT 'some text',
     CONSTRAINT [UQ_MyTable1_MyColumn4] UNIQUE ([MyColumn4]),
     CONSTRAINT [CK_MyTable1_MyCheck1] CHECK (MyColumn4 >= 0),
     CONSTRAINT [FK_MyTable1_MyColumn1_MyTable2_MyColumn1] FOREIGN KEY ([MyColumn1])
@@ -127,7 +127,7 @@ VALUES
     '299675e6-4faa-4d0f-a36a-224306ba5bcb',
     'Column',
     'MyColumn5',
-    NULL
+    '''some text'''
 );
 -- QUERY END: InsertDNDBTDbObjectRecordQuery
 

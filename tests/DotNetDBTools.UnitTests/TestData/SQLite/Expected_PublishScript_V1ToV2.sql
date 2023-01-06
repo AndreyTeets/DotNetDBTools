@@ -111,7 +111,7 @@ CREATE TABLE [_DNDBTTemp_MyTable1NewName]
 (
     [MyColumn1] INTEGER NULL DEFAULT 15,
     [MyColumn4] NUMERIC NOT NULL,
-    [MyColumn5] TEXT NULL,
+    [MyColumn5] TEXT NULL DEFAULT 'some text',
     CONSTRAINT [CK_MyTable1_MyCheck1] CHECK (MyColumn4 >= 1),
     CONSTRAINT [FK_MyTable1_MyColumn1_MyTable2_MyColumn1] FOREIGN KEY ([MyColumn1])
         REFERENCES [MyTable2]([MyColumn1NewName])
