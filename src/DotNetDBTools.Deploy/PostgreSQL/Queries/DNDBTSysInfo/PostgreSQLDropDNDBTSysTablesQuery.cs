@@ -3,7 +3,7 @@ using DotNetDBTools.Deploy.Core.Queries;
 
 namespace DotNetDBTools.Deploy.PostgreSQL.Queries.DNDBTSysInfo;
 
-internal class PostgreSQLDropDNDBTSysTablesQuery : SqlTextOnlyQuery
+internal class PostgreSQLDropDNDBTSysTablesQuery : NoParametersQuery
 {
     public override string Sql =>
 $@"DROP TABLE ""{DNDBTSysTables.DNDBTDbAttributes}"";

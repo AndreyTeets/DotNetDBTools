@@ -1,21 +1,13 @@
-﻿using System.Linq;
-using DotNetDBTools.Deploy.Common.Queries.DDL;
+﻿using DotNetDBTools.Deploy.Common.Queries.DDL;
 using DotNetDBTools.Models.Core;
+using DotNetDBTools.Models.MSSQL;
 
 namespace DotNetDBTools.Deploy.MSSQL.Queries.DDL;
 
 internal class MSSQLCreateForeignKeyQuery : CreateForeignKeyQuery
 {
-    public MSSQLCreateForeignKeyQuery(ForeignKey fk, string tableName)
-        : base(fk, tableName) { }
+    public MSSQLCreateForeignKeyQuery(ForeignKey fk)
+        : base(fk) { }
 
-    protected override string GetSql(ForeignKey fk, string tableName)
-    {
-        string query =
-$@"ALTER TABLE [{tableName}] ADD CONSTRAINT [{fk.Name}] FOREIGN KEY ({string.Join(", ", fk.ThisColumnNames.Select(x => $@"[{x}]"))})
-    REFERENCES [{fk.ReferencedTableName}] ({string.Join(", ", fk.ReferencedTableColumnNames.Select(x => $@"[{x}]"))})
-    ON UPDATE {fk.OnUpdate} ON DELETE {fk.OnDelete};";
-
-        return query;
-    }
+    protected override string GetSql(ForeignKey fk) => GetSqlBase<MSSQLTable, MSSQLTableDiff>(fk);
 }

@@ -1,21 +1,16 @@
-﻿using System.Collections.Generic;
-using DotNetDBTools.Deploy.Core;
+﻿using DotNetDBTools.Deploy.Core.Queries;
 using DotNetDBTools.Models.MSSQL.UserDefinedTypes;
 
 namespace DotNetDBTools.Deploy.MSSQL.Queries.DDL;
 
-internal class MSSQLUseNewUDTInAllTablesQuery : IQuery
+internal class MSSQLUseNewUDTInAllTablesQuery : NoParametersQuery
 {
-    public string Sql => _sql;
-    public IEnumerable<QueryParameter> Parameters => _parameters;
-
+    public override string Sql => _sql;
     private readonly string _sql;
-    private readonly List<QueryParameter> _parameters;
 
     public MSSQLUseNewUDTInAllTablesQuery(MSSQLUserDefinedTypeDiff udtDiff)
     {
         _sql = GetSql(udtDiff);
-        _parameters = new List<QueryParameter>();
     }
 
     private static string GetSql(MSSQLUserDefinedTypeDiff udtDiff)

@@ -1,6 +1,7 @@
 ﻿using System;
 using DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo;
 using DotNetDBTools.Models.Core;
+using DotNetDBTools.Models.PostgreSQL;
 
 namespace DotNetDBTools.Deploy.PostgreSQL.Queries.DBMSSysInfo;
 
@@ -25,10 +26,11 @@ WHERE tr.tgisinternal = FALSE
     {
         public override Trigger MapToTriggerModel(TriggerRecord triggerRecord)
         {
-            return new()
+            return new PostgreSQLTrigger()
             {
                 ID = Guid.NewGuid(),
                 Name = triggerRecord.TriggerName,
+                TableName = triggerRecord.TableName,
                 CodePiece = new CodePiece { Code = triggerRecord.TriggerCode },
             };
         }

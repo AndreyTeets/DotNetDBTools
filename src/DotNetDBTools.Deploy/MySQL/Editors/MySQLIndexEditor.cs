@@ -1,15 +1,12 @@
-﻿using DotNetDBTools.Deploy.Common.Editors;
-using DotNetDBTools.Deploy.Core;
-using DotNetDBTools.Deploy.MySQL.Queries.DDL;
+﻿using DotNetDBTools.Deploy.Core;
+using DotNetDBTools.Deploy.Core.Editors;
 using DotNetDBTools.Deploy.MySQL.Queries.DNDBTSysInfo;
 
 namespace DotNetDBTools.Deploy.MySQL.Editors;
 
 internal class MySQLIndexEditor : IndexEditor<
     MySQLInsertDNDBTDbObjectRecordQuery,
-    MySQLDeleteDNDBTDbObjectRecordQuery,
-    MySQLCreateIndexQuery,
-    MySQLDropIndexQuery>
+    MySQLDeleteDNDBTDbObjectRecordQuery>
 {
     public MySQLIndexEditor(IQueryExecutor queryExecutor)
         : base(queryExecutor) { }

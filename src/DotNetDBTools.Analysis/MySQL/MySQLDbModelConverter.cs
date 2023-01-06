@@ -8,6 +8,8 @@ internal class MySQLDbModelConverter : DbModelConverter<
     MySQLDatabase,
     MySQLTable,
     MySQLView,
+    MySQLIndex,
+    MySQLTrigger,
     Column>
 {
     public MySQLDbModelConverter() : base(

@@ -1,35 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using DotNetDBTools.Deploy.Core;
+﻿using DotNetDBTools.Deploy.Core.Queries;
+using DotNetDBTools.Generation;
 using DotNetDBTools.Models.Core;
-using DotNetDBTools.Models.PostgreSQL.UserDefinedTypes;
 
 namespace DotNetDBTools.Deploy.PostgreSQL.Queries.DDL;
 
-internal class PostgreSQLDropTypeQuery : IQuery
+internal class PostgreSQLDropTypeQuery : NoParametersQuery
 {
-    public string Sql => _sql;
-    public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
-
+    public override string Sql => _sql;
     private readonly string _sql;
 
     public PostgreSQLDropTypeQuery(DbObject type)
     {
-        _sql = GetSql(type);
-    }
-
-    private static string GetSql(DbObject type)
-    {
-        switch (type)
-        {
-            case PostgreSQLDomainType:
-                return $@"DROP DOMAIN ""{type.Name}"";";
-            case PostgreSQLCompositeType:
-            case PostgreSQLEnumType:
-            case PostgreSQLRangeType:
-                return $@"DROP TYPE ""{type.Name}"";";
-            default:
-                throw new InvalidOperationException($"Invalid user defined type csharp-type: '{type.GetType()}'");
-        }
+        _sql = GenerationManager.GenerateSqlDropStatement(type);
     }
 }

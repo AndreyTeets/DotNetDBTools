@@ -143,7 +143,8 @@ create_table_stmt:
 ;
 
 column_def:
-    dndbt_id=DNDBT_ID_DECLARATION_COMMENT? column_name type_name? column_constraint*
+    (dndbt_id=DNDBT_ID_DECLARATION_COMMENT dndbt_pkid=DNDBT_PKID_DECLARATION_COMMENT?)?
+    column_name type_name? column_constraint*
 ;
 
 type_name:

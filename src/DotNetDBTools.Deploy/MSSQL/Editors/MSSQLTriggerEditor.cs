@@ -1,15 +1,12 @@
-﻿using DotNetDBTools.Deploy.Common.Editors;
-using DotNetDBTools.Deploy.Core;
-using DotNetDBTools.Deploy.MSSQL.Queries.DDL;
+﻿using DotNetDBTools.Deploy.Core;
+using DotNetDBTools.Deploy.Core.Editors;
 using DotNetDBTools.Deploy.MSSQL.Queries.DNDBTSysInfo;
 
 namespace DotNetDBTools.Deploy.MSSQL.Editors;
 
 internal class MSSQLTriggerEditor : TriggerEditor<
     MSSQLInsertDNDBTDbObjectRecordQuery,
-    MSSQLDeleteDNDBTDbObjectRecordQuery,
-    MSSQLCreateTriggerQuery,
-    MSSQLDropTriggerQuery>
+    MSSQLDeleteDNDBTDbObjectRecordQuery>
 {
     public MSSQLTriggerEditor(IQueryExecutor queryExecutor)
         : base(queryExecutor) { }

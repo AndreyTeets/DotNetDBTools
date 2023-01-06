@@ -240,12 +240,13 @@ Values [DotNetDBTools.Models.Core.PrimaryKey] and [DotNetDBTools.Models.Core.Pri
                     CodePiece = new CodePiece { Code = "CHECK (C2 >= 0)" },
                 }
             },
-            Indexes = new List<Models.Core.Index>()
+            Indexes = new List<DotNetDBTools.Models.Core.Index>()
             {
-                new Models.Core.Index()
+                new AgnosticIndex()
                 {
                     ID = new Guid("65C65B34-E769-4826-8F06-B8E83BF7D06A"),
                     Name = "IDX_T1_1",
+                    TableName = "T1",
                     Columns = new List<string>() { "C1" },
                     IncludeColumns = new List<string>(),
                     Unique = true,
@@ -258,6 +259,7 @@ Values [DotNetDBTools.Models.Core.PrimaryKey] and [DotNetDBTools.Models.Core.Pri
                 {
                     ID = new Guid("D23109D4-CB94-40B2-BDB2-BC6292F4A5FA"),
                     Name = "FK_T1_1",
+                    ThisTableName = "T1",
                     ThisColumnNames = new List<string>() { "C1", "C2" },
                     ReferencedTableName = "T2",
                     ReferencedTableColumnNames = new List<string>() { "C1", "C2" },

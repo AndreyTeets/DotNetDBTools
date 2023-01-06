@@ -1,5 +1,6 @@
 ﻿using DotNetDBTools.Deploy.Core.Queries.DDL;
 using DotNetDBTools.Deploy.Core.Queries.DNDBTSysInfo;
+using DotNetDBTools.Generation.Core;
 using DotNetDBTools.Models.Core;
 using static DotNetDBTools.Deploy.Core.InstanceCreator;
 
@@ -10,14 +11,12 @@ internal abstract class TableEditor<
     TDeleteDNDBTDbObjectRecordQuery,
     TUpdateDNDBTDbObjectRecordQuery,
     TCreateTableQuery,
-    TDropTableQuery,
     TAlterTableQuery>
     : ITableEditor
     where TInsertDNDBTDbObjectRecordQuery : InsertDNDBTDbObjectRecordQuery
     where TDeleteDNDBTDbObjectRecordQuery : DeleteDNDBTDbObjectRecordQuery
     where TUpdateDNDBTDbObjectRecordQuery : UpdateDNDBTDbObjectRecordQuery
     where TCreateTableQuery : CreateTableQuery
-    where TDropTableQuery : DropTableQuery
     where TAlterTableQuery : AlterTableQuery
 {
     protected readonly IQueryExecutor QueryExecutor;
@@ -62,7 +61,7 @@ internal abstract class TableEditor<
 
     protected virtual void DropTable(Table table)
     {
-        QueryExecutor.Execute(Create<TDropTableQuery>(table));
+        QueryExecutor.Execute(new DropTableQuery(table));
         foreach (CheckConstraint ck in table.CheckConstraints)
             QueryExecutor.Execute(Create<TDeleteDNDBTDbObjectRecordQuery>(ck.ID));
         foreach (UniqueConstraint uc in table.UniqueConstraints)

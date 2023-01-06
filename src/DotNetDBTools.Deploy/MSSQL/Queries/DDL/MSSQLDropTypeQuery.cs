@@ -1,26 +1,16 @@
-﻿using System.Collections.Generic;
-using DotNetDBTools.Deploy.Core;
+﻿using DotNetDBTools.Deploy.Core.Queries;
+using DotNetDBTools.Generation;
 using DotNetDBTools.Models.MSSQL.UserDefinedTypes;
 
 namespace DotNetDBTools.Deploy.MSSQL.Queries.DDL;
 
-internal class MSSQLDropTypeQuery : IQuery
+internal class MSSQLDropTypeQuery : NoParametersQuery
 {
-    public string Sql => _sql;
-    public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
-
+    public override string Sql => _sql;
     private readonly string _sql;
 
-    public MSSQLDropTypeQuery(MSSQLUserDefinedType userDefinedType)
+    public MSSQLDropTypeQuery(MSSQLUserDefinedType type)
     {
-        _sql = GetSql(userDefinedType);
-    }
-
-    private static string GetSql(MSSQLUserDefinedType userDefinedType)
-    {
-        string query =
-$@"DROP TYPE [{userDefinedType.Name}];";
-
-        return query;
+        _sql = GenerationManager.GenerateSqlDropStatement(type);
     }
 }

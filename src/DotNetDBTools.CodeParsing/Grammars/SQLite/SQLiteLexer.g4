@@ -231,6 +231,7 @@ STRING_LITERAL: '\'' ( ~'\'' | '\'\'')* '\'';
 BLOB_LITERAL: X STRING_LITERAL;
 
 DNDBT_ID_DECLARATION_COMMENT: '--ID:#{' ~[\r\n]* '}#' (('\r'? '\n') | EOF);
+DNDBT_PKID_DECLARATION_COMMENT: '--PKID:#{' ~[\r\n]* '}#' (('\r'? '\n') | EOF);
 SINGLE_LINE_COMMENT: '--' ~[\r\n]* (('\r'? '\n') | EOF) -> channel(HIDDEN);
 
 MULTILINE_COMMENT: '/*' .*? '*/' -> channel(HIDDEN);

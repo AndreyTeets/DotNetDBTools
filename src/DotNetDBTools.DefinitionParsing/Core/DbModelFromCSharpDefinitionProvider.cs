@@ -12,11 +12,15 @@ internal abstract class DbModelFromCSharpDefinitionProvider<
     TDatabase,
     TTable,
     TView,
+    TIndex,
+    TTrigger,
     TColumn>
     : IDbModelFromDefinitionProvider
     where TDatabase : Database, new()
     where TTable : Table, new()
     where TView : View, new()
+    where TIndex : Index, new()
+    where TTrigger : Trigger, new()
     where TColumn : Column, new()
 {
     protected readonly IDataTypeMapper DataTypeMapper;
@@ -217,19 +221,20 @@ internal abstract class DbModelFromCSharpDefinitionProvider<
                 {
                     ID = fk.DNDBT_OBJECT_ID,
                     Name = x.Name,
+                    ThisTableName = table.GetType().Name,
                     ThisColumnNames = fk.ThisColumns.ToList(),
                     ReferencedTableName = fk.ReferencedTable,
                     ReferencedTableColumnNames = fk.ReferencedTableColumns.ToList(),
                     OnUpdate = GetOnUpdateActionName(fk),
                     OnDelete = GetOnDeleteActionName(fk),
                 };
-                BuildAdditionalForeignKeyModelProperties(fkModel, fk, table.GetType().Name);
+                BuildAdditionalForeignKeyModelProperties(fkModel, fk);
                 return fkModel;
             })
             .ToList();
     }
 
-    protected virtual void BuildAdditionalForeignKeyModelProperties(ForeignKey fkModel, BaseForeignKey fk, string tableName) { }
+    protected virtual void BuildAdditionalForeignKeyModelProperties(ForeignKey fkModel, BaseForeignKey fk) { }
     protected abstract string GetOnUpdateActionName(BaseForeignKey fk);
     protected abstract string GetOnDeleteActionName(BaseForeignKey fk);
     protected string MapFKActionNameFromDefinitionToModel(string fkDefinitionActionName)
@@ -253,19 +258,20 @@ internal abstract class DbModelFromCSharpDefinitionProvider<
             .Select(x =>
             {
                 BaseIndex index = (BaseIndex)x.GetPropertyOrFieldValue(table);
-                Index indexModel = new()
+                TIndex indexModel = new()
                 {
                     ID = index.DNDBT_OBJECT_ID,
                     Name = x.Name,
+                    TableName = table.GetType().Name,
                     Columns = index.Columns.ToList(),
                     Unique = index.Unique,
                 };
-                BuildAdditionalIndexModelProperties(indexModel, index, table.GetType().Name);
-                return indexModel;
+                BuildAdditionalIndexModelProperties(indexModel, index);
+                return (Index)indexModel;
             })
             .ToList();
     }
-    protected virtual void BuildAdditionalIndexModelProperties(Index indexModel, BaseIndex index, string tableName) { }
+    protected virtual void BuildAdditionalIndexModelProperties(Index indexModel, BaseIndex index) { }
 
     private List<Trigger> BuildTriggerModels(IBaseTable table)
     {
@@ -275,18 +281,19 @@ internal abstract class DbModelFromCSharpDefinitionProvider<
             .Select(x =>
             {
                 BaseTrigger trigger = (BaseTrigger)x.GetPropertyOrFieldValue(table);
-                Trigger triggerModel = new()
+                TTrigger triggerModel = new()
                 {
                     ID = trigger.DNDBT_OBJECT_ID,
                     Name = x.Name,
+                    TableName = table.GetType().Name,
                     CodePiece = DbObjectCodeMapper.MapToCodePiece(trigger),
                 };
-                BuildAdditionalTriggerModelProperties(triggerModel, trigger, table.GetType().Name);
-                return triggerModel;
+                BuildAdditionalTriggerModelProperties(triggerModel, trigger);
+                return (Trigger)triggerModel;
             })
             .ToList();
     }
-    protected virtual void BuildAdditionalTriggerModelProperties(Trigger triggerModel, BaseTrigger trigger, string tableName) { }
+    protected virtual void BuildAdditionalTriggerModelProperties(Trigger triggerModel, BaseTrigger trigger) { }
 
     protected static IEnumerable<TInterface> GetInstancesOfAllTypesImplementingInterface<TInterface>(Assembly dbAssembly)
     {

@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
-using DotNetDBTools.Deploy.Core;
+﻿using DotNetDBTools.Deploy.Core.Queries;
 using QH = DotNetDBTools.Deploy.PostgreSQL.PostgreSQLQueriesHelper;
 
 namespace DotNetDBTools.Deploy.PostgreSQL.Queries.DBMSSysInfo;
 
-internal class PostgreSQLGetRangeTypesFromDBMSSysInfoQuery : IQuery
+internal class PostgreSQLGetRangeTypesFromDBMSSysInfoQuery : NoParametersQuery
 {
-    public string Sql =>
+    public override string Sql =>
 $@"SELECT
     t.typname AS ""{nameof(RangeTypeRecord.TypeName)}"",
     rst.typname AS ""{nameof(RangeTypeRecord.SubtypeName)}"",
@@ -29,8 +28,6 @@ LEFT JOIN pg_catalog.pg_collation cl
     ON cl.oid = r.rngcollation
 WHERE t.typtype = 'r'
     AND n.nspname NOT IN ('information_schema', 'pg_catalog');";
-
-    public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
 
     private readonly int _dbmsVersion;
 

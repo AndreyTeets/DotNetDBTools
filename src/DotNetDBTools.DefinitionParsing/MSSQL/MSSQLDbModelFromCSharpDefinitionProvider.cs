@@ -17,6 +17,8 @@ internal class MSSQLDbModelFromCSharpDefinitionProvider : DbModelFromCSharpDefin
     MSSQLDatabase,
     MSSQLTable,
     MSSQLView,
+    MSSQLIndex,
+    MSSQLTrigger,
     MSSQLColumn>
 {
     public MSSQLDbModelFromCSharpDefinitionProvider() : base(
@@ -44,7 +46,7 @@ internal class MSSQLDbModelFromCSharpDefinitionProvider : DbModelFromCSharpDefin
     }
 
     protected override void BuildAdditionalIndexModelProperties(
-        Models.Core.Index indexModel, BaseIndex index, string tableName)
+        Models.Core.Index indexModel, BaseIndex index)
     {
         indexModel.IncludeColumns = ((Definition.MSSQL.Index)index).IncludeColumns?.ToList() ?? new List<string>();
     }

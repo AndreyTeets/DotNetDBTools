@@ -1,6 +1,7 @@
 ﻿using System;
 using DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo;
 using DotNetDBTools.Models.Core;
+using DotNetDBTools.Models.MySQL;
 
 namespace DotNetDBTools.Deploy.MySQL.Queries.DBMSSysInfo;
 
@@ -24,10 +25,11 @@ WHERE t.TRIGGER_SCHEMA = (select DATABASE());";
     {
         public override Trigger MapToTriggerModel(TriggerRecord triggerRecord)
         {
-            return new()
+            return new MySQLTrigger()
             {
                 ID = Guid.NewGuid(),
                 Name = triggerRecord.TriggerName,
+                TableName = triggerRecord.TableName,
                 CodePiece = new CodePiece { Code = triggerRecord.TriggerCode },
             };
         }

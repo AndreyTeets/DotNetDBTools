@@ -10,6 +10,8 @@ internal class SQLiteDbModelFromSqlDefinitionProvider : DbModelFromSqlDefinition
     SQLiteDatabase,
     SQLiteTable,
     SQLiteView,
+    SQLiteIndex,
+    SQLiteTrigger,
     Column>
 {
     public SQLiteDbModelFromSqlDefinitionProvider() : base(

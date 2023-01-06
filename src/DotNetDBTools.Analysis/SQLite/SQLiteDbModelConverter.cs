@@ -8,6 +8,8 @@ internal class SQLiteDbModelConverter : DbModelConverter<
     SQLiteDatabase,
     SQLiteTable,
     SQLiteView,
+    SQLiteIndex,
+    SQLiteTrigger,
     Column>
 {
     public SQLiteDbModelConverter() : base(

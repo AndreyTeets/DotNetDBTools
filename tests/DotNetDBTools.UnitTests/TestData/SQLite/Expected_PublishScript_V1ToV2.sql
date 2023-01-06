@@ -14,7 +14,7 @@ INSERT INTO [_MyTable2] ([MyColumn1], [MyColumn2])
 SELECT [MyColumn1], [MyColumn2] FROM [MyTable2];
 -- QUERY END: GenericQuery
 
--- QUERY START: SQLiteInsertDNDBTScriptExecutionRecordQuery
+-- QUERY START: InsertDNDBTScriptExecutionRecordQuery
 INSERT INTO [DNDBTScriptExecutions]
 (
     [ID],
@@ -44,50 +44,77 @@ SELECT [MyColumn1], [MyColumn2] FROM [MyTable2]',
     1,
     1
 );
--- QUERY END: SQLiteInsertDNDBTScriptExecutionRecordQuery
+-- QUERY END: InsertDNDBTScriptExecutionRecordQuery
 
--- QUERY START: GenericQuery
+-- QUERY START: DropTriggerQuery
+DROP TRIGGER [TR_MyTable2_MyTrigger1];
+-- QUERY END: DropTriggerQuery
+
+-- QUERY START: DeleteDNDBTDbObjectRecordQuery
+DELETE FROM [DNDBTDbObjects]
+WHERE [ID] = 'ee64ffc3-5536-4624-beaf-bc3a61d06a1a';
+-- QUERY END: DeleteDNDBTDbObjectRecordQuery
+
+-- QUERY START: DropViewQuery
 DROP VIEW [MyView1];
--- QUERY END: GenericQuery
+-- QUERY END: DropViewQuery
 
--- QUERY START: SQLiteDeleteDNDBTDbObjectRecordQuery
+-- QUERY START: DeleteDNDBTDbObjectRecordQuery
 DELETE FROM [DNDBTDbObjects]
 WHERE [ID] = 'e2569aae-d5da-4a77-b3cd-51adbdb272d9';
--- QUERY END: SQLiteDeleteDNDBTDbObjectRecordQuery
+-- QUERY END: DeleteDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteDropTableQuery
+-- QUERY START: DropIndexQuery
+DROP INDEX [IDX_MyTable2_MyIndex1];
+-- QUERY END: DropIndexQuery
+
+-- QUERY START: DeleteDNDBTDbObjectRecordQuery
+DELETE FROM [DNDBTDbObjects]
+WHERE [ID] = '74390b3c-bc39-4860-a42e-12baa400f927';
+-- QUERY END: DeleteDNDBTDbObjectRecordQuery
+
+-- QUERY START: DropIndexQuery
+DROP INDEX [IDX_MyTable5_CustomName];
+-- QUERY END: DropIndexQuery
+
+-- QUERY START: DeleteDNDBTDbObjectRecordQuery
+DELETE FROM [DNDBTDbObjects]
+WHERE [ID] = '1d632285-9914-4c5d-98e6-a618a99bd799';
+-- QUERY END: DeleteDNDBTDbObjectRecordQuery
+
+-- QUERY START: DropTableQuery
 DROP TABLE [MyTable6];
--- QUERY END: SQLiteDropTableQuery
+-- QUERY END: DropTableQuery
 
--- QUERY START: SQLiteDeleteDNDBTDbObjectRecordQuery
+-- QUERY START: DeleteDNDBTDbObjectRecordQuery
 DELETE FROM [DNDBTDbObjects]
 WHERE [ID] = 'bfa08c82-5c8f-4ab4-bd41-1f1d85cf3c85';
--- QUERY END: SQLiteDeleteDNDBTDbObjectRecordQuery
+-- QUERY END: DeleteDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteDeleteDNDBTDbObjectRecordQuery
+-- QUERY START: DeleteDNDBTDbObjectRecordQuery
 DELETE FROM [DNDBTDbObjects]
 WHERE [ID] = 'a402e2b7-c826-4cfd-a304-97c9bc346ba2';
--- QUERY END: SQLiteDeleteDNDBTDbObjectRecordQuery
+-- QUERY END: DeleteDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteDeleteDNDBTDbObjectRecordQuery
+-- QUERY START: DeleteDNDBTDbObjectRecordQuery
 DELETE FROM [DNDBTDbObjects]
 WHERE [ID] = 'f3064a8c-346a-4b3d-af2c-d967b39841e4';
--- QUERY END: SQLiteDeleteDNDBTDbObjectRecordQuery
+-- QUERY END: DeleteDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteDeleteDNDBTDbObjectRecordQuery
+-- QUERY START: DeleteDNDBTDbObjectRecordQuery
 DELETE FROM [DNDBTDbObjects]
 WHERE [ID] = 'ae453b22-d270-41fc-8184-9ac26b7a0569';
--- QUERY END: SQLiteDeleteDNDBTDbObjectRecordQuery
+-- QUERY END: DeleteDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteAlterTableQuery
+-- QUERY START: AlterTableQuery
 CREATE TABLE [_DNDBTTemp_MyTable1NewName]
 (
     [MyColumn1] INTEGER NULL DEFAULT 15,
     [MyColumn4] NUMERIC NOT NULL,
+    CONSTRAINT [CK_MyTable1_MyCheck1] CHECK (MyColumn4 >= 1),
     CONSTRAINT [FK_MyTable1_MyColumn1_MyTable2_MyColumn1] FOREIGN KEY ([MyColumn1])
         REFERENCES [MyTable2]([MyColumn1NewName])
-        ON UPDATE NO ACTION ON DELETE SET NULL,
-    CONSTRAINT [CK_MyTable1_MyCheck1] CHECK (MyColumn4 >= 1)
+        ON UPDATE NO ACTION ON DELETE SET NULL
 );
 
 INSERT INTO [_DNDBTTemp_MyTable1NewName]
@@ -103,55 +130,55 @@ FROM [MyTable1];
 DROP TABLE [MyTable1];
 
 ALTER TABLE [_DNDBTTemp_MyTable1NewName] RENAME TO [MyTable1NewName];
--- QUERY END: SQLiteAlterTableQuery
+-- QUERY END: AlterTableQuery
 
--- QUERY START: SQLiteDeleteDNDBTDbObjectRecordQuery
+-- QUERY START: DeleteDNDBTDbObjectRecordQuery
 DELETE FROM [DNDBTDbObjects]
 WHERE [ID] = 'eb9c59b5-bc7e-49d7-adaa-f5600b6a19a2';
--- QUERY END: SQLiteDeleteDNDBTDbObjectRecordQuery
+-- QUERY END: DeleteDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteDeleteDNDBTDbObjectRecordQuery
+-- QUERY START: DeleteDNDBTDbObjectRecordQuery
 DELETE FROM [DNDBTDbObjects]
 WHERE [ID] = 'f3f08522-26ee-4950-9135-22edf2e4e0cf';
--- QUERY END: SQLiteDeleteDNDBTDbObjectRecordQuery
+-- QUERY END: DeleteDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteDeleteDNDBTDbObjectRecordQuery
+-- QUERY START: DeleteDNDBTDbObjectRecordQuery
 DELETE FROM [DNDBTDbObjects]
 WHERE [ID] = '37a45def-f4a0-4be7-8bfb-8fbed4a7d705';
--- QUERY END: SQLiteDeleteDNDBTDbObjectRecordQuery
+-- QUERY END: DeleteDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteDeleteDNDBTDbObjectRecordQuery
+-- QUERY START: DeleteDNDBTDbObjectRecordQuery
 DELETE FROM [DNDBTDbObjects]
 WHERE [ID] = 'fe68ee3d-09d0-40ac-93f9-5e441fbb4f70';
--- QUERY END: SQLiteDeleteDNDBTDbObjectRecordQuery
+-- QUERY END: DeleteDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteDeleteDNDBTDbObjectRecordQuery
+-- QUERY START: DeleteDNDBTDbObjectRecordQuery
 DELETE FROM [DNDBTDbObjects]
 WHERE [ID] = '6e95de30-e01a-4fb4-b8b7-8f0c40bb682c';
--- QUERY END: SQLiteDeleteDNDBTDbObjectRecordQuery
+-- QUERY END: DeleteDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteUpdateDNDBTDbObjectRecordQuery
+-- QUERY START: UpdateDNDBTDbObjectRecordQuery
 UPDATE [DNDBTDbObjects] SET
     [Name] = 'MyTable1NewName',
     [Code] = NULL
 WHERE [ID] = '299675e6-4faa-4d0f-a36a-224306ba5bcb';
--- QUERY END: SQLiteUpdateDNDBTDbObjectRecordQuery
+-- QUERY END: UpdateDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteUpdateDNDBTDbObjectRecordQuery
+-- QUERY START: UpdateDNDBTDbObjectRecordQuery
 UPDATE [DNDBTDbObjects] SET
     [Name] = 'MyColumn1',
     [Code] = '15'
 WHERE [ID] = 'a2f2a4de-1337-4594-ae41-72ed4d05f317';
--- QUERY END: SQLiteUpdateDNDBTDbObjectRecordQuery
+-- QUERY END: UpdateDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteUpdateDNDBTDbObjectRecordQuery
+-- QUERY START: UpdateDNDBTDbObjectRecordQuery
 UPDATE [DNDBTDbObjects] SET
     [Name] = 'MyColumn4',
     [Code] = NULL
 WHERE [ID] = '867ac528-e87e-4c93-b6e3-dd2fcbbb837f';
--- QUERY END: SQLiteUpdateDNDBTDbObjectRecordQuery
+-- QUERY END: UpdateDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
 INSERT INTO [DNDBTDbObjects]
 (
     [ID],
@@ -168,14 +195,14 @@ VALUES
     'CK_MyTable1_MyCheck1',
     'CHECK (MyColumn4 >= 1)'
 );
--- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteDeleteDNDBTDbObjectRecordQuery
+-- QUERY START: DeleteDNDBTDbObjectRecordQuery
 DELETE FROM [DNDBTDbObjects]
 WHERE [ID] = 'd11b2a53-32db-432f-bb6b-f91788844ba9';
--- QUERY END: SQLiteDeleteDNDBTDbObjectRecordQuery
+-- QUERY END: DeleteDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
 INSERT INTO [DNDBTDbObjects]
 (
     [ID],
@@ -192,13 +219,9 @@ VALUES
     'FK_MyTable1_MyColumn1_MyTable2_MyColumn1',
     NULL
 );
--- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteAlterTableQuery
-DROP INDEX [IDX_MyTable2_MyIndex1];
-
-DROP TRIGGER [TR_MyTable2_MyTrigger1];
-
+-- QUERY START: AlterTableQuery
 CREATE TABLE [_DNDBTTemp_MyTable2]
 (
     [MyColumn1NewName] INTEGER PRIMARY KEY NOT NULL DEFAULT 333,
@@ -221,45 +244,33 @@ FROM [MyTable2];
 DROP TABLE [MyTable2];
 
 ALTER TABLE [_DNDBTTemp_MyTable2] RENAME TO [MyTable2];
+-- QUERY END: AlterTableQuery
 
-CREATE TRIGGER [TR_MyTable2_MyTrigger1]
-AFTER INSERT
-ON [MyTable2]
-FOR EACH ROW
-BEGIN
-    INSERT INTO [MyTable4]([MyColumn1])
-    VALUES(NEW.[MyColumn1NewName]);
-END;
-
-CREATE UNIQUE INDEX [IDX_MyTable2_MyIndex1]
-ON [MyTable2] ([MyColumn1NewName], [MyColumn2]);
--- QUERY END: SQLiteAlterTableQuery
-
--- QUERY START: SQLiteDeleteDNDBTDbObjectRecordQuery
+-- QUERY START: DeleteDNDBTDbObjectRecordQuery
 DELETE FROM [DNDBTDbObjects]
 WHERE [ID] = '3a43615b-40b3-4a13-99e7-93af7c56e8ce';
--- QUERY END: SQLiteDeleteDNDBTDbObjectRecordQuery
+-- QUERY END: DeleteDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteDeleteDNDBTDbObjectRecordQuery
+-- QUERY START: DeleteDNDBTDbObjectRecordQuery
 DELETE FROM [DNDBTDbObjects]
 WHERE [ID] = '5a0d1926-3270-4eb2-92eb-00be56c7af23';
--- QUERY END: SQLiteDeleteDNDBTDbObjectRecordQuery
+-- QUERY END: DeleteDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteUpdateDNDBTDbObjectRecordQuery
+-- QUERY START: UpdateDNDBTDbObjectRecordQuery
 UPDATE [DNDBTDbObjects] SET
     [Name] = 'MyTable2',
     [Code] = NULL
 WHERE [ID] = 'bfb9030c-a8c3-4882-9c42-1c6ad025cf8f';
--- QUERY END: SQLiteUpdateDNDBTDbObjectRecordQuery
+-- QUERY END: UpdateDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteUpdateDNDBTDbObjectRecordQuery
+-- QUERY START: UpdateDNDBTDbObjectRecordQuery
 UPDATE [DNDBTDbObjects] SET
     [Name] = 'MyColumn1NewName',
     [Code] = '333'
 WHERE [ID] = 'c480f22f-7c01-4f41-b282-35e9f5cd1fe3';
--- QUERY END: SQLiteUpdateDNDBTDbObjectRecordQuery
+-- QUERY END: UpdateDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
 INSERT INTO [DNDBTDbObjects]
 (
     [ID],
@@ -276,9 +287,9 @@ VALUES
     'MyColumn2',
     'X''000408'''
 );
--- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
 INSERT INTO [DNDBTDbObjects]
 (
     [ID],
@@ -295,9 +306,9 @@ VALUES
     'MyColumn3',
     NULL
 );
--- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
 INSERT INTO [DNDBTDbObjects]
 (
     [ID],
@@ -314,9 +325,9 @@ VALUES
     'MyColumn4',
     NULL
 );
--- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
 INSERT INTO [DNDBTDbObjects]
 (
     [ID],
@@ -333,19 +344,9 @@ VALUES
     'PK_MyTable2',
     NULL
 );
--- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteDeleteDNDBTDbObjectRecordQuery
-DELETE FROM [DNDBTDbObjects]
-WHERE [ID] = '74390b3c-bc39-4860-a42e-12baa400f927';
--- QUERY END: SQLiteDeleteDNDBTDbObjectRecordQuery
-
--- QUERY START: SQLiteDeleteDNDBTDbObjectRecordQuery
-DELETE FROM [DNDBTDbObjects]
-WHERE [ID] = 'ee64ffc3-5536-4624-beaf-bc3a61d06a1a';
--- QUERY END: SQLiteDeleteDNDBTDbObjectRecordQuery
-
--- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
 INSERT INTO [DNDBTDbObjects]
 (
     [ID],
@@ -362,56 +363,9 @@ VALUES
     'FK_MyTable2_MyColumns34_MyTable3_MyColumns12',
     NULL
 );
--- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
-INSERT INTO [DNDBTDbObjects]
-(
-    [ID],
-    [ParentID],
-    [Type],
-    [Name],
-    [Code]
-)
-VALUES
-(
-    'ee64ffc3-5536-4624-beaf-bc3a61d06a1a',
-    'bfb9030c-a8c3-4882-9c42-1c6ad025cf8f',
-    'Trigger',
-    'TR_MyTable2_MyTrigger1',
-    'CREATE TRIGGER [TR_MyTable2_MyTrigger1]
-AFTER INSERT
-ON [MyTable2]
-FOR EACH ROW
-BEGIN
-    INSERT INTO [MyTable4]([MyColumn1])
-    VALUES(NEW.[MyColumn1NewName]);
-END'
-);
--- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
-
--- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
-INSERT INTO [DNDBTDbObjects]
-(
-    [ID],
-    [ParentID],
-    [Type],
-    [Name],
-    [Code]
-)
-VALUES
-(
-    '74390b3c-bc39-4860-a42e-12baa400f927',
-    'bfb9030c-a8c3-4882-9c42-1c6ad025cf8f',
-    'Index',
-    'IDX_MyTable2_MyIndex1',
-    NULL
-);
--- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
-
--- QUERY START: SQLiteAlterTableQuery
-DROP INDEX [IDX_MyTable5_CustomName];
-
+-- QUERY START: AlterTableQuery
 CREATE TABLE [_DNDBTTemp_MyTable5]
 (
     [MyColumn1] INTEGER NOT NULL DEFAULT (ABS(-15)),
@@ -461,40 +415,35 @@ FROM [MyTable5];
 DROP TABLE [MyTable5];
 
 ALTER TABLE [_DNDBTTemp_MyTable5] RENAME TO [MyTable5];
--- QUERY END: SQLiteAlterTableQuery
+-- QUERY END: AlterTableQuery
 
--- QUERY START: SQLiteDeleteDNDBTDbObjectRecordQuery
+-- QUERY START: DeleteDNDBTDbObjectRecordQuery
 DELETE FROM [DNDBTDbObjects]
 WHERE [ID] = '5293b58a-9f63-4f0f-8d6f-18416ebbd751';
--- QUERY END: SQLiteDeleteDNDBTDbObjectRecordQuery
+-- QUERY END: DeleteDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteDeleteDNDBTDbObjectRecordQuery
+-- QUERY START: DeleteDNDBTDbObjectRecordQuery
 DELETE FROM [DNDBTDbObjects]
 WHERE [ID] = '79384d48-a39b-4a22-900e-066b2ca67ba2';
--- QUERY END: SQLiteDeleteDNDBTDbObjectRecordQuery
+-- QUERY END: DeleteDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteUpdateDNDBTDbObjectRecordQuery
+-- QUERY START: UpdateDNDBTDbObjectRecordQuery
 UPDATE [DNDBTDbObjects] SET
     [Name] = 'MyTable5',
     [Code] = NULL
 WHERE [ID] = '6ca51f29-c1bc-4349-b9c1-6f1ea170f162';
--- QUERY END: SQLiteUpdateDNDBTDbObjectRecordQuery
+-- QUERY END: UpdateDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteDeleteDNDBTDbObjectRecordQuery
-DELETE FROM [DNDBTDbObjects]
-WHERE [ID] = '1d632285-9914-4c5d-98e6-a618a99bd799';
--- QUERY END: SQLiteDeleteDNDBTDbObjectRecordQuery
-
--- QUERY START: SQLiteCreateTableQuery
+-- QUERY START: CreateTableQuery
 CREATE TABLE [MyTable3]
 (
     [MyColumn1] INTEGER NOT NULL DEFAULT 444,
     [MyColumn2] BLOB NOT NULL,
     CONSTRAINT [UQ_MyTable3_MyColumns12] UNIQUE ([MyColumn1], [MyColumn2])
 );
--- QUERY END: SQLiteCreateTableQuery
+-- QUERY END: CreateTableQuery
 
--- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
 INSERT INTO [DNDBTDbObjects]
 (
     [ID],
@@ -511,9 +460,9 @@ VALUES
     'MyTable3',
     NULL
 );
--- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
 INSERT INTO [DNDBTDbObjects]
 (
     [ID],
@@ -530,9 +479,9 @@ VALUES
     'MyColumn1',
     '444'
 );
--- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
 INSERT INTO [DNDBTDbObjects]
 (
     [ID],
@@ -549,9 +498,9 @@ VALUES
     'MyColumn2',
     NULL
 );
--- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
 INSERT INTO [DNDBTDbObjects]
 (
     [ID],
@@ -568,9 +517,33 @@ VALUES
     'UQ_MyTable3_MyColumns12',
     NULL
 );
--- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
 
--- QUERY START: GenericQuery
+-- QUERY START: CreateIndexQuery
+CREATE UNIQUE INDEX [IDX_MyTable2_MyIndex1]
+    ON [MyTable2] ([MyColumn1NewName], [MyColumn2]);
+-- QUERY END: CreateIndexQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+INSERT INTO [DNDBTDbObjects]
+(
+    [ID],
+    [ParentID],
+    [Type],
+    [Name],
+    [Code]
+)
+VALUES
+(
+    '74390b3c-bc39-4860-a42e-12baa400f927',
+    'bfb9030c-a8c3-4882-9c42-1c6ad025cf8f',
+    'Index',
+    'IDX_MyTable2_MyIndex1',
+    NULL
+);
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: CreateViewQuery
 CREATE VIEW MyView1 AS
 SELECT
     t1.MyColumn1,
@@ -579,9 +552,9 @@ SELECT
 FROM MyTable1NewName t1
 LEFT JOIN MyTable2 t2
     ON t2.MyColumn1NewName = t1.MyColumn1;
--- QUERY END: GenericQuery
+-- QUERY END: CreateViewQuery
 
--- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
 INSERT INTO [DNDBTDbObjects]
 (
     [ID],
@@ -605,7 +578,44 @@ FROM MyTable1NewName t1
 LEFT JOIN MyTable2 t2
     ON t2.MyColumn1NewName = t1.MyColumn1'
 );
--- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: CreateTriggerQuery
+CREATE TRIGGER [TR_MyTable2_MyTrigger1]
+AFTER INSERT
+ON [MyTable2]
+FOR EACH ROW
+BEGIN
+    INSERT INTO [MyTable4]([MyColumn1])
+    VALUES(NEW.[MyColumn1NewName]);
+END;
+-- QUERY END: CreateTriggerQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+INSERT INTO [DNDBTDbObjects]
+(
+    [ID],
+    [ParentID],
+    [Type],
+    [Name],
+    [Code]
+)
+VALUES
+(
+    'ee64ffc3-5536-4624-beaf-bc3a61d06a1a',
+    'bfb9030c-a8c3-4882-9c42-1c6ad025cf8f',
+    'Trigger',
+    'TR_MyTable2_MyTrigger1',
+    'CREATE TRIGGER [TR_MyTable2_MyTrigger1]
+AFTER INSERT
+ON [MyTable2]
+FOR EACH ROW
+BEGIN
+    INSERT INTO [MyTable4]([MyColumn1])
+    VALUES(NEW.[MyColumn1NewName]);
+END'
+);
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
 
 -- QUERY START: GenericQuery
 CREATE TABLE IF NOT EXISTS [_MyTable2]
@@ -620,7 +630,7 @@ UPDATE [MyTable2] SET
 DROP TABLE [_MyTable2];
 -- QUERY END: GenericQuery
 
--- QUERY START: SQLiteInsertDNDBTScriptExecutionRecordQuery
+-- QUERY START: InsertDNDBTScriptExecutionRecordQuery
 INSERT INTO [DNDBTScriptExecutions]
 (
     [ID],
@@ -650,11 +660,11 @@ DROP TABLE [_MyTable2]',
     1,
     1
 );
--- QUERY END: SQLiteInsertDNDBTScriptExecutionRecordQuery
+-- QUERY END: InsertDNDBTScriptExecutionRecordQuery
 
--- QUERY START: SQLiteUpdateDNDBTDbAttributesRecordQuery
+-- QUERY START: UpdateDNDBTDbAttributesRecordQuery
 UPDATE [DNDBTDbAttributes] SET
     [Version] = 2;
--- QUERY END: SQLiteUpdateDNDBTDbAttributesRecordQuery
+-- QUERY END: UpdateDNDBTDbAttributesRecordQuery
 
 COMMIT TRANSACTION;

@@ -1,15 +1,23 @@
 PRAGMA foreign_keys=off;
 BEGIN TRANSACTION;
 
--- QUERY START: GenericQuery
+-- QUERY START: DropTriggerQuery
+DROP TRIGGER [TR_MyTable2_MyTrigger1];
+-- QUERY END: DropTriggerQuery
+
+-- QUERY START: DropViewQuery
 DROP VIEW [MyView1];
--- QUERY END: GenericQuery
+-- QUERY END: DropViewQuery
 
--- QUERY START: SQLiteDropTableQuery
+-- QUERY START: DropIndexQuery
+DROP INDEX [IDX_MyTable2_MyIndex1];
+-- QUERY END: DropIndexQuery
+
+-- QUERY START: DropTableQuery
 DROP TABLE [MyTable3];
--- QUERY END: SQLiteDropTableQuery
+-- QUERY END: DropTableQuery
 
--- QUERY START: SQLiteAlterTableQuery
+-- QUERY START: AlterTableQuery
 CREATE TABLE [_DNDBTTemp_MyTable1]
 (
     [MyColumn1] INTEGER NOT NULL DEFAULT 15,
@@ -17,10 +25,10 @@ CREATE TABLE [_DNDBTTemp_MyTable1]
     [MyColumn3] INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     [MyColumn4] NUMERIC NOT NULL DEFAULT 7.36,
     CONSTRAINT [UQ_MyTable1_MyColumn4] UNIQUE ([MyColumn4]),
+    CONSTRAINT [CK_MyTable1_MyCheck1] CHECK (MyColumn4 >= 0),
     CONSTRAINT [FK_MyTable1_MyColumn1_MyTable2_MyColumn1] FOREIGN KEY ([MyColumn1])
         REFERENCES [MyTable2]([MyColumn1])
-        ON UPDATE NO ACTION ON DELETE CASCADE,
-    CONSTRAINT [CK_MyTable1_MyCheck1] CHECK (MyColumn4 >= 0)
+        ON UPDATE NO ACTION ON DELETE CASCADE
 );
 
 INSERT INTO [_DNDBTTemp_MyTable1]
@@ -36,13 +44,9 @@ FROM [MyTable1NewName];
 DROP TABLE [MyTable1NewName];
 
 ALTER TABLE [_DNDBTTemp_MyTable1] RENAME TO [MyTable1];
--- QUERY END: SQLiteAlterTableQuery
+-- QUERY END: AlterTableQuery
 
--- QUERY START: SQLiteAlterTableQuery
-DROP INDEX [IDX_MyTable2_MyIndex1];
-
-DROP TRIGGER [TR_MyTable2_MyTrigger1];
-
+-- QUERY START: AlterTableQuery
 CREATE TABLE [_DNDBTTemp_MyTable2]
 (
     [MyColumn1] INTEGER PRIMARY KEY NOT NULL DEFAULT 333,
@@ -60,21 +64,9 @@ FROM [MyTable2];
 DROP TABLE [MyTable2];
 
 ALTER TABLE [_DNDBTTemp_MyTable2] RENAME TO [MyTable2];
+-- QUERY END: AlterTableQuery
 
-CREATE TRIGGER [TR_MyTable2_MyTrigger1]
-AFTER INSERT
-ON [MyTable2]
-FOR EACH ROW
-BEGIN
-    INSERT INTO [MyTable4]([MyColumn1])
-    VALUES(NEW.[MyColumn1]);
-END;
-
-CREATE UNIQUE INDEX [IDX_MyTable2_MyIndex1]
-ON [MyTable2] ([MyColumn1], [MyColumn2]);
--- QUERY END: SQLiteAlterTableQuery
-
--- QUERY START: SQLiteAlterTableQuery
+-- QUERY START: AlterTableQuery
 CREATE TABLE [_DNDBTTemp_MyTable5]
 (
     [MyColumn1] INTEGER NOT NULL DEFAULT (ABS(-15)),
@@ -126,12 +118,9 @@ FROM [MyTable5];
 DROP TABLE [MyTable5];
 
 ALTER TABLE [_DNDBTTemp_MyTable5] RENAME TO [MyTable5];
+-- QUERY END: AlterTableQuery
 
-CREATE INDEX [IDX_MyTable5_CustomName]
-ON [MyTable5] ([MyColumn8]);
--- QUERY END: SQLiteAlterTableQuery
-
--- QUERY START: SQLiteCreateTableQuery
+-- QUERY START: CreateTableQuery
 CREATE TABLE [MyTable6]
 (
     [MyColumn1] TEXT NULL,
@@ -140,9 +129,19 @@ CREATE TABLE [MyTable6]
         REFERENCES [MyTable5]([MyColumn2], [MyColumn1])
         ON UPDATE NO ACTION ON DELETE NO ACTION
 );
--- QUERY END: SQLiteCreateTableQuery
+-- QUERY END: CreateTableQuery
 
--- QUERY START: GenericQuery
+-- QUERY START: CreateIndexQuery
+CREATE UNIQUE INDEX [IDX_MyTable2_MyIndex1]
+    ON [MyTable2] ([MyColumn1], [MyColumn2]);
+-- QUERY END: CreateIndexQuery
+
+-- QUERY START: CreateIndexQuery
+CREATE INDEX [IDX_MyTable5_CustomName]
+    ON [MyTable5] ([MyColumn8]);
+-- QUERY END: CreateIndexQuery
+
+-- QUERY START: CreateViewQuery
 CREATE VIEW MyView1 AS
 SELECT
     t1.MyColumn1,
@@ -151,6 +150,17 @@ SELECT
 FROM MyTable1 t1
 LEFT JOIN MyTable2 t2
     ON t2.MyColumn1 = t1.MyColumn1;
--- QUERY END: GenericQuery
+-- QUERY END: CreateViewQuery
+
+-- QUERY START: CreateTriggerQuery
+CREATE TRIGGER [TR_MyTable2_MyTrigger1]
+AFTER INSERT
+ON [MyTable2]
+FOR EACH ROW
+BEGIN
+    INSERT INTO [MyTable4]([MyColumn1])
+    VALUES(NEW.[MyColumn1]);
+END;
+-- QUERY END: CreateTriggerQuery
 
 COMMIT TRANSACTION;

@@ -1,14 +1,11 @@
-﻿using System.Collections.Generic;
-using DotNetDBTools.Deploy.Core;
+﻿using DotNetDBTools.Deploy.Core.Queries;
 using DotNetDBTools.Models.PostgreSQL;
 
 namespace DotNetDBTools.Deploy.PostgreSQL.Queries.DDL;
 
-internal class PostgreSQLRenameFunctionToTempQuery : IQuery
+internal class PostgreSQLRenameFunctionToTempQuery : NoParametersQuery
 {
-    public string Sql => _sql;
-    public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
-
+    public override string Sql => _sql;
     private readonly string _sql;
 
     public PostgreSQLRenameFunctionToTempQuery(PostgreSQLFunction func)

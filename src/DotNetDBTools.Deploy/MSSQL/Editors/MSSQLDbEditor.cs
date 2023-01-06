@@ -3,8 +3,10 @@ using DotNetDBTools.Deploy.Common.Editors;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Editors;
 using DotNetDBTools.Deploy.Core.Queries;
+using DotNetDBTools.Deploy.Core.Queries.DDL;
 using DotNetDBTools.Deploy.MSSQL.Queries.DDL;
 using DotNetDBTools.Deploy.MSSQL.Queries.DNDBTSysInfo;
+using DotNetDBTools.Generation.Core;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.MSSQL;
 using DotNetDBTools.Models.MSSQL.UserDefinedTypes;
@@ -175,13 +177,13 @@ internal class MSSQLDbEditor : DbEditor<
 
     private void CreateView(MSSQLView view)
     {
-        QueryExecutor.Execute(new GenericQuery($"{view.GetCode()}"));
+        QueryExecutor.Execute(new CreateViewQuery(view));
         QueryExecutor.Execute(new MSSQLInsertDNDBTDbObjectRecordQuery(view.ID, null, DbObjectType.View, view.Name, view.GetCode()));
     }
 
     private void DropView(MSSQLView view)
     {
-        QueryExecutor.Execute(new GenericQuery($"DROP VIEW [{view.Name}];"));
+        QueryExecutor.Execute(new DropViewQuery(view));
         QueryExecutor.Execute(new MSSQLDeleteDNDBTDbObjectRecordQuery(view.ID));
     }
 

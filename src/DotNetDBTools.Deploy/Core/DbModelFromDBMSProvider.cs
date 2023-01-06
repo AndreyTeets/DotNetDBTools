@@ -326,6 +326,7 @@ internal abstract class DbModelFromDBMSProvider<
         {
             foreach (Index index in table.Indexes)
             {
+                index.TableName = table.Name;
                 index.Columns = columnNames[index.Name].Select(x => x.Value).ToList();
                 index.IncludeColumns = includeColumnNames[index.Name].Select(x => x.Value).ToList();
             }

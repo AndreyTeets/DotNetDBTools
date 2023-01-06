@@ -9,40 +9,6 @@ internal static class PostgreSQLQueriesHelper
     public const int MultirangeTypeNameAvailableDbmsVersion = 140000;
     public const string SelectDbmsVersionStatement = "SELECT current_setting('server_version_num')::int";
 
-    public static string PlPgSqlQueryBlock(string innerCode)
-    {
-        string res =
-$@"DO $DNDBTPlPgSqlQueryBlock$
-BEGIN
-{innerCode}
-END;
-$DNDBTPlPgSqlQueryBlock$";
-
-        return res;
-    }
-
-    public static string GetIdentityStatement(Column column)
-    {
-        return column.Identity ? " GENERATED ALWAYS AS IDENTITY" : "";
-    }
-
-    public static string GetNullabilityStatement(Column column)
-    {
-        return column.NotNull switch
-        {
-            false => "NULL",
-            true => "NOT NULL",
-        };
-    }
-
-    public static string GetDefaultValStatement(Column column)
-    {
-        if (column.Default.Code is not null)
-            return $@" DEFAULT {column.Default.Code}";
-        else
-            return "";
-    }
-
     public static DataType CreateDataTypeModel(string dataType, string lengthStr, bool isBaseDataType)
     {
         if (!isBaseDataType)

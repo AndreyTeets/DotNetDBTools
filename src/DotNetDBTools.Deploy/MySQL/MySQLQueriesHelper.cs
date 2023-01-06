@@ -6,28 +6,6 @@ namespace DotNetDBTools.Deploy.MySQL;
 
 internal static class MySQLQueriesHelper
 {
-    public static string GetIdentityStatement(Column column)
-    {
-        return column.Identity ? " AUTO_INCREMENT" : "";
-    }
-
-    public static string GetNullabilityStatement(Column column)
-    {
-        return column.NotNull switch
-        {
-            false => "NULL",
-            true => "NOT NULL",
-        };
-    }
-
-    public static string GetDefaultValStatement(Column column)
-    {
-        if (column.Default.Code is not null)
-            return $" DEFAULT {column.Default.Code}";
-        else
-            return "";
-    }
-
     public static DataType CreateDataTypeModel(string dataType, string fullDataType)
     {
         switch (dataType)

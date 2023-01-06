@@ -1,11 +1,10 @@
-﻿using System.Collections.Generic;
-using DotNetDBTools.Deploy.Core;
+﻿using DotNetDBTools.Deploy.Core.Queries;
 
 namespace DotNetDBTools.Deploy.PostgreSQL.Queries.DBMSSysInfo;
 
-internal class PostgreSQLGetDomainTypesFromDBMSSysInfoQuery : IQuery
+internal class PostgreSQLGetDomainTypesFromDBMSSysInfoQuery : NoParametersQuery
 {
-    public string Sql =>
+    public override string Sql =>
 $@"SELECT
     t.typname AS ""{nameof(DomainTypeRecord.TypeName)}"",
     bt.typname AS ""{nameof(DomainTypeRecord.UnderlyingTypeName)}"",
@@ -30,8 +29,6 @@ LEFT JOIN LATERAL (
     ON TRUE
 WHERE t.typtype = 'd'
     AND n.nspname NOT IN ('information_schema', 'pg_catalog');";
-
-    public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
 
     public class DomainTypeRecord
     {

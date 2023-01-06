@@ -29,7 +29,7 @@ internal static class HelperMethods
         ObjectInfo objectInfo, string displayedObjectInfoIfMissing, string idDeclarationComment)
     {
         if (idDeclarationComment is null)
-            throw new ParseException($"Id declaration comment is missing for {displayedObjectInfoIfMissing}");
+            throw new ParseException($"ID declaration comment is missing for {displayedObjectInfoIfMissing}");
 
         objectInfo.ID = GetObjectID(idDeclarationComment);
     }

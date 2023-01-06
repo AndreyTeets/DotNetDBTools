@@ -1,18 +1,13 @@
 ﻿using DotNetDBTools.Deploy.Common.Queries.DDL;
 using DotNetDBTools.Models.Core;
+using DotNetDBTools.Models.PostgreSQL;
 
 namespace DotNetDBTools.Deploy.PostgreSQL.Queries.DDL;
 
 internal class PostgreSQLDropForeignKeyQuery : DropForeignKeyQuery
 {
-    public PostgreSQLDropForeignKeyQuery(ForeignKey fk, string tableName)
-        : base(fk, tableName) { }
+    public PostgreSQLDropForeignKeyQuery(ForeignKey fk)
+        : base(fk) { }
 
-    protected override string GetSql(ForeignKey fk, string tableName)
-    {
-        string query =
-$@"ALTER TABLE ""{tableName}"" DROP CONSTRAINT ""{fk.Name}"";";
-
-        return query;
-    }
+    protected override string GetSql(ForeignKey fk) => GetSqlBase<PostgreSQLTable, PostgreSQLTableDiff>(fk);
 }

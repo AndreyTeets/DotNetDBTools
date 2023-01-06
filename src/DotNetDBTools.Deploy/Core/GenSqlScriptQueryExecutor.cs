@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using DotNetDBTools.Analysis.Extensions;
 using DotNetDBTools.Deploy.Core.Queries;
 using DotNetDBTools.Generation.Core;
 

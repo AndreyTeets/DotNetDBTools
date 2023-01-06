@@ -1,6 +1,7 @@
 ﻿namespace DotNetDBTools.Models.Core;
 
-public class Trigger : DbObject
+public abstract class Trigger : DbObject
 {
+    public string TableName { get; set; }
     public CodePiece CodePiece { get; set; }
 }

@@ -8,6 +8,8 @@ internal class MSSQLDbModelConverter : DbModelConverter<
     MSSQLDatabase,
     MSSQLTable,
     MSSQLView,
+    MSSQLIndex,
+    MSSQLTrigger,
     MSSQLColumn>
 {
     public MSSQLDbModelConverter() : base(

@@ -1,6 +1,7 @@
 ﻿using System;
 using DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo;
 using DotNetDBTools.Models.Core;
+using DotNetDBTools.Models.MSSQL;
 
 namespace DotNetDBTools.Deploy.MSSQL.Queries.DBMSSysInfo;
 
@@ -36,7 +37,7 @@ WHERE i.is_primary_key = 0
     {
         public override Index MapExceptColumnsToIndexModel(IndexRecord indexRecord)
         {
-            return new()
+            return new MSSQLIndex()
             {
                 ID = Guid.NewGuid(),
                 Name = indexRecord.IndexName,

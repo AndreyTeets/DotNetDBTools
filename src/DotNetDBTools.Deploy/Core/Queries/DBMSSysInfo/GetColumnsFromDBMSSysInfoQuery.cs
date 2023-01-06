@@ -3,10 +3,8 @@ using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo;
 
-internal abstract class GetColumnsFromDBMSSysInfoQuery : IQuery
+internal abstract class GetColumnsFromDBMSSysInfoQuery : NoParametersQuery
 {
-    public abstract string Sql { get; }
-    public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
     public abstract RecordsLoader Loader { get; }
     public abstract RecordMapper Mapper { get; }
 

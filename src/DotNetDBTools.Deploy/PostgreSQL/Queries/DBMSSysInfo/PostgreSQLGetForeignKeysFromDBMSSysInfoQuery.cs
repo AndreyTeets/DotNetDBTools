@@ -56,6 +56,7 @@ WHERE this_table.relkind = 'r'
             {
                 ID = Guid.NewGuid(),
                 Name = fkr.ForeignKeyName,
+                ThisTableName = fkr.ThisTableName,
                 ReferencedTableName = fkr.ReferencedTableName,
                 OnUpdate = MapUpdateActionName(fkr.OnUpdate),
                 OnDelete = MapUpdateActionName(fkr.OnDelete),

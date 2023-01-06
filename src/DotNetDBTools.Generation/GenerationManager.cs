@@ -1,16 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using DotNetDBTools.Generation.Agnostic;
-using DotNetDBTools.Generation.MSSQL;
-using DotNetDBTools.Generation.MySQL;
-using DotNetDBTools.Generation.PostgreSQL;
-using DotNetDBTools.Generation.SQLite;
+using DotNetDBTools.Generation.Agnostic.Description;
+using DotNetDBTools.Generation.Core;
+using DotNetDBTools.Generation.Core.Definition;
+using DotNetDBTools.Generation.Core.Sql;
+using DotNetDBTools.Generation.MSSQL.Definition;
+using DotNetDBTools.Generation.MSSQL.Description;
+using DotNetDBTools.Generation.MSSQL.Sql;
+using DotNetDBTools.Generation.MySQL.Definition;
+using DotNetDBTools.Generation.MySQL.Description;
+using DotNetDBTools.Generation.MySQL.Sql;
+using DotNetDBTools.Generation.PostgreSQL.Definition;
+using DotNetDBTools.Generation.PostgreSQL.Description;
+using DotNetDBTools.Generation.PostgreSQL.Sql;
+using DotNetDBTools.Generation.SQLite.Definition;
+using DotNetDBTools.Generation.SQLite.Description;
+using DotNetDBTools.Generation.SQLite.Sql;
 using DotNetDBTools.Models.Agnostic;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.MSSQL;
+using DotNetDBTools.Models.MSSQL.UserDefinedTypes;
 using DotNetDBTools.Models.MySQL;
 using DotNetDBTools.Models.PostgreSQL;
+using DotNetDBTools.Models.PostgreSQL.UserDefinedTypes;
 using DotNetDBTools.Models.SQLite;
 
 namespace DotNetDBTools.Generation;
@@ -66,14 +79,78 @@ public class GenerationManager : IGenerationManager
 
     public IEnumerable<DefinitionSourceFile> GenerateDefinition(Database database)
     {
-        IEnumerable<DefinitionSourceFile> definitionSourceFiles = database.Kind switch
+        IDefinitionGenerator definitionGenerator = database.Kind switch
         {
-            DatabaseKind.MSSQL => MSSQLDefinitionGenerator.GenerateDefinition(database, Options.DatabaseName),
-            DatabaseKind.MySQL => MySQLDefinitionGenerator.GenerateDefinition(database, Options.DatabaseName),
-            DatabaseKind.PostgreSQL => PostgreSQLDefinitionGenerator.GenerateDefinition(database, Options.DatabaseName),
-            DatabaseKind.SQLite => SQLiteDefinitionGenerator.GenerateDefinition(database, Options.DatabaseName),
+            DatabaseKind.MSSQL => new MSSQLDefinitionGenerator(),
+            DatabaseKind.MySQL => new MySQLDefinitionGenerator(),
+            DatabaseKind.PostgreSQL => new PostgreSQLDefinitionGenerator(),
+            DatabaseKind.SQLite => new SQLiteDefinitionGenerator(),
             _ => throw new InvalidOperationException($"Invalid dbKind: {database.Kind}"),
         };
-        return definitionSourceFiles;
+        definitionGenerator.OutputDefinitionKind = Options.OutputDefinitionKind;
+        return definitionGenerator.GenerateDefinition(database, Options.DatabaseName);
+    }
+
+    public static string GenerateSqlCreateStatement(DbObject dbObject, bool includeIdDeclarations)
+    {
+        IStatementsGenerator statementsGenerator = CreateAppropriateStatementsGenerator(dbObject);
+        statementsGenerator.IncludeIdDeclarations = includeIdDeclarations;
+        return statementsGenerator.GetCreateSql(dbObject).NormalizeLineEndings();
+    }
+
+    public static string GenerateSqlDropStatement(DbObject dbObject)
+    {
+        IStatementsGenerator statementsGenerator = CreateAppropriateStatementsGenerator(dbObject);
+        return statementsGenerator.GetDropSql(dbObject).NormalizeLineEndings();
+    }
+
+    public static string GenerateSqlAlterStatement(TableDiff tableDiff)
+    {
+        IAlterStatementGenerator alterStatementGenerator = CreateAppropriateAlterStatementGenerator(tableDiff);
+        return alterStatementGenerator.GetAlterSql(tableDiff).NormalizeLineEndings();
+    }
+
+    private static IStatementsGenerator CreateAppropriateStatementsGenerator(DbObject dbObject)
+    {
+        IStatementsGenerator statementsGenerator = dbObject switch
+        {
+            MSSQLTable x => new MSSQLTableStatementsGenerator(),
+            MSSQLView x => new MSSQLViewStatementsGenerator(),
+            MSSQLIndex x => new MSSQLIndexStatementsGenerator(),
+            MSSQLTrigger x => new MSSQLTriggerStatementsGenerator(),
+            MSSQLUserDefinedType x => new MSSQLTypeStatementsGenerator(),
+            MySQLTable x => new MySQLTableStatementsGenerator(),
+            MySQLView x => new MySQLViewStatementsGenerator(),
+            MySQLIndex x => new MySQLIndexStatementsGenerator(),
+            MySQLTrigger x => new MySQLTriggerStatementsGenerator(),
+            PostgreSQLTable x => new PostgreSQLTableStatementsGenerator(),
+            PostgreSQLView x => new PostgreSQLViewStatementsGenerator(),
+            PostgreSQLIndex x => new PostgreSQLIndexStatementsGenerator(),
+            PostgreSQLTrigger x => new PostgreSQLTriggerStatementsGenerator(),
+            PostgreSQLCompositeType x => new PostgreSQLCompositeTypeStatementsGenerator(),
+            PostgreSQLDomainType x => new PostgreSQLDomainTypeStatementsGenerator(),
+            PostgreSQLEnumType x => new PostgreSQLEnumTypeStatementsGenerator(),
+            PostgreSQLRangeType x => new PostgreSQLRangeTypeStatementsGenerator(),
+            PostgreSQLFunction x => new PostgreSQLFunctionStatementsGenerator(),
+            SQLiteTable x => new SQLiteTableStatementsGenerator(),
+            SQLiteView x => new SQLiteViewStatementsGenerator(),
+            SQLiteIndex x => new SQLiteIndexStatementsGenerator(),
+            SQLiteTrigger x => new SQLiteTriggerStatementsGenerator(),
+            _ => throw new InvalidOperationException($"Invalid dbObject type for statements generation: {dbObject.GetType()}"),
+        };
+        return statementsGenerator;
+    }
+
+    private static IAlterStatementGenerator CreateAppropriateAlterStatementGenerator(TableDiff tableDiff)
+    {
+        IAlterStatementGenerator statementsGenerator = tableDiff switch
+        {
+            MSSQLTableDiff x => new MSSQLTableStatementsGenerator(),
+            MySQLTableDiff x => new MySQLTableStatementsGenerator(),
+            PostgreSQLTableDiff x => new PostgreSQLTableStatementsGenerator(),
+            SQLiteTableDiff x => new SQLiteTableStatementsGenerator(),
+            _ => throw new InvalidOperationException($"Invalid tableDiff type for alter statement generation: {tableDiff.GetType()}"),
+        };
+        return statementsGenerator;
     }
 }

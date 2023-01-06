@@ -3,7 +3,7 @@ using DotNetDBTools.Deploy.Core.Queries;
 
 namespace DotNetDBTools.Deploy.MSSQL.Queries.DNDBTSysInfo;
 
-internal class MSSQLCreateDNDBTSysTablesQuery : SqlTextOnlyQuery
+internal class MSSQLCreateDNDBTSysTablesQuery : NoParametersQuery
 {
     public override string Sql =>
 $@"CREATE TABLE [{DNDBTSysTables.DNDBTDbAttributes}]

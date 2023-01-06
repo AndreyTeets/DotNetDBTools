@@ -8,6 +8,8 @@ internal class AgnosticDatabaseModelProvider : DbModelFromCSharpDefinitionProvid
     AgnosticDatabase,
     AgnosticTable,
     AgnosticView,
+    AgnosticIndex,
+    AgnosticTrigger,
     Models.Core.Column>
 {
     public AgnosticDatabaseModelProvider() : base(

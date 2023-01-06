@@ -18,6 +18,8 @@ internal class PostgreSQLDbModelFromCSharpDefinitionProvider : DbModelFromCSharp
     PostgreSQLDatabase,
     PostgreSQLTable,
     PostgreSQLView,
+    PostgreSQLIndex,
+    PostgreSQLTrigger,
     Models.Core.Column>
 {
     public PostgreSQLDbModelFromCSharpDefinitionProvider() : base(
@@ -45,7 +47,7 @@ internal class PostgreSQLDbModelFromCSharpDefinitionProvider : DbModelFromCSharp
     }
 
     protected override void BuildAdditionalIndexModelProperties(
-        Models.Core.Index indexModel, BaseIndex index, string tableName)
+        Models.Core.Index indexModel, BaseIndex index)
     {
         indexModel.IncludeColumns = ((Definition.PostgreSQL.Index)index).IncludeColumns?.ToList() ?? new List<string>();
     }

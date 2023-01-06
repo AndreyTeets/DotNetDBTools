@@ -17,26 +17,34 @@ public abstract class BaseDefinitionGenerationTests<TDatabase>
     private static string GeneratedFilesDir => "./DefinitionGenerationTests_Generated";
 
     [Fact]
-    public void DbModelFromGeneratedDefinition_IsEquivalentTo_DbModelFromOriginalDefinition()
+    public void DbModelFromGeneratedCSharpDefinition_IsEquivalentTo_DbModelFromOriginalDefinition()
     {
-        TestCase(SpecificDbmsSampleDbV1AssemblyName);
-        TestCase(SpecificDbmsSampleDbV2AssemblyName);
+        DbModelFromGeneratedDefinition_IsEquivalentTo_DbModelFromOriginalDefinition_TestCase(
+            SpecificDbmsSampleDbV1AssemblyName, OutputDefinitionKind.CSharp);
 
-        void TestCase(string sampleDbAssemblyName)
+        DbModelFromGeneratedDefinition_IsEquivalentTo_DbModelFromOriginalDefinition_TestCase(
+            SpecificDbmsSampleDbV2AssemblyName, OutputDefinitionKind.CSharp);
+    }
+
+    protected void DbModelFromGeneratedDefinition_IsEquivalentTo_DbModelFromOriginalDefinition_TestCase(
+        string sampleDbAssemblyName, OutputDefinitionKind outputDefinitionKind)
+    {
+        Assembly origDefDbAssembly = TestDbAssembliesHelper.GetSampleDbAssembly(sampleDbAssemblyName);
+        TDatabase origDefDbModel = (TDatabase)new DefinitionParsingManager().CreateDbModel(origDefDbAssembly);
+
+        string projectDir = $@"{GeneratedFilesDir}/{sampleDbAssemblyName}_Generated{outputDefinitionKind}Definition";
+        GenerationOptions options = new()
         {
-            Assembly origDefDbAssembly = TestDbAssembliesHelper.GetSampleDbAssembly(sampleDbAssemblyName);
-            TDatabase origDefDbModel = (TDatabase)new DefinitionParsingManager().CreateDbModel(origDefDbAssembly);
+            DatabaseName = sampleDbAssemblyName,
+            OutputDefinitionKind = outputDefinitionKind,
+        };
+        new GenerationManager(options).GenerateDefinition(origDefDbModel, projectDir);
+        Assembly genDefDbAssembly = TestDatabasesCompiler.CompileSampleDbProject(projectDir);
+        TDatabase genDefDbModel = (TDatabase)new DefinitionParsingManager().CreateDbModel(genDefDbAssembly);
+        genDefDbModel.Version = origDefDbModel.Version;
 
-            string projectDir = $@"{GeneratedFilesDir}/{sampleDbAssemblyName}_GeneratedDefinition";
-            GenerationOptions options = new() { DatabaseName = sampleDbAssemblyName };
-            new GenerationManager(options).GenerateDefinition(origDefDbModel, projectDir);
-            Assembly genDefDbAssembly = TestDatabasesCompiler.CompileSampleDbProject(projectDir);
-            TDatabase genDefDbModel = (TDatabase)new DefinitionParsingManager().CreateDbModel(genDefDbAssembly);
-            genDefDbModel.Version = origDefDbModel.Version;
-
-            genDefDbModel.Should().BeEquivalentTo(origDefDbModel, options =>
-                options.WithStrictOrdering()
-                .Excluding(database => database.Scripts));
-        }
+        genDefDbModel.Should().BeEquivalentTo(origDefDbModel, options =>
+            options.WithStrictOrdering()
+            .Excluding(database => database.Scripts));
     }
 }

@@ -52,7 +52,7 @@ public abstract class BaseCodeParserTests<TCodeParser>
     {
         TCodeParser parser = new();
         FluentActions.Invoking(() => parser.GetObjectInfo(input))
-            .Should().Throw<ParseException>().WithMessage($"Failed to parse object info: Id declaration comment is missing for *");
+            .Should().Throw<ParseException>().WithMessage($"Failed to parse object info: ID declaration comment is missing for *");
     }
 
     protected void Assert_GetObjectInfo_ParsesObjectCorrectly<TObjectInfo>(

@@ -6,28 +6,6 @@ namespace DotNetDBTools.Deploy.MSSQL;
 
 internal static class MSSQLQueriesHelper
 {
-    public static string GetIdentityStatement(Column column)
-    {
-        return column.Identity ? " IDENTITY" : "";
-    }
-
-    public static string GetNullabilityStatement(Column column)
-    {
-        return column.NotNull switch
-        {
-            false => "NULL",
-            true => "NOT NULL",
-        };
-    }
-
-    public static string GetDefaultValStatement(Column column)
-    {
-        if (column.Default.Code is not null)
-            return $" CONSTRAINT [{((MSSQLColumn)column).DefaultConstraintName}] DEFAULT {column.Default.Code}";
-        else
-            return "";
-    }
-
     public static DataType CreateDataTypeModel(string dataType, int length, int precision, int scale)
     {
         switch (dataType)

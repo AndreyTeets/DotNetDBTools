@@ -41,6 +41,7 @@ WHERE tc.CONSTRAINT_SCHEMA = (select DATABASE())
             {
                 ID = Guid.NewGuid(),
                 Name = fkr.ForeignKeyName,
+                ThisTableName = fkr.ThisTableName,
                 ReferencedTableName = fkr.ReferencedTableName,
                 OnUpdate = fkr.OnUpdate,
                 OnDelete = fkr.OnDelete,

@@ -1,7 +1,7 @@
 PRAGMA foreign_keys=off;
 BEGIN TRANSACTION;
 
--- QUERY START: SQLiteCreateTableQuery
+-- QUERY START: CreateTableQuery
 CREATE TABLE [MyTable1]
 (
     [MyColumn1] INTEGER NOT NULL DEFAULT 15,
@@ -9,14 +9,14 @@ CREATE TABLE [MyTable1]
     [MyColumn3] INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     [MyColumn4] NUMERIC NOT NULL DEFAULT 7.36,
     CONSTRAINT [UQ_MyTable1_MyColumn4] UNIQUE ([MyColumn4]),
+    CONSTRAINT [CK_MyTable1_MyCheck1] CHECK (MyColumn4 >= 0),
     CONSTRAINT [FK_MyTable1_MyColumn1_MyTable2_MyColumn1] FOREIGN KEY ([MyColumn1])
         REFERENCES [MyTable2]([MyColumn1])
-        ON UPDATE NO ACTION ON DELETE CASCADE,
-    CONSTRAINT [CK_MyTable1_MyCheck1] CHECK (MyColumn4 >= 0)
+        ON UPDATE NO ACTION ON DELETE CASCADE
 );
--- QUERY END: SQLiteCreateTableQuery
+-- QUERY END: CreateTableQuery
 
--- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
 INSERT INTO [DNDBTDbObjects]
 (
     [ID],
@@ -33,9 +33,9 @@ VALUES
     'MyTable1',
     NULL
 );
--- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
 INSERT INTO [DNDBTDbObjects]
 (
     [ID],
@@ -52,9 +52,9 @@ VALUES
     'MyColumn1',
     '15'
 );
--- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
 INSERT INTO [DNDBTDbObjects]
 (
     [ID],
@@ -71,9 +71,9 @@ VALUES
     'MyColumn2',
     '''33'''
 );
--- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
 INSERT INTO [DNDBTDbObjects]
 (
     [ID],
@@ -90,9 +90,9 @@ VALUES
     'MyColumn3',
     NULL
 );
--- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
 INSERT INTO [DNDBTDbObjects]
 (
     [ID],
@@ -109,9 +109,9 @@ VALUES
     'MyColumn4',
     '7.36'
 );
--- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
 INSERT INTO [DNDBTDbObjects]
 (
     [ID],
@@ -128,9 +128,9 @@ VALUES
     'PK_MyTable1',
     NULL
 );
--- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
 INSERT INTO [DNDBTDbObjects]
 (
     [ID],
@@ -147,9 +147,9 @@ VALUES
     'UQ_MyTable1_MyColumn4',
     NULL
 );
--- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
 INSERT INTO [DNDBTDbObjects]
 (
     [ID],
@@ -166,9 +166,9 @@ VALUES
     'CK_MyTable1_MyCheck1',
     'CHECK (MyColumn4 >= 0)'
 );
--- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
 INSERT INTO [DNDBTDbObjects]
 (
     [ID],
@@ -185,29 +185,17 @@ VALUES
     'FK_MyTable1_MyColumn1_MyTable2_MyColumn1',
     NULL
 );
--- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteCreateTableQuery
+-- QUERY START: CreateTableQuery
 CREATE TABLE [MyTable2]
 (
     [MyColumn1] INTEGER PRIMARY KEY NOT NULL DEFAULT 333,
     [MyColumn2] BLOB NULL DEFAULT X'000408'
 );
+-- QUERY END: CreateTableQuery
 
-CREATE TRIGGER [TR_MyTable2_MyTrigger1]
-AFTER INSERT
-ON [MyTable2]
-FOR EACH ROW
-BEGIN
-    INSERT INTO [MyTable4]([MyColumn1])
-    VALUES(NEW.[MyColumn1]);
-END;
-
-CREATE UNIQUE INDEX [IDX_MyTable2_MyIndex1]
-ON [MyTable2] ([MyColumn1], [MyColumn2]);
--- QUERY END: SQLiteCreateTableQuery
-
--- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
 INSERT INTO [DNDBTDbObjects]
 (
     [ID],
@@ -224,9 +212,9 @@ VALUES
     'MyTable2',
     NULL
 );
--- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
 INSERT INTO [DNDBTDbObjects]
 (
     [ID],
@@ -243,9 +231,9 @@ VALUES
     'MyColumn1',
     '333'
 );
--- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
 INSERT INTO [DNDBTDbObjects]
 (
     [ID],
@@ -262,9 +250,9 @@ VALUES
     'MyColumn2',
     'X''000408'''
 );
--- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
 INSERT INTO [DNDBTDbObjects]
 (
     [ID],
@@ -281,61 +269,16 @@ VALUES
     'PK_MyTable2',
     NULL
 );
--- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
-INSERT INTO [DNDBTDbObjects]
-(
-    [ID],
-    [ParentID],
-    [Type],
-    [Name],
-    [Code]
-)
-VALUES
-(
-    'ee64ffc3-5536-4624-beaf-bc3a61d06a1a',
-    'bfb9030c-a8c3-4882-9c42-1c6ad025cf8f',
-    'Trigger',
-    'TR_MyTable2_MyTrigger1',
-    'CREATE TRIGGER [TR_MyTable2_MyTrigger1]
-AFTER INSERT
-ON [MyTable2]
-FOR EACH ROW
-BEGIN
-    INSERT INTO [MyTable4]([MyColumn1])
-    VALUES(NEW.[MyColumn1]);
-END'
-);
--- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
-
--- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
-INSERT INTO [DNDBTDbObjects]
-(
-    [ID],
-    [ParentID],
-    [Type],
-    [Name],
-    [Code]
-)
-VALUES
-(
-    '74390b3c-bc39-4860-a42e-12baa400f927',
-    'bfb9030c-a8c3-4882-9c42-1c6ad025cf8f',
-    'Index',
-    'IDX_MyTable2_MyIndex1',
-    NULL
-);
--- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
-
--- QUERY START: SQLiteCreateTableQuery
+-- QUERY START: CreateTableQuery
 CREATE TABLE [MyTable4]
 (
     [MyColumn1] INTEGER NOT NULL
 );
--- QUERY END: SQLiteCreateTableQuery
+-- QUERY END: CreateTableQuery
 
--- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
 INSERT INTO [DNDBTDbObjects]
 (
     [ID],
@@ -352,9 +295,9 @@ VALUES
     'MyTable4',
     NULL
 );
--- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
 INSERT INTO [DNDBTDbObjects]
 (
     [ID],
@@ -371,9 +314,9 @@ VALUES
     'MyColumn1',
     NULL
 );
--- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteCreateTableQuery
+-- QUERY START: CreateTableQuery
 CREATE TABLE [MyTable5]
 (
     [MyColumn1] INTEGER NOT NULL DEFAULT (ABS(-15)),
@@ -391,12 +334,9 @@ CREATE TABLE [MyTable5]
     CONSTRAINT [PK_MyTable5] PRIMARY KEY ([MyColumn2], [MyColumn1]),
     CONSTRAINT [UQ_MyTable5_CustomName] UNIQUE ([MyColumn6], [MyColumn3], [MyColumn7])
 );
+-- QUERY END: CreateTableQuery
 
-CREATE INDEX [IDX_MyTable5_CustomName]
-ON [MyTable5] ([MyColumn8]);
--- QUERY END: SQLiteCreateTableQuery
-
--- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
 INSERT INTO [DNDBTDbObjects]
 (
     [ID],
@@ -413,9 +353,9 @@ VALUES
     'MyTable5',
     NULL
 );
--- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
 INSERT INTO [DNDBTDbObjects]
 (
     [ID],
@@ -432,9 +372,9 @@ VALUES
     'MyColumn1',
     '(ABS(-15))'
 );
--- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
 INSERT INTO [DNDBTDbObjects]
 (
     [ID],
@@ -451,9 +391,9 @@ VALUES
     'MyColumn10',
     '''16:17:18'''
 );
--- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
 INSERT INTO [DNDBTDbObjects]
 (
     [ID],
@@ -470,9 +410,9 @@ VALUES
     'MyColumn11',
     '''2022-02-15 16:17:18'''
 );
--- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
 INSERT INTO [DNDBTDbObjects]
 (
     [ID],
@@ -489,9 +429,9 @@ VALUES
     'MyColumn12',
     '''2022-02-15 16:17:18+01:30'''
 );
--- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
 INSERT INTO [DNDBTDbObjects]
 (
     [ID],
@@ -508,9 +448,9 @@ VALUES
     'MyColumn2',
     '''test'''
 );
--- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
 INSERT INTO [DNDBTDbObjects]
 (
     [ID],
@@ -527,9 +467,9 @@ VALUES
     'MyColumn3',
     'X''000204'''
 );
--- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
 INSERT INTO [DNDBTDbObjects]
 (
     [ID],
@@ -546,9 +486,9 @@ VALUES
     'MyColumn4',
     '123.456'
 );
--- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
 INSERT INTO [DNDBTDbObjects]
 (
     [ID],
@@ -565,9 +505,9 @@ VALUES
     'MyColumn5',
     '12345.6789'
 );
--- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
 INSERT INTO [DNDBTDbObjects]
 (
     [ID],
@@ -584,9 +524,9 @@ VALUES
     'MyColumn6',
     '12.3'
 );
--- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
 INSERT INTO [DNDBTDbObjects]
 (
     [ID],
@@ -603,9 +543,9 @@ VALUES
     'MyColumn7',
     'TRUE'
 );
--- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
 INSERT INTO [DNDBTDbObjects]
 (
     [ID],
@@ -622,9 +562,9 @@ VALUES
     'MyColumn8',
     'X''8e2f99ad0fc8456db0e4ec3ba572dd15'''
 );
--- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
 INSERT INTO [DNDBTDbObjects]
 (
     [ID],
@@ -641,9 +581,9 @@ VALUES
     'MyColumn9',
     '''2022-02-15'''
 );
--- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
 INSERT INTO [DNDBTDbObjects]
 (
     [ID],
@@ -660,9 +600,9 @@ VALUES
     'PK_MyTable5',
     NULL
 );
--- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
 INSERT INTO [DNDBTDbObjects]
 (
     [ID],
@@ -679,28 +619,9 @@ VALUES
     'UQ_MyTable5_CustomName',
     NULL
 );
--- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
-INSERT INTO [DNDBTDbObjects]
-(
-    [ID],
-    [ParentID],
-    [Type],
-    [Name],
-    [Code]
-)
-VALUES
-(
-    '1d632285-9914-4c5d-98e6-a618a99bd799',
-    '6ca51f29-c1bc-4349-b9c1-6f1ea170f162',
-    'Index',
-    'IDX_MyTable5_CustomName',
-    NULL
-);
--- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
-
--- QUERY START: SQLiteCreateTableQuery
+-- QUERY START: CreateTableQuery
 CREATE TABLE [MyTable6]
 (
     [MyColumn1] TEXT NULL,
@@ -709,9 +630,9 @@ CREATE TABLE [MyTable6]
         REFERENCES [MyTable5]([MyColumn2], [MyColumn1])
         ON UPDATE NO ACTION ON DELETE NO ACTION
 );
--- QUERY END: SQLiteCreateTableQuery
+-- QUERY END: CreateTableQuery
 
--- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
 INSERT INTO [DNDBTDbObjects]
 (
     [ID],
@@ -728,9 +649,9 @@ VALUES
     'MyTable6',
     NULL
 );
--- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
 INSERT INTO [DNDBTDbObjects]
 (
     [ID],
@@ -747,9 +668,9 @@ VALUES
     'MyColumn1',
     NULL
 );
--- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
 INSERT INTO [DNDBTDbObjects]
 (
     [ID],
@@ -766,9 +687,9 @@ VALUES
     'MyColumn2',
     NULL
 );
--- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
 
--- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
 INSERT INTO [DNDBTDbObjects]
 (
     [ID],
@@ -785,9 +706,57 @@ VALUES
     'FK_MyTable6_MyTable5_CustomName',
     NULL
 );
--- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
 
--- QUERY START: GenericQuery
+-- QUERY START: CreateIndexQuery
+CREATE UNIQUE INDEX [IDX_MyTable2_MyIndex1]
+    ON [MyTable2] ([MyColumn1], [MyColumn2]);
+-- QUERY END: CreateIndexQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+INSERT INTO [DNDBTDbObjects]
+(
+    [ID],
+    [ParentID],
+    [Type],
+    [Name],
+    [Code]
+)
+VALUES
+(
+    '74390b3c-bc39-4860-a42e-12baa400f927',
+    'bfb9030c-a8c3-4882-9c42-1c6ad025cf8f',
+    'Index',
+    'IDX_MyTable2_MyIndex1',
+    NULL
+);
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: CreateIndexQuery
+CREATE INDEX [IDX_MyTable5_CustomName]
+    ON [MyTable5] ([MyColumn8]);
+-- QUERY END: CreateIndexQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+INSERT INTO [DNDBTDbObjects]
+(
+    [ID],
+    [ParentID],
+    [Type],
+    [Name],
+    [Code]
+)
+VALUES
+(
+    '1d632285-9914-4c5d-98e6-a618a99bd799',
+    '6ca51f29-c1bc-4349-b9c1-6f1ea170f162',
+    'Index',
+    'IDX_MyTable5_CustomName',
+    NULL
+);
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: CreateViewQuery
 CREATE VIEW MyView1 AS
 SELECT
     t1.MyColumn1,
@@ -796,9 +765,9 @@ SELECT
 FROM MyTable1 t1
 LEFT JOIN MyTable2 t2
     ON t2.MyColumn1 = t1.MyColumn1;
--- QUERY END: GenericQuery
+-- QUERY END: CreateViewQuery
 
--- QUERY START: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
 INSERT INTO [DNDBTDbObjects]
 (
     [ID],
@@ -822,7 +791,44 @@ FROM MyTable1 t1
 LEFT JOIN MyTable2 t2
     ON t2.MyColumn1 = t1.MyColumn1'
 );
--- QUERY END: SQLiteInsertDNDBTDbObjectRecordQuery
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: CreateTriggerQuery
+CREATE TRIGGER [TR_MyTable2_MyTrigger1]
+AFTER INSERT
+ON [MyTable2]
+FOR EACH ROW
+BEGIN
+    INSERT INTO [MyTable4]([MyColumn1])
+    VALUES(NEW.[MyColumn1]);
+END;
+-- QUERY END: CreateTriggerQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+INSERT INTO [DNDBTDbObjects]
+(
+    [ID],
+    [ParentID],
+    [Type],
+    [Name],
+    [Code]
+)
+VALUES
+(
+    'ee64ffc3-5536-4624-beaf-bc3a61d06a1a',
+    'bfb9030c-a8c3-4882-9c42-1c6ad025cf8f',
+    'Trigger',
+    'TR_MyTable2_MyTrigger1',
+    'CREATE TRIGGER [TR_MyTable2_MyTrigger1]
+AFTER INSERT
+ON [MyTable2]
+FOR EACH ROW
+BEGIN
+    INSERT INTO [MyTable4]([MyColumn1])
+    VALUES(NEW.[MyColumn1]);
+END'
+);
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
 
 -- QUERY START: GenericQuery
 INSERT INTO [MyTable4]([MyColumn1])
@@ -837,7 +843,7 @@ SELECT * FROM
 WHERE NOT EXISTS (SELECT * FROM [MyTable4]);
 -- QUERY END: GenericQuery
 
--- QUERY START: SQLiteInsertDNDBTScriptExecutionRecordQuery
+-- QUERY START: InsertDNDBTScriptExecutionRecordQuery
 INSERT INTO [DNDBTScriptExecutions]
 (
     [ID],
@@ -867,11 +873,11 @@ WHERE NOT EXISTS (SELECT * FROM [MyTable4])',
     9223372036854775807,
     0
 );
--- QUERY END: SQLiteInsertDNDBTScriptExecutionRecordQuery
+-- QUERY END: InsertDNDBTScriptExecutionRecordQuery
 
--- QUERY START: SQLiteUpdateDNDBTDbAttributesRecordQuery
+-- QUERY START: UpdateDNDBTDbAttributesRecordQuery
 UPDATE [DNDBTDbAttributes] SET
     [Version] = 1;
--- QUERY END: SQLiteUpdateDNDBTDbAttributesRecordQuery
+-- QUERY END: UpdateDNDBTDbAttributesRecordQuery
 
 COMMIT TRANSACTION;

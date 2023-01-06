@@ -1,12 +1,9 @@
-﻿using System.Collections.Generic;
-using DotNetDBTools.Models.Core;
+﻿using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo;
 
-internal abstract class GetCheckConstraintsFromDBMSSysInfoQuery : IQuery
+internal abstract class GetCheckConstraintsFromDBMSSysInfoQuery : NoParametersQuery
 {
-    public abstract string Sql { get; }
-    public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
     public abstract RecordMapper Mapper { get; }
 
     public class CheckConstraintRecord

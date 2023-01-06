@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
-using DotNetDBTools.Deploy.Core;
+﻿using DotNetDBTools.Deploy.Core;
+using DotNetDBTools.Deploy.Core.Queries;
 
 namespace DotNetDBTools.Deploy.SQLite.Queries.DBMSSysInfo;
 
-internal class SQLiteGetTablesDefinitionsFromDBMSSysInfoQuery : IQuery
+internal class SQLiteGetTablesDefinitionsFromDBMSSysInfoQuery : NoParametersQuery
 {
-    public string Sql =>
+    public override string Sql =>
 $@"SELECT
     sm.name AS [{nameof(TableRecord.TableName)}],
     sm.sql AS [{nameof(TableRecord.TableDefinition)}]
@@ -13,8 +13,6 @@ FROM sqlite_master sm
 WHERE sm.type = 'table'
     AND sm.name != 'sqlite_sequence'
     AND sm.name NOT IN ({DNDBTSysTables.AllTablesForInClause});";
-
-    public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
 
     public class TableRecord
     {

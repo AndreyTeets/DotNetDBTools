@@ -1,21 +1,24 @@
-﻿using System.Collections.Generic;
+﻿using DotNetDBTools.Generation;
+using DotNetDBTools.Models;
 using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.Deploy.Core.Queries.DDL;
 
-internal abstract class AlterTableQuery : IQuery
+internal class AlterTableQuery : NoParametersQuery
 {
-    public string Sql => _sql;
-    public IEnumerable<QueryParameter> Parameters => _parameters;
-
+    public override string Sql => _sql;
     private readonly string _sql;
-    private readonly List<QueryParameter> _parameters;
 
     public AlterTableQuery(TableDiff tableDiff)
     {
         _sql = GetSql(tableDiff);
-        _parameters = new List<QueryParameter>();
     }
 
-    protected abstract string GetSql(TableDiff tableDiff);
+    protected virtual string GetSql(TableDiff tableDiff)
+    {
+        TableDiff tableDiffWithoutForeignKeys = tableDiff.CopyModel();
+        tableDiffWithoutForeignKeys.ForeignKeysToCreate.Clear();
+        tableDiffWithoutForeignKeys.ForeignKeysToDrop.Clear();
+        return GenerationManager.GenerateSqlAlterStatement(tableDiffWithoutForeignKeys);
+    }
 }

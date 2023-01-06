@@ -1,14 +1,11 @@
-﻿using System.Collections.Generic;
-using DotNetDBTools.Deploy.Core;
+﻿using DotNetDBTools.Deploy.Core.Queries;
 using DotNetDBTools.Models.MSSQL.UserDefinedTypes;
 
 namespace DotNetDBTools.Deploy.MSSQL.Queries.DDL;
 
-internal class MSSQLRenameUserDefinedDataTypeQuery : IQuery
+internal class MSSQLRenameUserDefinedDataTypeQuery : NoParametersQuery
 {
-    public string Sql => _sql;
-    public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
-
+    public override string Sql => _sql;
     private readonly string _sql;
 
     public MSSQLRenameUserDefinedDataTypeQuery(MSSQLUserDefinedType userDefinedType)

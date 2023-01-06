@@ -39,9 +39,14 @@ internal class SQLiteGetObjectInfoVisitor : SQLiteParserBaseVisitor<ObjectInfo>
             HM.SetObjectID(table, $"table '{table.Name}'", context.dndbt_id?.Text);
 
         foreach (Column_defContext columnCtx in context.column_def())
-            table.Columns.Add(GetTableColumnInfo(columnCtx, table.Name));
+        {
+            table.Columns.Add(GetTableColumnInfo(columnCtx, table.Name, out ConstraintInfo pkConstraintInfo));
+            if (pkConstraintInfo is not null)
+                table.Constraints.Add(pkConstraintInfo);
+        }
         foreach (Table_constraintContext constraintCtx in context.table_constraint())
             table.Constraints.Add(GetTableConstraintInfo(constraintCtx, table.Name));
+
         return table;
     }
 
@@ -87,7 +92,7 @@ internal class SQLiteGetObjectInfoVisitor : SQLiteParserBaseVisitor<ObjectInfo>
         return trigger;
     }
 
-    private ColumnInfo GetTableColumnInfo(Column_defContext context, string tableName)
+    private ColumnInfo GetTableColumnInfo(Column_defContext context, string tableName, out ConstraintInfo pkConstraintInfo)
     {
         ColumnInfo column = new();
         column.Name = UnquoteIdentifier(context.column_name().GetText());
@@ -97,6 +102,9 @@ internal class SQLiteGetObjectInfoVisitor : SQLiteParserBaseVisitor<ObjectInfo>
         column.DataType = UnquoteIdentifier(context.type_name().GetText());
         foreach (Column_constraintContext constraintCtx in context.column_constraint())
             AddColumnConstraint(column, constraintCtx);
+
+        pkConstraintInfo = SetPkConstraintIfAny();
+
         return column;
 
         void AddColumnConstraint(ColumnInfo column, Column_constraintContext context)
@@ -121,6 +129,40 @@ internal class SQLiteGetObjectInfoVisitor : SQLiteParserBaseVisitor<ObjectInfo>
                     column.Default = context.literal_value().GetText();
                 else if (context.expr() != null)
                     column.Default = $"({HM.GetInitialText(context.expr())})";
+            }
+        }
+
+        ConstraintInfo SetPkConstraintIfAny()
+        {
+            ConstraintInfo pkConstraintInfo;
+            if (column.PrimaryKey)
+            {
+                pkConstraintInfo = new ConstraintInfo();
+                if (!_ignoreIds)
+                    pkConstraintInfo.ID = GetPkId(context.dndbt_pkid?.Text);
+
+                pkConstraintInfo.Type = ConstraintType.PrimaryKey;
+                pkConstraintInfo.Columns.Add(column.Name);
+            }
+            else
+            {
+                pkConstraintInfo = null;
+            }
+            return pkConstraintInfo;
+
+            Guid GetPkId(string idDeclarationComment)
+            {
+                if (idDeclarationComment is null)
+                    throw new ParseException($"PKID declaration comment is missing for pk-column '{column.Name}' in table '{tableName}'");
+
+                string idDeclStr = idDeclarationComment.Trim();
+                int prefixLen = "--PKID:#{".Length;
+                int postfixLen = "}#".Length;
+                string idStr = idDeclStr.Substring(prefixLen, idDeclStr.Length - prefixLen - postfixLen);
+                if (Guid.TryParse(idStr, out Guid id))
+                    return id;
+                else
+                    throw new ParseException($"Failed to parse pk id from PKID declaration comment '{idDeclStr}'");
             }
         }
     }

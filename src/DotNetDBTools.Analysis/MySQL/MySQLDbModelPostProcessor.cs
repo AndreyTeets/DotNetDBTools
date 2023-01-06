@@ -37,10 +37,11 @@ internal class MySQLDbModelPostProcessor : DbModelPostProcessor
         {
             foreach (UniqueConstraint uc in table.UniqueConstraints)
             {
-                Index index = new()
+                MySQLIndex index = new()
                 {
                     ID = uc.ID,
                     Name = uc.Name,
+                    TableName = table.Name,
                     Columns = uc.Columns,
                     Unique = true,
                 };

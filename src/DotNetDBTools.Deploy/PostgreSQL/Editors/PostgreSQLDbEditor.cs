@@ -1,6 +1,8 @@
 ﻿using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Editors;
 using DotNetDBTools.Deploy.PostgreSQL.Queries.DNDBTSysInfo;
+using DotNetDBTools.Generation.Core;
+using DotNetDBTools.Generation.PostgreSQL;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.PostgreSQL;
 using DotNetDBTools.Models.PostgreSQL.UserDefinedTypes;

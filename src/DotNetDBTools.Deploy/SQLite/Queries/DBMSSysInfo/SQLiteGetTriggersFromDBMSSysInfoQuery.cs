@@ -1,6 +1,7 @@
 ﻿using System;
 using DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo;
 using DotNetDBTools.Models.Core;
+using DotNetDBTools.Models.SQLite;
 
 namespace DotNetDBTools.Deploy.SQLite.Queries.DBMSSysInfo;
 
@@ -20,10 +21,11 @@ WHERE sm.type = 'trigger';";
     {
         public override Trigger MapToTriggerModel(TriggerRecord triggerRecord)
         {
-            return new()
+            return new SQLiteTrigger()
             {
                 ID = Guid.NewGuid(),
                 Name = triggerRecord.TriggerName,
+                TableName = triggerRecord.TableName,
                 CodePiece = new CodePiece { Code = triggerRecord.TriggerCode },
             };
         }

@@ -1,11 +1,10 @@
-﻿using System.Collections.Generic;
-using DotNetDBTools.Deploy.Core;
+﻿using DotNetDBTools.Deploy.Core.Queries;
 
 namespace DotNetDBTools.Deploy.PostgreSQL.Queries.DBMSSysInfo;
 
-internal class PostgreSQLGetFunctionsFromDBMSSysInfoQuery : IQuery
+internal class PostgreSQLGetFunctionsFromDBMSSysInfoQuery : NoParametersQuery
 {
-    public string Sql =>
+    public override string Sql =>
 $@"SELECT
     p.proname AS ""{nameof(FunctionRecord.FunctionName)}"",
     pg_catalog.pg_get_functiondef(p.oid) ""{nameof(FunctionRecord.FunctionCode)}""
@@ -17,8 +16,6 @@ INNER JOIN pg_catalog.pg_language l
 WHERE p.prokind = 'f'
     AND l.lanname IN ('sql', 'plpgsql')
     AND n.nspname NOT IN ('information_schema', 'pg_catalog');";
-
-    public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
 
     public class FunctionRecord
     {

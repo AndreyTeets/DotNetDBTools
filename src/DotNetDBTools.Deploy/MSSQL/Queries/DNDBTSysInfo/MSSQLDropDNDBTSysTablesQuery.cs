@@ -3,7 +3,7 @@ using DotNetDBTools.Deploy.Core.Queries;
 
 namespace DotNetDBTools.Deploy.MSSQL.Queries.DNDBTSysInfo;
 
-internal class MSSQLDropDNDBTSysTablesQuery : SqlTextOnlyQuery
+internal class MSSQLDropDNDBTSysTablesQuery : NoParametersQuery
 {
     public override string Sql =>
 $@"DROP TABLE [{DNDBTSysTables.DNDBTDbAttributes}];

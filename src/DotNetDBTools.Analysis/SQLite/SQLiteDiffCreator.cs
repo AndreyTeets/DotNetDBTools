@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using DotNetDBTools.Analysis.Common;
 using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.SQLite;
@@ -18,6 +19,9 @@ internal class SQLiteDiffCreator : DiffCreator
         };
 
         BuildTablesDiff<SQLiteTableDiff>(dbDiff);
+        IndexesHelper.BuildAllDbIndexesToBeDroppedAndCreated(dbDiff);
+        TriggersHelper.BuildAllDbTriggersToBeDroppedAndCreated(dbDiff);
+
         BuildViewsDiff(dbDiff);
         BuildScriptsDiff(dbDiff);
         return dbDiff;

@@ -3,6 +3,7 @@ using System.Linq;
 using DotNetDBTools.Analysis.Extensions;
 using DotNetDBTools.Deploy.Core.Queries;
 using DotNetDBTools.Deploy.Core.Queries.DNDBTSysInfo;
+using DotNetDBTools.Generation.Core;
 using DotNetDBTools.Models.Core;
 using static DotNetDBTools.Deploy.Core.InstanceCreator;
 

@@ -3,7 +3,7 @@ using DotNetDBTools.Deploy.Core.Queries;
 
 namespace DotNetDBTools.Deploy.PostgreSQL.Queries.DNDBTSysInfo;
 
-internal class PostgreSQLCreateDNDBTSysTablesQuery : SqlTextOnlyQuery
+internal class PostgreSQLCreateDNDBTSysTablesQuery : NoParametersQuery
 {
     public override string Sql =>
 $@"CREATE TABLE ""{DNDBTSysTables.DNDBTDbAttributes}""

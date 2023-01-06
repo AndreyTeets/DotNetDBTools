@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using DotNetDBTools.Deploy.Core;
+using DotNetDBTools.Deploy.Core.Queries;
 using DotNetDBTools.Models.MSSQL.UserDefinedTypes;
 
 namespace DotNetDBTools.Deploy.MSSQL.Queries.DBMSSysInfo;
 
-internal class MSSQLGetTypesFromDBMSSysInfoQuery : IQuery
+internal class MSSQLGetTypesFromDBMSSysInfoQuery : NoParametersQuery
 {
-    public string Sql =>
+    public override string Sql =>
 $@"SELECT
     t.name AS [{nameof(UserDefinedTypeRecord.Name)}],
     st.name AS [{nameof(UserDefinedTypeRecord.UnderlyingTypeName)}],
@@ -21,7 +20,6 @@ INNER JOIN sys.types st
 WHERE t.is_user_defined = 1
     AND t.is_table_type = 0;";
 
-    public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
     public RecordMapper Mapper => new();
 
     public class UserDefinedTypeRecord

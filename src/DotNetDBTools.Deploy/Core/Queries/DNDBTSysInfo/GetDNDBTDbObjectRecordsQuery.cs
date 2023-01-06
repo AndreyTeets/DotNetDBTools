@@ -3,10 +3,8 @@ using System.Collections.Generic;
 
 namespace DotNetDBTools.Deploy.Core.Queries.DNDBTSysInfo;
 
-internal abstract class GetDNDBTDbObjectRecordsQuery : IQuery
+internal abstract class GetDNDBTDbObjectRecordsQuery : NoParametersQuery
 {
-    public abstract string Sql { get; }
-    public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
     public abstract RecordsLoader Loader { get; }
 
     public abstract class DNDBTDbObjectRecord

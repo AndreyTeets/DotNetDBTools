@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Antlr4.Runtime.Misc;
 using DotNetDBTools.CodeParsing.Generated;
 using DotNetDBTools.CodeParsing.Models;

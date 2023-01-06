@@ -2,6 +2,7 @@
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo;
 using DotNetDBTools.Models.Core;
+using DotNetDBTools.Models.MySQL;
 
 namespace DotNetDBTools.Deploy.MySQL.Queries.DBMSSysInfo;
 
@@ -30,7 +31,7 @@ WHERE s.TABLE_SCHEMA = (select DATABASE())
     {
         public override Index MapExceptColumnsToIndexModel(IndexRecord indexRecord)
         {
-            return new()
+            return new MySQLIndex()
             {
                 ID = Guid.NewGuid(),
                 Name = indexRecord.IndexName,

@@ -2,6 +2,7 @@
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo;
 using DotNetDBTools.Models.Core;
+using DotNetDBTools.Models.PostgreSQL;
 
 namespace DotNetDBTools.Deploy.PostgreSQL.Queries.DBMSSysInfo;
 
@@ -47,7 +48,7 @@ WHERE n.nspname NOT IN ('information_schema', 'pg_catalog', 'pg_toast')
     {
         public override Index MapExceptColumnsToIndexModel(IndexRecord indexRecord)
         {
-            return new()
+            return new PostgreSQLIndex()
             {
                 ID = Guid.NewGuid(),
                 Name = indexRecord.IndexName,

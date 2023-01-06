@@ -1,19 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using DotNetDBTools.Generation;
 using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.Deploy.Core.Queries.DDL;
 
-internal abstract class DropTableQuery : IQuery
+internal class DropTableQuery : NoParametersQuery
 {
-    public string Sql => _sql;
-    public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
-
+    public override string Sql => _sql;
     private readonly string _sql;
 
     public DropTableQuery(Table table)
     {
-        _sql = GetSql(table);
+        _sql = GenerationManager.GenerateSqlDropStatement(table);
     }
-
-    protected abstract string GetSql(Table table);
 }

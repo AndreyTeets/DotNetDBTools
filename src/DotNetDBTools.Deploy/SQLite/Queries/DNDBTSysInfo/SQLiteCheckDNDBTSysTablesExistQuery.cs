@@ -3,7 +3,7 @@ using DotNetDBTools.Deploy.Core.Queries;
 
 namespace DotNetDBTools.Deploy.SQLite.Queries.DNDBTSysInfo;
 
-internal class SQLiteCheckDNDBTSysTablesExistQuery : SqlTextOnlyQuery
+internal class SQLiteCheckDNDBTSysTablesExistQuery : NoParametersQuery
 {
     public override string Sql =>
 $@"SELECT

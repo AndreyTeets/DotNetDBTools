@@ -1,13 +1,9 @@
-﻿using System.Collections.Generic;
+﻿namespace DotNetDBTools.Deploy.Core.Queries;
 
-namespace DotNetDBTools.Deploy.Core.Queries;
-
-internal class GenericQuery : IQuery
+internal class GenericQuery : NoParametersQuery
 {
+    public override string Sql => _sql;
     private readonly string _sql;
-
-    public string Sql => _sql;
-    public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
 
     public GenericQuery(string sql)
     {

@@ -9,6 +9,8 @@ internal class SQLiteDbModelFromCSharpDefinitionProvider : DbModelFromCSharpDefi
     SQLiteDatabase,
     SQLiteTable,
     SQLiteView,
+    SQLiteIndex,
+    SQLiteTrigger,
     Models.Core.Column>
 {
     public SQLiteDbModelFromCSharpDefinitionProvider() : base(

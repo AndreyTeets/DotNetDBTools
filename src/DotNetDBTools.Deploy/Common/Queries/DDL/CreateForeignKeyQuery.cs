@@ -1,22 +1,33 @@
 ﻿using System.Collections.Generic;
-using DotNetDBTools.Deploy.Core;
+using DotNetDBTools.Deploy.Core.Queries;
+using DotNetDBTools.Generation;
 using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.Deploy.Common.Queries.DDL;
 
-internal abstract class CreateForeignKeyQuery : IQuery
+internal abstract class CreateForeignKeyQuery : NoParametersQuery
 {
-    public string Sql => _sql;
-    public IEnumerable<QueryParameter> Parameters => _parameters;
-
+    public override string Sql => _sql;
     private readonly string _sql;
-    private readonly List<QueryParameter> _parameters;
 
-    public CreateForeignKeyQuery(ForeignKey fk, string tableName)
+    public CreateForeignKeyQuery(ForeignKey fk)
     {
-        _sql = GetSql(fk, tableName);
-        _parameters = new List<QueryParameter>();
+        _sql = GetSql(fk);
     }
 
-    protected abstract string GetSql(ForeignKey fk, string tableName);
+    protected abstract string GetSql(ForeignKey fk);
+
+    protected string GetSqlBase<TTable, TTableDiff>(ForeignKey fk)
+        where TTable : Table, new()
+        where TTableDiff : TableDiff, new()
+    {
+        TTable table = new() { Name = fk.ThisTableName };
+        TTableDiff tableDiff = new()
+        {
+            NewTable = table,
+            OldTable = table,
+            ForeignKeysToCreate = new List<ForeignKey>() { fk },
+        };
+        return GenerationManager.GenerateSqlAlterStatement(tableDiff);
+    }
 }

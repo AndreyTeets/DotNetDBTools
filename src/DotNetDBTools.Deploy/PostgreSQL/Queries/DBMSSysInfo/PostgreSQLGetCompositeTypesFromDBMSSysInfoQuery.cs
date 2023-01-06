@@ -1,11 +1,10 @@
-﻿using System.Collections.Generic;
-using DotNetDBTools.Deploy.Core;
+﻿using DotNetDBTools.Deploy.Core.Queries;
 
 namespace DotNetDBTools.Deploy.PostgreSQL.Queries.DBMSSysInfo;
 
-internal class PostgreSQLGetCompositeTypesFromDBMSSysInfoQuery : IQuery
+internal class PostgreSQLGetCompositeTypesFromDBMSSysInfoQuery : NoParametersQuery
 {
-    public string Sql =>
+    public override string Sql =>
 $@"SELECT
     t.typname AS ""{nameof(CompositeTypeRecord.TypeName)}"",
     a.attname AS ""{nameof(CompositeTypeRecord.AttributeName)}"",
@@ -26,8 +25,6 @@ INNER JOIN pg_catalog.pg_type at
 WHERE t.typtype = 'c'
     AND c.relkind = 'c'
     AND n.nspname NOT IN ('information_schema', 'pg_catalog');";
-
-    public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
 
     public class CompositeTypeRecord
     {

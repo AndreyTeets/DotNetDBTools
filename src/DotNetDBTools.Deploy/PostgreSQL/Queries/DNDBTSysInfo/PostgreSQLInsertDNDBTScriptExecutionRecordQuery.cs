@@ -2,6 +2,7 @@
 using System.Data;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Queries.DNDBTSysInfo;
+using DotNetDBTools.Generation.Core;
 using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.Deploy.PostgreSQL.Queries.DNDBTSysInfo;

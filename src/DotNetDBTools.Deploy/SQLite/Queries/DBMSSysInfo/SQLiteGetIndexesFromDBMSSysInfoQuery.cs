@@ -2,6 +2,7 @@
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo;
 using DotNetDBTools.Models.Core;
+using DotNetDBTools.Models.SQLite;
 
 namespace DotNetDBTools.Deploy.SQLite.Queries.DBMSSysInfo;
 
@@ -29,7 +30,7 @@ WHERE sm.type = 'table'
     {
         public override Index MapExceptColumnsToIndexModel(IndexRecord indexRecord)
         {
-            return new()
+            return new SQLiteIndex()
             {
                 ID = Guid.NewGuid(),
                 Name = indexRecord.IndexName,

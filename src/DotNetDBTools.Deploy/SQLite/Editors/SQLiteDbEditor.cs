@@ -1,7 +1,8 @@
 ﻿using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Editors;
-using DotNetDBTools.Deploy.Core.Queries;
+using DotNetDBTools.Deploy.Core.Queries.DDL;
 using DotNetDBTools.Deploy.SQLite.Queries.DNDBTSysInfo;
+using DotNetDBTools.Generation.Core;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.SQLite;
 
@@ -14,12 +15,16 @@ internal class SQLiteDbEditor : DbEditor<
 {
     private readonly IScriptExecutor _scriptExecutor;
     private readonly ITableEditor _tableEditor;
+    private readonly IIndexEditor _indexEditor;
+    private readonly ITriggerEditor _triggerEditor;
 
     public SQLiteDbEditor(IQueryExecutor queryExecutor)
         : base(queryExecutor)
     {
         _scriptExecutor = new SQLiteScriptExecutor(queryExecutor);
         _tableEditor = new SQLiteTableEditor(queryExecutor);
+        _indexEditor = new SQLiteIndexEditor(queryExecutor);
+        _triggerEditor = new SQLiteTriggerEditor(queryExecutor);
     }
 
     public override void PopulateDNDBTSysTables(Database database)
@@ -66,13 +71,17 @@ internal class SQLiteDbEditor : DbEditor<
         _scriptExecutor.DeleteRemovedScriptsExecutionRecords(dbDiff);
         _scriptExecutor.ExecuteScripts(dbDiff, ScriptKind.BeforePublishOnce);
 
+        _triggerEditor.DropTriggers(dbDiff);
         foreach (SQLiteView view in dbDiff.ViewsToDrop)
             DropView(view);
+        _indexEditor.DropIndexes(dbDiff);
         _tableEditor.DropTables(dbDiff);
         _tableEditor.AlterTables(dbDiff);
         _tableEditor.CreateTables(dbDiff);
+        _indexEditor.CreateIndexes(dbDiff);
         foreach (SQLiteView view in dbDiff.ViewsToCreate)
             CreateView(view);
+        _triggerEditor.CreateTriggers(dbDiff);
 
         _scriptExecutor.ExecuteScripts(dbDiff, ScriptKind.AfterPublishOnce);
 
@@ -82,13 +91,13 @@ internal class SQLiteDbEditor : DbEditor<
 
     private void CreateView(SQLiteView view)
     {
-        QueryExecutor.Execute(new GenericQuery($"{view.GetCode().AppendSemicolonIfAbsent()}"));
+        QueryExecutor.Execute(new CreateViewQuery(view));
         QueryExecutor.Execute(new SQLiteInsertDNDBTDbObjectRecordQuery(view.ID, null, DbObjectType.View, view.Name, view.GetCode()));
     }
 
     private void DropView(SQLiteView view)
     {
-        QueryExecutor.Execute(new GenericQuery($"DROP VIEW [{view.Name}];"));
+        QueryExecutor.Execute(new DropViewQuery(view));
         QueryExecutor.Execute(new SQLiteDeleteDNDBTDbObjectRecordQuery(view.ID));
     }
 }

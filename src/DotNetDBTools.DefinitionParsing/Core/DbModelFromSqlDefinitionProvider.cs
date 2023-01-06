@@ -15,11 +15,15 @@ internal abstract class DbModelFromSqlDefinitionProvider<
     TDatabase,
     TTable,
     TView,
+    TIndex,
+    TTrigger,
     TColumn>
     : IDbModelFromSqlDefinitionProvider
     where TDatabase : Database, new()
     where TTable : Table, new()
     where TView : View, new()
+    where TIndex : Index, new()
+    where TTrigger : Trigger, new()
     where TColumn : Column, new()
 {
     protected readonly ICodeParser CodeParser;
@@ -239,18 +243,19 @@ internal abstract class DbModelFromSqlDefinitionProvider<
             {
                 ID = fk.ID.Value,
                 Name = fk.Name,
+                ThisTableName = table.Name,
                 ThisColumnNames = fk.Columns,
                 ReferencedTableName = fk.RefTable,
                 ReferencedTableColumnNames = fk.RefColumns,
                 OnUpdate = fk.UpdateAction?.ToUpper() ?? ForeignKeyActions.NoAction,
                 OnDelete = fk.DeleteAction?.ToUpper() ?? ForeignKeyActions.NoAction,
             };
-            BuildAdditionalForeignKeyModelProperties(fkModel, fk, table.Name);
+            BuildAdditionalForeignKeyModelProperties(fkModel, fk);
             fkModels.Add(fkModel);
         }
         return fkModels;
     }
-    protected virtual void BuildAdditionalForeignKeyModelProperties(ForeignKey fkModel, ConstraintInfo fk, string tableName) { }
+    protected virtual void BuildAdditionalForeignKeyModelProperties(ForeignKey fkModel, ConstraintInfo fk) { }
 
     private void BuildTablesIndexes(
         Dictionary<string, Table> tableNameToTableMap,
@@ -258,18 +263,19 @@ internal abstract class DbModelFromSqlDefinitionProvider<
     {
         foreach (IndexInfo index in indexes.OrderBy(x => x.Name, StringComparer.Ordinal))
         {
-            Index indexModel = new()
+            TIndex indexModel = new()
             {
                 ID = index.ID.Value,
                 Name = index.Name,
+                TableName = index.Table,
                 Columns = index.Columns,
                 Unique = index.Unique,
             };
-            BuildAdditionalIndexModelProperties(indexModel, index, index.Table);
+            BuildAdditionalIndexModelProperties(indexModel, index);
             tableNameToTableMap[index.Table].Indexes.Add(indexModel);
         }
     }
-    protected virtual void BuildAdditionalIndexModelProperties(Index indexModel, IndexInfo index, string tableName) { }
+    protected virtual void BuildAdditionalIndexModelProperties(Index indexModel, IndexInfo index) { }
 
     private void BuildTablesTriggers(
         Dictionary<string, Table> tableNameToTableMap,
@@ -277,15 +283,16 @@ internal abstract class DbModelFromSqlDefinitionProvider<
     {
         foreach (TriggerInfo trigger in triggers.OrderBy(x => x.Name, StringComparer.Ordinal))
         {
-            Trigger triggerModel = new()
+            TTrigger triggerModel = new()
             {
                 ID = trigger.ID.Value,
                 Name = trigger.Name,
+                TableName = trigger.Table,
                 CodePiece = new CodePiece { Code = trigger.Code.NormalizeLineEndings() },
             };
-            BuildAdditionalTriggerModelProperties(triggerModel, trigger, trigger.Table);
+            BuildAdditionalTriggerModelProperties(triggerModel, trigger);
             tableNameToTableMap[trigger.Table].Triggers.Add(triggerModel);
         }
     }
-    protected virtual void BuildAdditionalTriggerModelProperties(Trigger triggerModel, TriggerInfo trigger, string tableName) { }
+    protected virtual void BuildAdditionalTriggerModelProperties(Trigger triggerModel, TriggerInfo trigger) { }
 }

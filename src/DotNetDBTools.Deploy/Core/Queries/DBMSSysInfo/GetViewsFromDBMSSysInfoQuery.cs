@@ -1,12 +1,7 @@
-﻿using System.Collections.Generic;
+﻿namespace DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo;
 
-namespace DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo;
-
-internal abstract class GetViewsFromDBMSSysInfoQuery : IQuery
+internal abstract class GetViewsFromDBMSSysInfoQuery : NoParametersQuery
 {
-    public abstract string Sql { get; }
-    public IEnumerable<QueryParameter> Parameters => new List<QueryParameter>();
-
     public class ViewRecord
     {
         public string ViewName { get; set; }

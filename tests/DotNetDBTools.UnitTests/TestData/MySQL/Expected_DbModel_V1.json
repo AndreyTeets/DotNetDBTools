@@ -114,6 +114,7 @@
       "ForeignKeys": [
         {
           "$id": "18",
+          "ThisTableName": "MyTable1",
           "ThisColumnNames": [
             "MyColumn1"
           ],
@@ -133,6 +134,7 @@
       "Indexes": [
         {
           "$id": "19",
+          "TableName": "MyTable1",
           "Columns": [
             "MyColumn4"
           ],
@@ -211,6 +213,7 @@
       "Indexes": [
         {
           "$id": "28",
+          "TableName": "MyTable2",
           "Columns": [
             "MyColumn1",
             "MyColumn2"
@@ -227,6 +230,7 @@
       "Triggers": [
         {
           "$id": "29",
+          "TableName": "MyTable2",
           "CodePiece": {
             "$id": "30",
             "Code": "CREATE TRIGGER `TR_MyTable2_MyTrigger1`\nAFTER INSERT\nON `MyTable2`\nFOR EACH ROW\nBEGIN\n    INSERT INTO `MyTable4`(`MyColumn1`)\n    VALUES (NEW.`MyColumn1`);\nEND"
@@ -529,6 +533,7 @@
       "Indexes": [
         {
           "$id": "73",
+          "TableName": "MyTable5",
           "Columns": [
             "MyColumn8"
           ],
@@ -542,6 +547,7 @@
         },
         {
           "$id": "74",
+          "TableName": "MyTable5",
           "Columns": [
             "MyColumn6",
             "MyColumn3",
@@ -611,6 +617,7 @@
       "ForeignKeys": [
         {
           "$id": "82",
+          "ThisTableName": "MyTable6",
           "ThisColumnNames": [
             "MyColumn1",
             "MyColumn2"

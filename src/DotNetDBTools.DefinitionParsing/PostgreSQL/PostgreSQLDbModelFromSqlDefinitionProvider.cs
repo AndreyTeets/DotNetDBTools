@@ -14,6 +14,8 @@ internal class PostgreSQLDbModelFromSqlDefinitionProvider : DbModelFromSqlDefini
     PostgreSQLDatabase,
     PostgreSQLTable,
     PostgreSQLView,
+    PostgreSQLIndex,
+    PostgreSQLTrigger,
     Column>
 {
     public PostgreSQLDbModelFromSqlDefinitionProvider() : base(

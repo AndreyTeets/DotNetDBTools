@@ -8,6 +8,8 @@ internal class PostgreSQLDbModelConverter : DbModelConverter<
     PostgreSQLDatabase,
     PostgreSQLTable,
     PostgreSQLView,
+    PostgreSQLIndex,
+    PostgreSQLTrigger,
     Column>
 {
     public PostgreSQLDbModelConverter() : base(

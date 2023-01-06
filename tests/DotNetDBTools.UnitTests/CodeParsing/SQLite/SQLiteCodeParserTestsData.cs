@@ -12,6 +12,7 @@ public class SQLiteCodeParserTestsData : BaseCodeParserTestsData
     public override ViewInfo ExpectedView => GetExpectedView();
     public override IndexInfo ExpectedIndex => GetExpectedIndex();
     public override TriggerInfo ExpectedTrigger => GetExpectedTrigger();
+    public TableInfo ExpectedTableWithPkColumn => GetExpectedTableWithPkColumn();
 
     private TableInfo GetExpectedTable()
     {
@@ -43,8 +44,6 @@ public class SQLiteCodeParserTestsData : BaseCodeParserTestsData
                     Name = "Col3",
                     DataType = "INTEGER",
                     NotNull = true,
-                    Identity = true,
-                    PrimaryKey = true,
                 },
                 new ColumnInfo()
                 {
@@ -161,6 +160,53 @@ public class SQLiteCodeParserTestsData : BaseCodeParserTestsData
             Name = "TR_MyTable2_MyTrigger1",
             Table = "MyTable2",
             Code = ReadStatementFromFileWithoutIdDeclarations($@"{TestDataDir}/CreateTrigger.sql"),
+        };
+    }
+
+    private TableInfo GetExpectedTableWithPkColumn()
+    {
+        return new()
+        {
+            ID = new Guid("4C36AE77-B7E4-40C3-824F-BD20DC270A14"),
+            Name = "MyTableWithPkColumn",
+            Columns = new List<ColumnInfo>()
+            {
+                new ColumnInfo()
+                {
+                    ID = new Guid("5C36AE77-B7E4-40C3-824F-BD20DC270A14"),
+                    Name = "Col1",
+                    DataType = "INTEGER",
+                    NotNull = true,
+                    Default = "15",
+                    Unique = true,
+                },
+                new ColumnInfo()
+                {
+                    ID = new Guid("7C36AE77-B7E4-40C3-824F-BD20DC270A14"),
+                    Name = "Col3",
+                    DataType = "INTEGER",
+                    NotNull = true,
+                    Identity = true,
+                    PrimaryKey = true,
+                },
+            },
+            Constraints = new List<ConstraintInfo>()
+            {
+                new ConstraintInfo()
+                {
+                    ID = new Guid("26B2955E-6DF9-4B5C-973A-0010F6606F5E"),
+                    Name = null,
+                    Type = ConstraintType.PrimaryKey,
+                    Columns = new List<string>() { "Col3" },
+                },
+                new ConstraintInfo()
+                {
+                    ID = new Guid("A836AE77-B7E4-40C3-824F-BD20DC270A14"),
+                    Name = "CK_Table1_Check3",
+                    Type = ConstraintType.Check,
+                    Code = "CHECK ([Col3] >= 0)",
+                },
+            }
         };
     }
 }

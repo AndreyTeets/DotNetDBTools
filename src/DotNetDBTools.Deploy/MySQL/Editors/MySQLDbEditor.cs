@@ -2,7 +2,9 @@
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Editors;
 using DotNetDBTools.Deploy.Core.Queries;
+using DotNetDBTools.Deploy.Core.Queries.DDL;
 using DotNetDBTools.Deploy.MySQL.Queries.DNDBTSysInfo;
+using DotNetDBTools.Generation.Core;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.MySQL;
 
@@ -116,13 +118,13 @@ internal class MySQLDbEditor : DbEditor<
 
     private void CreateView(MySQLView view)
     {
-        QueryExecutor.Execute(new GenericQuery($"{view.GetCode().AppendSemicolonIfAbsent()}"));
+        QueryExecutor.Execute(new CreateViewQuery(view));
         QueryExecutor.Execute(new MySQLInsertDNDBTDbObjectRecordQuery(view.ID, null, DbObjectType.View, view.Name, view.GetCode()));
     }
 
     private void DropView(MySQLView view)
     {
-        QueryExecutor.Execute(new GenericQuery($"DROP VIEW `{view.Name}`;"));
+        QueryExecutor.Execute(new DropViewQuery(view));
         QueryExecutor.Execute(new MySQLDeleteDNDBTDbObjectRecordQuery(view.ID));
     }
 

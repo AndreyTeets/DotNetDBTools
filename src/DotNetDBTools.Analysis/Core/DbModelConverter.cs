@@ -9,11 +9,15 @@ internal abstract class DbModelConverter<
     TDatabase,
     TTable,
     TView,
+    TIndex,
+    TTrigger,
     TColumn>
     : IDbModelConverter
     where TDatabase : Database, new()
     where TTable : Table, new()
     where TView : View, new()
+    where TIndex : Index, new()
+    where TTrigger : Trigger, new()
     where TColumn : Column, new()
 {
     private readonly DatabaseKind _databaseKind;
@@ -62,8 +66,8 @@ internal abstract class DbModelConverter<
             PrimaryKey = ConvertPrimaryKey(table.PrimaryKey, table.Name),
             UniqueConstraints = table.UniqueConstraints,
             CheckConstraints = table.CheckConstraints.Select(ck => { ck.CodePiece = ConvertCodePiece(ck.CodePiece); return ck; }).ToList(),
-            Indexes = table.Indexes,
-            Triggers = table.Triggers.Select(trigger => { trigger.CodePiece = ConvertCodePiece(trigger.CodePiece); return trigger; }).ToList(),
+            Indexes = ConvertIndexes(table.Indexes),
+            Triggers = ConvertTriggers(table.Triggers),
             ForeignKeys = table.ForeignKeys,
         };
     }
@@ -110,6 +114,42 @@ internal abstract class DbModelConverter<
     protected virtual PrimaryKey ConvertPrimaryKey(PrimaryKey pk, string tableName)
     {
         return pk;
+    }
+
+    protected virtual List<Index> ConvertIndexes(IEnumerable<Index> indexes)
+    {
+        List<Index> specificDbmsIndexes = new();
+        foreach (Index index in indexes)
+        {
+            TIndex specificDbmsIndex = new()
+            {
+                ID = index.ID,
+                Name = index.Name,
+                TableName = index.TableName,
+                Columns = index.Columns,
+                IncludeColumns = index.IncludeColumns,
+                Unique = index.Unique,
+            };
+            specificDbmsIndexes.Add(specificDbmsIndex);
+        };
+        return specificDbmsIndexes;
+    }
+
+    protected virtual List<Trigger> ConvertTriggers(IEnumerable<Trigger> triggers)
+    {
+        List<Trigger> specificDbmsTriggers = new();
+        foreach (Trigger trigger in triggers)
+        {
+            TTrigger specificDbmsTrigger = new()
+            {
+                ID = trigger.ID,
+                Name = trigger.Name,
+                TableName = trigger.TableName,
+                CodePiece = ConvertCodePiece(trigger.CodePiece),
+            };
+            specificDbmsTriggers.Add(specificDbmsTrigger);
+        };
+        return specificDbmsTriggers;
     }
 
     private Script ConvertScript(Script script)

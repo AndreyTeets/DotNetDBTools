@@ -1,21 +1,23 @@
-﻿using System.Collections.Generic;
+﻿using DotNetDBTools.Generation;
+using DotNetDBTools.Models;
 using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.Deploy.Core.Queries.DDL;
 
-internal abstract class CreateTableQuery : IQuery
+internal class CreateTableQuery : NoParametersQuery
 {
-    public string Sql => _sql;
-    public IEnumerable<QueryParameter> Parameters => _parameters;
-
+    public override string Sql => _sql;
     private readonly string _sql;
-    private readonly List<QueryParameter> _parameters;
 
     public CreateTableQuery(Table table)
     {
         _sql = GetSql(table);
-        _parameters = new List<QueryParameter>();
     }
 
-    protected abstract string GetSql(Table table);
+    protected virtual string GetSql(Table table)
+    {
+        Table tableWithoutForeignKeys = table.CopyModel();
+        tableWithoutForeignKeys.ForeignKeys.Clear();
+        return GenerationManager.GenerateSqlCreateStatement(tableWithoutForeignKeys, false);
+    }
 }

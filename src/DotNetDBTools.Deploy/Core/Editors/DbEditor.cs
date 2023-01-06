@@ -8,9 +8,9 @@ internal abstract class DbEditor<
     TCreateDNDBTSysTablesQuery,
     TDropDNDBTSysTablesQuery>
     : IDbEditor
-    where TCheckDNDBTSysTablesExistQuery : SqlTextOnlyQuery, new()
-    where TCreateDNDBTSysTablesQuery : SqlTextOnlyQuery, new()
-    where TDropDNDBTSysTablesQuery : SqlTextOnlyQuery, new()
+    where TCheckDNDBTSysTablesExistQuery : NoParametersQuery, new()
+    where TCreateDNDBTSysTablesQuery : NoParametersQuery, new()
+    where TDropDNDBTSysTablesQuery : NoParametersQuery, new()
 {
     protected readonly IQueryExecutor QueryExecutor;
 

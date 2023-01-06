@@ -4,8 +4,13 @@ using System.Linq;
 using DotNetDBTools.Analysis.Extensions;
 using DotNetDBTools.Deploy.Common.Editors;
 using DotNetDBTools.Deploy.Core;
+using DotNetDBTools.Deploy.Core.Editors;
 using DotNetDBTools.Deploy.Core.Queries;
+using DotNetDBTools.Deploy.Core.Queries.DDL;
+using DotNetDBTools.Deploy.PostgreSQL.Queries.DDL;
 using DotNetDBTools.Deploy.PostgreSQL.Queries.DNDBTSysInfo;
+using DotNetDBTools.Generation.Core;
+using DotNetDBTools.Generation.PostgreSQL;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.PostgreSQL;
 
@@ -87,25 +92,25 @@ internal class PostgreSQLDependsOnTablesObjectsEditor
 
     private void CreateView(PostgreSQLView view)
     {
-        QueryExecutor.Execute(new GenericQuery($"{view.GetCode()}"));
+        QueryExecutor.Execute(new CreateViewQuery(view));
         QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(view.ID, null, DbObjectType.View, view.Name, view.GetCode()));
     }
 
     private void DropView(PostgreSQLView view)
     {
-        QueryExecutor.Execute(new GenericQuery($@"DROP VIEW ""{view.Name}"";"));
+        QueryExecutor.Execute(new DropViewQuery(view));
         QueryExecutor.Execute(new PostgreSQLDeleteDNDBTDbObjectRecordQuery(view.ID));
     }
 
     private void CreateFunction(PostgreSQLFunction func)
     {
-        QueryExecutor.Execute(new GenericQuery($"{func.GetCode()}"));
+        QueryExecutor.Execute(new PostgreSQLCreateFunctionQuery(func));
         QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(func.ID, null, DbObjectType.Function, func.Name, func.GetCode()));
     }
 
     private void DropFunction(PostgreSQLFunction func)
     {
-        QueryExecutor.Execute(new GenericQuery($@"DROP FUNCTION ""{func.Name}"";"));
+        QueryExecutor.Execute(new PostgreSQLDropFunctionQuery(func));
         QueryExecutor.Execute(new PostgreSQLDeleteDNDBTDbObjectRecordQuery(func.ID));
     }
 

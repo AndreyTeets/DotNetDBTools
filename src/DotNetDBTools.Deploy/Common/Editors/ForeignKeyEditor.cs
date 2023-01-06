@@ -35,20 +35,19 @@ internal abstract class ForeignKeyEditor<
 
     public void DropForeignKeys(DatabaseDiff dbDiff)
     {
-        Dictionary<Guid, Table> fkToTableMap = CreateFKToTableMap(dbDiff.OldDatabase.Tables);
         foreach (ForeignKey fk in dbDiff.AllForeignKeysToDrop)
-            DropForeignKey(fk, fkToTableMap[fk.ID]);
+            DropForeignKey(fk);
     }
 
     public void CreateForeignKey(ForeignKey fk, Table table)
     {
-        _queryExecutor.Execute(Create<TCreateForeignKeyQuery>(fk, table.Name));
+        _queryExecutor.Execute(Create<TCreateForeignKeyQuery>(fk));
         _queryExecutor.Execute(Create<TInsertDNDBTDbObjectRecordQuery>(fk.ID, table.ID, DbObjectType.ForeignKey, fk.Name));
     }
 
-    public void DropForeignKey(ForeignKey fk, Table table)
+    public void DropForeignKey(ForeignKey fk)
     {
-        _queryExecutor.Execute(Create<TDropForeignKeyQuery>(fk, table.Name));
+        _queryExecutor.Execute(Create<TDropForeignKeyQuery>(fk));
         _queryExecutor.Execute(Create<TDeleteDNDBTDbObjectRecordQuery>(fk.ID));
     }
 

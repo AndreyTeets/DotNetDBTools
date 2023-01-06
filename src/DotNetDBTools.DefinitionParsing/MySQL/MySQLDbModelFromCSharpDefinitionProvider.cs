@@ -14,6 +14,8 @@ internal class MySQLDbModelFromCSharpDefinitionProvider : DbModelFromCSharpDefin
     MySQLDatabase,
     MySQLTable,
     MySQLView,
+    MySQLIndex,
+    MySQLTrigger,
     Models.Core.Column>
 {
     public MySQLDbModelFromCSharpDefinitionProvider() : base(
