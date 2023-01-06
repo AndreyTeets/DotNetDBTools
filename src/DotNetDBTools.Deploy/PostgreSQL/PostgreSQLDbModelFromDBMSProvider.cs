@@ -52,7 +52,6 @@ internal class PostgreSQLDbModelFromDBMSProvider : DbModelFromDBMSProvider<
         db.EnumTypes = BuildEnumTypes(new PostgreSQLGetEnumTypesFromDBMSSysInfoQuery());
         db.RangeTypes = BuildRangeTypes(new PostgreSQLGetRangeTypesFromDBMSSysInfoQuery(_dbmsVersion));
         db.Functions = BuildFunctions(new PostgreSQLGetFunctionsFromDBMSSysInfoQuery());
-        db.Procedures = new();
     }
 
     protected override void ReplaceAdditionalDbModelObjectsIDsAndCodeWithDNDBTSysInfo(Database database, Dictionary<string, DNDBTInfo> dbObjectIDsMap)
@@ -97,7 +96,6 @@ internal class PostgreSQLDbModelFromDBMSProvider : DbModelFromDBMSProvider<
                 {
                     ID = Guid.NewGuid(),
                     Name = typeRecord.TypeName,
-                    Attributes = new List<PostgreSQLCompositeTypeAttribute>(),
                 };
                 typesMap.Add(typeRecord.TypeName, type);
             }
@@ -162,7 +160,6 @@ internal class PostgreSQLDbModelFromDBMSProvider : DbModelFromDBMSProvider<
                 {
                     ID = Guid.NewGuid(),
                     Name = typeRecord.TypeName,
-                    AllowedValues = new List<string>(),
                 };
                 typesMap.Add(typeRecord.TypeName, type);
             }

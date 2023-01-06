@@ -36,6 +36,7 @@ internal class MSSQLDbModelPostProcessor : DbModelPostProcessor
 
         void PostProcessDataType(DataType dataType)
         {
+            dataType.Name = Regex.Replace(dataType.Name, @"\s", "");
             if (!userDefinedTypesNames.Contains(dataType.Name) && IsStandardSqlType(dataType.Name))
                 dataType.Name = dataType.Name.ToUpper();
             else if (userDefinedTypesNames.Contains(dataType.Name))

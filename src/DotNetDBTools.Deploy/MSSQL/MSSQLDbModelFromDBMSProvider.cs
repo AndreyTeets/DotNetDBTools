@@ -33,9 +33,6 @@ internal class MSSQLDbModelFromDBMSProvider : DbModelFromDBMSProvider<
     {
         MSSQLDatabase db = (MSSQLDatabase)database;
         db.UserDefinedTypes = BuildUserDefinedTypes(new MSSQLGetTypesFromDBMSSysInfoQuery());
-        db.UserDefinedTableTypes = new();
-        db.Functions = new();
-        db.Procedures = new();
     }
 
     protected override void ReplaceAdditionalDbModelObjectsIDsAndCodeWithDNDBTSysInfo(Database database, Dictionary<string, DNDBTInfo> dbObjectIDsMap)

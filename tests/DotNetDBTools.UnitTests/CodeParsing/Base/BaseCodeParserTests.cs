@@ -18,6 +18,12 @@ public abstract class BaseCodeParserTests<TCodeParser>
     }
 
     [Fact]
+    public void GetObjectInfo_ParsesPkColumnCorrectly()
+    {
+        Assert_GetObjectInfo_ParsesObjectCorrectly("CreateTableWithPkColumn.sql", TestData.ExpectedTableWithPkColumn);
+    }
+
+    [Fact]
     public void GetObjectInfo_ParsesViewCorrectly()
     {
         Assert_GetObjectInfo_ParsesObjectCorrectly("CreateView.sql", TestData.ExpectedView);
@@ -59,7 +65,7 @@ public abstract class BaseCodeParserTests<TCodeParser>
         string sqlFileName, TObjectInfo expectedObjectInfo)
         where TObjectInfo : ObjectInfo
     {
-        string input = FilesHelper.GetFromFile($@"{TestData.TestDataDir}/{sqlFileName}");
+        string input = MiscHelper.ReadFromFile($@"{TestData.TestDataDir}/{sqlFileName}");
         TCodeParser parser = new();
         TObjectInfo actualObjectInfo = (TObjectInfo)parser.GetObjectInfo(input);
 

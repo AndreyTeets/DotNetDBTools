@@ -30,7 +30,7 @@ public abstract class BaseGrammarTests<TParser, TLexer>
         StringBuilder sb = new();
         foreach (string filePath in Directory.EnumerateFiles(TestDataDir, "*.sql", SearchOption.TopDirectoryOnly))
         {
-            string input = FilesHelper.GetFromFile(filePath);
+            string input = MiscHelper.ReadFromFile(filePath);
             try
             {
                 totalFilesCount++;

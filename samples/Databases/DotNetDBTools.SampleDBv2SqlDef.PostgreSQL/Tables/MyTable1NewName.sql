@@ -7,6 +7,9 @@ CREATE TABLE "MyTable1NewName"
     --ID:#{867AC528-E87E-4C93-B6E3-DD2FCBBB837F}#
     "MyColumn4" DECIMAL(19, 2) NOT NULL,
 
+    --ID:#{EBBEF06C-C7DE-4B36-A911-827566639630}#
+    "MyColumn5" varchar ( 1000 ),
+
     --ID:#{D11B2A53-32DB-432F-BB6B-F91788844BA9}#
     CONSTRAINT "FK_MyTable1_MyColumn1_MyTable2_MyColumn1" FOREIGN KEY ("MyColumn1")
         REFERENCES "MyTable2"("MyColumn1NewName")

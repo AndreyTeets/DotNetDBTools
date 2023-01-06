@@ -37,7 +37,6 @@ internal class PostgreSQLDbModelFromCSharpDefinitionProvider : DbModelFromCSharp
         db.EnumTypes = BuildEnumTypeModels(dbAssembly);
         db.RangeTypes = BuildRangeTypeModels(dbAssembly);
         db.Functions = BuildFunctionModels(dbAssembly);
-        db.Procedures = new();
     }
 
     protected override void BuildAdditionalTableModelProperties(PostgreSQLTable tableModel, IBaseTable table)

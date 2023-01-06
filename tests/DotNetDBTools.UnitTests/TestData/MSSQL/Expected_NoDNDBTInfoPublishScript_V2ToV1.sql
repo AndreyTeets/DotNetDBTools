@@ -120,7 +120,9 @@ ALTER TABLE [MyTable2] ADD CONSTRAINT [PK_MyTable2_CustomName] PRIMARY KEY ([MyC
 -- QUERY END: AlterTableQuery
 
 -- QUERY START: AlterTableQuery
-EXEC sp_executesql N'ALTER TABLE [MyTable5] ADD CONSTRAINT [PK_MyTable5_CustomName] PRIMARY KEY ([MyColumn2], [MyColumn1]);
+EXEC sp_executesql N'ALTER TABLE [MyTable5] DROP CONSTRAINT [DF_MyTable5_MyColumn1];
+ALTER TABLE [MyTable5] ADD CONSTRAINT [DF_MyTable5_MyColumn1] DEFAULT ABs(-15) FOR [MyColumn1];
+ALTER TABLE [MyTable5] ADD CONSTRAINT [PK_MyTable5_CustomName] PRIMARY KEY ([MyColumn2], [MyColumn1]);
 ALTER TABLE [MyTable5] ADD CONSTRAINT [UQ_MyTable5_CustomName] UNIQUE ([MyColumn6], [MyColumn3], [MyColumn7]);';
 -- QUERY END: AlterTableQuery
 

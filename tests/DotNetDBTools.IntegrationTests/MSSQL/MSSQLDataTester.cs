@@ -28,7 +28,7 @@ internal class MSSQLDataTester : BaseDataTester
     {
         return
 $@",
-    {Quote("MyColumn13")}"
+    {Quote("MyColumn101")}"
         ;
     }
 
@@ -36,7 +36,7 @@ $@",
     {
         return
 $@",
-    'abc13'"
+    'abc101'"
         ;
     }
 
@@ -44,7 +44,7 @@ $@",
     {
         return
 $@"
-    AND {Quote("MyColumn13")} = 'abc13'"
+    AND {Quote("MyColumn101")} = 'abc101'"
         ;
     }
 }

@@ -53,7 +53,7 @@ public class PostgreSQLCodeParserTests : BaseCodeParserTests<PostgreSQLCodeParse
     [Fact]
     public void GetViewDependencies_GetsCorrectData()
     {
-        string input = FilesHelper.GetFromFile($@"{TestData.TestDataDir}/CreateView.sql");
+        string input = MiscHelper.ReadFromFile($@"{TestData.TestDataDir}/CreateView.sql");
         PostgreSQLCodeParser parser = new();
         List<Dependency> dependencies = parser.GetViewDependencies(input);
 
@@ -69,7 +69,7 @@ public class PostgreSQLCodeParserTests : BaseCodeParserTests<PostgreSQLCodeParse
     [Fact]
     public void GetFunctionDependencies_GetsCorrectData_FromSQLFunc()
     {
-        string input = FilesHelper.GetFromFile($@"{TestData.TestDataDir}/CreateSQLFunction.sql");
+        string input = MiscHelper.ReadFromFile($@"{TestData.TestDataDir}/CreateSQLFunction.sql");
         PostgreSQLCodeParser parser = new();
         List<Dependency> dependencies = parser.GetFunctionDependencies(input);
 
@@ -85,7 +85,7 @@ public class PostgreSQLCodeParserTests : BaseCodeParserTests<PostgreSQLCodeParse
     [Fact]
     public void GetFunctionDependencies_GetsCorrectData_FromPLPGSQLFunc()
     {
-        string input = FilesHelper.GetFromFile($@"{TestData.TestDataDir}/CreatePLPGSQLFunction.sql");
+        string input = MiscHelper.ReadFromFile($@"{TestData.TestDataDir}/CreatePLPGSQLFunction.sql");
         PostgreSQLCodeParser parser = new();
         List<Dependency> dependencies = parser.GetFunctionDependencies(input);
 

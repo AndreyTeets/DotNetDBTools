@@ -453,7 +453,9 @@ VALUES
 
 -- QUERY START: AlterTableQuery
 EXEC sp_executesql N'ALTER TABLE [MyTable5] DROP CONSTRAINT [UQ_MyTable5_CustomName];
-ALTER TABLE [MyTable5] DROP CONSTRAINT [PK_MyTable5_CustomName];';
+ALTER TABLE [MyTable5] DROP CONSTRAINT [PK_MyTable5_CustomName];
+ALTER TABLE [MyTable5] DROP CONSTRAINT [DF_MyTable5_MyColumn1];
+ALTER TABLE [MyTable5] ADD CONSTRAINT [DF_MyTable5_MyColumn1] DEFAULT abS(-15) FOR [MyColumn1];';
 -- QUERY END: AlterTableQuery
 
 -- QUERY START: DeleteDNDBTDbObjectRecordQuery
@@ -470,6 +472,16 @@ WHERE [ID] = ''79384d48-a39b-4a22-900e-066b2ca67ba2'';';
 EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'';
 DECLARE @Name NVARCHAR(MAX) = N''MyTable5'';
 DECLARE @Code NVARCHAR(MAX) = NULL;
+UPDATE [DNDBTDbObjects] SET
+    [Name] = @Name,
+    [Code] = @Code
+WHERE [ID] = @ID;';
+-- QUERY END: UpdateDNDBTDbObjectRecordQuery
+
+-- QUERY START: UpdateDNDBTDbObjectRecordQuery
+EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''5309d66f-2030-402e-912e-5547babaa072'';
+DECLARE @Name NVARCHAR(MAX) = N''MyColumn1'';
+DECLARE @Code NVARCHAR(MAX) = N''abS(-15)'';
 UPDATE [DNDBTDbObjects] SET
     [Name] = @Name,
     [Code] = @Code

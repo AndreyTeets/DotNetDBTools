@@ -7,22 +7,22 @@ public abstract class DatabaseDiff
     public Database NewDatabase { get; set; }
     public Database OldDatabase { get; set; }
 
-    public List<Table> AddedTables { get; set; }
-    public List<Table> RemovedTables { get; set; }
-    public List<TableDiff> ChangedTables { get; set; }
+    public List<Table> AddedTables { get; set; } = new();
+    public List<Table> RemovedTables { get; set; } = new();
+    public List<TableDiff> ChangedTables { get; set; } = new();
 
-    public List<View> ViewsToCreate { get; set; }
-    public List<View> ViewsToDrop { get; set; }
+    public List<View> ViewsToCreate { get; set; } = new();
+    public List<View> ViewsToDrop { get; set; } = new();
 
-    public List<Index> IndexesToCreate { get; set; }
-    public List<Index> IndexesToDrop { get; set; }
+    public List<Index> IndexesToCreate { get; set; } = new();
+    public List<Index> IndexesToDrop { get; set; } = new();
 
-    public List<Trigger> TriggersToCreate { get; set; }
-    public List<Trigger> TriggersToDrop { get; set; }
+    public List<Trigger> TriggersToCreate { get; set; } = new();
+    public List<Trigger> TriggersToDrop { get; set; } = new();
 
-    public List<ForeignKey> AllForeignKeysToCreate { get; set; }
-    public List<ForeignKey> AllForeignKeysToDrop { get; set; }
+    public List<ForeignKey> AllForeignKeysToCreate { get; set; } = new();
+    public List<ForeignKey> AllForeignKeysToDrop { get; set; } = new();
 
-    public List<Script> AddedScripts { get; set; }
-    public List<Script> RemovedScripts { get; set; }
+    public List<Script> AddedScripts { get; set; } = new();
+    public List<Script> RemovedScripts { get; set; } = new();
 }

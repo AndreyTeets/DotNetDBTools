@@ -28,10 +28,10 @@ internal class PostgreSQLDataTester : BaseDataTester
     {
         return
 $@",
-    {Quote("MyColumn13")},
-    {Quote("MyColumn14")},
-    {Quote("MyColumn15")},
-    {Quote("MyColumn16")}"
+    {Quote("MyColumn101")},
+    {Quote("MyColumn102")},
+    {Quote("MyColumn103")},
+    {Quote("MyColumn104")}"
         ;
     }
 
@@ -39,8 +39,8 @@ $@",
     {
         return
 $@",
-    '(abc,13)',
-    'abc14',
+    '(abc,101)',
+    'abc102',
     'Label2',
     '[2006-06-16 16:16:16,2016-06-16 16:16:16]'"
         ;
@@ -50,10 +50,10 @@ $@",
     {
         return
 $@"
-    AND {Quote("MyColumn13")} = '(abc,13)'::""MyCompositeType1""
-    AND {Quote("MyColumn14")} = 'abc14'
-    AND {Quote("MyColumn15")} = 'Label2'
-    AND {Quote("MyColumn16")} = '[2006-06-16 16:16:16,2016-06-16 16:16:16]'"
+    AND {Quote("MyColumn101")} = '(abc,101)'::""MyCompositeType1""
+    AND {Quote("MyColumn102")} = 'abc102'
+    AND {Quote("MyColumn103")} = 'Label2'
+    AND {Quote("MyColumn104")} = '[2006-06-16 16:16:16,2016-06-16 16:16:16]'"
         ;
     }
 }

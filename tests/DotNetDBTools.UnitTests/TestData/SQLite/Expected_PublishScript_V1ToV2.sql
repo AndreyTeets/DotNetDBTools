@@ -111,6 +111,7 @@ CREATE TABLE [_DNDBTTemp_MyTable1NewName]
 (
     [MyColumn1] INTEGER NULL DEFAULT 15,
     [MyColumn4] NUMERIC NOT NULL,
+    [MyColumn5] TEXT NULL,
     CONSTRAINT [CK_MyTable1_MyCheck1] CHECK (MyColumn4 >= 1),
     CONSTRAINT [FK_MyTable1_MyColumn1_MyTable2_MyColumn1] FOREIGN KEY ([MyColumn1])
         REFERENCES [MyTable2]([MyColumn1NewName])
@@ -120,11 +121,13 @@ CREATE TABLE [_DNDBTTemp_MyTable1NewName]
 INSERT INTO [_DNDBTTemp_MyTable1NewName]
 (
     [MyColumn1],
-    [MyColumn4]
+    [MyColumn4],
+    [MyColumn5]
 )
 SELECT
     [MyColumn1],
-    [MyColumn4]
+    [MyColumn4],
+    [MyColumn5]
 FROM [MyTable1];
 
 DROP TABLE [MyTable1];
@@ -368,7 +371,7 @@ VALUES
 -- QUERY START: AlterTableQuery
 CREATE TABLE [_DNDBTTemp_MyTable5]
 (
-    [MyColumn1] INTEGER NOT NULL DEFAULT (ABS(-15)),
+    [MyColumn1] INTEGER NOT NULL DEFAULT (abS(-15)),
     [MyColumn10] NUMERIC NOT NULL DEFAULT '16:17:18',
     [MyColumn11] NUMERIC NOT NULL DEFAULT '2022-02-15 16:17:18',
     [MyColumn12] NUMERIC NOT NULL DEFAULT '2022-02-15 16:17:18+01:30',
@@ -432,6 +435,13 @@ UPDATE [DNDBTDbObjects] SET
     [Name] = 'MyTable5',
     [Code] = NULL
 WHERE [ID] = '6ca51f29-c1bc-4349-b9c1-6f1ea170f162';
+-- QUERY END: UpdateDNDBTDbObjectRecordQuery
+
+-- QUERY START: UpdateDNDBTDbObjectRecordQuery
+UPDATE [DNDBTDbObjects] SET
+    [Name] = 'MyColumn1',
+    [Code] = '(abS(-15))'
+WHERE [ID] = '5309d66f-2030-402e-912e-5547babaa072';
 -- QUERY END: UpdateDNDBTDbObjectRecordQuery
 
 -- QUERY START: CreateTableQuery

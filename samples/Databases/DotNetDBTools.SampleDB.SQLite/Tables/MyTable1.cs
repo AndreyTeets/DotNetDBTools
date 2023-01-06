@@ -37,6 +37,11 @@ namespace DotNetDBTools.SampleDB.SQLite.Tables
             Default = new DecimalDefaultValue(7.36m),
         };
 
+        public Column MyColumn5 = new("EBBEF06C-C7DE-4B36-A911-827566639630")
+        {
+            DataType = new VerbatimDataType("VARCHAR(1000)"),
+        };
+
         public PrimaryKey PK_MyTable1 = new("37A45DEF-F4A0-4BE7-8BFB-8FBED4A7D705")
         {
             Columns = new[] { nameof(MyColumn3) },

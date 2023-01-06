@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using DotNetDBTools.Analysis.Common;
+﻿using DotNetDBTools.Analysis.Common;
 using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.MySQL;
@@ -14,12 +13,6 @@ internal class MySQLDiffCreator : DiffCreator
         {
             NewDatabase = newDatabase,
             OldDatabase = oldDatabase,
-            ViewsToCreate = new List<View>(),
-            ViewsToDrop = new List<View>(),
-            FunctionsToCreate = new List<MySQLFunction>(),
-            FunctionsToDrop = new List<MySQLFunction>(),
-            ProceduresToCreate = new List<MySQLProcedure>(),
-            ProceduresToDrop = new List<MySQLProcedure>(),
         };
 
         BuildTablesDiff<MySQLTableDiff>(dbDiff);

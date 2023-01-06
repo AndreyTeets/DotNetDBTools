@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using DotNetDBTools.CodeParsing.Models;
 using DotNetDBTools.UnitTests.CodeParsing.Base;
+using DotNetDBTools.UnitTests.Utilities;
 
 namespace DotNetDBTools.UnitTests.CodeParsing.SQLite;
 
@@ -9,10 +10,10 @@ public class SQLiteCodeParserTestsData : BaseCodeParserTestsData
 {
     public override string TestDataDir => "./TestData/SQLite";
     public override TableInfo ExpectedTable => GetExpectedTable();
+    public override TableInfo ExpectedTableWithPkColumn => GetExpectedTableWithPkColumn();
     public override ViewInfo ExpectedView => GetExpectedView();
     public override IndexInfo ExpectedIndex => GetExpectedIndex();
     public override TriggerInfo ExpectedTrigger => GetExpectedTrigger();
-    public TableInfo ExpectedTableWithPkColumn => GetExpectedTableWithPkColumn();
 
     private TableInfo GetExpectedTable()
     {
@@ -26,7 +27,7 @@ public class SQLiteCodeParserTestsData : BaseCodeParserTestsData
                 {
                     ID = new Guid("5C36AE77-B7E4-40C3-824F-BD20DC270A14"),
                     Name = "Col1",
-                    DataType = "INTEGER",
+                    DataType = "intEGER",
                     NotNull = true,
                     Default = "15",
                     Unique = true,
@@ -35,7 +36,7 @@ public class SQLiteCodeParserTestsData : BaseCodeParserTestsData
                 {
                     ID = new Guid("6C36AE77-B7E4-40C3-824F-BD20DC270A14"),
                     Name = "Col2",
-                    DataType = "numeric",
+                    DataType = "numERIC(6,1)",
                     Default = "7.36",
                 },
                 new ColumnInfo()
@@ -49,7 +50,7 @@ public class SQLiteCodeParserTestsData : BaseCodeParserTestsData
                 {
                     ID = new Guid("8C36AE77-B7E4-40C3-824F-BD20DC270A14"),
                     Name = "Col4",
-                    DataType = "TEXT",
+                    DataType = "text",
                     NotNull = true,
                     Default = "'CONSTRAINT CK_String_Check1 CHECK (Col3 >= 0),'",
                 },
@@ -93,8 +94,8 @@ public class SQLiteCodeParserTestsData : BaseCodeParserTestsData
                     Columns = new List<string>() { "Col1" },
                     RefTable = "Table2",
                     RefColumns = new List<string>() { "Col1" },
-                    UpdateAction = "NO ACTION",
-                    DeleteAction = "CASCADE",
+                    UpdateAction = "NO actION",
+                    DeleteAction = "casCADE",
                 },
                 new ConstraintInfo()
                 {
@@ -127,39 +128,6 @@ public class SQLiteCodeParserTestsData : BaseCodeParserTestsData
                     Code = "CHECK ([Col3] >= 0)",
                 },
             }
-        };
-    }
-
-    private ViewInfo GetExpectedView()
-    {
-        return new()
-        {
-            ID = new Guid("3C36AE77-B7E4-40C3-824F-BD20DC270A14"),
-            Name = "MyView1",
-            Code = ReadStatementFromFileWithoutIdDeclarations($@"{TestDataDir}/CreateView.sql"),
-        };
-    }
-
-    private IndexInfo GetExpectedIndex()
-    {
-        return new()
-        {
-            ID = new Guid("1C36AE77-B7E4-40C3-824F-BD20DC270A14"),
-            Name = "IDX_SomeTable1",
-            Table = "Contacts",
-            Unique = true,
-            Columns = new List<string>() { "Email", "phone" },
-        };
-    }
-
-    private TriggerInfo GetExpectedTrigger()
-    {
-        return new()
-        {
-            ID = new Guid("2C36AE77-B7E4-40C3-824F-BD20DC270A14"),
-            Name = "TR_MyTable2_MyTrigger1",
-            Table = "MyTable2",
-            Code = ReadStatementFromFileWithoutIdDeclarations($@"{TestDataDir}/CreateTrigger.sql"),
         };
     }
 
@@ -207,6 +175,39 @@ public class SQLiteCodeParserTestsData : BaseCodeParserTestsData
                     Code = "CHECK ([Col3] >= 0)",
                 },
             }
+        };
+    }
+
+    private ViewInfo GetExpectedView()
+    {
+        return new()
+        {
+            ID = new Guid("3C36AE77-B7E4-40C3-824F-BD20DC270A14"),
+            Name = "MyView1",
+            Code = MiscHelper.ReadFromFileWithoutIdDeclarations($@"{TestDataDir}/CreateView.sql"),
+        };
+    }
+
+    private IndexInfo GetExpectedIndex()
+    {
+        return new()
+        {
+            ID = new Guid("1C36AE77-B7E4-40C3-824F-BD20DC270A14"),
+            Name = "IDX_SomeTable1",
+            Table = "Contacts",
+            Unique = true,
+            Columns = new List<string>() { "Email", "phone" },
+        };
+    }
+
+    private TriggerInfo GetExpectedTrigger()
+    {
+        return new()
+        {
+            ID = new Guid("2C36AE77-B7E4-40C3-824F-BD20DC270A14"),
+            Name = "TR_MyTable2_MyTrigger1",
+            Table = "MyTable2",
+            Code = MiscHelper.ReadFromFileWithoutIdDeclarations($@"{TestDataDir}/CreateTrigger.sql"),
         };
     }
 }

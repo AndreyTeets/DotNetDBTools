@@ -2,7 +2,7 @@
 CREATE TABLE "MyTable5"
 (
     --ID:#{5309D66F-2030-402E-912E-5547BABAA072}#
-    "MyColumn1" INT NOT NULL DEFAULT "MyFunction1"(-25, 10),
+    "MyColumn1" int NOT NULL DEFAULT abS(-15),
 
     --ID:#{11EF8E25-3691-42D4-B2FA-88D724F73B61}#
     "MyColumn2" CHAR(4) NOT NULL DEFAULT 'test',
@@ -38,14 +38,17 @@ CREATE TABLE "MyTable5"
     "MyColumn12" TIMESTAMPTZ NOT NULL DEFAULT '2022-02-15 14:47:18+00',
 
     --ID:#{15AE6061-426D-4485-85E6-ECD3E0F98882}#
-    "MyColumn13" "MyCompositeType1" NOT NULL,
+    "MyColumn101" "MyCompositeType1" NOT NULL,
     
     --ID:#{45856161-DB66-49F6-AFDE-9214D2D2D4B0}#
-    "MyColumn14" "MyDomain1" NOT NULL,
+    "MyColumn102" "MyDomain1" NOT NULL,
     
     --ID:#{B45D163B-F49E-499F-A9E5-2538CD073B80}#
-    "MyColumn15" "MyEnumType1" NOT NULL,
+    "MyColumn103" "MyEnumType1" NOT NULL,
     
     --ID:#{C8B03B75-A8A2-47E0-BF5C-F3E4F1B8F500}#
-    "MyColumn16" "MyRangeType1" NOT NULL
+    "MyColumn104" "MyRangeType1" NOT NULL,
+
+    --ID:#{5C455EC9-9830-4D0B-A88C-57341899DC4A}#
+    "MyColumn201" INT DEFAULT "MyFunction1"(-25, 10)
 )

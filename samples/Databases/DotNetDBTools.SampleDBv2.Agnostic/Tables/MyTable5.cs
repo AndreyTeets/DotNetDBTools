@@ -11,9 +11,9 @@ namespace DotNetDBTools.SampleDB.Agnostic.Tables
 
         public Column MyColumn1 = new("5309D66F-2030-402E-912E-5547BABAA072")
         {
-            DataType = new VerbatimDataType(dk => dk == DbmsKind.SQLite ? "INTEGER" : "INT"),
+            DataType = new VerbatimDataType(dk => dk == DbmsKind.SQLite ? "integer" : "int"),
             NotNull = true,
-            Default = new VerbatimDefaultValue(dk => dk is DbmsKind.SQLite or DbmsKind.MySQL ? "(ABS(-15))" : "ABS(-15)"),
+            Default = new VerbatimDefaultValue(dk => dk is DbmsKind.SQLite or DbmsKind.MySQL ? "(abS(-15))" : "abS(-15)"),
         };
 
         public Column MyColumn2 = new("11EF8E25-3691-42D4-B2FA-88D724F73B61")

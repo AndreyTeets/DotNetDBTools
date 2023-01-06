@@ -11,9 +11,9 @@ namespace DotNetDBTools.SampleDB.MySQL.Tables
 
         public Column MyColumn1 = new("5309D66F-2030-402E-912E-5547BABAA072")
         {
-            DataType = new VerbatimDataType("INT"),
+            DataType = new VerbatimDataType("int"),
             NotNull = true,
-            Default = new VerbatimDefaultValue("(ABS(-15))"),
+            Default = new VerbatimDefaultValue("(ABs(-15))"),
         };
 
         public Column MyColumn2 = new("11EF8E25-3691-42D4-B2FA-88D724F73B61")

@@ -31,7 +31,6 @@ internal class PostgreSQLDbModelFromSqlDefinitionProvider : DbModelFromSqlDefini
         db.EnumTypes = BuildEnumTypeModels(dbObjects.OfType<TypeInfo>().Where(x => x.TypeType == TypeType.Enum));
         db.RangeTypes = BuildRangeTypeModels(dbObjects.OfType<TypeInfo>().Where(x => x.TypeType == TypeType.Range));
         db.Functions = BuildFunctionModels(dbObjects.OfType<FunctionInfo>());
-        db.Procedures = new();
     }
 
     private List<PostgreSQLCompositeType> BuildCompositeTypeModels(IEnumerable<TypeInfo> types)

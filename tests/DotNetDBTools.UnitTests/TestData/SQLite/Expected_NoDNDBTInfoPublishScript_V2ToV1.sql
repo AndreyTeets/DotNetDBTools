@@ -24,6 +24,7 @@ CREATE TABLE [_DNDBTTemp_MyTable1]
     [MyColumn2] TEXT NOT NULL DEFAULT '33',
     [MyColumn3] INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     [MyColumn4] NUMERIC NOT NULL DEFAULT 7.36,
+    [MyColumn5] TEXT NULL,
     CONSTRAINT [UQ_MyTable1_MyColumn4] UNIQUE ([MyColumn4]),
     CONSTRAINT [CK_MyTable1_MyCheck1] CHECK (MyColumn4 >= 0),
     CONSTRAINT [FK_MyTable1_MyColumn1_MyTable2_MyColumn1] FOREIGN KEY ([MyColumn1])
@@ -34,11 +35,13 @@ CREATE TABLE [_DNDBTTemp_MyTable1]
 INSERT INTO [_DNDBTTemp_MyTable1]
 (
     [MyColumn1],
-    [MyColumn4]
+    [MyColumn4],
+    [MyColumn5]
 )
 SELECT
     [MyColumn1],
-    [MyColumn4]
+    [MyColumn4],
+    [MyColumn5]
 FROM [MyTable1NewName];
 
 DROP TABLE [MyTable1NewName];
@@ -69,7 +72,7 @@ ALTER TABLE [_DNDBTTemp_MyTable2] RENAME TO [MyTable2];
 -- QUERY START: AlterTableQuery
 CREATE TABLE [_DNDBTTemp_MyTable5]
 (
-    [MyColumn1] INTEGER NOT NULL DEFAULT (ABS(-15)),
+    [MyColumn1] INTEGER NOT NULL DEFAULT (ABs(-15)),
     [MyColumn10] NUMERIC NOT NULL DEFAULT '16:17:18',
     [MyColumn11] NUMERIC NOT NULL DEFAULT '2022-02-15 16:17:18',
     [MyColumn12] NUMERIC NOT NULL DEFAULT '2022-02-15 16:17:18+01:30',

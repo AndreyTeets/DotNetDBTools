@@ -10,6 +10,6 @@ public abstract class DbObject
 
     public DbObject Parent { get; set; }
 
-    public List<DbObject> DependsOn { get; set; }
-    public List<DbObject> IsDependencyOf { get; set; }
+    public List<DbObject> DependsOn { get; set; } = new();
+    public List<DbObject> IsDependencyOf { get; set; } = new();
 }

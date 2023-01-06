@@ -29,7 +29,6 @@ internal class PostgreSQLDependenciesBuilder : IDependenciesBuilder
         PostgreSQLCodeParser parser = new();
         foreach (PostgreSQLView view in database.Views)
         {
-            view.DependsOn = new List<DbObject>();
             List<Dependency> dependencies = ExecuteParsingFunc(
                 () => parser.GetViewDependencies(view.CodePiece.Code),
                 $"Error while parsing view '{view.Name}' code");
@@ -39,7 +38,6 @@ internal class PostgreSQLDependenciesBuilder : IDependenciesBuilder
         }
         foreach (PostgreSQLFunction func in database.Functions)
         {
-            func.DependsOn = new List<DbObject>();
             List<Dependency> dependencies = ExecuteParsingFunc(
                 () => parser.GetFunctionDependencies(func.CodePiece.Code),
                 $"Error while parsing function '{func.Name}' code");
@@ -49,24 +47,19 @@ internal class PostgreSQLDependenciesBuilder : IDependenciesBuilder
         }
         foreach (PostgreSQLProcedure proc in database.Procedures)
         {
-            proc.DependsOn = new List<DbObject>();
         }
 
         foreach (PostgreSQLCompositeType type in database.CompositeTypes)
         {
-            type.DependsOn = new List<DbObject>();
         }
         foreach (PostgreSQLDomainType type in database.DomainTypes)
         {
-            type.DependsOn = new List<DbObject>();
         }
         foreach (PostgreSQLEnumType type in database.EnumTypes)
         {
-            type.DependsOn = new List<DbObject>();
         }
         foreach (PostgreSQLRangeType type in database.RangeTypes)
         {
-            type.DependsOn = new List<DbObject>();
         }
 
         void AddDependency(List<DbObject> dependencies, Dependency dep, string referencingObjectName)
@@ -118,8 +111,6 @@ internal class PostgreSQLDependenciesBuilder : IDependenciesBuilder
         {
             if (isDependencyOfMap.ContainsKey(dbObject.ID))
                 dbObject.IsDependencyOf = isDependencyOfMap[dbObject.ID];
-            else
-                dbObject.IsDependencyOf = new List<DbObject>();
         }
     }
 

@@ -5,7 +5,7 @@ namespace DotNetDBTools.Models.PostgreSQL.UserDefinedTypes;
 
 public class PostgreSQLCompositeType : DbObject
 {
-    public List<PostgreSQLCompositeTypeAttribute> Attributes { get; set; }
+    public List<PostgreSQLCompositeTypeAttribute> Attributes { get; set; } = new();
 }
 
 public class PostgreSQLCompositeTypeAttribute

@@ -68,12 +68,6 @@ internal abstract class DiffCreator
         {
             NewTable = newDbTable,
             OldTable = oldDbTable,
-            CheckConstraintsToCreate = new List<CheckConstraint>(),
-            CheckConstraintsToDrop = new List<CheckConstraint>(),
-            IndexesToCreate = new List<Index>(),
-            IndexesToDrop = new List<Index>(),
-            TriggersToCreate = new List<Trigger>(),
-            TriggersToDrop = new List<Trigger>(),
         };
 
         BuildColumnsDiff(tableDiff, newDbTable, oldDbTable);

@@ -13,5 +13,17 @@ namespace DotNetDBTools.SampleDB.MySQL.Tables
             DataType = new IntDataType() { Size = IntSize.Int64 },
             NotNull = true,
         };
+
+        public Column MyColumn2 = new("A6354EA4-7113-4C14-8047-648F0CFC7163")
+        {
+            DataType = new VerbatimDataType("inT"),
+            NotNull = true,
+            Identity = true,
+        };
+
+        public PrimaryKey PK_MyTable4 = new("53AD5415-7FEA-4A51-BCAE-65E349A2E477")
+        {
+            Columns = new[] { nameof(MyColumn2) },
+        };
     }
 }

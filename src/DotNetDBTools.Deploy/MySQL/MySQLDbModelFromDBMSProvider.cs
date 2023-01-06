@@ -1,7 +1,6 @@
 ﻿using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.MySQL.Queries.DBMSSysInfo;
 using DotNetDBTools.Deploy.MySQL.Queries.DNDBTSysInfo;
-using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.MySQL;
 
 namespace DotNetDBTools.Deploy.MySQL;
@@ -24,11 +23,4 @@ internal class MySQLDbModelFromDBMSProvider : DbModelFromDBMSProvider<
 {
     public MySQLDbModelFromDBMSProvider(IQueryExecutor queryExecutor)
         : base(queryExecutor) { }
-
-    protected override void BuildAdditionalDbObjects(Database database)
-    {
-        MySQLDatabase db = (MySQLDatabase)database;
-        db.Functions = new();
-        db.Procedures = new();
-    }
 }

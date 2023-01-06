@@ -61,6 +61,7 @@ internal class PostgreSQLDbModelPostProcessor : DbModelPostProcessor
             if (dataType is null)
                 return; // TODO move "Unknown data type" to DbValidator check as well
 
+            dataType.Name = Regex.Replace(dataType.Name, @"\s", "");
             if (!userDefinedTypesNames.Contains(dataType.Name) && IsStandardSqlType(dataType.Name))
                 dataType.Name = dataType.Name.ToUpper();
             else if (userDefinedTypesNames.Contains(dataType.Name))

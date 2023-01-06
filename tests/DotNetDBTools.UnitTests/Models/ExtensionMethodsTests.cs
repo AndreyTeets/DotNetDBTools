@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DotNetDBTools.Analysis.Extensions;
 using DotNetDBTools.Models;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.PostgreSQL;
 using DotNetDBTools.Models.PostgreSQL.UserDefinedTypes;
+using DotNetDBTools.UnitTests.Utilities;
 using FluentAssertions;
-using Newtonsoft.Json;
 using Xunit;
 
 namespace DotNetDBTools.UnitTests.Models;
@@ -34,13 +33,14 @@ public class ExtensionMethodsTests
         cloneObject = originalObject.CopyModel();
         cloneObject.Version = 3;
         cloneObject.Tables = null;
-        cloneObject.Functions = null;
+        cloneObject.Functions = new List<PostgreSQLFunction>();
         AssertEquivalence(originalObject, unmodifiedObject);
 
         cloneObject = originalObject.CopyModel();
         cloneObject.Tables.Clear();
         cloneObject.EnumTypes.Clear();
-        cloneObject.Functions.Add(new PostgreSQLFunction() { Name = "f1" });
+        cloneObject.CompositeTypes = new List<PostgreSQLCompositeType>();
+        cloneObject.CompositeTypes.Add(new PostgreSQLCompositeType() { Name = "type1" });
         AssertEquivalence(originalObject, unmodifiedObject);
 
         cloneObject = originalObject.CopyModel();
@@ -57,19 +57,9 @@ public class ExtensionMethodsTests
 
     private static void AssertEquivalence<TModel>(TModel model1, TModel model2)
     {
-        string serializedModel1 = SerializeWithReferences(model1);
-        string serializedModel2 = SerializeWithReferences(model2);
+        string serializedModel1 = MiscHelper.SerializeToJsonWithReferences(model1);
+        string serializedModel2 = MiscHelper.SerializeToJsonWithReferences(model2);
         serializedModel1.Should().Be(serializedModel2);
-
-        static string SerializeWithReferences(TModel model)
-        {
-            JsonSerializerSettings jsonSettings = new()
-            {
-                Formatting = Formatting.Indented,
-                PreserveReferencesHandling = PreserveReferencesHandling.Objects,
-            };
-            return JsonConvert.SerializeObject(model, jsonSettings).NormalizeLineEndings();
-        }
     }
 
     private static PostgreSQLDatabase CreateTestDatabaseModel()
@@ -92,7 +82,7 @@ public class ExtensionMethodsTests
                         {
                             ID = new Guid("67A97E88-9E8B-40AE-8A50-D03B21BC8174"),
                             Name = "Col1",
-                            DataType = new DataType()
+                            DataType = new DataType(),
                         },
                         new Column(),
                         new Column()
@@ -115,7 +105,7 @@ public class ExtensionMethodsTests
                     AllowedValues = new List<string>() { "Val1", "Val2" },
                 }
             },
-            Functions = new List<PostgreSQLFunction>(),
+            Functions = null,
         };
 
         db.Tables.Single().PrimaryKey.Parent = db.Tables.Single();

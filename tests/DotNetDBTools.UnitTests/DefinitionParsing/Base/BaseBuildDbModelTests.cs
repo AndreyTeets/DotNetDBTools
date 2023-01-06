@@ -1,10 +1,8 @@
 ﻿using System.Reflection;
-using DotNetDBTools.Analysis.Extensions;
 using DotNetDBTools.DefinitionParsing;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.UnitTests.Utilities;
 using FluentAssertions;
-using Newtonsoft.Json;
 using Xunit;
 
 namespace DotNetDBTools.UnitTests.DefinitionParsing.Base;
@@ -19,25 +17,15 @@ public abstract class BaseBuildDbModelTests<TDatabase>
 
     protected BaseBuildDbModelTests()
     {
-        _specificDbmsDbAssemblyV1 = TestDbAssembliesHelper.GetSampleDbAssembly(SpecificDbmsSampleDbV1AssemblyName);
+        _specificDbmsDbAssemblyV1 = MiscHelper.GetSampleDbAssembly(SpecificDbmsSampleDbV1AssemblyName);
     }
 
     [Fact]
-    public void DbModelFromCSharpDef_IsCorrect()
+    public void CreateDbModel_FromCSharpDef_CreatesCorrectModel()
     {
         TDatabase db = (TDatabase)new DefinitionParsingManager().CreateDbModel(_specificDbmsDbAssemblyV1);
-        string actualDbModel = SerializeDbModel(db);
-        string expectedDbModel = FilesHelper.GetFromFile($@"{ExpectedFilesDir}/Expected_DbModel_V1.json");
+        string actualDbModel = MiscHelper.SerializeToJsonWithReferences(db);
+        string expectedDbModel = MiscHelper.ReadFromFile($@"{ExpectedFilesDir}/Expected_DbModel_V1.json");
         actualDbModel.Should().Be(expectedDbModel);
-    }
-
-    private static string SerializeDbModel(TDatabase dbModel)
-    {
-        JsonSerializerSettings jsonSettings = new()
-        {
-            Formatting = Formatting.Indented,
-            PreserveReferencesHandling = PreserveReferencesHandling.Objects,
-        };
-        return JsonConvert.SerializeObject(dbModel, jsonSettings).NormalizeLineEndings();
     }
 }

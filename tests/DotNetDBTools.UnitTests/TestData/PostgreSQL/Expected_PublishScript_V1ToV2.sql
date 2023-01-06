@@ -544,14 +544,15 @@ VALUES
 EXECUTE 'ALTER TABLE "MyTable5"
     DROP CONSTRAINT "UQ_MyTable5_CustomName",
     DROP CONSTRAINT "PK_MyTable5_CustomName",
-    ALTER COLUMN "MyColumn13" SET DATA TYPE "MyCompositeType1"
-        USING ("MyColumn13"::text::"MyCompositeType1"),
-    ALTER COLUMN "MyColumn14" SET DATA TYPE "MyDomain1"
-        USING ("MyColumn14"::text::"MyDomain1"),
-    ALTER COLUMN "MyColumn15" SET DATA TYPE "MyEnumType1"
-        USING ("MyColumn15"::text::"MyEnumType1"),
-    ALTER COLUMN "MyColumn16" SET DATA TYPE "MyRangeType1"
-        USING ("MyColumn16"::text::"MyRangeType1");';
+    ALTER COLUMN "MyColumn1" SET DEFAULT abS(-15),
+    ALTER COLUMN "MyColumn101" SET DATA TYPE "MyCompositeType1"
+        USING ("MyColumn101"::text::"MyCompositeType1"),
+    ALTER COLUMN "MyColumn102" SET DATA TYPE "MyDomain1"
+        USING ("MyColumn102"::text::"MyDomain1"),
+    ALTER COLUMN "MyColumn103" SET DATA TYPE "MyEnumType1"
+        USING ("MyColumn103"::text::"MyEnumType1"),
+    ALTER COLUMN "MyColumn104" SET DATA TYPE "MyRangeType1"
+        USING ("MyColumn104"::text::"MyRangeType1");';
 -- QUERY END: AlterTableQuery
 
 -- QUERY START: DeleteDNDBTDbObjectRecordQuery
@@ -573,28 +574,35 @@ WHERE "ID" = ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'';';
 
 -- QUERY START: UpdateDNDBTDbObjectRecordQuery
 EXECUTE 'UPDATE "DNDBTDbObjects" SET
-    "Name" = ''MyColumn13'',
+    "Name" = ''MyColumn1'',
+    "Code" = ''abS(-15)''
+WHERE "ID" = ''5309d66f-2030-402e-912e-5547babaa072'';';
+-- QUERY END: UpdateDNDBTDbObjectRecordQuery
+
+-- QUERY START: UpdateDNDBTDbObjectRecordQuery
+EXECUTE 'UPDATE "DNDBTDbObjects" SET
+    "Name" = ''MyColumn101'',
     "Code" = NULL
 WHERE "ID" = ''15ae6061-426d-4485-85e6-ecd3e0f98882'';';
 -- QUERY END: UpdateDNDBTDbObjectRecordQuery
 
 -- QUERY START: UpdateDNDBTDbObjectRecordQuery
 EXECUTE 'UPDATE "DNDBTDbObjects" SET
-    "Name" = ''MyColumn14'',
+    "Name" = ''MyColumn102'',
     "Code" = NULL
 WHERE "ID" = ''45856161-db66-49f6-afde-9214d2d2d4b0'';';
 -- QUERY END: UpdateDNDBTDbObjectRecordQuery
 
 -- QUERY START: UpdateDNDBTDbObjectRecordQuery
 EXECUTE 'UPDATE "DNDBTDbObjects" SET
-    "Name" = ''MyColumn15'',
+    "Name" = ''MyColumn103'',
     "Code" = NULL
 WHERE "ID" = ''b45d163b-f49e-499f-a9e5-2538cd073b80'';';
 -- QUERY END: UpdateDNDBTDbObjectRecordQuery
 
 -- QUERY START: UpdateDNDBTDbObjectRecordQuery
 EXECUTE 'UPDATE "DNDBTDbObjects" SET
-    "Name" = ''MyColumn16'',
+    "Name" = ''MyColumn104'',
     "Code" = NULL
 WHERE "ID" = ''c8b03b75-a8a2-47e0-bf5c-f3e4f1b8f500'';';
 -- QUERY END: UpdateDNDBTDbObjectRecordQuery

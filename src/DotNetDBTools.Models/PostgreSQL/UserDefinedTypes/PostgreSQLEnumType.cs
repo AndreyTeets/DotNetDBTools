@@ -5,5 +5,5 @@ namespace DotNetDBTools.Models.PostgreSQL.UserDefinedTypes;
 
 public class PostgreSQLEnumType : DbObject
 {
-    public List<string> AllowedValues { get; set; }
+    public List<string> AllowedValues { get; set; } = new();
 }

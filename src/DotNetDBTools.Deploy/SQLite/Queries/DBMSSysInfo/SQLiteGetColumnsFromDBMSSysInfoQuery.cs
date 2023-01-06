@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo;
 using DotNetDBTools.Models.Core;
-using DotNetDBTools.Models.SQLite;
 
 namespace DotNetDBTools.Deploy.SQLite.Queries.DBMSSysInfo;
 
@@ -56,18 +55,7 @@ WHERE sm.type = 'table'
 
         private static DataType ParseDataType(SQLiteColumnRecord columnRecord)
         {
-            string dataType = columnRecord.DataType.ToUpper();
-            switch (dataType)
-            {
-                case SQLiteDataTypeNames.INTEGER:
-                case SQLiteDataTypeNames.REAL:
-                case SQLiteDataTypeNames.NUMERIC:
-                case SQLiteDataTypeNames.TEXT:
-                case SQLiteDataTypeNames.BLOB:
-                    return new DataType { Name = dataType };
-                default:
-                    throw new InvalidOperationException($"Invalid column record datatype: {columnRecord.DataType}");
-            }
+            return new DataType { Name = columnRecord.DataType };
         }
 
         private static CodePiece ParseDefault(SQLiteColumnRecord columnRecord)

@@ -4,6 +4,7 @@ using System.Reflection;
 using Dapper;
 using DotNetDBTools.Deploy;
 using DotNetDBTools.EventsLogger;
+using DotNetDBTools.Generation;
 using Microsoft.Data.Sqlite;
 
 namespace DotNetDBTools.SampleDeployManagerUsage.SQLite
@@ -49,6 +50,12 @@ namespace DotNetDBTools.SampleDeployManagerUsage.SQLite
             dmDataLoss.Events.EventFired += DeployManagerEventsLogger.LogEvent;
             using SqliteConnection connection = new(s_sqliteConnectionString);
 
+            GenerationOptions generationOptions = new()
+            {
+                DatabaseName = "CustomDbName",
+                OutputDefinitionKind = OutputDefinitionKind.Sql
+            };
+
             Console.WriteLine("Registering empty SQLiteSampleDB as DNDBT to make other actions with it possible...");
             deployManager.RegisterAsDNDBT(connection);
 
@@ -77,6 +84,7 @@ namespace DotNetDBTools.SampleDeployManagerUsage.SQLite
             deployManager.UnregisterAsDNDBT(connection);
             Console.WriteLine("Generating definition from existing unregistered SQLiteSampleDB...");
             deployManager.GenerateDefinition(connection, s_definitionFromUnregisteredDir);
+            deployManager.GenerateDefinition(connection, generationOptions, s_definitionFromUnregisteredDir + "SqlDef");
 
             Console.WriteLine("Generating NoDNDBTInfo script to update(from v1 to v2) SQLiteSampleDB from the corresponding assembly files...");
             File.WriteAllText(s_noDNDBTInfoPublishFromV1ToV2ScriptPath, dmDataLoss.GenerateNoDNDBTInfoPublishScript(dbAssemblyV2, dbAssembly));
@@ -92,6 +100,7 @@ namespace DotNetDBTools.SampleDeployManagerUsage.SQLite
             deployManager.RegisterAsDNDBT(connection);
             Console.WriteLine("Generating definition from existing registered SQLiteSampleDB...");
             deployManager.GenerateDefinition(connection, s_definitionFromRegisteredDir);
+            deployManager.GenerateDefinition(connection, generationOptions, s_definitionFromRegisteredDir + "SqlDef");
 
             Console.WriteLine("Newly created DNDBT system information(by registration) has different IDs for all objects");
             Console.WriteLine("Generating script to update(recreate all objects) existing SQLiteSampleDB from dbAssembly file...");

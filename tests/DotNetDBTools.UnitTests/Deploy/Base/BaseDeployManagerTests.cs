@@ -24,7 +24,7 @@ public abstract class BaseDeployManagerTests<TDatabase>
     private protected BaseDeployManagerTests(IMockCreator mockCreator)
     {
         _mockCreator = mockCreator;
-        _agnosticDbAssemblyV1 = TestDbAssembliesHelper.GetSampleDbAssembly(AgnosticSampleDbV1AssemblyName);
+        _agnosticDbAssemblyV1 = MiscHelper.GetSampleDbAssembly(AgnosticSampleDbV1AssemblyName);
     }
 
     [Fact]
@@ -137,7 +137,6 @@ GeneratePublishScriptFinished";
 
             Mock<IDbModelFromDBMSProvider> dbModelFromDBMSProviderMock = new(MockBehavior.Strict);
             TDatabase emptyDb = new();
-            emptyDb.InitializeProperties();
             dbModelFromDBMSProviderMock
                 .Setup(x => x.CreateDbModelUsingDNDBTSysInfo())
                 .Returns(emptyDb);

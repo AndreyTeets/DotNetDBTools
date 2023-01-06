@@ -133,14 +133,15 @@ ALTER TABLE "MyTable2"
 
 -- QUERY START: AlterTableQuery
 EXECUTE 'ALTER TABLE "MyTable5"
-    ALTER COLUMN "MyColumn13" SET DATA TYPE "MyCompositeType1"
-        USING ("MyColumn13"::text::"MyCompositeType1"),
-    ALTER COLUMN "MyColumn14" SET DATA TYPE "MyDomain1"
-        USING ("MyColumn14"::text::"MyDomain1"),
-    ALTER COLUMN "MyColumn15" SET DATA TYPE "MyEnumType1"
-        USING ("MyColumn15"::text::"MyEnumType1"),
-    ALTER COLUMN "MyColumn16" SET DATA TYPE "MyRangeType1"
-        USING ("MyColumn16"::text::"MyRangeType1"),
+    ALTER COLUMN "MyColumn1" SET DEFAULT ABs(-15),
+    ALTER COLUMN "MyColumn101" SET DATA TYPE "MyCompositeType1"
+        USING ("MyColumn101"::text::"MyCompositeType1"),
+    ALTER COLUMN "MyColumn102" SET DATA TYPE "MyDomain1"
+        USING ("MyColumn102"::text::"MyDomain1"),
+    ALTER COLUMN "MyColumn103" SET DATA TYPE "MyEnumType1"
+        USING ("MyColumn103"::text::"MyEnumType1"),
+    ALTER COLUMN "MyColumn104" SET DATA TYPE "MyRangeType1"
+        USING ("MyColumn104"::text::"MyRangeType1"),
     ADD CONSTRAINT "PK_MyTable5_CustomName" PRIMARY KEY ("MyColumn2", "MyColumn1"),
     ADD CONSTRAINT "UQ_MyTable5_CustomName" UNIQUE ("MyColumn6", "MyColumn3", "MyColumn7");';
 -- QUERY END: AlterTableQuery

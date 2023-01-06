@@ -25,17 +25,17 @@ public abstract class BasePublishScriptGenerationTests<TDeployManager>
     protected BasePublishScriptGenerationTests()
     {
         _deployManager = new TDeployManager();
-        _agnosticDbAssemblyV1 = TestDbAssembliesHelper.GetSampleDbAssembly(AgnosticSampleDbV1AssemblyName);
-        _agnosticDbAssemblyV2 = TestDbAssembliesHelper.GetSampleDbAssembly(AgnosticSampleDbV2AssemblyName);
-        _specificDbmsDbAssemblyV1 = TestDbAssembliesHelper.GetSampleDbAssembly(SpecificDbmsSampleDbV1AssemblyName);
-        _specificDbmsDbAssemblyV2 = TestDbAssembliesHelper.GetSampleDbAssembly(SpecificDbmsSampleDbV2AssemblyName);
+        _agnosticDbAssemblyV1 = MiscHelper.GetSampleDbAssembly(AgnosticSampleDbV1AssemblyName);
+        _agnosticDbAssemblyV2 = MiscHelper.GetSampleDbAssembly(AgnosticSampleDbV2AssemblyName);
+        _specificDbmsDbAssemblyV1 = MiscHelper.GetSampleDbAssembly(SpecificDbmsSampleDbV1AssemblyName);
+        _specificDbmsDbAssemblyV2 = MiscHelper.GetSampleDbAssembly(SpecificDbmsSampleDbV2AssemblyName);
     }
 
     [Fact]
     public void Generate_PublishScript_CreatesCorrectScript_WhenCreatingV1()
     {
         string actualScript = _deployManager.GeneratePublishScript(_specificDbmsDbAssemblyV1);
-        string expectedScript = FilesHelper.GetFromFile($@"{ExpectedFilesDir}/Expected_PublishScript_CreateV1.sql");
+        string expectedScript = MiscHelper.ReadFromFile($@"{ExpectedFilesDir}/Expected_PublishScript_CreateV1.sql");
         actualScript.Should().Be(expectedScript);
     }
 
@@ -44,7 +44,7 @@ public abstract class BasePublishScriptGenerationTests<TDeployManager>
     {
         _deployManager.Options = new DeployOptions { AllowDataLoss = true };
         string actualScript = _deployManager.GeneratePublishScript(_specificDbmsDbAssemblyV2, _specificDbmsDbAssemblyV1);
-        string expectedScript = FilesHelper.GetFromFile($@"{ExpectedFilesDir}/Expected_PublishScript_V1ToV2.sql");
+        string expectedScript = MiscHelper.ReadFromFile($@"{ExpectedFilesDir}/Expected_PublishScript_V1ToV2.sql");
         actualScript.Should().Be(expectedScript);
     }
 
@@ -53,7 +53,7 @@ public abstract class BasePublishScriptGenerationTests<TDeployManager>
     {
         _deployManager.Options = new DeployOptions { AllowDataLoss = true };
         string actualScript = _deployManager.GenerateNoDNDBTInfoPublishScript(_specificDbmsDbAssemblyV1, _specificDbmsDbAssemblyV2);
-        string expectedScript = FilesHelper.GetFromFile($@"{ExpectedFilesDir}/Expected_NoDNDBTInfoPublishScript_V2ToV1.sql");
+        string expectedScript = MiscHelper.ReadFromFile($@"{ExpectedFilesDir}/Expected_NoDNDBTInfoPublishScript_V2ToV1.sql");
         actualScript.Should().Be(expectedScript);
     }
 

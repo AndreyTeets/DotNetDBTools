@@ -29,7 +29,7 @@ public abstract class BaseDefinitionGenerationTests<TDatabase>
     protected void DbModelFromGeneratedDefinition_IsEquivalentTo_DbModelFromOriginalDefinition_TestCase(
         string sampleDbAssemblyName, OutputDefinitionKind outputDefinitionKind)
     {
-        Assembly origDefDbAssembly = TestDbAssembliesHelper.GetSampleDbAssembly(sampleDbAssemblyName);
+        Assembly origDefDbAssembly = MiscHelper.GetSampleDbAssembly(sampleDbAssemblyName);
         TDatabase origDefDbModel = (TDatabase)new DefinitionParsingManager().CreateDbModel(origDefDbAssembly);
 
         string projectDir = $@"{GeneratedFilesDir}/{sampleDbAssemblyName}_Generated{outputDefinitionKind}Definition";

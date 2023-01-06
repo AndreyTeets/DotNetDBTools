@@ -24,8 +24,8 @@
           "ID": "a2f2a4de-1337-4594-ae41-72ed4d05f317",
           "Name": "MyColumn1",
           "Parent": null,
-          "DependsOn": null,
-          "IsDependencyOf": null
+          "DependsOn": [],
+          "IsDependencyOf": []
         },
         {
           "$id": "6",
@@ -43,8 +43,8 @@
           "ID": "fe68ee3d-09d0-40ac-93f9-5e441fbb4f70",
           "Name": "MyColumn2",
           "Parent": null,
-          "DependsOn": null,
-          "IsDependencyOf": null
+          "DependsOn": [],
+          "IsDependencyOf": []
         },
         {
           "$id": "9",
@@ -62,8 +62,8 @@
           "ID": "6e95de30-e01a-4fb4-b8b7-8f0c40bb682c",
           "Name": "MyColumn3",
           "Parent": null,
-          "DependsOn": null,
-          "IsDependencyOf": null
+          "DependsOn": [],
+          "IsDependencyOf": []
         },
         {
           "$id": "12",
@@ -81,39 +81,58 @@
           "ID": "867ac528-e87e-4c93-b6e3-dd2fcbbb837f",
           "Name": "MyColumn4",
           "Parent": null,
-          "DependsOn": null,
-          "IsDependencyOf": null
+          "DependsOn": [],
+          "IsDependencyOf": []
+        },
+        {
+          "$id": "15",
+          "DataType": {
+            "$id": "16",
+            "Name": "VARCHAR(1000)",
+            "IsUserDefined": false
+          },
+          "NotNull": false,
+          "Identity": false,
+          "Default": {
+            "$id": "17",
+            "Code": null
+          },
+          "ID": "ebbef06c-c7de-4b36-a911-827566639630",
+          "Name": "MyColumn5",
+          "Parent": null,
+          "DependsOn": [],
+          "IsDependencyOf": []
         }
       ],
       "PrimaryKey": {
-        "$id": "15",
+        "$id": "18",
         "Columns": [
           "MyColumn3"
         ],
         "ID": "37a45def-f4a0-4be7-8bfb-8fbed4a7d705",
         "Name": "PK_MyTable1",
         "Parent": null,
-        "DependsOn": null,
-        "IsDependencyOf": null
+        "DependsOn": [],
+        "IsDependencyOf": []
       },
       "UniqueConstraints": [],
       "CheckConstraints": [
         {
-          "$id": "16",
+          "$id": "19",
           "CodePiece": {
-            "$id": "17",
+            "$id": "20",
             "Code": "CHECK (MyColumn4 >= 0)"
           },
           "ID": "eb9c59b5-bc7e-49d7-adaa-f5600b6a19a2",
           "Name": "CK_MyTable1_MyCheck1",
           "Parent": null,
-          "DependsOn": null,
-          "IsDependencyOf": null
+          "DependsOn": [],
+          "IsDependencyOf": []
         }
       ],
       "ForeignKeys": [
         {
-          "$id": "18",
+          "$id": "21",
           "ThisTableName": "MyTable1",
           "ThisColumnNames": [
             "MyColumn1"
@@ -127,13 +146,13 @@
           "ID": "d11b2a53-32db-432f-bb6b-f91788844ba9",
           "Name": "FK_MyTable1_MyColumn1_MyTable2_MyColumn1",
           "Parent": null,
-          "DependsOn": null,
-          "IsDependencyOf": null
+          "DependsOn": [],
+          "IsDependencyOf": []
         }
       ],
       "Indexes": [
         {
-          "$id": "19",
+          "$id": "22",
           "TableName": "MyTable1",
           "Columns": [
             "MyColumn4"
@@ -143,76 +162,76 @@
           "ID": "f3f08522-26ee-4950-9135-22edf2e4e0cf",
           "Name": "UQ_MyTable1_MyColumn4",
           "Parent": null,
-          "DependsOn": null,
-          "IsDependencyOf": null
+          "DependsOn": [],
+          "IsDependencyOf": []
         }
       ],
       "Triggers": [],
       "ID": "299675e6-4faa-4d0f-a36a-224306ba5bcb",
       "Name": "MyTable1",
       "Parent": null,
-      "DependsOn": null,
-      "IsDependencyOf": null
+      "DependsOn": [],
+      "IsDependencyOf": []
     },
     {
-      "$id": "20",
+      "$id": "23",
       "Columns": [
         {
-          "$id": "21",
+          "$id": "24",
           "DataType": {
-            "$id": "22",
+            "$id": "25",
             "Name": "INT",
             "IsUserDefined": false
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
-            "$id": "23",
+            "$id": "26",
             "Code": "333"
           },
           "ID": "c480f22f-7c01-4f41-b282-35e9f5cd1fe3",
           "Name": "MyColumn1",
           "Parent": null,
-          "DependsOn": null,
-          "IsDependencyOf": null
+          "DependsOn": [],
+          "IsDependencyOf": []
         },
         {
-          "$id": "24",
+          "$id": "27",
           "DataType": {
-            "$id": "25",
+            "$id": "28",
             "Name": "VARBINARY(22)",
             "IsUserDefined": false
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
-            "$id": "26",
+            "$id": "29",
             "Code": "(0x000408)"
           },
           "ID": "5a0d1926-3270-4eb2-92eb-00be56c7af23",
           "Name": "MyColumn2",
           "Parent": null,
-          "DependsOn": null,
-          "IsDependencyOf": null
+          "DependsOn": [],
+          "IsDependencyOf": []
         }
       ],
       "PrimaryKey": {
-        "$id": "27",
+        "$id": "30",
         "Columns": [
           "MyColumn1"
         ],
         "ID": "3a43615b-40b3-4a13-99e7-93af7c56e8ce",
         "Name": "PK_MyTable2",
         "Parent": null,
-        "DependsOn": null,
-        "IsDependencyOf": null
+        "DependsOn": [],
+        "IsDependencyOf": []
       },
       "UniqueConstraints": [],
       "CheckConstraints": [],
       "ForeignKeys": [],
       "Indexes": [
         {
-          "$id": "28",
+          "$id": "31",
           "TableName": "MyTable2",
           "Columns": [
             "MyColumn1",
@@ -223,55 +242,84 @@
           "ID": "74390b3c-bc39-4860-a42e-12baa400f927",
           "Name": "IDX_MyTable2_MyIndex1",
           "Parent": null,
-          "DependsOn": null,
-          "IsDependencyOf": null
+          "DependsOn": [],
+          "IsDependencyOf": []
         }
       ],
       "Triggers": [
         {
-          "$id": "29",
+          "$id": "32",
           "TableName": "MyTable2",
           "CodePiece": {
-            "$id": "30",
+            "$id": "33",
             "Code": "CREATE TRIGGER `TR_MyTable2_MyTrigger1`\nAFTER INSERT\nON `MyTable2`\nFOR EACH ROW\nBEGIN\n    INSERT INTO `MyTable4`(`MyColumn1`)\n    VALUES (NEW.`MyColumn1`);\nEND"
           },
           "ID": "ee64ffc3-5536-4624-beaf-bc3a61d06a1a",
           "Name": "TR_MyTable2_MyTrigger1",
           "Parent": null,
-          "DependsOn": null,
-          "IsDependencyOf": null
+          "DependsOn": [],
+          "IsDependencyOf": []
         }
       ],
       "ID": "bfb9030c-a8c3-4882-9c42-1c6ad025cf8f",
       "Name": "MyTable2",
       "Parent": null,
-      "DependsOn": null,
-      "IsDependencyOf": null
+      "DependsOn": [],
+      "IsDependencyOf": []
     },
     {
-      "$id": "31",
+      "$id": "34",
       "Columns": [
         {
-          "$id": "32",
+          "$id": "35",
           "DataType": {
-            "$id": "33",
+            "$id": "36",
             "Name": "BIGINT",
             "IsUserDefined": false
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
-            "$id": "34",
+            "$id": "37",
             "Code": null
           },
           "ID": "de0425b8-9f99-4d76-9a64-09e52f8b5d5a",
           "Name": "MyColumn1",
           "Parent": null,
-          "DependsOn": null,
-          "IsDependencyOf": null
+          "DependsOn": [],
+          "IsDependencyOf": []
+        },
+        {
+          "$id": "38",
+          "DataType": {
+            "$id": "39",
+            "Name": "INT",
+            "IsUserDefined": false
+          },
+          "NotNull": true,
+          "Identity": true,
+          "Default": {
+            "$id": "40",
+            "Code": null
+          },
+          "ID": "a6354ea4-7113-4c14-8047-648f0cfc7163",
+          "Name": "MyColumn2",
+          "Parent": null,
+          "DependsOn": [],
+          "IsDependencyOf": []
         }
       ],
-      "PrimaryKey": null,
+      "PrimaryKey": {
+        "$id": "41",
+        "Columns": [
+          "MyColumn2"
+        ],
+        "ID": "53ad5415-7fea-4a51-bcae-65e349a2e477",
+        "Name": "PK_MyTable4",
+        "Parent": null,
+        "DependsOn": [],
+        "IsDependencyOf": []
+      },
       "UniqueConstraints": [],
       "CheckConstraints": [],
       "ForeignKeys": [],
@@ -280,243 +328,243 @@
       "ID": "b12a6a37-7739-48e0-a9e1-499ae7d2a395",
       "Name": "MyTable4",
       "Parent": null,
-      "DependsOn": null,
-      "IsDependencyOf": null
+      "DependsOn": [],
+      "IsDependencyOf": []
     },
     {
-      "$id": "35",
+      "$id": "42",
       "Columns": [
         {
-          "$id": "36",
+          "$id": "43",
           "DataType": {
-            "$id": "37",
+            "$id": "44",
             "Name": "INT",
             "IsUserDefined": false
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
-            "$id": "38",
-            "Code": "(ABS(-15))"
+            "$id": "45",
+            "Code": "(ABs(-15))"
           },
           "ID": "5309d66f-2030-402e-912e-5547babaa072",
           "Name": "MyColumn1",
           "Parent": null,
-          "DependsOn": null,
-          "IsDependencyOf": null
+          "DependsOn": [],
+          "IsDependencyOf": []
         },
         {
-          "$id": "39",
+          "$id": "46",
           "DataType": {
-            "$id": "40",
+            "$id": "47",
             "Name": "TIME",
             "IsUserDefined": false
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
-            "$id": "41",
+            "$id": "48",
             "Code": "'16:17:18'"
           },
           "ID": "cba4849b-3d84-4e38-b2c8-f9dbdff22fa6",
           "Name": "MyColumn10",
           "Parent": null,
-          "DependsOn": null,
-          "IsDependencyOf": null
+          "DependsOn": [],
+          "IsDependencyOf": []
         },
         {
-          "$id": "42",
+          "$id": "49",
           "DataType": {
-            "$id": "43",
+            "$id": "50",
             "Name": "DATETIME",
             "IsUserDefined": false
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
-            "$id": "44",
+            "$id": "51",
             "Code": "'2022-02-15 16:17:18'"
           },
           "ID": "4dde852d-ec19-4b61-80f9-da428d8ff41a",
           "Name": "MyColumn11",
           "Parent": null,
-          "DependsOn": null,
-          "IsDependencyOf": null
+          "DependsOn": [],
+          "IsDependencyOf": []
         },
         {
-          "$id": "45",
+          "$id": "52",
           "DataType": {
-            "$id": "46",
+            "$id": "53",
             "Name": "TIMESTAMP",
             "IsUserDefined": false
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
-            "$id": "47",
+            "$id": "54",
             "Code": "'2022-02-15 14:47:18'"
           },
           "ID": "685faf2e-fef7-4e6b-a960-acd093f1f004",
           "Name": "MyColumn12",
           "Parent": null,
-          "DependsOn": null,
-          "IsDependencyOf": null
+          "DependsOn": [],
+          "IsDependencyOf": []
         },
         {
-          "$id": "48",
+          "$id": "55",
           "DataType": {
-            "$id": "49",
+            "$id": "56",
             "Name": "CHAR(4)",
             "IsUserDefined": false
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
-            "$id": "50",
+            "$id": "57",
             "Code": "'test'"
           },
           "ID": "11ef8e25-3691-42d4-b2fa-88d724f73b61",
           "Name": "MyColumn2",
           "Parent": null,
-          "DependsOn": null,
-          "IsDependencyOf": null
+          "DependsOn": [],
+          "IsDependencyOf": []
         },
         {
-          "$id": "51",
+          "$id": "58",
           "DataType": {
-            "$id": "52",
+            "$id": "59",
             "Name": "BINARY(3)",
             "IsUserDefined": false
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
-            "$id": "53",
+            "$id": "60",
             "Code": "(0x000204)"
           },
           "ID": "6ed0ab37-aad3-4294-9ba6-c0921f0e67af",
           "Name": "MyColumn3",
           "Parent": null,
-          "DependsOn": null,
-          "IsDependencyOf": null
+          "DependsOn": [],
+          "IsDependencyOf": []
         },
         {
-          "$id": "54",
+          "$id": "61",
           "DataType": {
-            "$id": "55",
+            "$id": "62",
             "Name": "FLOAT",
             "IsUserDefined": false
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
-            "$id": "56",
+            "$id": "63",
             "Code": "123.456"
           },
           "ID": "aca57fd6-80d0-4c18-b2ca-aabcb06bea10",
           "Name": "MyColumn4",
           "Parent": null,
-          "DependsOn": null,
-          "IsDependencyOf": null
+          "DependsOn": [],
+          "IsDependencyOf": []
         },
         {
-          "$id": "57",
+          "$id": "64",
           "DataType": {
-            "$id": "58",
+            "$id": "65",
             "Name": "DOUBLE",
             "IsUserDefined": false
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
-            "$id": "59",
+            "$id": "66",
             "Code": "12345.6789"
           },
           "ID": "47666b8b-ca72-4507-86b2-04c47a84aed4",
           "Name": "MyColumn5",
           "Parent": null,
-          "DependsOn": null,
-          "IsDependencyOf": null
+          "DependsOn": [],
+          "IsDependencyOf": []
         },
         {
-          "$id": "60",
+          "$id": "67",
           "DataType": {
-            "$id": "61",
+            "$id": "68",
             "Name": "DECIMAL(6,1)",
             "IsUserDefined": false
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
-            "$id": "62",
+            "$id": "69",
             "Code": "12.3"
           },
           "ID": "98fded6c-d486-4a2e-9c9a-1ec31c9d5830",
           "Name": "MyColumn6",
           "Parent": null,
-          "DependsOn": null,
-          "IsDependencyOf": null
+          "DependsOn": [],
+          "IsDependencyOf": []
         },
         {
-          "$id": "63",
+          "$id": "70",
           "DataType": {
-            "$id": "64",
+            "$id": "71",
             "Name": "TINYINT(1)",
             "IsUserDefined": false
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
-            "$id": "65",
+            "$id": "72",
             "Code": "1"
           },
           "ID": "2502cade-458a-48ee-9421-e6d7850493f7",
           "Name": "MyColumn7",
           "Parent": null,
-          "DependsOn": null,
-          "IsDependencyOf": null
+          "DependsOn": [],
+          "IsDependencyOf": []
         },
         {
-          "$id": "66",
+          "$id": "73",
           "DataType": {
-            "$id": "67",
+            "$id": "74",
             "Name": "BINARY(16)",
             "IsUserDefined": false
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
-            "$id": "68",
+            "$id": "75",
             "Code": "(0x8e2f99ad0fc8456db0e4ec3ba572dd15)"
           },
           "ID": "ed044a8a-6858-41e2-a867-9e5b01f226c8",
           "Name": "MyColumn8",
           "Parent": null,
-          "DependsOn": null,
-          "IsDependencyOf": null
+          "DependsOn": [],
+          "IsDependencyOf": []
         },
         {
-          "$id": "69",
+          "$id": "76",
           "DataType": {
-            "$id": "70",
+            "$id": "77",
             "Name": "DATE",
             "IsUserDefined": false
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
-            "$id": "71",
+            "$id": "78",
             "Code": "'2022-02-15'"
           },
           "ID": "9939d676-73b7-42d1-ba3e-5c13aed5ce34",
           "Name": "MyColumn9",
           "Parent": null,
-          "DependsOn": null,
-          "IsDependencyOf": null
+          "DependsOn": [],
+          "IsDependencyOf": []
         }
       ],
       "PrimaryKey": {
-        "$id": "72",
+        "$id": "79",
         "Columns": [
           "MyColumn2",
           "MyColumn1"
@@ -524,15 +572,15 @@
         "ID": "79384d48-a39b-4a22-900e-066b2ca67ba2",
         "Name": "PK_MyTable5",
         "Parent": null,
-        "DependsOn": null,
-        "IsDependencyOf": null
+        "DependsOn": [],
+        "IsDependencyOf": []
       },
       "UniqueConstraints": [],
       "CheckConstraints": [],
       "ForeignKeys": [],
       "Indexes": [
         {
-          "$id": "73",
+          "$id": "80",
           "TableName": "MyTable5",
           "Columns": [
             "MyColumn8"
@@ -542,11 +590,11 @@
           "ID": "1d632285-9914-4c5d-98e6-a618a99bd799",
           "Name": "IDX_MyTable5_CustomName",
           "Parent": null,
-          "DependsOn": null,
-          "IsDependencyOf": null
+          "DependsOn": [],
+          "IsDependencyOf": []
         },
         {
-          "$id": "74",
+          "$id": "81",
           "TableName": "MyTable5",
           "Columns": [
             "MyColumn6",
@@ -558,57 +606,57 @@
           "ID": "5293b58a-9f63-4f0f-8d6f-18416ebbd751",
           "Name": "UQ_MyTable5_CustomName",
           "Parent": null,
-          "DependsOn": null,
-          "IsDependencyOf": null
+          "DependsOn": [],
+          "IsDependencyOf": []
         }
       ],
       "Triggers": [],
       "ID": "6ca51f29-c1bc-4349-b9c1-6f1ea170f162",
       "Name": "MyTable5",
       "Parent": null,
-      "DependsOn": null,
-      "IsDependencyOf": null
+      "DependsOn": [],
+      "IsDependencyOf": []
     },
     {
-      "$id": "75",
+      "$id": "82",
       "Columns": [
         {
-          "$id": "76",
+          "$id": "83",
           "DataType": {
-            "$id": "77",
+            "$id": "84",
             "Name": "CHAR(4)",
             "IsUserDefined": false
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
-            "$id": "78",
+            "$id": "85",
             "Code": null
           },
           "ID": "bfa08c82-5c8f-4ab4-bd41-1f1d85cf3c85",
           "Name": "MyColumn1",
           "Parent": null,
-          "DependsOn": null,
-          "IsDependencyOf": null
+          "DependsOn": [],
+          "IsDependencyOf": []
         },
         {
-          "$id": "79",
+          "$id": "86",
           "DataType": {
-            "$id": "80",
+            "$id": "87",
             "Name": "INT",
             "IsUserDefined": false
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
-            "$id": "81",
+            "$id": "88",
             "Code": null
           },
           "ID": "a402e2b7-c826-4cfd-a304-97c9bc346ba2",
           "Name": "MyColumn2",
           "Parent": null,
-          "DependsOn": null,
-          "IsDependencyOf": null
+          "DependsOn": [],
+          "IsDependencyOf": []
         }
       ],
       "PrimaryKey": null,
@@ -616,7 +664,7 @@
       "CheckConstraints": [],
       "ForeignKeys": [
         {
-          "$id": "82",
+          "$id": "89",
           "ThisTableName": "MyTable6",
           "ThisColumnNames": [
             "MyColumn1",
@@ -632,8 +680,8 @@
           "ID": "ae453b22-d270-41fc-8184-9ac26b7a0569",
           "Name": "FK_MyTable6_MyTable5_CustomName",
           "Parent": null,
-          "DependsOn": null,
-          "IsDependencyOf": null
+          "DependsOn": [],
+          "IsDependencyOf": []
         }
       ],
       "Indexes": [],
@@ -641,39 +689,39 @@
       "ID": "f3064a8c-346a-4b3d-af2c-d967b39841e4",
       "Name": "MyTable6",
       "Parent": null,
-      "DependsOn": null,
-      "IsDependencyOf": null
+      "DependsOn": [],
+      "IsDependencyOf": []
     }
   ],
   "Views": [
     {
-      "$id": "83",
+      "$id": "90",
       "CodePiece": {
-        "$id": "84",
+        "$id": "91",
         "Code": "CREATE VIEW MyView1 AS\nSELECT\n    t1.MyColumn1,\n    t1.MyColumn4,\n    t2.MyColumn2\nFROM MyTable1 t1\nLEFT JOIN MyTable2 t2\n    ON t2.MyColumn1 = t1.MyColumn1"
       },
       "ID": "e2569aae-d5da-4a77-b3cd-51adbdb272d9",
       "Name": "MyView1",
       "Parent": null,
-      "DependsOn": null,
-      "IsDependencyOf": null
+      "DependsOn": [],
+      "IsDependencyOf": []
     }
   ],
   "Scripts": [
     {
-      "$id": "85",
+      "$id": "92",
       "Kind": 1,
       "MinDbVersionToExecute": 0,
       "MaxDbVersionToExecute": 9223372036854775807,
       "CodePiece": {
-        "$id": "86",
+        "$id": "93",
         "Code": "INSERT INTO `MyTable4`(`MyColumn1`)\nSELECT * FROM\n(\n    SELECT 1\n    UNION ALL\n    SELECT 2\n    UNION ALL\n    SELECT 3\n) t\nWHERE NOT EXISTS (SELECT * FROM `MyTable4`)"
       },
       "ID": "100d624a-01aa-4730-b86f-f991ac3ed936",
       "Name": "InsertSomeInitialData",
       "Parent": null,
-      "DependsOn": null,
-      "IsDependencyOf": null
+      "DependsOn": [],
+      "IsDependencyOf": []
     }
   ]
 }

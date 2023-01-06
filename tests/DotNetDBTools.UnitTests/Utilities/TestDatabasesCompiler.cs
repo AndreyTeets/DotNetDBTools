@@ -34,13 +34,13 @@ internal static class TestDatabasesCompiler
         List<SyntaxTree> syntaxTrees = new();
 
         foreach (string filePath in Directory.EnumerateFiles(projectDir, "*.cs", SearchOption.TopDirectoryOnly))
-            syntaxTrees.Add(CreateSyntaxTree(FilesHelper.GetFromFile(filePath)));
+            syntaxTrees.Add(CreateSyntaxTree(MiscHelper.ReadFromFile(filePath)));
 
         foreach (string subdir in Directory.EnumerateDirectories(projectDir, "*", SearchOption.TopDirectoryOnly)
             .Where(dir => !dir.Replace(@"\", "/").EndsWith("obj", StringComparison.OrdinalIgnoreCase)))
         {
             foreach (string filePath in Directory.EnumerateFiles(subdir, "*.cs", SearchOption.AllDirectories))
-                syntaxTrees.Add(CreateSyntaxTree(FilesHelper.GetFromFile(filePath)));
+                syntaxTrees.Add(CreateSyntaxTree(MiscHelper.ReadFromFile(filePath)));
         }
 
         return syntaxTrees;

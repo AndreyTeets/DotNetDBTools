@@ -21,6 +21,11 @@ namespace DotNetDBTools.SampleDB.Agnostic.Tables
             NotNull = true,
         };
 
+        public Column MyColumn5 = new("EBBEF06C-C7DE-4B36-A911-827566639630")
+        {
+            DataType = new VerbatimDataType(dk => "varchar ( 1000 )"),
+        };
+
         public ForeignKey FK_MyTable1_MyColumn1_MyTable2_MyColumn1 = new("D11B2A53-32DB-432F-BB6B-F91788844BA9")
         {
             ThisColumns = new[] { nameof(MyColumn1) },

@@ -112,8 +112,6 @@ internal abstract class DbModelFromSqlDefinitionProvider<
                 UniqueConstraints = BuildUniqueConstraintModels(table),
                 CheckConstraints = BuildCheckConstraintModels(table),
                 ForeignKeys = BuildForeignKeyModels(table),
-                Indexes = new List<Index>(),
-                Triggers = new List<Trigger>(),
             };
             BuildAdditionalTableModelProperties(tableModel, table);
             tableModels.Add(tableModel);

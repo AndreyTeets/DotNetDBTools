@@ -13,11 +13,11 @@ public class AgnosticDescriptionGenerationTests
     [Fact]
     public void GenerateDescription_CreatesCorrectDescription()
     {
-        Assembly dbAssembly = TestDbAssembliesHelper.GetSampleDbAssembly("DotNetDBTools.SampleDB.Agnostic");
+        Assembly dbAssembly = MiscHelper.GetSampleDbAssembly("DotNetDBTools.SampleDB.Agnostic");
         Database database = new DefinitionParsingManager().CreateDbModel(dbAssembly);
         GenerationOptions options = new() { DatabaseName = "DotNetDBToolsSampleDBAgnostic" };
         string actualDescriptionCode = new GenerationManager(options).GenerateDescription(database);
-        string expectedDescriptionCode = FilesHelper.GetFromFile(@"TestData/Agnostic/Expected_Description_V1.cs");
+        string expectedDescriptionCode = MiscHelper.ReadFromFile(@"TestData/Agnostic/Expected_Description_V1.cs");
         actualDescriptionCode.Should().Be(expectedDescriptionCode);
     }
 }

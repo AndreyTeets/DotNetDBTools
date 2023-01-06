@@ -8,6 +8,7 @@ CREATE TABLE [MyTable1]
     [MyColumn2] TEXT NOT NULL DEFAULT '33',
     [MyColumn3] INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     [MyColumn4] NUMERIC NOT NULL DEFAULT 7.36,
+    [MyColumn5] TEXT NULL,
     CONSTRAINT [UQ_MyTable1_MyColumn4] UNIQUE ([MyColumn4]),
     CONSTRAINT [CK_MyTable1_MyCheck1] CHECK (MyColumn4 >= 0),
     CONSTRAINT [FK_MyTable1_MyColumn1_MyTable2_MyColumn1] FOREIGN KEY ([MyColumn1])
@@ -108,6 +109,25 @@ VALUES
     'Column',
     'MyColumn4',
     '7.36'
+);
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+INSERT INTO [DNDBTDbObjects]
+(
+    [ID],
+    [ParentID],
+    [Type],
+    [Name],
+    [Code]
+)
+VALUES
+(
+    'ebbef06c-c7de-4b36-a911-827566639630',
+    '299675e6-4faa-4d0f-a36a-224306ba5bcb',
+    'Column',
+    'MyColumn5',
+    NULL
 );
 -- QUERY END: InsertDNDBTDbObjectRecordQuery
 
@@ -274,7 +294,8 @@ VALUES
 -- QUERY START: CreateTableQuery
 CREATE TABLE [MyTable4]
 (
-    [MyColumn1] INTEGER NOT NULL
+    [MyColumn1] INTEGER NOT NULL,
+    [MyColumn2] INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
 );
 -- QUERY END: CreateTableQuery
 
@@ -316,10 +337,48 @@ VALUES
 );
 -- QUERY END: InsertDNDBTDbObjectRecordQuery
 
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+INSERT INTO [DNDBTDbObjects]
+(
+    [ID],
+    [ParentID],
+    [Type],
+    [Name],
+    [Code]
+)
+VALUES
+(
+    'a6354ea4-7113-4c14-8047-648f0cfc7163',
+    'b12a6a37-7739-48e0-a9e1-499ae7d2a395',
+    'Column',
+    'MyColumn2',
+    NULL
+);
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+INSERT INTO [DNDBTDbObjects]
+(
+    [ID],
+    [ParentID],
+    [Type],
+    [Name],
+    [Code]
+)
+VALUES
+(
+    '53ad5415-7fea-4a51-bcae-65e349a2e477',
+    'b12a6a37-7739-48e0-a9e1-499ae7d2a395',
+    'PrimaryKey',
+    'PK_MyTable4',
+    NULL
+);
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
 -- QUERY START: CreateTableQuery
 CREATE TABLE [MyTable5]
 (
-    [MyColumn1] INTEGER NOT NULL DEFAULT (ABS(-15)),
+    [MyColumn1] INTEGER NOT NULL DEFAULT (ABs(-15)),
     [MyColumn10] NUMERIC NOT NULL DEFAULT '16:17:18',
     [MyColumn11] NUMERIC NOT NULL DEFAULT '2022-02-15 16:17:18',
     [MyColumn12] NUMERIC NOT NULL DEFAULT '2022-02-15 16:17:18+01:30',
@@ -370,7 +429,7 @@ VALUES
     '6ca51f29-c1bc-4349-b9c1-6f1ea170f162',
     'Column',
     'MyColumn1',
-    '(ABS(-15))'
+    '(ABs(-15))'
 );
 -- QUERY END: InsertDNDBTDbObjectRecordQuery
 

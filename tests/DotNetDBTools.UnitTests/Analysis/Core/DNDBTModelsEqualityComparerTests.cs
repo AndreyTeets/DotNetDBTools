@@ -25,7 +25,7 @@ public class DNDBTModelsEqualityComparerTests
     [Fact]
     public void DNDBTModelsEqualityComparer_Equals_ReturnsTrue_ForDatabase_WhenModelsAreEqual()
     {
-        Assembly dbAssemblyV2 = TestDbAssembliesHelper.GetSampleDbAssembly("DotNetDBTools.SampleDBv2.Agnostic");
+        Assembly dbAssemblyV2 = MiscHelper.GetSampleDbAssembly("DotNetDBTools.SampleDBv2.Agnostic");
         Database database1 = _definitionParsingManager.CreateDbModel(dbAssemblyV2);
         Database database2 = _definitionParsingManager.CreateDbModel(dbAssemblyV2);
         _comparer.Equals(database1, database2).Should().BeTrue();
@@ -34,8 +34,8 @@ public class DNDBTModelsEqualityComparerTests
     [Fact]
     public void DNDBTModelsEqualityComparer_Equals_ReturnsFalse_ForDatabase_WhenModelsAreDifferent()
     {
-        Assembly dbAssembly = TestDbAssembliesHelper.GetSampleDbAssembly("DotNetDBTools.SampleDB.Agnostic");
-        Assembly dbAssemblyV2 = TestDbAssembliesHelper.GetSampleDbAssembly("DotNetDBTools.SampleDBv2.Agnostic");
+        Assembly dbAssembly = MiscHelper.GetSampleDbAssembly("DotNetDBTools.SampleDB.Agnostic");
+        Assembly dbAssemblyV2 = MiscHelper.GetSampleDbAssembly("DotNetDBTools.SampleDBv2.Agnostic");
         Database database1 = _definitionParsingManager.CreateDbModel(dbAssembly);
         Database database2 = _definitionParsingManager.CreateDbModel(dbAssemblyV2);
         _comparer.Equals(database1, database2).Should().BeFalse();
@@ -53,8 +53,8 @@ public class DNDBTModelsEqualityComparerTests
     [Fact]
     public void DNDBTModelsEqualityComparer_Equals_ReturnsTrue_ForDbDiff_WhenModelsAreEqual()
     {
-        Assembly dbAssemblyV1 = TestDbAssembliesHelper.GetSampleDbAssembly("DotNetDBTools.SampleDB.PostgreSQL");
-        Assembly dbAssemblyV2 = TestDbAssembliesHelper.GetSampleDbAssembly("DotNetDBTools.SampleDBv2.PostgreSQL");
+        Assembly dbAssemblyV1 = MiscHelper.GetSampleDbAssembly("DotNetDBTools.SampleDB.PostgreSQL");
+        Assembly dbAssemblyV2 = MiscHelper.GetSampleDbAssembly("DotNetDBTools.SampleDBv2.PostgreSQL");
         Database databaseV1 = _definitionParsingManager.CreateDbModel(dbAssemblyV1);
         Database databaseV2 = _definitionParsingManager.CreateDbModel(dbAssemblyV2);
         DatabaseDiff dbDiff1 = _analysisManager.CreateDatabaseDiff(databaseV1, databaseV2);
@@ -65,8 +65,8 @@ public class DNDBTModelsEqualityComparerTests
     [Fact]
     public void DNDBTModelsEqualityComparer_Equals_ReturnsFalse_ForDbDiff_WhenModelsAreDifferent()
     {
-        Assembly dbAssemblyV1 = TestDbAssembliesHelper.GetSampleDbAssembly("DotNetDBTools.SampleDB.SQLite");
-        Assembly dbAssemblyV2 = TestDbAssembliesHelper.GetSampleDbAssembly("DotNetDBTools.SampleDBv2.SQLite");
+        Assembly dbAssemblyV1 = MiscHelper.GetSampleDbAssembly("DotNetDBTools.SampleDB.SQLite");
+        Assembly dbAssemblyV2 = MiscHelper.GetSampleDbAssembly("DotNetDBTools.SampleDBv2.SQLite");
         Database databaseV1 = _definitionParsingManager.CreateDbModel(dbAssemblyV1);
         Database databaseV2 = _definitionParsingManager.CreateDbModel(dbAssemblyV2);
         DatabaseDiff dbDiff1 = _analysisManager.CreateDatabaseDiff(databaseV1, databaseV2);
@@ -230,7 +230,7 @@ Values [DotNetDBTools.Models.Core.PrimaryKey] and [DotNetDBTools.Models.Core.Pri
                 Name = "PK_T1",
                 Columns = new List<string>() { "C1", "C2" },
             },
-            UniqueConstraints = new List<UniqueConstraint>(),
+            UniqueConstraints = null,
             CheckConstraints = new List<CheckConstraint>()
             {
                 new CheckConstraint()
@@ -248,11 +248,11 @@ Values [DotNetDBTools.Models.Core.PrimaryKey] and [DotNetDBTools.Models.Core.Pri
                     Name = "IDX_T1_1",
                     TableName = "T1",
                     Columns = new List<string>() { "C1" },
-                    IncludeColumns = new List<string>(),
+                    IncludeColumns = null,
                     Unique = true,
                 }
             },
-            Triggers = new List<Trigger>(),
+            Triggers = null,
             ForeignKeys = new List<ForeignKey>()
             {
                 new ForeignKey()

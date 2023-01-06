@@ -1,4 +1,5 @@
-﻿using DotNetDBTools.Analysis.Core;
+﻿using System.Text.RegularExpressions;
+using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.Analysis.Extensions;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.MySQL;
@@ -19,6 +20,7 @@ internal class MySQLDbModelPostProcessor : DbModelPostProcessor
         {
             foreach (Column column in table.Columns)
             {
+                column.DataType.Name = Regex.Replace(column.DataType.Name, @"\s", "");
                 column.DataType.Name = column.DataType.Name.ToUpper();
             }
         }

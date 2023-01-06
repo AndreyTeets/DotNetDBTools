@@ -12,9 +12,9 @@ namespace DotNetDBTools.SampleDB.MSSQL.Tables
 
         public Column MyColumn1 = new("5309D66F-2030-402E-912E-5547BABAA072")
         {
-            DataType = new VerbatimDataType("INT"),
+            DataType = new VerbatimDataType("int"),
             NotNull = true,
-            Default = new VerbatimDefaultValue("ABS(-15)"),
+            Default = new VerbatimDefaultValue("ABs(-15)"),
         };
 
         public Column MyColumn2 = new("11EF8E25-3691-42D4-B2FA-88D724F73B61")
@@ -94,11 +94,11 @@ namespace DotNetDBTools.SampleDB.MSSQL.Tables
             Default = new DateTimeDefaultValue("2022-02-15 16:17:18+01:30"),
         };
 
-        public Column MyColumn13 = new("15AE6061-426D-4485-85E6-ECD3E0F98882")
+        public Column MyColumn101 = new("15AE6061-426D-4485-85E6-ECD3E0F98882")
         {
             DataType = new MyUserDefinedType1(),
             Default = new StringDefaultValue("cc"),
-            DefaultConstraintName = "DF_MyTable5_MyColumn13",
+            DefaultConstraintName = "DF_MyTable5_MyColumn101",
         };
 
         public PrimaryKey PK_MyTable5_CustomName = new("79384D48-A39B-4A22-900E-066B2CA67BA2")

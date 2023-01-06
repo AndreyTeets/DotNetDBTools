@@ -17,14 +17,6 @@ internal class MSSQLDiffCreator : DiffCreator
         {
             NewDatabase = newDatabase,
             OldDatabase = oldDatabase,
-            ViewsToCreate = new List<View>(),
-            ViewsToDrop = new List<View>(),
-            UserDefinedTableTypesToCreate = new List<MSSQLUserDefinedTableType>(),
-            UserDefinedTableTypesToDrop = new List<MSSQLUserDefinedTableType>(),
-            FunctionsToCreate = new List<MSSQLFunction>(),
-            FunctionsToDrop = new List<MSSQLFunction>(),
-            ProceduresToCreate = new List<MSSQLProcedure>(),
-            ProceduresToDrop = new List<MSSQLProcedure>(),
         };
 
         BuildUserDefinedTypesDiff(dbDiff);

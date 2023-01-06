@@ -51,6 +51,7 @@ ALTER TABLE `MyTable2` ADD PRIMARY KEY (`MyColumn1`);
 -- QUERY END: AlterTableQuery
 
 -- QUERY START: AlterTableQuery
+ALTER TABLE `MyTable5` ALTER COLUMN `MyColumn1` SET DEFAULT (ABs(-15));
 ALTER TABLE `MyTable5` ADD PRIMARY KEY (`MyColumn2`, `MyColumn1`);
 -- QUERY END: AlterTableQuery
 

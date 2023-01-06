@@ -211,12 +211,6 @@ internal abstract class DbModelFromDBMSProvider<
                 {
                     ID = Guid.NewGuid(),
                     Name = columnRecord.TableName,
-                    Columns = new List<Column>(),
-                    UniqueConstraints = new List<UniqueConstraint>(),
-                    CheckConstraints = new List<CheckConstraint>(),
-                    Indexes = new List<Index>(),
-                    Triggers = new List<Trigger>(),
-                    ForeignKeys = new List<ForeignKey>(),
                 };
                 tables.Add(columnRecord.TableName, table);
             }

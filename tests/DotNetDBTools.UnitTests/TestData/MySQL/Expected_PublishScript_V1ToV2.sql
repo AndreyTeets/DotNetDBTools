@@ -321,6 +321,7 @@ VALUES
 
 -- QUERY START: AlterTableQuery
 ALTER TABLE `MyTable5` DROP PRIMARY KEY;
+ALTER TABLE `MyTable5` ALTER COLUMN `MyColumn1` SET DEFAULT (abS(-15));
 -- QUERY END: AlterTableQuery
 
 -- QUERY START: DeleteDNDBTDbObjectRecordQuery
@@ -333,6 +334,13 @@ UPDATE `DNDBTDbObjects` SET
     `Name` = 'MyTable5',
     `Code` = NULL
 WHERE `ID` = '6ca51f29-c1bc-4349-b9c1-6f1ea170f162';
+-- QUERY END: UpdateDNDBTDbObjectRecordQuery
+
+-- QUERY START: UpdateDNDBTDbObjectRecordQuery
+UPDATE `DNDBTDbObjects` SET
+    `Name` = 'MyColumn1',
+    `Code` = '(abS(-15))'
+WHERE `ID` = '5309d66f-2030-402e-912e-5547babaa072';
 -- QUERY END: UpdateDNDBTDbObjectRecordQuery
 
 -- QUERY START: CreateTableQuery

@@ -11,16 +11,8 @@ public class MSSQLDatabase : Database
         Kind = DatabaseKind.MSSQL;
     }
 
-    public List<MSSQLUserDefinedType> UserDefinedTypes { get; set; }
-    public List<MSSQLUserDefinedTableType> UserDefinedTableTypes { get; set; }
-    public List<MSSQLFunction> Functions { get; set; }
-    public List<MSSQLProcedure> Procedures { get; set; }
-
-    public override void InitializeAdditionalProperties()
-    {
-        UserDefinedTypes = new();
-        UserDefinedTableTypes = new();
-        Functions = new();
-        Procedures = new();
-    }
+    public List<MSSQLUserDefinedType> UserDefinedTypes { get; set; } = new();
+    public List<MSSQLUserDefinedTableType> UserDefinedTableTypes { get; set; } = new();
+    public List<MSSQLFunction> Functions { get; set; } = new();
+    public List<MSSQLProcedure> Procedures { get; set; } = new();
 }

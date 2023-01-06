@@ -4,6 +4,7 @@ using System.Reflection;
 using Dapper;
 using DotNetDBTools.Deploy;
 using DotNetDBTools.EventsLogger;
+using DotNetDBTools.Generation;
 using Npgsql;
 
 namespace DotNetDBTools.SampleDeployManagerUsage.PostgreSQL
@@ -54,6 +55,12 @@ namespace DotNetDBTools.SampleDeployManagerUsage.PostgreSQL
             dmDataLoss.Events.EventFired += DeployManagerEventsLogger.LogEvent;
             using NpgsqlConnection connection = new(s_postgresqlConnectionString);
 
+            GenerationOptions generationOptions = new()
+            {
+                DatabaseName = "CustomDbName",
+                OutputDefinitionKind = OutputDefinitionKind.Sql
+            };
+
             Console.WriteLine("Registering empty PostgreSQLSampleDB as DNDBT to make other actions with it possible...");
             deployManager.RegisterAsDNDBT(connection);
 
@@ -82,6 +89,7 @@ namespace DotNetDBTools.SampleDeployManagerUsage.PostgreSQL
             deployManager.UnregisterAsDNDBT(connection);
             Console.WriteLine("Generating definition from existing unregistered PostgreSQLSampleDB...");
             deployManager.GenerateDefinition(connection, s_definitionFromUnregisteredDir);
+            deployManager.GenerateDefinition(connection, generationOptions, s_definitionFromUnregisteredDir + "SqlDef");
 
             Console.WriteLine("Generating NoDNDBTInfo script to update(from v1 to v2) PostgreSQLSampleDB from the corresponding assembly files...");
             File.WriteAllText(s_noDNDBTInfoPublishFromV1ToV2ScriptPath, dmDataLoss.GenerateNoDNDBTInfoPublishScript(dbAssemblyV2, dbAssembly));
@@ -97,6 +105,7 @@ namespace DotNetDBTools.SampleDeployManagerUsage.PostgreSQL
             deployManager.RegisterAsDNDBT(connection);
             Console.WriteLine("Generating definition from existing registered PostgreSQLSampleDB...");
             deployManager.GenerateDefinition(connection, s_definitionFromRegisteredDir);
+            deployManager.GenerateDefinition(connection, generationOptions, s_definitionFromRegisteredDir + "SqlDef");
 
             Console.WriteLine("Newly created DNDBT system information(by registration) has different IDs for all objects");
             Console.WriteLine("Generating script to update(recreate all objects) existing PostgreSQLSampleDB from dbAssembly file...");

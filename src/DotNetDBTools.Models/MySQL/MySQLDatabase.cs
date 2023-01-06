@@ -10,12 +10,6 @@ public class MySQLDatabase : Database
         Kind = DatabaseKind.MySQL;
     }
 
-    public List<MySQLFunction> Functions { get; set; }
-    public List<MySQLProcedure> Procedures { get; set; }
-
-    public override void InitializeAdditionalProperties()
-    {
-        Functions = new();
-        Procedures = new();
-    }
+    public List<MySQLFunction> Functions { get; set; } = new();
+    public List<MySQLProcedure> Procedures { get; set; } = new();
 }

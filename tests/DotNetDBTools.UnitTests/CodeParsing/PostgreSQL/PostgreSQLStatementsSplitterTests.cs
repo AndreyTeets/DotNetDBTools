@@ -14,7 +14,7 @@ public class PostgreSQLStatementsSplitterTests
     [Fact]
     public void ParseToStatementsList_GetsCorrectData()
     {
-        string input = FilesHelper.GetFromFile($@"{TestDataDir}/StatementsList.sql");
+        string input = MiscHelper.ReadFromFile($@"{TestDataDir}/StatementsList.sql");
         List<string> statements = PostgreSQLStatementsSplitter.Split(input);
 
         statements.Count.Should().Be(3);

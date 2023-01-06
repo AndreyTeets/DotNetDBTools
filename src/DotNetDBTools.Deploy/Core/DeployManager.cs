@@ -221,7 +221,6 @@ public abstract class DeployManager<TDatabase> : IDeployManager
     private Database CreateEmptyDbModel()
     {
         TDatabase database = new();
-        database.InitializeProperties();
         return database;
     }
 

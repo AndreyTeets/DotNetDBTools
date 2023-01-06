@@ -49,7 +49,6 @@ internal abstract class DbModelConverter<
             Views = database.Views.Select(x => ConvertView((AgnosticView)x)).ToList(),
             Scripts = database.Scripts.Select(x => ConvertScript(x)).ToList(),
         };
-        specificDbmsDatabase.InitializeAdditionalProperties();
         _dbModelPostProcessor.DoSpecificDbmsDbModelCreationFromDefinitionPostProcessing(specificDbmsDatabase);
         _dbModelPostProcessor.DoPostProcessing(specificDbmsDatabase);
         _dependenciesBuilder.BuildDependencies(specificDbmsDatabase);

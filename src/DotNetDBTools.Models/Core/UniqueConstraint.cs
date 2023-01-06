@@ -4,5 +4,5 @@ namespace DotNetDBTools.Models.Core;
 
 public class UniqueConstraint : DbObject
 {
-    public List<string> Columns { get; set; }
+    public List<string> Columns { get; set; } = new();
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using DotNetDBTools.CodeParsing.Models;
 using DotNetDBTools.UnitTests.CodeParsing.Base;
+using DotNetDBTools.UnitTests.Utilities;
 
 namespace DotNetDBTools.UnitTests.CodeParsing.PostgreSQL;
 
@@ -9,6 +10,7 @@ public class PostgreSQLCodeParserTestsData : BaseCodeParserTestsData
 {
     public override string TestDataDir => "./TestData/PostgreSQL";
     public override TableInfo ExpectedTable => GetExpectedTable();
+    public override TableInfo ExpectedTableWithPkColumn => GetExpectedTableWithPkColumn();
     public override ViewInfo ExpectedView => GetExpectedView();
     public override IndexInfo ExpectedIndex => GetExpectedIndex();
     public override TriggerInfo ExpectedTrigger => GetExpectedTrigger();
@@ -31,7 +33,7 @@ public class PostgreSQLCodeParserTestsData : BaseCodeParserTestsData
                 {
                     ID = new Guid("5C36AE77-B7E4-40C3-824F-BD20DC270A14"),
                     Name = "Col1".ToLower(),
-                    DataType = "BIGINT",
+                    DataType = "bigINT",
                     NotNull = true,
                     Default = "15",
                     Unique = true,
@@ -40,7 +42,7 @@ public class PostgreSQLCodeParserTestsData : BaseCodeParserTestsData
                 {
                     ID = new Guid("6C36AE77-B7E4-40C3-824F-BD20DC270A14"),
                     Name = "Col2",
-                    DataType = "DECIMAL(6, 1)",
+                    DataType = "decIMAL ( 6, 1 )",
                     Default = "7.36",
                 },
                 new ColumnInfo()
@@ -50,13 +52,12 @@ public class PostgreSQLCodeParserTestsData : BaseCodeParserTestsData
                     DataType = "BIGINT",
                     NotNull = true,
                     Identity = true,
-                    PrimaryKey = true,
                 },
                 new ColumnInfo()
                 {
                     ID = new Guid("8C36AE77-B7E4-40C3-824F-BD20DC270A14"),
                     Name = "Col4".ToLower(),
-                    DataType = "TEXT",
+                    DataType = "text",
                     NotNull = true,
                     Default = "'CONSTRAINT CK_String_Check1 CHECK (Col3 >= 0),'",
                 },
@@ -100,8 +101,8 @@ public class PostgreSQLCodeParserTestsData : BaseCodeParserTestsData
                     Columns = new List<string>() { "Col1".ToLower() },
                     RefTable = "Table2",
                     RefColumns = new List<string>() { "Col1".ToLower() },
-                    UpdateAction = "NO ACTION",
-                    DeleteAction = "CASCADE",
+                    UpdateAction = "NO actION",
+                    DeleteAction = "casCADE",
                 },
                 new ConstraintInfo()
                 {
@@ -137,13 +138,53 @@ public class PostgreSQLCodeParserTestsData : BaseCodeParserTestsData
         };
     }
 
+    private TableInfo GetExpectedTableWithPkColumn()
+    {
+        return new()
+        {
+            ID = new Guid("4C36AE77-B7E4-40C3-824F-BD20DC270A14"),
+            Name = "MyTableWithPkColumn".ToLower(),
+            Columns = new List<ColumnInfo>()
+            {
+                new ColumnInfo()
+                {
+                    ID = new Guid("5C36AE77-B7E4-40C3-824F-BD20DC270A14"),
+                    Name = "Col1".ToLower(),
+                    DataType = "BIGINT",
+                    NotNull = true,
+                    Default = "15",
+                    Unique = true,
+                },
+                new ColumnInfo()
+                {
+                    ID = new Guid("7C36AE77-B7E4-40C3-824F-BD20DC270A14"),
+                    Name = "Col3".ToLower(),
+                    DataType = "BIGINT",
+                    NotNull = true,
+                    Identity = true,
+                    PrimaryKey = true,
+                },
+            },
+            Constraints = new List<ConstraintInfo>()
+            {
+                new ConstraintInfo()
+                {
+                    ID = new Guid("A836AE77-B7E4-40C3-824F-BD20DC270A14"),
+                    Name = null,
+                    Type = ConstraintType.Check,
+                    Code = @"CHECK (""Col3"" >= 0)",
+                },
+            }
+        };
+    }
+
     private ViewInfo GetExpectedView()
     {
         return new()
         {
             ID = new Guid("3C36AE77-B7E4-40C3-824F-BD20DC270A14"),
             Name = "MyView1",
-            Code = ReadStatementFromFileWithoutIdDeclarations($@"{TestDataDir}/CreateView.sql"),
+            Code = MiscHelper.ReadFromFileWithoutIdDeclarations($@"{TestDataDir}/CreateView.sql"),
         };
     }
 
@@ -166,7 +207,7 @@ public class PostgreSQLCodeParserTestsData : BaseCodeParserTestsData
             ID = new Guid("2C36AE77-B7E4-40C3-824F-BD20DC270A14"),
             Name = "TR_MyTable2_MyTrigger1".ToLower(),
             Table = "MyTable2",
-            Code = ReadStatementFromFileWithoutIdDeclarations($@"{TestDataDir}/CreateTrigger.sql"),
+            Code = MiscHelper.ReadFromFileWithoutIdDeclarations($@"{TestDataDir}/CreateTrigger.sql"),
         };
     }
 
@@ -248,7 +289,7 @@ public class PostgreSQLCodeParserTestsData : BaseCodeParserTestsData
         {
             ID = new Guid("FE72177E-52D8-48E3-975E-408AF5A1A44B"),
             Name = "TR_MyTable2_MyTrigger1_Handler",
-            Code = ReadStatementFromFileWithoutIdDeclarations($@"{TestDataDir}/CreateSQLFunction.sql"),
+            Code = MiscHelper.ReadFromFileWithoutIdDeclarations($@"{TestDataDir}/CreateSQLFunction.sql"),
         };
     }
 
@@ -258,7 +299,7 @@ public class PostgreSQLCodeParserTestsData : BaseCodeParserTestsData
         {
             ID = new Guid("316C7688-D510-4A61-9D09-E15D465D0EFF"),
             Name = "public._Some_Complex_PLPGSQL_Function",
-            Code = ReadStatementFromFileWithoutIdDeclarations($@"{TestDataDir}/CreatePLPGSQLFunction.sql"),
+            Code = MiscHelper.ReadFromFileWithoutIdDeclarations($@"{TestDataDir}/CreatePLPGSQLFunction.sql"),
         };
     }
 }
