@@ -18,7 +18,7 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/AndreyTeets/DotNetDBTools</PackageProjectUrl>
     <RepositoryUrl>>https://github.com/AndreyTeets/DotNetDBTools.git</RepositoryUrl>
-    <PackageTags>DNDBT DBMS sql state-based declarative database version control tools db migration</PackageTags>
+    <PackageTags>DNDBT DBMS sql state-based declarative database version-control versioning tool db migration</PackageTags>
     <Description>
 DotNetDBTools is a set of libraries to define, analyze and deploy (publish migrate) relational databases throughout their evolution using database as code approach.
 Or in other words - state-based (declarative) database version control tools.
