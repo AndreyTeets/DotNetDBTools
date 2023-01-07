@@ -4,5 +4,5 @@
 *.bat text eol=crlf
 *.cmd text eol=crlf
 *.sh text eol=lf
-/samples/** linguist-detectable
-/tests/DotNetDBTools.UnitTests/TestData/** linguist-vendored
+samples/** -linguist-documentation
+tests/DotNetDBTools.UnitTests/TestData/** linguist-vendored
