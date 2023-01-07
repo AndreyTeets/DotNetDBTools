@@ -2,5 +2,5 @@
 
 public class ViewInfo : ObjectInfo
 {
-    public string Code { get; set; }
+    public string CreateStatement { get; set; }
 }

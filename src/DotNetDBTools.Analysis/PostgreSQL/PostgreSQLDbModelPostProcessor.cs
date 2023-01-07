@@ -168,7 +168,7 @@ internal class PostgreSQLDbModelPostProcessor : DbModelPostProcessor
                         {
                             ID = func.ID.Value,
                             Name = func.Name,
-                            CreateStatement = new CodePiece { Code = func.Code.NormalizeLineEndings() },
+                            CreateStatement = new CodePiece { Code = func.CreateStatement.NormalizeLineEndings() },
                         };
                         database.Functions.Add(funcModel);
                         trg.CreateStatement.Code = statements[1].NormalizeLineEndings();

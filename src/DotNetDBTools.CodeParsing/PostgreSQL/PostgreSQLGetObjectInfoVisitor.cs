@@ -59,9 +59,9 @@ internal class PostgreSQLGetObjectInfoVisitor : PostgreSQLParserBaseVisitor<Obje
         if (!_ignoreIds)
             HM.SetObjectID(view, $"view '{view.Name}'", context.dndbt_id?.Text);
 
-        view.Code = HM.GetInitialText(context);
+        view.CreateStatement = HM.GetInitialText(context);
         if (context.dndbt_id != null)
-            view.Code = view.Code.Remove(0, context.dndbt_id.Text.Length);
+            view.CreateStatement = view.CreateStatement.Remove(0, context.dndbt_id.Text.Length);
         return view;
     }
 
@@ -88,9 +88,9 @@ internal class PostgreSQLGetObjectInfoVisitor : PostgreSQLParserBaseVisitor<Obje
             HM.SetObjectID(trigger, $"trigger '{trigger.Name}'", context.dndbt_id?.Text);
 
         trigger.Table = UnquoteIdentifier(context.table_name.GetText());
-        trigger.Code = HM.GetInitialText(context);
+        trigger.CreateStatement = HM.GetInitialText(context);
         if (context.dndbt_id != null)
-            trigger.Code = trigger.Code.Remove(0, context.dndbt_id.Text.Length);
+            trigger.CreateStatement = trigger.CreateStatement.Remove(0, context.dndbt_id.Text.Length);
         return trigger;
     }
 
@@ -187,9 +187,9 @@ internal class PostgreSQLGetObjectInfoVisitor : PostgreSQLParserBaseVisitor<Obje
         if (!_ignoreIds)
             HM.SetObjectID(function, $"function '{function.Name}'", context.dndbt_id?.Text);
 
-        function.Code = HM.GetInitialText(context);
+        function.CreateStatement = HM.GetInitialText(context);
         if (context.dndbt_id != null)
-            function.Code = function.Code.Remove(0, context.dndbt_id.Text.Length);
+            function.CreateStatement = function.CreateStatement.Remove(0, context.dndbt_id.Text.Length);
         return function;
     }
 

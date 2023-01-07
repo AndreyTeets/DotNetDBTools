@@ -17,7 +17,7 @@ INSERT INTO `DNDBTScriptExecutions`
     `ID`,
     `Type`,
     `Name`,
-    `Code`,
+    `Text`,
     `MinDbVersionToExecute`,
     `MaxDbVersionToExecute`,
     `ExecutedOnDbVersion`
@@ -601,7 +601,7 @@ INSERT INTO `DNDBTScriptExecutions`
     `ID`,
     `Type`,
     `Name`,
-    `Code`,
+    `Text`,
     `MinDbVersionToExecute`,
     `MaxDbVersionToExecute`,
     `ExecutedOnDbVersion`

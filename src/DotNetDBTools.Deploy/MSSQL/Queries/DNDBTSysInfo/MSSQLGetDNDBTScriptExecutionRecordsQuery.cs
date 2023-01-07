@@ -12,7 +12,7 @@ $@"SELECT
     [{DNDBTSysTables.DNDBTScriptExecutions.ID}] AS [{nameof(MSSQLScriptRecord.ID)}],
     [{DNDBTSysTables.DNDBTScriptExecutions.Type}] AS [{nameof(MSSQLScriptRecord.Type)}],
     [{DNDBTSysTables.DNDBTScriptExecutions.Name}] AS [{nameof(MSSQLScriptRecord.Name)}],
-    [{DNDBTSysTables.DNDBTScriptExecutions.Code}] AS [{nameof(MSSQLScriptRecord.Code)}],
+    [{DNDBTSysTables.DNDBTScriptExecutions.Text}] AS [{nameof(MSSQLScriptRecord.Text)}],
     [{DNDBTSysTables.DNDBTScriptExecutions.MinDbVersionToExecute}] AS [{nameof(MSSQLScriptRecord.MinDbVersionToExecute)}],
     [{DNDBTSysTables.DNDBTScriptExecutions.MaxDbVersionToExecute}] AS [{nameof(MSSQLScriptRecord.MaxDbVersionToExecute)}]
 FROM [{DNDBTSysTables.DNDBTScriptExecutions}];";

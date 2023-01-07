@@ -25,7 +25,7 @@ CREATE TABLE ""{DNDBTSysTables.DNDBTScriptExecutions}""
     ""{DNDBTSysTables.DNDBTScriptExecutions.ID}"" UUID PRIMARY KEY,
     ""{DNDBTSysTables.DNDBTScriptExecutions.Type}"" VARCHAR(32) NOT NULL,
     ""{DNDBTSysTables.DNDBTScriptExecutions.Name}"" VARCHAR(256) NOT NULL,
-    ""{DNDBTSysTables.DNDBTScriptExecutions.Code}"" TEXT NOT NULL,
+    ""{DNDBTSysTables.DNDBTScriptExecutions.Text}"" TEXT NOT NULL,
     ""{DNDBTSysTables.DNDBTScriptExecutions.MinDbVersionToExecute}"" BIGINT NOT NULL,
     ""{DNDBTSysTables.DNDBTScriptExecutions.MaxDbVersionToExecute}"" BIGINT NOT NULL,
     ""{DNDBTSysTables.DNDBTScriptExecutions.ExecutedOnDbVersion}"" BIGINT NOT NULL

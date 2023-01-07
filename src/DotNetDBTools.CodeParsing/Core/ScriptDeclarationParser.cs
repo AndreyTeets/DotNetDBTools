@@ -39,7 +39,7 @@ $@"^--ScriptID:\#{{ (?<scriptID> {AnyGuid} ) }}\#\r?\n
                 Type = (ScriptType)Enum.Parse(typeof(ScriptType), match.Groups["scriptType"].Value),
                 MinDbVersionToExecute = long.Parse(match.Groups["scriptMinDbVersionToExecute"].Value),
                 MaxDbVersionToExecute = long.Parse(match.Groups["scriptMaxDbVersionToExecute"].Value),
-                Code = match.Groups["scriptCode"].Value,
+                Text = match.Groups["scriptCode"].Value,
             };
             return true;
         }

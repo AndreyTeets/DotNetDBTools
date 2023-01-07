@@ -20,7 +20,7 @@ $@"INSERT INTO [{DNDBTSysTables.DNDBTScriptExecutions}]
     [{DNDBTSysTables.DNDBTScriptExecutions.ID}],
     [{DNDBTSysTables.DNDBTScriptExecutions.Type}],
     [{DNDBTSysTables.DNDBTScriptExecutions.Name}],
-    [{DNDBTSysTables.DNDBTScriptExecutions.Code}],
+    [{DNDBTSysTables.DNDBTScriptExecutions.Text}],
     [{DNDBTSysTables.DNDBTScriptExecutions.MinDbVersionToExecute}],
     [{DNDBTSysTables.DNDBTScriptExecutions.MaxDbVersionToExecute}],
     [{DNDBTSysTables.DNDBTScriptExecutions.ExecutedOnDbVersion}]

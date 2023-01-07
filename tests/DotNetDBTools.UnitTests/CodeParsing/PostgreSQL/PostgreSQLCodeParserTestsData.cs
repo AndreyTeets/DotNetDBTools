@@ -184,7 +184,7 @@ public class PostgreSQLCodeParserTestsData : BaseCodeParserTestsData
         {
             ID = new Guid("3C36AE77-B7E4-40C3-824F-BD20DC270A14"),
             Name = "MyView1",
-            Code = MiscHelper.ReadFromFileWithoutIdDeclarations($@"{TestDataDir}/CreateView.sql"),
+            CreateStatement = MiscHelper.ReadFromFileWithoutIdDeclarations($@"{TestDataDir}/CreateView.sql"),
         };
     }
 
@@ -207,7 +207,7 @@ public class PostgreSQLCodeParserTestsData : BaseCodeParserTestsData
             ID = new Guid("2C36AE77-B7E4-40C3-824F-BD20DC270A14"),
             Name = "TR_MyTable2_MyTrigger1".ToLower(),
             Table = "MyTable2",
-            Code = MiscHelper.ReadFromFileWithoutIdDeclarations($@"{TestDataDir}/CreateTrigger.sql"),
+            CreateStatement = MiscHelper.ReadFromFileWithoutIdDeclarations($@"{TestDataDir}/CreateTrigger.sql"),
         };
     }
 
@@ -289,7 +289,7 @@ public class PostgreSQLCodeParserTestsData : BaseCodeParserTestsData
         {
             ID = new Guid("FE72177E-52D8-48E3-975E-408AF5A1A44B"),
             Name = "TR_MyTable2_MyTrigger1_Handler",
-            Code = MiscHelper.ReadFromFileWithoutIdDeclarations($@"{TestDataDir}/CreateSQLFunction.sql"),
+            CreateStatement = MiscHelper.ReadFromFileWithoutIdDeclarations($@"{TestDataDir}/CreateSQLFunction.sql"),
         };
     }
 
@@ -299,7 +299,7 @@ public class PostgreSQLCodeParserTestsData : BaseCodeParserTestsData
         {
             ID = new Guid("316C7688-D510-4A61-9D09-E15D465D0EFF"),
             Name = "public._Some_Complex_PLPGSQL_Function",
-            Code = MiscHelper.ReadFromFileWithoutIdDeclarations($@"{TestDataDir}/CreatePLPGSQLFunction.sql"),
+            CreateStatement = MiscHelper.ReadFromFileWithoutIdDeclarations($@"{TestDataDir}/CreatePLPGSQLFunction.sql"),
         };
     }
 }

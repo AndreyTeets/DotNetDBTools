@@ -25,7 +25,7 @@ CREATE TABLE [{DNDBTSysTables.DNDBTScriptExecutions}]
     [{DNDBTSysTables.DNDBTScriptExecutions.ID}] UNIQUEIDENTIFIER PRIMARY KEY,
     [{DNDBTSysTables.DNDBTScriptExecutions.Type}] NVARCHAR(32) NOT NULL,
     [{DNDBTSysTables.DNDBTScriptExecutions.Name}] NVARCHAR(256) NOT NULL,
-    [{DNDBTSysTables.DNDBTScriptExecutions.Code}] NVARCHAR(MAX) NOT NULL,
+    [{DNDBTSysTables.DNDBTScriptExecutions.Text}] NVARCHAR(MAX) NOT NULL,
     [{DNDBTSysTables.DNDBTScriptExecutions.MinDbVersionToExecute}] BIGINT NOT NULL,
     [{DNDBTSysTables.DNDBTScriptExecutions.MaxDbVersionToExecute}] BIGINT NOT NULL,
     [{DNDBTSysTables.DNDBTScriptExecutions.ExecutedOnDbVersion}] BIGINT NOT NULL

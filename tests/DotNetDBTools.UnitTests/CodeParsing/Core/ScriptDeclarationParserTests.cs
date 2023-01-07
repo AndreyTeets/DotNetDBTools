@@ -28,7 +28,7 @@ bla bla";
         scriptInfo.Type.Should().Be(ScriptType.AfterPublishOnce);
         scriptInfo.MinDbVersionToExecute.Should().Be(0);
         scriptInfo.MaxDbVersionToExecute.Should().Be(long.MaxValue);
-        scriptInfo.Code.Should().Be(input.Replace(ScriptDeclaration, "").Trim());
+        scriptInfo.Text.Should().Be(input.Replace(ScriptDeclaration, "").Trim());
     }
 
     [Theory]

@@ -184,7 +184,7 @@ public class SQLiteCodeParserTestsData : BaseCodeParserTestsData
         {
             ID = new Guid("3C36AE77-B7E4-40C3-824F-BD20DC270A14"),
             Name = "MyView1",
-            Code = MiscHelper.ReadFromFileWithoutIdDeclarations($@"{TestDataDir}/CreateView.sql"),
+            CreateStatement = MiscHelper.ReadFromFileWithoutIdDeclarations($@"{TestDataDir}/CreateView.sql"),
         };
     }
 
@@ -207,7 +207,7 @@ public class SQLiteCodeParserTestsData : BaseCodeParserTestsData
             ID = new Guid("2C36AE77-B7E4-40C3-824F-BD20DC270A14"),
             Name = "TR_MyTable2_MyTrigger1",
             Table = "MyTable2",
-            Code = MiscHelper.ReadFromFileWithoutIdDeclarations($@"{TestDataDir}/CreateTrigger.sql"),
+            CreateStatement = MiscHelper.ReadFromFileWithoutIdDeclarations($@"{TestDataDir}/CreateTrigger.sql"),
         };
     }
 }

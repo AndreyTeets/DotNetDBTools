@@ -33,7 +33,7 @@ internal static class DNDBTSysTables
         public readonly string ID = nameof(ID);
         public readonly string Type = nameof(Type);
         public readonly string Name = nameof(Name);
-        public readonly string Code = nameof(Code);
+        public readonly string Text = nameof(Text);
         public readonly string MinDbVersionToExecute = nameof(MinDbVersionToExecute);
         public readonly string MaxDbVersionToExecute = nameof(MaxDbVersionToExecute);
         public readonly string ExecutedOnDbVersion = nameof(ExecutedOnDbVersion);

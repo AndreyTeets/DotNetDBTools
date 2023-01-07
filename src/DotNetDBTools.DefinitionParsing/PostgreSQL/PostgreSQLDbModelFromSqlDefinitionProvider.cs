@@ -133,7 +133,7 @@ internal class PostgreSQLDbModelFromSqlDefinitionProvider : DbModelFromSqlDefini
             {
                 ID = function.ID.Value,
                 Name = function.Name,
-                CreateStatement = new CodePiece { Code = function.Code.NormalizeLineEndings() },
+                CreateStatement = new CodePiece { Code = function.CreateStatement.NormalizeLineEndings() },
             };
             functionModels.Add(functionModel);
         }

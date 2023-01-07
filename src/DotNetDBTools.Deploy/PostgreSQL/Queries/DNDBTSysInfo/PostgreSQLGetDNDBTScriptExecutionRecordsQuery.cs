@@ -12,7 +12,7 @@ $@"SELECT
     ""{DNDBTSysTables.DNDBTScriptExecutions.ID}"" AS ""{nameof(PostgreSQLScriptRecord.ID)}"",
     ""{DNDBTSysTables.DNDBTScriptExecutions.Type}"" AS ""{nameof(PostgreSQLScriptRecord.Type)}"",
     ""{DNDBTSysTables.DNDBTScriptExecutions.Name}"" AS ""{nameof(PostgreSQLScriptRecord.Name)}"",
-    ""{DNDBTSysTables.DNDBTScriptExecutions.Code}"" AS ""{nameof(PostgreSQLScriptRecord.Code)}"",
+    ""{DNDBTSysTables.DNDBTScriptExecutions.Text}"" AS ""{nameof(PostgreSQLScriptRecord.Text)}"",
     ""{DNDBTSysTables.DNDBTScriptExecutions.MinDbVersionToExecute}"" AS ""{nameof(PostgreSQLScriptRecord.MinDbVersionToExecute)}"",
     ""{DNDBTSysTables.DNDBTScriptExecutions.MaxDbVersionToExecute}"" AS ""{nameof(PostgreSQLScriptRecord.MaxDbVersionToExecute)}""
 FROM ""{DNDBTSysTables.DNDBTScriptExecutions}"";";

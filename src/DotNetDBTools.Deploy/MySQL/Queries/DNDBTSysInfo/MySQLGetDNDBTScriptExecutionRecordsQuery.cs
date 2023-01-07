@@ -12,7 +12,7 @@ $@"SELECT
     CAST(`{DNDBTSysTables.DNDBTScriptExecutions.ID}` AS CHAR(36)) AS `{nameof(MySQLScriptRecord.ID)}`,
     `{DNDBTSysTables.DNDBTScriptExecutions.Type}` AS `{nameof(MySQLScriptRecord.Type)}`,
     `{DNDBTSysTables.DNDBTScriptExecutions.Name}` AS `{nameof(MySQLScriptRecord.Name)}`,
-    `{DNDBTSysTables.DNDBTScriptExecutions.Code}` AS `{nameof(MySQLScriptRecord.Code)}`,
+    `{DNDBTSysTables.DNDBTScriptExecutions.Text}` AS `{nameof(MySQLScriptRecord.Text)}`,
     `{DNDBTSysTables.DNDBTScriptExecutions.MinDbVersionToExecute}` AS `{nameof(MySQLScriptRecord.MinDbVersionToExecute)}`,
     `{DNDBTSysTables.DNDBTScriptExecutions.MaxDbVersionToExecute}` AS `{nameof(MySQLScriptRecord.MaxDbVersionToExecute)}`
 FROM `{DNDBTSysTables.DNDBTScriptExecutions}`;";

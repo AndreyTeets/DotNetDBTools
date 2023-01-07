@@ -152,7 +152,7 @@ internal abstract class DbModelFromDBMSProvider<
                 Kind = (ScriptKind)Enum.Parse(typeof(ScriptKind), scriptRecord.Type),
                 MinDbVersionToExecute = scriptRecord.MinDbVersionToExecute,
                 MaxDbVersionToExecute = scriptRecord.MaxDbVersionToExecute,
-                Text = new CodePiece { Code = scriptRecord.Code },
+                Text = new CodePiece { Code = scriptRecord.Text },
             };
             database.Scripts.Add(script);
         }

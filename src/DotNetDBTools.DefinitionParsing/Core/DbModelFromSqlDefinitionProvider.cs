@@ -129,7 +129,7 @@ internal abstract class DbModelFromSqlDefinitionProvider<
             {
                 ID = view.ID.Value,
                 Name = view.Name,
-                CreateStatement = new CodePiece { Code = view.Code.NormalizeLineEndings() },
+                CreateStatement = new CodePiece { Code = view.CreateStatement.NormalizeLineEndings() },
             };
             BuildAdditionalViewModelProperties(viewModel, view);
             viewModels.Add(viewModel);
@@ -150,7 +150,7 @@ internal abstract class DbModelFromSqlDefinitionProvider<
                 Kind = (ScriptKind)Enum.Parse(typeof(ScriptKind), script.Type.ToString()),
                 MinDbVersionToExecute = script.MinDbVersionToExecute,
                 MaxDbVersionToExecute = script.MaxDbVersionToExecute,
-                Text = new CodePiece { Code = script.Code.NormalizeLineEndings() },
+                Text = new CodePiece { Code = script.Text.NormalizeLineEndings() },
             };
             scriptModels.Add(scriptModel);
         }
@@ -286,7 +286,7 @@ internal abstract class DbModelFromSqlDefinitionProvider<
                 ID = trigger.ID.Value,
                 Name = trigger.Name,
                 TableName = trigger.Table,
-                CreateStatement = new CodePiece { Code = trigger.Code.NormalizeLineEndings() },
+                CreateStatement = new CodePiece { Code = trigger.CreateStatement.NormalizeLineEndings() },
             };
             BuildAdditionalTriggerModelProperties(triggerModel, trigger);
             tableNameToTableMap[trigger.Table].Triggers.Add(triggerModel);

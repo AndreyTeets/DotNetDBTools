@@ -30,7 +30,7 @@ public class PostgreSQLCodeParser : CodeParser<PostgreSQLParser, PostgreSQLLexer
                 if (objectInfo is not TriggerInfo triggerInfoRes)
                     throw new ParseException($"Trigger object code contains 2 statements and second one is not a trigger\ninput=[{input}]");
 
-                triggerInfoRes.Code = $"{expectedCreateFunctionStatement}{triggerInfoRes.Code}";
+                triggerInfoRes.CreateStatement = $"{expectedCreateFunctionStatement}{triggerInfoRes.CreateStatement}";
                 triggerInfo = triggerInfoRes;
                 return true;
             }
