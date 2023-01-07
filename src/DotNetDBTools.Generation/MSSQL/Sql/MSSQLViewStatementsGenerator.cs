@@ -9,7 +9,7 @@ internal class MSSQLViewStatementsGenerator : StatementsGenerator<MSSQLView>
 {
     protected override string GetCreateSqlImpl(MSSQLView view)
     {
-        return $"{GetIdDeclarationText(view, 0)}{view.GetCode()}";
+        return $"{GetIdDeclarationText(view, 0)}{view.GetCreateStatement()}";
     }
 
     protected override string GetDropSqlImpl(MSSQLView view)

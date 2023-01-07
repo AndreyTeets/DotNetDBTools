@@ -8,7 +8,7 @@ internal class SQLiteViewStatementsGenerator : StatementsGenerator<SQLiteView>
 {
     protected override string GetCreateSqlImpl(SQLiteView view)
     {
-        return $"{GetIdDeclarationText(view, 0)}{view.GetCode().AppendSemicolonIfAbsent()}";
+        return $"{GetIdDeclarationText(view, 0)}{view.GetCreateStatement().AppendSemicolonIfAbsent()}";
     }
 
     protected override string GetDropSqlImpl(SQLiteView view)

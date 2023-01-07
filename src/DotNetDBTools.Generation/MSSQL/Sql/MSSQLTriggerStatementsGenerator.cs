@@ -9,7 +9,7 @@ internal class MSSQLTriggerStatementsGenerator : StatementsGenerator<MSSQLTrigge
     protected override string GetCreateSqlImpl(MSSQLTrigger trigger)
     {
         string res =
-$@"{GetIdDeclarationText(trigger, 0)}{trigger.GetCode()}";
+$@"{GetIdDeclarationText(trigger, 0)}{trigger.GetCreateStatement()}";
 
         return res;
     }

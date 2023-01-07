@@ -57,7 +57,7 @@ internal abstract class ScriptExecutor<
 
     private void ExecuteScript(Script script, long executedOnDbVersion)
     {
-        string scriptCode = AppendSemicolon ? script.GetCode().AppendSemicolonIfAbsent() : script.GetCode();
+        string scriptCode = AppendSemicolon ? script.GetText().AppendSemicolonIfAbsent() : script.GetText();
         QueryExecutor.Execute(new GenericQuery(scriptCode));
         AddScriptExecutionRecord(script, executedOnDbVersion);
     }

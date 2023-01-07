@@ -24,7 +24,7 @@ internal static class TablesCSharpDefinitionGenerator
                     propsDeclarations.Add($@"            NotNull = {DeclareBool(column.NotNull)},");
                 if (column.Identity)
                     propsDeclarations.Add($@"            Identity = {DeclareBool(column.Identity)},");
-                if (column.Default.Code is not null)
+                if (column.GetDefault() is not null)
                     propsDeclarations.Add($@"            Default = {DeclareDefaultValue(column.Default)},");
 
                 string columnDeclaration =
@@ -104,7 +104,7 @@ $@"        public Trigger {tr.Name} = new(""{tr.ID}"")
                 DefinitionSourceFile sqlRefFile = new()
                 {
                     RelativePath = $"Sql/Triggers/{tr.Name}.sql",
-                    SourceText = tr.CreateStatement.Code.NormalizeLineEndings(),
+                    SourceText = tr.GetCreateStatement().NormalizeLineEndings(),
                 };
                 sqlRefFiles.Add(sqlRefFile);
             }
@@ -115,7 +115,7 @@ $@"        public Trigger {tr.Name} = new(""{tr.ID}"")
                 string ckDeclaration =
 $@"        public CheckConstraint {ck.Name} = new(""{ck.ID}"")
         {{
-            Expression = {DeclareString(ck.Expression.Code)},
+            Expression = {DeclareString(ck.GetExpression())},
         }};";
 
                 ckDeclarations.Add(ckDeclaration);

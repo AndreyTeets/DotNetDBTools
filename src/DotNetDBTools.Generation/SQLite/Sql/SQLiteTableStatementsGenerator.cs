@@ -116,7 +116,7 @@ $@"CONSTRAINT [{pk.Name}] PRIMARY KEY ({string.Join(", ", pk.Columns.Select(x =>
 $@"CONSTRAINT [{uc.Name}] UNIQUE ({string.Join(", ", uc.Columns.Select(x => $@"[{x}]"))})"
             ;
         public static string DefCheckConstraint(CheckConstraint ck) =>
-$@"CONSTRAINT [{ck.Name}] CHECK ({ck.GetCode()})"
+$@"CONSTRAINT [{ck.Name}] CHECK ({ck.GetExpression()})"
             ;
         public static string DefForeignKey(ForeignKey fk) =>
 $@"CONSTRAINT [{fk.Name}] FOREIGN KEY ({string.Join(", ", fk.ThisColumnNames.Select(x => $@"[{x}]"))})
@@ -137,7 +137,7 @@ $@"CONSTRAINT [{fk.Name}] FOREIGN KEY ({string.Join(", ", fk.ThisColumnNames.Sel
 c.NotNull ? "NOT NULL" : "NULL"
             ;
         private static string Default(Column c) =>
-c.GetCode() is not null ? $@" DEFAULT {c.GetCode()}" : ""
+c.GetDefault() is not null ? $@" DEFAULT {c.GetDefault()}" : ""
             ;
     }
 }

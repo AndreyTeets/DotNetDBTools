@@ -46,7 +46,7 @@ VALUES
             new QueryParameter(IDParameterName, script.ID, DbType.Guid),
             new QueryParameter(TypeParameterName, script.Kind.ToString(), DbType.String),
             new QueryParameter(NameParameterName, script.Name, DbType.String),
-            new QueryParameter(CodeParameterName, script.GetCode(), DbType.String),
+            new QueryParameter(CodeParameterName, script.GetText(), DbType.String),
             new QueryParameter(MinDbVersionToExecuteParameterName, script.MinDbVersionToExecute, DbType.Int64),
             new QueryParameter(MaxDbVersionToExecuteParameterName, script.MaxDbVersionToExecute, DbType.Int64),
             new QueryParameter(ExecutedOnDbVersionParameterName, executedOnDbVersion, DbType.Int64),

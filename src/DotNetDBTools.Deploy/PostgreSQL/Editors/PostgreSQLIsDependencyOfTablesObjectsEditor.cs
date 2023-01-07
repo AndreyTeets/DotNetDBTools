@@ -127,7 +127,7 @@ internal class PostgreSQLIsDependencyOfTablesObjectsEditor
     private void CreateFunction(PostgreSQLFunction func)
     {
         QueryExecutor.Execute(new PostgreSQLCreateFunctionQuery(func));
-        QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(func.ID, null, DbObjectType.Function, func.Name, func.GetCode()));
+        QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(func.ID, null, DbObjectType.Function, func.Name, func.GetCreateStatement()));
     }
 
     private void DropFunction(PostgreSQLFunction func)
@@ -147,7 +147,7 @@ internal class PostgreSQLIsDependencyOfTablesObjectsEditor
         QueryExecutor.Execute(new PostgreSQLCreateDomainTypeQuery(type));
         QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(type.ID, null, DbObjectType.UserDefinedType, type.Name));
         foreach (CheckConstraint ck in type.CheckConstraints)
-            QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(ck.ID, type.ID, DbObjectType.CheckConstraint, ck.Name, ck.GetCode()));
+            QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(ck.ID, type.ID, DbObjectType.CheckConstraint, ck.Name, ck.GetExpression()));
     }
 
     private void CreateEnumType(PostgreSQLEnumType type)

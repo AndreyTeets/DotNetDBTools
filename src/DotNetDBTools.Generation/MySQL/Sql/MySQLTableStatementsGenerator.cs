@@ -108,12 +108,12 @@ $@"    {GetIdDeclarationText(fk, 4)}{Statements.DefForeignKey(fk)}"));
 
         foreach (ColumnDiff columnDiff in tableDiff.ChangedColumns)
         {
-            bool defaultChagned = columnDiff.NewColumn.Default.Code != columnDiff.OldColumn.Default.Code;
+            bool defaultChagned = columnDiff.NewColumn.GetDefault() != columnDiff.OldColumn.GetDefault();
             if (columnDiff.DataTypeChanged || columnDiff.NewColumn.NotNull != columnDiff.OldColumn.NotNull)
                 sb.Append(Statements.AlterColumnDefinition(tableDiff.NewTable.Name, columnDiff.NewColumn));
-            else if (columnDiff.NewColumn.Default.Code is not null && defaultChagned)
+            else if (columnDiff.NewColumn.GetDefault() is not null && defaultChagned)
                 sb.Append(Statements.AddDefaultConstraint(tableDiff.NewTable.Name, columnDiff.NewColumn));
-            else if (columnDiff.NewColumn.Default.Code is null && defaultChagned)
+            else if (columnDiff.NewColumn.GetDefault() is null && defaultChagned)
                 sb.Append(Statements.DropDefaultConstraint(tableDiff.NewTable.Name, columnDiff.NewColumn));
         }
 
@@ -145,7 +145,7 @@ $@"CONSTRAINT `{pk.Name}` PRIMARY KEY ({string.Join(", ", pk.Columns.Select(x =>
 $@"CONSTRAINT `{uc.Name}` UNIQUE ({string.Join(", ", uc.Columns.Select(x => $@"`{x}`"))})"
             ;
         public static string DefCheckConstraint(CheckConstraint ck) =>
-$@"CONSTRAINT `{ck.Name}` CHECK ({ck.GetCode()})"
+$@"CONSTRAINT `{ck.Name}` CHECK ({ck.GetExpression()})"
             ;
         public static string DefForeignKey(ForeignKey fk) =>
 $@"CONSTRAINT `{fk.Name}` FOREIGN KEY ({string.Join(", ", fk.ThisColumnNames.Select(x => $@"`{x}`"))})
@@ -181,7 +181,7 @@ ALTER TABLE `{tableName}` MODIFY COLUMN `{c.Name}` {c.DataType.Name} {Nullabilit
 
         public static string AddDefaultConstraint(string tableName, Column c) =>
 $@"
-ALTER TABLE `{tableName}` ALTER COLUMN `{c.Name}` SET DEFAULT {c.GetCode()};"
+ALTER TABLE `{tableName}` ALTER COLUMN `{c.Name}` SET DEFAULT {c.GetDefault()};"
             ;
         public static string DropDefaultConstraint(string tableName, Column c) =>
 $@"
@@ -236,7 +236,7 @@ c.Identity ? " AUTO_INCREMENT" : ""
 c.NotNull ? "NOT NULL" : "NULL"
             ;
         private static string Default(Column c) =>
-c.GetCode() is not null ? $@" DEFAULT {c.GetCode()}" : ""
+c.GetDefault() is not null ? $@" DEFAULT {c.GetDefault()}" : ""
             ;
     }
 }

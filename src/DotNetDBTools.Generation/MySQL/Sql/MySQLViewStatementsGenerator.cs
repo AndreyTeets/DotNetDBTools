@@ -8,7 +8,7 @@ internal class MySQLViewStatementsGenerator : StatementsGenerator<MySQLView>
 {
     protected override string GetCreateSqlImpl(MySQLView view)
     {
-        return $"{GetIdDeclarationText(view, 0)}{view.GetCode().AppendSemicolonIfAbsent()}";
+        return $"{GetIdDeclarationText(view, 0)}{view.GetCreateStatement().AppendSemicolonIfAbsent()}";
     }
 
     protected override string GetDropSqlImpl(MySQLView view)

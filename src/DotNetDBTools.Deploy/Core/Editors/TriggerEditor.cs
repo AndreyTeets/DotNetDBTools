@@ -38,7 +38,7 @@ internal abstract class TriggerEditor<
     private void CreateTrigger(Trigger trg, Table table)
     {
         _queryExecutor.Execute(new CreateTriggerQuery(trg));
-        _queryExecutor.Execute(Create<TInsertDNDBTDbObjectRecordQuery>(trg.ID, table.ID, DbObjectType.Trigger, trg.Name, trg.GetCode()));
+        _queryExecutor.Execute(Create<TInsertDNDBTDbObjectRecordQuery>(trg.ID, table.ID, DbObjectType.Trigger, trg.Name, trg.GetCreateStatement()));
     }
 
     private void DropTrigger(Trigger trg)

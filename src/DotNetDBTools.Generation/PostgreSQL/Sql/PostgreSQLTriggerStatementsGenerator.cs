@@ -9,7 +9,7 @@ internal class PostgreSQLTriggerStatementsGenerator : StatementsGenerator<Postgr
     protected override string GetCreateSqlImpl(PostgreSQLTrigger trigger)
     {
         string res =
-$@"{GetIdDeclarationText(trigger, 0)}{trigger.GetCode()}";
+$@"{GetIdDeclarationText(trigger, 0)}{trigger.GetCreateStatement()}";
 
         return res;
     }

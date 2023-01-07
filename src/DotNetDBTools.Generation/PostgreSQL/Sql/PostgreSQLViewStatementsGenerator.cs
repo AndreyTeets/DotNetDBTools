@@ -9,7 +9,7 @@ internal class PostgreSQLViewStatementsGenerator : StatementsGenerator<PostgreSQ
 {
     protected override string GetCreateSqlImpl(PostgreSQLView view)
     {
-        return $"{GetIdDeclarationText(view, 0)}{view.GetCode()}";
+        return $"{GetIdDeclarationText(view, 0)}{view.GetCreateStatement()}";
     }
 
     protected override string GetDropSqlImpl(PostgreSQLView view)

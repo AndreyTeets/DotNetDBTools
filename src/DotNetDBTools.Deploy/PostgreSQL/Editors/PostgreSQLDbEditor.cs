@@ -78,9 +78,9 @@ internal class PostgreSQLDbEditor : DbEditor<
             QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(type.ID, null, DbObjectType.UserDefinedType, type.Name));
         foreach (PostgreSQLDomainType type in db.DomainTypes)
         {
-            QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(type.ID, null, DbObjectType.UserDefinedType, type.Name, type.GetCode()));
+            QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(type.ID, null, DbObjectType.UserDefinedType, type.Name, type.GetDefault()));
             foreach (CheckConstraint ck in type.CheckConstraints)
-                QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(ck.ID, type.ID, DbObjectType.CheckConstraint, ck.Name, ck.GetCode()));
+                QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(ck.ID, type.ID, DbObjectType.CheckConstraint, ck.Name, ck.GetExpression()));
         }
         foreach (PostgreSQLEnumType type in db.EnumTypes)
             QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(type.ID, null, DbObjectType.UserDefinedType, type.Name));
@@ -94,7 +94,7 @@ internal class PostgreSQLDbEditor : DbEditor<
         {
             QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(table.ID, null, DbObjectType.Table, table.Name));
             foreach (Column c in table.Columns)
-                QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(c.ID, table.ID, DbObjectType.Column, c.Name, c.GetCode()));
+                QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(c.ID, table.ID, DbObjectType.Column, c.Name, c.GetDefault()));
 
             PrimaryKey pk = table.PrimaryKey;
             if (pk is not null)
@@ -105,21 +105,21 @@ internal class PostgreSQLDbEditor : DbEditor<
             foreach (ForeignKey fk in table.ForeignKeys)
                 QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(fk.ID, table.ID, DbObjectType.ForeignKey, fk.Name));
             foreach (CheckConstraint ck in table.CheckConstraints)
-                QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(ck.ID, table.ID, DbObjectType.CheckConstraint, ck.Name, ck.GetCode()));
+                QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(ck.ID, table.ID, DbObjectType.CheckConstraint, ck.Name, ck.GetExpression()));
             foreach (Index idx in table.Indexes)
                 QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(idx.ID, table.ID, DbObjectType.Index, idx.Name));
             foreach (Trigger trg in table.Triggers)
-                QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(trg.ID, table.ID, DbObjectType.Trigger, trg.Name, trg.GetCode()));
+                QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(trg.ID, table.ID, DbObjectType.Trigger, trg.Name, trg.GetCreateStatement()));
         }
     }
 
     private void InsertViewsFunctionsProceduresInfos(PostgreSQLDatabase db)
     {
         foreach (PostgreSQLView view in db.Views)
-            QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(view.ID, null, DbObjectType.View, view.Name, view.GetCode()));
+            QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(view.ID, null, DbObjectType.View, view.Name, view.GetCreateStatement()));
         foreach (PostgreSQLFunction func in db.Functions)
-            QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(func.ID, null, DbObjectType.Function, func.Name, func.GetCode()));
+            QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(func.ID, null, DbObjectType.Function, func.Name, func.GetCreateStatement()));
         foreach (PostgreSQLProcedure proc in db.Procedures)
-            QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(proc.ID, null, DbObjectType.Procedure, proc.Name, proc.GetCode()));
+            QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(proc.ID, null, DbObjectType.Procedure, proc.Name, proc.GetCreateStatement()));
     }
 }

@@ -9,7 +9,7 @@ internal class SQLiteTriggerStatementsGenerator : StatementsGenerator<SQLiteTrig
     protected override string GetCreateSqlImpl(SQLiteTrigger trigger)
     {
         string res =
-$"{GetIdDeclarationText(trigger, 0)}{trigger.GetCode().AppendSemicolonIfAbsent()}";
+$"{GetIdDeclarationText(trigger, 0)}{trigger.GetCreateStatement().AppendSemicolonIfAbsent()}";
 
         return res;
     }

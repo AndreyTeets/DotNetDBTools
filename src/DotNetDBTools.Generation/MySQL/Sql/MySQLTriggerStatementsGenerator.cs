@@ -9,7 +9,7 @@ internal class MySQLTriggerStatementsGenerator : StatementsGenerator<MySQLTrigge
     protected override string GetCreateSqlImpl(MySQLTrigger trigger)
     {
         string res =
-$@"{GetIdDeclarationText(trigger, 0)}{trigger.GetCode().AppendSemicolonIfAbsent()}";
+$@"{GetIdDeclarationText(trigger, 0)}{trigger.GetCreateStatement().AppendSemicolonIfAbsent()}";
 
         return res;
     }

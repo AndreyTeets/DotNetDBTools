@@ -44,11 +44,11 @@ $@"    {GetIdDeclarationText(ck, 4)}{Statements.DefCheckConstraint(ck)}");
 type.NotNull ? "NOT NULL" : "NULL"
             ;
         public static string Default(PostgreSQLDomainType type) =>
-type.GetCode() is not null ? $@" DEFAULT {type.GetCode()}" : ""
+type.GetDefault() is not null ? $@" DEFAULT {type.GetDefault()}" : ""
             ;
 
         public static string DefCheckConstraint(CheckConstraint ck) =>
-$@"CONSTRAINT ""{ck.Name}"" CHECK ({ck.GetCode()})"
+$@"CONSTRAINT ""{ck.Name}"" CHECK ({ck.GetExpression()})"
             ;
     }
 }

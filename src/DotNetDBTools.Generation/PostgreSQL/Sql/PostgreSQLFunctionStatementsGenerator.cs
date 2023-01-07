@@ -7,7 +7,7 @@ internal class PostgreSQLFunctionStatementsGenerator : StatementsGenerator<Postg
 {
     protected override string GetCreateSqlImpl(PostgreSQLFunction function)
     {
-        return $"{GetIdDeclarationText(function, 0)}{function.GetCode()}";
+        return $"{GetIdDeclarationText(function, 0)}{function.GetCreateStatement()}";
     }
 
     protected override string GetDropSqlImpl(PostgreSQLFunction function)

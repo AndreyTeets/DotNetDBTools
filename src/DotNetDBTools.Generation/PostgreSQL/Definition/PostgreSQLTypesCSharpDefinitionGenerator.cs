@@ -58,7 +58,7 @@ namespace {projectNamespace}.Types
                 string ckDeclaration =
 $@"        public CheckConstraint {ck.Name} = new(""{ck.ID}"")
         {{
-            Expression = {DeclareString(ck.Expression.Code)},
+            Expression = {DeclareString(ck.GetExpression())},
         }};";
 
                 ckDeclarations.Add(ckDeclaration);
