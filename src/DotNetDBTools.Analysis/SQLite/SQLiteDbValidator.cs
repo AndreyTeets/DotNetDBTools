@@ -8,11 +8,15 @@ namespace DotNetDBTools.Analysis.SQLite;
 
 internal class SQLiteDbValidator : DbValidator
 {
-    public override bool DbIsValid(Database database, out List<DbError> dbErrors)
+    protected override DbAnalysisContext BuildCurrentAnalysisContext(Database database)
     {
-        dbErrors = new();
-        AddCoreDbObjectsErrors(database, dbErrors);
-        return dbErrors.Count == 0;
+        return new DbAnalysisContext();
+    }
+
+    protected override bool DataTypeIsValid(DataType dataType, out string dataTypeErrorMessage)
+    {
+        dataTypeErrorMessage = null;
+        return true;
     }
 
     protected override void AddAdditionalTriggerErrors(Table table, Trigger trigger, List<DbError> dbErrors)

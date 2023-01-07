@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Text.RegularExpressions;
 using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.Analysis.Extensions;
 using DotNetDBTools.Models.Core;
@@ -20,6 +21,9 @@ internal class MySQLDbModelPostProcessor : DbModelPostProcessor
         {
             foreach (Column column in table.Columns)
             {
+                if (string.IsNullOrEmpty(column.DataType.Name))
+                    throw new Exception($"Column '{column.Name}' in table '{table.Name}' datatype is null or empty");
+
                 column.DataType.Name = Regex.Replace(column.DataType.Name, @"\s", "");
                 column.DataType.Name = column.DataType.Name.ToUpper();
             }

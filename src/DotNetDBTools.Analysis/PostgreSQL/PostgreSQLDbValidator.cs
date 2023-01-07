@@ -8,11 +8,28 @@ namespace DotNetDBTools.Analysis.PostgreSQL;
 
 internal class PostgreSQLDbValidator : DbValidator
 {
-    public override bool DbIsValid(Database database, out List<DbError> dbErrors)
+    protected override DbAnalysisContext BuildCurrentAnalysisContext(Database database)
     {
-        dbErrors = new();
-        AddCoreDbObjectsErrors(database, dbErrors);
-        return dbErrors.Count == 0;
+        return new DbAnalysisContext()
+        {
+            UserDefinedTypesNames = PostgreSQLHelperMethods.GetUserDefinedTypesName(database),
+        };
+    }
+
+    protected override bool DataTypeIsValid(DataType dataType, out string dataTypeErrorMessage)
+    {
+        if (DataTypeIsUnknown(dataType))
+            dataTypeErrorMessage = $"Unknown data type '{dataType.Name}'.";
+        else
+            dataTypeErrorMessage = null;
+
+        return dataTypeErrorMessage is null;
+
+        bool DataTypeIsUnknown(DataType dataType)
+        {
+            return !CurrentAnalysisContext.UserDefinedTypesNames.Contains(dataType.Name)
+                && !PostgreSQLHelperMethods.IsStandardSqlType(dataType.Name);
+        }
     }
 
     protected override void AddAdditionalTriggerErrors(Table table, Trigger trigger, List<DbError> dbErrors)

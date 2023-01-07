@@ -81,7 +81,7 @@ namespace SampleTestCode
         string badDbCode = goodDbCode
             .Replace(
                 @"DataType = new TestCompositeType1(),",
-                @"DataType = null,")
+                @"DataType = new VerbatimDataType(""SomeNonExistentType""),")
             .Replace(
                 @"ReferencedTable = nameof(TestTable2),",
                 @"ReferencedTable = ""NonExistentTableName"",")
@@ -90,7 +90,7 @@ namespace SampleTestCode
                 @"CreateStatement = @""CREATE TRIGGER TR_OtherTriggerName bla bla"",");
 
         string expectedColumnErrorMessage =
-"Column 'TestColumn1' in table 'TestTable2' has no data type.";
+"Column 'TestColumn1' in table 'TestTable2' datatype is invalid: Unknown data type 'SomeNonExistentType'.";
         string expectedForeignKeyErrorMessage =
 "Foreign key 'FK_TestName1' in table 'TestTable1' references unknown table 'NonExistentTableName'.";
         string expectedTriggerErrorMessage =

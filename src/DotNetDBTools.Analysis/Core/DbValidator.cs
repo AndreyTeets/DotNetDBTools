@@ -7,7 +7,18 @@ namespace DotNetDBTools.Analysis.Core;
 
 internal abstract class DbValidator
 {
-    public abstract bool DbIsValid(Database database, out List<DbError> dbErrors);
+    protected DbAnalysisContext CurrentAnalysisContext { get; private set; }
+
+    public bool DbIsValid(Database database, out List<DbError> dbErrors)
+    {
+        dbErrors = new();
+        CurrentAnalysisContext = BuildCurrentAnalysisContext(database);
+        AddCoreDbObjectsErrors(database, dbErrors);
+        AddAdditionalDbObjectsErrors(database, dbErrors);
+        return dbErrors.Count == 0;
+    }
+    protected abstract DbAnalysisContext BuildCurrentAnalysisContext(Database database);
+    protected virtual void AddAdditionalDbObjectsErrors(Database database, List<DbError> dbErrors) { }
 
     protected void AddCoreDbObjectsErrors(Database database, List<DbError> dbErrors)
     {
@@ -22,10 +33,10 @@ internal abstract class DbValidator
         {
             foreach (Column column in table.Columns)
             {
-                if (column.DataType is null)
+                if (!DataTypeIsValid(column.DataType, out string dataTypeErrorMessage))
                 {
                     string errorMessage =
-$"Column '{column.Name}' in table '{table.Name}' has no data type.";
+$"Column '{column.Name}' in table '{table.Name}' datatype is invalid: {dataTypeErrorMessage}";
 
                     DbError dbError = new ColumnDbError(
                         errorMessage: errorMessage,
@@ -38,6 +49,7 @@ $"Column '{column.Name}' in table '{table.Name}' has no data type.";
             }
         }
     }
+    protected abstract bool DataTypeIsValid(DataType dataType, out string dataTypeErrorMessage);
     protected virtual void AddAdditionalColumnErrors(Table table, Column column, List<DbError> dbErrors) { }
 
     private void AddForeignKeysErrors(Database database, List<DbError> dbErrors)

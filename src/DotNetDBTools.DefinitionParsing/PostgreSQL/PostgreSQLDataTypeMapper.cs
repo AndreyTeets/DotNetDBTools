@@ -16,7 +16,7 @@ internal class PostgreSQLDataTypeMapper : DataTypeMapper
         switch (dataType)
         {
             case null:
-                return null;
+                return new DataType();
             case IntDataType:
             case RealDataType:
             case DecimalDataType:

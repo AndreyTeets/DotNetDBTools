@@ -108,7 +108,7 @@ internal abstract class DbModelFromSqlDefinitionProvider<
                 ID = table.ID.Value,
                 Name = table.Name,
                 Columns = BuildColumnModels(table),
-                PrimaryKey = BuildPrimaryKeyModels(table),
+                PrimaryKey = BuildPrimaryKeyModel(table),
                 UniqueConstraints = BuildUniqueConstraintModels(table),
                 CheckConstraints = BuildCheckConstraintModels(table),
                 ForeignKeys = BuildForeignKeyModels(table),
@@ -178,7 +178,7 @@ internal abstract class DbModelFromSqlDefinitionProvider<
     }
     protected virtual void BuildAdditionalColumnModelProperties(TColumn columnModel, ColumnInfo column, string tableName) { }
 
-    private PrimaryKey BuildPrimaryKeyModels(TableInfo table)
+    private PrimaryKey BuildPrimaryKeyModel(TableInfo table)
     {
         ConstraintInfo pk = table.Constraints.SingleOrDefault(x => x.Type == ConstraintType.PrimaryKey);
         if (pk is not null)

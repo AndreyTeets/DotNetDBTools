@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.RegularExpressions;
 using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.Analysis.Extensions;
@@ -23,62 +22,37 @@ internal class PostgreSQLDbModelPostProcessor : DbModelPostProcessor
     protected override void PostProcessDataTypes(Database database)
     {
         PostgreSQLDatabase db = (PostgreSQLDatabase)database;
-        IEnumerable<DbObject> userDefinedTypes =
-            db.CompositeTypes.Select(x => (DbObject)x)
-            .Concat(db.DomainTypes.Select(x => (DbObject)x))
-            .Concat(db.EnumTypes.Select(x => (DbObject)x))
-            .Concat(db.RangeTypes.Select(x => (DbObject)x));
-
-        HashSet<string> userDefinedTypesNames = new();
-        foreach (DbObject udt in userDefinedTypes)
-            userDefinedTypesNames.Add(udt.Name);
+        HashSet<string> userDefinedTypesNames = PostgreSQLHelperMethods.GetUserDefinedTypesName(database);
 
         foreach (Table table in db.Tables)
         {
             foreach (Column column in table.Columns)
-            {
-                PostProcessDataType(column.DataType);
-            }
+                PostProcessDataType(column.DataType, $"Column '{column.Name}' in table '{table.Name}'");
         }
         foreach (PostgreSQLDomainType type in db.DomainTypes)
         {
-            PostProcessDataType(type.UnderlyingType);
+            PostProcessDataType(type.UnderlyingType, $"Domain type '{type.Name}' underlying");
         }
         foreach (PostgreSQLCompositeType type in db.CompositeTypes)
         {
             foreach (PostgreSQLCompositeTypeAttribute attr in type.Attributes)
-            {
-                PostProcessDataType(attr.DataType);
-            }
+                PostProcessDataType(attr.DataType, $"Attribute '{attr.Name}' in composite type '{type.Name}'");
         }
         foreach (PostgreSQLRangeType type in db.RangeTypes)
         {
-            PostProcessDataType(type.Subtype);
+            PostProcessDataType(type.Subtype, $"Domain type '{type.Name}' subtype");
         }
 
-        void PostProcessDataType(DataType dataType)
+        void PostProcessDataType(DataType dataType, string displayedObjectInfoIfInvalid)
         {
-            if (dataType is null)
-                return; // TODO move "Unknown data type" to DbValidator check as well
+            if (string.IsNullOrEmpty(dataType.Name))
+                throw new Exception($"{displayedObjectInfoIfInvalid} datatype is null or empty");
 
             dataType.Name = Regex.Replace(dataType.Name, @"\s", "");
-            if (!userDefinedTypesNames.Contains(dataType.Name) && IsStandardSqlType(dataType.Name))
+            if (PostgreSQLHelperMethods.IsStandardSqlType(dataType.Name))
                 dataType.Name = dataType.Name.ToUpper();
             else if (userDefinedTypesNames.Contains(dataType.Name))
                 dataType.IsUserDefined = true;
-            else
-                throw new Exception($"Unknown data type '{dataType.Name}'");
-
-            static bool IsStandardSqlType(string typeName)
-            {
-                IEnumerable<string> standardSqlTypeNamesBases = typeof(PostgreSQLDataTypeNames).GetFields().Select(x => x.Name);
-                return standardSqlTypeNamesBases.Any(typeNameBase => TypeNameMatchesItsBase(typeName, typeNameBase));
-
-                static bool TypeNameMatchesItsBase(string typeName, string typeNameBase)
-                {
-                    return Regex.IsMatch(typeName.ToUpper(), $@"^{typeNameBase}\s*(?:[\(][\s\d\,\-]+[\)])?\s*(?:[\[][\s\d]*[\]])*$");
-                }
-            }
         }
     }
 

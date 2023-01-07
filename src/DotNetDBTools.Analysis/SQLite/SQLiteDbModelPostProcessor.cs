@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Text.RegularExpressions;
 using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.SQLite;
@@ -13,6 +14,9 @@ internal class SQLiteDbModelPostProcessor : DbModelPostProcessor
         {
             foreach (Column column in table.Columns)
             {
+                if (string.IsNullOrEmpty(column.DataType.Name))
+                    throw new Exception($"Column '{column.Name}' in table '{table.Name}' datatype is null or empty");
+
                 string dataType = Regex.Replace(column.DataType.Name, @"\s", "");
                 dataType = dataType.ToUpper();
 
