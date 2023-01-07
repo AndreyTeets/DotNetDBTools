@@ -46,12 +46,17 @@ public enum DefinitionKind
     MySQL,
 
     /// <summary>
-    /// Not implemented.
+    /// Assembly is scanned for embedded files with .sql extension and database model is constructed from definitions in them.
+    /// Each .sql file should contain one create statement with ID declarations.
+    /// Triggers are exception and may optionally contain create function statement before create trigger statement.
+    /// File is parsed using PostgreSQL syntax, unsupported properties of are ignored.
     /// </summary>
     PostgreSQL,
 
     /// <summary>
     /// Assembly is scanned for embedded files with .sql extension and database model is constructed from definitions in them.
+    /// Each .sql file should contain one create statement with ID declarations.
+    /// File is parsed using SQLite syntax, unsupported properties of are ignored.
     /// </summary>
     SQLite,
 }

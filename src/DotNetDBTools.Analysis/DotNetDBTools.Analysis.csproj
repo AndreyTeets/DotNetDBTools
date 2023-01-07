@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Description>
 $(Description)
-DotNetDBTools.Analysis is a library for internal use by other DotNetDBTools.* packages.
+DotNetDBTools.Analysis is a library mainly for internal use by other DotNetDBTools.* packages, but may also contain helpful functionality to be used directly.
     </Description>
   </PropertyGroup>
 

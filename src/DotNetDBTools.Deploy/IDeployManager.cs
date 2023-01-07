@@ -20,18 +20,18 @@ public interface IDeployManager
     /// </summary>
     public void RegisterAsDNDBT(IDbConnection connection);
     /// <summary>
-    /// Adds DNDBT system tables and populates them with DNDBTInfo taken from provided dbAssembly.
+    /// Adds DNDBT system tables and populates them with DNDBTInfo taken from the provided dbAssembly.
     /// Provided dbAssembly and actual database are first checked for equivalency.
     /// </summary>
     public void RegisterAsDNDBT(IDbConnection connection, string dbWithDNDBTInfoAssemblyPath);
     /// <summary>
-    /// Adds DNDBT system tables and populates them with DNDBTInfo taken from provided dbAssembly.
+    /// Adds DNDBT system tables and populates them with DNDBTInfo taken from the provided dbAssembly.
     /// Provided dbAssembly and actual database are first checked for equivalency.
     /// </summary>
     public void RegisterAsDNDBT(IDbConnection connection, Assembly dbWithDNDBTInfoAssembly);
     /// <summary>
-    /// Adds DNDBT system tables and populates them with DNDBTInfo taken from provided database model.
-    /// Provided dbAssembly and actual database are first checked for equivalency.
+    /// Adds DNDBT system tables and populates them with DNDBTInfo taken from the provided database model.
+    /// Provided database model and actual database are first checked for equivalency.
     /// </summary>
     public void RegisterAsDNDBT(IDbConnection connection, Database dbWithDNDBTInfo);
     /// <summary>

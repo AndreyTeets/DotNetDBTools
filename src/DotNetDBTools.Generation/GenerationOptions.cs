@@ -11,7 +11,7 @@ public class GenerationOptions
     public string DatabaseName { get; set; } = "MyDatabase";
 
     /// <summary>
-    /// Defines what kind of definition is generated.
+    /// Controls what kind of definition will be generated.
     /// </summary>
     /// <remarks>
     /// Default value is CSharp.
@@ -21,6 +21,16 @@ public class GenerationOptions
 
 public enum OutputDefinitionKind
 {
+    /// <summary>
+    /// Generates .cs definition-files for database objects with links to sql code in embedded .sql files where appropriate.
+    /// DatabaseSettings.DefinitionKind is set to DotNetDBTools.Definition.DefinitionKind.CSharp.
+    /// </summary>
     CSharp,
+
+    /// <summary>
+    /// Generates embedded .sql files with create statement with ID declarations for each database object.
+    /// DatabaseSettings.DefinitionKind is set to DotNetDBTools.Definition.DefinitionKind.[MSSQL|MySQL|PostgreSQL|SQLite].
+    /// DBMS type is chosen based on the passed database model type.
+    /// </summary>
     Sql,
 }

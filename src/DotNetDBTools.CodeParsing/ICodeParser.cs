@@ -4,5 +4,8 @@ namespace DotNetDBTools.CodeParsing;
 
 public interface ICodeParser
 {
-    public ObjectInfo GetObjectInfo(string input);
+    /// <summary>
+    /// Parses database object information from the provided create statement.
+    /// </summary>
+    public ObjectInfo GetObjectInfo(string createStatement);
 }

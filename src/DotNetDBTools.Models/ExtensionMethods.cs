@@ -10,6 +10,9 @@ public static class ExtensionMethods
         "MemberwiseClone",
         BindingFlags.NonPublic | BindingFlags.Instance);
 
+    /// <summary>
+    /// Creates a deep copy of the provided object.
+    /// </summary>
     public static T CopyModel<T>(this T original)
     {
         return (T)CopyModel((object)original);

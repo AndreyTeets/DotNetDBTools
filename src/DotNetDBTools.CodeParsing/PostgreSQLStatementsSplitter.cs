@@ -4,6 +4,9 @@ namespace DotNetDBTools.CodeParsing;
 
 public static class PostgreSQLStatementsSplitter
 {
+    /// <summary>
+    /// Splits PostgreSQL statements separated by semicolon into a list using correct quotes and dollarquotes handling.
+    /// </summary>
     public static List<string> Split(string statementsStr)
     {
         List<string> statementsList = new();

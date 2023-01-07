@@ -3,19 +3,19 @@ DotNetDBTools is a set of libraries to define, analyze and deploy (publish migra
 
 Or in other words - state-based (declarative) database version control tools.
 
-It provides the means to conviniently describe database structure for the supported DBMS as c# code or as sql in a declarative way, to analyze that structure and the means of publishing it to the selected DBMS with automatic differences calculation between what's being published and what's currently in the DBMS now.
+It provides the means to conviniently describe database objects for the supported DBMS as c# code or as sql in a declarative way, to analyze it and the means of publishing it to the selected DBMS with automatic differences calculation between what's being published and what's currently in the DBMS now.
 
-Agnostic description for standard sql objects (Tables, Views, Indexes, Triggers) is also supported (as c# code only) and can then be used to publish to any supported DBMS.
+Agnostic definition for standard sql objects (Tables, Views, Indexes, Triggers) is also supported (as c# code only) and can then be used to publish to any supported DBMS.
 
 ## How it works
-Differences are calculated on the idea of assigning unique identifiers to each object (table, column, foreign key, function, e.t.c.) in database description (and saving them in DBMS as well) and then:
+Differences are calculated on the idea of assigning unique identifiers to each object (table, column, foreign key, function, e.t.c.) in database definition (and saving them in DBMS as well) and then:
 + Creating new objects during publish if there's no record of this identifier in DBMS now.
 + Altering only changed properties of this object (like changing name for a table, or changing data type for a column) if there's a record of this identifier in DBMS now.
-+ Dropping objects if object was deleted in description but still exists in DBMS.
++ Dropping objects if object was deleted in definition but still exists in DBMS.
 
-Identifiers are there to provide a reliable mapping between what's in the description and what's in DBMS because it can't be done with names which often change.
+Identifiers are there to provide a reliable mapping between what's in the database definition and what's in DBMS because it can't be done with names which often change.
 
-## Example database structure description as c# code
+## Example database definition as c# code
 ```
 public class MyTable : ITable
 {
@@ -59,7 +59,7 @@ public class MyTable : ITable
 }
 ```
 
-## Example database structure description as sql(PostgreSQL)
+## Example database definition as sql(PostgreSQL)
 ```
 --ID:#{299675E6-4FAA-4D0F-A36A-224306BA5BCB}#
 CREATE TABLE "MyTable"
@@ -85,7 +85,7 @@ CREATE UNIQUE INDEX "IDX_MyTable_MyDataColumn2"
 ON "MyTable" ("MyDataColumn2");
 ```
 
-## Example usage of additionally generated description classes for use in business logic
+## Example usage of additionally generated description classes in business logic
 ```
 string sql =
 $@"SELECT
@@ -98,10 +98,10 @@ IEnumerable<string> values = connection.Query<string>(sql); // Dapper call
 ```
 
 ## How is 'SQL Server Data Tools (SSDT)' different?
-Although it provides analogous declaritive means for database structure description it still has to drag all the history of renames to make publish correctly work to support renames. Plus it's only available for MSSQL.
+Although it provides analogous declaritive means for defining database objects it still has to drag all the history of renames to make publish correctly work to support renames. Plus it's only available for MSSQL.
 
 ## How is 'Entity framework' different?
-Also provides declarative means for database structure description with different syntax, but publishing process is entirely different and relies on dragging the whole history of every change done to database. Also DotNetDBTools is not an ORM, it just provides means to describe and deploy database structure and analysis on this structure.
+Also provides declarative means for defining database structure with different syntax, but publishing process is entirely different and relies on dragging the whole history of every change done to database. Also DotNetDBTools is not an ORM, it just provides means to define objects and analysis and deploy it.
 
 # Supported DBMS
 + MSSQL (oldest tested - 2017, latest tested - 2022)
@@ -122,7 +122,7 @@ Also provides declarative means for database structure description with differen
 3. Optionally add references to additional analyzer-packages for database analysis and additional description classes source-generation.
    * `DotNetDBTools.DefinitionAnalyzer`
    * `DotNetDBTools.DescriptionSourceGenerator`
-4. Describe database structure as c# code by creating classes derived from `ITable` (with members of type `Column`, `PrimaryKey`, `ForeignKey` e.t.c.), `IView`, `IFunction` e.t.c. or as sql by setting assembly attribute `DatabaseSettings.DefinitionKind` and including .sql files with definition as embedded resources. In both cases embedded resources require creating and filling custom `AdditionalFiles` msbuild property.
+4. Define database objects as c# code by creating classes derived from `ITable` (with members of type `Column`, `PrimaryKey`, `ForeignKey` e.t.c.), `IView`, `IFunction` e.t.c. or as sql by setting assembly attribute `DatabaseSettings.DefinitionKind` and including .sql files with definition as embedded resources. In both cases embedded resources require creating and filling custom `AdditionalFiles` msbuild property.
 5. Create a standalone console project with a reference to `DotNetDBTools.Deploy` nuget package and use provided `MSSQLDeployManager` / `MySQLDeployManager` / `PostgreSQLDeployManager` / `SQLiteDeployManager` classes to create a simple deployment tool, after that use this tool to publish database from compiled database project output dll to DBMS as it evolves. Or alternatively reference `DotNetDBTools.Deploy` package right in business logic application and add database publish logic right there.
 6. Optionally reference database project in business application to use additional description classes generated by `DotNetDBTools.DescriptionSourceGenerator`.
 
@@ -173,7 +173,7 @@ public interface IDeployManager
 }
 ```
 
-## Example csproj file for database description project
+## Example csproj file for database definition project
 ```
 <Project Sdk="Microsoft.NET.Sdk">
 
@@ -233,6 +233,70 @@ connection.Execute(File.ReadAllText("./publishScript.sql")); // Dapper call
 More information on usage with end-to-end working examples can be found in [/samples](/samples) directory of this project. For even more complex scenarios one can check out available public classes in Analysis, CodeParsing, DefinitionParsing, Generation packages and look at the code in tests or in DeployManager class to find examples of their usage.
 
 In order to run sample applications docker container with the appropriate DBMS has to be started (except for SQLite which works out of the box). To start containers simply run any (or all) integration test for the chosen DBMS, it will create container with required parameters and leave it running. SampleBusinessLogicOnlyApp.* samples require running corresponding SampleDeployManagerUsage.* sample first to create appropriate db.
+
+Building solution requires java runtime (needed by Antlr4BuildTasks which generates c# files from ANTLR grammars during CodeParsing project build).
+
+Here is a concise list of some potentially helpful classes/methods in other packages:
+```
+public interface DotNetDBTools.DefinitionParsing.IDefinitionParsingManager
+{
+    public Database CreateDbModel(string dbAssemblyPath);
+    public Database CreateDbModel(Assembly dbAssembly);
+    public Database CreateDbModel(IEnumerable<string> definitionSqlStatements, long dbVersion, DatabaseKind dbKind);
+}
+
+public interface DotNetDBTools.Generation.IGenerationManager
+{
+    public string GenerateDescription(Database database);
+    public IEnumerable<DefinitionSourceFile> GenerateDefinition(Database database);
+}
+
+public class DotNetDBTools.Generation.GenerationManager
+{
+    public static string GenerateSqlCreateStatement(DbObject dbObject, bool includeIdDeclarations);
+    public static string GenerateSqlDropStatement(DbObject dbObject);
+    public static string GenerateSqlAlterStatement(TableDiff tableDiff);
+}
+
+public interface DotNetDBTools.Analysis.IAnalysisManager
+{
+    public bool DbIsValid(Database database, out List<DbError> dbErrors);
+    public bool DatabasesAreEquivalentExcludingDNDBTInfo(Database database1, Database database2, out string diffLog);
+
+    public DatabaseDiff CreateDatabaseDiff(Database newDatabase, Database oldDatabase);
+    public bool DiffIsEmpty(DatabaseDiff dbDiff);
+    public bool DiffLeadsToDataLoss(DatabaseDiff dbDiff);
+
+    public Database ConvertFromAgnostic(Database database, DatabaseKind targetKind);
+}
+
+public interface DotNetDBTools.CodeParsing.ICodeParser
+{
+    public ObjectInfo GetObjectInfo(string createStatement);
+}
+
+public static class DotNetDBTools.CodeParsing.PostgreSQLStatementsSplitter
+{
+    public static List<string> Split(string statementsStr);
+}
+
+public class DotNetDBTools.CodeParsing.PostgreSQLCodeParser
+{
+    public List<Dependency> GetFunctionDependencies(string createFunctionStatement);
+    public List<Dependency> GetViewDependencies(string createViewStatement);
+}
+
+public static class DotNetDBTools.Analysis.Extensions.OrderingExtensions
+{
+    public static IEnumerable<DbObject> OrderByDependenciesLast(this IEnumerable<DbObject> dbObjects);
+    public static IEnumerable<DbObject> OrderByDependenciesFirst(this IEnumerable<DbObject> dbObjects);
+}
+
+public static class DotNetDBTools.Models.ExtensionMethods
+{
+    public static T CopyModel<T>(this T original)
+}
+```
 
 # Licence
 MIT License. See [LICENSE](LICENSE) file.

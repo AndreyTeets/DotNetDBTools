@@ -7,10 +7,10 @@ namespace DotNetDBTools.CodeParsing;
 
 public class SQLiteCodeParser : CodeParser<SQLiteParser, SQLiteLexer>
 {
-    public override ObjectInfo GetObjectInfo(string input)
+    public override ObjectInfo GetObjectInfo(string createStatement)
     {
-        if (ScriptDeclarationParser.TryParseScriptInfo(input, out ScriptInfo scriptInfo))
+        if (ScriptDeclarationParser.TryParseScriptInfo(createStatement, out ScriptInfo scriptInfo))
             return scriptInfo;
-        return ParseObjectInfo<SQLiteGetObjectInfoVisitor>(input, x => x.dndbt_sqldef_create_statement());
+        return ParseObjectInfo<SQLiteGetObjectInfoVisitor>(createStatement, x => x.dndbt_sqldef_create_statement());
     }
 }

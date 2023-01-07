@@ -7,12 +7,20 @@ namespace DotNetDBTools.Analysis.Extensions;
 
 public static class OrderingExtensions
 {
+    /// <summary>
+    /// Sorts by DbObject.Name ascending (ordinal).
+    /// </summary>
     public static List<TDbObject> OrderByName<TDbObject>(this IEnumerable<TDbObject> dbObjects)
         where TDbObject : DbObject
     {
         return dbObjects.OrderBy(x => x.Name, StringComparer.Ordinal).ToList();
     }
 
+    /// <summary>
+    /// Sorts so that for every DbObject all objects in DbObject.DependsOn appear after it.
+    /// Meaning that for every DbObject all objects in DbObject.IsDependencyOf appear before it.
+    /// Throws on recursive dependency.
+    /// </summary>
     public static IEnumerable<DbObject> OrderByDependenciesLast(this IEnumerable<DbObject> dbObjects)
     {
         if (!dbObjects.Any())
@@ -24,6 +32,10 @@ public static class OrderingExtensions
         return orderedDbObjects;
     }
 
+    /// <summary>
+    /// Sorts so that for every DbObject all objects in DbObject.DependsOn appear before it.
+    /// Throws on recursive dependency.
+    /// </summary>
     public static IEnumerable<DbObject> OrderByDependenciesFirst(this IEnumerable<DbObject> dbObjects)
     {
         if (!dbObjects.Any())

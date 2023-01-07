@@ -91,6 +91,10 @@ public class GenerationManager : IGenerationManager
         return definitionGenerator.GenerateDefinition(database, Options.DatabaseName);
     }
 
+    /// <summary>
+    /// Generates appropriate create statement for the provided dbObject model.
+    /// DBMS type is chosen based on the passed dbObject model type.
+    /// </summary>
     public static string GenerateSqlCreateStatement(DbObject dbObject, bool includeIdDeclarations)
     {
         IStatementsGenerator statementsGenerator = CreateAppropriateStatementsGenerator(dbObject);
@@ -98,12 +102,20 @@ public class GenerationManager : IGenerationManager
         return statementsGenerator.GetCreateSql(dbObject).NormalizeLineEndings();
     }
 
+    /// <summary>
+    /// Generates appropriate drop statement for the provided dbObject model.
+    /// DBMS type is chosen based on the passed dbObject model type.
+    /// </summary>
     public static string GenerateSqlDropStatement(DbObject dbObject)
     {
         IStatementsGenerator statementsGenerator = CreateAppropriateStatementsGenerator(dbObject);
         return statementsGenerator.GetDropSql(dbObject).NormalizeLineEndings();
     }
 
+    /// <summary>
+    /// Generates appropriate alter statement for the provided tableDiff model.
+    /// DBMS type is chosen based on the passed dbObject model type.
+    /// </summary>
     public static string GenerateSqlAlterStatement(TableDiff tableDiff)
     {
         IAlterStatementGenerator alterStatementGenerator = CreateAppropriateAlterStatementGenerator(tableDiff);

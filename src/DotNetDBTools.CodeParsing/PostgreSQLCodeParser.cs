@@ -9,13 +9,13 @@ namespace DotNetDBTools.CodeParsing;
 
 public class PostgreSQLCodeParser : CodeParser<PostgreSQLParser, PostgreSQLLexer>
 {
-    public override ObjectInfo GetObjectInfo(string input)
+    public override ObjectInfo GetObjectInfo(string createStatement)
     {
-        if (ScriptDeclarationParser.TryParseScriptInfo(input, out ScriptInfo scriptInfo))
+        if (ScriptDeclarationParser.TryParseScriptInfo(createStatement, out ScriptInfo scriptInfo))
             return scriptInfo;
-        else if (ParseTriggerInfoWhenTwoStatements(input, out TriggerInfo triggerInfo))
+        else if (ParseTriggerInfoWhenTwoStatements(createStatement, out TriggerInfo triggerInfo))
             return triggerInfo;
-        return ParseObjectInfo<PostgreSQLGetObjectInfoVisitor>(input, x => x.dndbt_sqldef_create_statement());
+        return ParseObjectInfo<PostgreSQLGetObjectInfoVisitor>(createStatement, x => x.dndbt_sqldef_create_statement());
 
         bool ParseTriggerInfoWhenTwoStatements(string input, out TriggerInfo triggerInfo)
         {
@@ -42,9 +42,12 @@ public class PostgreSQLCodeParser : CodeParser<PostgreSQLParser, PostgreSQLLexer
         }
     }
 
-    public List<Dependency> GetFunctionDependencies(string input)
+    /// <summary>
+    /// Parses the list of functions|views|tables referenced in the provided create function statement.
+    /// </summary>
+    public List<Dependency> GetFunctionDependencies(string createFunctionStatement)
     {
-        IParseTree parseTree = Parse(input, x => x.statement());
+        IParseTree parseTree = Parse(createFunctionStatement, x => x.create_function_statement());
         PostgreSQLGetFunctionAttributesVisitor visitor = new();
         visitor.Visit(parseTree);
 
@@ -61,9 +64,12 @@ public class PostgreSQLCodeParser : CodeParser<PostgreSQLParser, PostgreSQLLexer
         return bodyVisitor.GetDependencies();
     }
 
-    public List<Dependency> GetViewDependencies(string input)
+    /// <summary>
+    /// Parses the list of functions|views|tables referenced in the provided create view statement.
+    /// </summary>
+    public List<Dependency> GetViewDependencies(string createViewStatement)
     {
-        IParseTree parseTree = Parse(input, x => x.statement());
+        IParseTree parseTree = Parse(createViewStatement, x => x.create_view_statement());
         PostgreSQLGetViewDependenciesVisitor visitor = new();
         parseTree.Accept(visitor);
         return visitor.GetDependencies();

@@ -11,7 +11,7 @@ public abstract class CodeParser<TParser, TLexer> : ICodeParser
     where TLexer : Lexer
 {
     public bool IgnoreIdsWhenParsingObjectInfo { get; set; } = false;
-    public abstract ObjectInfo GetObjectInfo(string input);
+    public abstract ObjectInfo GetObjectInfo(string createStatement);
 
     private readonly ErrorListener _errorListener = new();
 

@@ -4,7 +4,7 @@
     <PackageTags>$(PackageTags) Agnostic MSSQL MySQL PostgreSQL SQLite</PackageTags>
     <Description>
 $(Description)
-DotNetDBTools.Definition is a library that provides the means to declaratively describe database structure which could be then managed using DotNetDBTools.Deploy package.
+DotNetDBTools.Definition is a library that provides the means to declaratively define databases which could be then managed using DotNetDBTools.Deploy package.
     </Description>
   </PropertyGroup>
 
