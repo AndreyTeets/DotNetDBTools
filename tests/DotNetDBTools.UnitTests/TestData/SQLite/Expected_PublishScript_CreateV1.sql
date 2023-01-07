@@ -184,7 +184,7 @@ VALUES
     '299675e6-4faa-4d0f-a36a-224306ba5bcb',
     'CheckConstraint',
     'CK_MyTable1_MyCheck1',
-    'CHECK (MyColumn4 >= 0)'
+    'MyColumn4 >= 0'
 );
 -- QUERY END: InsertDNDBTDbObjectRecordQuery
 

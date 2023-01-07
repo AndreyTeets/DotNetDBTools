@@ -10,7 +10,7 @@ internal abstract class GetCheckConstraintsFromDBMSSysInfoQuery : NoParametersQu
     {
         public string TableName { get; set; }
         public string ConstraintName { get; set; }
-        public string ConstraintCode { get; set; }
+        public string ConstraintDefinition { get; set; }
     }
 
     public abstract class RecordMapper

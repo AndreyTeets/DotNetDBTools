@@ -2,5 +2,5 @@
 
 public class CheckConstraint : DbObject
 {
-    public CodePiece CodePiece { get; set; }
+    public CodePiece Expression { get; set; }
 }

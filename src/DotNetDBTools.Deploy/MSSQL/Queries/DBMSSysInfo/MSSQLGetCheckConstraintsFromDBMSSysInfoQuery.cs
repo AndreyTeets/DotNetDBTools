@@ -11,7 +11,7 @@ internal class MSSQLGetCheckConstraintsFromDBMSSysInfoQuery : GetCheckConstraint
 $@"SELECT
     t.name AS [{nameof(CheckConstraintRecord.TableName)}],
     cc.name AS [{nameof(CheckConstraintRecord.ConstraintName)}],
-    'CHECK ' + cc.definition AS [{nameof(CheckConstraintRecord.ConstraintCode)}]
+    'CHECK ' + cc.definition AS [{nameof(CheckConstraintRecord.ConstraintDefinition)}]
 FROM sys.tables t
 INNER JOIN sys.check_constraints cc
       ON cc.parent_object_id = t.object_id
@@ -27,7 +27,7 @@ WHERE t.name NOT IN ({DNDBTSysTables.AllTablesForInClause});";
             {
                 ID = Guid.NewGuid(),
                 Name = ckr.ConstraintName,
-                CodePiece = new CodePiece { Code = ckr.ConstraintCode },
+                Expression = new CodePiece { Code = ckr.ConstraintDefinition.ParseOutCheckExpression() },
             };
         }
     }

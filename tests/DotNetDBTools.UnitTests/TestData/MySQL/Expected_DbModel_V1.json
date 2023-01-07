@@ -119,9 +119,9 @@
       "CheckConstraints": [
         {
           "$id": "19",
-          "CodePiece": {
+          "Expression": {
             "$id": "20",
-            "Code": "CHECK (MyColumn4 >= 0)"
+            "Code": "MyColumn4 >= 0"
           },
           "ID": "eb9c59b5-bc7e-49d7-adaa-f5600b6a19a2",
           "Name": "CK_MyTable1_MyCheck1",

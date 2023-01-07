@@ -11,7 +11,7 @@ internal class PostgreSQLGetCheckConstraintsFromDBMSSysInfoQuery : GetCheckConst
 $@"SELECT
     t.relname AS ""{nameof(CheckConstraintRecord.TableName)}"",
     c.conname AS ""{nameof(CheckConstraintRecord.ConstraintName)}"",
-    pg_catalog.pg_get_constraintdef(c.oid, TRUE) AS ""{nameof(CheckConstraintRecord.ConstraintCode)}""
+    pg_catalog.pg_get_constraintdef(c.oid, TRUE) AS ""{nameof(CheckConstraintRecord.ConstraintDefinition)}""
 FROM pg_catalog.pg_class t
 INNER JOIN pg_catalog.pg_namespace n
     ON n.oid = t.relnamespace
@@ -32,7 +32,7 @@ WHERE t.relkind = 'r'
             {
                 ID = Guid.NewGuid(),
                 Name = ckr.ConstraintName,
-                CodePiece = new CodePiece { Code = ckr.ConstraintCode },
+                Expression = new CodePiece { Code = ckr.ConstraintDefinition.ParseOutCheckExpression() },
             };
         }
     }

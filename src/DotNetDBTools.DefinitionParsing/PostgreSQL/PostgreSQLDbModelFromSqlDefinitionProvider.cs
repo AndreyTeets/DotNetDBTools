@@ -79,7 +79,7 @@ internal class PostgreSQLDbModelFromSqlDefinitionProvider : DbModelFromSqlDefini
                 {
                     ID = ck.ID.Value,
                     Name = ck.Name,
-                    CodePiece = new CodePiece { Code = ck.Code },
+                    Expression = new CodePiece { Code = ck.Expression },
                 };
                 return ckModel;
             })

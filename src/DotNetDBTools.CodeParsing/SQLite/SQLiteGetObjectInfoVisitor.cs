@@ -189,7 +189,7 @@ internal class SQLiteGetObjectInfoVisitor : SQLiteParserBaseVisitor<ObjectInfo>
         static void AddCheckConstraintInfo(ConstraintInfo constraint, Table_constraintContext context)
         {
             constraint.Type = ConstraintType.Check;
-            constraint.Code = $"CHECK ({HM.GetInitialText(context.expr())})";
+            constraint.Expression = HM.GetInitialText(context.expr());
         }
 
         static void AddPrimaryKeyConstraintInfo(ConstraintInfo constraint, Table_constraintContext context)

@@ -223,7 +223,7 @@ internal abstract class DbModelFromSqlDefinitionProvider<
             {
                 ID = ck.ID.Value,
                 Name = ck.Name,
-                CodePiece = new CodePiece { Code = ck.Code },
+                Expression = new CodePiece { Code = ck.Expression },
             };
             BuildAdditionalCheckConstraintModelProperties(ckModel, ck, table.Name);
             ckModels.Add(ckModel);

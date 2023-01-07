@@ -69,7 +69,7 @@ internal class PostgreSQLDbModelFromDBMSProvider : DbModelFromDBMSProvider<
             {
                 DNDBTInfo dndbtInfoCK = dbObjectIDsMap[$"{DbObjectType.CheckConstraint}_{ck.Name}_{type.ID}"];
                 ck.ID = dndbtInfoCK.ID;
-                ck.CodePiece.Code = dndbtInfoCK.Code;
+                ck.Expression.Code = dndbtInfoCK.Code;
             }
         }
         foreach (PostgreSQLEnumType type in db.EnumTypes)
@@ -141,7 +141,7 @@ internal class PostgreSQLDbModelFromDBMSProvider : DbModelFromDBMSProvider<
             {
                 ID = Guid.NewGuid(),
                 Name = typeRecord.CheckConstrantName,
-                CodePiece = new CodePiece { Code = typeRecord.CheckConstrantCode },
+                Expression = new CodePiece { Code = typeRecord.CheckConstrantDefinition.ParseOutCheckExpression() },
             };
             typesMap[typeRecord.TypeName].CheckConstraints.Add(checkConstraint);
         }

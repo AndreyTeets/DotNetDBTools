@@ -118,21 +118,21 @@ public class PostgreSQLCodeParserTestsData : BaseCodeParserTestsData
                     ID = new Guid("A636AE77-B7E4-40C3-824F-BD20DC270A14"),
                     Name = "CK_Table1_Check1".ToLower(),
                     Type = ConstraintType.Check,
-                    Code = "CHECK (Col2 != 'Col2 DECIMAL(6, 1) NOT NULL DEFAULT 7.36,')",
+                    Expression = "Col2 != 'Col2 DECIMAL(6, 1) NOT NULL DEFAULT 7.36,'",
                 },
                 new ConstraintInfo()
                 {
                     ID = new Guid("A736AE77-B7E4-40C3-824F-BD20DC270A14"),
                     Name = null,
                     Type = ConstraintType.Check,
-                    Code = "CHECK (Col4 = 'CONSTRAINT CK_String_Check2 CHECK ( Col3 >= 0 ),' AND f1(f2())=' quo''te g1(g2(g3)))' AND TRUE)",
+                    Expression = "Col4 = 'CONSTRAINT CK_String_Check2 CHECK ( Col3 >= 0 ),' AND f1(f2())=' quo''te g1(g2(g3)))' AND TRUE",
                 },
                 new ConstraintInfo()
                 {
                     ID = new Guid("A836AE77-B7E4-40C3-824F-BD20DC270A14"),
                     Name = "CK_Table1_Check3",
                     Type = ConstraintType.Check,
-                    Code = @"CHECK (""Col3"" >= 0)",
+                    Expression = @"""Col3"" >= 0",
                 },
             }
         };
@@ -172,7 +172,7 @@ public class PostgreSQLCodeParserTestsData : BaseCodeParserTestsData
                     ID = new Guid("A836AE77-B7E4-40C3-824F-BD20DC270A14"),
                     Name = null,
                     Type = ConstraintType.Check,
-                    Code = @"CHECK (""Col3"" >= 0)",
+                    Expression = @"""Col3"" >= 0",
                 },
             }
         };
@@ -243,14 +243,14 @@ public class PostgreSQLCodeParserTestsData : BaseCodeParserTestsData
                     ID = new Guid("3C7DF430-DDC3-4EE7-93CC-70E7427E7937"),
                     Name = null, // TODO set {type.Name}_CKsomething
                     Type = ConstraintType.Check,
-                    Code = @"CHECK (value = lower(value) || 'CHECK (TRUE)')",
+                    Expression = @"value = lower(value) || 'CHECK (TRUE)'",
                 },
                 new ConstraintInfo()
                 {
                     ID = new Guid("960EFE55-2985-4057-8A83-EF7F5FF6C3CA"),
                     Name = "MyDomain1_CK2",
                     Type = ConstraintType.Check,
-                    Code = @"check (char_length(value) > 3)",
+                    Expression = @"char_length(value) > 3",
                 },
             },
         };

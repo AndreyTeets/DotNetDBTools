@@ -6,5 +6,8 @@ public abstract class SpecificDbmsCheckConstraint : BaseCheckConstraint
 {
     protected SpecificDbmsCheckConstraint(string id) : base(id) { }
 
-    public string Code { get; set; }
+    /// <summary>
+    /// Will appear in sql as 'CHECK (Expression)'
+    /// </summary>
+    public string Expression { get; set; }
 }

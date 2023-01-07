@@ -30,7 +30,7 @@ $@"^--ScriptID:\#{{ (?<scriptID> {AnyGuid} ) }}\#\r?\n
 (?<scriptCode> {AnyText} )";
 
         Match match = Regex.Match(input, pattern, s_regexOptions);
-        if (match.Groups[0].Success)
+        if (match.Success)
         {
             scriptInfo = new()
             {

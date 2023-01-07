@@ -33,6 +33,14 @@ internal static class HelperExtensions
         }
     }
 
+    public static string ParseOutCheckExpression(this string checkDefinition)
+    {
+        Match match = Regex.Match(checkDefinition, @"^CHECK\s*\((?<expr>.*)\)$");
+        if (!match.Success)
+            throw new Exception($"Failed to parse out check expression\ninput=[{checkDefinition}]");
+        return match.Groups["expr"].Value.Trim();
+    }
+
     public static void ExecuteInTransaction(this IQueryExecutor queryExecutor, Action action)
     {
         queryExecutor.BeginTransaction();

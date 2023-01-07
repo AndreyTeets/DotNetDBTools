@@ -10,10 +10,18 @@ public abstract class CodeParser<TParser, TLexer> : ICodeParser
     where TParser : Parser
     where TLexer : Lexer
 {
+    /// <summary>
+    /// Ignores ID declarations if set to true.
+    /// Otherwise throws ParseException if ID declaration is missing for any object that's supposed to have it.
+    /// </summary>
+    /// <remarks>
+    /// Default value is false.
+    /// </remarks>
     public bool IgnoreIdsWhenParsingObjectInfo { get; set; } = false;
-    public abstract ObjectInfo GetObjectInfo(string createStatement);
 
     private readonly ErrorListener _errorListener = new();
+
+    public abstract ObjectInfo GetObjectInfo(string createStatement);
 
     protected ObjectInfo ParseObjectInfo<TGetObjectInfoVisitor>(string input, Func<TParser, IParseTree> startRule)
         where TGetObjectInfoVisitor : AbstractParseTreeVisitor<ObjectInfo>

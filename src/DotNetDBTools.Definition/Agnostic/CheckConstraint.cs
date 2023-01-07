@@ -7,5 +7,8 @@ public class CheckConstraint : BaseCheckConstraint
 {
     public CheckConstraint(string id) : base(id) { }
 
-    public Func<DbmsKind, string> Code { get; set; }
+    /// <summary>
+    /// Will appear in sql as 'CHECK (Expression)'
+    /// </summary>
+    public Func<DbmsKind, string> Expression { get; set; }
 }

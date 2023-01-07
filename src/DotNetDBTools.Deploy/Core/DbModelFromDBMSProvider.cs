@@ -114,7 +114,7 @@ internal abstract class DbModelFromDBMSProvider<
             {
                 DNDBTInfo dndbtInfoCK = dbObjectIDsMap[$"{DbObjectType.CheckConstraint}_{ck.Name}_{table.ID}"];
                 ck.ID = dndbtInfoCK.ID;
-                ck.CodePiece.Code = dndbtInfoCK.Code;
+                ck.Expression.Code = dndbtInfoCK.Code;
             }
             foreach (Index idx in table.Indexes)
                 idx.ID = dbObjectIDsMap[$"{DbObjectType.Index}_{idx.Name}_{table.ID}"].ID;

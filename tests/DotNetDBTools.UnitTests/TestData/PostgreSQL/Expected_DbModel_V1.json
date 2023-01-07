@@ -46,9 +46,9 @@
       "CheckConstraints": [
         {
           "$id": "10",
-          "CodePiece": {
+          "Expression": {
             "$id": "11",
-            "Code": "CHECK (value = lower(value))"
+            "Code": "value = lower(value)"
           },
           "ID": "7a053cee-abcc-4993-8eea-12b87c5194e6",
           "Name": "MyDomain1_CK1",
@@ -58,9 +58,9 @@
         },
         {
           "$id": "12",
-          "CodePiece": {
+          "Expression": {
             "$id": "13",
-            "Code": "CHECK (char_length(value) > 3)"
+            "Code": "char_length(value) > 3"
           },
           "ID": "7905b7a8-cf45-4328-8a2b-00616d98235e",
           "Name": "MyDomain1_CK2",
@@ -335,9 +335,9 @@
       "CheckConstraints": [
         {
           "$id": "47",
-          "CodePiece": {
+          "Expression": {
             "$id": "48",
-            "Code": "CHECK (\"MyColumn4\" >= 0)"
+            "Code": "\"MyColumn4\" >= 0"
           },
           "ID": "eb9c59b5-bc7e-49d7-adaa-f5600b6a19a2",
           "Name": "CK_MyTable1_MyCheck1",

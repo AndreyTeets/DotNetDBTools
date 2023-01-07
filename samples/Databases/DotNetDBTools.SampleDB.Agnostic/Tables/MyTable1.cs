@@ -64,7 +64,7 @@ namespace DotNetDBTools.SampleDB.Agnostic.Tables
 
         public CheckConstraint CK_MyTable1_MyCheck1 = new("EB9C59B5-BC7E-49D7-ADAA-F5600B6A19A2")
         {
-            Code = dk => $"CHECK ({nameof(MyColumn4).Quote(dk)} >= 0)",
+            Expression = dk => $"{nameof(MyColumn4).Quote(dk)} >= 0",
         };
     }
 }

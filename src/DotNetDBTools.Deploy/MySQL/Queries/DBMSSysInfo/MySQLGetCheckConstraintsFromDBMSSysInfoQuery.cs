@@ -11,7 +11,7 @@ internal class MySQLGetCheckConstraintsFromDBMSSysInfoQuery : GetCheckConstraint
 $@"SELECT
     tc.TABLE_NAME AS `{nameof(CheckConstraintRecord.TableName)}`,
     tc.CONSTRAINT_NAME AS `{nameof(CheckConstraintRecord.ConstraintName)}`,
-    CONCAT('CHECK ', cc.CHECK_CLAUSE) AS `{nameof(CheckConstraintRecord.ConstraintCode)}`
+    CONCAT('CHECK ', cc.CHECK_CLAUSE) AS `{nameof(CheckConstraintRecord.ConstraintDefinition)}`
 FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc
 INNER JOIN INFORMATION_SCHEMA.CHECK_CONSTRAINTS cc
     ON cc.CONSTRAINT_SCHEMA = tc.CONSTRAINT_SCHEMA
@@ -30,7 +30,7 @@ WHERE tc.CONSTRAINT_SCHEMA = (select DATABASE())
             {
                 ID = Guid.NewGuid(),
                 Name = ckr.ConstraintName,
-                CodePiece = new CodePiece { Code = ckr.ConstraintCode },
+                Expression = new CodePiece { Code = ckr.ConstraintDefinition.ParseOutCheckExpression() },
             };
         }
     }

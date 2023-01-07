@@ -200,7 +200,7 @@ internal abstract class DbModelFromCSharpDefinitionProvider<
                 {
                     ID = ck.DNDBT_OBJECT_ID,
                     Name = x.Name,
-                    CodePiece = DbObjectCodeMapper.MapToCodePiece(ck),
+                    Expression = DbObjectCodeMapper.MapToCodePiece(ck),
                 };
                 BuildAdditionalCheckConstraintModelProperties(ckModel, ck, table.GetType().Name);
                 return ckModel;

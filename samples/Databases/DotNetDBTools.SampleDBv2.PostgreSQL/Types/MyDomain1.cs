@@ -15,11 +15,11 @@ namespace DotNetDBTools.SampleDB.PostgreSQL.Types
 
         public CheckConstraint MyDomain1_CK1 = new("7A053CEE-ABCC-4993-8EEA-12B87C5194E6")
         {
-            Code = "CHECK (value = lower(value))",
+            Expression = "value = lower(value)",
         };
         public CheckConstraint MyDomain1_CK2 = new("7905B7A8-CF45-4328-8A2B-00616D98235E")
         {
-            Code = "CHECK (char_length(value) > 3)",
+            Expression = "char_length(value) > 3",
         };
     }
 }

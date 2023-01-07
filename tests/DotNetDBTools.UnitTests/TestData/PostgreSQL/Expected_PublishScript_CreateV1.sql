@@ -133,7 +133,7 @@ VALUES
     ''a28bcb6c-3cbc-467e-a52c-ac740c98a537'',
     ''CheckConstraint'',
     ''MyDomain1_CK1'',
-    ''CHECK (value = lower(value))''
+    ''value = lower(value)''
 );';
 -- QUERY END: InsertDNDBTDbObjectRecordQuery
 
@@ -152,7 +152,7 @@ VALUES
     ''a28bcb6c-3cbc-467e-a52c-ac740c98a537'',
     ''CheckConstraint'',
     ''MyDomain1_CK2'',
-    ''CHECK (char_length(value) > 3)''
+    ''char_length(value) > 3''
 );';
 -- QUERY END: InsertDNDBTDbObjectRecordQuery
 
@@ -377,7 +377,7 @@ VALUES
     ''299675e6-4faa-4d0f-a36a-224306ba5bcb'',
     ''CheckConstraint'',
     ''CK_MyTable1_MyCheck1'',
-    ''CHECK ("MyColumn4" >= 0)''
+    ''"MyColumn4" >= 0''
 );';
 -- QUERY END: InsertDNDBTDbObjectRecordQuery
 

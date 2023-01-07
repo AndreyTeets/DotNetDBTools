@@ -10,5 +10,5 @@ public class ConstraintInfo : ObjectInfo
     public List<string> RefColumns { get; set; } = new();
     public string UpdateAction { get; set; }
     public string DeleteAction { get; set; }
-    public string Code { get; set; }
+    public string Expression { get; set; }
 }

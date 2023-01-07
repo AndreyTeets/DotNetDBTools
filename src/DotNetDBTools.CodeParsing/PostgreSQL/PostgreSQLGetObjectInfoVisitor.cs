@@ -160,22 +160,22 @@ internal class PostgreSQLGetObjectInfoVisitor : PostgreSQLParserBaseVisitor<Obje
         {
             if (constrContext.NOT() != null && constrContext.NULL() != null)
                 type.NotNull = true;
-            else if (constrContext.ck_code != null)
+            else if (constrContext.CHECK() != null)
                 type.CheckConstraints.Add(GetCheckConstraintInfo(constrContext, type.Name));
         }
 
         return type;
 
-        ConstraintInfo GetCheckConstraintInfo(Domain_constraintContext context, string domainName)
+        ConstraintInfo GetCheckConstraintInfo(Domain_constraintContext constrContext, string domainName)
         {
             ConstraintInfo constraint = new();
-            if (context.name != null)
-                constraint.Name = UnquoteIdentifier(context.name.GetText());
+            if (constrContext.name != null)
+                constraint.Name = UnquoteIdentifier(constrContext.name.GetText());
             if (!_ignoreIds)
-                HM.SetObjectID(constraint, $"constraint '{constraint.Name}' in domain '{domainName}'", context.dndbt_id?.Text);
+                HM.SetObjectID(constraint, $"constraint '{constraint.Name}' in domain '{domainName}'", constrContext.dndbt_id?.Text);
 
             constraint.Type = ConstraintType.Check;
-            constraint.Code = HM.GetInitialText(context.ck_code);
+            constraint.Expression = HM.GetInitialText(constrContext.vex());
             return constraint;
         }
     }
@@ -243,7 +243,7 @@ internal class PostgreSQLGetObjectInfoVisitor : PostgreSQLParserBaseVisitor<Obje
         static void AddCheckConstraintInfo(ConstraintInfo constraint, Constr_bodyContext context)
         {
             constraint.Type = ConstraintType.Check;
-            constraint.Code = $"CHECK ({HM.GetInitialText(context.vex())})";
+            constraint.Expression = HM.GetInitialText(context.vex());
         }
 
         static void AddPrimaryKeyConstraintInfo(ConstraintInfo constraint, Constr_bodyContext context)

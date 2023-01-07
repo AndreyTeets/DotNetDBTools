@@ -80,7 +80,7 @@ internal static class TestDatabasesCompiler
                 {
                     string pattern = "using DotNetDBTools.Definition.(?<dbms>Agnostic|MSSQL|MySQL|PostgreSQL|SQLite);";
                     Match match = Regex.Match(usingStatement, pattern);
-                    if (match.Groups[0].Success)
+                    if (match.Success)
                         return match.Groups["dbms"].Value;
                 }
                 return null;

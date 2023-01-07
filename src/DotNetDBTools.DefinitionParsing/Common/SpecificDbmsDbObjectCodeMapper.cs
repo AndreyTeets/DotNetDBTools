@@ -13,7 +13,7 @@ internal class SpecificDbmsDbObjectCodeMapper : IDbObjectCodeMapper
     {
         return dbObject switch
         {
-            SpecificDbmsCheckConstraint ck => CreateCodePiece(ck.Code),
+            SpecificDbmsCheckConstraint ck => CreateCodePiece(ck.Expression),
             SpecificDbmsTrigger trigger => CreateCodePiece(trigger.Code),
             ISpecificDbmsView view => CreateCodePiece(view.Code),
             ISpecificDbmsScript script => CreateCodePiece(script.Code),

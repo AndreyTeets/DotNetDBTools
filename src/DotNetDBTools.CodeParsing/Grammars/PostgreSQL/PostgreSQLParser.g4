@@ -927,11 +927,7 @@ target_operator
 
 domain_constraint
     : dndbt_id=DNDBT_ID_DECLARATION_COMMENT?
-        (CONSTRAINT name=identifier)? (ck_code=domain_constraint_code | NOT? NULL)
-    ;
-
-domain_constraint_code
-    : CHECK LEFT_PAREN vex RIGHT_PAREN
+        (CONSTRAINT name=identifier)? (CHECK LEFT_PAREN vex RIGHT_PAREN | NOT? NULL)
     ;
 
 create_transform_statement

@@ -64,7 +64,7 @@ internal abstract class DbModelConverter<
             Columns = ConvertColumns(table.Columns, table.Name),
             PrimaryKey = ConvertPrimaryKey(table.PrimaryKey, table.Name),
             UniqueConstraints = table.UniqueConstraints,
-            CheckConstraints = table.CheckConstraints.Select(ck => { ck.CodePiece = ConvertCodePiece(ck.CodePiece); return ck; }).ToList(),
+            CheckConstraints = table.CheckConstraints.Select(ck => { ck.Expression = ConvertCodePiece(ck.Expression); return ck; }).ToList(),
             Indexes = ConvertIndexes(table.Indexes),
             Triggers = ConvertTriggers(table.Triggers),
             ForeignKeys = table.ForeignKeys,

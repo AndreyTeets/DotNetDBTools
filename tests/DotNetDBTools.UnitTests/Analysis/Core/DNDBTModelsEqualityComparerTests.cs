@@ -170,7 +170,7 @@ public class DNDBTModelsEqualityComparerTests
         _comparer.Equals(_tableModel1, _tableModel2).Should().BeTrue();
 
         _tableModel2 = CreateTemplateAgnosticTableModel();
-        _tableModel2.CheckConstraints.First().CodePiece = new CodePiece { Code = "other code value" };
+        _tableModel2.CheckConstraints.First().Expression = new CodePiece { Code = "other code value" };
         _comparer.Equals(_tableModel1, _tableModel2).Should().BeTrue();
     }
 
@@ -237,7 +237,7 @@ Values [DotNetDBTools.Models.Core.PrimaryKey] and [DotNetDBTools.Models.Core.Pri
                 {
                     ID = new Guid("75D55104-DDF0-4F9D-B0B2-CF8F85A3A0A7"),
                     Name = "CK_T1_1",
-                    CodePiece = new CodePiece { Code = "CHECK (C2 >= 0)" },
+                    Expression = new CodePiece { Code = "CHECK (C2 >= 0)" },
                 }
             },
             Indexes = new List<DotNetDBTools.Models.Core.Index>()

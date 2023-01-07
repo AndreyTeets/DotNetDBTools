@@ -307,7 +307,7 @@ WHERE [ID] = @ID;';
 EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''eb9c59b5-bc7e-49d7-adaa-f5600b6a19a2'';
 DECLARE @ParentID UNIQUEIDENTIFIER = N''299675e6-4faa-4d0f-a36a-224306ba5bcb'';
 DECLARE @Name NVARCHAR(MAX) = N''CK_MyTable1_MyCheck1'';
-DECLARE @Code NVARCHAR(MAX) = N''CHECK (MyColumn4 >= 1)'';
+DECLARE @Code NVARCHAR(MAX) = N''MyColumn4 >= 1'';
 INSERT INTO [DNDBTDbObjects]
 (
     [ID],

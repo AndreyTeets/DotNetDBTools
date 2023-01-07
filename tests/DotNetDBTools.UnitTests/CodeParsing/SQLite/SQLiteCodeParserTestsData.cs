@@ -111,21 +111,21 @@ public class SQLiteCodeParserTestsData : BaseCodeParserTestsData
                     ID = new Guid("A636AE77-B7E4-40C3-824F-BD20DC270A14"),
                     Name = "CK_Table1_Check1",
                     Type = ConstraintType.Check,
-                    Code = "CHECK ([Col2] != 'Col2 NUMERIC NOT NULL DEFAULT 7.36,')",
+                    Expression = "[Col2] != 'Col2 NUMERIC NOT NULL DEFAULT 7.36,'",
                 },
                 new ConstraintInfo()
                 {
                     ID = new Guid("A736AE77-B7E4-40C3-824F-BD20DC270A14"),
                     Name = null,
                     Type = ConstraintType.Check,
-                    Code = "CHECK (Col4 = 'CONSTRAINT [CK_String_Check2] CHECK ( [Col3] >= 0 ),' AND f1(f2())=' quo''te g1(g2(g3)))' AND TRUE)",
+                    Expression = "Col4 = 'CONSTRAINT [CK_String_Check2] CHECK ( [Col3] >= 0 ),' AND f1(f2())=' quo''te g1(g2(g3)))' AND TRUE",
                 },
                 new ConstraintInfo()
                 {
                     ID = new Guid("A836AE77-B7E4-40C3-824F-BD20DC270A14"),
                     Name = "CK_Table1_Check3",
                     Type = ConstraintType.Check,
-                    Code = "CHECK ([Col3] >= 0)",
+                    Expression = "[Col3] >= 0",
                 },
             }
         };
@@ -172,7 +172,7 @@ public class SQLiteCodeParserTestsData : BaseCodeParserTestsData
                     ID = new Guid("A836AE77-B7E4-40C3-824F-BD20DC270A14"),
                     Name = "CK_Table1_Check3",
                     Type = ConstraintType.Check,
-                    Code = "CHECK ([Col3] >= 0)",
+                    Expression = "[Col3] >= 0",
                 },
             }
         };

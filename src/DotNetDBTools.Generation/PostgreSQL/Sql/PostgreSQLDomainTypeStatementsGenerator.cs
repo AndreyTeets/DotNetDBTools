@@ -48,7 +48,7 @@ type.GetCode() is not null ? $@" DEFAULT {type.GetCode()}" : ""
             ;
 
         public static string DefCheckConstraint(CheckConstraint ck) =>
-$@"CONSTRAINT ""{ck.Name}"" {ck.GetCode()}"
+$@"CONSTRAINT ""{ck.Name}"" CHECK ({ck.GetCode()})"
             ;
     }
 }

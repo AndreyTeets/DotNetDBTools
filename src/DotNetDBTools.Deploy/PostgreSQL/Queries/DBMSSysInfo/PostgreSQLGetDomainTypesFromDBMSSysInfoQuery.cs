@@ -13,7 +13,7 @@ $@"SELECT
     t.typdefault AS ""{nameof(DomainTypeRecord.Default)}"",
     t.typnotnull AS ""{nameof(DomainTypeRecord.NotNull)}"",
     c.con_name AS ""{nameof(DomainTypeRecord.CheckConstrantName)}"",
-    c.con_def AS ""{nameof(DomainTypeRecord.CheckConstrantCode)}""
+    c.con_def AS ""{nameof(DomainTypeRecord.CheckConstrantDefinition)}""
 FROM pg_catalog.pg_type t
 INNER JOIN pg_catalog.pg_namespace n
     ON n.oid = t.typnamespace
@@ -39,6 +39,6 @@ WHERE t.typtype = 'd'
         public bool NotNull { get; set; }
         public string Default { get; set; }
         public string CheckConstrantName { get; set; }
-        public string CheckConstrantCode { get; set; }
+        public string CheckConstrantDefinition { get; set; }
     }
 }

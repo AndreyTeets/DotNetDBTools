@@ -109,7 +109,7 @@ internal class PostgreSQLDbModelFromCSharpDefinitionProvider : DbModelFromCSharp
                 {
                     ID = ck.DNDBT_OBJECT_ID,
                     Name = x.Name,
-                    CodePiece = DbObjectCodeMapper.MapToCodePiece(ck),
+                    Expression = DbObjectCodeMapper.MapToCodePiece(ck),
                 };
                 return ckModel;
             })
