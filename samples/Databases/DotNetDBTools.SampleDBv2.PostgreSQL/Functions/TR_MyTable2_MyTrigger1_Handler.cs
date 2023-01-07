@@ -8,7 +8,7 @@ namespace DotNetDBTools.SampleDBv2.PostgreSQL.Functions
     public class TR_MyTable2_MyTrigger1_Handler : IFunction
     {
         public Guid DNDBT_OBJECT_ID => new("8EDD4469-E048-48BD-956E-A26113355F80");
-        public string Code =>
+        public string CreateStatement =>
 $@"CREATE FUNCTION {nameof(TR_MyTable2_MyTrigger1_Handler).Quote()}()
 RETURNS TRIGGER
 LANGUAGE PLPGSQL

@@ -97,7 +97,7 @@ $@"        public Index {idx.Name} = new(""{idx.ID}"")
                 string trDeclaration =
 $@"        public Trigger {tr.Name} = new(""{tr.ID}"")
         {{
-            Code = ""Triggers.{tr.Name}.sql"".AsSqlResource(),
+            CreateStatement = ""Triggers.{tr.Name}.sql"".AsSqlResource(),
         }};";
 
                 trDeclarations.Add(trDeclaration);

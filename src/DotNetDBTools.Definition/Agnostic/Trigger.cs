@@ -7,8 +7,5 @@ public class Trigger : BaseTrigger
 {
     public Trigger(string id) : base(id) { }
 
-    /// <summary>
-    /// Full create trigger statement.
-    /// </summary>
-    public Func<DbmsKind, string> Code { get; set; }
+    public Func<DbmsKind, string> CreateStatement { get; set; }
 }

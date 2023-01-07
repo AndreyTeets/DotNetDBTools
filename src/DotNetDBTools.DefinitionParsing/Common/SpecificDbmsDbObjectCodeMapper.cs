@@ -14,9 +14,9 @@ internal class SpecificDbmsDbObjectCodeMapper : IDbObjectCodeMapper
         return dbObject switch
         {
             SpecificDbmsCheckConstraint ck => CreateCodePiece(ck.Expression),
-            SpecificDbmsTrigger trigger => CreateCodePiece(trigger.Code),
-            ISpecificDbmsView view => CreateCodePiece(view.Code),
-            ISpecificDbmsScript script => CreateCodePiece(script.Code),
+            SpecificDbmsTrigger trigger => CreateCodePiece(trigger.CreateStatement),
+            ISpecificDbmsView view => CreateCodePiece(view.CreateStatement),
+            ISpecificDbmsScript script => CreateCodePiece(script.Text),
             _ => throw new InvalidOperationException($"Invalid dbObject for code mapping: {dbObject}")
         };
     }

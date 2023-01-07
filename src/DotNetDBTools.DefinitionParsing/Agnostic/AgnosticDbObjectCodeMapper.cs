@@ -16,9 +16,9 @@ internal class AgnosticDbObjectCodeMapper : IDbObjectCodeMapper
         return dbObject switch
         {
             Definition.Agnostic.CheckConstraint ck => CreateAgnosticCodePiece(ck.Expression),
-            Definition.Agnostic.Trigger trigger => CreateAgnosticCodePiece(trigger.Code),
-            IView view => CreateAgnosticCodePiece(view.Code),
-            IScript script => CreateAgnosticCodePiece(script.Code),
+            Definition.Agnostic.Trigger trigger => CreateAgnosticCodePiece(trigger.CreateStatement),
+            IView view => CreateAgnosticCodePiece(view.CreateStatement),
+            IScript script => CreateAgnosticCodePiece(script.Text),
             _ => throw new InvalidOperationException($"Invalid dbObject for code mapping: {dbObject}"),
         };
     }

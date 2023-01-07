@@ -51,7 +51,7 @@ namespace SampleTestCode
 
         public Trigger {|#2:TR_TestName1|} = new(""EE64FFC3-5536-4624-BEAF-BC3A61D06A1A"")
         {
-            Code = @""CREATE TRIGGER TR_TestName1 bla bla"",
+            CreateStatement = @""CREATE TRIGGER TR_TestName1 bla bla"",
         };
     }
 
@@ -86,8 +86,8 @@ namespace SampleTestCode
                 @"ReferencedTable = nameof(TestTable2),",
                 @"ReferencedTable = ""NonExistentTableName"",")
             .Replace(
-                @"Code = @""CREATE TRIGGER TR_TestName1 bla bla"",",
-                @"Code = @""CREATE TRIGGER TR_OtherTriggerName bla bla"",");
+                @"CreateStatement = @""CREATE TRIGGER TR_TestName1 bla bla"",",
+                @"CreateStatement = @""CREATE TRIGGER TR_OtherTriggerName bla bla"",");
 
         string expectedColumnErrorMessage =
 "Column 'TestColumn1' in table 'TestTable2' has no data type.";

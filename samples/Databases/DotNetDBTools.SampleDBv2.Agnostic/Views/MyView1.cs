@@ -7,7 +7,7 @@ namespace DotNetDBTools.SampleDB.Agnostic.Views
     public class MyView1 : IView
     {
         public Guid DNDBT_OBJECT_ID => new("E2569AAE-D5DA-4A77-B3CD-51ADBDB272D9");
-        public Func<DbmsKind, string> Code => dk =>
+        public Func<DbmsKind, string> CreateStatement => dk =>
 $@"CREATE VIEW {nameof(MyView1).Quote(dk)} AS
 SELECT
     t1.{nameof(MyTable1NewName.MyColumn1).Quote(dk)},

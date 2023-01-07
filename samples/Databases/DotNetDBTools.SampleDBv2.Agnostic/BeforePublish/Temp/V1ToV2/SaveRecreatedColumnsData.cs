@@ -10,7 +10,7 @@ namespace DotNetDBTools.SampleDB.Agnostic.BeforePublish
         public ScriptType Type => ScriptType.BeforePublishOnce;
         public long MinDbVersionToExecute => 1;
         public long MaxDbVersionToExecute => 1;
-        public Func<DbmsKind, string> Code => dk =>
+        public Func<DbmsKind, string> Text => dk =>
             $"BeforePublish.Temp.V1ToV2.{nameof(SaveRecreatedColumnsData)}.sql".AsSqlResource(dk);
     }
 }

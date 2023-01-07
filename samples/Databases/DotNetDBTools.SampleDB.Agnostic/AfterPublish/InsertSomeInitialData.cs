@@ -11,7 +11,7 @@ namespace DotNetDBTools.SampleDB.Agnostic.AfterPublish
         public ScriptType Type => ScriptType.AfterPublishOnce;
         public long MinDbVersionToExecute => 0;
         public long MaxDbVersionToExecute => long.MaxValue;
-        public Func<DbmsKind, string> Code => dk =>
+        public Func<DbmsKind, string> Text => dk =>
 $@"INSERT INTO {nameof(MyTable4).Quote(dk)}({nameof(MyTable4.MyColumn1).Quote(dk)})
 SELECT * FROM
 (

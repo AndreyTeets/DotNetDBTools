@@ -10,7 +10,7 @@ namespace DotNetDBTools.SampleDB.Agnostic.AfterPublish.Init
         public ScriptType Type => ScriptType.AfterPublishOnce;
         public long MinDbVersionToExecute => 0;
         public long MaxDbVersionToExecute => long.MaxValue;
-        public Func<DbmsKind, string> Code => dk =>
+        public Func<DbmsKind, string> Text => dk =>
             $"AfterPublish.Init.{nameof(InsertSomeInitialData)}.sql".AsSqlResource(dk);
     }
 }

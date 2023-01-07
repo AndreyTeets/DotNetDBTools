@@ -10,6 +10,6 @@ namespace DotNetDBTools.SampleDB.MySQL.AfterPublish.Init
         public ScriptType Type => ScriptType.AfterPublishOnce;
         public long MinDbVersionToExecute => 0;
         public long MaxDbVersionToExecute => long.MaxValue;
-        public string Code => $"AfterPublish.Init.{nameof(InsertSomeInitialData)}.sql".AsSqlResource();
+        public string Text => $"AfterPublish.Init.{nameof(InsertSomeInitialData)}.sql".AsSqlResource();
     }
 }

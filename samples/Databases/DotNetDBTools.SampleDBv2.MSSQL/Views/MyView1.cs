@@ -7,7 +7,7 @@ namespace DotNetDBTools.SampleDB.MSSQL.Views
     public class MyView1 : IView
     {
         public Guid DNDBT_OBJECT_ID => new("E2569AAE-D5DA-4A77-B3CD-51ADBDB272D9");
-        public string Code =>
+        public string CreateStatement =>
 $@"CREATE VIEW {nameof(MyView1)} AS
 SELECT
     t1.{nameof(MyTable1NewName.MyColumn1)},

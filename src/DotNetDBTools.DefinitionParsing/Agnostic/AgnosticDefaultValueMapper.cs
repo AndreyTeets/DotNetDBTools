@@ -12,7 +12,7 @@ internal class AgnosticDefaultValueMapper : DefaultValueMapper
         if (defaultValue is null)
             return AgnosticDbObjectCodeMapper.CreateAgnosticCodePiece(dk => null);
         if (defaultValue is VerbatimDefaultValue vdv)
-            return AgnosticDbObjectCodeMapper.CreateAgnosticCodePiece(vdv.Value);
+            return AgnosticDbObjectCodeMapper.CreateAgnosticCodePiece(vdv.Expression);
         return CreateCSharpDefaultValueModel(defaultValue);
     }
 }

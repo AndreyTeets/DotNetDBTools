@@ -11,7 +11,7 @@ namespace DotNetDBTools.SampleDB.PostgreSQL.AfterPublish
         public ScriptType Type => ScriptType.AfterPublishOnce;
         public long MinDbVersionToExecute => 0;
         public long MaxDbVersionToExecute => long.MaxValue;
-        public string Code =>
+        public string Text =>
 $@"INSERT INTO {nameof(MyTable4).Quote()}({nameof(MyTable4.MyColumn1).Quote()})
 SELECT * FROM
 (

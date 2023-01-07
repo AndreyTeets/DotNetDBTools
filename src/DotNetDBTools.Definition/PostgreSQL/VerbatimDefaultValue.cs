@@ -4,5 +4,5 @@ namespace DotNetDBTools.Definition.PostgreSQL;
 
 public class VerbatimDefaultValue : SpecificDbmsVerbatimDefaultValue
 {
-    public VerbatimDefaultValue(string value) : base(value) { }
+    public VerbatimDefaultValue(string expression) : base(expression) { }
 }

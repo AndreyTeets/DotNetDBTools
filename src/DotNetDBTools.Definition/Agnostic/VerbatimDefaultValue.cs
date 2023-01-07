@@ -5,10 +5,10 @@ namespace DotNetDBTools.Definition.Agnostic;
 
 public class VerbatimDefaultValue : IDefaultValue
 {
-    public Func<DbmsKind, string> Value { get; private set; }
+    public Func<DbmsKind, string> Expression { get; private set; }
 
-    public VerbatimDefaultValue(Func<DbmsKind, string> value)
+    public VerbatimDefaultValue(Func<DbmsKind, string> expression)
     {
-        Value = value;
+        Expression = expression;
     }
 }

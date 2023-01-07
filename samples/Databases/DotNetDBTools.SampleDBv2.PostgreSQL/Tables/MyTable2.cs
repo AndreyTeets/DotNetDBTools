@@ -49,7 +49,7 @@ namespace DotNetDBTools.SampleDB.PostgreSQL.Tables
 
         public Trigger TR_MyTable2_MyTrigger1 = new("EE64FFC3-5536-4624-BEAF-BC3A61D06A1A")
         {
-            Code =
+            CreateStatement =
 $@"CREATE TRIGGER {nameof(TR_MyTable2_MyTrigger1).Quote()}
 AFTER INSERT
 ON {nameof(MyTable2).Quote()}

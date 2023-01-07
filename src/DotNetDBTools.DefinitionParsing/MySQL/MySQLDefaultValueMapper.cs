@@ -13,7 +13,7 @@ internal class MySQLDefaultValueMapper : DefaultValueMapper
         if (defaultValue is null)
             return new CodePiece { Code = null };
         if (defaultValue is VerbatimDefaultValue vdv)
-            return new CodePiece { Code = vdv.Value };
+            return new CodePiece { Code = vdv.Expression };
         return new AnalysisManager().ConvertDefaultValue(CreateCSharpDefaultValueModel(defaultValue), DatabaseKind.MySQL);
     }
 }

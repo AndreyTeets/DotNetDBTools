@@ -10,6 +10,6 @@ namespace DotNetDBTools.SampleDB.SQLite.AfterPublish
         public ScriptType Type => ScriptType.AfterPublishOnce;
         public long MinDbVersionToExecute => 1;
         public long MaxDbVersionToExecute => 1;
-        public string Code => $"AfterPublish.Temp.V1ToV2.{nameof(RestoreRecreatedColumnsData)}.sql".AsSqlResource();
+        public string Text => $"AfterPublish.Temp.V1ToV2.{nameof(RestoreRecreatedColumnsData)}.sql".AsSqlResource();
     }
 }

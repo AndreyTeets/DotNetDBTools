@@ -22,7 +22,7 @@ namespace {projectNamespace}.Functions
     public class {func.Name} : IFunction
     {{
         public Guid DNDBT_OBJECT_ID => new(""{func.ID}"");
-        public string Code => ""Functions.{func.Name}.sql"".AsSqlResource();
+        public string CreateStatement => ""Functions.{func.Name}.sql"".AsSqlResource();
     }}
 }}";
 

@@ -5,5 +5,5 @@ namespace DotNetDBTools.Definition.Agnostic;
 
 public interface IScript : IBaseScript
 {
-    public Func<DbmsKind, string> Code { get; }
+    public Func<DbmsKind, string> Text { get; }
 }

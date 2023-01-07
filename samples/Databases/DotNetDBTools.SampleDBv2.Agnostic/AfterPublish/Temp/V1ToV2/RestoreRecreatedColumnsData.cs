@@ -10,7 +10,7 @@ namespace DotNetDBTools.SampleDB.Agnostic.AfterPublish
         public ScriptType Type => ScriptType.AfterPublishOnce;
         public long MinDbVersionToExecute => 1;
         public long MaxDbVersionToExecute => 1;
-        public Func<DbmsKind, string> Code => dk =>
+        public Func<DbmsKind, string> Text => dk =>
             $"AfterPublish.Temp.V1ToV2.{nameof(RestoreRecreatedColumnsData)}.sql".AsSqlResource(dk);
     }
 }

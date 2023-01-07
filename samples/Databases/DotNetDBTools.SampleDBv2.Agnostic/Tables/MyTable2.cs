@@ -48,7 +48,7 @@ namespace DotNetDBTools.SampleDB.Agnostic.Tables
 
         public Trigger TR_MyTable2_MyTrigger1 = new("EE64FFC3-5536-4624-BEAF-BC3A61D06A1A")
         {
-            Code = dk => $"Triggers.{nameof(TR_MyTable2_MyTrigger1)}.sql".AsSqlResource(dk),
+            CreateStatement = dk => $"Triggers.{nameof(TR_MyTable2_MyTrigger1)}.sql".AsSqlResource(dk),
         };
 
         public Index IDX_MyTable2_MyIndex1 = new("74390B3C-BC39-4860-A42E-12BAA400F927")

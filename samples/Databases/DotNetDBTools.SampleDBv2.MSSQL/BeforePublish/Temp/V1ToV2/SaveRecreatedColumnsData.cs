@@ -10,6 +10,6 @@ namespace DotNetDBTools.SampleDB.MSSQL.BeforePublish
         public ScriptType Type => ScriptType.BeforePublishOnce;
         public long MinDbVersionToExecute => 1;
         public long MaxDbVersionToExecute => 1;
-        public string Code => $"BeforePublish.Temp.V1ToV2.{nameof(SaveRecreatedColumnsData)}.sql".AsSqlResource();
+        public string Text => $"BeforePublish.Temp.V1ToV2.{nameof(SaveRecreatedColumnsData)}.sql".AsSqlResource();
     }
 }
