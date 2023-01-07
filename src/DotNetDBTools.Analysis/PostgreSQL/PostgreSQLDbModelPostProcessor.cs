@@ -48,9 +48,8 @@ internal class PostgreSQLDbModelPostProcessor : DbModelPostProcessor
             if (string.IsNullOrEmpty(dataType.Name))
                 throw new Exception($"{displayedObjectInfoIfInvalid} datatype is null or empty");
 
-            dataType.Name = Regex.Replace(dataType.Name, @"\s", "");
-            if (PostgreSQLHelperMethods.IsStandardSqlType(dataType.Name))
-                dataType.Name = dataType.Name.ToUpper();
+            if (PostgreSQLHelperMethods.IsStandardSqlType(dataType.Name, out string normalizedName))
+                dataType.Name = normalizedName;
             else if (userDefinedTypesNames.Contains(dataType.Name))
                 dataType.IsUserDefined = true;
         }

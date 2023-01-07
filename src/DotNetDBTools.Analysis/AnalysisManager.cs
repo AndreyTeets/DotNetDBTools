@@ -144,4 +144,16 @@ public class AnalysisManager : IAnalysisManager
         };
         dependenciesBuilder.BuildDependencies(database);
     }
+
+    public static string TryGetTypeBaseName(string typeName, DatabaseKind dbmsKind)
+    {
+        return dbmsKind switch
+        {
+            DatabaseKind.MSSQL => throw new NotImplementedException(),
+            DatabaseKind.MySQL => throw new NotImplementedException(),
+            DatabaseKind.PostgreSQL => PostgreSQLHelperMethods.TryGetNormalizedTypeName(typeName, out string baseName),
+            DatabaseKind.SQLite => throw new NotImplementedException(),
+            _ => throw new InvalidOperationException($"Invalid {nameof(TryGetTypeBaseName)} dbmsKind: {dbmsKind}"),
+        };
+    }
 }

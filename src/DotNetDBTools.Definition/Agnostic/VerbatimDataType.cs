@@ -28,7 +28,7 @@ public class VerbatimDataType : IDataType
     /// <list type="bullet">
     /// <item>if it is null or empty exception is thrown.</item>
     /// <item>white space is removed.</item>
-    /// <item>if it is a standard sql type resulting name is converted to upper case.</item>
+    /// <item>if it is a standard sql type then resulting name white space is removed, changed with non-alias and converted to upper case.</item>
     /// <item>else resulting name stays as is.</item>
     /// </list>
     /// </item>

@@ -1,4 +1,5 @@
 ﻿using System;
+using DotNetDBTools.Analysis;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.PostgreSQL;
 
@@ -15,8 +16,8 @@ internal static class PostgreSQLQueriesHelper
             return new DataType { Name = dataType };
 
         int length = int.Parse(lengthStr);
-        string normalizedDataType = NormalizeTypeName(dataType);
-        switch (normalizedDataType)
+        string dataTypeBaseName = AnalysisManager.TryGetTypeBaseName(dataType, DatabaseKind.PostgreSQL);
+        switch (dataTypeBaseName)
         {
             case PostgreSQLDataTypeNames.SMALLINT:
             case PostgreSQLDataTypeNames.INT:
@@ -36,41 +37,28 @@ internal static class PostgreSQLQueriesHelper
             case PostgreSQLDataTypeNames.UUID:
             case PostgreSQLDataTypeNames.JSON:
             case PostgreSQLDataTypeNames.JSONB:
-                return new DataType { Name = normalizedDataType };
+                return new DataType { Name = dataTypeBaseName };
 
             case PostgreSQLDataTypeNames.DECIMAL:
-                return new DataType { Name = length == -1 ? normalizedDataType : $"{normalizedDataType}({GetDecimalPrecisionAndScale(length)})" };
+                return new DataType { Name = length == -1 ? dataTypeBaseName : $"{dataTypeBaseName}({GetDecimalPrecisionAndScale(length)})" };
 
             case PostgreSQLDataTypeNames.CHAR:
             case PostgreSQLDataTypeNames.VARCHAR:
-                return new DataType { Name = length == -1 ? normalizedDataType : $"{normalizedDataType}({length - 4})" };
+                return new DataType { Name = length == -1 ? dataTypeBaseName : $"{dataTypeBaseName}({length - 4})" };
 
             case PostgreSQLDataTypeNames.TIME:
             case PostgreSQLDataTypeNames.TIMETZ:
             case PostgreSQLDataTypeNames.TIMESTAMP:
             case PostgreSQLDataTypeNames.TIMESTAMPTZ:
-                return new DataType { Name = length == -1 ? normalizedDataType : $"{normalizedDataType}({length})" };
+                return new DataType { Name = length == -1 ? dataTypeBaseName : $"{dataTypeBaseName}({length})" };
 
             case PostgreSQLDataTypeNames.BIT:
             case PostgreSQLDataTypeNames.VARBIT:
-                return new DataType { Name = length == -1 ? normalizedDataType : $"{normalizedDataType}({length})" };
+                return new DataType { Name = length == -1 ? dataTypeBaseName : $"{dataTypeBaseName}({length})" };
 
             // TODO handle user defined base data types (probalby will require declaring their names in definition)
             default:
-                throw new InvalidOperationException($"Invalid normalized datatype: {normalizedDataType}");
-        }
-
-        string NormalizeTypeName(string dataType)
-        {
-            return dataType.ToUpper() switch
-            {
-                "INT2" => PostgreSQLDataTypeNames.SMALLINT,
-                "INT4" => PostgreSQLDataTypeNames.INT,
-                "INT8" => PostgreSQLDataTypeNames.BIGINT,
-                "NUMERIC" => PostgreSQLDataTypeNames.DECIMAL,
-                "BPCHAR" => PostgreSQLDataTypeNames.CHAR,
-                _ => dataType.ToUpper(),
-            };
+                throw new InvalidOperationException($"Invalid datatype base name: {dataTypeBaseName}");
         }
 
         string GetDecimalPrecisionAndScale(int length)
