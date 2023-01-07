@@ -7,9 +7,9 @@ public static class HelperExtensions
 {
     public static string GetCode(this Column column) => column.Default.Code;
     public static string GetCode(this CheckConstraint ck) => ck.Expression.Code;
-    public static string GetCode(this Trigger trg) => trg.CodePiece.Code;
-    public static string GetCode(this View view) => view.CodePiece.Code;
-    public static string GetCode(this Script script) => script.CodePiece.Code;
+    public static string GetCode(this Trigger trg) => trg.CreateStatement.Code;
+    public static string GetCode(this View view) => view.CreateStatement.Code;
+    public static string GetCode(this Script script) => script.Text.Code;
 
     public static string AppendSemicolonIfAbsent(this string val)
     {

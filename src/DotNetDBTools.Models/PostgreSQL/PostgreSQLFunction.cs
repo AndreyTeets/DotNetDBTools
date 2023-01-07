@@ -4,6 +4,10 @@ namespace DotNetDBTools.Models.PostgreSQL;
 
 public class PostgreSQLFunction : DbObject
 {
-    public CodePiece CodePiece { get; set; }
+    public CodePiece CreateStatement { get; set; }
+
+    /// <summary>
+    /// Meaning it does not transitively depend on tables.
+    /// </summary>
     public bool IsSimple { get; set; }
 }

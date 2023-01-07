@@ -4,5 +4,5 @@ namespace DotNetDBTools.Models.MySQL;
 
 public class MySQLFunction : DbObject
 {
-    public CodePiece CodePiece { get; set; }
+    public CodePiece CreateStatement { get; set; }
 }

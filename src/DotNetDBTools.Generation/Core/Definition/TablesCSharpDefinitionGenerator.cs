@@ -104,7 +104,7 @@ $@"        public Trigger {tr.Name} = new(""{tr.ID}"")
                 DefinitionSourceFile sqlRefFile = new()
                 {
                     RelativePath = $"Sql/Triggers/{tr.Name}.sql",
-                    SourceText = tr.CodePiece.Code.NormalizeLineEndings(),
+                    SourceText = tr.CreateStatement.Code.NormalizeLineEndings(),
                 };
                 sqlRefFiles.Add(sqlRefFile);
             }

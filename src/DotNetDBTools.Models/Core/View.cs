@@ -2,5 +2,5 @@
 
 public abstract class View : DbObject
 {
-    public CodePiece CodePiece { get; set; }
+    public CodePiece CreateStatement { get; set; }
 }

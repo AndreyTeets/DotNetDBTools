@@ -34,7 +34,7 @@ namespace {projectNamespace}.Functions
             DefinitionSourceFile sqlRefFile = new()
             {
                 RelativePath = $"Sql/Functions/{func.Name}.sql",
-                SourceText = func.CodePiece.Code.NormalizeLineEndings(),
+                SourceText = func.CreateStatement.Code.NormalizeLineEndings(),
             };
             res.Add(file);
             res.Add(sqlRefFile);

@@ -92,7 +92,7 @@ internal abstract class DbModelFromCSharpDefinitionProvider<
             {
                 ID = view.DNDBT_OBJECT_ID,
                 Name = view.GetType().Name,
-                CodePiece = DbObjectCodeMapper.MapToCodePiece(view),
+                CreateStatement = DbObjectCodeMapper.MapToCodePiece(view),
             };
             BuildAdditionalViewModelProperties(viewModel, view);
             viewModels.Add(viewModel);
@@ -114,7 +114,7 @@ internal abstract class DbModelFromCSharpDefinitionProvider<
                 Kind = (ScriptKind)Enum.Parse(typeof(ScriptKind), script.Type.ToString()),
                 MinDbVersionToExecute = script.MinDbVersionToExecute,
                 MaxDbVersionToExecute = script.MaxDbVersionToExecute,
-                CodePiece = DbObjectCodeMapper.MapToCodePiece(script),
+                Text = DbObjectCodeMapper.MapToCodePiece(script),
             };
             scriptModels.Add(scriptModel);
         }
@@ -286,7 +286,7 @@ internal abstract class DbModelFromCSharpDefinitionProvider<
                     ID = trigger.DNDBT_OBJECT_ID,
                     Name = x.Name,
                     TableName = table.GetType().Name,
-                    CodePiece = DbObjectCodeMapper.MapToCodePiece(trigger),
+                    CreateStatement = DbObjectCodeMapper.MapToCodePiece(trigger),
                 };
                 BuildAdditionalTriggerModelProperties(triggerModel, trigger);
                 return (Trigger)triggerModel;

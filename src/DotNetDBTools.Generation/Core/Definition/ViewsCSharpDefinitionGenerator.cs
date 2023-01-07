@@ -31,7 +31,7 @@ namespace {projectNamespace}.Views
             DefinitionSourceFile sqlRefFile = new()
             {
                 RelativePath = $"Sql/Views/{view.Name}.sql",
-                SourceText = view.CodePiece.Code.NormalizeLineEndings(),
+                SourceText = view.CreateStatement.Code.NormalizeLineEndings(),
             };
             res.Add(file);
             res.Add(sqlRefFile);

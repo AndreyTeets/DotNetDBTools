@@ -154,7 +154,7 @@ internal class PostgreSQLDbModelPostProcessor : DbModelPostProcessor
         {
             foreach (Trigger trg in table.Triggers)
             {
-                List<string> statements = PostgreSQLStatementsSplitter.Split(trg.CodePiece.Code);
+                List<string> statements = PostgreSQLStatementsSplitter.Split(trg.CreateStatement.Code);
                 if (statements.Count == 1)
                     continue;
 
@@ -168,10 +168,10 @@ internal class PostgreSQLDbModelPostProcessor : DbModelPostProcessor
                         {
                             ID = func.ID.Value,
                             Name = func.Name,
-                            CodePiece = new CodePiece { Code = func.Code.NormalizeLineEndings() },
+                            CreateStatement = new CodePiece { Code = func.Code.NormalizeLineEndings() },
                         };
                         database.Functions.Add(funcModel);
-                        trg.CodePiece.Code = statements[1].NormalizeLineEndings();
+                        trg.CreateStatement.Code = statements[1].NormalizeLineEndings();
                     }
                     else
                     {
@@ -180,7 +180,7 @@ internal class PostgreSQLDbModelPostProcessor : DbModelPostProcessor
                 }
                 else
                 {
-                    throw new Exception($"Found invalid count({statements.Count}) of statements in trigger code [{trg.CodePiece.Code}]");
+                    throw new Exception($"Found invalid count({statements.Count}) of statements in trigger code [{trg.CreateStatement.Code}]");
                 }
             }
         }

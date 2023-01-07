@@ -77,7 +77,7 @@ internal abstract class DbModelConverter<
         {
             ID = view.ID,
             Name = view.Name,
-            CodePiece = ConvertCodePiece(view.CodePiece),
+            CreateStatement = ConvertCodePiece(view.CreateStatement),
         };
     }
 
@@ -144,7 +144,7 @@ internal abstract class DbModelConverter<
                 ID = trigger.ID,
                 Name = trigger.Name,
                 TableName = trigger.TableName,
-                CodePiece = ConvertCodePiece(trigger.CodePiece),
+                CreateStatement = ConvertCodePiece(trigger.CreateStatement),
             };
             specificDbmsTriggers.Add(specificDbmsTrigger);
         };
@@ -153,7 +153,7 @@ internal abstract class DbModelConverter<
 
     private Script ConvertScript(Script script)
     {
-        script.CodePiece = ConvertCodePiece(script.CodePiece);
+        script.Text = ConvertCodePiece(script.Text);
         return script;
     }
 

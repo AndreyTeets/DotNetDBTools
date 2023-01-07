@@ -17,7 +17,7 @@ internal class SQLiteDbValidator : DbValidator
 
     protected override void AddAdditionalTriggerErrors(Table table, Trigger trigger, List<DbError> dbErrors)
     {
-        if (!Regex.IsMatch(trigger.CodePiece.Code, $@"CREATE TRIGGER \[?{trigger.Name}\]?"))
+        if (!Regex.IsMatch(trigger.CreateStatement.Code, $@"CREATE TRIGGER \[?{trigger.Name}\]?"))
         {
             string errorMessage =
 $"Trigger '{trigger.Name}' in table '{table.Name}' has different name in it's creation code.";

@@ -80,7 +80,7 @@ internal class PostgreSQLDbModelFromDBMSProvider : DbModelFromDBMSProvider<
         {
             DNDBTInfo dndbtInfo = dbObjectIDsMap[$"{DbObjectType.Function}_{func.Name}_{null}"];
             func.ID = dndbtInfo.ID;
-            func.CodePiece.Code = dndbtInfo.Code;
+            func.CreateStatement.Code = dndbtInfo.Code;
         }
     }
 
@@ -206,7 +206,7 @@ internal class PostgreSQLDbModelFromDBMSProvider : DbModelFromDBMSProvider<
             {
                 ID = Guid.NewGuid(),
                 Name = funcRecord.FunctionName,
-                CodePiece = new CodePiece { Code = funcRecord.FunctionCode },
+                CreateStatement = new CodePiece { Code = funcRecord.FunctionCode },
             };
             funcsList.Add(func);
         }

@@ -45,7 +45,7 @@ public class DNDBTModelsEqualityComparerTests
         _comparer.Equals(database1, database3).Should().BeFalse();
 
         database3 = _definitionParsingManager.CreateDbModel(dbAssembly);
-        ((AgnosticCodePiece)database3.Views.Single(x => x.Name == "MyView1").CodePiece)
+        ((AgnosticCodePiece)database3.Views.Single(x => x.Name == "MyView1").CreateStatement)
                 .DbKindToCodeMap[DatabaseKind.PostgreSQL] = "some other view code";
         _comparer.Equals(database1, database3).Should().BeFalse();
     }

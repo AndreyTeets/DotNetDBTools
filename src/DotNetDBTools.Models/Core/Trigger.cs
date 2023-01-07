@@ -3,5 +3,5 @@
 public abstract class Trigger : DbObject
 {
     public string TableName { get; set; }
-    public CodePiece CodePiece { get; set; }
+    public CodePiece CreateStatement { get; set; }
 }

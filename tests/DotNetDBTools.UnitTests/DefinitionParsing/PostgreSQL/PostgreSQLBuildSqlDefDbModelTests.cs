@@ -145,7 +145,7 @@ public class PostgreSQLBuildSqlDefDbModelTests : BaseBuildSqlDefDbModelTests<Pos
             {
                 ID = new Guid("3C36AE77-B7E4-40C3-824F-BD20DC270A14"),
                 Name = "MyView1",
-                CodePiece = new CodePiece()
+                CreateStatement = new CodePiece()
                 {
                     Code = MiscHelper.ReadFromFileWithoutIdDeclarations("./TestData/PostgreSQL/CreateView.sql"),
                 },

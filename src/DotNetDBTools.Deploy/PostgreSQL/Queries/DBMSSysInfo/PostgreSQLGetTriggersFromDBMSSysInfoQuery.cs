@@ -31,7 +31,7 @@ WHERE tr.tgisinternal = FALSE
                 ID = Guid.NewGuid(),
                 Name = triggerRecord.TriggerName,
                 TableName = triggerRecord.TableName,
-                CodePiece = new CodePiece { Code = triggerRecord.TriggerCode },
+                CreateStatement = new CodePiece { Code = triggerRecord.TriggerCode },
             };
         }
     }

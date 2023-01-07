@@ -4,5 +4,5 @@ namespace DotNetDBTools.Models.MSSQL;
 
 public class MSSQLFunction : DbObject
 {
-    public CodePiece CodePiece { get; set; }
+    public CodePiece CreateStatement { get; set; }
 }

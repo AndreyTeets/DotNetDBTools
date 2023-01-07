@@ -122,7 +122,7 @@ internal abstract class DbModelFromDBMSProvider<
             {
                 DNDBTInfo dndbtInfoTRG = dbObjectIDsMap[$"{DbObjectType.Trigger}_{trg.Name}_{table.ID}"];
                 trg.ID = dndbtInfoTRG.ID;
-                trg.CodePiece.Code = dndbtInfoTRG.Code;
+                trg.CreateStatement.Code = dndbtInfoTRG.Code;
             }
             foreach (ForeignKey fk in table.ForeignKeys)
                 fk.ID = dbObjectIDsMap[$"{DbObjectType.ForeignKey}_{fk.Name}_{table.ID}"].ID;
@@ -132,7 +132,7 @@ internal abstract class DbModelFromDBMSProvider<
         {
             DNDBTInfo dndbtInfo = dbObjectIDsMap[$"{DbObjectType.View}_{view.Name}_{null}"];
             view.ID = dndbtInfo.ID;
-            view.CodePiece.Code = dndbtInfo.Code;
+            view.CreateStatement.Code = dndbtInfo.Code;
         }
 
         ReplaceAdditionalDbModelObjectsIDsAndCodeWithDNDBTSysInfo(database, dbObjectIDsMap);
@@ -152,7 +152,7 @@ internal abstract class DbModelFromDBMSProvider<
                 Kind = (ScriptKind)Enum.Parse(typeof(ScriptKind), scriptRecord.Type),
                 MinDbVersionToExecute = scriptRecord.MinDbVersionToExecute,
                 MaxDbVersionToExecute = scriptRecord.MaxDbVersionToExecute,
-                CodePiece = new CodePiece { Code = scriptRecord.Code },
+                Text = new CodePiece { Code = scriptRecord.Code },
             };
             database.Scripts.Add(script);
         }
@@ -191,7 +191,7 @@ internal abstract class DbModelFromDBMSProvider<
             {
                 ID = Guid.NewGuid(),
                 Name = viewRecord.ViewName,
-                CodePiece = new CodePiece { Code = viewRecord.ViewCode },
+                CreateStatement = new CodePiece { Code = viewRecord.ViewCode },
             };
             views.Add(view);
         }

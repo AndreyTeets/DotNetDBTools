@@ -4,5 +4,5 @@ namespace DotNetDBTools.Models.PostgreSQL;
 
 public class PostgreSQLProcedure : DbObject
 {
-    public CodePiece CodePiece { get; set; }
+    public CodePiece CreateStatement { get; set; }
 }

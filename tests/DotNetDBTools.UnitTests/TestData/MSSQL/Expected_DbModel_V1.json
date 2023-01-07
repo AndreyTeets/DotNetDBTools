@@ -271,7 +271,7 @@
         {
           "$id": "34",
           "TableName": "MyTable2",
-          "CodePiece": {
+          "CreateStatement": {
             "$id": "35",
             "Code": "CREATE TRIGGER [TR_MyTable2_MyTrigger1]\nON [MyTable2]\nAFTER INSERT\nAS\nBEGIN\n    INSERT INTO [MyTable4]([MyColumn1])\n    SELECT i.[MyColumn1] FROM inserted i;\nEND"
           },
@@ -751,7 +751,7 @@
   "Views": [
     {
       "$id": "95",
-      "CodePiece": {
+      "CreateStatement": {
         "$id": "96",
         "Code": "CREATE VIEW MyView1 AS\nSELECT\n    t1.MyColumn1,\n    t1.MyColumn4,\n    t2.MyColumn2\nFROM MyTable1 t1\nLEFT JOIN MyTable2 t2\n    ON t2.MyColumn1 = t1.MyColumn1"
       },
@@ -768,7 +768,7 @@
       "Kind": 1,
       "MinDbVersionToExecute": 0,
       "MaxDbVersionToExecute": 9223372036854775807,
-      "CodePiece": {
+      "Text": {
         "$id": "98",
         "Code": "INSERT INTO [MyTable4]([MyColumn1])\nSELECT * FROM\n(\n    SELECT 1\n    UNION ALL\n    SELECT 2\n    UNION ALL\n    SELECT 3\n) t(Col1)\nWHERE NOT EXISTS (SELECT * FROM [MyTable4])"
       },

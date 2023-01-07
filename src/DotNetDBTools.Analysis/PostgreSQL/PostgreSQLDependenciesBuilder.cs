@@ -30,7 +30,7 @@ internal class PostgreSQLDependenciesBuilder : IDependenciesBuilder
         foreach (PostgreSQLView view in database.Views)
         {
             List<Dependency> dependencies = ExecuteParsingFunc(
-                () => parser.GetViewDependencies(view.CodePiece.Code),
+                () => parser.GetViewDependencies(view.CreateStatement.Code),
                 $"Error while parsing view '{view.Name}' code");
 
             foreach (Dependency dep in dependencies)
@@ -39,7 +39,7 @@ internal class PostgreSQLDependenciesBuilder : IDependenciesBuilder
         foreach (PostgreSQLFunction func in database.Functions)
         {
             List<Dependency> dependencies = ExecuteParsingFunc(
-                () => parser.GetFunctionDependencies(func.CodePiece.Code),
+                () => parser.GetFunctionDependencies(func.CreateStatement.Code),
                 $"Error while parsing function '{func.Name}' code");
 
             foreach (Dependency dep in dependencies)

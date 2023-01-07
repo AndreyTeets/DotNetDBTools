@@ -64,7 +64,7 @@ internal class PostgreSQLDiffCreator : DiffCreator
         }
 
         if (newItem is Trigger newTrigger &&
-            _functionsToCreateNames.Any(fName => newTrigger.CodePiece.Code.Contains($"{fName}")))
+            _functionsToCreateNames.Any(fName => newTrigger.CreateStatement.Code.Contains($"{fName}")))
         {
             return true;
         }
