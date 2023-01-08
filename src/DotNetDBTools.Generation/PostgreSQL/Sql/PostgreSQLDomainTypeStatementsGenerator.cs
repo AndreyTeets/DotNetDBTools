@@ -27,7 +27,7 @@ $@"{GetIdDeclarationText(type, 0)}CREATE DOMAIN ""{type.Name}"" AS
         List<string> definitions = new();
 
         definitions.Add(
-$@"    {type.UnderlyingType.GetQuotedName()} {Statements.Nullability(type)}{Statements.Default(type)}");
+$@"    {type.UnderlyingType.Name} {Statements.Nullability(type)}{Statements.Default(type)}");
 
         foreach (CheckConstraint ck in type.CheckConstraints)
         {

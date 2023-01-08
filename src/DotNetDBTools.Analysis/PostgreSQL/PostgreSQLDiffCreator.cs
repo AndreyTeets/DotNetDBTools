@@ -45,20 +45,19 @@ internal class PostgreSQLDiffCreator : DiffCreator
     protected override void SetDataTypeChanged(ColumnDiff columnDiff)
     {
         base.SetDataTypeChanged(columnDiff);
-        if (_changedUserDefinedTypesNames.Contains(columnDiff.NewColumn.DataType.Name))
+        if (IsChangedUserDefinedType(columnDiff.NewColumn.DataType))
             columnDiff.DataTypeChanged = true;
     }
 
     protected override bool AdditionalItemsNonEqualityConditionIsTrue<TItem>(TItem newItem, TItem oldItem)
     {
         if (newItem is Table newTable &&
-            newTable.Columns.Any(c => _changedUserDefinedTypesNames.Contains(c.DataType.Name)))
+            newTable.Columns.Any(c => IsChangedUserDefinedType(c.DataType)))
         {
             return true;
         }
 
-        if (newItem is Column newColumn &&
-            _changedUserDefinedTypesNames.Contains(newColumn.DataType.Name))
+        if (newItem is Column newColumn && IsChangedUserDefinedType(newColumn.DataType))
         {
             return true;
         }
@@ -187,13 +186,20 @@ internal class PostgreSQLDiffCreator : DiffCreator
     {
         _changedUserDefinedTypesNames.Clear();
         foreach (PostgreSQLCompositeTypeDiff typeDiff in dbDiff.ChangedCompositeTypes)
-            _changedUserDefinedTypesNames.Add(typeDiff.NewCompositeType.Name);
+            _changedUserDefinedTypesNames.Add($@"""{typeDiff.NewCompositeType.Name}""");
         foreach (PostgreSQLDomainTypeDiff typeDiff in dbDiff.ChangedDomainTypes)
-            _changedUserDefinedTypesNames.Add(typeDiff.NewDomainType.Name);
+            _changedUserDefinedTypesNames.Add($@"""{typeDiff.NewDomainType.Name}""");
         foreach (PostgreSQLEnumTypeDiff typeDiff in dbDiff.ChangedEnumTypes)
-            _changedUserDefinedTypesNames.Add(typeDiff.NewEnumType.Name);
+            _changedUserDefinedTypesNames.Add($@"""{typeDiff.NewEnumType.Name}""");
         foreach (PostgreSQLRangeTypeDiff typeDiff in dbDiff.ChangedRangeTypes)
-            _changedUserDefinedTypesNames.Add(typeDiff.NewRangeType.Name);
+            _changedUserDefinedTypesNames.Add($@"""{typeDiff.NewRangeType.Name}""");
+    }
+
+    private bool IsChangedUserDefinedType(DataType dataType)
+    {
+        string typeNameWithoutArray = PostgreSQLHelperMethods.GetNormalizedTypeNameWithoutArray(
+            dataType.Name, out string _, out string _);
+        return _changedUserDefinedTypesNames.Contains(typeNameWithoutArray);
     }
 
     private void FillFunctionsToCreateNames(PostgreSQLDatabaseDiff dbDiff)

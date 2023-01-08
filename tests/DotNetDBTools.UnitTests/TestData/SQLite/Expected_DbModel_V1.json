@@ -10,8 +10,7 @@
           "$id": "3",
           "DataType": {
             "$id": "4",
-            "Name": "INTEGER",
-            "IsUserDefined": false
+            "Name": "INTEGER"
           },
           "NotNull": true,
           "Identity": false,
@@ -29,8 +28,7 @@
           "$id": "6",
           "DataType": {
             "$id": "7",
-            "Name": "TEXT",
-            "IsUserDefined": false
+            "Name": "TEXT"
           },
           "NotNull": true,
           "Identity": false,
@@ -48,8 +46,7 @@
           "$id": "9",
           "DataType": {
             "$id": "10",
-            "Name": "INTEGER",
-            "IsUserDefined": false
+            "Name": "INTEGER"
           },
           "NotNull": true,
           "Identity": true,
@@ -67,8 +64,7 @@
           "$id": "12",
           "DataType": {
             "$id": "13",
-            "Name": "NUMERIC",
-            "IsUserDefined": false
+            "Name": "NUMERIC"
           },
           "NotNull": true,
           "Identity": false,
@@ -86,8 +82,7 @@
           "$id": "15",
           "DataType": {
             "$id": "16",
-            "Name": "TEXT",
-            "IsUserDefined": false
+            "Name": "TEXT"
           },
           "NotNull": false,
           "Identity": false,
@@ -175,8 +170,7 @@
           "$id": "24",
           "DataType": {
             "$id": "25",
-            "Name": "INTEGER",
-            "IsUserDefined": false
+            "Name": "INTEGER"
           },
           "NotNull": true,
           "Identity": false,
@@ -194,8 +188,7 @@
           "$id": "27",
           "DataType": {
             "$id": "28",
-            "Name": "BLOB",
-            "IsUserDefined": false
+            "Name": "BLOB"
           },
           "NotNull": false,
           "Identity": false,
@@ -269,8 +262,7 @@
           "$id": "35",
           "DataType": {
             "$id": "36",
-            "Name": "INTEGER",
-            "IsUserDefined": false
+            "Name": "INTEGER"
           },
           "NotNull": true,
           "Identity": false,
@@ -288,8 +280,7 @@
           "$id": "38",
           "DataType": {
             "$id": "39",
-            "Name": "INTEGER",
-            "IsUserDefined": false
+            "Name": "INTEGER"
           },
           "NotNull": true,
           "Identity": true,
@@ -333,8 +324,7 @@
           "$id": "43",
           "DataType": {
             "$id": "44",
-            "Name": "INTEGER",
-            "IsUserDefined": false
+            "Name": "INTEGER"
           },
           "NotNull": true,
           "Identity": false,
@@ -352,8 +342,7 @@
           "$id": "46",
           "DataType": {
             "$id": "47",
-            "Name": "NUMERIC",
-            "IsUserDefined": false
+            "Name": "NUMERIC"
           },
           "NotNull": true,
           "Identity": false,
@@ -371,8 +360,7 @@
           "$id": "49",
           "DataType": {
             "$id": "50",
-            "Name": "NUMERIC",
-            "IsUserDefined": false
+            "Name": "NUMERIC"
           },
           "NotNull": true,
           "Identity": false,
@@ -390,8 +378,7 @@
           "$id": "52",
           "DataType": {
             "$id": "53",
-            "Name": "NUMERIC",
-            "IsUserDefined": false
+            "Name": "NUMERIC"
           },
           "NotNull": true,
           "Identity": false,
@@ -409,8 +396,7 @@
           "$id": "55",
           "DataType": {
             "$id": "56",
-            "Name": "TEXT",
-            "IsUserDefined": false
+            "Name": "TEXT"
           },
           "NotNull": true,
           "Identity": false,
@@ -428,8 +414,7 @@
           "$id": "58",
           "DataType": {
             "$id": "59",
-            "Name": "BLOB",
-            "IsUserDefined": false
+            "Name": "BLOB"
           },
           "NotNull": true,
           "Identity": false,
@@ -447,8 +432,7 @@
           "$id": "61",
           "DataType": {
             "$id": "62",
-            "Name": "REAL",
-            "IsUserDefined": false
+            "Name": "REAL"
           },
           "NotNull": true,
           "Identity": false,
@@ -466,8 +450,7 @@
           "$id": "64",
           "DataType": {
             "$id": "65",
-            "Name": "REAL",
-            "IsUserDefined": false
+            "Name": "REAL"
           },
           "NotNull": true,
           "Identity": false,
@@ -485,8 +468,7 @@
           "$id": "67",
           "DataType": {
             "$id": "68",
-            "Name": "NUMERIC",
-            "IsUserDefined": false
+            "Name": "NUMERIC"
           },
           "NotNull": true,
           "Identity": false,
@@ -504,8 +486,7 @@
           "$id": "70",
           "DataType": {
             "$id": "71",
-            "Name": "INTEGER",
-            "IsUserDefined": false
+            "Name": "INTEGER"
           },
           "NotNull": true,
           "Identity": false,
@@ -523,8 +504,7 @@
           "$id": "73",
           "DataType": {
             "$id": "74",
-            "Name": "BLOB",
-            "IsUserDefined": false
+            "Name": "BLOB"
           },
           "NotNull": true,
           "Identity": false,
@@ -542,8 +522,7 @@
           "$id": "76",
           "DataType": {
             "$id": "77",
-            "Name": "NUMERIC",
-            "IsUserDefined": false
+            "Name": "NUMERIC"
           },
           "NotNull": true,
           "Identity": false,
@@ -617,8 +596,7 @@
           "$id": "83",
           "DataType": {
             "$id": "84",
-            "Name": "TEXT",
-            "IsUserDefined": false
+            "Name": "TEXT"
           },
           "NotNull": false,
           "Identity": false,
@@ -636,8 +614,7 @@
           "$id": "86",
           "DataType": {
             "$id": "87",
-            "Name": "INTEGER",
-            "IsUserDefined": false
+            "Name": "INTEGER"
           },
           "NotNull": false,
           "Identity": false,

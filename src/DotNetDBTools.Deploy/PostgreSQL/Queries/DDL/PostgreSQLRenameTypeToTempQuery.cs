@@ -31,7 +31,7 @@ internal class PostgreSQLRenameTypeToTempQuery : NoParametersQuery
                 string multirangeTypeName = rt.MultirangeTypeName ?? $"{rt.Name}_multirange";
                 return
 $@"ALTER TYPE ""{rt.Name}"" RENAME TO ""{tempPrefix}{type.Name}"";
-ALTER FUNCTION ""{rt.Name}""({rt.Subtype.GetQuotedName()},{rt.Subtype.GetQuotedName()}) RENAME TO ""{tempPrefix}{type.Name}"";
+ALTER FUNCTION ""{rt.Name}""({rt.Subtype.Name},{rt.Subtype.Name}) RENAME TO ""{tempPrefix}{type.Name}"";
 ALTER FUNCTION ""{rt.Name}"" RENAME TO ""{tempPrefix}{type.Name}"";
 IF ({QH.SelectDbmsVersionStatement}) >= {QH.MultirangeTypeNameAvailableDbmsVersion} THEN
 ALTER TYPE ""{multirangeTypeName}"" RENAME TO ""{tempPrefix}{multirangeTypeName}"";

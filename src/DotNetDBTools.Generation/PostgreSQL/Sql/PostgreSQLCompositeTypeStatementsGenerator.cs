@@ -28,7 +28,7 @@ $@"{GetIdDeclarationText(type, 0)}CREATE TYPE ""{type.Name}"" AS
         List<string> attributesDefinitions = new();
 
         attributesDefinitions.AddRange(type.Attributes.Select(a =>
-$@"    ""{a.Name}"" {a.DataType.GetQuotedName()}"));
+$@"    ""{a.Name}"" {a.DataType.Name}"));
 
         return string.Join(",\n", attributesDefinitions);
     }

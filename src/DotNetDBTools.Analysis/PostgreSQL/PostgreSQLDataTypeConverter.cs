@@ -21,7 +21,7 @@ internal class PostgreSQLDataTypeConverter : IDataTypeConverter
             CSharpDataTypeNames.Guid => new DataType { Name = PostgreSQLDataTypeNames.UUID },
 
             CSharpDataTypeNames.Date => new DataType { Name = PostgreSQLDataTypeNames.DATE },
-            CSharpDataTypeNames.Time => ConvertTimeSqlType(dataType),
+            CSharpDataTypeNames.Time => new DataType { Name = PostgreSQLDataTypeNames.TIME },
             CSharpDataTypeNames.DateTime => ConvertDateTimeSqlType(dataType),
 
             _ => throw new InvalidOperationException($"Invalid csharp datatype name: {dataType.Name}"),
@@ -58,14 +58,6 @@ internal class PostgreSQLDataTypeConverter : IDataTypeConverter
         string stringTypeName = dataType.IsFixedLength ? PostgreSQLDataTypeNames.CHAR : PostgreSQLDataTypeNames.VARCHAR;
         string lengthStr = dataType.Length.ToString();
         return new DataType { Name = $"{stringTypeName}({lengthStr})" };
-    }
-
-    private static DataType ConvertTimeSqlType(CSharpDataType dataType)
-    {
-        if (dataType.IsWithTimeZone)
-            return new DataType { Name = PostgreSQLDataTypeNames.TIMETZ };
-        else
-            return new DataType { Name = PostgreSQLDataTypeNames.TIME };
     }
 
     private static DataType ConvertDateTimeSqlType(CSharpDataType dataType)

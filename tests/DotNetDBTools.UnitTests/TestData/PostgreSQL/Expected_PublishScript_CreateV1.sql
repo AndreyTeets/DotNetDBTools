@@ -5,7 +5,7 @@ BEGIN
 EXECUTE 'CREATE TYPE "MyCompositeType1" AS
 (
     "MyAttribute1" VARCHAR(100),
-    "MyAttribute2" INT
+    "MyAttribute2" DECIMAL(7,2)[]
 );';
 -- QUERY END: CreateCompositeTypeQuery
 
@@ -565,6 +565,46 @@ EXECUTE 'CREATE TABLE "MyTable5"
     "MyColumn2" CHAR(4) NOT NULL DEFAULT ''test'',
     "MyColumn201" INT NULL DEFAULT "MyFunction1"(-25, 10),
     "MyColumn3" BYTEA NOT NULL DEFAULT ''\x000204'',
+    "MyColumn301" SMALLINT NULL,
+    "MyColumn302" SMALLINT NULL,
+    "MyColumn303" MONEY NULL,
+    "MyColumn304" JSON NULL,
+    "MyColumn305" JSONB NULL,
+    "MyColumn306" XML NULL,
+    "MyColumn307" TSQUERY NULL,
+    "MyColumn308" TSVECTOR NULL,
+    "MyColumn309" POINT NULL,
+    "MyColumn310" LINE NULL,
+    "MyColumn311" LSEG NULL,
+    "MyColumn312" BOX NULL,
+    "MyColumn313" PATH NULL,
+    "MyColumn314" POLYGON NULL,
+    "MyColumn315" CIRCLE NULL,
+    "MyColumn316" INET NULL,
+    "MyColumn317" CIDR NULL,
+    "MyColumn318" MACADDR NULL,
+    "MyColumn319" MACADDR8 NULL,
+    "MyColumn320" DECIMAL NULL,
+    "MyColumn321" TIMETZ NULL,
+    "MyColumn322" TIME(4) NULL,
+    "MyColumn323" TIMETZ(4) NULL,
+    "MyColumn324" TIMESTAMP(4) NULL,
+    "MyColumn325" TIMESTAMPTZ(4) NULL,
+    "MyColumn326" INTERVAL NULL,
+    "MyColumn327" INTERVAL MINUTE TO SECOND(6) NULL,
+    "MyColumn328" BIT NULL,
+    "MyColumn329" VARBIT NULL,
+    "MyColumn330" BIT(10) NULL,
+    "MyColumn331" VARBIT(20) NULL,
+    "MyColumn332" CHAR NULL,
+    "MyColumn333" VARCHAR NULL,
+    "MyColumn334" CHAR(30) NULL,
+    "MyColumn335" VARCHAR(40) NULL,
+    "MyColumn336" JSONB[][] NULL,
+    "MyColumn337" DECIMAL(10,4)[][] NULL,
+    "MyColumn338" TIMETZ(4)[] NULL,
+    "MyColumn339" "MyCompositeType1"[] NULL,
+    "MyColumn340" "MyCompositeType1"[] NULL,
     "MyColumn4" FLOAT4 NOT NULL DEFAULT 123.456,
     "MyColumn5" FLOAT8 NOT NULL DEFAULT 12345.6789,
     "MyColumn6" DECIMAL(6,1) NOT NULL DEFAULT 12.3,
@@ -801,6 +841,766 @@ VALUES
     ''Column'',
     ''MyColumn3'',
     ''''''\x000204''''''
+);';
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''5a6fdf6e-f39e-41bf-84fd-6b1becab248b'',
+    ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
+    ''Column'',
+    ''MyColumn301'',
+    NULL
+);';
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''4f4b70fd-178d-468f-8575-1d41ed28afc4'',
+    ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
+    ''Column'',
+    ''MyColumn302'',
+    NULL
+);';
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''99eae06e-5188-43aa-be38-b353adc5aacf'',
+    ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
+    ''Column'',
+    ''MyColumn303'',
+    NULL
+);';
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''e4eea54c-b11b-4c85-b98e-aac299776845'',
+    ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
+    ''Column'',
+    ''MyColumn304'',
+    NULL
+);';
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''2624c566-e9d5-4dd9-974a-bf031f73a714'',
+    ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
+    ''Column'',
+    ''MyColumn305'',
+    NULL
+);';
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''616314fc-e56a-424d-81ee-ae89be650d42'',
+    ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
+    ''Column'',
+    ''MyColumn306'',
+    NULL
+);';
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''b6f006fa-2a78-4965-ac10-0d2cf05d60f0'',
+    ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
+    ''Column'',
+    ''MyColumn307'',
+    NULL
+);';
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''129fd264-af69-4aa7-b4ef-6b9923340cd8'',
+    ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
+    ''Column'',
+    ''MyColumn308'',
+    NULL
+);';
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''d1ae8ccd-526a-46e1-a5a0-39f25cc391ce'',
+    ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
+    ''Column'',
+    ''MyColumn309'',
+    NULL
+);';
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''f3f38026-18cc-49ec-9d4b-3e844427a6f8'',
+    ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
+    ''Column'',
+    ''MyColumn310'',
+    NULL
+);';
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''87c48981-bdb7-4da7-ac4a-1e03913133fa'',
+    ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
+    ''Column'',
+    ''MyColumn311'',
+    NULL
+);';
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''7b535f7e-bcc3-4950-b8af-a16ea36fb7bb'',
+    ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
+    ''Column'',
+    ''MyColumn312'',
+    NULL
+);';
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''1c4c38cc-8266-4992-b87a-179b0affb526'',
+    ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
+    ''Column'',
+    ''MyColumn313'',
+    NULL
+);';
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''448d6de4-9d8e-47cb-99e7-9801e78a3e7f'',
+    ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
+    ''Column'',
+    ''MyColumn314'',
+    NULL
+);';
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''a1e9678b-12bd-4c2f-88a5-8f203a10d4bf'',
+    ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
+    ''Column'',
+    ''MyColumn315'',
+    NULL
+);';
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''f8ef2969-0182-44c0-b9e5-58506b2353be'',
+    ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
+    ''Column'',
+    ''MyColumn316'',
+    NULL
+);';
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''1d70b438-3a2c-4d8a-9fb8-2e39bacd2582'',
+    ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
+    ''Column'',
+    ''MyColumn317'',
+    NULL
+);';
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''eeb2bca0-4d76-4b75-98c1-130a62268265'',
+    ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
+    ''Column'',
+    ''MyColumn318'',
+    NULL
+);';
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''9594f5f1-d746-4efa-a174-65e9eb82eea0'',
+    ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
+    ''Column'',
+    ''MyColumn319'',
+    NULL
+);';
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''78aaf5ec-b0c6-4503-8fa7-a87e1d45f532'',
+    ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
+    ''Column'',
+    ''MyColumn320'',
+    NULL
+);';
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''dc2e14b0-0fd7-44d9-92a7-39ee99358459'',
+    ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
+    ''Column'',
+    ''MyColumn321'',
+    NULL
+);';
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''4c2aa5f2-893f-42f1-a39d-d81123988b2e'',
+    ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
+    ''Column'',
+    ''MyColumn322'',
+    NULL
+);';
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''710e422f-7899-45fa-8b1d-d2543519ffc1'',
+    ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
+    ''Column'',
+    ''MyColumn323'',
+    NULL
+);';
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''fb0562d8-afba-4939-8cd3-89878c572b56'',
+    ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
+    ''Column'',
+    ''MyColumn324'',
+    NULL
+);';
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''baabb5c1-e231-4c0b-97ec-f6be8fba018f'',
+    ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
+    ''Column'',
+    ''MyColumn325'',
+    NULL
+);';
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''4763c35f-bdbd-485e-9010-a950cb5a4bdb'',
+    ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
+    ''Column'',
+    ''MyColumn326'',
+    NULL
+);';
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''ecbfa2f0-98a1-4d13-9da6-772a80dddac7'',
+    ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
+    ''Column'',
+    ''MyColumn327'',
+    NULL
+);';
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''36049ef7-16f2-41f3-ab8c-69d23726ad42'',
+    ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
+    ''Column'',
+    ''MyColumn328'',
+    NULL
+);';
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''03f0a0a6-cf85-41dc-8c3a-879ae832e9ab'',
+    ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
+    ''Column'',
+    ''MyColumn329'',
+    NULL
+);';
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''9ec1ef6a-9df3-4633-889a-660f53a4866f'',
+    ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
+    ''Column'',
+    ''MyColumn330'',
+    NULL
+);';
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''eeb5b0e8-0b1f-4ec6-b47b-068e5b303255'',
+    ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
+    ''Column'',
+    ''MyColumn331'',
+    NULL
+);';
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''ab4454ec-a6b4-4d51-b0fa-0e667b26326d'',
+    ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
+    ''Column'',
+    ''MyColumn332'',
+    NULL
+);';
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''684f2d90-9eea-4879-b2d5-0197d32654b0'',
+    ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
+    ''Column'',
+    ''MyColumn333'',
+    NULL
+);';
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''54b3d4dd-b3a9-4b99-915d-dff9fe24d7c2'',
+    ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
+    ''Column'',
+    ''MyColumn334'',
+    NULL
+);';
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''3631d9cb-c041-44e5-a964-c2751918c234'',
+    ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
+    ''Column'',
+    ''MyColumn335'',
+    NULL
+);';
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''00dfce94-1c1d-4fc2-bdb0-8e1306a248a2'',
+    ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
+    ''Column'',
+    ''MyColumn336'',
+    NULL
+);';
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''9430c94b-7ded-47b1-83bb-a041f0edee88'',
+    ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
+    ''Column'',
+    ''MyColumn337'',
+    NULL
+);';
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''86107168-6f36-43f9-8a56-78d19049beda'',
+    ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
+    ''Column'',
+    ''MyColumn338'',
+    NULL
+);';
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''a9863561-9309-4911-94d8-c12d21b0884e'',
+    ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
+    ''Column'',
+    ''MyColumn339'',
+    NULL
+);';
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''0d33ed85-9909-46e7-8369-eee86b563519'',
+    ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
+    ''Column'',
+    ''MyColumn340'',
+    NULL
 );';
 -- QUERY END: InsertDNDBTDbObjectRecordQuery
 

@@ -27,24 +27,16 @@ internal static class PostgreSQLHelperMethods
 
         HashSet<string> userDefinedTypesNames = new();
         foreach (DbObject udt in userDefinedTypes)
-            userDefinedTypesNames.Add(udt.Name);
+            userDefinedTypesNames.Add($@"""{udt.Name}""");
         return userDefinedTypesNames;
     }
 
-    public static bool IsStandardSqlType(string typeName, out string normalizedName)
-    {
-        normalizedName = TryGetNormalizedTypeName(typeName, out string baseName);
-        if (normalizedName != null)
-            return true;
-        else
-            return false;
-    }
-
-    public static string TryGetNormalizedTypeName(string typeName, out string baseName)
+    public static string GetNormalizedTypeNameWithoutArray(
+        string typeName, out string standardSqlTypeNameBase, out string arrayDimsStr)
     {
         Match match = Regex.Match(
             typeName,
-            $@"^(?<name>[\w_]*)(?:\s+(?<name2>varying|precision|{IF}))?\s*{P}(?:\s+(?<tz>with|without)\s*time\s*zone)?\s*{A}$",
+            $@"^""?(?<name>[\w_]+)""?(?:\s+(?<name2>varying|precision|{IF}))?\s*{P}(?:\s+(?<tz>with|without)\s*time\s*zone)?\s*{A}$",
             RegexOptions.IgnoreCase);
 
         string name = match.Groups["name"].Value;
@@ -53,27 +45,33 @@ internal static class PostgreSQLHelperMethods
         if (!match.Success
             || IsVaryingStr(name2) && !Regex.IsMatch(name, "^(?:bit|character)$", RegexOptions.IgnoreCase)
             || IsPrecisionStr(name2) && !Regex.IsMatch(name, "^double$", RegexOptions.IgnoreCase)
-            || IsIntervalFieldsStr(name2) && !Regex.IsMatch(name, "^interval", RegexOptions.IgnoreCase)
+            || IsIntervalFieldsStr(name2) && !Regex.IsMatch(name, "^interval$", RegexOptions.IgnoreCase)
             || match.Groups["tz"].Success && !Regex.IsMatch(name, "^(?:time|timestamp)$", RegexOptions.IgnoreCase))
         {
             throw new Exception($"Invalid datatype name '{typeName}'");
         }
 
-        string pa = "";
+        string p = "";
         if (match.Groups["precision"].Success)
-            pa = pa + match.Groups["precision"].Value;
+            p = p + match.Groups["precision"].Value;
+
+        arrayDimsStr = "";
         if (match.Groups["array"].Success)
-            pa = pa + match.Groups["array"].Value;
+        {
+            int arrayDims = match.Groups["array"].Value.Count(x => x == '[');
+            for (int i = 0; i < arrayDims; i++)
+                arrayDimsStr += "[]";
+        }
 
-        baseName = TryGetStandardBaseName(name);
-        if (baseName == PgDt.INTERVAL && IsIntervalFieldsStr(name2))
-            return $"{baseName} {name2.ToSingleSpaces().ToUpper()}{pa.ToNoWhiteSpace()}";
-        else if (baseName != null)
-            return (baseName + pa).ToNoWhiteSpace().ToUpper();
+        standardSqlTypeNameBase = TryGetStandardSqlTypeNameBase(name);
+        if (standardSqlTypeNameBase == PgDt.INTERVAL)
+            return $"{(standardSqlTypeNameBase + " " + name2.ToSingleSpaces().ToUpper()).Trim()}{p.ToNoWhiteSpace()}";
+        else if (standardSqlTypeNameBase != null)
+            return (standardSqlTypeNameBase + p).ToNoWhiteSpace().ToUpper();
         else
-            return null;
+            return $@"""{name}""";
 
-        string TryGetStandardBaseName(string name)
+        string TryGetStandardSqlTypeNameBase(string name)
         {
             string nameToUpper = name.ToUpper();
             if (typeof(PgDt).GetFields().Select(x => x.Name)

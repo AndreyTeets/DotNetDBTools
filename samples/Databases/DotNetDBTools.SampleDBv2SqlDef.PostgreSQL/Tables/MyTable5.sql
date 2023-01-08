@@ -50,5 +50,125 @@ CREATE TABLE "MyTable5"
     "MyColumn104" "MyRangeType1" NOT NULL,
 
     --ID:#{5C455EC9-9830-4D0B-A88C-57341899DC4A}#
-    "MyColumn201" INT DEFAULT "MyFunction1"(-25, 10)
+    "MyColumn201" INT DEFAULT "MyFunction1"(-25, 10),
+
+    --ID:#{5A6FDF6E-F39E-41BF-84FD-6B1BECAB248B}#
+    "MyColumn301" SMALLINT,
+
+    --ID:#{4F4B70FD-178D-468F-8575-1D41ED28AFC4}#
+    "MyColumn302" SMALLINT,
+
+    --ID:#{99EAE06E-5188-43AA-BE38-B353ADC5AACF}#
+    "MyColumn303" MONEY,
+
+    --ID:#{E4EEA54C-B11B-4C85-B98E-AAC299776845}#
+    "MyColumn304" JSON,
+
+    --ID:#{2624C566-E9D5-4DD9-974A-BF031F73A714}#
+    "MyColumn305" JSONB,
+
+    --ID:#{616314FC-E56A-424D-81EE-AE89BE650D42}#
+    "MyColumn306" XML,
+
+    --ID:#{B6F006FA-2A78-4965-AC10-0D2CF05D60F0}#
+    "MyColumn307" TSQUERY,
+
+    --ID:#{129FD264-AF69-4AA7-B4EF-6B9923340CD8}#
+    "MyColumn308" TSVECTOR,
+
+    --ID:#{D1AE8CCD-526A-46E1-A5A0-39F25CC391CE}#
+    "MyColumn309" POINT,
+
+    --ID:#{F3F38026-18CC-49EC-9D4B-3E844427A6F8}#
+    "MyColumn310" LINE,
+
+    --ID:#{87C48981-BDB7-4DA7-AC4A-1E03913133FA}#
+    "MyColumn311" LSEG,
+
+    --ID:#{7B535F7E-BCC3-4950-B8AF-A16EA36FB7BB}#
+    "MyColumn312" BOX,
+
+    --ID:#{1C4C38CC-8266-4992-B87A-179B0AFFB526}#
+    "MyColumn313" PATH,
+
+    --ID:#{448D6DE4-9D8E-47CB-99E7-9801E78A3E7F}#
+    "MyColumn314" POLYGON,
+
+    --ID:#{A1E9678B-12BD-4C2F-88A5-8F203A10D4BF}#
+    "MyColumn315" CIRCLE,
+
+    --ID:#{F8EF2969-0182-44C0-B9E5-58506B2353BE}#
+    "MyColumn316" INET,
+
+    --ID:#{1D70B438-3A2C-4D8A-9FB8-2E39BACD2582}#
+    "MyColumn317" CIDR,
+
+    --ID:#{EEB2BCA0-4D76-4B75-98C1-130A62268265}#
+    "MyColumn318" MACADDR,
+
+    --ID:#{9594F5F1-D746-4EFA-A174-65E9EB82EEA0}#
+    "MyColumn319" MACADDR8,
+
+    --ID:#{78AAF5EC-B0C6-4503-8FA7-A87E1D45F532}#
+    "MyColumn320" decimal,
+
+    --ID:#{DC2E14B0-0FD7-44D9-92A7-39EE99358459}#
+    "MyColumn321" time with time zone,
+
+    --ID:#{4C2AA5F2-893F-42F1-A39D-D81123988B2E}#
+    "MyColumn322" time ( 4),
+
+    --ID:#{710E422F-7899-45FA-8B1D-D2543519FFC1}#
+    "MyColumn323" time ( 4) with time zone,
+
+    --ID:#{FB0562D8-AFBA-4939-8CD3-89878C572B56}#
+    "MyColumn324" timestamp ( 4) without time zone,
+
+    --ID:#{BAABB5C1-E231-4C0B-97EC-F6BE8FBA018F}#
+    "MyColumn325" timestamptz ( 4),
+
+    --ID:#{4763C35F-BDBD-485E-9010-A950CB5A4BDB}#
+    "MyColumn326" INTERVAL,
+
+    --ID:#{ECBFA2F0-98A1-4D13-9DA6-772A80DDDAC7}#
+    "MyColumn327" interval  minute   to  second  (6 ),
+
+    --ID:#{36049EF7-16F2-41F3-AB8C-69D23726AD42}#
+    "MyColumn328" BIT,
+
+    --ID:#{03F0A0A6-CF85-41DC-8C3A-879AE832E9AB}#
+    "MyColumn329" VARBIT,
+
+    --ID:#{9EC1EF6A-9DF3-4633-889A-660F53A4866F}#
+    "MyColumn330" bit  (10  ),
+
+    --ID:#{EEB5B0E8-0B1F-4EC6-B47B-068E5B303255}#
+    "MyColumn331" bit varying  ( 20 ),
+
+    --ID:#{AB4454EC-A6B4-4D51-B0FA-0E667B26326D}#
+    "MyColumn332" character,
+
+    --ID:#{684F2D90-9EEA-4879-B2D5-0197D32654B0}#
+    "MyColumn333" character varying,
+
+    --ID:#{54B3D4DD-B3A9-4B99-915D-DFF9FE24D7C2}#
+    "MyColumn334" char  (30),
+
+    --ID:#{3631D9CB-C041-44E5-A964-C2751918C234}#
+    "MyColumn335" varchar  (  40 ),
+
+    --ID:#{00DFCE94-1C1D-4FC2-BDB0-8E1306A248A2}#
+    "MyColumn336" jsonb  [] [ ],
+
+    --ID:#{9430C94B-7DED-47B1-83BB-A041F0EDEE88}#
+    "MyColumn337" decimal  ( 10, 4 )  [22] [],
+
+    --ID:#{86107168-6F36-43F9-8A56-78D19049BEDA}#
+    "MyColumn338" time  (  4 )  with  time  zone [11],
+
+    --ID:#{A9863561-9309-4911-94D8-C12D21B0884E}#
+    "MyColumn339" "MyCompositeType1"  [ 88  ],
+
+    --ID:#{0D33ED85-9909-46E7-8369-EEE86B563519}#
+    "MyColumn340" "MyCompositeType1"  [ 99  ]
 )

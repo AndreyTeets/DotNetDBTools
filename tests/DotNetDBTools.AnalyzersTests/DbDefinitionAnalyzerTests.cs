@@ -90,7 +90,7 @@ namespace SampleTestCode
                 @"CreateStatement = @""CREATE TRIGGER TR_OtherTriggerName bla bla"",");
 
         string expectedColumnErrorMessage =
-"Column 'TestColumn1' in table 'TestTable2' datatype is invalid: Unknown data type 'SomeNonExistentType'.";
+"Column 'TestColumn1' in table 'TestTable2' datatype is invalid: Unknown data type '\"SomeNonExistentType\"'.";
         string expectedForeignKeyErrorMessage =
 "Foreign key 'FK_TestName1' in table 'TestTable1' references unknown table 'NonExistentTableName'.";
         string expectedTriggerErrorMessage =

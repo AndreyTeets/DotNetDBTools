@@ -104,10 +104,11 @@ internal class PostgreSQLDbModelFromDBMSProvider : DbModelFromDBMSProvider<
             {
                 Name = typeRecord.AttributeName,
                 DataType = PostgreSQLQueriesHelper.CreateDataTypeModel(
-                typeRecord.AttributeDataTypeName,
-                typeRecord.AttributeDataTypeLength,
-                typeRecord.AttributeDataTypeIsBaseDataType),
+                    typeRecord.AttributeArrayDims > 0 ? typeRecord.AttributeArrayElemDataType : typeRecord.AttributeDataTypeName,
+                    typeRecord.AttributeDataTypeLength,
+                    typeRecord.AttributeArrayDims),
             };
+
             typesMap[typeRecord.TypeName].Attributes.Add(attribute);
         }
         return typesMap.Select(x => x.Value).ToList();
@@ -122,9 +123,9 @@ internal class PostgreSQLDbModelFromDBMSProvider : DbModelFromDBMSProvider<
             if (!typesMap.ContainsKey(typeRecord.TypeName))
             {
                 DataType underlyingType = PostgreSQLQueriesHelper.CreateDataTypeModel(
-                    typeRecord.UnderlyingTypeName,
+                    typeRecord.UnderlyingTypeArrayDims > 0 ? typeRecord.UnderlyingTypeArrayElemDataType : typeRecord.UnderlyingTypeName,
                     typeRecord.UnderlyingTypeLength,
-                    typeRecord.UnderlyingTypeIsBaseDataType);
+                    typeRecord.UnderlyingTypeArrayDims);
                 PostgreSQLDomainType type = new()
                 {
                     ID = Guid.NewGuid(),
@@ -182,9 +183,9 @@ internal class PostgreSQLDbModelFromDBMSProvider : DbModelFromDBMSProvider<
             };
 
             type.Subtype = PostgreSQLQueriesHelper.CreateDataTypeModel(
-                typeRecord.SubtypeName,
+                typeRecord.SubtypeArrayElemDataType != null ? typeRecord.SubtypeArrayElemDataType : typeRecord.SubtypeName,
                 "-1",
-                typeRecord.SubtypeIsBaseDataType);
+                typeRecord.SubtypeArrayElemDataType != null ? 1 : 0);
             type.SubtypeOperatorClass = typeRecord.SubtypeOperatorClass;
             type.Collation = typeRecord.Collation;
             type.CanonicalFunction = typeRecord.CanonicalFunction == "-" ? null : typeRecord.CanonicalFunction;

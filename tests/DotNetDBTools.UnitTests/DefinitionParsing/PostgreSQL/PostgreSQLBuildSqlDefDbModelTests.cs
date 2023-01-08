@@ -76,7 +76,7 @@ public class PostgreSQLBuildSqlDefDbModelTests : BaseBuildSqlDefDbModelTests<Pos
                     Name = "PK_Table1".ToLower(),
                     Columns = new() { "Col1".ToLower(), "Col2".ToLower() },
                 },
-                UniqueConstraints= new()
+                UniqueConstraints = new()
                 {
                     new UniqueConstraint()
                     {
@@ -91,7 +91,7 @@ public class PostgreSQLBuildSqlDefDbModelTests : BaseBuildSqlDefDbModelTests<Pos
                         Columns = new() { "Col2".ToLower(), "Col4" },
                     },
                 },
-                CheckConstraints= new()
+                CheckConstraints = new()
                 {
                     new CheckConstraint()
                     {
@@ -112,7 +112,7 @@ public class PostgreSQLBuildSqlDefDbModelTests : BaseBuildSqlDefDbModelTests<Pos
                         Expression = new CodePiece() { Code = @"""Col3"" >= 0" },
                     },
                 },
-                ForeignKeys= new()
+                ForeignKeys = new()
                 {
                     new ForeignKey()
                     {

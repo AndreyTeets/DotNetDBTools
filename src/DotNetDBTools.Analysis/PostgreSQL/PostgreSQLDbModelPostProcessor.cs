@@ -22,7 +22,6 @@ internal class PostgreSQLDbModelPostProcessor : DbModelPostProcessor
     protected override void PostProcessDataTypes(Database database)
     {
         PostgreSQLDatabase db = (PostgreSQLDatabase)database;
-        HashSet<string> userDefinedTypesNames = PostgreSQLHelperMethods.GetUserDefinedTypesName(database);
 
         foreach (Table table in db.Tables)
         {
@@ -48,10 +47,13 @@ internal class PostgreSQLDbModelPostProcessor : DbModelPostProcessor
             if (string.IsNullOrEmpty(dataType.Name))
                 throw new Exception($"{displayedObjectInfoIfInvalid} datatype is null or empty");
 
-            if (PostgreSQLHelperMethods.IsStandardSqlType(dataType.Name, out string normalizedName))
-                dataType.Name = normalizedName;
-            else if (userDefinedTypesNames.Contains(dataType.Name))
-                dataType.IsUserDefined = true;
+            string normalizedTypeNameWithoutArray = PostgreSQLHelperMethods.GetNormalizedTypeNameWithoutArray(
+                dataType.Name, out string standardSqlTypeNameBase, out string arrayDimsStr);
+
+            if (string.IsNullOrEmpty(arrayDimsStr))
+                dataType.Name = normalizedTypeNameWithoutArray;
+            else
+                dataType.Name = $"{normalizedTypeNameWithoutArray}{arrayDimsStr}";
         }
     }
 

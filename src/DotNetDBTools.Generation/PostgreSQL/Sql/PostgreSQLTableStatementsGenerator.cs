@@ -127,7 +127,7 @@ $@"    {GetIdDeclarationText(fk, 4)}{Statements.DefForeignKey(fk)}"));
     private static class Statements
     {
         public static string DefColumn(Column c) =>
-$@"""{c.Name}"" {c.DataType.GetQuotedName()}{Identity(c)} {Nullability(c)}{Default(c)}"
+$@"""{c.Name}"" {c.DataType.Name}{Identity(c)} {Nullability(c)}{Default(c)}"
             ;
         public static string DefPrimaryKey(PrimaryKey pk) =>
 $@"CONSTRAINT ""{pk.Name}"" PRIMARY KEY ({string.Join(", ", pk.Columns.Select(x => $@"""{x}"""))})"
@@ -162,8 +162,8 @@ $@"
             ;
         public static string AlterColumnType(Column c) =>
 $@"
-    ALTER COLUMN ""{c.Name}"" SET DATA TYPE {c.DataType.GetQuotedName()}
-        USING (""{c.Name}""::text::{c.DataType.GetQuotedName()}),"
+    ALTER COLUMN ""{c.Name}"" SET DATA TYPE {c.DataType.Name}
+        USING (""{c.Name}""::text::{c.DataType.Name}),"
             ; // TODO Add TypeChangeConversions<srcTypeName,destTypeName,usingCode> in deploy/generation options?
         public static string SetColumnNotNull(Column c) =>
 $@"

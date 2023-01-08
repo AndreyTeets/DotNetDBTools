@@ -6,10 +6,8 @@ internal static class CSharpDefinitionGenerationHelper
 {
     public static string DeclareDataType(DataType dataType)
     {
-        if (dataType.IsUserDefined)
-            return $@"new Types.{dataType.Name}()";
-        else
-            return $@"new VerbatimDataType({DeclareString(dataType.Name)})";
+        // TODO declare as CSharp types where possible (including user defined)
+        return $@"new VerbatimDataType({DeclareString(dataType.Name)})";
     }
 
     public static string DeclareDefaultValue(CodePiece codePiece)

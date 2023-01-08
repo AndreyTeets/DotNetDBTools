@@ -75,7 +75,7 @@ public class SQLiteBuildSqlDefDbModelTests : BaseBuildSqlDefDbModelTests<SQLiteD
                     Name = "PK_Table1",
                     Columns = new() { "Col1", "Col2" },
                 },
-                UniqueConstraints= new()
+                UniqueConstraints = new()
                 {
                     new UniqueConstraint()
                     {
@@ -90,7 +90,7 @@ public class SQLiteBuildSqlDefDbModelTests : BaseBuildSqlDefDbModelTests<SQLiteD
                         Columns = new() { "Col2", "Col4" },
                     },
                 },
-                CheckConstraints= new()
+                CheckConstraints = new()
                 {
                     new CheckConstraint()
                     {
@@ -111,7 +111,7 @@ public class SQLiteBuildSqlDefDbModelTests : BaseBuildSqlDefDbModelTests<SQLiteD
                         Expression = new CodePiece() { Code = "[Col3] >= 0" },
                     },
                 },
-                ForeignKeys= new()
+                ForeignKeys = new()
                 {
                     new ForeignKey()
                     {

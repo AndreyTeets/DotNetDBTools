@@ -39,7 +39,7 @@ $@",
     {
         return
 $@",
-    '(abc,101)',
+    '(abc,{{101.97}})',
     'abc102',
     'Label2',
     '[2006-06-16 16:16:16,2016-06-16 16:16:16]'"
@@ -50,7 +50,7 @@ $@",
     {
         return
 $@"
-    AND {Quote("MyColumn101")} = '(abc,101)'::""MyCompositeType1""
+    AND {Quote("MyColumn101")} = '(abc,{{101.97}})'::""MyCompositeType1""
     AND {Quote("MyColumn102")} = 'abc102'
     AND {Quote("MyColumn103")} = 'Label2'
     AND {Quote("MyColumn104")} = '[2006-06-16 16:16:16,2016-06-16 16:16:16]'"

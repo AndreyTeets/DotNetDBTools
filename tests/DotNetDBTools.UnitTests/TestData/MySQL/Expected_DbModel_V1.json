@@ -12,8 +12,7 @@
           "$id": "3",
           "DataType": {
             "$id": "4",
-            "Name": "INT",
-            "IsUserDefined": false
+            "Name": "INT"
           },
           "NotNull": true,
           "Identity": false,
@@ -31,8 +30,7 @@
           "$id": "6",
           "DataType": {
             "$id": "7",
-            "Name": "VARCHAR(10)",
-            "IsUserDefined": false
+            "Name": "VARCHAR(10)"
           },
           "NotNull": true,
           "Identity": false,
@@ -50,8 +48,7 @@
           "$id": "9",
           "DataType": {
             "$id": "10",
-            "Name": "INT",
-            "IsUserDefined": false
+            "Name": "INT"
           },
           "NotNull": true,
           "Identity": true,
@@ -69,8 +66,7 @@
           "$id": "12",
           "DataType": {
             "$id": "13",
-            "Name": "DECIMAL(19,2)",
-            "IsUserDefined": false
+            "Name": "DECIMAL(19,2)"
           },
           "NotNull": true,
           "Identity": false,
@@ -88,8 +84,7 @@
           "$id": "15",
           "DataType": {
             "$id": "16",
-            "Name": "VARCHAR(1000)",
-            "IsUserDefined": false
+            "Name": "VARCHAR(1000)"
           },
           "NotNull": false,
           "Identity": false,
@@ -180,8 +175,7 @@
           "$id": "24",
           "DataType": {
             "$id": "25",
-            "Name": "INT",
-            "IsUserDefined": false
+            "Name": "INT"
           },
           "NotNull": true,
           "Identity": false,
@@ -199,8 +193,7 @@
           "$id": "27",
           "DataType": {
             "$id": "28",
-            "Name": "VARBINARY(22)",
-            "IsUserDefined": false
+            "Name": "VARBINARY(22)"
           },
           "NotNull": false,
           "Identity": false,
@@ -274,8 +267,7 @@
           "$id": "35",
           "DataType": {
             "$id": "36",
-            "Name": "BIGINT",
-            "IsUserDefined": false
+            "Name": "BIGINT"
           },
           "NotNull": true,
           "Identity": false,
@@ -293,8 +285,7 @@
           "$id": "38",
           "DataType": {
             "$id": "39",
-            "Name": "INT",
-            "IsUserDefined": false
+            "Name": "INT"
           },
           "NotNull": true,
           "Identity": true,
@@ -338,8 +329,7 @@
           "$id": "43",
           "DataType": {
             "$id": "44",
-            "Name": "INT",
-            "IsUserDefined": false
+            "Name": "INT"
           },
           "NotNull": true,
           "Identity": false,
@@ -357,8 +347,7 @@
           "$id": "46",
           "DataType": {
             "$id": "47",
-            "Name": "TIME",
-            "IsUserDefined": false
+            "Name": "TIME"
           },
           "NotNull": true,
           "Identity": false,
@@ -376,8 +365,7 @@
           "$id": "49",
           "DataType": {
             "$id": "50",
-            "Name": "DATETIME",
-            "IsUserDefined": false
+            "Name": "DATETIME"
           },
           "NotNull": true,
           "Identity": false,
@@ -395,8 +383,7 @@
           "$id": "52",
           "DataType": {
             "$id": "53",
-            "Name": "TIMESTAMP",
-            "IsUserDefined": false
+            "Name": "TIMESTAMP"
           },
           "NotNull": true,
           "Identity": false,
@@ -414,8 +401,7 @@
           "$id": "55",
           "DataType": {
             "$id": "56",
-            "Name": "CHAR(4)",
-            "IsUserDefined": false
+            "Name": "CHAR(4)"
           },
           "NotNull": true,
           "Identity": false,
@@ -433,8 +419,7 @@
           "$id": "58",
           "DataType": {
             "$id": "59",
-            "Name": "BINARY(3)",
-            "IsUserDefined": false
+            "Name": "BINARY(3)"
           },
           "NotNull": true,
           "Identity": false,
@@ -452,8 +437,7 @@
           "$id": "61",
           "DataType": {
             "$id": "62",
-            "Name": "FLOAT",
-            "IsUserDefined": false
+            "Name": "FLOAT"
           },
           "NotNull": true,
           "Identity": false,
@@ -471,8 +455,7 @@
           "$id": "64",
           "DataType": {
             "$id": "65",
-            "Name": "DOUBLE",
-            "IsUserDefined": false
+            "Name": "DOUBLE"
           },
           "NotNull": true,
           "Identity": false,
@@ -490,8 +473,7 @@
           "$id": "67",
           "DataType": {
             "$id": "68",
-            "Name": "DECIMAL(6,1)",
-            "IsUserDefined": false
+            "Name": "DECIMAL(6,1)"
           },
           "NotNull": true,
           "Identity": false,
@@ -509,8 +491,7 @@
           "$id": "70",
           "DataType": {
             "$id": "71",
-            "Name": "TINYINT(1)",
-            "IsUserDefined": false
+            "Name": "TINYINT(1)"
           },
           "NotNull": true,
           "Identity": false,
@@ -528,8 +509,7 @@
           "$id": "73",
           "DataType": {
             "$id": "74",
-            "Name": "BINARY(16)",
-            "IsUserDefined": false
+            "Name": "BINARY(16)"
           },
           "NotNull": true,
           "Identity": false,
@@ -547,8 +527,7 @@
           "$id": "76",
           "DataType": {
             "$id": "77",
-            "Name": "DATE",
-            "IsUserDefined": false
+            "Name": "DATE"
           },
           "NotNull": true,
           "Identity": false,
@@ -624,8 +603,7 @@
           "$id": "83",
           "DataType": {
             "$id": "84",
-            "Name": "CHAR(4)",
-            "IsUserDefined": false
+            "Name": "CHAR(4)"
           },
           "NotNull": false,
           "Identity": false,
@@ -643,8 +621,7 @@
           "$id": "86",
           "DataType": {
             "$id": "87",
-            "Name": "INT",
-            "IsUserDefined": false
+            "Name": "INT"
           },
           "NotNull": false,
           "Identity": false,

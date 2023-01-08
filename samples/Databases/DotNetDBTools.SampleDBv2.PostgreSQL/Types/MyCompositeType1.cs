@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using DotNetDBTools.Definition.Core;
 using DotNetDBTools.Definition.Core.CSharpDataTypes;
+using DotNetDBTools.Definition.PostgreSQL;
 using DotNetDBTools.Definition.PostgreSQL.UserDefinedTypes;
 
 namespace DotNetDBTools.SampleDB.PostgreSQL.Types
@@ -12,7 +13,7 @@ namespace DotNetDBTools.SampleDB.PostgreSQL.Types
         public IDictionary<string, IDataType> Attributes => new Dictionary<string, IDataType>()
         {
             { "MyAttribute1", new StringDataType() { Length = 110 } },
-            { "MyAttribute2", new IntDataType() },
+            { "MyAttribute2", new VerbatimDataType("numeric  (  7,  2)  [ 100  ]") },
         };
     }
 }

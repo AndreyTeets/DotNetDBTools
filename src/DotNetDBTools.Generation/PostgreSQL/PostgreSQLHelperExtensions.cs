@@ -1,19 +1,10 @@
-﻿using DotNetDBTools.Models.Core;
-using DotNetDBTools.Models.PostgreSQL;
+﻿using DotNetDBTools.Models.PostgreSQL;
 using DotNetDBTools.Models.PostgreSQL.UserDefinedTypes;
 
 namespace DotNetDBTools.Generation.PostgreSQL;
 
 public static class PostgreSQLHelperExtensions
 {
-    public static string GetQuotedName(this DataType type)
-    {
-        if (type.IsUserDefined)
-            return $@"""{type.Name}""";
-        else
-            return type.Name;
-    }
-
     public static string GetDefault(this PostgreSQLDomainType type) => type.Default.Code;
     public static string GetCreateStatement(this PostgreSQLFunction func) => func.CreateStatement.Code;
     public static string GetCreateStatement(this PostgreSQLProcedure proc) => proc.CreateStatement.Code;

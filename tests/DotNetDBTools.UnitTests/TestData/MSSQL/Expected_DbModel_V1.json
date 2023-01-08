@@ -5,8 +5,7 @@
       "$id": "2",
       "UnderlyingType": {
         "$id": "3",
-        "Name": "NVARCHAR(100)",
-        "IsUserDefined": false
+        "Name": "NVARCHAR(100)"
       },
       "NotNull": false,
       "ID": "0cd1e71c-cc9c-440f-ac0b-81a1d6f7ddaa",
@@ -30,8 +29,7 @@
           "DefaultConstraintName": "DF_MyTable1_MyColumn1",
           "DataType": {
             "$id": "6",
-            "Name": "INT",
-            "IsUserDefined": false
+            "Name": "INT"
           },
           "NotNull": true,
           "Identity": false,
@@ -50,8 +48,7 @@
           "DefaultConstraintName": "DF_MyTable1_MyColumn2",
           "DataType": {
             "$id": "9",
-            "Name": "NVARCHAR(10)",
-            "IsUserDefined": false
+            "Name": "NVARCHAR(10)"
           },
           "NotNull": true,
           "Identity": false,
@@ -70,8 +67,7 @@
           "DefaultConstraintName": null,
           "DataType": {
             "$id": "12",
-            "Name": "INT",
-            "IsUserDefined": false
+            "Name": "INT"
           },
           "NotNull": true,
           "Identity": true,
@@ -90,8 +86,7 @@
           "DefaultConstraintName": "DF_MyTable1_MyColumn4",
           "DataType": {
             "$id": "15",
-            "Name": "DECIMAL(19,2)",
-            "IsUserDefined": false
+            "Name": "DECIMAL(19,2)"
           },
           "NotNull": true,
           "Identity": false,
@@ -110,8 +105,7 @@
           "DefaultConstraintName": "DF_MyTable1_MyColumn5",
           "DataType": {
             "$id": "18",
-            "Name": "VARCHAR(1000)",
-            "IsUserDefined": false
+            "Name": "VARCHAR(1000)"
           },
           "NotNull": false,
           "Identity": false,
@@ -200,8 +194,7 @@
           "DefaultConstraintName": "DF_MyTable2_MyColumn1",
           "DataType": {
             "$id": "27",
-            "Name": "INT",
-            "IsUserDefined": false
+            "Name": "INT"
           },
           "NotNull": true,
           "Identity": false,
@@ -220,8 +213,7 @@
           "DefaultConstraintName": "DF_MyTable2_MyColumn2",
           "DataType": {
             "$id": "30",
-            "Name": "VARBINARY(22)",
-            "IsUserDefined": false
+            "Name": "VARBINARY(22)"
           },
           "NotNull": false,
           "Identity": false,
@@ -296,8 +288,7 @@
           "DefaultConstraintName": null,
           "DataType": {
             "$id": "38",
-            "Name": "BIGINT",
-            "IsUserDefined": false
+            "Name": "BIGINT"
           },
           "NotNull": true,
           "Identity": false,
@@ -316,8 +307,7 @@
           "DefaultConstraintName": null,
           "DataType": {
             "$id": "41",
-            "Name": "INT",
-            "IsUserDefined": false
+            "Name": "INT"
           },
           "NotNull": true,
           "Identity": true,
@@ -362,8 +352,7 @@
           "DefaultConstraintName": "DF_MyTable5_MyColumn1",
           "DataType": {
             "$id": "46",
-            "Name": "INT",
-            "IsUserDefined": false
+            "Name": "INT"
           },
           "NotNull": true,
           "Identity": false,
@@ -382,8 +371,7 @@
           "DefaultConstraintName": "DF_MyTable5_MyColumn10",
           "DataType": {
             "$id": "49",
-            "Name": "TIME",
-            "IsUserDefined": false
+            "Name": "TIME"
           },
           "NotNull": true,
           "Identity": false,
@@ -402,8 +390,7 @@
           "DefaultConstraintName": "DF_MyTable5_MyColumn101",
           "DataType": {
             "$id": "52",
-            "Name": "MyUserDefinedType1",
-            "IsUserDefined": true
+            "Name": "MyUserDefinedType1"
           },
           "NotNull": false,
           "Identity": false,
@@ -422,8 +409,7 @@
           "DefaultConstraintName": "DF_MyTable5_MyColumn11",
           "DataType": {
             "$id": "55",
-            "Name": "DATETIME2",
-            "IsUserDefined": false
+            "Name": "DATETIME2"
           },
           "NotNull": true,
           "Identity": false,
@@ -442,8 +428,7 @@
           "DefaultConstraintName": "DF_MyTable5_MyColumn12",
           "DataType": {
             "$id": "58",
-            "Name": "DATETIMEOFFSET",
-            "IsUserDefined": false
+            "Name": "DATETIMEOFFSET"
           },
           "NotNull": true,
           "Identity": false,
@@ -462,8 +447,7 @@
           "DefaultConstraintName": "DF_MyTable5_MyColumn2",
           "DataType": {
             "$id": "61",
-            "Name": "NCHAR(4)",
-            "IsUserDefined": false
+            "Name": "NCHAR(4)"
           },
           "NotNull": true,
           "Identity": false,
@@ -482,8 +466,7 @@
           "DefaultConstraintName": "DF_MyTable5_MyColumn3",
           "DataType": {
             "$id": "64",
-            "Name": "BINARY(3)",
-            "IsUserDefined": false
+            "Name": "BINARY(3)"
           },
           "NotNull": true,
           "Identity": false,
@@ -502,8 +485,7 @@
           "DefaultConstraintName": "DF_MyTable5_MyColumn4",
           "DataType": {
             "$id": "67",
-            "Name": "FLOAT",
-            "IsUserDefined": false
+            "Name": "FLOAT"
           },
           "NotNull": true,
           "Identity": false,
@@ -522,8 +504,7 @@
           "DefaultConstraintName": "DF_MyTable5_MyColumn5",
           "DataType": {
             "$id": "70",
-            "Name": "REAL",
-            "IsUserDefined": false
+            "Name": "REAL"
           },
           "NotNull": true,
           "Identity": false,
@@ -542,8 +523,7 @@
           "DefaultConstraintName": "DF_MyTable5_MyColumn6",
           "DataType": {
             "$id": "73",
-            "Name": "DECIMAL(6,1)",
-            "IsUserDefined": false
+            "Name": "DECIMAL(6,1)"
           },
           "NotNull": true,
           "Identity": false,
@@ -562,8 +542,7 @@
           "DefaultConstraintName": "DF_MyTable5_MyColumn7",
           "DataType": {
             "$id": "76",
-            "Name": "BIT",
-            "IsUserDefined": false
+            "Name": "BIT"
           },
           "NotNull": true,
           "Identity": false,
@@ -582,8 +561,7 @@
           "DefaultConstraintName": "DF_MyTable5_MyColumn8",
           "DataType": {
             "$id": "79",
-            "Name": "UNIQUEIDENTIFIER",
-            "IsUserDefined": false
+            "Name": "UNIQUEIDENTIFIER"
           },
           "NotNull": true,
           "Identity": false,
@@ -602,8 +580,7 @@
           "DefaultConstraintName": "DF_MyTable5_MyColumn9",
           "DataType": {
             "$id": "82",
-            "Name": "DATE",
-            "IsUserDefined": false
+            "Name": "DATE"
           },
           "NotNull": true,
           "Identity": false,
@@ -678,8 +655,7 @@
           "DefaultConstraintName": null,
           "DataType": {
             "$id": "89",
-            "Name": "NCHAR(4)",
-            "IsUserDefined": false
+            "Name": "NCHAR(4)"
           },
           "NotNull": false,
           "Identity": false,
@@ -698,8 +674,7 @@
           "DefaultConstraintName": null,
           "DataType": {
             "$id": "92",
-            "Name": "INT",
-            "IsUserDefined": false
+            "Name": "INT"
           },
           "NotNull": false,
           "Identity": false,

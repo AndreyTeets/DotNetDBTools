@@ -173,7 +173,7 @@ WHERE "ID" = ''b02db666-fbbc-4cd7-a14d-4049251b9a7b'';';
 EXECUTE 'CREATE TYPE "MyCompositeType1" AS
 (
     "MyAttribute1" VARCHAR(110),
-    "MyAttribute2" INT
+    "MyAttribute2" DECIMAL(7,2)[]
 );';
 -- QUERY END: CreateCompositeTypeQuery
 
@@ -552,7 +552,11 @@ EXECUTE 'ALTER TABLE "MyTable5"
     ALTER COLUMN "MyColumn103" SET DATA TYPE "MyEnumType1"
         USING ("MyColumn103"::text::"MyEnumType1"),
     ALTER COLUMN "MyColumn104" SET DATA TYPE "MyRangeType1"
-        USING ("MyColumn104"::text::"MyRangeType1");';
+        USING ("MyColumn104"::text::"MyRangeType1"),
+    ALTER COLUMN "MyColumn339" SET DATA TYPE "MyCompositeType1"[]
+        USING ("MyColumn339"::text::"MyCompositeType1"[]),
+    ALTER COLUMN "MyColumn340" SET DATA TYPE "MyCompositeType1"[]
+        USING ("MyColumn340"::text::"MyCompositeType1"[]);';
 -- QUERY END: AlterTableQuery
 
 -- QUERY START: DeleteDNDBTDbObjectRecordQuery
@@ -605,6 +609,20 @@ EXECUTE 'UPDATE "DNDBTDbObjects" SET
     "Name" = ''MyColumn104'',
     "Code" = NULL
 WHERE "ID" = ''c8b03b75-a8a2-47e0-bf5c-f3e4f1b8f500'';';
+-- QUERY END: UpdateDNDBTDbObjectRecordQuery
+
+-- QUERY START: UpdateDNDBTDbObjectRecordQuery
+EXECUTE 'UPDATE "DNDBTDbObjects" SET
+    "Name" = ''MyColumn339'',
+    "Code" = NULL
+WHERE "ID" = ''a9863561-9309-4911-94d8-c12d21b0884e'';';
+-- QUERY END: UpdateDNDBTDbObjectRecordQuery
+
+-- QUERY START: UpdateDNDBTDbObjectRecordQuery
+EXECUTE 'UPDATE "DNDBTDbObjects" SET
+    "Name" = ''MyColumn340'',
+    "Code" = NULL
+WHERE "ID" = ''0d33ed85-9909-46e7-8369-eee86b563519'';';
 -- QUERY END: UpdateDNDBTDbObjectRecordQuery
 
 -- QUERY START: CreateTableQuery

@@ -27,8 +27,11 @@ internal class PostgreSQLDbValidator : DbValidator
 
         bool DataTypeIsUnknown(DataType dataType)
         {
-            return !CurrentAnalysisContext.UserDefinedTypesNames.Contains(dataType.Name)
-                && !PostgreSQLHelperMethods.IsStandardSqlType(dataType.Name, out string normalizedName);
+            string normalizedTypeNameWithoutArray = PostgreSQLHelperMethods.GetNormalizedTypeNameWithoutArray(
+                dataType.Name, out string standardSqlTypeNameBase, out string arrayDimsStr);
+
+            return !CurrentAnalysisContext.UserDefinedTypesNames.Contains(normalizedTypeNameWithoutArray)
+                && standardSqlTypeNameBase == null;
         }
     }
 

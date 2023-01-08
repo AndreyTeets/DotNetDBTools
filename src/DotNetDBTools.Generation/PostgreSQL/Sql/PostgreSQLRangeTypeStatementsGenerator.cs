@@ -27,7 +27,7 @@ $@"{GetIdDeclarationText(type, 0)}CREATE TYPE ""{type.Name}"" AS RANGE
         List<string> definitions = new();
 
         definitions.Add(
-$@"    SUBTYPE = {type.Subtype.GetQuotedName()}");
+$@"    SUBTYPE = {type.Subtype.Name}");
 
         if (type.SubtypeOperatorClass is not null)
         {

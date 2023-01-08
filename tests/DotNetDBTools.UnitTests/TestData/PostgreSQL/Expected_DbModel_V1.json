@@ -9,8 +9,7 @@
           "Name": "MyAttribute1",
           "DataType": {
             "$id": "4",
-            "Name": "VARCHAR(100)",
-            "IsUserDefined": false
+            "Name": "VARCHAR(100)"
           }
         },
         {
@@ -18,8 +17,7 @@
           "Name": "MyAttribute2",
           "DataType": {
             "$id": "6",
-            "Name": "INT",
-            "IsUserDefined": false
+            "Name": "DECIMAL(7,2)[]"
           }
         }
       ],
@@ -35,8 +33,7 @@
       "$id": "7",
       "UnderlyingType": {
         "$id": "8",
-        "Name": "VARCHAR(100)",
-        "IsUserDefined": false
+        "Name": "VARCHAR(100)"
       },
       "NotNull": false,
       "Default": {
@@ -95,8 +92,7 @@
       "$id": "15",
       "Subtype": {
         "$id": "16",
-        "Name": "TIMESTAMP",
-        "IsUserDefined": false
+        "Name": "TIMESTAMP"
       },
       "SubtypeOperatorClass": "timestamp_ops",
       "Collation": null,
@@ -143,8 +139,7 @@
               "$id": "22",
               "DataType": {
                 "$id": "23",
-                "Name": "BIGINT",
-                "IsUserDefined": false
+                "Name": "BIGINT"
               },
               "NotNull": true,
               "Identity": false,
@@ -162,8 +157,7 @@
               "$id": "25",
               "DataType": {
                 "$id": "26",
-                "Name": "INT",
-                "IsUserDefined": false
+                "Name": "INT"
               },
               "NotNull": true,
               "Identity": true,
@@ -216,8 +210,7 @@
           "$id": "30",
           "DataType": {
             "$id": "31",
-            "Name": "INT",
-            "IsUserDefined": false
+            "Name": "INT"
           },
           "NotNull": true,
           "Identity": false,
@@ -235,8 +228,7 @@
           "$id": "33",
           "DataType": {
             "$id": "34",
-            "Name": "VARCHAR(10)",
-            "IsUserDefined": false
+            "Name": "VARCHAR(10)"
           },
           "NotNull": true,
           "Identity": false,
@@ -254,8 +246,7 @@
           "$id": "36",
           "DataType": {
             "$id": "37",
-            "Name": "INT",
-            "IsUserDefined": false
+            "Name": "INT"
           },
           "NotNull": true,
           "Identity": true,
@@ -273,8 +264,7 @@
           "$id": "39",
           "DataType": {
             "$id": "40",
-            "Name": "DECIMAL(19,2)",
-            "IsUserDefined": false
+            "Name": "DECIMAL(19,2)"
           },
           "NotNull": true,
           "Identity": false,
@@ -292,8 +282,7 @@
           "$id": "42",
           "DataType": {
             "$id": "43",
-            "Name": "VARCHAR(1000)",
-            "IsUserDefined": false
+            "Name": "VARCHAR(1000)"
           },
           "NotNull": false,
           "Identity": false,
@@ -382,8 +371,7 @@
           "$id": "51",
           "DataType": {
             "$id": "52",
-            "Name": "INT",
-            "IsUserDefined": false
+            "Name": "INT"
           },
           "NotNull": true,
           "Identity": false,
@@ -401,8 +389,7 @@
           "$id": "54",
           "DataType": {
             "$id": "55",
-            "Name": "BYTEA",
-            "IsUserDefined": false
+            "Name": "BYTEA"
           },
           "NotNull": false,
           "Identity": false,
@@ -480,8 +467,7 @@
           "$id": "62",
           "DataType": {
             "$id": "63",
-            "Name": "INT",
-            "IsUserDefined": false
+            "Name": "INT"
           },
           "NotNull": true,
           "Identity": false,
@@ -499,8 +485,7 @@
           "$id": "65",
           "DataType": {
             "$id": "66",
-            "Name": "TIME",
-            "IsUserDefined": false
+            "Name": "TIME"
           },
           "NotNull": true,
           "Identity": false,
@@ -518,8 +503,7 @@
           "$id": "68",
           "DataType": {
             "$id": "69",
-            "Name": "MyCompositeType1",
-            "IsUserDefined": true
+            "Name": "\"MyCompositeType1\""
           },
           "NotNull": true,
           "Identity": false,
@@ -537,8 +521,7 @@
           "$id": "71",
           "DataType": {
             "$id": "72",
-            "Name": "MyDomain1",
-            "IsUserDefined": true
+            "Name": "\"MyDomain1\""
           },
           "NotNull": true,
           "Identity": false,
@@ -556,8 +539,7 @@
           "$id": "74",
           "DataType": {
             "$id": "75",
-            "Name": "MyEnumType1",
-            "IsUserDefined": true
+            "Name": "\"MyEnumType1\""
           },
           "NotNull": true,
           "Identity": false,
@@ -575,8 +557,7 @@
           "$id": "77",
           "DataType": {
             "$id": "78",
-            "Name": "MyRangeType1",
-            "IsUserDefined": true
+            "Name": "\"MyRangeType1\""
           },
           "NotNull": true,
           "Identity": false,
@@ -594,8 +575,7 @@
           "$id": "80",
           "DataType": {
             "$id": "81",
-            "Name": "TIMESTAMP",
-            "IsUserDefined": false
+            "Name": "TIMESTAMP"
           },
           "NotNull": true,
           "Identity": false,
@@ -613,8 +593,7 @@
           "$id": "83",
           "DataType": {
             "$id": "84",
-            "Name": "TIMESTAMPTZ",
-            "IsUserDefined": false
+            "Name": "TIMESTAMPTZ"
           },
           "NotNull": true,
           "Identity": false,
@@ -632,8 +611,7 @@
           "$id": "86",
           "DataType": {
             "$id": "87",
-            "Name": "CHAR(4)",
-            "IsUserDefined": false
+            "Name": "CHAR(4)"
           },
           "NotNull": true,
           "Identity": false,
@@ -651,8 +629,7 @@
           "$id": "89",
           "DataType": {
             "$id": "90",
-            "Name": "INT",
-            "IsUserDefined": false
+            "Name": "INT"
           },
           "NotNull": false,
           "Identity": false,
@@ -670,8 +647,7 @@
           "$id": "92",
           "DataType": {
             "$id": "93",
-            "Name": "BYTEA",
-            "IsUserDefined": false
+            "Name": "BYTEA"
           },
           "NotNull": true,
           "Identity": false,
@@ -689,13 +665,732 @@
           "$id": "95",
           "DataType": {
             "$id": "96",
-            "Name": "FLOAT4",
-            "IsUserDefined": false
+            "Name": "SMALLINT"
+          },
+          "NotNull": false,
+          "Identity": false,
+          "Default": {
+            "$id": "97",
+            "Code": null
+          },
+          "ID": "5a6fdf6e-f39e-41bf-84fd-6b1becab248b",
+          "Name": "MyColumn301",
+          "Parent": null,
+          "DependsOn": [],
+          "IsDependencyOf": []
+        },
+        {
+          "$id": "98",
+          "DataType": {
+            "$id": "99",
+            "Name": "SMALLINT"
+          },
+          "NotNull": false,
+          "Identity": false,
+          "Default": {
+            "$id": "100",
+            "Code": null
+          },
+          "ID": "4f4b70fd-178d-468f-8575-1d41ed28afc4",
+          "Name": "MyColumn302",
+          "Parent": null,
+          "DependsOn": [],
+          "IsDependencyOf": []
+        },
+        {
+          "$id": "101",
+          "DataType": {
+            "$id": "102",
+            "Name": "MONEY"
+          },
+          "NotNull": false,
+          "Identity": false,
+          "Default": {
+            "$id": "103",
+            "Code": null
+          },
+          "ID": "99eae06e-5188-43aa-be38-b353adc5aacf",
+          "Name": "MyColumn303",
+          "Parent": null,
+          "DependsOn": [],
+          "IsDependencyOf": []
+        },
+        {
+          "$id": "104",
+          "DataType": {
+            "$id": "105",
+            "Name": "JSON"
+          },
+          "NotNull": false,
+          "Identity": false,
+          "Default": {
+            "$id": "106",
+            "Code": null
+          },
+          "ID": "e4eea54c-b11b-4c85-b98e-aac299776845",
+          "Name": "MyColumn304",
+          "Parent": null,
+          "DependsOn": [],
+          "IsDependencyOf": []
+        },
+        {
+          "$id": "107",
+          "DataType": {
+            "$id": "108",
+            "Name": "JSONB"
+          },
+          "NotNull": false,
+          "Identity": false,
+          "Default": {
+            "$id": "109",
+            "Code": null
+          },
+          "ID": "2624c566-e9d5-4dd9-974a-bf031f73a714",
+          "Name": "MyColumn305",
+          "Parent": null,
+          "DependsOn": [],
+          "IsDependencyOf": []
+        },
+        {
+          "$id": "110",
+          "DataType": {
+            "$id": "111",
+            "Name": "XML"
+          },
+          "NotNull": false,
+          "Identity": false,
+          "Default": {
+            "$id": "112",
+            "Code": null
+          },
+          "ID": "616314fc-e56a-424d-81ee-ae89be650d42",
+          "Name": "MyColumn306",
+          "Parent": null,
+          "DependsOn": [],
+          "IsDependencyOf": []
+        },
+        {
+          "$id": "113",
+          "DataType": {
+            "$id": "114",
+            "Name": "TSQUERY"
+          },
+          "NotNull": false,
+          "Identity": false,
+          "Default": {
+            "$id": "115",
+            "Code": null
+          },
+          "ID": "b6f006fa-2a78-4965-ac10-0d2cf05d60f0",
+          "Name": "MyColumn307",
+          "Parent": null,
+          "DependsOn": [],
+          "IsDependencyOf": []
+        },
+        {
+          "$id": "116",
+          "DataType": {
+            "$id": "117",
+            "Name": "TSVECTOR"
+          },
+          "NotNull": false,
+          "Identity": false,
+          "Default": {
+            "$id": "118",
+            "Code": null
+          },
+          "ID": "129fd264-af69-4aa7-b4ef-6b9923340cd8",
+          "Name": "MyColumn308",
+          "Parent": null,
+          "DependsOn": [],
+          "IsDependencyOf": []
+        },
+        {
+          "$id": "119",
+          "DataType": {
+            "$id": "120",
+            "Name": "POINT"
+          },
+          "NotNull": false,
+          "Identity": false,
+          "Default": {
+            "$id": "121",
+            "Code": null
+          },
+          "ID": "d1ae8ccd-526a-46e1-a5a0-39f25cc391ce",
+          "Name": "MyColumn309",
+          "Parent": null,
+          "DependsOn": [],
+          "IsDependencyOf": []
+        },
+        {
+          "$id": "122",
+          "DataType": {
+            "$id": "123",
+            "Name": "LINE"
+          },
+          "NotNull": false,
+          "Identity": false,
+          "Default": {
+            "$id": "124",
+            "Code": null
+          },
+          "ID": "f3f38026-18cc-49ec-9d4b-3e844427a6f8",
+          "Name": "MyColumn310",
+          "Parent": null,
+          "DependsOn": [],
+          "IsDependencyOf": []
+        },
+        {
+          "$id": "125",
+          "DataType": {
+            "$id": "126",
+            "Name": "LSEG"
+          },
+          "NotNull": false,
+          "Identity": false,
+          "Default": {
+            "$id": "127",
+            "Code": null
+          },
+          "ID": "87c48981-bdb7-4da7-ac4a-1e03913133fa",
+          "Name": "MyColumn311",
+          "Parent": null,
+          "DependsOn": [],
+          "IsDependencyOf": []
+        },
+        {
+          "$id": "128",
+          "DataType": {
+            "$id": "129",
+            "Name": "BOX"
+          },
+          "NotNull": false,
+          "Identity": false,
+          "Default": {
+            "$id": "130",
+            "Code": null
+          },
+          "ID": "7b535f7e-bcc3-4950-b8af-a16ea36fb7bb",
+          "Name": "MyColumn312",
+          "Parent": null,
+          "DependsOn": [],
+          "IsDependencyOf": []
+        },
+        {
+          "$id": "131",
+          "DataType": {
+            "$id": "132",
+            "Name": "PATH"
+          },
+          "NotNull": false,
+          "Identity": false,
+          "Default": {
+            "$id": "133",
+            "Code": null
+          },
+          "ID": "1c4c38cc-8266-4992-b87a-179b0affb526",
+          "Name": "MyColumn313",
+          "Parent": null,
+          "DependsOn": [],
+          "IsDependencyOf": []
+        },
+        {
+          "$id": "134",
+          "DataType": {
+            "$id": "135",
+            "Name": "POLYGON"
+          },
+          "NotNull": false,
+          "Identity": false,
+          "Default": {
+            "$id": "136",
+            "Code": null
+          },
+          "ID": "448d6de4-9d8e-47cb-99e7-9801e78a3e7f",
+          "Name": "MyColumn314",
+          "Parent": null,
+          "DependsOn": [],
+          "IsDependencyOf": []
+        },
+        {
+          "$id": "137",
+          "DataType": {
+            "$id": "138",
+            "Name": "CIRCLE"
+          },
+          "NotNull": false,
+          "Identity": false,
+          "Default": {
+            "$id": "139",
+            "Code": null
+          },
+          "ID": "a1e9678b-12bd-4c2f-88a5-8f203a10d4bf",
+          "Name": "MyColumn315",
+          "Parent": null,
+          "DependsOn": [],
+          "IsDependencyOf": []
+        },
+        {
+          "$id": "140",
+          "DataType": {
+            "$id": "141",
+            "Name": "INET"
+          },
+          "NotNull": false,
+          "Identity": false,
+          "Default": {
+            "$id": "142",
+            "Code": null
+          },
+          "ID": "f8ef2969-0182-44c0-b9e5-58506b2353be",
+          "Name": "MyColumn316",
+          "Parent": null,
+          "DependsOn": [],
+          "IsDependencyOf": []
+        },
+        {
+          "$id": "143",
+          "DataType": {
+            "$id": "144",
+            "Name": "CIDR"
+          },
+          "NotNull": false,
+          "Identity": false,
+          "Default": {
+            "$id": "145",
+            "Code": null
+          },
+          "ID": "1d70b438-3a2c-4d8a-9fb8-2e39bacd2582",
+          "Name": "MyColumn317",
+          "Parent": null,
+          "DependsOn": [],
+          "IsDependencyOf": []
+        },
+        {
+          "$id": "146",
+          "DataType": {
+            "$id": "147",
+            "Name": "MACADDR"
+          },
+          "NotNull": false,
+          "Identity": false,
+          "Default": {
+            "$id": "148",
+            "Code": null
+          },
+          "ID": "eeb2bca0-4d76-4b75-98c1-130a62268265",
+          "Name": "MyColumn318",
+          "Parent": null,
+          "DependsOn": [],
+          "IsDependencyOf": []
+        },
+        {
+          "$id": "149",
+          "DataType": {
+            "$id": "150",
+            "Name": "MACADDR8"
+          },
+          "NotNull": false,
+          "Identity": false,
+          "Default": {
+            "$id": "151",
+            "Code": null
+          },
+          "ID": "9594f5f1-d746-4efa-a174-65e9eb82eea0",
+          "Name": "MyColumn319",
+          "Parent": null,
+          "DependsOn": [],
+          "IsDependencyOf": []
+        },
+        {
+          "$id": "152",
+          "DataType": {
+            "$id": "153",
+            "Name": "DECIMAL"
+          },
+          "NotNull": false,
+          "Identity": false,
+          "Default": {
+            "$id": "154",
+            "Code": null
+          },
+          "ID": "78aaf5ec-b0c6-4503-8fa7-a87e1d45f532",
+          "Name": "MyColumn320",
+          "Parent": null,
+          "DependsOn": [],
+          "IsDependencyOf": []
+        },
+        {
+          "$id": "155",
+          "DataType": {
+            "$id": "156",
+            "Name": "TIMETZ"
+          },
+          "NotNull": false,
+          "Identity": false,
+          "Default": {
+            "$id": "157",
+            "Code": null
+          },
+          "ID": "dc2e14b0-0fd7-44d9-92a7-39ee99358459",
+          "Name": "MyColumn321",
+          "Parent": null,
+          "DependsOn": [],
+          "IsDependencyOf": []
+        },
+        {
+          "$id": "158",
+          "DataType": {
+            "$id": "159",
+            "Name": "TIME(4)"
+          },
+          "NotNull": false,
+          "Identity": false,
+          "Default": {
+            "$id": "160",
+            "Code": null
+          },
+          "ID": "4c2aa5f2-893f-42f1-a39d-d81123988b2e",
+          "Name": "MyColumn322",
+          "Parent": null,
+          "DependsOn": [],
+          "IsDependencyOf": []
+        },
+        {
+          "$id": "161",
+          "DataType": {
+            "$id": "162",
+            "Name": "TIMETZ(4)"
+          },
+          "NotNull": false,
+          "Identity": false,
+          "Default": {
+            "$id": "163",
+            "Code": null
+          },
+          "ID": "710e422f-7899-45fa-8b1d-d2543519ffc1",
+          "Name": "MyColumn323",
+          "Parent": null,
+          "DependsOn": [],
+          "IsDependencyOf": []
+        },
+        {
+          "$id": "164",
+          "DataType": {
+            "$id": "165",
+            "Name": "TIMESTAMP(4)"
+          },
+          "NotNull": false,
+          "Identity": false,
+          "Default": {
+            "$id": "166",
+            "Code": null
+          },
+          "ID": "fb0562d8-afba-4939-8cd3-89878c572b56",
+          "Name": "MyColumn324",
+          "Parent": null,
+          "DependsOn": [],
+          "IsDependencyOf": []
+        },
+        {
+          "$id": "167",
+          "DataType": {
+            "$id": "168",
+            "Name": "TIMESTAMPTZ(4)"
+          },
+          "NotNull": false,
+          "Identity": false,
+          "Default": {
+            "$id": "169",
+            "Code": null
+          },
+          "ID": "baabb5c1-e231-4c0b-97ec-f6be8fba018f",
+          "Name": "MyColumn325",
+          "Parent": null,
+          "DependsOn": [],
+          "IsDependencyOf": []
+        },
+        {
+          "$id": "170",
+          "DataType": {
+            "$id": "171",
+            "Name": "INTERVAL"
+          },
+          "NotNull": false,
+          "Identity": false,
+          "Default": {
+            "$id": "172",
+            "Code": null
+          },
+          "ID": "4763c35f-bdbd-485e-9010-a950cb5a4bdb",
+          "Name": "MyColumn326",
+          "Parent": null,
+          "DependsOn": [],
+          "IsDependencyOf": []
+        },
+        {
+          "$id": "173",
+          "DataType": {
+            "$id": "174",
+            "Name": "INTERVAL MINUTE TO SECOND(6)"
+          },
+          "NotNull": false,
+          "Identity": false,
+          "Default": {
+            "$id": "175",
+            "Code": null
+          },
+          "ID": "ecbfa2f0-98a1-4d13-9da6-772a80dddac7",
+          "Name": "MyColumn327",
+          "Parent": null,
+          "DependsOn": [],
+          "IsDependencyOf": []
+        },
+        {
+          "$id": "176",
+          "DataType": {
+            "$id": "177",
+            "Name": "BIT"
+          },
+          "NotNull": false,
+          "Identity": false,
+          "Default": {
+            "$id": "178",
+            "Code": null
+          },
+          "ID": "36049ef7-16f2-41f3-ab8c-69d23726ad42",
+          "Name": "MyColumn328",
+          "Parent": null,
+          "DependsOn": [],
+          "IsDependencyOf": []
+        },
+        {
+          "$id": "179",
+          "DataType": {
+            "$id": "180",
+            "Name": "VARBIT"
+          },
+          "NotNull": false,
+          "Identity": false,
+          "Default": {
+            "$id": "181",
+            "Code": null
+          },
+          "ID": "03f0a0a6-cf85-41dc-8c3a-879ae832e9ab",
+          "Name": "MyColumn329",
+          "Parent": null,
+          "DependsOn": [],
+          "IsDependencyOf": []
+        },
+        {
+          "$id": "182",
+          "DataType": {
+            "$id": "183",
+            "Name": "BIT(10)"
+          },
+          "NotNull": false,
+          "Identity": false,
+          "Default": {
+            "$id": "184",
+            "Code": null
+          },
+          "ID": "9ec1ef6a-9df3-4633-889a-660f53a4866f",
+          "Name": "MyColumn330",
+          "Parent": null,
+          "DependsOn": [],
+          "IsDependencyOf": []
+        },
+        {
+          "$id": "185",
+          "DataType": {
+            "$id": "186",
+            "Name": "VARBIT(20)"
+          },
+          "NotNull": false,
+          "Identity": false,
+          "Default": {
+            "$id": "187",
+            "Code": null
+          },
+          "ID": "eeb5b0e8-0b1f-4ec6-b47b-068e5b303255",
+          "Name": "MyColumn331",
+          "Parent": null,
+          "DependsOn": [],
+          "IsDependencyOf": []
+        },
+        {
+          "$id": "188",
+          "DataType": {
+            "$id": "189",
+            "Name": "CHAR"
+          },
+          "NotNull": false,
+          "Identity": false,
+          "Default": {
+            "$id": "190",
+            "Code": null
+          },
+          "ID": "ab4454ec-a6b4-4d51-b0fa-0e667b26326d",
+          "Name": "MyColumn332",
+          "Parent": null,
+          "DependsOn": [],
+          "IsDependencyOf": []
+        },
+        {
+          "$id": "191",
+          "DataType": {
+            "$id": "192",
+            "Name": "VARCHAR"
+          },
+          "NotNull": false,
+          "Identity": false,
+          "Default": {
+            "$id": "193",
+            "Code": null
+          },
+          "ID": "684f2d90-9eea-4879-b2d5-0197d32654b0",
+          "Name": "MyColumn333",
+          "Parent": null,
+          "DependsOn": [],
+          "IsDependencyOf": []
+        },
+        {
+          "$id": "194",
+          "DataType": {
+            "$id": "195",
+            "Name": "CHAR(30)"
+          },
+          "NotNull": false,
+          "Identity": false,
+          "Default": {
+            "$id": "196",
+            "Code": null
+          },
+          "ID": "54b3d4dd-b3a9-4b99-915d-dff9fe24d7c2",
+          "Name": "MyColumn334",
+          "Parent": null,
+          "DependsOn": [],
+          "IsDependencyOf": []
+        },
+        {
+          "$id": "197",
+          "DataType": {
+            "$id": "198",
+            "Name": "VARCHAR(40)"
+          },
+          "NotNull": false,
+          "Identity": false,
+          "Default": {
+            "$id": "199",
+            "Code": null
+          },
+          "ID": "3631d9cb-c041-44e5-a964-c2751918c234",
+          "Name": "MyColumn335",
+          "Parent": null,
+          "DependsOn": [],
+          "IsDependencyOf": []
+        },
+        {
+          "$id": "200",
+          "DataType": {
+            "$id": "201",
+            "Name": "JSONB[][]"
+          },
+          "NotNull": false,
+          "Identity": false,
+          "Default": {
+            "$id": "202",
+            "Code": null
+          },
+          "ID": "00dfce94-1c1d-4fc2-bdb0-8e1306a248a2",
+          "Name": "MyColumn336",
+          "Parent": null,
+          "DependsOn": [],
+          "IsDependencyOf": []
+        },
+        {
+          "$id": "203",
+          "DataType": {
+            "$id": "204",
+            "Name": "DECIMAL(10,4)[][]"
+          },
+          "NotNull": false,
+          "Identity": false,
+          "Default": {
+            "$id": "205",
+            "Code": null
+          },
+          "ID": "9430c94b-7ded-47b1-83bb-a041f0edee88",
+          "Name": "MyColumn337",
+          "Parent": null,
+          "DependsOn": [],
+          "IsDependencyOf": []
+        },
+        {
+          "$id": "206",
+          "DataType": {
+            "$id": "207",
+            "Name": "TIMETZ(4)[]"
+          },
+          "NotNull": false,
+          "Identity": false,
+          "Default": {
+            "$id": "208",
+            "Code": null
+          },
+          "ID": "86107168-6f36-43f9-8a56-78d19049beda",
+          "Name": "MyColumn338",
+          "Parent": null,
+          "DependsOn": [],
+          "IsDependencyOf": []
+        },
+        {
+          "$id": "209",
+          "DataType": {
+            "$id": "210",
+            "Name": "\"MyCompositeType1\"[]"
+          },
+          "NotNull": false,
+          "Identity": false,
+          "Default": {
+            "$id": "211",
+            "Code": null
+          },
+          "ID": "a9863561-9309-4911-94d8-c12d21b0884e",
+          "Name": "MyColumn339",
+          "Parent": null,
+          "DependsOn": [],
+          "IsDependencyOf": []
+        },
+        {
+          "$id": "212",
+          "DataType": {
+            "$id": "213",
+            "Name": "\"MyCompositeType1\"[]"
+          },
+          "NotNull": false,
+          "Identity": false,
+          "Default": {
+            "$id": "214",
+            "Code": null
+          },
+          "ID": "0d33ed85-9909-46e7-8369-eee86b563519",
+          "Name": "MyColumn340",
+          "Parent": null,
+          "DependsOn": [],
+          "IsDependencyOf": []
+        },
+        {
+          "$id": "215",
+          "DataType": {
+            "$id": "216",
+            "Name": "FLOAT4"
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
-            "$id": "97",
+            "$id": "217",
             "Code": "123.456"
           },
           "ID": "aca57fd6-80d0-4c18-b2ca-aabcb06bea10",
@@ -705,16 +1400,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "98",
+          "$id": "218",
           "DataType": {
-            "$id": "99",
-            "Name": "FLOAT8",
-            "IsUserDefined": false
+            "$id": "219",
+            "Name": "FLOAT8"
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
-            "$id": "100",
+            "$id": "220",
             "Code": "12345.6789"
           },
           "ID": "47666b8b-ca72-4507-86b2-04c47a84aed4",
@@ -724,16 +1418,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "101",
+          "$id": "221",
           "DataType": {
-            "$id": "102",
-            "Name": "DECIMAL(6,1)",
-            "IsUserDefined": false
+            "$id": "222",
+            "Name": "DECIMAL(6,1)"
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
-            "$id": "103",
+            "$id": "223",
             "Code": "12.3"
           },
           "ID": "98fded6c-d486-4a2e-9c9a-1ec31c9d5830",
@@ -743,16 +1436,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "104",
+          "$id": "224",
           "DataType": {
-            "$id": "105",
-            "Name": "BOOL",
-            "IsUserDefined": false
+            "$id": "225",
+            "Name": "BOOL"
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
-            "$id": "106",
+            "$id": "226",
             "Code": "TRUE"
           },
           "ID": "2502cade-458a-48ee-9421-e6d7850493f7",
@@ -762,16 +1454,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "107",
+          "$id": "227",
           "DataType": {
-            "$id": "108",
-            "Name": "UUID",
-            "IsUserDefined": false
+            "$id": "228",
+            "Name": "UUID"
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
-            "$id": "109",
+            "$id": "229",
             "Code": "'8e2f99ad-0fc8-456d-b0e4-ec3ba572dd15'"
           },
           "ID": "ed044a8a-6858-41e2-a867-9e5b01f226c8",
@@ -781,16 +1472,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "110",
+          "$id": "230",
           "DataType": {
-            "$id": "111",
-            "Name": "DATE",
-            "IsUserDefined": false
+            "$id": "231",
+            "Name": "DATE"
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
-            "$id": "112",
+            "$id": "232",
             "Code": "'2022-02-15'"
           },
           "ID": "9939d676-73b7-42d1-ba3e-5c13aed5ce34",
@@ -801,7 +1491,7 @@
         }
       ],
       "PrimaryKey": {
-        "$id": "113",
+        "$id": "233",
         "Columns": [
           "MyColumn2",
           "MyColumn1"
@@ -814,7 +1504,7 @@
       },
       "UniqueConstraints": [
         {
-          "$id": "114",
+          "$id": "234",
           "Columns": [
             "MyColumn6",
             "MyColumn3",
@@ -831,7 +1521,7 @@
       "ForeignKeys": [],
       "Indexes": [
         {
-          "$id": "115",
+          "$id": "235",
           "TableName": "MyTable5",
           "Columns": [
             "MyColumn8"
@@ -853,20 +1543,19 @@
       "IsDependencyOf": []
     },
     {
-      "$id": "116",
+      "$id": "236",
       "OfType": null,
       "Columns": [
         {
-          "$id": "117",
+          "$id": "237",
           "DataType": {
-            "$id": "118",
-            "Name": "CHAR(4)",
-            "IsUserDefined": false
+            "$id": "238",
+            "Name": "CHAR(4)"
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
-            "$id": "119",
+            "$id": "239",
             "Code": null
           },
           "ID": "bfa08c82-5c8f-4ab4-bd41-1f1d85cf3c85",
@@ -876,16 +1565,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "120",
+          "$id": "240",
           "DataType": {
-            "$id": "121",
-            "Name": "INT",
-            "IsUserDefined": false
+            "$id": "241",
+            "Name": "INT"
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
-            "$id": "122",
+            "$id": "242",
             "Code": null
           },
           "ID": "a402e2b7-c826-4cfd-a304-97c9bc346ba2",
@@ -900,7 +1588,7 @@
       "CheckConstraints": [],
       "ForeignKeys": [
         {
-          "$id": "123",
+          "$id": "243",
           "ThisTableName": "MyTable6",
           "ThisColumnNames": [
             "MyColumn1",
@@ -931,9 +1619,9 @@
   ],
   "Views": [
     {
-      "$id": "124",
+      "$id": "244",
       "CreateStatement": {
-        "$id": "125",
+        "$id": "245",
         "Code": "CREATE VIEW \"MyView1\" AS\nSELECT\n    t1.\"MyColumn1\",\n    t1.\"MyColumn4\",\n    t2.\"MyColumn2\"\nFROM \"MyTable1\" t1\nLEFT JOIN \"MyTable2\" t2\n    ON t2.\"MyColumn1\" = t1.\"MyColumn1\""
       },
       "ID": "e2569aae-d5da-4a77-b3cd-51adbdb272d9",
@@ -952,12 +1640,12 @@
   ],
   "Scripts": [
     {
-      "$id": "126",
+      "$id": "246",
       "Kind": 1,
       "MinDbVersionToExecute": 0,
       "MaxDbVersionToExecute": 9223372036854775807,
       "Text": {
-        "$id": "127",
+        "$id": "247",
         "Code": "INSERT INTO \"MyTable4\"(\"MyColumn1\")\nSELECT * FROM\n(\n    SELECT 1\n    UNION ALL\n    SELECT 2\n    UNION ALL\n    SELECT 3\n) t\nWHERE NOT EXISTS (SELECT * FROM \"MyTable4\")"
       },
       "ID": "100d624a-01aa-4730-b86f-f991ac3ed936",

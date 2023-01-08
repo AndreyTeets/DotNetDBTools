@@ -91,7 +91,6 @@ public class ExtensionMethodsTests
                             DataType = new DataType()
                             {
                                 Name = "SomeType",
-                                IsUserDefined = true,
                             },
                             Default = new CodePiece() { Code = "Some code" }
                         },

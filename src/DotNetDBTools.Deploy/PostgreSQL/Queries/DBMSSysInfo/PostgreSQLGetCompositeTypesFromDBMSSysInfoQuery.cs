@@ -10,7 +10,8 @@ $@"SELECT
     a.attname AS ""{nameof(CompositeTypeRecord.AttributeName)}"",
     at.typname AS ""{nameof(CompositeTypeRecord.AttributeDataTypeName)}"",
     a.atttypmod AS ""{nameof(CompositeTypeRecord.AttributeDataTypeLength)}"",
-    at.typtype = 'b' AS ""{nameof(CompositeTypeRecord.AttributeDataTypeIsBaseDataType)}""
+    a.attndims AS ""{nameof(CompositeTypeRecord.AttributeArrayDims)}"",
+    aet.typname AS ""{nameof(CompositeTypeRecord.AttributeArrayElemDataType)}""
 FROM pg_catalog.pg_type t
 INNER JOIN pg_catalog.pg_namespace n
     ON n.oid = t.typnamespace
@@ -22,6 +23,8 @@ INNER JOIN pg_catalog.pg_attribute a
         AND NOT a.attisdropped
 INNER JOIN pg_catalog.pg_type at
     ON at.oid = a.atttypid
+LEFT JOIN pg_catalog.pg_type aet
+    ON aet.oid = at.typelem
 WHERE t.typtype = 'c'
     AND c.relkind = 'c'
     AND n.nspname NOT IN ('information_schema', 'pg_catalog');";
@@ -32,6 +35,7 @@ WHERE t.typtype = 'c'
         public string AttributeName { get; set; }
         public string AttributeDataTypeName { get; set; }
         public string AttributeDataTypeLength { get; set; }
-        public bool AttributeDataTypeIsBaseDataType { get; set; }
+        public int AttributeArrayDims { get; set; }
+        public string AttributeArrayElemDataType { get; set; }
     }
 }

@@ -13,7 +13,6 @@ internal class MSSQLDbModelPostProcessor : DbModelPostProcessor
     protected override void PostProcessDataTypes(Database database)
     {
         MSSQLDatabase db = (MSSQLDatabase)database;
-        HashSet<string> userDefinedTypesNames = MSSQLHelperMethods.GetUserDefinedTypesName(database);
 
         foreach (Table table in db.Tables)
         {
@@ -33,8 +32,6 @@ internal class MSSQLDbModelPostProcessor : DbModelPostProcessor
             dataType.Name = dataType.Name.ToNoWhiteSpace();
             if (MSSQLHelperMethods.IsStandardSqlType(dataType.Name))
                 dataType.Name = dataType.Name.ToUpper();
-            else if (userDefinedTypesNames.Contains(dataType.Name))
-                dataType.IsUserDefined = true;
         }
     }
 

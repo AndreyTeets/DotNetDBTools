@@ -59,7 +59,7 @@ $DNDBTPlPgSqlBlock$';
 EXECUTE 'CREATE TYPE "MyCompositeType1" AS
 (
     "MyAttribute1" VARCHAR(100),
-    "MyAttribute2" INT
+    "MyAttribute2" DECIMAL(7,2)[]
 );';
 -- QUERY END: CreateCompositeTypeQuery
 
@@ -142,6 +142,10 @@ EXECUTE 'ALTER TABLE "MyTable5"
         USING ("MyColumn103"::text::"MyEnumType1"),
     ALTER COLUMN "MyColumn104" SET DATA TYPE "MyRangeType1"
         USING ("MyColumn104"::text::"MyRangeType1"),
+    ALTER COLUMN "MyColumn339" SET DATA TYPE "MyCompositeType1"[]
+        USING ("MyColumn339"::text::"MyCompositeType1"[]),
+    ALTER COLUMN "MyColumn340" SET DATA TYPE "MyCompositeType1"[]
+        USING ("MyColumn340"::text::"MyCompositeType1"[]),
     ADD CONSTRAINT "PK_MyTable5_CustomName" PRIMARY KEY ("MyColumn2", "MyColumn1"),
     ADD CONSTRAINT "UQ_MyTable5_CustomName" UNIQUE ("MyColumn6", "MyColumn3", "MyColumn7");';
 -- QUERY END: AlterTableQuery

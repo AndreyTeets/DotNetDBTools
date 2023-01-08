@@ -2,5 +2,5 @@
 CREATE TYPE "MyCompositeType1" AS
 (
     "MyAttribute1" VARCHAR(110),
-    "MyAttribute2" INT
+    "MyAttribute2" numeric  (  7,  2)  [ 100  ]
 );

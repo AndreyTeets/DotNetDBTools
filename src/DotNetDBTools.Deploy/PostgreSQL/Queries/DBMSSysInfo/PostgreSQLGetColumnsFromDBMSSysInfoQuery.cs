@@ -13,11 +13,12 @@ $@"SELECT
     c.relname AS ""{nameof(PostgreSQLColumnRecord.TableName)}"",
     a.attname AS ""{nameof(PostgreSQLColumnRecord.ColumnName)}"",
     t.typname AS ""{nameof(PostgreSQLColumnRecord.DataType)}"",
-    t.typtype = 'b' AS ""{nameof(PostgreSQLColumnRecord.IsBaseDataType)}"",
     a.attnotnull AS ""{nameof(PostgreSQLColumnRecord.NotNull)}"",
     pg_catalog.pg_get_serial_sequence('""' || n.nspname || '"".""' || c.relname || '""', a.attname) IS NOT NULL AS ""{nameof(PostgreSQLColumnRecord.Identity)}"",
     pg_catalog.pg_get_expr(d.adbin, d.adrelid) AS ""{nameof(PostgreSQLColumnRecord.Default)}"",
-    a.atttypmod AS ""{nameof(PostgreSQLColumnRecord.Length)}""
+    a.atttypmod AS ""{nameof(PostgreSQLColumnRecord.Length)}"",
+    a.attndims AS ""{nameof(PostgreSQLColumnRecord.ArrayDims)}"",
+    et.typname AS ""{nameof(PostgreSQLColumnRecord.ArrayElemDataType)}""
 FROM pg_catalog.pg_class c
 INNER JOIN pg_catalog.pg_namespace n
     ON n.oid = c.relnamespace
@@ -27,6 +28,8 @@ INNER JOIN pg_catalog.pg_attribute a
         AND NOT a.attisdropped
 INNER JOIN pg_catalog.pg_type t
     ON t.oid = a.atttypid
+LEFT JOIN pg_catalog.pg_type et
+    ON et.oid = t.typelem
 LEFT JOIN pg_catalog.pg_attrdef d
     ON (d.adrelid, d.adnum) = (a.attrelid, a.attnum)
 WHERE c.relkind = 'r'
@@ -38,9 +41,10 @@ WHERE c.relkind = 'r'
 
     public class PostgreSQLColumnRecord : ColumnRecord
     {
-        public bool IsBaseDataType { get; set; }
         public bool Identity { get; set; }
         public string Length { get; set; }
+        public int ArrayDims { get; set; }
+        public string ArrayElemDataType { get; set; }
     }
 
     public class PostgreSQLRecordsLoader : RecordsLoader
@@ -57,9 +61,10 @@ WHERE c.relkind = 'r'
         {
             PostgreSQLColumnRecord cr = (PostgreSQLColumnRecord)columnRecord;
             DataType dataType = PostgreSQLQueriesHelper.CreateDataTypeModel(
-                cr.DataType,
+                cr.ArrayDims > 0 ? cr.ArrayElemDataType : cr.DataType,
                 cr.Length,
-                cr.IsBaseDataType);
+                cr.ArrayDims);
+
             return new Column()
             {
                 ID = Guid.NewGuid(),
