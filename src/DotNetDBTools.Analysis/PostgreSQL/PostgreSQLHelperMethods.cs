@@ -2,15 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using DotNetDBTools.Analysis.Extensions;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.PostgreSQL;
+using PgDt = DotNetDBTools.Models.PostgreSQL.PostgreSQLDataTypeNames;
 
 namespace DotNetDBTools.Analysis.PostgreSQL;
 
 internal static class PostgreSQLHelperMethods
 {
     private const string P = @"(?<precision>\([\s\d\,\-]+\))?";
-    private const string A = @"(?<array>(:?\[[\s\d]*\]\s*)*)";
+    private const string A = @"(?<array>(?:\[[\s\d]*\]\s*)*)";
+    private const string IF = @"YEAR|MONTH|DAY|HOUR|MINUTE|SECOND|YEAR\s*TO\s*MONTH|DAY\s*TO\s*HOUR"
+        + @"|DAY\s*TO\s*MINUTE|DAY\s*TO\s*SECOND|HOUR\s*TO\s*MINUTE|HOUR\s*TO\s*SECOND|MINUTE\s*TO\s*SECOND";
 
     public static HashSet<string> GetUserDefinedTypesName(Database database)
     {
@@ -40,7 +44,7 @@ internal static class PostgreSQLHelperMethods
     {
         Match match = Regex.Match(
             typeName,
-            $@"^(?<name>[\w_]*)(?:\s+(?<name2>varying|precision))?\s*{P}(?:\s+(?<tz>with|without)\s*time\s*zone)?\s*{A}$",
+            $@"^(?<name>[\w_]*)(?:\s+(?<name2>varying|precision|{IF}))?\s*{P}(?:\s+(?<tz>with|without)\s*time\s*zone)?\s*{A}$",
             RegexOptions.IgnoreCase);
 
         string name = match.Groups["name"].Value;
@@ -49,6 +53,7 @@ internal static class PostgreSQLHelperMethods
         if (!match.Success
             || IsVaryingStr(name2) && !Regex.IsMatch(name, "^(?:bit|character)$", RegexOptions.IgnoreCase)
             || IsPrecisionStr(name2) && !Regex.IsMatch(name, "^double$", RegexOptions.IgnoreCase)
+            || IsIntervalFieldsStr(name2) && !Regex.IsMatch(name, "^interval", RegexOptions.IgnoreCase)
             || match.Groups["tz"].Success && !Regex.IsMatch(name, "^(?:time|timestamp)$", RegexOptions.IgnoreCase))
         {
             throw new Exception($"Invalid datatype name '{typeName}'");
@@ -61,16 +66,18 @@ internal static class PostgreSQLHelperMethods
             pa = pa + match.Groups["array"].Value;
 
         baseName = TryGetStandardBaseName(name);
-        if (baseName != null)
-            return Regex.Replace(baseName + pa, @"\s", "").ToUpper();
+        if (baseName == PgDt.INTERVAL && IsIntervalFieldsStr(name2))
+            return $"{baseName} {name2.ToSingleSpaces().ToUpper()}{pa.ToNoWhiteSpace()}";
+        else if (baseName != null)
+            return (baseName + pa).ToNoWhiteSpace().ToUpper();
         else
             return null;
 
         string TryGetStandardBaseName(string name)
         {
             string nameToUpper = name.ToUpper();
-            if (typeof(PostgreSQLDataTypeNames).GetFields().Select(x => x.Name)
-                .Except(new string[] { "TIME", "TIMESTAMP" })
+            if (typeof(PgDt).GetFields().Select(x => x.Name)
+                .Except(new string[] { PgDt.BIT, PgDt.INTERVAL, PgDt.TIME, PgDt.TIMESTAMP })
                 .Any(x => x == nameToUpper))
             {
                 return nameToUpper;
@@ -79,30 +86,32 @@ internal static class PostgreSQLHelperMethods
             switch (nameToUpper)
             {
                 case "BOOLEAN":
-                    return PostgreSQLDataTypeNames.BOOL;
+                    return PgDt.BOOL;
                 case "INT2":
-                    return PostgreSQLDataTypeNames.SMALLINT;
+                    return PgDt.SMALLINT;
                 case "INT4":
                 case "INTEGER":
-                    return PostgreSQLDataTypeNames.INT;
+                    return PgDt.INT;
                 case "INT8":
-                    return PostgreSQLDataTypeNames.BIGINT;
+                    return PgDt.BIGINT;
                 case "NUMERIC":
-                    return PostgreSQLDataTypeNames.DECIMAL;
+                    return PgDt.DECIMAL;
                 case "REAL":
-                    return PostgreSQLDataTypeNames.FLOAT4;
+                    return PgDt.FLOAT4;
                 case "BPCHAR":
-                    return PostgreSQLDataTypeNames.CHAR;
-                case "BIT":
-                    return IsVaryingStr(name2) ? PostgreSQLDataTypeNames.VARBIT : PostgreSQLDataTypeNames.BIT;
+                    return PgDt.CHAR;
+                case PgDt.BIT:
+                    return IsVaryingStr(name2) ? PgDt.VARBIT : nameToUpper;
                 case "CHARACTER":
-                    return IsVaryingStr(name2) ? PostgreSQLDataTypeNames.VARCHAR : PostgreSQLDataTypeNames.CHAR;
+                    return IsVaryingStr(name2) ? PgDt.VARCHAR : PgDt.CHAR;
                 case "DOUBLE":
-                    return IsPrecisionStr(name2) ? PostgreSQLDataTypeNames.FLOAT8 : null;
-                case "TIME":
-                    return IsWithTimeZoneStr(tz) ? PostgreSQLDataTypeNames.TIMETZ : PostgreSQLDataTypeNames.TIME;
-                case "TIMESTAMP":
-                    return IsWithTimeZoneStr(tz) ? PostgreSQLDataTypeNames.TIMESTAMPTZ : PostgreSQLDataTypeNames.TIMESTAMP;
+                    return IsPrecisionStr(name2) ? PgDt.FLOAT8 : null;
+                case PgDt.INTERVAL:
+                    return nameToUpper;
+                case PgDt.TIME:
+                    return IsWithTimeZoneStr(tz) ? PgDt.TIMETZ : nameToUpper;
+                case PgDt.TIMESTAMP:
+                    return IsWithTimeZoneStr(tz) ? PgDt.TIMESTAMPTZ : nameToUpper;
                 default:
                     return null;
             }
@@ -121,6 +130,11 @@ internal static class PostgreSQLHelperMethods
         static bool IsPrecisionStr(string value)
         {
             return Regex.IsMatch(value, @"^precision$", RegexOptions.IgnoreCase);
+        }
+
+        static bool IsIntervalFieldsStr(string value)
+        {
+            return Regex.IsMatch(value, $@"^(?:{IF})$", RegexOptions.IgnoreCase);
         }
     }
 }

@@ -31,6 +31,7 @@ public class VerbatimDataType : IDataType
     /// <item>if it is a standard sql type then resulting name white space is removed, changed with non-alias and converted to upper case.</item>
     /// <item>else resulting name stays as is.</item>
     /// </list>
+    /// User defined data types will appear in sql automatically quoted.
     /// </item>
     /// <item><term>SQLite</term>
     /// <list type="bullet">

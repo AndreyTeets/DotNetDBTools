@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.Analysis.Extensions;
 using DotNetDBTools.Models.Core;
@@ -31,7 +30,7 @@ internal class MSSQLDbModelPostProcessor : DbModelPostProcessor
             if (string.IsNullOrEmpty(dataType.Name))
                 throw new Exception($"{displayedObjectInfoIfInvalid} datatype is null or empty");
 
-            dataType.Name = Regex.Replace(dataType.Name, @"\s", "");
+            dataType.Name = dataType.Name.ToNoWhiteSpace();
             if (MSSQLHelperMethods.IsStandardSqlType(dataType.Name))
                 dataType.Name = dataType.Name.ToUpper();
             else if (userDefinedTypesNames.Contains(dataType.Name))

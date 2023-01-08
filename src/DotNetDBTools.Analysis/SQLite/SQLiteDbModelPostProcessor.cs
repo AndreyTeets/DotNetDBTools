@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Text.RegularExpressions;
 using DotNetDBTools.Analysis.Core;
+using DotNetDBTools.Analysis.Extensions;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.SQLite;
 
@@ -17,7 +17,7 @@ internal class SQLiteDbModelPostProcessor : DbModelPostProcessor
                 if (string.IsNullOrEmpty(column.DataType.Name))
                     throw new Exception($"Column '{column.Name}' in table '{table.Name}' datatype is null or empty");
 
-                string dataType = Regex.Replace(column.DataType.Name, @"\s", "");
+                string dataType = column.DataType.Name.ToNoWhiteSpace();
                 dataType = dataType.ToUpper();
 
                 if (dataType.Contains("INT"))

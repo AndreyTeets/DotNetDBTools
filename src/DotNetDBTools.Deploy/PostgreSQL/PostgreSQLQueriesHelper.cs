@@ -33,10 +33,28 @@ internal static class PostgreSQLQueriesHelper
             case PostgreSQLDataTypeNames.BYTEA:
 
             case PostgreSQLDataTypeNames.DATE:
+            case PostgreSQLDataTypeNames.INTERVAL: // TODO parse out interval fields and precision from length
 
             case PostgreSQLDataTypeNames.UUID:
             case PostgreSQLDataTypeNames.JSON:
             case PostgreSQLDataTypeNames.JSONB:
+            case PostgreSQLDataTypeNames.XML:
+
+            case PostgreSQLDataTypeNames.TSQUERY:
+            case PostgreSQLDataTypeNames.TSVECTOR:
+
+            case PostgreSQLDataTypeNames.POINT:
+            case PostgreSQLDataTypeNames.LINE:
+            case PostgreSQLDataTypeNames.LSEG:
+            case PostgreSQLDataTypeNames.BOX:
+            case PostgreSQLDataTypeNames.PATH:
+            case PostgreSQLDataTypeNames.POLYGON:
+            case PostgreSQLDataTypeNames.CIRCLE:
+
+            case PostgreSQLDataTypeNames.INET:
+            case PostgreSQLDataTypeNames.CIDR:
+            case PostgreSQLDataTypeNames.MACADDR:
+            case PostgreSQLDataTypeNames.MACADDR8:
                 return new DataType { Name = dataTypeBaseName };
 
             case PostgreSQLDataTypeNames.DECIMAL:
@@ -53,12 +71,13 @@ internal static class PostgreSQLQueriesHelper
                 return new DataType { Name = length == -1 ? dataTypeBaseName : $"{dataTypeBaseName}({length})" };
 
             case PostgreSQLDataTypeNames.BIT:
+                return new DataType { Name = Math.Abs(length) == 1 ? dataTypeBaseName : $"{dataTypeBaseName}({length})" };
             case PostgreSQLDataTypeNames.VARBIT:
                 return new DataType { Name = length == -1 ? dataTypeBaseName : $"{dataTypeBaseName}({length})" };
 
             // TODO handle user defined base data types (probalby will require declaring their names in definition)
             default:
-                throw new InvalidOperationException($"Invalid datatype base name: {dataTypeBaseName}");
+                throw new InvalidOperationException($"Invalid datatype: {dataType} (dataTypeBaseName={dataTypeBaseName})");
         }
 
         string GetDecimalPrecisionAndScale(int length)
