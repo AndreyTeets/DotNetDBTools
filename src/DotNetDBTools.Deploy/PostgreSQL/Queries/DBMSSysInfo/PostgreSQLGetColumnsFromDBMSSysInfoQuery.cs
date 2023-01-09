@@ -14,11 +14,17 @@ $@"SELECT
     a.attname AS ""{nameof(PostgreSQLColumnRecord.ColumnName)}"",
     t.typname AS ""{nameof(PostgreSQLColumnRecord.DataType)}"",
     a.attnotnull AS ""{nameof(PostgreSQLColumnRecord.NotNull)}"",
-    pg_catalog.pg_get_serial_sequence('""' || n.nspname || '"".""' || c.relname || '""', a.attname) IS NOT NULL AS ""{nameof(PostgreSQLColumnRecord.Identity)}"",
+    a.attidentity AS ""{nameof(PostgreSQLColumnRecord.Identity)}"",
     pg_catalog.pg_get_expr(d.adbin, d.adrelid) AS ""{nameof(PostgreSQLColumnRecord.Default)}"",
     a.atttypmod AS ""{nameof(PostgreSQLColumnRecord.Length)}"",
     a.attndims AS ""{nameof(PostgreSQLColumnRecord.ArrayDims)}"",
-    et.typname AS ""{nameof(PostgreSQLColumnRecord.ArrayElemDataType)}""
+    et.typname AS ""{nameof(PostgreSQLColumnRecord.ArrayElemDataType)}"",
+    s.seqstart AS ""{nameof(PostgreSQLColumnRecord.IdentitySequenceStartWith)}"",
+    s.seqincrement AS ""{nameof(PostgreSQLColumnRecord.IdentitySequenceIncrementBy)}"",
+    s.seqmin AS ""{nameof(PostgreSQLColumnRecord.IdentitySequenceMinValue)}"",
+    s.seqmax AS ""{nameof(PostgreSQLColumnRecord.IdentitySequenceMaxValue)}"",
+    s.seqcycle AS ""{nameof(PostgreSQLColumnRecord.IdentitySequenceCycle)}"",
+    s.seqcache AS ""{nameof(PostgreSQLColumnRecord.IdentitySequenceCache)}""
 FROM pg_catalog.pg_class c
 INNER JOIN pg_catalog.pg_namespace n
     ON n.oid = c.relnamespace
@@ -32,6 +38,17 @@ LEFT JOIN pg_catalog.pg_type et
     ON et.oid = t.typelem
 LEFT JOIN pg_catalog.pg_attrdef d
     ON (d.adrelid, d.adnum) = (a.attrelid, a.attnum)
+LEFT JOIN LATERAL (
+    SELECT sq.*
+    FROM pg_catalog.pg_sequence sq
+    INNER JOIN pg_catalog.pg_depend dep
+        ON dep.objid = sq.seqrelid
+            AND dep.classid = 'pg_class'::regclass
+            AND dep.refclassid = 'pg_class'::regclass
+    WHERE dep.refobjid = a.attrelid
+        AND dep.refobjsubid = a.attnum
+        AND (a.attidentity = 'a' OR a.attidentity = 'd')
+    ) s ON TRUE
 WHERE c.relkind = 'r'
     AND n.nspname NOT IN ('information_schema', 'pg_catalog')
     AND c.relname NOT IN ({DNDBTSysTables.AllTablesForInClause});";
@@ -41,10 +58,16 @@ WHERE c.relkind = 'r'
 
     public class PostgreSQLColumnRecord : ColumnRecord
     {
-        public bool Identity { get; set; }
+        public string Identity { get; set; }
         public string Length { get; set; }
         public int ArrayDims { get; set; }
         public string ArrayElemDataType { get; set; }
+        public long IdentitySequenceStartWith { get; set; }
+        public long IdentitySequenceIncrementBy { get; set; }
+        public long IdentitySequenceMinValue { get; set; }
+        public long IdentitySequenceMaxValue { get; set; }
+        public bool IdentitySequenceCycle { get; set; }
+        public long IdentitySequenceCache { get; set; }
     }
 
     public class PostgreSQLRecordsLoader : RecordsLoader
@@ -71,7 +94,7 @@ WHERE c.relkind = 'r'
                 Name = cr.ColumnName,
                 DataType = dataType,
                 NotNull = cr.NotNull,
-                Identity = cr.Identity,
+                Identity = cr.Identity == "a" || cr.Identity == "d",
                 Default = PostgreSQLQueriesHelper.ParseDefault(cr.Default),
             };
         }

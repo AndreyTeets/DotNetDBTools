@@ -26,6 +26,13 @@ namespace DotNetDBTools.SampleDB.PostgreSQL.Tables
             DataType = new IntDataType(),
             NotNull = true,
             Identity = true,
+            IdentityGenerationKind = IdentityGenerationKind.Always,
+            IdentitySequenceOptions = new()
+            {
+                StartWith = 1000,
+                IncrementBy = -2,
+                MinValue = int.MinValue,
+            },
         };
 
         public Column MyColumn4 = new("867AC528-E87E-4C93-B6E3-DD2FCBBB837F")
