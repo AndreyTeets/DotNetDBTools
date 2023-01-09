@@ -21,9 +21,9 @@ DROP TABLE [MyTable3];
 CREATE TABLE [_DNDBTTemp_MyTable1]
 (
     [MyColumn1] INTEGER NOT NULL DEFAULT 15,
-    [MyColumn2] TEXT NOT NULL DEFAULT '33',
+    [MyColumn2] TEXT NULL,
     [MyColumn3] INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    [MyColumn4] NUMERIC NOT NULL DEFAULT 7.36,
+    [MyColumn4] NUMERIC NOT NULL DEFAULT 736,
     [MyColumn5] TEXT NULL DEFAULT 'some text',
     CONSTRAINT [UQ_MyTable1_MyColumn4] UNIQUE ([MyColumn4]),
     CONSTRAINT [CK_MyTable1_MyCheck1] CHECK (MyColumn4 >= 0),

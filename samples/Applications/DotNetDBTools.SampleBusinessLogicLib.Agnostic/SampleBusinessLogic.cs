@@ -35,8 +35,8 @@ namespace DotNetDBTools.SampleBusinessLogicLib.Agnostic
                     new[] { MyTable3.MyColumn1, MyTable3.MyColumn2 },
                     new[]
                     {
-                        new object[] { 3, Encoding.UTF8.GetBytes("value3") },
-                        new object[] { 4, Encoding.UTF8.GetBytes("value4") },
+                        new object[] { 3, "value3" },
+                        new object[] { 4, "value4" },
                     });
 
             SqlResult sqlCompilationResult = compiler.Compile(query);
@@ -50,16 +50,16 @@ namespace DotNetDBTools.SampleBusinessLogicLib.Agnostic
         {
             QueryFactory db = new(connection, compiler);
 
-            List<byte[]> queryResults = db.Query(MyTable3)
+            List<string> queryResults = db.Query(MyTable3)
                 .Select(new[] { MyTable3.MyColumn2 })
                 .WhereIn(MyTable3.MyColumn1, new[] { 3, 4 })
                 .OrderBy(new[] { MyTable3.MyColumn1 })
-                .Get<byte[]>()
+                .Get<string>()
                 .ToList();
 
             if (queryResults.Count != 2 ||
-                Encoding.UTF8.GetString(queryResults[0]) != "value3" ||
-                Encoding.UTF8.GetString(queryResults[1]) != "value4")
+                queryResults[0] != "value3" ||
+                queryResults[1] != "value4")
             {
                 throw new Exception($"Wrong data in '{MyTable3}' table");
             }

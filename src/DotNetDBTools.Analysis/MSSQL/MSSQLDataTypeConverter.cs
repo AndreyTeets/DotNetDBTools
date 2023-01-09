@@ -50,7 +50,10 @@ internal class MSSQLDataTypeConverter : IDataTypeConverter
 
     private static DataType ConvertDecimalSqlType(CSharpDataType dataType)
     {
-        return new DataType { Name = $"{MSSQLDataTypeNames.DECIMAL}({dataType.Precision}, {dataType.Scale})" };
+        string precisionStr = dataType.Precision.ToString();
+        if (dataType.Precision < 1)
+            precisionStr = "18";
+        return new DataType { Name = $"{MSSQLDataTypeNames.DECIMAL}({precisionStr},{dataType.Scale})" };
     }
 
     private static DataType ConvertStringSqlType(CSharpDataType dataType)

@@ -50,14 +50,25 @@ internal class PostgreSQLDataTypeConverter : IDataTypeConverter
 
     private static DataType ConvertDecimalSqlType(CSharpDataType dataType)
     {
-        return new DataType { Name = $"{PostgreSQLDataTypeNames.DECIMAL}({dataType.Precision}, {dataType.Scale})" };
+        string resultingName = PostgreSQLDataTypeNames.DECIMAL;
+        if (dataType.Precision > 0)
+        {
+            resultingName = dataType.Scale != 0
+                ? $"{resultingName}({dataType.Precision},{dataType.Scale})"
+                : $"{resultingName}({dataType.Precision})";
+        }
+        return new DataType { Name = resultingName };
     }
 
     private static DataType ConvertStringSqlType(CSharpDataType dataType)
     {
-        string stringTypeName = dataType.IsFixedLength ? PostgreSQLDataTypeNames.CHAR : PostgreSQLDataTypeNames.VARCHAR;
-        string lengthStr = dataType.Length.ToString();
-        return new DataType { Name = $"{stringTypeName}({lengthStr})" };
+        string resultingName = PostgreSQLDataTypeNames.TEXT;
+        if (dataType.Length > 0)
+        {
+            resultingName = dataType.IsFixedLength ? PostgreSQLDataTypeNames.CHAR : PostgreSQLDataTypeNames.VARCHAR;
+            resultingName = $"{resultingName}({dataType.Length})";
+        }
+        return new DataType { Name = resultingName };
     }
 
     private static DataType ConvertDateTimeSqlType(CSharpDataType dataType)

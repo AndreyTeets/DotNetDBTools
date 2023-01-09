@@ -18,7 +18,7 @@ namespace DotNetDBTools.SampleDB.MSSQL.Tables
 
         public Column MyColumn2 = new("169824E1-8B74-4B60-AF17-99656D6DBBEE")
         {
-            DataType = new BinaryDataType(),
+            DataType = new StringDataType() { Length = 50 },
             NotNull = true,
         };
 

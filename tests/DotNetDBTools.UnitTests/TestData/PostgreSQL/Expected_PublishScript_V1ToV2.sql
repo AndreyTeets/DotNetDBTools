@@ -436,7 +436,7 @@ ALTER TABLE "MyTable2"
         USING ("MyColumn1NewName"::text::BIGINT),
     ADD COLUMN "MyColumn2" BYTEA NULL DEFAULT ''\x000408'',
     ADD COLUMN "MyColumn3" BIGINT NULL,
-    ADD COLUMN "MyColumn4" BYTEA NULL,
+    ADD COLUMN "MyColumn4" VARCHAR(50) NULL,
     ADD CONSTRAINT "PK_MyTable2_CustomName" PRIMARY KEY ("MyColumn1NewName");';
 -- QUERY END: AlterTableQuery
 
@@ -629,7 +629,7 @@ WHERE "ID" = ''0d33ed85-9909-46e7-8369-eee86b563519'';';
 EXECUTE 'CREATE TABLE "MyTable3"
 (
     "MyColumn1" BIGINT NOT NULL DEFAULT 444,
-    "MyColumn2" BYTEA NOT NULL,
+    "MyColumn2" VARCHAR(50) NOT NULL,
     CONSTRAINT "UQ_MyTable3_MyColumns12" UNIQUE ("MyColumn1", "MyColumn2")
 );';
 -- QUERY END: CreateTableQuery

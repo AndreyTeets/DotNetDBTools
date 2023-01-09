@@ -230,7 +230,7 @@ CREATE TABLE [_DNDBTTemp_MyTable2]
     [MyColumn1NewName] INTEGER PRIMARY KEY NOT NULL DEFAULT 333,
     [MyColumn2] BLOB NULL DEFAULT X'000408',
     [MyColumn3] INTEGER NULL,
-    [MyColumn4] BLOB NULL,
+    [MyColumn4] TEXT NULL,
     CONSTRAINT [FK_MyTable2_MyColumns34_MyTable3_MyColumns12] FOREIGN KEY ([MyColumn3], [MyColumn4])
         REFERENCES [MyTable3]([MyColumn1], [MyColumn2])
         ON UPDATE NO ACTION ON DELETE SET DEFAULT
@@ -448,7 +448,7 @@ WHERE [ID] = '5309d66f-2030-402e-912e-5547babaa072';
 CREATE TABLE [MyTable3]
 (
     [MyColumn1] INTEGER NOT NULL DEFAULT 444,
-    [MyColumn2] BLOB NOT NULL,
+    [MyColumn2] TEXT NOT NULL,
     CONSTRAINT [UQ_MyTable3_MyColumns12] UNIQUE ([MyColumn1], [MyColumn2])
 );
 -- QUERY END: CreateTableQuery

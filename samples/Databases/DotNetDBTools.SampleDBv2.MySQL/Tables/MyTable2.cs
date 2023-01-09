@@ -29,7 +29,7 @@ namespace DotNetDBTools.SampleDB.MySQL.Tables
 
         public Column MyColumn4 = new("87950A3F-2072-42DB-AC3C-A4E85B79720D")
         {
-            DataType = new BinaryDataType(),
+            DataType = new StringDataType() { Length = 50 },
         };
 
         public PrimaryKey PK_MyTable2_CustomName = new("3A43615B-40B3-4A13-99E7-93AF7C56E8CE")

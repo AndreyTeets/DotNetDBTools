@@ -24,12 +24,12 @@ namespace DotNetDBTools.SampleDB.SQLite.Tables
 
         public Column MyColumn3 = new("99BC3F49-3151-4F52-87F7-104B424ED7BF")
         {
-            DataType = new IntDataType() { Size = IntSize.Int64 },
+            DataType = new IntDataType(),
         };
 
         public Column MyColumn4 = new("87950A3F-2072-42DB-AC3C-A4E85B79720D")
         {
-            DataType = new BinaryDataType(),
+            DataType = new StringDataType(),
         };
 
         public PrimaryKey PK_MyTable2_CustomName = new("3A43615B-40B3-4A13-99E7-93AF7C56E8CE")

@@ -42,12 +42,12 @@ VALUES
 (
     101,
     102,
-    100.4
+    1004
 ),
 (
     201,
     202,
-    200.4
+    2004
 );");
     }
     private void AssertDataInTable1(IDbConnection connection, AssertKind assertKind)
@@ -57,8 +57,8 @@ VALUES
 $@"SELECT
     COUNT(*)
 FROM {Quote($"MyTable1{newName}")}
-WHERE {Quote("MyColumn1")} = 101 AND {Quote("MyColumn4")} = 100.4
-    OR {Quote("MyColumn1")} = 201 AND {Quote("MyColumn4")} = 200.4;")
+WHERE {Quote("MyColumn1")} = 101 AND {Quote("MyColumn4")} = 1004
+    OR {Quote("MyColumn1")} = 201 AND {Quote("MyColumn4")} = 2004;")
             .Should().Be(2);
     }
 

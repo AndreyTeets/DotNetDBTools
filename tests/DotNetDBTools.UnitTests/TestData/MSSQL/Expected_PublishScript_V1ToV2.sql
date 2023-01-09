@@ -226,7 +226,6 @@ EXEC sp_executesql N'EXEC sp_rename ''MyTable1'', ''MyTable1NewName'';
 ALTER TABLE [MyTable1NewName] DROP CONSTRAINT [CK_MyTable1_MyCheck1];
 ALTER TABLE [MyTable1NewName] DROP CONSTRAINT [UQ_MyTable1_MyColumn4];
 ALTER TABLE [MyTable1NewName] DROP CONSTRAINT [PK_MyTable1];
-ALTER TABLE [MyTable1NewName] DROP CONSTRAINT [DF_MyTable1_MyColumn2];
 ALTER TABLE [MyTable1NewName] DROP COLUMN [MyColumn2];
 ALTER TABLE [MyTable1NewName] DROP COLUMN [MyColumn3];
 ALTER TABLE [MyTable1NewName] DROP CONSTRAINT [DF_MyTable1_MyColumn1];
@@ -337,7 +336,7 @@ ALTER TABLE [MyTable2] ALTER COLUMN [MyColumn1NewName] BIGINT NOT NULL;
 ALTER TABLE [MyTable2] ADD CONSTRAINT [DF_MyTable2_MyColumn1NewName] DEFAULT 333 FOR [MyColumn1NewName];
 ALTER TABLE [MyTable2] ADD [MyColumn2] VARBINARY(22) NULL CONSTRAINT [DF_MyTable2_MyColumn2] DEFAULT 0x000408 WITH VALUES;
 ALTER TABLE [MyTable2] ADD [MyColumn3] BIGINT NULL;
-ALTER TABLE [MyTable2] ADD [MyColumn4] VARBINARY(50) NULL;
+ALTER TABLE [MyTable2] ADD [MyColumn4] NVARCHAR(50) NULL;
 ALTER TABLE [MyTable2] ADD CONSTRAINT [PK_MyTable2_CustomName] PRIMARY KEY ([MyColumn1NewName]);';
 -- QUERY END: AlterTableQuery
 
@@ -508,7 +507,7 @@ EXEC sp_executesql N'DROP TYPE [_DNDBTTemp_MyUserDefinedType1];';
 EXEC sp_executesql N'CREATE TABLE [MyTable3]
 (
     [MyColumn1] BIGINT NOT NULL CONSTRAINT [DF_MyTable3_MyColumn1] DEFAULT 444,
-    [MyColumn2] VARBINARY(50) NOT NULL,
+    [MyColumn2] NVARCHAR(50) NOT NULL,
     CONSTRAINT [UQ_MyTable3_MyColumns12] UNIQUE ([MyColumn1], [MyColumn2])
 );';
 -- QUERY END: CreateTableQuery

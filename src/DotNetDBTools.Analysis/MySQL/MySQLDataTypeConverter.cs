@@ -50,7 +50,10 @@ internal class MySQLDataTypeConverter : IDataTypeConverter
 
     private static DataType ConvertDecimalSqlType(CSharpDataType dataType)
     {
-        return new DataType { Name = $"{MySQLDataTypeNames.DECIMAL}({dataType.Precision},{dataType.Scale})" };
+        string precisionStr = dataType.Precision.ToString();
+        if (dataType.Precision < 1)
+            precisionStr = "10";
+        return new DataType { Name = $"{MySQLDataTypeNames.DECIMAL}({precisionStr},{dataType.Scale})" };
     }
 
     private static DataType ConvertStringSqlType(CSharpDataType dataType)
@@ -63,8 +66,7 @@ internal class MySQLDataTypeConverter : IDataTypeConverter
         }
 
         string stringTypeName = dataType.IsFixedLength ? MySQLDataTypeNames.CHAR : MySQLDataTypeNames.VARCHAR;
-        string lengthStr = dataType.Length.ToString();
-        return new DataType { Name = $"{stringTypeName}({lengthStr})" };
+        return new DataType { Name = $"{stringTypeName}({dataType.Length})" };
     }
 
     private static DataType ConvertBinarySqlType(CSharpDataType dataType)
@@ -77,8 +79,7 @@ internal class MySQLDataTypeConverter : IDataTypeConverter
         }
 
         string binaryTypeName = dataType.IsFixedLength ? MySQLDataTypeNames.BINARY : MySQLDataTypeNames.VARBINARY;
-        string lengthStr = dataType.Length.ToString();
-        return new DataType { Name = $"{binaryTypeName}({lengthStr})" };
+        return new DataType { Name = $"{binaryTypeName}({dataType.Length})" };
     }
 
     private static DataType ConvertDateTimeSqlType(CSharpDataType dataType)

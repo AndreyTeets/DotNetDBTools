@@ -30,11 +30,11 @@
             "$id": "7",
             "Name": "TEXT"
           },
-          "NotNull": true,
+          "NotNull": false,
           "Identity": false,
           "Default": {
             "$id": "8",
-            "Code": "'33'"
+            "Code": null
           },
           "ID": "fe68ee3d-09d0-40ac-93f9-5e441fbb4f70",
           "Name": "MyColumn2",
@@ -70,7 +70,7 @@
           "Identity": false,
           "Default": {
             "$id": "14",
-            "Code": "7.36"
+            "Code": "736"
           },
           "ID": "867ac528-e87e-4c93-b6e3-dd2fcbbb837f",
           "Name": "MyColumn4",

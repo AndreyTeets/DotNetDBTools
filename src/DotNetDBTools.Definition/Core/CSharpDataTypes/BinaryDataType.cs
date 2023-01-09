@@ -21,15 +21,15 @@ public class BinaryDataType : IDataType
     /// </list>
     /// </summary>
     /// <remarks>
-    /// Default value is 50.
+    /// Default value is -1.
     /// </remarks>
-    public int Length { get; set; } = 50;
+    public int Length { get; set; } = -1;
 
     /// <summary>
     /// Controls the exact binary type chosen for the used DBMS.
     /// <list type="bullet">
     /// <item><term>MSSQL</term> Column is declared as 'BINARY' if IsFixedLength=true and specified Length is in allowed range, otherwise as 'VARBINARY'.</item>
-    /// <item><term>MySQL</term> If specified Length isn't in allowed range property is ignored and Column is declared as 'LONGBLOB'.<br/>
+    /// <item><term>MySQL</term> If specified Length isn't in allowed range property is ignored and column is declared as 'LONGBLOB'.<br/>
     /// Otherwise Column is declared as 'BINARY' if IsFixedLength=true, 'VARBINARY' if IsFixedLength=false.</item>
     /// <item><term>PostgreSQL</term> Property is ignored.</item>
     /// <item><term>SQLite</term> Property is ignored.</item>

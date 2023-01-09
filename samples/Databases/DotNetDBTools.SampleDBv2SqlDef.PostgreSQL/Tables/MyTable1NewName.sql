@@ -5,7 +5,7 @@ CREATE TABLE "MyTable1NewName"
     "MyColumn1" BIGINT DEFAULT 15,
 
     --ID:#{867AC528-E87E-4C93-B6E3-DD2FCBBB837F}#
-    "MyColumn4" DECIMAL(19, 2) NOT NULL,
+    "MyColumn4" DECIMAL NOT NULL,
 
     --ID:#{EBBEF06C-C7DE-4B36-A911-827566639630}#
     "MyColumn5" varchar ( 1000 ) default 'some text',

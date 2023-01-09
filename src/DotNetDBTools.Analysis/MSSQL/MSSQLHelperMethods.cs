@@ -27,7 +27,7 @@ internal static class MSSQLHelperMethods
 
         static bool TypeNameMatchesItsBase(string typeName, string typeNameBase)
         {
-            return Regex.IsMatch(typeName.ToUpper(), $@"^{typeNameBase}\s*(?:[\(][\s\d\,]+[\)])?$");
+            return Regex.IsMatch(typeName.ToUpper(), $@"^{typeNameBase}\s*(?:[\(](?:[\s\d\,]+|MAX)[\)])?$");
         }
     }
 }

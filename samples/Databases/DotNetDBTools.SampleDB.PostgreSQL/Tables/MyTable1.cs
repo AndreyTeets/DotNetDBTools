@@ -18,9 +18,7 @@ namespace DotNetDBTools.SampleDB.PostgreSQL.Tables
 
         public Column MyColumn2 = new("FE68EE3D-09D0-40AC-93F9-5E441FBB4F70")
         {
-            DataType = new StringDataType() { Length = 10 },
-            NotNull = true,
-            Default = new StringDefaultValue("33"),
+            DataType = new StringDataType(),
         };
 
         public Column MyColumn3 = new("6E95DE30-E01A-4FB4-B8B7-8F0C40BB682C")
@@ -34,7 +32,7 @@ namespace DotNetDBTools.SampleDB.PostgreSQL.Tables
         {
             DataType = new DecimalDataType(),
             NotNull = true,
-            Default = new DecimalDefaultValue(7.36m),
+            Default = new DecimalDefaultValue(736m),
         };
 
         public Column MyColumn5 = new("EBBEF06C-C7DE-4B36-A911-827566639630")

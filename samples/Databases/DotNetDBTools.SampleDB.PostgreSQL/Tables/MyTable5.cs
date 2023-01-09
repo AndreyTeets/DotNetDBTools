@@ -15,7 +15,7 @@ namespace DotNetDBTools.SampleDB.PostgreSQL.Tables
         {
             DataType = new VerbatimDataType("int"),
             NotNull = true,
-            Default = new VerbatimDefaultValue($"ABs(-15)"),
+            Default = new VerbatimDefaultValue("ABs(-15)"),
         };
 
         public Column MyColumn2 = new("11EF8E25-3691-42D4-B2FA-88D724F73B61")

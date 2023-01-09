@@ -5,9 +5,9 @@ BEGIN TRANSACTION;
 CREATE TABLE [MyTable1]
 (
     [MyColumn1] INTEGER NOT NULL DEFAULT 15,
-    [MyColumn2] TEXT NOT NULL DEFAULT '33',
+    [MyColumn2] TEXT NULL,
     [MyColumn3] INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    [MyColumn4] NUMERIC NOT NULL DEFAULT 7.36,
+    [MyColumn4] NUMERIC NOT NULL DEFAULT 736,
     [MyColumn5] TEXT NULL DEFAULT 'some text',
     CONSTRAINT [UQ_MyTable1_MyColumn4] UNIQUE ([MyColumn4]),
     CONSTRAINT [CK_MyTable1_MyCheck1] CHECK (MyColumn4 >= 0),
@@ -70,7 +70,7 @@ VALUES
     '299675e6-4faa-4d0f-a36a-224306ba5bcb',
     'Column',
     'MyColumn2',
-    '''33'''
+    NULL
 );
 -- QUERY END: InsertDNDBTDbObjectRecordQuery
 
@@ -108,7 +108,7 @@ VALUES
     '299675e6-4faa-4d0f-a36a-224306ba5bcb',
     'Column',
     'MyColumn4',
-    '7.36'
+    '736'
 );
 -- QUERY END: InsertDNDBTDbObjectRecordQuery
 

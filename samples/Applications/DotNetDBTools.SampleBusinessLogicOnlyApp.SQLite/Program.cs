@@ -55,11 +55,11 @@ INSERT INTO {MyTable1}
 VALUES
 (
     1,
-    1.11
+    111
 ),
 (
     2,
-    2.22
+    222
 );";
 
             using SqliteConnection connection = new(s_connectionString);
@@ -74,7 +74,7 @@ $@"SELECT
 FROM {MyTable1} t1
 INNER JOIN {MyTable2} t2
     ON t1.{MyTable1.MyColumn1} = t2.{MyTable2.MyColumn1}
-WHERE t1.{MyTable1.MyColumn4} IN (1.11, 2.22)
+WHERE t1.{MyTable1.MyColumn4} IN (111, 222)
     AND t2.{MyTable2.MyColumn2} IS NULL;";
 
             using SqliteConnection connection = new(s_connectionString);
