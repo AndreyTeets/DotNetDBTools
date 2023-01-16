@@ -12,7 +12,7 @@ namespace DotNetDBTools.UnitTests.CodeParsing.PostgreSQL;
 
 public class PostgreSQLGrammarTests : BaseGrammarTests<PostgreSQLParser, PostgreSQLLexer>
 {
-    protected override string TestDataDir => "./TestData/PostgreSQL/Grammar/examples";
+    protected override string TestDataDir => "../../../TestData/PostgreSQL/Grammar/examples";
     protected override Func<PostgreSQLParser, IParseTree> ListOfStatementsStartRule => x => x.sql();
     protected override Action<TestCodeParser, IParseTree> DoAdditionalParsing => (x, y) => ParseAllBodies(x, y);
     private Func<PostgreSQLParser, IParseTree> SqlFunctionBodyStartRule => x => x.sql_function_def();

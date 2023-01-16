@@ -22,10 +22,8 @@
   <Import Project="..\..\src\DotNetDBTools.RoslynUtilities\DotNetDBTools.RoslynUtilities.projitems" Label="Shared" />
 
   <ItemGroup>
-    <None Include="TestData\**" />
-    <None Update="TestData\**">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <None Include="TestData\**" CopyToOutputDirectory="PreserveNewest" />
+    <None Remove="TestData\*\Grammar\**" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>
