@@ -8,8 +8,6 @@ namespace DotNetDBTools.UnitTests.Utilities;
 
 public class JsonDbModelContractResolver : DefaultContractResolver
 {
-    public static new readonly JsonDbModelContractResolver Instance = new();
-
     protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
     {
         JsonProperty property = base.CreateProperty(member, memberSerialization);

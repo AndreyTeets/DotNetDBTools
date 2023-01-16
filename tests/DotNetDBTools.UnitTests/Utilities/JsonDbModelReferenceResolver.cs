@@ -66,8 +66,6 @@ public class JsonDbModelReferenceResolver : IReferenceResolver
 
     public class IgnoreDepsContractResolver : DefaultContractResolver
     {
-        public static new readonly JsonDbModelContractResolver Instance = new();
-
         protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
         {
             JsonProperty property = base.CreateProperty(member, memberSerialization);
