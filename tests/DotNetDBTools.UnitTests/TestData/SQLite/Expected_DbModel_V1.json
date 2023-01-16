@@ -1,21 +1,21 @@
 {
-  "$id": "1",
+  "$id": "7D90211C02ECF5DE",
   "Kind": 4,
   "Version": 1,
   "Tables": [
     {
-      "$id": "2",
+      "$id": "DbObject { ID: '299675e6-4faa-4d0f-a36a-224306ba5bcb', Name: 'MyTable1' }",
       "Columns": [
         {
-          "$id": "3",
+          "$id": "DbObject { ID: 'a2f2a4de-1337-4594-ae41-72ed4d05f317', Name: 'MyColumn1' }",
           "DataType": {
-            "$id": "4",
+            "$id": "2049FB74B0631023",
             "Name": "INTEGER"
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
-            "$id": "5",
+            "$id": "E26185F24E980850",
             "Code": "15"
           },
           "ID": "a2f2a4de-1337-4594-ae41-72ed4d05f317",
@@ -25,15 +25,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "6",
+          "$id": "DbObject { ID: 'fe68ee3d-09d0-40ac-93f9-5e441fbb4f70', Name: 'MyColumn2' }",
           "DataType": {
-            "$id": "7",
+            "$id": "3CF45FBFEB5ECEC7",
             "Name": "TEXT"
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
-            "$id": "8",
+            "$id": "D12CC50BBB155503",
             "Code": null
           },
           "ID": "fe68ee3d-09d0-40ac-93f9-5e441fbb4f70",
@@ -43,15 +43,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "9",
+          "$id": "DbObject { ID: '6e95de30-e01a-4fb4-b8b7-8f0c40bb682c', Name: 'MyColumn3' }",
           "DataType": {
-            "$id": "10",
+            "$id": "2049FB74B0631023",
             "Name": "INTEGER"
           },
           "NotNull": true,
           "Identity": true,
           "Default": {
-            "$id": "11",
+            "$id": "D12CC50BBB155503",
             "Code": null
           },
           "ID": "6e95de30-e01a-4fb4-b8b7-8f0c40bb682c",
@@ -61,15 +61,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "12",
+          "$id": "DbObject { ID: '867ac528-e87e-4c93-b6e3-dd2fcbbb837f', Name: 'MyColumn4' }",
           "DataType": {
-            "$id": "13",
+            "$id": "D3CAAC0A6F2AC8A1",
             "Name": "NUMERIC"
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
-            "$id": "14",
+            "$id": "EE86FAD38751ABCA",
             "Code": "736"
           },
           "ID": "867ac528-e87e-4c93-b6e3-dd2fcbbb837f",
@@ -79,15 +79,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "15",
+          "$id": "DbObject { ID: 'ebbef06c-c7de-4b36-a911-827566639630', Name: 'MyColumn5' }",
           "DataType": {
-            "$id": "16",
+            "$id": "3CF45FBFEB5ECEC7",
             "Name": "TEXT"
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
-            "$id": "17",
+            "$id": "085124D68A1754B2",
             "Code": "'some text'"
           },
           "ID": "ebbef06c-c7de-4b36-a911-827566639630",
@@ -98,7 +98,7 @@
         }
       ],
       "PrimaryKey": {
-        "$id": "18",
+        "$id": "DbObject { ID: '37a45def-f4a0-4be7-8bfb-8fbed4a7d705', Name: 'PK_MyTable1' }",
         "Columns": [
           "MyColumn3"
         ],
@@ -110,7 +110,7 @@
       },
       "UniqueConstraints": [
         {
-          "$id": "19",
+          "$id": "DbObject { ID: 'f3f08522-26ee-4950-9135-22edf2e4e0cf', Name: 'UQ_MyTable1_MyColumn4' }",
           "Columns": [
             "MyColumn4"
           ],
@@ -123,9 +123,9 @@
       ],
       "CheckConstraints": [
         {
-          "$id": "20",
+          "$id": "DbObject { ID: 'eb9c59b5-bc7e-49d7-adaa-f5600b6a19a2', Name: 'CK_MyTable1_MyCheck1' }",
           "Expression": {
-            "$id": "21",
+            "$id": "18B33C4E09E168E6",
             "Code": "MyColumn4 >= 0"
           },
           "ID": "eb9c59b5-bc7e-49d7-adaa-f5600b6a19a2",
@@ -137,7 +137,7 @@
       ],
       "ForeignKeys": [
         {
-          "$id": "22",
+          "$id": "DbObject { ID: 'd11b2a53-32db-432f-bb6b-f91788844ba9', Name: 'FK_MyTable1_MyColumn1_MyTable2_MyColumn1' }",
           "ThisTableName": "MyTable1",
           "ThisColumnNames": [
             "MyColumn1"
@@ -164,18 +164,18 @@
       "IsDependencyOf": []
     },
     {
-      "$id": "23",
+      "$id": "DbObject { ID: 'bfb9030c-a8c3-4882-9c42-1c6ad025cf8f', Name: 'MyTable2' }",
       "Columns": [
         {
-          "$id": "24",
+          "$id": "DbObject { ID: 'c480f22f-7c01-4f41-b282-35e9f5cd1fe3', Name: 'MyColumn1' }",
           "DataType": {
-            "$id": "25",
+            "$id": "2049FB74B0631023",
             "Name": "INTEGER"
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
-            "$id": "26",
+            "$id": "3FFA66CD9357353A",
             "Code": "333"
           },
           "ID": "c480f22f-7c01-4f41-b282-35e9f5cd1fe3",
@@ -185,15 +185,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "27",
+          "$id": "DbObject { ID: '5a0d1926-3270-4eb2-92eb-00be56c7af23', Name: 'MyColumn2' }",
           "DataType": {
-            "$id": "28",
+            "$id": "FD2B84C4F869BAB0",
             "Name": "BLOB"
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
-            "$id": "29",
+            "$id": "BB49414DF231DFCB",
             "Code": "X'000408'"
           },
           "ID": "5a0d1926-3270-4eb2-92eb-00be56c7af23",
@@ -204,7 +204,7 @@
         }
       ],
       "PrimaryKey": {
-        "$id": "30",
+        "$id": "DbObject { ID: '3a43615b-40b3-4a13-99e7-93af7c56e8ce', Name: 'PK_MyTable2' }",
         "Columns": [
           "MyColumn1"
         ],
@@ -219,7 +219,7 @@
       "ForeignKeys": [],
       "Indexes": [
         {
-          "$id": "31",
+          "$id": "DbObject { ID: '74390b3c-bc39-4860-a42e-12baa400f927', Name: 'IDX_MyTable2_MyIndex1' }",
           "TableName": "MyTable2",
           "Columns": [
             "MyColumn1",
@@ -236,10 +236,10 @@
       ],
       "Triggers": [
         {
-          "$id": "32",
+          "$id": "DbObject { ID: 'ee64ffc3-5536-4624-beaf-bc3a61d06a1a', Name: 'TR_MyTable2_MyTrigger1' }",
           "TableName": "MyTable2",
           "CreateStatement": {
-            "$id": "33",
+            "$id": "BB101C00A9EAF348",
             "Code": "CREATE TRIGGER [TR_MyTable2_MyTrigger1]\nAFTER INSERT\nON [MyTable2]\nFOR EACH ROW\nBEGIN\n    INSERT INTO [MyTable4]([MyColumn1])\n    VALUES(NEW.[MyColumn1]);\nEND"
           },
           "ID": "ee64ffc3-5536-4624-beaf-bc3a61d06a1a",
@@ -256,18 +256,18 @@
       "IsDependencyOf": []
     },
     {
-      "$id": "34",
+      "$id": "DbObject { ID: 'b12a6a37-7739-48e0-a9e1-499ae7d2a395', Name: 'MyTable4' }",
       "Columns": [
         {
-          "$id": "35",
+          "$id": "DbObject { ID: 'de0425b8-9f99-4d76-9a64-09e52f8b5d5a', Name: 'MyColumn1' }",
           "DataType": {
-            "$id": "36",
+            "$id": "2049FB74B0631023",
             "Name": "INTEGER"
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
-            "$id": "37",
+            "$id": "D12CC50BBB155503",
             "Code": null
           },
           "ID": "de0425b8-9f99-4d76-9a64-09e52f8b5d5a",
@@ -277,15 +277,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "38",
+          "$id": "DbObject { ID: 'a6354ea4-7113-4c14-8047-648f0cfc7163', Name: 'MyColumn2' }",
           "DataType": {
-            "$id": "39",
+            "$id": "2049FB74B0631023",
             "Name": "INTEGER"
           },
           "NotNull": true,
           "Identity": true,
           "Default": {
-            "$id": "40",
+            "$id": "D12CC50BBB155503",
             "Code": null
           },
           "ID": "a6354ea4-7113-4c14-8047-648f0cfc7163",
@@ -296,7 +296,7 @@
         }
       ],
       "PrimaryKey": {
-        "$id": "41",
+        "$id": "DbObject { ID: '53ad5415-7fea-4a51-bcae-65e349a2e477', Name: 'PK_MyTable4' }",
         "Columns": [
           "MyColumn2"
         ],
@@ -318,18 +318,18 @@
       "IsDependencyOf": []
     },
     {
-      "$id": "42",
+      "$id": "DbObject { ID: '6ca51f29-c1bc-4349-b9c1-6f1ea170f162', Name: 'MyTable5' }",
       "Columns": [
         {
-          "$id": "43",
+          "$id": "DbObject { ID: '5309d66f-2030-402e-912e-5547babaa072', Name: 'MyColumn1' }",
           "DataType": {
-            "$id": "44",
+            "$id": "2049FB74B0631023",
             "Name": "INTEGER"
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
-            "$id": "45",
+            "$id": "0D5360FBB1BF91A2",
             "Code": "(ABs(-15))"
           },
           "ID": "5309d66f-2030-402e-912e-5547babaa072",
@@ -339,15 +339,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "46",
+          "$id": "DbObject { ID: 'cba4849b-3d84-4e38-b2c8-f9dbdff22fa6', Name: 'MyColumn10' }",
           "DataType": {
-            "$id": "47",
+            "$id": "D3CAAC0A6F2AC8A1",
             "Name": "NUMERIC"
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
-            "$id": "48",
+            "$id": "9684A056E0D52C95",
             "Code": "'16:17:18'"
           },
           "ID": "cba4849b-3d84-4e38-b2c8-f9dbdff22fa6",
@@ -357,15 +357,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "49",
+          "$id": "DbObject { ID: '4dde852d-ec19-4b61-80f9-da428d8ff41a', Name: 'MyColumn11' }",
           "DataType": {
-            "$id": "50",
+            "$id": "D3CAAC0A6F2AC8A1",
             "Name": "NUMERIC"
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
-            "$id": "51",
+            "$id": "9ECBFD81A61B061D",
             "Code": "'2022-02-15 16:17:18'"
           },
           "ID": "4dde852d-ec19-4b61-80f9-da428d8ff41a",
@@ -375,15 +375,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "52",
+          "$id": "DbObject { ID: '685faf2e-fef7-4e6b-a960-acd093f1f004', Name: 'MyColumn12' }",
           "DataType": {
-            "$id": "53",
+            "$id": "D3CAAC0A6F2AC8A1",
             "Name": "NUMERIC"
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
-            "$id": "54",
+            "$id": "F3C7AD2B6834B840",
             "Code": "'2022-02-15 16:17:18+01:30'"
           },
           "ID": "685faf2e-fef7-4e6b-a960-acd093f1f004",
@@ -393,15 +393,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "55",
+          "$id": "DbObject { ID: '11ef8e25-3691-42d4-b2fa-88d724f73b61', Name: 'MyColumn2' }",
           "DataType": {
-            "$id": "56",
+            "$id": "3CF45FBFEB5ECEC7",
             "Name": "TEXT"
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
-            "$id": "57",
+            "$id": "535E28DC8CBF60E2",
             "Code": "'test'"
           },
           "ID": "11ef8e25-3691-42d4-b2fa-88d724f73b61",
@@ -411,15 +411,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "58",
+          "$id": "DbObject { ID: '6ed0ab37-aad3-4294-9ba6-c0921f0e67af', Name: 'MyColumn3' }",
           "DataType": {
-            "$id": "59",
+            "$id": "FD2B84C4F869BAB0",
             "Name": "BLOB"
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
-            "$id": "60",
+            "$id": "90E1530920CD9357",
             "Code": "X'000204'"
           },
           "ID": "6ed0ab37-aad3-4294-9ba6-c0921f0e67af",
@@ -429,15 +429,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "61",
+          "$id": "DbObject { ID: 'aca57fd6-80d0-4c18-b2ca-aabcb06bea10', Name: 'MyColumn4' }",
           "DataType": {
-            "$id": "62",
+            "$id": "915C29E8A4178D06",
             "Name": "REAL"
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
-            "$id": "63",
+            "$id": "F6364828BCF6D51A",
             "Code": "123.456"
           },
           "ID": "aca57fd6-80d0-4c18-b2ca-aabcb06bea10",
@@ -447,15 +447,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "64",
+          "$id": "DbObject { ID: '47666b8b-ca72-4507-86b2-04c47a84aed4', Name: 'MyColumn5' }",
           "DataType": {
-            "$id": "65",
+            "$id": "915C29E8A4178D06",
             "Name": "REAL"
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
-            "$id": "66",
+            "$id": "9EA3BD2290545711",
             "Code": "12345.6789"
           },
           "ID": "47666b8b-ca72-4507-86b2-04c47a84aed4",
@@ -465,15 +465,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "67",
+          "$id": "DbObject { ID: '98fded6c-d486-4a2e-9c9a-1ec31c9d5830', Name: 'MyColumn6' }",
           "DataType": {
-            "$id": "68",
+            "$id": "D3CAAC0A6F2AC8A1",
             "Name": "NUMERIC"
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
-            "$id": "69",
+            "$id": "DC954864BBC971C3",
             "Code": "12.3"
           },
           "ID": "98fded6c-d486-4a2e-9c9a-1ec31c9d5830",
@@ -483,15 +483,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "70",
+          "$id": "DbObject { ID: '2502cade-458a-48ee-9421-e6d7850493f7', Name: 'MyColumn7' }",
           "DataType": {
-            "$id": "71",
+            "$id": "2049FB74B0631023",
             "Name": "INTEGER"
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
-            "$id": "72",
+            "$id": "C87962D4AA6521B8",
             "Code": "TRUE"
           },
           "ID": "2502cade-458a-48ee-9421-e6d7850493f7",
@@ -501,15 +501,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "73",
+          "$id": "DbObject { ID: 'ed044a8a-6858-41e2-a867-9e5b01f226c8', Name: 'MyColumn8' }",
           "DataType": {
-            "$id": "74",
+            "$id": "FD2B84C4F869BAB0",
             "Name": "BLOB"
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
-            "$id": "75",
+            "$id": "CBE2E32115B270B8",
             "Code": "X'8e2f99ad0fc8456db0e4ec3ba572dd15'"
           },
           "ID": "ed044a8a-6858-41e2-a867-9e5b01f226c8",
@@ -519,15 +519,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "76",
+          "$id": "DbObject { ID: '9939d676-73b7-42d1-ba3e-5c13aed5ce34', Name: 'MyColumn9' }",
           "DataType": {
-            "$id": "77",
+            "$id": "D3CAAC0A6F2AC8A1",
             "Name": "NUMERIC"
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
-            "$id": "78",
+            "$id": "B9960A22E04D580C",
             "Code": "'2022-02-15'"
           },
           "ID": "9939d676-73b7-42d1-ba3e-5c13aed5ce34",
@@ -538,7 +538,7 @@
         }
       ],
       "PrimaryKey": {
-        "$id": "79",
+        "$id": "DbObject { ID: '79384d48-a39b-4a22-900e-066b2ca67ba2', Name: 'PK_MyTable5' }",
         "Columns": [
           "MyColumn2",
           "MyColumn1"
@@ -551,7 +551,7 @@
       },
       "UniqueConstraints": [
         {
-          "$id": "80",
+          "$id": "DbObject { ID: '5293b58a-9f63-4f0f-8d6f-18416ebbd751', Name: 'UQ_MyTable5_CustomName' }",
           "Columns": [
             "MyColumn6",
             "MyColumn3",
@@ -568,7 +568,7 @@
       "ForeignKeys": [],
       "Indexes": [
         {
-          "$id": "81",
+          "$id": "DbObject { ID: '1d632285-9914-4c5d-98e6-a618a99bd799', Name: 'IDX_MyTable5_CustomName' }",
           "TableName": "MyTable5",
           "Columns": [
             "MyColumn8"
@@ -590,18 +590,18 @@
       "IsDependencyOf": []
     },
     {
-      "$id": "82",
+      "$id": "DbObject { ID: 'f3064a8c-346a-4b3d-af2c-d967b39841e4', Name: 'MyTable6' }",
       "Columns": [
         {
-          "$id": "83",
+          "$id": "DbObject { ID: 'bfa08c82-5c8f-4ab4-bd41-1f1d85cf3c85', Name: 'MyColumn1' }",
           "DataType": {
-            "$id": "84",
+            "$id": "3CF45FBFEB5ECEC7",
             "Name": "TEXT"
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
-            "$id": "85",
+            "$id": "D12CC50BBB155503",
             "Code": null
           },
           "ID": "bfa08c82-5c8f-4ab4-bd41-1f1d85cf3c85",
@@ -611,15 +611,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "86",
+          "$id": "DbObject { ID: 'a402e2b7-c826-4cfd-a304-97c9bc346ba2', Name: 'MyColumn2' }",
           "DataType": {
-            "$id": "87",
+            "$id": "2049FB74B0631023",
             "Name": "INTEGER"
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
-            "$id": "88",
+            "$id": "D12CC50BBB155503",
             "Code": null
           },
           "ID": "a402e2b7-c826-4cfd-a304-97c9bc346ba2",
@@ -634,7 +634,7 @@
       "CheckConstraints": [],
       "ForeignKeys": [
         {
-          "$id": "89",
+          "$id": "DbObject { ID: 'ae453b22-d270-41fc-8184-9ac26b7a0569', Name: 'FK_MyTable6_MyTable5_CustomName' }",
           "ThisTableName": "MyTable6",
           "ThisColumnNames": [
             "MyColumn1",
@@ -665,9 +665,9 @@
   ],
   "Views": [
     {
-      "$id": "90",
+      "$id": "DbObject { ID: 'e2569aae-d5da-4a77-b3cd-51adbdb272d9', Name: 'MyView1' }",
       "CreateStatement": {
-        "$id": "91",
+        "$id": "21918E4E39FF5395",
         "Code": "CREATE VIEW MyView1 AS\nSELECT\n    t1.MyColumn1,\n    t1.MyColumn4,\n    t2.MyColumn2\nFROM MyTable1 t1\nLEFT JOIN MyTable2 t2\n    ON t2.MyColumn1 = t1.MyColumn1"
       },
       "ID": "e2569aae-d5da-4a77-b3cd-51adbdb272d9",
@@ -679,12 +679,12 @@
   ],
   "Scripts": [
     {
-      "$id": "92",
+      "$id": "DbObject { ID: '100d624a-01aa-4730-b86f-f991ac3ed936', Name: 'InsertSomeInitialData' }",
       "Kind": 1,
       "MinDbVersionToExecute": 0,
       "MaxDbVersionToExecute": 9223372036854775807,
       "Text": {
-        "$id": "93",
+        "$id": "CC07220213339459",
         "Code": "INSERT INTO [MyTable4]([MyColumn1])\nSELECT * FROM\n(\n    SELECT 1\n    UNION ALL\n    SELECT 2\n    UNION ALL\n    SELECT 3\n) t\nWHERE NOT EXISTS (SELECT * FROM [MyTable4])"
       },
       "ID": "100d624a-01aa-4730-b86f-f991ac3ed936",

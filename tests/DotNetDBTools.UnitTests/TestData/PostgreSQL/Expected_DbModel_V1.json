@@ -1,22 +1,22 @@
 {
-  "$id": "1",
+  "$id": "702DACE70C775298",
   "CompositeTypes": [
     {
-      "$id": "2",
+      "$id": "DbObject { ID: '29bf2520-1d74-49ab-a602-14bd692371f2', Name: 'MyCompositeType1' }",
       "Attributes": [
         {
-          "$id": "3",
+          "$id": "848F4FE0BCC2D35C",
           "Name": "MyAttribute1",
           "DataType": {
-            "$id": "4",
+            "$id": "A5B6736925E0166E",
             "Name": "VARCHAR(100)"
           }
         },
         {
-          "$id": "5",
+          "$id": "4863E52A1E2171AD",
           "Name": "MyAttribute2",
           "DataType": {
-            "$id": "6",
+            "$id": "22A04E25F8A20AE5",
             "Name": "DECIMAL(7,2)[]"
           }
         }
@@ -30,21 +30,21 @@
   ],
   "DomainTypes": [
     {
-      "$id": "7",
+      "$id": "DbObject { ID: 'a28bcb6c-3cbc-467e-a52c-ac740c98a537', Name: 'MyDomain1' }",
       "UnderlyingType": {
-        "$id": "8",
+        "$id": "A5B6736925E0166E",
         "Name": "VARCHAR(100)"
       },
       "NotNull": false,
       "Default": {
-        "$id": "9",
+        "$id": "D12CC50BBB155503",
         "Code": null
       },
       "CheckConstraints": [
         {
-          "$id": "10",
+          "$id": "DbObject { ID: '7a053cee-abcc-4993-8eea-12b87c5194e6', Name: 'MyDomain1_CK1' }",
           "Expression": {
-            "$id": "11",
+            "$id": "881960D3F61EB48F",
             "Code": "value = lower(value)"
           },
           "ID": "7a053cee-abcc-4993-8eea-12b87c5194e6",
@@ -54,9 +54,9 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "12",
+          "$id": "DbObject { ID: '7905b7a8-cf45-4328-8a2b-00616d98235e', Name: 'MyDomain1_CK2' }",
           "Expression": {
-            "$id": "13",
+            "$id": "F34DB9C523E6AB08",
             "Code": "char_length(value) > 3"
           },
           "ID": "7905b7a8-cf45-4328-8a2b-00616d98235e",
@@ -75,7 +75,7 @@
   ],
   "EnumTypes": [
     {
-      "$id": "14",
+      "$id": "DbObject { ID: '9286cc1d-f0a5-4046-adc0-b9ae298c6f91', Name: 'MyEnumType1' }",
       "AllowedValues": [
         "Label1",
         "Label2"
@@ -89,9 +89,9 @@
   ],
   "RangeTypes": [
     {
-      "$id": "15",
+      "$id": "DbObject { ID: 'b02db666-fbbc-4cd7-a14d-4049251b9a7b', Name: 'MyRangeType1' }",
       "Subtype": {
-        "$id": "16",
+        "$id": "9B455902E67E49B2",
         "Name": "TIMESTAMP"
       },
       "SubtypeOperatorClass": "timestamp_ops",
@@ -108,9 +108,9 @@
   ],
   "Functions": [
     {
-      "$id": "17",
+      "$id": "DbObject { ID: '63d3a414-2893-4462-b3f8-04633101263a', Name: 'MyFunction1' }",
       "CreateStatement": {
-        "$id": "18",
+        "$id": "AAE06579A7A52B24",
         "Code": "CREATE FUNCTION \"MyFunction1\"(a INT, b INT)\nRETURNS INT\nLANGUAGE SQL\nIMMUTABLE\nAS\n$FuncBody$\nSELECT a + b;\n$FuncBody$"
       },
       "IsSimple": true,
@@ -121,9 +121,9 @@
       "IsDependencyOf": []
     },
     {
-      "$id": "19",
+      "$id": "DbObject { ID: '8edd4469-e048-48bd-956e-a26113355f80', Name: 'TR_MyTable2_MyTrigger1_Handler' }",
       "CreateStatement": {
-        "$id": "20",
+        "$id": "14374591160E59E5",
         "Code": "CREATE FUNCTION \"TR_MyTable2_MyTrigger1_Handler\"()\nRETURNS TRIGGER\nLANGUAGE PLPGSQL\nAS\n$FuncBody$\nBEGIN\n    INSERT INTO \"MyTable4\"(\"MyColumn1\")\n    VALUES(NEW.\"MyColumn1\");\n    RETURN NULL;\nEND;\n$FuncBody$"
       },
       "IsSimple": false,
@@ -132,19 +132,19 @@
       "Parent": null,
       "DependsOn": [
         {
-          "$id": "21",
+          "$id": "DbObject { ID: 'b12a6a37-7739-48e0-a9e1-499ae7d2a395', Name: 'MyTable4' }",
           "OfType": null,
           "Columns": [
             {
-              "$id": "22",
+              "$id": "DbObject { ID: 'de0425b8-9f99-4d76-9a64-09e52f8b5d5a', Name: 'MyColumn1' }",
               "DataType": {
-                "$id": "23",
+                "$id": "85552F008B207EC8",
                 "Name": "BIGINT"
               },
               "NotNull": true,
               "Identity": false,
               "Default": {
-                "$id": "24",
+                "$id": "D12CC50BBB155503",
                 "Code": null
               },
               "ID": "de0425b8-9f99-4d76-9a64-09e52f8b5d5a",
@@ -154,15 +154,15 @@
               "IsDependencyOf": []
             },
             {
-              "$id": "25",
+              "$id": "DbObject { ID: 'a6354ea4-7113-4c14-8047-648f0cfc7163', Name: 'MyColumn2' }",
               "DataType": {
-                "$id": "26",
+                "$id": "213584E6F496185B",
                 "Name": "INT"
               },
               "NotNull": true,
               "Identity": true,
               "Default": {
-                "$id": "27",
+                "$id": "D12CC50BBB155503",
                 "Code": null
               },
               "ID": "a6354ea4-7113-4c14-8047-648f0cfc7163",
@@ -173,7 +173,7 @@
             }
           ],
           "PrimaryKey": {
-            "$id": "28",
+            "$id": "DbObject { ID: '53ad5415-7fea-4a51-bcae-65e349a2e477', Name: 'PK_MyTable4' }",
             "Columns": [
               "MyColumn2"
             ],
@@ -203,19 +203,19 @@
   "Version": 1,
   "Tables": [
     {
-      "$id": "29",
+      "$id": "DbObject { ID: '299675e6-4faa-4d0f-a36a-224306ba5bcb', Name: 'MyTable1' }",
       "OfType": null,
       "Columns": [
         {
-          "$id": "30",
+          "$id": "DbObject { ID: 'a2f2a4de-1337-4594-ae41-72ed4d05f317', Name: 'MyColumn1' }",
           "DataType": {
-            "$id": "31",
+            "$id": "213584E6F496185B",
             "Name": "INT"
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
-            "$id": "32",
+            "$id": "E26185F24E980850",
             "Code": "15"
           },
           "ID": "a2f2a4de-1337-4594-ae41-72ed4d05f317",
@@ -225,15 +225,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "33",
+          "$id": "DbObject { ID: 'fe68ee3d-09d0-40ac-93f9-5e441fbb4f70', Name: 'MyColumn2' }",
           "DataType": {
-            "$id": "34",
+            "$id": "3CF45FBFEB5ECEC7",
             "Name": "TEXT"
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
-            "$id": "35",
+            "$id": "D12CC50BBB155503",
             "Code": null
           },
           "ID": "fe68ee3d-09d0-40ac-93f9-5e441fbb4f70",
@@ -243,15 +243,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "36",
+          "$id": "DbObject { ID: '6e95de30-e01a-4fb4-b8b7-8f0c40bb682c', Name: 'MyColumn3' }",
           "DataType": {
-            "$id": "37",
+            "$id": "213584E6F496185B",
             "Name": "INT"
           },
           "NotNull": true,
           "Identity": true,
           "Default": {
-            "$id": "38",
+            "$id": "D12CC50BBB155503",
             "Code": null
           },
           "ID": "6e95de30-e01a-4fb4-b8b7-8f0c40bb682c",
@@ -261,15 +261,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "39",
+          "$id": "DbObject { ID: '867ac528-e87e-4c93-b6e3-dd2fcbbb837f', Name: 'MyColumn4' }",
           "DataType": {
-            "$id": "40",
+            "$id": "65643EFE492A431F",
             "Name": "DECIMAL"
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
-            "$id": "41",
+            "$id": "EE86FAD38751ABCA",
             "Code": "736"
           },
           "ID": "867ac528-e87e-4c93-b6e3-dd2fcbbb837f",
@@ -279,15 +279,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "42",
+          "$id": "DbObject { ID: 'ebbef06c-c7de-4b36-a911-827566639630', Name: 'MyColumn5' }",
           "DataType": {
-            "$id": "43",
+            "$id": "EDF049B8249E640F",
             "Name": "VARCHAR(1000)"
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
-            "$id": "44",
+            "$id": "085124D68A1754B2",
             "Code": "'some text'"
           },
           "ID": "ebbef06c-c7de-4b36-a911-827566639630",
@@ -298,7 +298,7 @@
         }
       ],
       "PrimaryKey": {
-        "$id": "45",
+        "$id": "DbObject { ID: '37a45def-f4a0-4be7-8bfb-8fbed4a7d705', Name: 'PK_MyTable1' }",
         "Columns": [
           "MyColumn3"
         ],
@@ -310,7 +310,7 @@
       },
       "UniqueConstraints": [
         {
-          "$id": "46",
+          "$id": "DbObject { ID: 'f3f08522-26ee-4950-9135-22edf2e4e0cf', Name: 'UQ_MyTable1_MyColumn4' }",
           "Columns": [
             "MyColumn4"
           ],
@@ -323,9 +323,9 @@
       ],
       "CheckConstraints": [
         {
-          "$id": "47",
+          "$id": "DbObject { ID: 'eb9c59b5-bc7e-49d7-adaa-f5600b6a19a2', Name: 'CK_MyTable1_MyCheck1' }",
           "Expression": {
-            "$id": "48",
+            "$id": "21A25FF107CC4974",
             "Code": "\"MyColumn4\" >= 0"
           },
           "ID": "eb9c59b5-bc7e-49d7-adaa-f5600b6a19a2",
@@ -337,7 +337,7 @@
       ],
       "ForeignKeys": [
         {
-          "$id": "49",
+          "$id": "DbObject { ID: 'd11b2a53-32db-432f-bb6b-f91788844ba9', Name: 'FK_MyTable1_MyColumn1_MyTable2_MyColumn1' }",
           "ThisTableName": "MyTable1",
           "ThisColumnNames": [
             "MyColumn1"
@@ -364,19 +364,19 @@
       "IsDependencyOf": []
     },
     {
-      "$id": "50",
+      "$id": "DbObject { ID: 'bfb9030c-a8c3-4882-9c42-1c6ad025cf8f', Name: 'MyTable2' }",
       "OfType": null,
       "Columns": [
         {
-          "$id": "51",
+          "$id": "DbObject { ID: 'c480f22f-7c01-4f41-b282-35e9f5cd1fe3', Name: 'MyColumn1' }",
           "DataType": {
-            "$id": "52",
+            "$id": "213584E6F496185B",
             "Name": "INT"
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
-            "$id": "53",
+            "$id": "3FFA66CD9357353A",
             "Code": "333"
           },
           "ID": "c480f22f-7c01-4f41-b282-35e9f5cd1fe3",
@@ -386,15 +386,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "54",
+          "$id": "DbObject { ID: '5a0d1926-3270-4eb2-92eb-00be56c7af23', Name: 'MyColumn2' }",
           "DataType": {
-            "$id": "55",
+            "$id": "6B27FA21A594B94E",
             "Name": "BYTEA"
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
-            "$id": "56",
+            "$id": "AE7CE956303452AF",
             "Code": "'\\x000408'"
           },
           "ID": "5a0d1926-3270-4eb2-92eb-00be56c7af23",
@@ -405,7 +405,7 @@
         }
       ],
       "PrimaryKey": {
-        "$id": "57",
+        "$id": "DbObject { ID: '3a43615b-40b3-4a13-99e7-93af7c56e8ce', Name: 'PK_MyTable2_CustomName' }",
         "Columns": [
           "MyColumn1"
         ],
@@ -420,7 +420,7 @@
       "ForeignKeys": [],
       "Indexes": [
         {
-          "$id": "58",
+          "$id": "DbObject { ID: '74390b3c-bc39-4860-a42e-12baa400f927', Name: 'IDX_MyTable2_MyIndex1' }",
           "TableName": "MyTable2",
           "Columns": [
             "MyColumn1",
@@ -437,10 +437,10 @@
       ],
       "Triggers": [
         {
-          "$id": "59",
+          "$id": "DbObject { ID: 'ee64ffc3-5536-4624-beaf-bc3a61d06a1a', Name: 'TR_MyTable2_MyTrigger1' }",
           "TableName": "MyTable2",
           "CreateStatement": {
-            "$id": "60",
+            "$id": "CA9618E28D247020",
             "Code": "CREATE TRIGGER \"TR_MyTable2_MyTrigger1\"\nAFTER INSERT\nON \"MyTable2\"\nFOR EACH ROW\nEXECUTE FUNCTION \"TR_MyTable2_MyTrigger1_Handler\"()"
           },
           "ID": "ee64ffc3-5536-4624-beaf-bc3a61d06a1a",
@@ -457,22 +457,22 @@
       "IsDependencyOf": []
     },
     {
-      "$ref": "21"
+      "$ref": "DbObject { ID: 'b12a6a37-7739-48e0-a9e1-499ae7d2a395', Name: 'MyTable4' }"
     },
     {
-      "$id": "61",
+      "$id": "DbObject { ID: '6ca51f29-c1bc-4349-b9c1-6f1ea170f162', Name: 'MyTable5' }",
       "OfType": null,
       "Columns": [
         {
-          "$id": "62",
+          "$id": "DbObject { ID: '5309d66f-2030-402e-912e-5547babaa072', Name: 'MyColumn1' }",
           "DataType": {
-            "$id": "63",
+            "$id": "213584E6F496185B",
             "Name": "INT"
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
-            "$id": "64",
+            "$id": "104C42D037A2D975",
             "Code": "ABs(-15)"
           },
           "ID": "5309d66f-2030-402e-912e-5547babaa072",
@@ -482,15 +482,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "65",
+          "$id": "DbObject { ID: 'cba4849b-3d84-4e38-b2c8-f9dbdff22fa6', Name: 'MyColumn10' }",
           "DataType": {
-            "$id": "66",
+            "$id": "19335A7C598342C5",
             "Name": "TIME"
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
-            "$id": "67",
+            "$id": "9684A056E0D52C95",
             "Code": "'16:17:18'"
           },
           "ID": "cba4849b-3d84-4e38-b2c8-f9dbdff22fa6",
@@ -500,15 +500,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "68",
+          "$id": "DbObject { ID: '15ae6061-426d-4485-85e6-ecd3e0f98882', Name: 'MyColumn101' }",
           "DataType": {
-            "$id": "69",
+            "$id": "4F9148B6D978F321",
             "Name": "\"MyCompositeType1\""
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
-            "$id": "70",
+            "$id": "D12CC50BBB155503",
             "Code": null
           },
           "ID": "15ae6061-426d-4485-85e6-ecd3e0f98882",
@@ -518,15 +518,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "71",
+          "$id": "DbObject { ID: '45856161-db66-49f6-afde-9214d2d2d4b0', Name: 'MyColumn102' }",
           "DataType": {
-            "$id": "72",
+            "$id": "671673FF5413B8DD",
             "Name": "\"MyDomain1\""
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
-            "$id": "73",
+            "$id": "D12CC50BBB155503",
             "Code": null
           },
           "ID": "45856161-db66-49f6-afde-9214d2d2d4b0",
@@ -536,15 +536,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "74",
+          "$id": "DbObject { ID: 'b45d163b-f49e-499f-a9e5-2538cd073b80', Name: 'MyColumn103' }",
           "DataType": {
-            "$id": "75",
+            "$id": "B1DBABCD5AF3EAC4",
             "Name": "\"MyEnumType1\""
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
-            "$id": "76",
+            "$id": "D12CC50BBB155503",
             "Code": null
           },
           "ID": "b45d163b-f49e-499f-a9e5-2538cd073b80",
@@ -554,15 +554,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "77",
+          "$id": "DbObject { ID: 'c8b03b75-a8a2-47e0-bf5c-f3e4f1b8f500', Name: 'MyColumn104' }",
           "DataType": {
-            "$id": "78",
+            "$id": "8E5AB18ADF71184D",
             "Name": "\"MyRangeType1\""
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
-            "$id": "79",
+            "$id": "D12CC50BBB155503",
             "Code": null
           },
           "ID": "c8b03b75-a8a2-47e0-bf5c-f3e4f1b8f500",
@@ -572,15 +572,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "80",
+          "$id": "DbObject { ID: '4dde852d-ec19-4b61-80f9-da428d8ff41a', Name: 'MyColumn11' }",
           "DataType": {
-            "$id": "81",
+            "$id": "9B455902E67E49B2",
             "Name": "TIMESTAMP"
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
-            "$id": "82",
+            "$id": "9ECBFD81A61B061D",
             "Code": "'2022-02-15 16:17:18'"
           },
           "ID": "4dde852d-ec19-4b61-80f9-da428d8ff41a",
@@ -590,15 +590,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "83",
+          "$id": "DbObject { ID: '685faf2e-fef7-4e6b-a960-acd093f1f004', Name: 'MyColumn12' }",
           "DataType": {
-            "$id": "84",
+            "$id": "386E8171EC9C3B5E",
             "Name": "TIMESTAMPTZ"
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
-            "$id": "85",
+            "$id": "B99FA352CBF2A31E",
             "Code": "'2022-02-15 14:47:18+00'"
           },
           "ID": "685faf2e-fef7-4e6b-a960-acd093f1f004",
@@ -608,15 +608,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "86",
+          "$id": "DbObject { ID: '11ef8e25-3691-42d4-b2fa-88d724f73b61', Name: 'MyColumn2' }",
           "DataType": {
-            "$id": "87",
+            "$id": "9AF64F48EA752725",
             "Name": "CHAR(4)"
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
-            "$id": "88",
+            "$id": "535E28DC8CBF60E2",
             "Code": "'test'"
           },
           "ID": "11ef8e25-3691-42d4-b2fa-88d724f73b61",
@@ -626,15 +626,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "89",
+          "$id": "DbObject { ID: '5c455ec9-9830-4d0b-a88c-57341899dc4a', Name: 'MyColumn201' }",
           "DataType": {
-            "$id": "90",
+            "$id": "213584E6F496185B",
             "Name": "INT"
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
-            "$id": "91",
+            "$id": "F95FFD25538B19ED",
             "Code": "\"MyFunction1\"(-25, 10)"
           },
           "ID": "5c455ec9-9830-4d0b-a88c-57341899dc4a",
@@ -644,15 +644,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "92",
+          "$id": "DbObject { ID: '6ed0ab37-aad3-4294-9ba6-c0921f0e67af', Name: 'MyColumn3' }",
           "DataType": {
-            "$id": "93",
+            "$id": "6B27FA21A594B94E",
             "Name": "BYTEA"
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
-            "$id": "94",
+            "$id": "27796B89B9EF86B9",
             "Code": "'\\x000204'"
           },
           "ID": "6ed0ab37-aad3-4294-9ba6-c0921f0e67af",
@@ -662,15 +662,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "95",
+          "$id": "DbObject { ID: '5a6fdf6e-f39e-41bf-84fd-6b1becab248b', Name: 'MyColumn301' }",
           "DataType": {
-            "$id": "96",
+            "$id": "7EAEA143706C8455",
             "Name": "SMALLINT"
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
-            "$id": "97",
+            "$id": "D12CC50BBB155503",
             "Code": null
           },
           "ID": "5a6fdf6e-f39e-41bf-84fd-6b1becab248b",
@@ -680,15 +680,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "98",
+          "$id": "DbObject { ID: '4f4b70fd-178d-468f-8575-1d41ed28afc4', Name: 'MyColumn302' }",
           "DataType": {
-            "$id": "99",
+            "$id": "7EAEA143706C8455",
             "Name": "SMALLINT"
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
-            "$id": "100",
+            "$id": "D12CC50BBB155503",
             "Code": null
           },
           "ID": "4f4b70fd-178d-468f-8575-1d41ed28afc4",
@@ -698,15 +698,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "101",
+          "$id": "DbObject { ID: '99eae06e-5188-43aa-be38-b353adc5aacf', Name: 'MyColumn303' }",
           "DataType": {
-            "$id": "102",
+            "$id": "699EC9A989087C09",
             "Name": "MONEY"
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
-            "$id": "103",
+            "$id": "D12CC50BBB155503",
             "Code": null
           },
           "ID": "99eae06e-5188-43aa-be38-b353adc5aacf",
@@ -716,15 +716,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "104",
+          "$id": "DbObject { ID: 'e4eea54c-b11b-4c85-b98e-aac299776845', Name: 'MyColumn304' }",
           "DataType": {
-            "$id": "105",
+            "$id": "D7A198E22B981D4B",
             "Name": "JSON"
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
-            "$id": "106",
+            "$id": "D12CC50BBB155503",
             "Code": null
           },
           "ID": "e4eea54c-b11b-4c85-b98e-aac299776845",
@@ -734,15 +734,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "107",
+          "$id": "DbObject { ID: '2624c566-e9d5-4dd9-974a-bf031f73a714', Name: 'MyColumn305' }",
           "DataType": {
-            "$id": "108",
+            "$id": "AE3162BD6FBE5AA9",
             "Name": "JSONB"
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
-            "$id": "109",
+            "$id": "D12CC50BBB155503",
             "Code": null
           },
           "ID": "2624c566-e9d5-4dd9-974a-bf031f73a714",
@@ -752,15 +752,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "110",
+          "$id": "DbObject { ID: '616314fc-e56a-424d-81ee-ae89be650d42', Name: 'MyColumn306' }",
           "DataType": {
-            "$id": "111",
+            "$id": "D4A155C328B88415",
             "Name": "XML"
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
-            "$id": "112",
+            "$id": "D12CC50BBB155503",
             "Code": null
           },
           "ID": "616314fc-e56a-424d-81ee-ae89be650d42",
@@ -770,15 +770,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "113",
+          "$id": "DbObject { ID: 'b6f006fa-2a78-4965-ac10-0d2cf05d60f0', Name: 'MyColumn307' }",
           "DataType": {
-            "$id": "114",
+            "$id": "08BA0511BBD04EF9",
             "Name": "TSQUERY"
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
-            "$id": "115",
+            "$id": "D12CC50BBB155503",
             "Code": null
           },
           "ID": "b6f006fa-2a78-4965-ac10-0d2cf05d60f0",
@@ -788,15 +788,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "116",
+          "$id": "DbObject { ID: '129fd264-af69-4aa7-b4ef-6b9923340cd8', Name: 'MyColumn308' }",
           "DataType": {
-            "$id": "117",
+            "$id": "F4E75BC795225182",
             "Name": "TSVECTOR"
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
-            "$id": "118",
+            "$id": "D12CC50BBB155503",
             "Code": null
           },
           "ID": "129fd264-af69-4aa7-b4ef-6b9923340cd8",
@@ -806,15 +806,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "119",
+          "$id": "DbObject { ID: 'd1ae8ccd-526a-46e1-a5a0-39f25cc391ce', Name: 'MyColumn309' }",
           "DataType": {
-            "$id": "120",
+            "$id": "A447123842199B7C",
             "Name": "POINT"
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
-            "$id": "121",
+            "$id": "D12CC50BBB155503",
             "Code": null
           },
           "ID": "d1ae8ccd-526a-46e1-a5a0-39f25cc391ce",
@@ -824,15 +824,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "122",
+          "$id": "DbObject { ID: 'f3f38026-18cc-49ec-9d4b-3e844427a6f8', Name: 'MyColumn310' }",
           "DataType": {
-            "$id": "123",
+            "$id": "5BA86D06E115125F",
             "Name": "LINE"
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
-            "$id": "124",
+            "$id": "D12CC50BBB155503",
             "Code": null
           },
           "ID": "f3f38026-18cc-49ec-9d4b-3e844427a6f8",
@@ -842,15 +842,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "125",
+          "$id": "DbObject { ID: '87c48981-bdb7-4da7-ac4a-1e03913133fa', Name: 'MyColumn311' }",
           "DataType": {
-            "$id": "126",
+            "$id": "181C1B8C5DF08483",
             "Name": "LSEG"
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
-            "$id": "127",
+            "$id": "D12CC50BBB155503",
             "Code": null
           },
           "ID": "87c48981-bdb7-4da7-ac4a-1e03913133fa",
@@ -860,15 +860,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "128",
+          "$id": "DbObject { ID: '7b535f7e-bcc3-4950-b8af-a16ea36fb7bb', Name: 'MyColumn312' }",
           "DataType": {
-            "$id": "129",
+            "$id": "7F3D1902144CBA38",
             "Name": "BOX"
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
-            "$id": "130",
+            "$id": "D12CC50BBB155503",
             "Code": null
           },
           "ID": "7b535f7e-bcc3-4950-b8af-a16ea36fb7bb",
@@ -878,15 +878,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "131",
+          "$id": "DbObject { ID: '1c4c38cc-8266-4992-b87a-179b0affb526', Name: 'MyColumn313' }",
           "DataType": {
-            "$id": "132",
+            "$id": "76B9DFAC3A49A9BD",
             "Name": "PATH"
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
-            "$id": "133",
+            "$id": "D12CC50BBB155503",
             "Code": null
           },
           "ID": "1c4c38cc-8266-4992-b87a-179b0affb526",
@@ -896,15 +896,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "134",
+          "$id": "DbObject { ID: '448d6de4-9d8e-47cb-99e7-9801e78a3e7f', Name: 'MyColumn314' }",
           "DataType": {
-            "$id": "135",
+            "$id": "9DA67FAD204FDE8F",
             "Name": "POLYGON"
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
-            "$id": "136",
+            "$id": "D12CC50BBB155503",
             "Code": null
           },
           "ID": "448d6de4-9d8e-47cb-99e7-9801e78a3e7f",
@@ -914,15 +914,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "137",
+          "$id": "DbObject { ID: 'a1e9678b-12bd-4c2f-88a5-8f203a10d4bf', Name: 'MyColumn315' }",
           "DataType": {
-            "$id": "138",
+            "$id": "5E915F59398EF75A",
             "Name": "CIRCLE"
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
-            "$id": "139",
+            "$id": "D12CC50BBB155503",
             "Code": null
           },
           "ID": "a1e9678b-12bd-4c2f-88a5-8f203a10d4bf",
@@ -932,15 +932,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "140",
+          "$id": "DbObject { ID: 'f8ef2969-0182-44c0-b9e5-58506b2353be', Name: 'MyColumn316' }",
           "DataType": {
-            "$id": "141",
+            "$id": "DFC8D09D724698FE",
             "Name": "INET"
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
-            "$id": "142",
+            "$id": "D12CC50BBB155503",
             "Code": null
           },
           "ID": "f8ef2969-0182-44c0-b9e5-58506b2353be",
@@ -950,15 +950,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "143",
+          "$id": "DbObject { ID: '1d70b438-3a2c-4d8a-9fb8-2e39bacd2582', Name: 'MyColumn317' }",
           "DataType": {
-            "$id": "144",
+            "$id": "BC86B41920CD600D",
             "Name": "CIDR"
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
-            "$id": "145",
+            "$id": "D12CC50BBB155503",
             "Code": null
           },
           "ID": "1d70b438-3a2c-4d8a-9fb8-2e39bacd2582",
@@ -968,15 +968,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "146",
+          "$id": "DbObject { ID: 'eeb2bca0-4d76-4b75-98c1-130a62268265', Name: 'MyColumn318' }",
           "DataType": {
-            "$id": "147",
+            "$id": "B63C2D1FE56374FD",
             "Name": "MACADDR"
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
-            "$id": "148",
+            "$id": "D12CC50BBB155503",
             "Code": null
           },
           "ID": "eeb2bca0-4d76-4b75-98c1-130a62268265",
@@ -986,15 +986,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "149",
+          "$id": "DbObject { ID: '9594f5f1-d746-4efa-a174-65e9eb82eea0', Name: 'MyColumn319' }",
           "DataType": {
-            "$id": "150",
+            "$id": "E0E7343E38546CAB",
             "Name": "MACADDR8"
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
-            "$id": "151",
+            "$id": "D12CC50BBB155503",
             "Code": null
           },
           "ID": "9594f5f1-d746-4efa-a174-65e9eb82eea0",
@@ -1004,15 +1004,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "152",
+          "$id": "DbObject { ID: '78aaf5ec-b0c6-4503-8fa7-a87e1d45f532', Name: 'MyColumn320' }",
           "DataType": {
-            "$id": "153",
+            "$id": "65643EFE492A431F",
             "Name": "DECIMAL"
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
-            "$id": "154",
+            "$id": "D12CC50BBB155503",
             "Code": null
           },
           "ID": "78aaf5ec-b0c6-4503-8fa7-a87e1d45f532",
@@ -1022,15 +1022,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "155",
+          "$id": "DbObject { ID: 'dc2e14b0-0fd7-44d9-92a7-39ee99358459', Name: 'MyColumn321' }",
           "DataType": {
-            "$id": "156",
+            "$id": "B9672BAE249673C5",
             "Name": "TIMETZ"
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
-            "$id": "157",
+            "$id": "D12CC50BBB155503",
             "Code": null
           },
           "ID": "dc2e14b0-0fd7-44d9-92a7-39ee99358459",
@@ -1040,15 +1040,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "158",
+          "$id": "DbObject { ID: '4c2aa5f2-893f-42f1-a39d-d81123988b2e', Name: 'MyColumn322' }",
           "DataType": {
-            "$id": "159",
+            "$id": "B1F6CDD3EDC050B0",
             "Name": "TIME(4)"
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
-            "$id": "160",
+            "$id": "D12CC50BBB155503",
             "Code": null
           },
           "ID": "4c2aa5f2-893f-42f1-a39d-d81123988b2e",
@@ -1058,15 +1058,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "161",
+          "$id": "DbObject { ID: '710e422f-7899-45fa-8b1d-d2543519ffc1', Name: 'MyColumn323' }",
           "DataType": {
-            "$id": "162",
+            "$id": "80E161A69AC34FA8",
             "Name": "TIMETZ(4)"
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
-            "$id": "163",
+            "$id": "D12CC50BBB155503",
             "Code": null
           },
           "ID": "710e422f-7899-45fa-8b1d-d2543519ffc1",
@@ -1076,15 +1076,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "164",
+          "$id": "DbObject { ID: 'fb0562d8-afba-4939-8cd3-89878c572b56', Name: 'MyColumn324' }",
           "DataType": {
-            "$id": "165",
+            "$id": "2496DD9A0B277DB7",
             "Name": "TIMESTAMP(4)"
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
-            "$id": "166",
+            "$id": "D12CC50BBB155503",
             "Code": null
           },
           "ID": "fb0562d8-afba-4939-8cd3-89878c572b56",
@@ -1094,15 +1094,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "167",
+          "$id": "DbObject { ID: 'baabb5c1-e231-4c0b-97ec-f6be8fba018f', Name: 'MyColumn325' }",
           "DataType": {
-            "$id": "168",
+            "$id": "0F9F7552C1FD04EA",
             "Name": "TIMESTAMPTZ(4)"
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
-            "$id": "169",
+            "$id": "D12CC50BBB155503",
             "Code": null
           },
           "ID": "baabb5c1-e231-4c0b-97ec-f6be8fba018f",
@@ -1112,15 +1112,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "170",
+          "$id": "DbObject { ID: '4763c35f-bdbd-485e-9010-a950cb5a4bdb', Name: 'MyColumn326' }",
           "DataType": {
-            "$id": "171",
+            "$id": "45AFD2529868A9B0",
             "Name": "INTERVAL"
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
-            "$id": "172",
+            "$id": "D12CC50BBB155503",
             "Code": null
           },
           "ID": "4763c35f-bdbd-485e-9010-a950cb5a4bdb",
@@ -1130,15 +1130,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "173",
+          "$id": "DbObject { ID: 'ecbfa2f0-98a1-4d13-9da6-772a80dddac7', Name: 'MyColumn327' }",
           "DataType": {
-            "$id": "174",
+            "$id": "02A73A9CC12DBC08",
             "Name": "INTERVAL MINUTE TO SECOND(6)"
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
-            "$id": "175",
+            "$id": "D12CC50BBB155503",
             "Code": null
           },
           "ID": "ecbfa2f0-98a1-4d13-9da6-772a80dddac7",
@@ -1148,15 +1148,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "176",
+          "$id": "DbObject { ID: '36049ef7-16f2-41f3-ab8c-69d23726ad42', Name: 'MyColumn328' }",
           "DataType": {
-            "$id": "177",
+            "$id": "F166DC1240A803A2",
             "Name": "BIT"
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
-            "$id": "178",
+            "$id": "D12CC50BBB155503",
             "Code": null
           },
           "ID": "36049ef7-16f2-41f3-ab8c-69d23726ad42",
@@ -1166,15 +1166,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "179",
+          "$id": "DbObject { ID: '03f0a0a6-cf85-41dc-8c3a-879ae832e9ab', Name: 'MyColumn329' }",
           "DataType": {
-            "$id": "180",
+            "$id": "E2AAE9C40E1BCB8C",
             "Name": "VARBIT"
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
-            "$id": "181",
+            "$id": "D12CC50BBB155503",
             "Code": null
           },
           "ID": "03f0a0a6-cf85-41dc-8c3a-879ae832e9ab",
@@ -1184,15 +1184,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "182",
+          "$id": "DbObject { ID: '9ec1ef6a-9df3-4633-889a-660f53a4866f', Name: 'MyColumn330' }",
           "DataType": {
-            "$id": "183",
+            "$id": "9354EC2839A4FCBA",
             "Name": "BIT(10)"
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
-            "$id": "184",
+            "$id": "D12CC50BBB155503",
             "Code": null
           },
           "ID": "9ec1ef6a-9df3-4633-889a-660f53a4866f",
@@ -1202,15 +1202,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "185",
+          "$id": "DbObject { ID: 'eeb5b0e8-0b1f-4ec6-b47b-068e5b303255', Name: 'MyColumn331' }",
           "DataType": {
-            "$id": "186",
+            "$id": "6841E7DE7E43C3A8",
             "Name": "VARBIT(20)"
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
-            "$id": "187",
+            "$id": "D12CC50BBB155503",
             "Code": null
           },
           "ID": "eeb5b0e8-0b1f-4ec6-b47b-068e5b303255",
@@ -1220,15 +1220,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "188",
+          "$id": "DbObject { ID: 'ab4454ec-a6b4-4d51-b0fa-0e667b26326d', Name: 'MyColumn332' }",
           "DataType": {
-            "$id": "189",
+            "$id": "65F11D65EC9B5194",
             "Name": "CHAR"
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
-            "$id": "190",
+            "$id": "D12CC50BBB155503",
             "Code": null
           },
           "ID": "ab4454ec-a6b4-4d51-b0fa-0e667b26326d",
@@ -1238,15 +1238,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "191",
+          "$id": "DbObject { ID: '684f2d90-9eea-4879-b2d5-0197d32654b0', Name: 'MyColumn333' }",
           "DataType": {
-            "$id": "192",
+            "$id": "106635F8104156E8",
             "Name": "VARCHAR"
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
-            "$id": "193",
+            "$id": "D12CC50BBB155503",
             "Code": null
           },
           "ID": "684f2d90-9eea-4879-b2d5-0197d32654b0",
@@ -1256,15 +1256,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "194",
+          "$id": "DbObject { ID: '54b3d4dd-b3a9-4b99-915d-dff9fe24d7c2', Name: 'MyColumn334' }",
           "DataType": {
-            "$id": "195",
+            "$id": "E01B819C9220ACDF",
             "Name": "CHAR(30)"
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
-            "$id": "196",
+            "$id": "D12CC50BBB155503",
             "Code": null
           },
           "ID": "54b3d4dd-b3a9-4b99-915d-dff9fe24d7c2",
@@ -1274,15 +1274,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "197",
+          "$id": "DbObject { ID: '3631d9cb-c041-44e5-a964-c2751918c234', Name: 'MyColumn335' }",
           "DataType": {
-            "$id": "198",
+            "$id": "C734A1FBB4205AA8",
             "Name": "VARCHAR(40)"
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
-            "$id": "199",
+            "$id": "D12CC50BBB155503",
             "Code": null
           },
           "ID": "3631d9cb-c041-44e5-a964-c2751918c234",
@@ -1292,15 +1292,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "200",
+          "$id": "DbObject { ID: '00dfce94-1c1d-4fc2-bdb0-8e1306a248a2', Name: 'MyColumn336' }",
           "DataType": {
-            "$id": "201",
+            "$id": "B467A71959F3D6A0",
             "Name": "JSONB[][]"
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
-            "$id": "202",
+            "$id": "D12CC50BBB155503",
             "Code": null
           },
           "ID": "00dfce94-1c1d-4fc2-bdb0-8e1306a248a2",
@@ -1310,15 +1310,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "203",
+          "$id": "DbObject { ID: '9430c94b-7ded-47b1-83bb-a041f0edee88', Name: 'MyColumn337' }",
           "DataType": {
-            "$id": "204",
+            "$id": "FAD0DF7F1FB47530",
             "Name": "DECIMAL(10,4)[][]"
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
-            "$id": "205",
+            "$id": "D12CC50BBB155503",
             "Code": null
           },
           "ID": "9430c94b-7ded-47b1-83bb-a041f0edee88",
@@ -1328,15 +1328,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "206",
+          "$id": "DbObject { ID: '86107168-6f36-43f9-8a56-78d19049beda', Name: 'MyColumn338' }",
           "DataType": {
-            "$id": "207",
+            "$id": "CD40C1CDD1B082DF",
             "Name": "TIMETZ(4)[]"
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
-            "$id": "208",
+            "$id": "D12CC50BBB155503",
             "Code": null
           },
           "ID": "86107168-6f36-43f9-8a56-78d19049beda",
@@ -1346,15 +1346,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "209",
+          "$id": "DbObject { ID: 'a9863561-9309-4911-94d8-c12d21b0884e', Name: 'MyColumn339' }",
           "DataType": {
-            "$id": "210",
+            "$id": "4E74463DD89713C7",
             "Name": "\"MyCompositeType1\"[]"
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
-            "$id": "211",
+            "$id": "D12CC50BBB155503",
             "Code": null
           },
           "ID": "a9863561-9309-4911-94d8-c12d21b0884e",
@@ -1364,15 +1364,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "212",
+          "$id": "DbObject { ID: '0d33ed85-9909-46e7-8369-eee86b563519', Name: 'MyColumn340' }",
           "DataType": {
-            "$id": "213",
+            "$id": "4E74463DD89713C7",
             "Name": "\"MyCompositeType1\"[]"
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
-            "$id": "214",
+            "$id": "D12CC50BBB155503",
             "Code": null
           },
           "ID": "0d33ed85-9909-46e7-8369-eee86b563519",
@@ -1382,15 +1382,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "215",
+          "$id": "DbObject { ID: 'aca57fd6-80d0-4c18-b2ca-aabcb06bea10', Name: 'MyColumn4' }",
           "DataType": {
-            "$id": "216",
+            "$id": "240CF460F6AD8DA4",
             "Name": "FLOAT4"
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
-            "$id": "217",
+            "$id": "F6364828BCF6D51A",
             "Code": "123.456"
           },
           "ID": "aca57fd6-80d0-4c18-b2ca-aabcb06bea10",
@@ -1400,15 +1400,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "218",
+          "$id": "DbObject { ID: '47666b8b-ca72-4507-86b2-04c47a84aed4', Name: 'MyColumn5' }",
           "DataType": {
-            "$id": "219",
+            "$id": "6D39B8C2285B39DE",
             "Name": "FLOAT8"
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
-            "$id": "220",
+            "$id": "9EA3BD2290545711",
             "Code": "12345.6789"
           },
           "ID": "47666b8b-ca72-4507-86b2-04c47a84aed4",
@@ -1418,15 +1418,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "221",
+          "$id": "DbObject { ID: '98fded6c-d486-4a2e-9c9a-1ec31c9d5830', Name: 'MyColumn6' }",
           "DataType": {
-            "$id": "222",
+            "$id": "83D2318088D8047B",
             "Name": "DECIMAL(6,1)"
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
-            "$id": "223",
+            "$id": "DC954864BBC971C3",
             "Code": "12.3"
           },
           "ID": "98fded6c-d486-4a2e-9c9a-1ec31c9d5830",
@@ -1436,15 +1436,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "224",
+          "$id": "DbObject { ID: '2502cade-458a-48ee-9421-e6d7850493f7', Name: 'MyColumn7' }",
           "DataType": {
-            "$id": "225",
+            "$id": "36BFF0A95CA09FCA",
             "Name": "BOOL"
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
-            "$id": "226",
+            "$id": "C87962D4AA6521B8",
             "Code": "TRUE"
           },
           "ID": "2502cade-458a-48ee-9421-e6d7850493f7",
@@ -1454,15 +1454,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "227",
+          "$id": "DbObject { ID: 'ed044a8a-6858-41e2-a867-9e5b01f226c8', Name: 'MyColumn8' }",
           "DataType": {
-            "$id": "228",
+            "$id": "5388A8DA0BA93FD3",
             "Name": "UUID"
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
-            "$id": "229",
+            "$id": "72BA57B8A134275E",
             "Code": "'8e2f99ad-0fc8-456d-b0e4-ec3ba572dd15'"
           },
           "ID": "ed044a8a-6858-41e2-a867-9e5b01f226c8",
@@ -1472,15 +1472,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "230",
+          "$id": "DbObject { ID: '9939d676-73b7-42d1-ba3e-5c13aed5ce34', Name: 'MyColumn9' }",
           "DataType": {
-            "$id": "231",
+            "$id": "84A2390B7167BC18",
             "Name": "DATE"
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
-            "$id": "232",
+            "$id": "B9960A22E04D580C",
             "Code": "'2022-02-15'"
           },
           "ID": "9939d676-73b7-42d1-ba3e-5c13aed5ce34",
@@ -1491,7 +1491,7 @@
         }
       ],
       "PrimaryKey": {
-        "$id": "233",
+        "$id": "DbObject { ID: '79384d48-a39b-4a22-900e-066b2ca67ba2', Name: 'PK_MyTable5_CustomName' }",
         "Columns": [
           "MyColumn2",
           "MyColumn1"
@@ -1504,7 +1504,7 @@
       },
       "UniqueConstraints": [
         {
-          "$id": "234",
+          "$id": "DbObject { ID: '5293b58a-9f63-4f0f-8d6f-18416ebbd751', Name: 'UQ_MyTable5_CustomName' }",
           "Columns": [
             "MyColumn6",
             "MyColumn3",
@@ -1521,7 +1521,7 @@
       "ForeignKeys": [],
       "Indexes": [
         {
-          "$id": "235",
+          "$id": "DbObject { ID: '1d632285-9914-4c5d-98e6-a618a99bd799', Name: 'IDX_MyTable5_CustomName' }",
           "TableName": "MyTable5",
           "Columns": [
             "MyColumn8"
@@ -1543,19 +1543,19 @@
       "IsDependencyOf": []
     },
     {
-      "$id": "236",
+      "$id": "DbObject { ID: 'f3064a8c-346a-4b3d-af2c-d967b39841e4', Name: 'MyTable6' }",
       "OfType": null,
       "Columns": [
         {
-          "$id": "237",
+          "$id": "DbObject { ID: 'bfa08c82-5c8f-4ab4-bd41-1f1d85cf3c85', Name: 'MyColumn1' }",
           "DataType": {
-            "$id": "238",
+            "$id": "9AF64F48EA752725",
             "Name": "CHAR(4)"
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
-            "$id": "239",
+            "$id": "D12CC50BBB155503",
             "Code": null
           },
           "ID": "bfa08c82-5c8f-4ab4-bd41-1f1d85cf3c85",
@@ -1565,15 +1565,15 @@
           "IsDependencyOf": []
         },
         {
-          "$id": "240",
+          "$id": "DbObject { ID: 'a402e2b7-c826-4cfd-a304-97c9bc346ba2', Name: 'MyColumn2' }",
           "DataType": {
-            "$id": "241",
+            "$id": "213584E6F496185B",
             "Name": "INT"
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
-            "$id": "242",
+            "$id": "D12CC50BBB155503",
             "Code": null
           },
           "ID": "a402e2b7-c826-4cfd-a304-97c9bc346ba2",
@@ -1588,7 +1588,7 @@
       "CheckConstraints": [],
       "ForeignKeys": [
         {
-          "$id": "243",
+          "$id": "DbObject { ID: 'ae453b22-d270-41fc-8184-9ac26b7a0569', Name: 'FK_MyTable6_MyTable5_CustomName' }",
           "ThisTableName": "MyTable6",
           "ThisColumnNames": [
             "MyColumn1",
@@ -1619,9 +1619,9 @@
   ],
   "Views": [
     {
-      "$id": "244",
+      "$id": "DbObject { ID: 'e2569aae-d5da-4a77-b3cd-51adbdb272d9', Name: 'MyView1' }",
       "CreateStatement": {
-        "$id": "245",
+        "$id": "46EB6CE7AEC785BA",
         "Code": "CREATE VIEW \"MyView1\" AS\nSELECT\n    t1.\"MyColumn1\",\n    t1.\"MyColumn4\",\n    t2.\"MyColumn2\"\nFROM \"MyTable1\" t1\nLEFT JOIN \"MyTable2\" t2\n    ON t2.\"MyColumn1\" = t1.\"MyColumn1\""
       },
       "ID": "e2569aae-d5da-4a77-b3cd-51adbdb272d9",
@@ -1629,10 +1629,10 @@
       "Parent": null,
       "DependsOn": [
         {
-          "$ref": "29"
+          "$ref": "DbObject { ID: '299675e6-4faa-4d0f-a36a-224306ba5bcb', Name: 'MyTable1' }"
         },
         {
-          "$ref": "50"
+          "$ref": "DbObject { ID: 'bfb9030c-a8c3-4882-9c42-1c6ad025cf8f', Name: 'MyTable2' }"
         }
       ],
       "IsDependencyOf": []
@@ -1640,12 +1640,12 @@
   ],
   "Scripts": [
     {
-      "$id": "246",
+      "$id": "DbObject { ID: '100d624a-01aa-4730-b86f-f991ac3ed936', Name: 'InsertSomeInitialData' }",
       "Kind": 1,
       "MinDbVersionToExecute": 0,
       "MaxDbVersionToExecute": 9223372036854775807,
       "Text": {
-        "$id": "247",
+        "$id": "1DCB20ADC66C76BA",
         "Code": "INSERT INTO \"MyTable4\"(\"MyColumn1\")\nSELECT * FROM\n(\n    SELECT 1\n    UNION ALL\n    SELECT 2\n    UNION ALL\n    SELECT 3\n) t\nWHERE NOT EXISTS (SELECT * FROM \"MyTable4\")"
       },
       "ID": "100d624a-01aa-4730-b86f-f991ac3ed936",

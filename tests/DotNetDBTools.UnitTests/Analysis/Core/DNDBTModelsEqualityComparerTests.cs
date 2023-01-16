@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 using DotNetDBTools.Analysis;
 using DotNetDBTools.Analysis.Core;
-using DotNetDBTools.Analysis.Extensions;
 using DotNetDBTools.DefinitionParsing;
 using DotNetDBTools.Models.Agnostic;
 using DotNetDBTools.Models.Core;
