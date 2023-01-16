@@ -43,13 +43,25 @@ public class PostgreSQLCodeParser : CodeParser<PostgreSQLParser, PostgreSQLLexer
     }
 
     /// <summary>
+    /// Parses the list of functions|views|tables referenced in the provided create view statement.
+    /// </summary>
+    public List<Dependency> GetViewDependencies(string createViewStatement)
+    {
+        IParseTree parseTree = Parse(createViewStatement, x => x.create_view_statement());
+        PostgreSQLGetViewDependenciesVisitor visitor = new();
+        parseTree.Accept(visitor);
+        return visitor.GetDependencies();
+    }
+
+    /// <summary>
     /// Parses the list of functions|views|tables referenced in the provided create function statement.
     /// </summary>
-    public List<Dependency> GetFunctionDependencies(string createFunctionStatement)
+    public List<Dependency> GetFunctionDependencies(string createFunctionStatement, out string language)
     {
         IParseTree parseTree = Parse(createFunctionStatement, x => x.create_function_statement());
         PostgreSQLGetFunctionAttributesVisitor visitor = new();
         visitor.Visit(parseTree);
+        language = visitor.FunctionLanguage;
 
         IParseTree bodyParseTree;
         if (visitor.FunctionLanguage == "SQL" || visitor.FunctionLanguage is null)
@@ -65,12 +77,31 @@ public class PostgreSQLCodeParser : CodeParser<PostgreSQLParser, PostgreSQLLexer
     }
 
     /// <summary>
-    /// Parses the list of functions|views|tables referenced in the provided create view statement.
+    /// Parses the list of functions|views|tables referenced in the provided create procedure statement.
     /// </summary>
-    public List<Dependency> GetViewDependencies(string createViewStatement)
+    public List<Dependency> GetProcedureDependencies(string createProcedureStatement, out string language)
     {
-        IParseTree parseTree = Parse(createViewStatement, x => x.create_view_statement());
-        PostgreSQLGetViewDependenciesVisitor visitor = new();
+        throw new System.NotImplementedException();
+    }
+
+    /// <summary>
+    /// Parses the name of executed function in the provided create trigger statement.
+    /// </summary>
+    public List<Dependency> GetTriggerDependencies(string createTriggerStatement)
+    {
+        IParseTree parseTree = Parse(createTriggerStatement, x => x.create_trigger_statement());
+        PostgreSQLGetTriggerDependenciesVisitor visitor = new();
+        parseTree.Accept(visitor);
+        return visitor.GetDependencies();
+    }
+
+    /// <summary>
+    /// Parses the list of functions|sequences referenced in the provided expression statement.
+    /// </summary>
+    public List<Dependency> GetExpressionDependencies(string expressionStatement)
+    {
+        IParseTree parseTree = Parse(expressionStatement, x => x.vex());
+        PostgreSQLGetExpressionDependenciesVisitor visitor = new();
         parseTree.Accept(visitor);
         return visitor.GetDependencies();
     }

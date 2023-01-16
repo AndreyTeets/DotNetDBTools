@@ -4,5 +4,5 @@ LANGUAGE SQL
 IMMUTABLE
 AS
 $FuncBody$
-SELECT a + b;
+SELECT a + b + 1;
 $FuncBody$

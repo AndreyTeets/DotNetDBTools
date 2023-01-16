@@ -14,6 +14,7 @@ using static DotNetDBTools.Deploy.PostgreSQL.Queries.DBMSSysInfo.PostgreSQLGetDo
 using static DotNetDBTools.Deploy.PostgreSQL.Queries.DBMSSysInfo.PostgreSQLGetEnumTypesFromDBMSSysInfoQuery;
 using static DotNetDBTools.Deploy.PostgreSQL.Queries.DBMSSysInfo.PostgreSQLGetFunctionsFromDBMSSysInfoQuery;
 using static DotNetDBTools.Deploy.PostgreSQL.Queries.DBMSSysInfo.PostgreSQLGetRangeTypesFromDBMSSysInfoQuery;
+using static DotNetDBTools.Deploy.PostgreSQL.Queries.DBMSSysInfo.PostgreSQLGetSequencesFromDBMSSysInfoQuery;
 
 namespace DotNetDBTools.Deploy.PostgreSQL;
 
@@ -47,6 +48,7 @@ internal class PostgreSQLDbModelFromDBMSProvider : DbModelFromDBMSProvider<
     protected override void BuildAdditionalDbObjects(Database database)
     {
         PostgreSQLDatabase db = (PostgreSQLDatabase)database;
+        db.Sequences = BuildSequences(new PostgreSQLGetSequencesFromDBMSSysInfoQuery());
         db.CompositeTypes = BuildCompositeTypes(new PostgreSQLGetCompositeTypesFromDBMSSysInfoQuery());
         db.DomainTypes = BuildDomainTypes(new PostgreSQLGetDomainTypesFromDBMSSysInfoQuery());
         db.EnumTypes = BuildEnumTypes(new PostgreSQLGetEnumTypesFromDBMSSysInfoQuery());
@@ -57,6 +59,8 @@ internal class PostgreSQLDbModelFromDBMSProvider : DbModelFromDBMSProvider<
     protected override void ReplaceAdditionalDbModelObjectsIDsAndCodeWithDNDBTSysInfo(Database database, Dictionary<string, DNDBTInfo> dbObjectIDsMap)
     {
         PostgreSQLDatabase db = (PostgreSQLDatabase)database;
+        foreach (PostgreSQLSequence sequence in db.Sequences)
+            sequence.ID = dbObjectIDsMap[$"{DbObjectType.Sequence}_{sequence.Name}_{null}"].ID;
         foreach (PostgreSQLCompositeType type in db.CompositeTypes)
             type.ID = dbObjectIDsMap[$"{DbObjectType.UserDefinedType}_{type.Name}_{null}"].ID;
         foreach (PostgreSQLDomainType type in db.DomainTypes)
@@ -82,6 +86,34 @@ internal class PostgreSQLDbModelFromDBMSProvider : DbModelFromDBMSProvider<
             func.ID = dndbtInfo.ID;
             func.CreateStatement.Code = dndbtInfo.Code;
         }
+    }
+
+    private List<PostgreSQLSequence> BuildSequences(PostgreSQLGetSequencesFromDBMSSysInfoQuery query)
+    {
+        IEnumerable<SequenceRecord> sequenceRecordsList = QueryExecutor.Query<SequenceRecord>(query);
+        List<PostgreSQLSequence> sequencesList = new();
+        foreach (SequenceRecord sequenceRecord in sequenceRecordsList)
+        {
+            PostgreSQLSequence sequence = new()
+            {
+                ID = Guid.NewGuid(),
+                Name = sequenceRecord.SequenceName,
+                DataType = PostgreSQLQueriesHelper.CreateDataTypeModel(sequenceRecord.DataType, "-1", 0),
+                Options = new PostgreSQLSequenceOptions()
+                {
+                    StartWith = sequenceRecord.StartWith,
+                    IncrementBy = sequenceRecord.IncrementBy,
+                    MinValue = sequenceRecord.MinValue,
+                    MaxValue = sequenceRecord.MaxValue,
+                    Cache = sequenceRecord.Cache,
+                    Cycle = sequenceRecord.Cycle,
+                },
+                OwnedBy = (sequenceRecord.OwnedByTableName, sequenceRecord.OwnedByColumnName),
+            };
+
+            sequencesList.Add(sequence);
+        }
+        return sequencesList;
     }
 
     private List<PostgreSQLCompositeType> BuildCompositeTypes(PostgreSQLGetCompositeTypesFromDBMSSysInfoQuery query)

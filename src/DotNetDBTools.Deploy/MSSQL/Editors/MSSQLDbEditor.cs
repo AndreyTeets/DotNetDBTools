@@ -8,6 +8,7 @@ using DotNetDBTools.Deploy.MSSQL.Queries.DDL;
 using DotNetDBTools.Deploy.MSSQL.Queries.DNDBTSysInfo;
 using DotNetDBTools.Generation.Core;
 using DotNetDBTools.Generation.MSSQL;
+using DotNetDBTools.Models;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.MSSQL;
 using DotNetDBTools.Models.MSSQL.UserDefinedTypes;
@@ -61,10 +62,10 @@ internal class MSSQLDbEditor : DbEditor<
         }
         foreach (MSSQLUserDefinedTableType udtt in db.UserDefinedTableTypes)
             QueryExecutor.Execute(new MSSQLInsertDNDBTDbObjectRecordQuery(udtt.ID, null, DbObjectType.UserDefinedTableType, udtt.Name));
-        foreach (MSSQLFunction func in db.Functions)
-            QueryExecutor.Execute(new MSSQLInsertDNDBTDbObjectRecordQuery(func.ID, null, DbObjectType.Function, func.Name, func.GetCreateStatement()));
         foreach (MSSQLView view in db.Views)
             QueryExecutor.Execute(new MSSQLInsertDNDBTDbObjectRecordQuery(view.ID, null, DbObjectType.View, view.Name, view.GetCreateStatement()));
+        foreach (MSSQLFunction func in db.Functions)
+            QueryExecutor.Execute(new MSSQLInsertDNDBTDbObjectRecordQuery(func.ID, null, DbObjectType.Function, func.Name, func.GetCreateStatement()));
         foreach (MSSQLProcedure proc in db.Procedures)
             QueryExecutor.Execute(new MSSQLInsertDNDBTDbObjectRecordQuery(proc.ID, null, DbObjectType.Procedure, proc.Name, proc.GetCreateStatement()));
 
@@ -88,39 +89,44 @@ internal class MSSQLDbEditor : DbEditor<
         _scriptExecutor.ExecuteScripts(dbDiff, ScriptKind.BeforePublishOnce);
 
         _triggerEditor.DropTriggers(dbDiff);
-        foreach (MSSQLProcedure procedure in dbDiff.ProceduresToDrop)
-            DropProcedure(procedure);
-        foreach (MSSQLView view in dbDiff.ViewsToDrop)
-            DropView(view);
-        foreach (MSSQLFunction function in dbDiff.FunctionsToDrop)
-            DropFunction(function);
-        foreach (MSSQLUserDefinedTableType udtt in dbDiff.UserDefinedTableTypesToDrop)
-            DropUserDefinedTableType(udtt);
         _foreignKeyEditor.DropForeignKeys(dbDiff);
         _indexEditor.DropIndexes(dbDiff);
+
+        foreach (MSSQLProcedure procedure in dbDiff.ProceduresToDrop)
+            DropProcedure(procedure);
+        foreach (MSSQLFunction function in dbDiff.FunctionsToDrop)
+            DropFunction(function);
+        foreach (MSSQLView view in dbDiff.ViewsToDrop)
+            DropView(view);
+        foreach (MSSQLUserDefinedTableType udtt in dbDiff.UserDefinedTableTypesToDrop)
+            DropUserDefinedTableType(udtt);
+
         _tableEditor.DropTables(dbDiff);
 
         foreach (MSSQLUserDefinedType udt in dbDiff.RemovedUserDefinedTypes.Concat(dbDiff.ChangedUserDefinedTypes.Select(x => x.OldUserDefinedType)))
-            RenameUserDefinedTypeToTempInDbAndInDbDiff(udt);
+            RenameUserDefinedTypeToTemp(udt);
         foreach (MSSQLUserDefinedType udt in dbDiff.AddedUserDefinedTypes.Concat(dbDiff.ChangedUserDefinedTypes.Select(x => x.NewUserDefinedType)))
             CreateUserDefinedType(udt);
         foreach (MSSQLUserDefinedTypeDiff udtDiff in dbDiff.ChangedUserDefinedTypes)
             UseNewUDTInAllTables(udtDiff);
+
         _tableEditor.AlterTables(dbDiff);
         foreach (MSSQLUserDefinedType udt in dbDiff.RemovedUserDefinedTypes.Concat(dbDiff.ChangedUserDefinedTypes.Select(x => x.OldUserDefinedType)))
-            DropUserDefinedType(udt);
+            Drop_RenamedToTemp_UserDefinedType(udt);
 
         _tableEditor.CreateTables(dbDiff);
-        _indexEditor.CreateIndexes(dbDiff);
-        _foreignKeyEditor.CreateForeignKeys(dbDiff);
+
         foreach (MSSQLUserDefinedTableType udtt in dbDiff.UserDefinedTableTypesToCreate)
             CreateUserDefinedTableType(udtt);
-        foreach (MSSQLFunction function in dbDiff.FunctionsToCreate)
-            CreateFunction(function);
         foreach (MSSQLView view in dbDiff.ViewsToCreate)
             CreateView(view);
+        foreach (MSSQLFunction function in dbDiff.FunctionsToCreate)
+            CreateFunction(function);
         foreach (MSSQLProcedure procedure in dbDiff.ProceduresToCreate)
             CreateProcedure(procedure);
+
+        _indexEditor.CreateIndexes(dbDiff);
+        _foreignKeyEditor.CreateForeignKeys(dbDiff);
         _triggerEditor.CreateTriggers(dbDiff);
 
         _scriptExecutor.ExecuteScripts(dbDiff, ScriptKind.AfterPublishOnce);
@@ -129,10 +135,9 @@ internal class MSSQLDbEditor : DbEditor<
             QueryExecutor.Execute(new MSSQLUpdateDNDBTDbAttributesRecordQuery(dbDiff.NewDatabase));
     }
 
-    private void RenameUserDefinedTypeToTempInDbAndInDbDiff(MSSQLUserDefinedType udt)
+    private void RenameUserDefinedTypeToTemp(MSSQLUserDefinedType udt)
     {
         QueryExecutor.Execute(new MSSQLRenameUserDefinedDataTypeQuery(udt));
-        udt.Name = $"_DNDBTTemp_{udt.Name}";
         QueryExecutor.Execute(new MSSQLDeleteDNDBTDbObjectRecordQuery(udt.ID));
     }
 
@@ -142,9 +147,11 @@ internal class MSSQLDbEditor : DbEditor<
         QueryExecutor.Execute(new MSSQLInsertDNDBTDbObjectRecordQuery(udt.ID, null, DbObjectType.UserDefinedType, udt.Name));
     }
 
-    private void DropUserDefinedType(MSSQLUserDefinedType udt)
+    private void Drop_RenamedToTemp_UserDefinedType(MSSQLUserDefinedType udt)
     {
-        QueryExecutor.Execute(new MSSQLDropTypeQuery(udt));
+        MSSQLUserDefinedType renamedUdt = udt.CopyModel();
+        renamedUdt.Name = $"_DNDBTTemp_{udt.Name}";
+        QueryExecutor.Execute(new MSSQLDropTypeQuery(renamedUdt));
     }
 
     private void UseNewUDTInAllTables(MSSQLUserDefinedTypeDiff udtDiff)

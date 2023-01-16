@@ -156,7 +156,7 @@ internal abstract class DbModelFromDBMSProvider<
             };
             database.Scripts.Add(script);
         }
-        database.Scripts = database.Scripts.OrderByName();
+        database.Scripts = database.Scripts.OrderByNameThenByType().ToList();
     }
 
     private void PopulateDbAttributesFromDNDBTSysInfo(Database database)

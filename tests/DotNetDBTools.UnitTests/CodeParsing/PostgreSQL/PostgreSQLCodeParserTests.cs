@@ -71,7 +71,7 @@ public class PostgreSQLCodeParserTests : BaseCodeParserTests<PostgreSQLCodeParse
     {
         string input = MiscHelper.ReadFromFile($@"{TestData.TestDataDir}/CreateSQLFunction.sql");
         PostgreSQLCodeParser parser = new();
-        List<Dependency> dependencies = parser.GetFunctionDependencies(input);
+        List<Dependency> dependencies = parser.GetFunctionDependencies(input, out string language);
 
         List<Dependency> expectedDependencies = new()
         {
@@ -87,10 +87,17 @@ public class PostgreSQLCodeParserTests : BaseCodeParserTests<PostgreSQLCodeParse
     {
         string input = MiscHelper.ReadFromFile($@"{TestData.TestDataDir}/CreatePLPGSQLFunction.sql");
         PostgreSQLCodeParser parser = new();
-        List<Dependency> dependencies = parser.GetFunctionDependencies(input);
+        List<Dependency> dependencies = parser.GetFunctionDependencies(input, out string language);
 
         List<Dependency> expectedDependencies = new()
         {
+            new Dependency { Type = DependencyType.DataType, Name = "text" },
+            new Dependency { Type = DependencyType.DataType, Name = "xml" },
+            new Dependency { Type = DependencyType.DataType, Name = "timestamptz" },
+            new Dependency { Type = DependencyType.DataType, Name = "uuid" },
+            new Dependency { Type = DependencyType.DataType, Name = "regprocedure" },
+            new Dependency { Type = DependencyType.DataType, Name = "SQLSTATE" },
+            new Dependency { Type = DependencyType.DataType, Name = "int8" },
             new Dependency { Type = DependencyType.TableOrView, Name = "MyTable01" },
             new Dependency { Type = DependencyType.TableOrView, Name = "MyTable02" },
             new Dependency { Type = DependencyType.TableOrView, Name = "MyTable03".ToLower() },

@@ -5,12 +5,12 @@ using DotNetDBTools.Deploy.PostgreSQL.Queries.DNDBTSysInfo;
 
 namespace DotNetDBTools.Deploy.PostgreSQL.Editors;
 
-internal class PostgreSQLForeignKeyEditor : ForeignKeyEditor<
+internal class PostgreSQLForeignKeysEditor : ForeignKeyEditor<
     PostgreSQLInsertDNDBTDbObjectRecordQuery,
     PostgreSQLDeleteDNDBTDbObjectRecordQuery,
     PostgreSQLCreateForeignKeyQuery,
     PostgreSQLDropForeignKeyQuery>
 {
-    public PostgreSQLForeignKeyEditor(IQueryExecutor queryExecutor)
+    public PostgreSQLForeignKeysEditor(IQueryExecutor queryExecutor)
         : base(queryExecutor) { }
 }

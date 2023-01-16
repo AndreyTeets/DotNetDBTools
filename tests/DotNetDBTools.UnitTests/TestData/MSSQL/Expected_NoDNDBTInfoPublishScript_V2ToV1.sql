@@ -7,10 +7,6 @@ BEGIN TRY;
 EXEC sp_executesql N'DROP TRIGGER [TR_MyTable2_MyTrigger1];';
 -- QUERY END: DropTriggerQuery
 
--- QUERY START: DropViewQuery
-EXEC sp_executesql N'DROP VIEW [MyView1];';
--- QUERY END: DropViewQuery
-
 -- QUERY START: DropForeignKeyQuery
 EXEC sp_executesql N'ALTER TABLE [MyTable1NewName] DROP CONSTRAINT [FK_MyTable1_MyColumn1_MyTable2_MyColumn1];';
 -- QUERY END: DropForeignKeyQuery
@@ -22,6 +18,10 @@ EXEC sp_executesql N'ALTER TABLE [MyTable2] DROP CONSTRAINT [FK_MyTable2_MyColum
 -- QUERY START: DropIndexQuery
 EXEC sp_executesql N'DROP INDEX [IDX_MyTable2_MyIndex1] ON [MyTable2];';
 -- QUERY END: DropIndexQuery
+
+-- QUERY START: DropViewQuery
+EXEC sp_executesql N'DROP VIEW [MyView1];';
+-- QUERY END: DropViewQuery
 
 -- QUERY START: DropTableQuery
 EXEC sp_executesql N'DROP TABLE [MyTable3];';
@@ -124,6 +124,9 @@ ALTER TABLE [MyTable2] ADD CONSTRAINT [PK_MyTable2_CustomName] PRIMARY KEY ([MyC
 -- QUERY START: AlterTableQuery
 EXEC sp_executesql N'ALTER TABLE [MyTable5] DROP CONSTRAINT [DF_MyTable5_MyColumn1];
 ALTER TABLE [MyTable5] ADD CONSTRAINT [DF_MyTable5_MyColumn1] DEFAULT ABs(-15) FOR [MyColumn1];
+ALTER TABLE [MyTable5] DROP CONSTRAINT [DF_MyTable5_MyColumn101];
+ALTER TABLE [MyTable5] ALTER COLUMN [MyColumn101] MyUserDefinedType1 NULL;
+ALTER TABLE [MyTable5] ADD CONSTRAINT [DF_MyTable5_MyColumn101] DEFAULT ''cc'' FOR [MyColumn101];
 ALTER TABLE [MyTable5] ADD CONSTRAINT [PK_MyTable5_CustomName] PRIMARY KEY ([MyColumn2], [MyColumn1]);
 ALTER TABLE [MyTable5] ADD CONSTRAINT [UQ_MyTable5_CustomName] UNIQUE ([MyColumn6], [MyColumn3], [MyColumn7]);';
 -- QUERY END: AlterTableQuery
@@ -139,6 +142,17 @@ EXEC sp_executesql N'CREATE TABLE [MyTable6]
     [MyColumn2] INT NULL
 );';
 -- QUERY END: CreateTableQuery
+
+-- QUERY START: CreateViewQuery
+EXEC sp_executesql N'CREATE VIEW MyView1 AS
+SELECT
+    t1.MyColumn1,
+    t1.MyColumn4,
+    t2.MyColumn2
+FROM MyTable1 t1
+LEFT JOIN MyTable2 t2
+    ON t2.MyColumn1 = t1.MyColumn1';
+-- QUERY END: CreateViewQuery
 
 -- QUERY START: CreateIndexQuery
 EXEC sp_executesql N'CREATE UNIQUE INDEX [IDX_MyTable2_MyIndex1]
@@ -161,17 +175,6 @@ EXEC sp_executesql N'ALTER TABLE [MyTable1] ADD CONSTRAINT [FK_MyTable1_MyColumn
         REFERENCES [MyTable2] ([MyColumn1])
         ON UPDATE NO ACTION ON DELETE CASCADE;';
 -- QUERY END: CreateForeignKeyQuery
-
--- QUERY START: CreateViewQuery
-EXEC sp_executesql N'CREATE VIEW MyView1 AS
-SELECT
-    t1.MyColumn1,
-    t1.MyColumn4,
-    t2.MyColumn2
-FROM MyTable1 t1
-LEFT JOIN MyTable2 t2
-    ON t2.MyColumn1 = t1.MyColumn1';
--- QUERY END: CreateViewQuery
 
 -- QUERY START: CreateTriggerQuery
 EXEC sp_executesql N'CREATE TRIGGER [TR_MyTable2_MyTrigger1]

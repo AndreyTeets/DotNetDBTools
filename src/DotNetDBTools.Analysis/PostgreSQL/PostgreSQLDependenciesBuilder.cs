@@ -16,128 +16,200 @@ internal class PostgreSQLDependenciesBuilder : IDependenciesBuilder
     {
         PostgreSQLDatabase db = (PostgreSQLDatabase)database;
         Build_DependsOn_Property_ForAllObjects(db);
-        Build_IsDependencyOf_Property_ForAllObjects(db);
-        SetFunctionsSimplicity(db);
     }
 
     private void Build_DependsOn_Property_ForAllObjects(PostgreSQLDatabase database)
     {
+        IEnumerable<DbObject> userDefinedTypes =
+           database.CompositeTypes.Select(x => (DbObject)x)
+           .Concat(database.DomainTypes.Select(x => (DbObject)x))
+           .Concat(database.EnumTypes.Select(x => (DbObject)x))
+           .Concat(database.RangeTypes.Select(x => (DbObject)x));
+
+        Dictionary<string, DbObject> udtNameToUdtMap = new();
+        foreach (DbObject udt in userDefinedTypes)
+            udtNameToUdtMap.Add($@"""{udt.Name}""", udt);
+
         Dictionary<string, Table> tableNameToTableMap = database.Tables.ToDictionary(x => x.Name, x => x);
         Dictionary<string, View> viewNameToViewMap = database.Views.ToDictionary(x => x.Name, x => x);
         Dictionary<string, PostgreSQLFunction> funcNameToFuncMap = database.Functions.ToDictionary(x => x.Name, x => x);
+        Dictionary<string, PostgreSQLSequence> sequenceNameToFuncMap = database.Sequences.ToDictionary(x => x.Name, x => x);
 
         PostgreSQLCodeParser parser = new();
-        foreach (PostgreSQLView view in database.Views)
-        {
-            List<Dependency> dependencies = ExecuteParsingFunc(
-                () => parser.GetViewDependencies(view.CreateStatement.Code),
-                $"Error while parsing view '{view.Name}' code");
+        AddForTypes();
+        AddForTableObjects();
+        AddForProgrammableObjects();
 
-            foreach (Dependency dep in dependencies)
-                AddDependency(view.DependsOn, dep, $"view '{view.Name}'");
-        }
-        foreach (PostgreSQLFunction func in database.Functions)
+        void AddForTypes()
         {
-            List<Dependency> dependencies = ExecuteParsingFunc(
-                () => parser.GetFunctionDependencies(func.CreateStatement.Code),
-                $"Error while parsing function '{func.Name}' code");
-
-            foreach (Dependency dep in dependencies)
-                AddDependency(func.DependsOn, dep, $"function '{func.Name}'");
-        }
-        foreach (PostgreSQLProcedure proc in database.Procedures)
-        {
-        }
-
-        foreach (PostgreSQLCompositeType type in database.CompositeTypes)
-        {
-        }
-        foreach (PostgreSQLDomainType type in database.DomainTypes)
-        {
-        }
-        foreach (PostgreSQLEnumType type in database.EnumTypes)
-        {
-        }
-        foreach (PostgreSQLRangeType type in database.RangeTypes)
-        {
-        }
-
-        void AddDependency(List<DbObject> dependencies, Dependency dep, string referencingObjectName)
-        {
-            if (dep.Type == DependencyType.TableOrView)
+            foreach (PostgreSQLCompositeType type in database.CompositeTypes)
             {
-                if (tableNameToTableMap.ContainsKey(dep.Name))
-                    dependencies.Add(tableNameToTableMap[dep.Name]);
-                else if (viewNameToViewMap.ContainsKey(dep.Name))
-                    dependencies.Add(viewNameToViewMap[dep.Name]);
-                // Otherwise it may be a system table or view
+                foreach (PostgreSQLCompositeTypeAttribute attr in type.Attributes)
+                    AddDependencyIfTypeIsUdt(attr.DataType.DependsOn, attr.DataType.Name);
             }
-            else if (dep.Type == DependencyType.Function)
+            foreach (PostgreSQLDomainType type in database.DomainTypes)
             {
-                if (funcNameToFuncMap.ContainsKey(dep.Name))
-                    dependencies.Add(funcNameToFuncMap[dep.Name]);
-                // Otherwise it may be a system function
-            }
-            else
-            {
-                throw new Exception($"Invalid dependency type {dep.Type}");
-            }
-        }
-    }
+                AddDependencyIfTypeIsUdt(type.UnderlyingType.DependsOn, type.UnderlyingType.Name);
 
-    private void Build_IsDependencyOf_Property_ForAllObjects(PostgreSQLDatabase database)
-    {
-        IEnumerable<DbObject> dbObjectsWithDependencies =
-            database.Views.Select(x => (DbObject)x)
-            .Concat(database.Functions.Select(x => (DbObject)x))
-            .Concat(database.Procedures.Select(x => (DbObject)x))
-            .Concat(database.CompositeTypes.Select(x => (DbObject)x))
-            .Concat(database.DomainTypes.Select(x => (DbObject)x))
-            .Concat(database.EnumTypes.Select(x => (DbObject)x))
-            .Concat(database.RangeTypes.Select(x => (DbObject)x));
+                if (type.Default.Code != null)
+                {
+                    List<Dependency> deps = ExecuteParsingFunc(
+                        () => parser.GetExpressionDependencies(type.Default.Code),
+                        $"Error while parsing domain type '{type.Name}' default expression");
 
-        Dictionary<Guid, List<DbObject>> isDependencyOfMap = new();
-        foreach (DbObject dbObject in dbObjectsWithDependencies)
-        {
-            foreach (DbObject dep in dbObject.DependsOn)
+                    AddDependencies(type.Default.DependsOn, deps);
+                }
+
+                foreach (CheckConstraint ck in type.CheckConstraints)
+                {
+                    ck.Parent = type;
+
+                    List<Dependency> deps = ExecuteParsingFunc(
+                        () => parser.GetExpressionDependencies(ck.Expression.Code),
+                        $"Error while parsing domain type '{type.Name}' check constraint '{ck.Name}' expression");
+
+                    AddDependencies(ck.Expression.DependsOn, deps);
+                }
+            }
+            foreach (PostgreSQLRangeType type in database.RangeTypes)
             {
-                if (!isDependencyOfMap.ContainsKey(dep.ID))
-                    isDependencyOfMap[dep.ID] = new List<DbObject>();
-                isDependencyOfMap[dep.ID].Add(dbObject);
+                AddDependencyIfTypeIsUdt(type.Subtype.DependsOn, type.Subtype.Name);
+                // TODO + OperatorFuncsDependsOn
             }
         }
 
-        foreach (DbObject dbObject in dbObjectsWithDependencies)
+        void AddForTableObjects()
         {
-            if (isDependencyOfMap.ContainsKey(dbObject.ID))
-                dbObject.IsDependencyOf = isDependencyOfMap[dbObject.ID];
+            foreach (PostgreSQLTable table in database.Tables)
+            {
+                foreach (PostgreSQLColumn column in table.Columns)
+                {
+                    column.Parent = table;
+
+                    AddDependencyIfTypeIsUdt(column.DataType.DependsOn, column.DataType.Name);
+
+                    if (column.Default.Code != null)
+                    {
+                        List<Dependency> deps = ExecuteParsingFunc(
+                        () => parser.GetExpressionDependencies(column.Default.Code),
+                        $"Error while parsing table '{table.Name}' column '{table.Name}' default expression");
+
+                        AddDependencies(column.Default.DependsOn, deps);
+                    }
+                }
+                foreach (CheckConstraint ck in table.CheckConstraints)
+                {
+                    ck.Parent = table;
+
+                    List<Dependency> deps = ExecuteParsingFunc(
+                        () => parser.GetExpressionDependencies(ck.Expression.Code),
+                        $"Error while parsing table '{table.Name}' check constraint '{ck.Name}' expression");
+
+                    AddDependencies(ck.Expression.DependsOn, deps);
+                }
+                foreach (PostgreSQLIndex index in table.Indexes)
+                {
+                    index.Parent = table;
+
+                    if (index.Expression != null)
+                    {
+                        List<Dependency> deps = ExecuteParsingFunc(
+                        () => parser.GetExpressionDependencies(index.Expression.Code),
+                        $"Error while parsing index '{index.Name}' expression");
+
+                        AddDependencies(index.Expression.DependsOn, deps);
+                    }
+                }
+                foreach (PostgreSQLTrigger trigger in table.Triggers)
+                {
+                    trigger.Parent = table;
+
+                    List<Dependency> deps = ExecuteParsingFunc(
+                        () => parser.GetTriggerDependencies(trigger.CreateStatement.Code),
+                        $"Error while parsing trigger '{trigger.Name}' expression");
+
+                    AddDependencies(trigger.CreateStatement.DependsOn, deps);
+                }
+            }
         }
-    }
 
-    private void SetFunctionsSimplicity(PostgreSQLDatabase database)
-    {
-        foreach (PostgreSQLFunction func in database.Functions)
-            func.IsSimple = !ObjectDependsOnTablesTransitively(func);
-    }
-
-    private bool ObjectDependsOnTablesTransitively(DbObject dbObject)
-    {
-        foreach (DbObject dep in dbObject.DependsOn)
+        void AddForProgrammableObjects()
         {
-            if (ObjectIsTableOrDependsOnTables(dep))
-                return true;
-            else
-                return ObjectDependsOnTablesTransitively(dep);
-        }
-        return false;
-    }
+            foreach (PostgreSQLView view in database.Views)
+            {
+                List<Dependency> deps = ExecuteParsingFunc(
+                    () => parser.GetViewDependencies(view.CreateStatement.Code),
+                    $"Error while parsing view '{view.Name}' code");
 
-    private bool ObjectIsTableOrDependsOnTables(DbObject dbObject)
-    {
-        if (dbObject is Table || dbObject is View || dbObject is PostgreSQLProcedure)
-            return true;
-        else
-            return false;
+                AddDependencies(view.CreateStatement.DependsOn, deps);
+            }
+            foreach (PostgreSQLFunction func in database.Functions)
+            {
+                string language = null;
+                List<Dependency> deps = ExecuteParsingFunc(
+                    () => parser.GetFunctionDependencies(func.CreateStatement.Code, out language),
+                    $"Error while parsing function '{func.Name}' code");
+
+                if (language == "SQL")
+                    AddDependencies(func.CreateStatement.DependsOn, deps);
+            }
+            foreach (PostgreSQLProcedure proc in database.Procedures)
+            {
+                string language = null;
+                List<Dependency> deps = ExecuteParsingFunc(
+                    () => parser.GetProcedureDependencies(proc.CreateStatement.Code, out language),
+                    $"Error while parsing procedure '{proc.Name}' code");
+
+                if (language == "SQL")
+                    AddDependencies(proc.CreateStatement.DependsOn, deps);
+            }
+        }
+
+        void AddDependencyIfTypeIsUdt(List<DbObject> destDeps, string typeName)
+        {
+            string typeNameWithoutArray = PostgreSQLHelperMethods.GetNormalizedTypeNameWithoutArray(
+                typeName, out string _, out string _);
+            if (udtNameToUdtMap.ContainsKey(typeNameWithoutArray))
+                destDeps.Add(udtNameToUdtMap[typeNameWithoutArray]);
+        }
+
+        void AddDependencies(List<DbObject> destDeps, IEnumerable<Dependency> sourceDeps)
+        {
+            foreach (Dependency dep in sourceDeps)
+            {
+                if (dep.Type == DependencyType.Sequence)
+                {
+                    if (sequenceNameToFuncMap.ContainsKey(dep.Name))
+                        destDeps.Add(sequenceNameToFuncMap[dep.Name]);
+                    // Otherwise it may be a system sequence
+                }
+                else if (dep.Type == DependencyType.DataType)
+                {
+                    string quotedDataTypeName = $@"""{dep.Name}""";
+                    if (udtNameToUdtMap.ContainsKey(quotedDataTypeName))
+                        destDeps.Add(udtNameToUdtMap[quotedDataTypeName]);
+                    // Otherwise it may be a system data type
+                }
+                else if (dep.Type == DependencyType.TableOrView)
+                {
+                    if (tableNameToTableMap.ContainsKey(dep.Name))
+                        destDeps.Add(tableNameToTableMap[dep.Name]);
+                    else if (viewNameToViewMap.ContainsKey(dep.Name))
+                        destDeps.Add(viewNameToViewMap[dep.Name]);
+                    // Otherwise it may be a system table or view
+                }
+                else if (dep.Type == DependencyType.Function)
+                {
+                    if (funcNameToFuncMap.ContainsKey(dep.Name))
+                        destDeps.Add(funcNameToFuncMap[dep.Name]);
+                    // Otherwise it may be a system function
+                }
+                else
+                {
+                    throw new Exception($"Invalid dependency type {dep.Type}");
+                }
+            }
+        }
     }
 
     private TResult ExecuteParsingFunc<TResult>(Func<TResult> func, string onParseErrorMessageHeader)

@@ -1,4 +1,5 @@
-﻿using DotNetDBTools.Deploy.Core;
+﻿using DotNetDBTools.Deploy.Common.Editors;
+using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Editors;
 using DotNetDBTools.Deploy.PostgreSQL.Queries.DNDBTSysInfo;
 using DotNetDBTools.Generation.Core;
@@ -14,23 +15,33 @@ internal class PostgreSQLDbEditor : DbEditor<
     PostgreSQLCreateDNDBTSysTablesQuery,
     PostgreSQLDropDNDBTSysTablesQuery>
 {
-    private readonly IScriptExecutor _scriptExecutor;
-    private readonly ITableEditor _tableEditor;
-    private readonly PostgreSQLIsDependencyOfTablesObjectsEditor _isDependencyOfTablesObjectsEditor;
-    private readonly PostgreSQLDependsOnTablesObjectsEditor _dependsOnTablesObjectsEditor;
+    private readonly IScriptExecutor _scriptsExecutor;
+    private readonly PostgreSQLSequencesEditor _sequencesEditor;
+    private readonly PostgreSQLTablesEditor _tablesEditor;
+    private readonly PostgreSQLTypesEditor _typesEditor;
+    private readonly PostgreSQLProgrammableObjectsEditor _programmableObjectsEditor;
+    private readonly IIndexEditor _indexesEditor;
+    private readonly ITriggerEditor _triggersEditor;
+    private readonly IForeignKeyEditor _foreignKeysEditor;
 
     public PostgreSQLDbEditor(IQueryExecutor queryExecutor)
         : base(queryExecutor)
     {
-        _scriptExecutor = new PostgreSQLScriptExecutor(queryExecutor);
-        _tableEditor = new PostgreSQLTableEditor(queryExecutor);
-        _isDependencyOfTablesObjectsEditor = new PostgreSQLIsDependencyOfTablesObjectsEditor(queryExecutor);
-        _dependsOnTablesObjectsEditor = new PostgreSQLDependsOnTablesObjectsEditor(queryExecutor);
+        _scriptsExecutor = new PostgreSQLScriptExecutor(queryExecutor);
+        _sequencesEditor = new PostgreSQLSequencesEditor(queryExecutor);
+        _tablesEditor = new PostgreSQLTablesEditor(queryExecutor);
+        _typesEditor = new PostgreSQLTypesEditor(queryExecutor);
+        _programmableObjectsEditor = new PostgreSQLProgrammableObjectsEditor(queryExecutor);
+        _indexesEditor = new PostgreSQLIndexesEditor(queryExecutor);
+        _triggersEditor = new PostgreSQLTriggersEditor(queryExecutor);
+        _foreignKeysEditor = new PostgreSQLForeignKeysEditor(queryExecutor);
     }
 
     public override void PopulateDNDBTSysTables(Database database)
     {
         PostgreSQLDatabase db = (PostgreSQLDatabase)database;
+        foreach (PostgreSQLSequence sequence in db.Sequences)
+            QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(sequence.ID, null, DbObjectType.Sequence, sequence.Name));
         InsertUserDefinedTypesInfos(db);
         InsertTablesInfos(db);
         InsertViewsFunctionsProceduresInfos(db);
@@ -50,23 +61,49 @@ internal class PostgreSQLDbEditor : DbEditor<
 
     private void ApplyDatabaseDiff(PostgreSQLDatabaseDiff dbDiff)
     {
-        _scriptExecutor.DeleteRemovedScriptsExecutionRecords(dbDiff);
-        _scriptExecutor.ExecuteScripts(dbDiff, ScriptKind.BeforePublishOnce);
+        _scriptsExecutor.DeleteRemovedScriptsExecutionRecords(dbDiff);
+        _scriptsExecutor.ExecuteScripts(dbDiff, ScriptKind.BeforePublishOnce);
 
-        _dependsOnTablesObjectsEditor.DropObjectsThatDependOnTables(dbDiff);
+        _triggersEditor.DropTriggers(dbDiff);
+        _foreignKeysEditor.DropForeignKeys(dbDiff);
+        _indexesEditor.DropIndexes(dbDiff);
+        _tablesEditor.DropCheckConstraints(dbDiff);
+        _tablesEditor.DropColumnsDefault(dbDiff);
+        _typesEditor.DropDomainsCheckConstraints(dbDiff);
+        _typesEditor.DropDomainsDefault(dbDiff);
 
-        _isDependencyOfTablesObjectsEditor.Rename_RemovedOrChanged_ObjectsThatTablesDependOn_ToTemp_InDbAndInDbDiff(dbDiff);
-        _isDependencyOfTablesObjectsEditor.Create_AddedOrChanged_ObjectsThatTablesDependOn(dbDiff);
+        _programmableObjectsEditor.DropComplexDepsProgrammableObjects(dbDiff);
 
-        _tableEditor.DropTables(dbDiff);
-        _tableEditor.AlterTables(dbDiff);
-        _tableEditor.CreateTables(dbDiff);
+        _sequencesEditor.DropOwnerAndRename_SequencesToDrop_ToTemp(dbDiff);
+        _programmableObjectsEditor.Rename_SimpleDepsProgrammableObjectsToDrop_ToTemp(dbDiff);
+        _typesEditor.Rename_TypesToDrop_ToTemp(dbDiff);
 
-        _isDependencyOfTablesObjectsEditor.Drop_RemovedOrChanged_ObjectsThatTablesDependOn(dbDiff);
+        _sequencesEditor.AlterSequencesExceptOwners(dbDiff);
+        _sequencesEditor.CreateSequencesWithoutOwners(dbDiff);
+        _programmableObjectsEditor.CreateSimpleDepsProgrammableObjects(dbDiff);
+        _typesEditor.AlterTypes_ExceptDomains_Default_CK(dbDiff);
+        _typesEditor.CreateTypes(dbDiff);
 
-        _dependsOnTablesObjectsEditor.CreateObjectsThatDependOnTables(dbDiff);
+        _tablesEditor.DropTables(dbDiff);
+        _tablesEditor.AlterTables_Except_ColumnsDefault_CK_FK(dbDiff);
+        _tablesEditor.CreateTables_Without_ColumnsDefault_CK_FK(dbDiff);
+        _sequencesEditor.SetSequencesOwners(dbDiff);
 
-        _scriptExecutor.ExecuteScripts(dbDiff, ScriptKind.AfterPublishOnce);
+        _typesEditor.Drop_RenamedToTemp_TypesToDrop(dbDiff);
+        _programmableObjectsEditor.Drop_RenamedToTemp_SimpleDepsProgrammableObjectsToDrop(dbDiff);
+        _sequencesEditor.Drop_RenamedToTemp_SequencesToDrop(dbDiff);
+
+        _programmableObjectsEditor.CreateComplexDepsProgrammableObjects(dbDiff);
+
+        _typesEditor.SetDomainsDefault(dbDiff);
+        _typesEditor.AddDomainsCheckConstraints(dbDiff);
+        _tablesEditor.SetColumnsDefault(dbDiff);
+        _tablesEditor.AddCheckConstraints(dbDiff);
+        _indexesEditor.CreateIndexes(dbDiff);
+        _foreignKeysEditor.CreateForeignKeys(dbDiff);
+        _triggersEditor.CreateTriggers(dbDiff);
+
+        _scriptsExecutor.ExecuteScripts(dbDiff, ScriptKind.AfterPublishOnce);
 
         if (dbDiff.NewDatabase.Version != dbDiff.OldDatabase.Version)
             QueryExecutor.Execute(new PostgreSQLUpdateDNDBTDbAttributesRecordQuery(dbDiff.NewDatabase));

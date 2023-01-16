@@ -54,10 +54,11 @@ internal class MySQLDbEditor : DbEditor<
             foreach (ForeignKey fk in table.ForeignKeys)
                 QueryExecutor.Execute(new MySQLInsertDNDBTDbObjectRecordQuery(fk.ID, table.ID, DbObjectType.ForeignKey, fk.Name));
         }
-        foreach (MySQLFunction func in db.Functions)
-            QueryExecutor.Execute(new MySQLInsertDNDBTDbObjectRecordQuery(func.ID, null, DbObjectType.Function, func.Name, func.GetCreateStatement()));
+
         foreach (MySQLView view in db.Views)
             QueryExecutor.Execute(new MySQLInsertDNDBTDbObjectRecordQuery(view.ID, null, DbObjectType.View, view.Name, view.GetCreateStatement()));
+        foreach (MySQLFunction func in db.Functions)
+            QueryExecutor.Execute(new MySQLInsertDNDBTDbObjectRecordQuery(func.ID, null, DbObjectType.Function, func.Name, func.GetCreateStatement()));
         foreach (MySQLProcedure proc in db.Procedures)
             QueryExecutor.Execute(new MySQLInsertDNDBTDbObjectRecordQuery(proc.ID, null, DbObjectType.Procedure, proc.Name, proc.GetCreateStatement()));
 
@@ -78,25 +79,29 @@ internal class MySQLDbEditor : DbEditor<
         _scriptExecutor.ExecuteScripts(dbDiff, ScriptKind.BeforePublishOnce);
 
         _triggerEditor.DropTriggers(dbDiff);
-        foreach (MySQLProcedure procedure in dbDiff.ProceduresToDrop)
-            DropProcedure(procedure);
-        foreach (MySQLView view in dbDiff.ViewsToDrop)
-            DropView(view);
-        foreach (MySQLFunction function in dbDiff.FunctionsToDrop)
-            DropFunction(function);
         _foreignKeyEditor.DropForeignKeys(dbDiff);
         _indexEditor.DropIndexes(dbDiff);
+
+        foreach (MySQLProcedure procedure in dbDiff.ProceduresToDrop)
+            DropProcedure(procedure);
+        foreach (MySQLFunction function in dbDiff.FunctionsToDrop)
+            DropFunction(function);
+        foreach (MySQLView view in dbDiff.ViewsToDrop)
+            DropView(view);
+
         _tableEditor.DropTables(dbDiff);
         _tableEditor.AlterTables(dbDiff);
         _tableEditor.CreateTables(dbDiff);
-        _indexEditor.CreateIndexes(dbDiff);
-        _foreignKeyEditor.CreateForeignKeys(dbDiff);
-        foreach (MySQLFunction function in dbDiff.FunctionsToCreate)
-            CreateFunction(function);
+
         foreach (MySQLView view in dbDiff.ViewsToCreate)
             CreateView(view);
+        foreach (MySQLFunction function in dbDiff.FunctionsToCreate)
+            CreateFunction(function);
         foreach (MySQLProcedure procedure in dbDiff.ProceduresToCreate)
             CreateProcedure(procedure);
+
+        _indexEditor.CreateIndexes(dbDiff);
+        _foreignKeyEditor.CreateForeignKeys(dbDiff);
         _triggerEditor.CreateTriggers(dbDiff);
 
         _scriptExecutor.ExecuteScripts(dbDiff, ScriptKind.AfterPublishOnce);

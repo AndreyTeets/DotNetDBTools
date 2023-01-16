@@ -11,9 +11,17 @@ internal class PostgreSQLIndexStatementsGenerator : StatementsGenerator<PostgreS
     {
         string res =
 $@"{GetIdDeclarationText(index, 0)}CREATE{Statements.Unique(index)} INDEX ""{index.Name}""
-    ON ""{index.TableName}"" ({string.Join(", ", index.Columns.Select(x => $@"""{x}"""))});";
+    ON ""{index.TableName}"" ({GetColumnsListOrExpression(index)});";
 
         return res;
+    }
+
+    private static string GetColumnsListOrExpression(PostgreSQLIndex index)
+    {
+        if (index.Expression != null)
+            return index.Expression.Code;
+        else
+            return string.Join(", ", index.Columns.Select(x => $@"""{x}"""));
     }
 
     protected override string GetDropSqlImpl(PostgreSQLIndex index)

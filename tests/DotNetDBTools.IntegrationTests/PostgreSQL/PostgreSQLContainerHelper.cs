@@ -25,6 +25,7 @@ internal class PostgreSQLContainerHelper
             Port = PostgreSQLServerHostPort,
             Username = "postgres",
             Password = PostgreSQLServerPassword,
+            IncludeErrorDetail = true,
         }.ConnectionString;
 
     public static async Task InitContainer()

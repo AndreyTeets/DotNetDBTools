@@ -5,14 +5,6 @@ BEGIN
 EXECUTE 'DROP TRIGGER "TR_MyTable2_MyTrigger1" ON "MyTable2";';
 -- QUERY END: DropTriggerQuery
 
--- QUERY START: DropFunctionQuery
-EXECUTE 'DROP FUNCTION "TR_MyTable2_MyTrigger1_Handler";';
--- QUERY END: DropFunctionQuery
-
--- QUERY START: DropViewQuery
-EXECUTE 'DROP VIEW "MyView1";';
--- QUERY END: DropViewQuery
-
 -- QUERY START: DropForeignKeyQuery
 EXECUTE 'ALTER TABLE "MyTable1NewName"
     DROP CONSTRAINT "FK_MyTable1_MyColumn1_MyTable2_MyColumn1";';
@@ -27,16 +19,44 @@ EXECUTE 'ALTER TABLE "MyTable2"
 EXECUTE 'DROP INDEX "IDX_MyTable2_MyIndex1";';
 -- QUERY END: DropIndexQuery
 
+-- QUERY START: AlterTableQuery
+EXECUTE 'ALTER TABLE "MyTable1NewName"
+    DROP CONSTRAINT "CK_MyTable1_MyCheck1";';
+-- QUERY END: AlterTableQuery
+
+-- QUERY START: AlterTableQuery
+EXECUTE 'ALTER TABLE "MyTable2"
+    ALTER COLUMN "MyColumn2" DROP DEFAULT;';
+-- QUERY END: AlterTableQuery
+
+-- QUERY START: AlterTableQuery
+EXECUTE 'ALTER TABLE "MyTable5"
+    ALTER COLUMN "MyColumn1" DROP DEFAULT,
+    ALTER COLUMN "MyColumn201" DROP DEFAULT;';
+-- QUERY END: AlterTableQuery
+
+-- QUERY START: DropViewQuery
+EXECUTE 'DROP VIEW "MyView1";';
+-- QUERY END: DropViewQuery
+
+-- QUERY START: RenameProgrammableObjectToTempQuery
+EXECUTE 'ALTER FUNCTION "MyFunction1" RENAME TO "_DNDBTTemp_MyFunction1";';
+-- QUERY END: RenameProgrammableObjectToTempQuery
+
+-- QUERY START: RenameProgrammableObjectToTempQuery
+EXECUTE 'ALTER FUNCTION "TR_MyTable2_MyTrigger1_Handler" RENAME TO "_DNDBTTemp_TR_MyTable2_MyTrigger1_Handler";';
+-- QUERY END: RenameProgrammableObjectToTempQuery
+
 -- QUERY START: RenameTypeToTempQuery
 EXECUTE 'ALTER TYPE "MyCompositeType1" RENAME TO "_DNDBTTemp_MyCompositeType1";';
 -- QUERY END: RenameTypeToTempQuery
 
 -- QUERY START: RenameTypeToTempQuery
-EXECUTE 'ALTER TYPE "MyEnumType1" RENAME TO "_DNDBTTemp_MyEnumType1";';
+EXECUTE 'ALTER DOMAIN "MyDomain1" RENAME TO "_DNDBTTemp_MyDomain1";';
 -- QUERY END: RenameTypeToTempQuery
 
 -- QUERY START: RenameTypeToTempQuery
-EXECUTE 'ALTER DOMAIN "MyDomain1" RENAME TO "_DNDBTTemp_MyDomain1";';
+EXECUTE 'ALTER TYPE "MyEnumType1" RENAME TO "_DNDBTTemp_MyEnumType1";';
 -- QUERY END: RenameTypeToTempQuery
 
 -- QUERY START: RenameTypeToTempQuery
@@ -55,6 +75,44 @@ END;
 $DNDBTPlPgSqlBlock$';
 -- QUERY END: RenameTypeToTempQuery
 
+-- QUERY START: AlterSequenceQuery
+EXECUTE 'ALTER SEQUENCE "MySequence1NewName" RENAME TO "MySequence1";
+ALTER SEQUENCE "MySequence1"
+    AS BIGINT
+    MINVALUE -2147483648 MAXVALUE 0 CYCLE';
+-- QUERY END: AlterSequenceQuery
+
+-- QUERY START: CreateSequenceQuery
+EXECUTE 'CREATE SEQUENCE "MySequence2"
+    AS INT
+    START 1 INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 NO CYCLE;';
+-- QUERY END: CreateSequenceQuery
+
+-- QUERY START: CreateFunctionQuery
+EXECUTE 'CREATE FUNCTION "MyFunction1"(a INT, b INT)
+RETURNS INT
+LANGUAGE SQL
+IMMUTABLE
+AS
+$FuncBody$
+SELECT a + b + 1;
+$FuncBody$';
+-- QUERY END: CreateFunctionQuery
+
+-- QUERY START: CreateFunctionQuery
+EXECUTE 'CREATE FUNCTION "TR_MyTable2_MyTrigger1_Handler"()
+RETURNS TRIGGER
+LANGUAGE PLPGSQL
+AS
+$FuncBody$
+BEGIN
+    INSERT INTO "MyTable4"("MyColumn1")
+    VALUES(NEW."MyColumn1");
+    RETURN NULL;
+END;
+$FuncBody$';
+-- QUERY END: CreateFunctionQuery
+
 -- QUERY START: CreateCompositeTypeQuery
 EXECUTE 'CREATE TYPE "MyCompositeType1" AS
 (
@@ -63,6 +121,13 @@ EXECUTE 'CREATE TYPE "MyCompositeType1" AS
 );';
 -- QUERY END: CreateCompositeTypeQuery
 
+-- QUERY START: CreateDomainTypeQuery
+EXECUTE 'CREATE DOMAIN "MyDomain1" AS
+    VARCHAR(100) NULL
+    CONSTRAINT "MyDomain1_CK1" CHECK (value = lower(value))
+    CONSTRAINT "MyDomain1_CK2" CHECK (char_length(value) > 3);';
+-- QUERY END: CreateDomainTypeQuery
+
 -- QUERY START: CreateEnumTypeQuery
 EXECUTE 'CREATE TYPE "MyEnumType1" AS ENUM
 (
@@ -70,13 +135,6 @@ EXECUTE 'CREATE TYPE "MyEnumType1" AS ENUM
     ''Label2''
 );';
 -- QUERY END: CreateEnumTypeQuery
-
--- QUERY START: CreateDomainTypeQuery
-EXECUTE 'CREATE DOMAIN "MyDomain1" AS
-    VARCHAR(100) NULL
-    CONSTRAINT "MyDomain1_CK1" CHECK (value = lower(value))
-    CONSTRAINT "MyDomain1_CK2" CHECK (char_length(value) > 3);';
--- QUERY END: CreateDomainTypeQuery
 
 -- QUERY START: CreateRangeTypeQuery
 EXECUTE 'DO $DNDBTPlPgSqlBlock$
@@ -106,16 +164,13 @@ EXECUTE 'DROP TABLE "MyTable3";';
 -- QUERY START: AlterTableQuery
 EXECUTE 'ALTER TABLE "MyTable1NewName" RENAME TO "MyTable1";
 ALTER TABLE "MyTable1"
-    DROP CONSTRAINT "CK_MyTable1_MyCheck1",
     ALTER COLUMN "MyColumn1" SET DATA TYPE INT
         USING ("MyColumn1"::text::INT),
     ALTER COLUMN "MyColumn1" SET NOT NULL,
-    ALTER COLUMN "MyColumn4" SET DEFAULT 736,
     ADD COLUMN "MyColumn2" TEXT NULL,
-    ADD COLUMN "MyColumn3" INT GENERATED ALWAYS AS IDENTITY NOT NULL,
+    ADD COLUMN "MyColumn3" INT GENERATED ALWAYS AS IDENTITY (START 1000 INCREMENT -2 MINVALUE -2147483648 MAXVALUE 2147483647 CACHE 1 NO CYCLE) NOT NULL,
     ADD CONSTRAINT "PK_MyTable1" PRIMARY KEY ("MyColumn3"),
-    ADD CONSTRAINT "UQ_MyTable1_MyColumn4" UNIQUE ("MyColumn4"),
-    ADD CONSTRAINT "CK_MyTable1_MyCheck1" CHECK ("MyColumn4" >= 0);';
+    ADD CONSTRAINT "UQ_MyTable1_MyColumn4" UNIQUE ("MyColumn4");';
 -- QUERY END: AlterTableQuery
 
 -- QUERY START: AlterTableQuery
@@ -133,7 +188,6 @@ ALTER TABLE "MyTable2"
 
 -- QUERY START: AlterTableQuery
 EXECUTE 'ALTER TABLE "MyTable5"
-    ALTER COLUMN "MyColumn1" SET DEFAULT ABs(-15),
     ALTER COLUMN "MyColumn101" SET DATA TYPE "MyCompositeType1"
         USING ("MyColumn101"::text::"MyCompositeType1"),
     ALTER COLUMN "MyColumn102" SET DATA TYPE "MyDomain1"
@@ -158,12 +212,18 @@ EXECUTE 'CREATE TABLE "MyTable6"
 );';
 -- QUERY END: CreateTableQuery
 
--- QUERY START: DropTypeQuery
-EXECUTE 'DROP TYPE "_DNDBTTemp_MyCompositeType1";';
--- QUERY END: DropTypeQuery
+-- QUERY START: AlterSequenceQuery
+EXECUTE 'ALTER SEQUENCE "MySequence2"
+    OWNED BY "MyTable1"."MyColumn2"';
+-- QUERY END: AlterSequenceQuery
+
+-- QUERY START: AlterSequenceQuery
+EXECUTE 'ALTER SEQUENCE "MySequence1"
+    OWNED BY "MyTable1"."MyColumn1"';
+-- QUERY END: AlterSequenceQuery
 
 -- QUERY START: DropTypeQuery
-EXECUTE 'DROP TYPE "_DNDBTTemp_MyEnumType1";';
+EXECUTE 'DROP TYPE "_DNDBTTemp_MyCompositeType1";';
 -- QUERY END: DropTypeQuery
 
 -- QUERY START: DropTypeQuery
@@ -171,8 +231,52 @@ EXECUTE 'DROP DOMAIN "_DNDBTTemp_MyDomain1";';
 -- QUERY END: DropTypeQuery
 
 -- QUERY START: DropTypeQuery
+EXECUTE 'DROP TYPE "_DNDBTTemp_MyEnumType1";';
+-- QUERY END: DropTypeQuery
+
+-- QUERY START: DropTypeQuery
 EXECUTE 'DROP TYPE "_DNDBTTemp_MyRangeType1";';
 -- QUERY END: DropTypeQuery
+
+-- QUERY START: DropFunctionQuery
+EXECUTE 'DROP FUNCTION "_DNDBTTemp_MyFunction1";';
+-- QUERY END: DropFunctionQuery
+
+-- QUERY START: DropFunctionQuery
+EXECUTE 'DROP FUNCTION "_DNDBTTemp_TR_MyTable2_MyTrigger1_Handler";';
+-- QUERY END: DropFunctionQuery
+
+-- QUERY START: CreateViewQuery
+EXECUTE 'CREATE VIEW "MyView1" AS
+SELECT
+    t1."MyColumn1",
+    t1."MyColumn4",
+    t2."MyColumn2"
+FROM "MyTable1" t1
+LEFT JOIN "MyTable2" t2
+    ON t2."MyColumn1" = t1."MyColumn1"';
+-- QUERY END: CreateViewQuery
+
+-- QUERY START: AlterTableQuery
+EXECUTE 'ALTER TABLE "MyTable1"
+    ALTER COLUMN "MyColumn4" SET DEFAULT 736;';
+-- QUERY END: AlterTableQuery
+
+-- QUERY START: AlterTableQuery
+EXECUTE 'ALTER TABLE "MyTable2"
+    ALTER COLUMN "MyColumn2" SET DEFAULT ''\x000408'';';
+-- QUERY END: AlterTableQuery
+
+-- QUERY START: AlterTableQuery
+EXECUTE 'ALTER TABLE "MyTable5"
+    ALTER COLUMN "MyColumn1" SET DEFAULT ABs(-15),
+    ALTER COLUMN "MyColumn201" SET DEFAULT "MyFunction1"(-25, 10);';
+-- QUERY END: AlterTableQuery
+
+-- QUERY START: AlterTableQuery
+EXECUTE 'ALTER TABLE "MyTable1"
+    ADD CONSTRAINT "CK_MyTable1_MyCheck1" CHECK ("MyColumn4" >= 0);';
+-- QUERY END: AlterTableQuery
 
 -- QUERY START: CreateIndexQuery
 EXECUTE 'CREATE UNIQUE INDEX "IDX_MyTable2_MyIndex1"
@@ -197,31 +301,6 @@ EXECUTE 'ALTER TABLE "MyTable1"
         REFERENCES "MyTable2" ("MyColumn1")
         ON UPDATE NO ACTION ON DELETE CASCADE;';
 -- QUERY END: CreateForeignKeyQuery
-
--- QUERY START: CreateFunctionQuery
-EXECUTE 'CREATE FUNCTION "TR_MyTable2_MyTrigger1_Handler"()
-RETURNS TRIGGER
-LANGUAGE PLPGSQL
-AS
-$FuncBody$
-BEGIN
-    INSERT INTO "MyTable4"("MyColumn1")
-    VALUES(NEW."MyColumn1");
-    RETURN NULL;
-END;
-$FuncBody$';
--- QUERY END: CreateFunctionQuery
-
--- QUERY START: CreateViewQuery
-EXECUTE 'CREATE VIEW "MyView1" AS
-SELECT
-    t1."MyColumn1",
-    t1."MyColumn4",
-    t2."MyColumn2"
-FROM "MyTable1" t1
-LEFT JOIN "MyTable2" t2
-    ON t2."MyColumn1" = t1."MyColumn1"';
--- QUERY END: CreateViewQuery
 
 -- QUERY START: CreateTriggerQuery
 EXECUTE 'CREATE TRIGGER "TR_MyTable2_MyTrigger1"

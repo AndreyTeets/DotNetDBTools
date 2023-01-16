@@ -11,6 +11,8 @@ public class PostgreSQLDatabase : Database
         Kind = DatabaseKind.PostgreSQL;
     }
 
+    public List<PostgreSQLSequence> Sequences { get; set; } = new();
+
     public List<PostgreSQLCompositeType> CompositeTypes { get; set; } = new();
     public List<PostgreSQLDomainType> DomainTypes { get; set; } = new();
     public List<PostgreSQLEnumType> EnumTypes { get; set; } = new();

@@ -12,8 +12,8 @@ $@"SELECT
     s.seqincrement AS ""{nameof(SequenceRecord.IncrementBy)}"",
     s.seqmin AS ""{nameof(SequenceRecord.MinValue)}"",
     s.seqmax AS ""{nameof(SequenceRecord.MaxValue)}"",
-    s.seqcycle AS ""{nameof(SequenceRecord.Cycle)}"",
     s.seqcache AS ""{nameof(SequenceRecord.Cache)}"",
+    s.seqcycle AS ""{nameof(SequenceRecord.Cycle)}"",
     depc.relname AS ""{nameof(SequenceRecord.OwnedByTableName)}"",
     depa.attname AS ""{nameof(SequenceRecord.OwnedByColumnName)}""
 FROM pg_catalog.pg_sequence s
@@ -24,7 +24,7 @@ INNER JOIN pg_catalog.pg_namespace n
 INNER JOIN pg_catalog.pg_type t
     ON t.oid = s.seqtypid
 LEFT JOIN pg_catalog.pg_depend dep
-    ON dep.objid = c.oid
+    ON dep.objid = s.seqrelid
         AND dep.classid = 'pg_class'::regclass
         AND dep.refclassid = 'pg_class'::regclass
 LEFT JOIN pg_catalog.pg_class depc
@@ -33,7 +33,7 @@ LEFT JOIN pg_catalog.pg_attribute depa
     ON depa.attrelid = depc.oid
         AND depa.attnum = dep.refobjsubid
 WHERE n.nspname NOT IN ('information_schema', 'pg_catalog')
-    AND a.attidentity = '';";
+    AND (dep.deptype IS NULL OR dep.deptype = 'a');";
 
     public class SequenceRecord
     {
@@ -43,8 +43,8 @@ WHERE n.nspname NOT IN ('information_schema', 'pg_catalog')
         public long IncrementBy { get; set; }
         public long MinValue { get; set; }
         public long MaxValue { get; set; }
-        public bool Cycle { get; set; }
         public long Cache { get; set; }
+        public bool Cycle { get; set; }
         public string OwnedByTableName { get; set; }
         public string OwnedByColumnName { get; set; }
     }

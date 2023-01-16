@@ -82,14 +82,15 @@ VALUES
     }
     private void AssertDataInTable2(IDbConnection connection, AssertKind assertKind)
     {
+        string nonExistingValue = BinaryLiteral("9999");
         string newName = assertKind == AssertKind.V2 ? "NewName" : "";
         string col2Op = assertKind == AssertKind.V1Rollbacked ? "!=" : "=";
         connection.QuerySingle<int>(
 $@"SELECT
     COUNT(*)
 FROM {Quote("MyTable2")}
-WHERE {Quote($"MyColumn1{newName}")} = 101 AND {Quote("MyColumn2")} {col2Op} {BinaryLiteral("000102")}
-    OR {Quote($"MyColumn1{newName}")} = 201 AND {Quote("MyColumn2")} {col2Op} {BinaryLiteral("000202")};")
+WHERE {Quote($"MyColumn1{newName}")} = 101 AND COALESCE({Quote("MyColumn2")},{nonExistingValue}) {col2Op} {BinaryLiteral("000102")}
+    OR {Quote($"MyColumn1{newName}")} = 201 AND COALESCE({Quote("MyColumn2")},{nonExistingValue}) {col2Op} {BinaryLiteral("000202")};")
             .Should().Be(2);
     }
 

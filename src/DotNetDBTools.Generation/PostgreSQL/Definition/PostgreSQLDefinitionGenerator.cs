@@ -14,11 +14,14 @@ internal class PostgreSQLDefinitionGenerator : DefinitionGenerator
         PostgreSQLDatabase db = (PostgreSQLDatabase)database;
         if (OutputDefinitionKind == OutputDefinitionKind.CSharp)
         {
+            files.AddRange(PostgreSQLSequencesCSharpDefinitionGenerator.Create(database, projectNamespace));
             files.AddRange(PostgreSQLTypesCSharpDefinitionGenerator.Create(database, projectNamespace));
             files.AddRange(PostgreSQLFunctionsCSharpDefinitionGenerator.Create(database, projectNamespace));
         }
         else
         {
+            foreach (PostgreSQLSequence sequence in db.Sequences)
+                AddFile(files, sequence, "Sequences");
             foreach (PostgreSQLCompositeType type in db.CompositeTypes)
                 AddFile(files, type, "Types");
             foreach (PostgreSQLDomainType type in db.DomainTypes)

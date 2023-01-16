@@ -33,7 +33,7 @@ $@"{GetIdDeclarationText(table, 0)}CREATE TABLE `{table.Name}`
         if (tableDiff.NewTable.Name != tableDiff.OldTable.Name)
             sb.AppendLine(Statements.RenameTable(tableDiff.OldTable.Name, tableDiff.NewTable.Name));
 
-        foreach (ColumnDiff columnDiff in tableDiff.ChangedColumns.Where(x => x.NewColumn.Name != x.OldColumn.Name))
+        foreach (ColumnDiff columnDiff in tableDiff.ColumnsToAlter.Where(x => x.NewColumn.Name != x.OldColumn.Name))
             sb.AppendLine(Statements.RenameColumn(tableDiff.NewTable.Name, columnDiff.OldColumn.Name, columnDiff.NewColumn.Name));
 
         string tableAlters = GetTableAltersText(tableDiff);
@@ -103,14 +103,15 @@ $@"    {GetIdDeclarationText(fk, 4)}{Statements.DefForeignKey(fk)}"));
 
     private bool AppendColumnsAlters(StringBuilder sb, TableDiff tableDiff)
     {
-        foreach (Column column in tableDiff.RemovedColumns)
+        foreach (Column column in tableDiff.ColumnsToDrop)
             sb.Append(Statements.DropColumn(tableDiff.NewTable.Name, column));
 
-        foreach (ColumnDiff columnDiff in tableDiff.ChangedColumns)
+        foreach (ColumnDiff columnDiff in tableDiff.ColumnsToAlter)
         {
             bool defaultChagned = columnDiff.NewColumn.GetDefault() != columnDiff.OldColumn.GetDefault();
-            if (columnDiff.DataTypeChanged || columnDiff.NewColumn.NotNull != columnDiff.OldColumn.NotNull)
-                sb.Append(Statements.AlterColumnDefinition(tableDiff.NewTable.Name, columnDiff.NewColumn));
+            DataType dataType = columnDiff.DataTypeToSet ?? columnDiff.NewColumn.DataType;
+            if (columnDiff.DataTypeToSet != null || columnDiff.NewColumn.NotNull != columnDiff.OldColumn.NotNull)
+                sb.Append(Statements.AlterColumnDefinition(tableDiff.NewTable.Name, columnDiff.NewColumn, dataType));
             else if (columnDiff.NewColumn.GetDefault() is not null && defaultChagned)
                 sb.Append(Statements.AddDefaultConstraint(tableDiff.NewTable.Name, columnDiff.NewColumn));
             else if (columnDiff.NewColumn.GetDefault() is null && defaultChagned)
@@ -118,7 +119,7 @@ $@"    {GetIdDeclarationText(fk, 4)}{Statements.DefForeignKey(fk)}"));
         }
 
         bool addedPk = false;
-        foreach (Column column in tableDiff.AddedColumns)
+        foreach (Column column in tableDiff.ColumnsToAdd)
         {
             if (tableDiff.PrimaryKeyToCreate is not null && tableDiff.PrimaryKeyToCreate.Columns.Any(c => c == column.Name))
             {
@@ -174,9 +175,9 @@ ALTER TABLE `{tableName}` ADD COLUMN `{c.Name}` {c.DataType.Name}{Identity(c)} {
 $@"
 ALTER TABLE `{tableName}` DROP COLUMN `{c.Name}`;"
             ;
-        public static string AlterColumnDefinition(string tableName, Column c) =>
+        public static string AlterColumnDefinition(string tableName, Column c, DataType dataType) =>
 $@"
-ALTER TABLE `{tableName}` MODIFY COLUMN `{c.Name}` {c.DataType.Name} {Nullability(c)}{Default(c)};"
+ALTER TABLE `{tableName}` MODIFY COLUMN `{c.Name}` {dataType.Name} {Nullability(c)}{Default(c)};"
             ;
 
         public static string AddDefaultConstraint(string tableName, Column c) =>

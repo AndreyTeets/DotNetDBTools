@@ -2,6 +2,7 @@
 
 internal enum DbObjectType
 {
+    Sequence,
     UserDefinedType,
     Table,
     Column,

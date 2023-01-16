@@ -3,7 +3,6 @@ using System.Linq;
 using System.Text;
 using DotNetDBTools.Generation.Core;
 using DotNetDBTools.Generation.Core.Sql;
-using DotNetDBTools.Generation.MSSQL;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.MSSQL;
 
@@ -34,7 +33,7 @@ $@"{GetIdDeclarationText(table, 0)}CREATE TABLE [{table.Name}]
         if (tableDiff.NewTable.Name != tableDiff.OldTable.Name)
             sb.AppendLine(Statements.RenameTable(tableDiff.OldTable.Name, tableDiff.NewTable.Name));
 
-        foreach (ColumnDiff columnDiff in tableDiff.ChangedColumns.Where(x => x.NewColumn.Name != x.OldColumn.Name))
+        foreach (ColumnDiff columnDiff in tableDiff.ColumnsToAlter.Where(x => x.NewColumn.Name != x.OldColumn.Name))
             sb.AppendLine(Statements.RenameColumn(tableDiff.NewTable.Name, columnDiff.OldColumn.Name, columnDiff.NewColumn.Name));
 
         string tableAlters = GetTableAltersText(tableDiff);
@@ -98,31 +97,40 @@ $@"    {GetIdDeclarationText(fk, 4)}{Statements.DefForeignKey(fk)}"));
 
     private void AppendColumnsAlters(StringBuilder sb, TableDiff tableDiff)
     {
-        foreach (Column column in tableDiff.RemovedColumns)
+        foreach (Column column in tableDiff.ColumnsToDrop)
         {
             if (column.GetDefault() is not null)
                 sb.Append(Statements.DropDefaultConstraint(tableDiff.NewTable.Name, column));
             sb.Append(Statements.DropColumn(tableDiff.NewTable.Name, column));
         }
 
-        foreach (ColumnDiff columnDiff in tableDiff.ChangedColumns)
+        foreach (ColumnDiff columnDiff in tableDiff.ColumnsToAlter)
         {
-            bool defaultChagned = columnDiff.NewColumn.GetDefault() != columnDiff.OldColumn.GetDefault() ||
-                ((MSSQLColumn)columnDiff.NewColumn).DefaultConstraintName != ((MSSQLColumn)columnDiff.OldColumn).DefaultConstraintName;
-            bool typeOrNullabilityChanged = columnDiff.DataTypeChanged ||
+            bool defaultChagned = columnDiff.NewColumn.GetDefault() != columnDiff.OldColumn.GetDefault()
+                || ((MSSQLColumn)columnDiff.NewColumn).DefaultConstraintName != ((MSSQLColumn)columnDiff.OldColumn).DefaultConstraintName;
+
+            bool typeOrNullabilityChanged = columnDiff.DataTypeToSet != null ||
                 columnDiff.NewColumn.NotNull != columnDiff.OldColumn.NotNull;
 
             if (columnDiff.OldColumn.GetDefault() is not null && (defaultChagned || typeOrNullabilityChanged))
                 sb.Append(Statements.DropDefaultConstraint(tableDiff.NewTable.Name, columnDiff.OldColumn));
+            else if (columnDiff.DefaultToDrop is not null)
+                sb.Append(Statements.DropDefaultConstraint(tableDiff.NewTable.Name, columnDiff.OldColumn));
 
             if (typeOrNullabilityChanged)
-                sb.Append(Statements.AlterColumnTypeAndNullability(tableDiff.NewTable.Name, columnDiff.NewColumn));
+            {
+                DataType dataType = columnDiff.DataTypeToSet ?? columnDiff.NewColumn.DataType;
+                sb.Append(Statements.AlterColumnTypeAndNullability(tableDiff.NewTable.Name, columnDiff.NewColumn, dataType));
+            }
 
             if (columnDiff.NewColumn.GetDefault() is not null && (defaultChagned || typeOrNullabilityChanged))
                 sb.Append(Statements.AddDefaultConstraint(tableDiff.NewTable.Name, columnDiff.NewColumn));
+            else if (columnDiff.DefaultToSet is not null)
+                sb.Append(Statements.AddDefaultConstraint(columnDiff.NewColumn.Name, columnDiff.NewColumn));
+
         }
 
-        foreach (Column column in tableDiff.AddedColumns)
+        foreach (Column column in tableDiff.ColumnsToAdd)
             sb.Append(Statements.AddColumn(tableDiff.NewTable.Name, column));
     }
 
@@ -162,9 +170,9 @@ ALTER TABLE [{tableName}] ADD {DefColumn(c)}{WithValues(c)};"
 $@"
 ALTER TABLE [{tableName}] DROP COLUMN [{c.Name}];"
             ;
-        public static string AlterColumnTypeAndNullability(string tableName, Column c) =>
+        public static string AlterColumnTypeAndNullability(string tableName, Column c, DataType dataType) =>
 $@"
-ALTER TABLE [{tableName}] ALTER COLUMN [{c.Name}] {c.DataType.Name} {Nullability(c)};"
+ALTER TABLE [{tableName}] ALTER COLUMN [{c.Name}] {dataType.Name} {Nullability(c)};"
             ;
 
         public static string AddDefaultConstraint(string tableName, Column c) =>

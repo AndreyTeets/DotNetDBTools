@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using DotNetDBTools.DefinitionParsing;
 using DotNetDBTools.Generation;
 using DotNetDBTools.Models.Core;
@@ -45,6 +46,8 @@ public abstract class BaseDefinitionGenerationTests<TDatabase>
 
         genDefDbModel.Should().BeEquivalentTo(origDefDbModel, options =>
             options.WithStrictOrdering()
-            .Excluding(database => database.Scripts));
+            .Excluding(database => database.Scripts)
+            .Excluding(x => x.Path.EndsWith(".Parent", StringComparison.Ordinal))
+            .Excluding(x => x.Path.EndsWith(".DependsOn", StringComparison.Ordinal)));
     }
 }

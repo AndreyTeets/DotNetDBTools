@@ -52,14 +52,14 @@ ALTER TABLE [{DNDBTTempPrefix}{tableDiff.NewTable.Name}] RENAME TO [{tableDiff.N
         static string GetCommonColumnsNewNamesText(TableDiff tableDiff)
         {
             IEnumerable<string> commonNewOldColumnsNames = tableDiff.NewTable.Columns.Select(x => x.Name)
-                .Except(tableDiff.AddedColumns.Select(x => x.Name));
+                .Except(tableDiff.ColumnsToAdd.Select(x => x.Name));
             return string.Join(",\n", commonNewOldColumnsNames.Select(x => $@"    [{x}]"));
         }
 
         static string GetCommonColumnsOldNamesText(TableDiff tableDiff)
         {
             IEnumerable<string> commonNewOldColumnsNames = tableDiff.OldTable.Columns.Select(x => x.Name)
-                .Except(tableDiff.RemovedColumns.Select(x => x.Name));
+                .Except(tableDiff.ColumnsToDrop.Select(x => x.Name));
             return string.Join(",\n", commonNewOldColumnsNames.Select(x => $@"    [{x}]"));
         }
     }

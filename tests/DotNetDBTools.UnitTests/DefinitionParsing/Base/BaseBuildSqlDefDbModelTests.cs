@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 using DotNetDBTools.DefinitionParsing;
 using DotNetDBTools.Models.Core;
@@ -31,7 +32,9 @@ public abstract class BaseBuildSqlDefDbModelTests<TDatabase>
     {
         TDatabase databaseCSharp = (TDatabase)new DefinitionParsingManager().CreateDbModel(_specificDbmsDbAssemblyV2);
         TDatabase databaseSql = (TDatabase)new DefinitionParsingManager().CreateDbModel(_specificDbmsDbAssemblyV2SqlDef);
-        databaseSql.Should().BeEquivalentTo(databaseCSharp, options => options.WithStrictOrdering());
+        databaseSql.Should().BeEquivalentTo(databaseCSharp, options => options.WithStrictOrdering()
+            .Excluding(x => x.Path.EndsWith(".Parent", StringComparison.Ordinal))
+            .Excluding(x => x.Path.EndsWith(".DependsOn", StringComparison.Ordinal)));
     }
 
     [Fact]
@@ -40,6 +43,8 @@ public abstract class BaseBuildSqlDefDbModelTests<TDatabase>
         TDatabase actualDbModel = (TDatabase)new DefinitionParsingManager().CreateDbModel(
             ListOfSqlStatementsForDbModelCreation, 3, DatabaseKindForDbModelCreation);
 
-        actualDbModel.Should().BeEquivalentTo(ExpectedDbModelFromListOfSqlStatements, options => options.WithoutStrictOrdering());
+        actualDbModel.Should().BeEquivalentTo(ExpectedDbModelFromListOfSqlStatements, options => options.WithoutStrictOrdering()
+            .Excluding(x => x.Path.EndsWith(".Parent", StringComparison.Ordinal))
+            .Excluding(x => x.Path.EndsWith(".DependsOn", StringComparison.Ordinal)));
     }
 }

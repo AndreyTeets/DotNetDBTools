@@ -45,7 +45,7 @@ internal abstract class ScriptExecutor<
             .Where(x => x.Kind == scriptKind &&
                 dbDiff.OldDatabase.Version >= x.MinDbVersionToExecute &&
                 dbDiff.OldDatabase.Version <= x.MaxDbVersionToExecute)
-            .OrderByName();
+            .OrderByNameThenByType();
     }
 
     private IEnumerable<Script> GetScriptsToAddRecordWithoutExecution(DatabaseDiff dbDiff, ScriptKind scriptKind)

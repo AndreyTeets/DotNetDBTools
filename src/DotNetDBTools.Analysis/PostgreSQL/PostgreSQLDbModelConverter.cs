@@ -10,7 +10,7 @@ internal class PostgreSQLDbModelConverter : DbModelConverter<
     PostgreSQLView,
     PostgreSQLIndex,
     PostgreSQLTrigger,
-    Column>
+    PostgreSQLColumn>
 {
     public PostgreSQLDbModelConverter() : base(
         DatabaseKind.PostgreSQL,
@@ -19,5 +19,22 @@ internal class PostgreSQLDbModelConverter : DbModelConverter<
         new PostgreSQLDependenciesBuilder(),
         new PostgreSQLDbModelPostProcessor())
     {
+    }
+
+    protected override void BuildAdditionalColumnProperties(PostgreSQLColumn column, string tableName)
+    {
+        if (column.Identity)
+        {
+            column.IdentityGenerationKind = "ALWAYS";
+            column.IdentitySequenceOptions = new PostgreSQLSequenceOptions()
+            {
+                StartWith = 1,
+                IncrementBy = 1,
+                MinValue = 1,
+                MaxValue = int.MaxValue,
+                Cache = 1,
+                Cycle = false,
+            };
+        }
     }
 }

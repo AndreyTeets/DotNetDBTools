@@ -16,11 +16,11 @@ internal class MySQLDiffCreator : DiffCreator
         };
 
         BuildTablesDiff<MySQLTableDiff>(dbDiff);
-        IndexesHelper.BuildAllDbIndexesToBeDroppedAndCreated(dbDiff);
-        TriggersHelper.BuildAllDbTriggersToBeDroppedAndCreated(dbDiff);
-        ForeignKeysHelper.BuildAllForeignKeysToBeDroppedAndCreated(dbDiff);
-
         BuildViewsDiff(dbDiff);
+        BuildIndexesDiff(dbDiff);
+        BuildTriggersDiff(dbDiff);
+        ForeignKeysHelper.BuildUnchangedForeignKeysToRecreateBecauseOfDeps(dbDiff);
+
         BuildScriptsDiff(dbDiff);
         return dbDiff;
     }

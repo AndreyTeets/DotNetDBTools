@@ -77,7 +77,7 @@ public class DNDBTModelsEqualityComparerTests
         _comparer.Equals(dbDiff1, dbDiff3).Should().BeFalse();
 
         dbDiff3 = _analysisManager.CreateDatabaseDiff(databaseV1, databaseV2);
-        dbDiff3.ChangedTables.Single(x => x.NewTable.Name == "MyTable2").ChangedColumns = new List<ColumnDiff>();
+        dbDiff3.ChangedTables.Single(x => x.NewTable.Name == "MyTable2").ColumnsToAlter = new List<ColumnDiff>();
         _comparer.Equals(dbDiff1, dbDiff3).Should().BeFalse();
     }
 
@@ -152,9 +152,8 @@ public class DNDBTModelsEqualityComparerTests
     [Fact]
     public void DNDBTModelsEqualityComparer_Equals_IgnoresPropertiesCorrectly()
     {
-        _comparer.IgnoredProperties.Add(new PropInfo { Name = "ID", DeclaringTypeName = nameof(DbObject) });
-        _comparer.IgnoredProperties.Add(new PropInfo { Name = "Name", DeclaringTypeName = nameof(Database) });
-        _comparer.IgnoredProperties.Add(new PropInfo { Name = "Code" });
+        _comparer.IgnoredProperties.Add(new PropInfo { Name = nameof(DbObject.ID), InType = nameof(DbObject) });
+        _comparer.IgnoredProperties.Add(new PropInfo { Name = nameof(CodePiece.Code) });
 
         _tableModel2 = CreateTemplateAgnosticTableModel();
         _tableModel2.ID = new Guid("00255E91-E83B-4D8F-AA83-DDF558D901C7");

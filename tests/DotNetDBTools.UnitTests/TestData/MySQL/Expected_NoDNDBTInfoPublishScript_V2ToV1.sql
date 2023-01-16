@@ -2,10 +2,6 @@
 DROP TRIGGER `TR_MyTable2_MyTrigger1`;
 -- QUERY END: DropTriggerQuery
 
--- QUERY START: DropViewQuery
-DROP VIEW `MyView1`;
--- QUERY END: DropViewQuery
-
 -- QUERY START: DropForeignKeyQuery
 ALTER TABLE `MyTable1NewName` DROP CONSTRAINT `FK_MyTable1_MyColumn1_MyTable2_MyColumn1`;
 -- QUERY END: DropForeignKeyQuery
@@ -21,6 +17,10 @@ DROP INDEX `UQ_MyTable3_MyColumns12` ON `MyTable3`;
 -- QUERY START: DropIndexQuery
 DROP INDEX `IDX_MyTable2_MyIndex1` ON `MyTable2`;
 -- QUERY END: DropIndexQuery
+
+-- QUERY START: DropViewQuery
+DROP VIEW `MyView1`;
+-- QUERY END: DropViewQuery
 
 -- QUERY START: DropTableQuery
 DROP TABLE `MyTable3`;
@@ -63,6 +63,17 @@ CREATE TABLE `MyTable6`
 );
 -- QUERY END: CreateTableQuery
 
+-- QUERY START: CreateViewQuery
+CREATE VIEW MyView1 AS
+SELECT
+    t1.MyColumn1,
+    t1.MyColumn4,
+    t2.MyColumn2
+FROM MyTable1 t1
+LEFT JOIN MyTable2 t2
+    ON t2.MyColumn1 = t1.MyColumn1;
+-- QUERY END: CreateViewQuery
+
 -- QUERY START: CreateIndexQuery
 CREATE UNIQUE INDEX `UQ_MyTable1_MyColumn4`
     ON `MyTable1` (`MyColumn4`);
@@ -94,17 +105,6 @@ ALTER TABLE `MyTable1` ADD CONSTRAINT `FK_MyTable1_MyColumn1_MyTable2_MyColumn1`
         REFERENCES `MyTable2` (`MyColumn1`)
         ON UPDATE NO ACTION ON DELETE CASCADE;
 -- QUERY END: CreateForeignKeyQuery
-
--- QUERY START: CreateViewQuery
-CREATE VIEW MyView1 AS
-SELECT
-    t1.MyColumn1,
-    t1.MyColumn4,
-    t2.MyColumn2
-FROM MyTable1 t1
-LEFT JOIN MyTable2 t2
-    ON t2.MyColumn1 = t1.MyColumn1;
--- QUERY END: CreateViewQuery
 
 -- QUERY START: CreateTriggerQuery
 CREATE TRIGGER `TR_MyTable2_MyTrigger1`

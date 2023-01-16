@@ -49,6 +49,7 @@ dndbt_sqldef_create_statement
       | create_view_statement
       | create_index_statement
       | create_trigger_statement
+      | create_sequence_statement
       | create_type_statement
       | create_domain_statement
       | create_function_statement)
@@ -1334,7 +1335,8 @@ argmode
     ;
 
 create_sequence_statement
-    : CREATE ((TEMPORARY | TEMP) | UNLOGGED)? SEQUENCE if_not_exists? name=schema_qualified_name (sequence_body)*
+    : dndbt_id=DNDBT_ID_DECLARATION_COMMENT?
+        CREATE ((TEMPORARY | TEMP) | UNLOGGED)? SEQUENCE if_not_exists? name=schema_qualified_name (sequence_body)*
     ;
 
 sequence_body
@@ -1347,7 +1349,7 @@ sequence_body
     | RESTART (WITH? signed_number_literal)?
     | CACHE cache_val=signed_numerical_literal
     | cycle_true=NO? cycle_val=CYCLE
-    | OWNED BY col_name=schema_qualified_name
+    | OWNED BY owned_by=schema_qualified_name
     ;
 
 signed_number_literal

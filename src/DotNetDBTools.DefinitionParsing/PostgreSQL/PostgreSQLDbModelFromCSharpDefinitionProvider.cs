@@ -20,7 +20,7 @@ internal class PostgreSQLDbModelFromCSharpDefinitionProvider : DbModelFromCSharp
     PostgreSQLView,
     PostgreSQLIndex,
     PostgreSQLTrigger,
-    Models.Core.Column>
+    PostgreSQLColumn>
 {
     public PostgreSQLDbModelFromCSharpDefinitionProvider() : base(
         new PostgreSQLDataTypeMapper(),
@@ -32,6 +32,7 @@ internal class PostgreSQLDbModelFromCSharpDefinitionProvider : DbModelFromCSharp
     protected override void BuildAdditionalDbObjects(Database database, Assembly dbAssembly)
     {
         PostgreSQLDatabase db = (PostgreSQLDatabase)database;
+        db.Sequences = BuildSequences(dbAssembly);
         db.CompositeTypes = BuildCompositeTypeModels(dbAssembly);
         db.DomainTypes = BuildDomainModels(dbAssembly);
         db.EnumTypes = BuildEnumTypeModels(dbAssembly);
@@ -45,6 +46,16 @@ internal class PostgreSQLDbModelFromCSharpDefinitionProvider : DbModelFromCSharp
             tableModel.OfType = typedTable.OfType;
     }
 
+    protected override void BuildAdditionalColumnModelProperties(PostgreSQLColumn columnModel, BaseColumn column, string tableName)
+    {
+        if (columnModel.Identity)
+        {
+            Definition.PostgreSQL.Column c = (Definition.PostgreSQL.Column)column;
+            columnModel.IdentityGenerationKind = c.IdentityGenerationKind == IdentityGenerationKind.Always ? "ALWAYS" : "BY DEFAULT";
+            columnModel.IdentitySequenceOptions = MapToSequenceOptionsModel(c.IdentitySequenceOptions);
+        }
+    }
+
     protected override void BuildAdditionalIndexModelProperties(
         Models.Core.Index indexModel, BaseIndex index)
     {
@@ -55,6 +66,25 @@ internal class PostgreSQLDbModelFromCSharpDefinitionProvider : DbModelFromCSharp
         MapFKActionNameFromDefinitionToModel(((Definition.PostgreSQL.ForeignKey)fk).OnUpdate.ToString());
     protected override string GetOnDeleteActionName(BaseForeignKey fk) =>
         MapFKActionNameFromDefinitionToModel(((Definition.PostgreSQL.ForeignKey)fk).OnDelete.ToString());
+
+    private List<PostgreSQLSequence> BuildSequences(Assembly dbAssembly)
+    {
+        IEnumerable<ISequence> sequencesList = GetInstancesOfAllTypesImplementingInterface<ISequence>(dbAssembly);
+        List<PostgreSQLSequence> sequenceModelsList = new();
+        foreach (ISequence sequence in sequencesList)
+        {
+            PostgreSQLSequence sequenceModel = new()
+            {
+                ID = sequence.DNDBT_OBJECT_ID,
+                Name = sequence.GetType().Name,
+                DataType = DataTypeMapper.MapToDataTypeModel(sequence.DataType),
+                Options = MapToSequenceOptionsModel(sequence.Options),
+                OwnedBy = sequence.OwnedBy,
+            };
+            sequenceModelsList.Add(sequenceModel);
+        }
+        return sequenceModelsList;
+    }
 
     private List<PostgreSQLCompositeType> BuildCompositeTypeModels(Assembly dbAssembly)
     {
@@ -174,5 +204,18 @@ internal class PostgreSQLDbModelFromCSharpDefinitionProvider : DbModelFromCSharp
             functionModels.Add(functionModel);
         }
         return functionModels;
+    }
+
+    private static PostgreSQLSequenceOptions MapToSequenceOptionsModel(SequenceOptions options)
+    {
+        return new PostgreSQLSequenceOptions()
+        {
+            StartWith = options.StartWith,
+            IncrementBy = options.IncrementBy,
+            MinValue = options.MinValue,
+            MaxValue = options.MaxValue,
+            Cache = options.Cache,
+            Cycle = options.Cycle,
+        };
     }
 }

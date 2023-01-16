@@ -6,21 +6,22 @@ namespace DotNetDBTools.Models.PostgreSQL;
 
 public class PostgreSQLDatabaseDiff : DatabaseDiff
 {
-    public List<PostgreSQLCompositeType> AddedCompositeTypes { get; set; } = new();
-    public List<PostgreSQLCompositeType> RemovedCompositeTypes { get; set; } = new();
-    public List<PostgreSQLCompositeTypeDiff> ChangedCompositeTypes { get; set; } = new();
+    public List<PostgreSQLSequence> SequencesToCreate { get; set; } = new();
+    public List<PostgreSQLSequence> SequencesToDrop { get; set; } = new();
+    public List<PostgreSQLSequenceDiff> SequencesToAlter { get; set; } = new();
 
-    public List<PostgreSQLDomainType> AddedDomainTypes { get; set; } = new();
-    public List<PostgreSQLDomainType> RemovedDomainTypes { get; set; } = new();
-    public List<PostgreSQLDomainTypeDiff> ChangedDomainTypes { get; set; } = new();
+    public List<PostgreSQLCompositeType> CompositeTypesToCreate { get; set; } = new();
+    public List<PostgreSQLCompositeType> CompositeTypesToDrop { get; set; } = new();
 
-    public List<PostgreSQLEnumType> AddedEnumTypes { get; set; } = new();
-    public List<PostgreSQLEnumType> RemovedEnumTypes { get; set; } = new();
-    public List<PostgreSQLEnumTypeDiff> ChangedEnumTypes { get; set; } = new();
+    public List<PostgreSQLDomainType> DomainTypesToCreate { get; set; } = new();
+    public List<PostgreSQLDomainType> DomainTypesToDrop { get; set; } = new();
+    public List<PostgreSQLDomainTypeDiff> DomainTypesToAlter { get; set; } = new();
 
-    public List<PostgreSQLRangeType> AddedRangeTypes { get; set; } = new();
-    public List<PostgreSQLRangeType> RemovedRangeTypes { get; set; } = new();
-    public List<PostgreSQLRangeTypeDiff> ChangedRangeTypes { get; set; } = new();
+    public List<PostgreSQLEnumType> EnumTypesToCreate { get; set; } = new();
+    public List<PostgreSQLEnumType> EnumTypesToDrop { get; set; } = new();
+
+    public List<PostgreSQLRangeType> RangeTypesToCreate { get; set; } = new();
+    public List<PostgreSQLRangeType> RangeTypesToDrop { get; set; } = new();
 
     public List<PostgreSQLFunction> FunctionsToCreate { get; set; } = new();
     public List<PostgreSQLFunction> FunctionsToDrop { get; set; } = new();

@@ -1,13 +1,11 @@
 DO $DNDBTGeneratedScriptTransactionBlock$
 BEGIN
 
--- QUERY START: CreateCompositeTypeQuery
-EXECUTE 'CREATE TYPE "MyCompositeType1" AS
-(
-    "MyAttribute1" VARCHAR(100),
-    "MyAttribute2" DECIMAL(7,2)[]
-);';
--- QUERY END: CreateCompositeTypeQuery
+-- QUERY START: CreateSequenceQuery
+EXECUTE 'CREATE SEQUENCE "MySequence1"
+    AS BIGINT
+    START -1000 INCREMENT 2 MINVALUE -2147483648 MAXVALUE 0 CACHE 1 CYCLE;';
+-- QUERY END: CreateSequenceQuery
 
 -- QUERY START: InsertDNDBTDbObjectRecordQuery
 EXECUTE 'INSERT INTO "DNDBTDbObjects"
@@ -20,10 +18,35 @@ EXECUTE 'INSERT INTO "DNDBTDbObjects"
 )
 VALUES
 (
-    ''29bf2520-1d74-49ab-a602-14bd692371f2'',
+    ''f54a1a93-8cd2-4125-aede-b38cc7f8a750'',
     NULL,
-    ''UserDefinedType'',
-    ''MyCompositeType1'',
+    ''Sequence'',
+    ''MySequence1'',
+    NULL
+);';
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: CreateSequenceQuery
+EXECUTE 'CREATE SEQUENCE "MySequence2"
+    AS INT
+    START 1 INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 NO CYCLE;';
+-- QUERY END: CreateSequenceQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''59c3bf9d-4938-40df-9528-f1aa8367c6e3'',
+    NULL,
+    ''Sequence'',
+    ''MySequence2'',
     NULL
 );';
 -- QUERY END: InsertDNDBTDbObjectRecordQuery
@@ -35,7 +58,7 @@ LANGUAGE SQL
 IMMUTABLE
 AS
 $FuncBody$
-SELECT a + b;
+SELECT a + b + 1;
 $FuncBody$';
 -- QUERY END: CreateFunctionQuery
 
@@ -60,18 +83,24 @@ LANGUAGE SQL
 IMMUTABLE
 AS
 $FuncBody$
-SELECT a + b;
+SELECT a + b + 1;
 $FuncBody$''
 );';
 -- QUERY END: InsertDNDBTDbObjectRecordQuery
 
--- QUERY START: CreateEnumTypeQuery
-EXECUTE 'CREATE TYPE "MyEnumType1" AS ENUM
-(
-    ''Label1'',
-    ''Label2''
-);';
--- QUERY END: CreateEnumTypeQuery
+-- QUERY START: CreateFunctionQuery
+EXECUTE 'CREATE FUNCTION "TR_MyTable2_MyTrigger1_Handler"()
+RETURNS TRIGGER
+LANGUAGE PLPGSQL
+AS
+$FuncBody$
+BEGIN
+    INSERT INTO "MyTable4"("MyColumn1")
+    VALUES(NEW."MyColumn1");
+    RETURN NULL;
+END;
+$FuncBody$';
+-- QUERY END: CreateFunctionQuery
 
 -- QUERY START: InsertDNDBTDbObjectRecordQuery
 EXECUTE 'INSERT INTO "DNDBTDbObjects"
@@ -84,10 +113,47 @@ EXECUTE 'INSERT INTO "DNDBTDbObjects"
 )
 VALUES
 (
-    ''9286cc1d-f0a5-4046-adc0-b9ae298c6f91'',
+    ''8edd4469-e048-48bd-956e-a26113355f80'',
+    NULL,
+    ''Function'',
+    ''TR_MyTable2_MyTrigger1_Handler'',
+    ''CREATE FUNCTION "TR_MyTable2_MyTrigger1_Handler"()
+RETURNS TRIGGER
+LANGUAGE PLPGSQL
+AS
+$FuncBody$
+BEGIN
+    INSERT INTO "MyTable4"("MyColumn1")
+    VALUES(NEW."MyColumn1");
+    RETURN NULL;
+END;
+$FuncBody$''
+);';
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: CreateCompositeTypeQuery
+EXECUTE 'CREATE TYPE "MyCompositeType1" AS
+(
+    "MyAttribute1" VARCHAR(100),
+    "MyAttribute2" DECIMAL(7,2)[]
+);';
+-- QUERY END: CreateCompositeTypeQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''29bf2520-1d74-49ab-a602-14bd692371f2'',
     NULL,
     ''UserDefinedType'',
-    ''MyEnumType1'',
+    ''MyCompositeType1'',
     NULL
 );';
 -- QUERY END: InsertDNDBTDbObjectRecordQuery
@@ -156,6 +222,33 @@ VALUES
 );';
 -- QUERY END: InsertDNDBTDbObjectRecordQuery
 
+-- QUERY START: CreateEnumTypeQuery
+EXECUTE 'CREATE TYPE "MyEnumType1" AS ENUM
+(
+    ''Label1'',
+    ''Label2''
+);';
+-- QUERY END: CreateEnumTypeQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''9286cc1d-f0a5-4046-adc0-b9ae298c6f91'',
+    NULL,
+    ''UserDefinedType'',
+    ''MyEnumType1'',
+    NULL
+);';
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
 -- QUERY START: CreateRangeTypeQuery
 EXECUTE 'DO $DNDBTPlPgSqlBlock$
 BEGIN
@@ -201,7 +294,7 @@ EXECUTE 'CREATE TABLE "MyTable1"
 (
     "MyColumn1" INT NOT NULL DEFAULT 15,
     "MyColumn2" TEXT NULL,
-    "MyColumn3" INT GENERATED ALWAYS AS IDENTITY NOT NULL,
+    "MyColumn3" INT GENERATED ALWAYS AS IDENTITY (START 1000 INCREMENT -2 MINVALUE -2147483648 MAXVALUE 2147483647 CACHE 1 NO CYCLE) NOT NULL,
     "MyColumn4" DECIMAL NOT NULL DEFAULT 736,
     "MyColumn5" VARCHAR(1000) NULL DEFAULT ''some text'',
     CONSTRAINT "PK_MyTable1" PRIMARY KEY ("MyColumn3"),
@@ -470,7 +563,7 @@ VALUES
 EXECUTE 'CREATE TABLE "MyTable4"
 (
     "MyColumn1" BIGINT NOT NULL,
-    "MyColumn2" INT GENERATED ALWAYS AS IDENTITY NOT NULL,
+    "MyColumn2" INT GENERATED ALWAYS AS IDENTITY (START 1 INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 NO CYCLE) NOT NULL,
     CONSTRAINT "PK_MyTable4" PRIMARY KEY ("MyColumn2")
 );';
 -- QUERY END: CreateTableQuery
@@ -1821,6 +1914,67 @@ VALUES
 );';
 -- QUERY END: InsertDNDBTDbObjectRecordQuery
 
+-- QUERY START: AlterSequenceQuery
+EXECUTE 'ALTER SEQUENCE "MySequence1"
+    OWNED BY "MyTable1"."MyColumn1"';
+-- QUERY END: AlterSequenceQuery
+
+-- QUERY START: UpdateDNDBTDbObjectRecordQuery
+EXECUTE 'UPDATE "DNDBTDbObjects" SET
+    "Name" = ''MySequence1'',
+    "Code" = NULL
+WHERE "ID" = ''f54a1a93-8cd2-4125-aede-b38cc7f8a750'';';
+-- QUERY END: UpdateDNDBTDbObjectRecordQuery
+
+-- QUERY START: AlterSequenceQuery
+EXECUTE 'ALTER SEQUENCE "MySequence2"
+    OWNED BY "MyTable1"."MyColumn2"';
+-- QUERY END: AlterSequenceQuery
+
+-- QUERY START: UpdateDNDBTDbObjectRecordQuery
+EXECUTE 'UPDATE "DNDBTDbObjects" SET
+    "Name" = ''MySequence2'',
+    "Code" = NULL
+WHERE "ID" = ''59c3bf9d-4938-40df-9528-f1aa8367c6e3'';';
+-- QUERY END: UpdateDNDBTDbObjectRecordQuery
+
+-- QUERY START: CreateViewQuery
+EXECUTE 'CREATE VIEW "MyView1" AS
+SELECT
+    t1."MyColumn1",
+    t1."MyColumn4",
+    t2."MyColumn2"
+FROM "MyTable1" t1
+LEFT JOIN "MyTable2" t2
+    ON t2."MyColumn1" = t1."MyColumn1"';
+-- QUERY END: CreateViewQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''e2569aae-d5da-4a77-b3cd-51adbdb272d9'',
+    NULL,
+    ''View'',
+    ''MyView1'',
+    ''CREATE VIEW "MyView1" AS
+SELECT
+    t1."MyColumn1",
+    t1."MyColumn4",
+    t2."MyColumn2"
+FROM "MyTable1" t1
+LEFT JOIN "MyTable2" t2
+    ON t2."MyColumn1" = t1."MyColumn1"''
+);';
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
 -- QUERY START: CreateIndexQuery
 EXECUTE 'CREATE UNIQUE INDEX "IDX_MyTable2_MyIndex1"
     ON "MyTable2" ("MyColumn1", "MyColumn2");';
@@ -1918,86 +2072,6 @@ VALUES
     ''ForeignKey'',
     ''FK_MyTable6_MyTable5_CustomName'',
     NULL
-);';
--- QUERY END: InsertDNDBTDbObjectRecordQuery
-
--- QUERY START: CreateFunctionQuery
-EXECUTE 'CREATE FUNCTION "TR_MyTable2_MyTrigger1_Handler"()
-RETURNS TRIGGER
-LANGUAGE PLPGSQL
-AS
-$FuncBody$
-BEGIN
-    INSERT INTO "MyTable4"("MyColumn1")
-    VALUES(NEW."MyColumn1");
-    RETURN NULL;
-END;
-$FuncBody$';
--- QUERY END: CreateFunctionQuery
-
--- QUERY START: InsertDNDBTDbObjectRecordQuery
-EXECUTE 'INSERT INTO "DNDBTDbObjects"
-(
-    "ID",
-    "ParentID",
-    "Type",
-    "Name",
-    "Code"
-)
-VALUES
-(
-    ''8edd4469-e048-48bd-956e-a26113355f80'',
-    NULL,
-    ''Function'',
-    ''TR_MyTable2_MyTrigger1_Handler'',
-    ''CREATE FUNCTION "TR_MyTable2_MyTrigger1_Handler"()
-RETURNS TRIGGER
-LANGUAGE PLPGSQL
-AS
-$FuncBody$
-BEGIN
-    INSERT INTO "MyTable4"("MyColumn1")
-    VALUES(NEW."MyColumn1");
-    RETURN NULL;
-END;
-$FuncBody$''
-);';
--- QUERY END: InsertDNDBTDbObjectRecordQuery
-
--- QUERY START: CreateViewQuery
-EXECUTE 'CREATE VIEW "MyView1" AS
-SELECT
-    t1."MyColumn1",
-    t1."MyColumn4",
-    t2."MyColumn2"
-FROM "MyTable1" t1
-LEFT JOIN "MyTable2" t2
-    ON t2."MyColumn1" = t1."MyColumn1"';
--- QUERY END: CreateViewQuery
-
--- QUERY START: InsertDNDBTDbObjectRecordQuery
-EXECUTE 'INSERT INTO "DNDBTDbObjects"
-(
-    "ID",
-    "ParentID",
-    "Type",
-    "Name",
-    "Code"
-)
-VALUES
-(
-    ''e2569aae-d5da-4a77-b3cd-51adbdb272d9'',
-    NULL,
-    ''View'',
-    ''MyView1'',
-    ''CREATE VIEW "MyView1" AS
-SELECT
-    t1."MyColumn1",
-    t1."MyColumn4",
-    t2."MyColumn2"
-FROM "MyTable1" t1
-LEFT JOIN "MyTable2" t2
-    ON t2."MyColumn1" = t1."MyColumn1"''
 );';
 -- QUERY END: InsertDNDBTDbObjectRecordQuery
 

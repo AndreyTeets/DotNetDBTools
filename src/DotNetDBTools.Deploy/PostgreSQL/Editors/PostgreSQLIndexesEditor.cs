@@ -4,10 +4,10 @@ using DotNetDBTools.Deploy.PostgreSQL.Queries.DNDBTSysInfo;
 
 namespace DotNetDBTools.Deploy.PostgreSQL.Editors;
 
-internal class PostgreSQLIndexEditor : IndexEditor<
+internal class PostgreSQLIndexesEditor : IndexEditor<
     PostgreSQLInsertDNDBTDbObjectRecordQuery,
     PostgreSQLDeleteDNDBTDbObjectRecordQuery>
 {
-    public PostgreSQLIndexEditor(IQueryExecutor queryExecutor)
+    public PostgreSQLIndexesEditor(IQueryExecutor queryExecutor)
         : base(queryExecutor) { }
 }

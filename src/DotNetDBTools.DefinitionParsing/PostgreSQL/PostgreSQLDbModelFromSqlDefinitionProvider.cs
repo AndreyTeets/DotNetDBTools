@@ -16,7 +16,7 @@ internal class PostgreSQLDbModelFromSqlDefinitionProvider : DbModelFromSqlDefini
     PostgreSQLView,
     PostgreSQLIndex,
     PostgreSQLTrigger,
-    Column>
+    PostgreSQLColumn>
 {
     public PostgreSQLDbModelFromSqlDefinitionProvider() : base(
         new PostgreSQLCodeParser())
@@ -26,11 +26,44 @@ internal class PostgreSQLDbModelFromSqlDefinitionProvider : DbModelFromSqlDefini
     protected override void BuildAdditionalDbObjects(Database database, List<ObjectInfo> dbObjects)
     {
         PostgreSQLDatabase db = (PostgreSQLDatabase)database;
+        db.Sequences = BuildSequenceModels(dbObjects.OfType<SequenceInfo>());
         db.CompositeTypes = BuildCompositeTypeModels(dbObjects.OfType<TypeInfo>().Where(x => x.TypeType == TypeType.Composite));
         db.DomainTypes = BuildDomainModels(dbObjects.OfType<TypeInfo>().Where(x => x.TypeType == TypeType.Domain));
         db.EnumTypes = BuildEnumTypeModels(dbObjects.OfType<TypeInfo>().Where(x => x.TypeType == TypeType.Enum));
         db.RangeTypes = BuildRangeTypeModels(dbObjects.OfType<TypeInfo>().Where(x => x.TypeType == TypeType.Range));
         db.Functions = BuildFunctionModels(dbObjects.OfType<FunctionInfo>());
+    }
+
+    protected override void BuildAdditionalIndexModelProperties(Index indexModel, IndexInfo index)
+    {
+        if (index.Expression != null)
+            ((PostgreSQLIndex)indexModel).Expression = new CodePiece() { Code = index.Expression };
+    }
+
+    private List<PostgreSQLSequence> BuildSequenceModels(IEnumerable<SequenceInfo> sequences)
+    {
+        List<PostgreSQLSequence> sequenceModels = new();
+        foreach (SequenceInfo sequence in sequences)
+        {
+            PostgreSQLSequence sequenceModel = new()
+            {
+                ID = sequence.ID.Value,
+                Name = sequence.Name,
+                DataType = new DataType { Name = sequence.DataType ?? PostgreSQLDataTypeNames.INT },
+                Options = new PostgreSQLSequenceOptions()
+                {
+                    StartWith = sequence.StartWith ?? 1,
+                    IncrementBy = sequence.IncrementBy ?? 1,
+                    MinValue = sequence.MinValue ?? 1,
+                    MaxValue = sequence.MaxValue ?? int.MaxValue,
+                    Cache = sequence.Cache ?? 1,
+                    Cycle = sequence.Cycle ?? false,
+                },
+                OwnedBy = (sequence.OwnedByTableName, sequence.OwnedByColumnName),
+            };
+            sequenceModels.Add(sequenceModel);
+        }
+        return sequenceModels;
     }
 
     private List<PostgreSQLCompositeType> BuildCompositeTypeModels(IEnumerable<TypeInfo> types)

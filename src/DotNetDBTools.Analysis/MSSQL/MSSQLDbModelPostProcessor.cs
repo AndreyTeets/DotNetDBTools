@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Linq;
 using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.Analysis.Extensions;
 using DotNetDBTools.Models.Core;
@@ -38,9 +38,9 @@ internal class MSSQLDbModelPostProcessor : DbModelPostProcessor
     protected override void OrderAdditionalDbObjects(Database database)
     {
         MSSQLDatabase db = (MSSQLDatabase)database;
-        db.UserDefinedTypes = db.UserDefinedTypes.OrderByName();
-        db.UserDefinedTableTypes = db.UserDefinedTableTypes.OrderByName();
-        db.Functions = db.Functions.OrderByName();
-        db.Procedures = db.Procedures.OrderByName();
+        db.UserDefinedTypes = db.UserDefinedTypes.OrderByNameThenByType().ToList();
+        db.UserDefinedTableTypes = db.UserDefinedTableTypes.OrderByNameThenByType().ToList();
+        db.Functions = db.Functions.OrderByNameThenByType().ToList();
+        db.Procedures = db.Procedures.OrderByNameThenByType().ToList();
     }
 }

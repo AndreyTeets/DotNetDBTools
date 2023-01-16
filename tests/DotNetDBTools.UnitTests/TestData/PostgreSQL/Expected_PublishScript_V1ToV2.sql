@@ -55,24 +55,6 @@ EXECUTE 'DELETE FROM "DNDBTDbObjects"
 WHERE "ID" = ''ee64ffc3-5536-4624-beaf-bc3a61d06a1a'';';
 -- QUERY END: DeleteDNDBTDbObjectRecordQuery
 
--- QUERY START: DropFunctionQuery
-EXECUTE 'DROP FUNCTION "TR_MyTable2_MyTrigger1_Handler";';
--- QUERY END: DropFunctionQuery
-
--- QUERY START: DeleteDNDBTDbObjectRecordQuery
-EXECUTE 'DELETE FROM "DNDBTDbObjects"
-WHERE "ID" = ''8edd4469-e048-48bd-956e-a26113355f80'';';
--- QUERY END: DeleteDNDBTDbObjectRecordQuery
-
--- QUERY START: DropViewQuery
-EXECUTE 'DROP VIEW "MyView1";';
--- QUERY END: DropViewQuery
-
--- QUERY START: DeleteDNDBTDbObjectRecordQuery
-EXECUTE 'DELETE FROM "DNDBTDbObjects"
-WHERE "ID" = ''e2569aae-d5da-4a77-b3cd-51adbdb272d9'';';
--- QUERY END: DeleteDNDBTDbObjectRecordQuery
-
 -- QUERY START: DropForeignKeyQuery
 EXECUTE 'ALTER TABLE "MyTable6"
     DROP CONSTRAINT "FK_MyTable6_MyTable5_CustomName";';
@@ -111,6 +93,98 @@ EXECUTE 'DELETE FROM "DNDBTDbObjects"
 WHERE "ID" = ''1d632285-9914-4c5d-98e6-a618a99bd799'';';
 -- QUERY END: DeleteDNDBTDbObjectRecordQuery
 
+-- QUERY START: AlterTableQuery
+EXECUTE 'ALTER TABLE "MyTable1"
+    DROP CONSTRAINT "CK_MyTable1_MyCheck1";';
+-- QUERY END: AlterTableQuery
+
+-- QUERY START: DeleteDNDBTDbObjectRecordQuery
+EXECUTE 'DELETE FROM "DNDBTDbObjects"
+WHERE "ID" = ''eb9c59b5-bc7e-49d7-adaa-f5600b6a19a2'';';
+-- QUERY END: DeleteDNDBTDbObjectRecordQuery
+
+-- QUERY START: AlterTableQuery
+EXECUTE 'ALTER TABLE "MyTable1"
+    ALTER COLUMN "MyColumn4" DROP DEFAULT;';
+-- QUERY END: AlterTableQuery
+
+-- QUERY START: UpdateDNDBTDbObjectRecordQuery
+EXECUTE 'UPDATE "DNDBTDbObjects" SET
+    "Name" = ''MyColumn4'',
+    "Code" = NULL
+WHERE "ID" = ''867ac528-e87e-4c93-b6e3-dd2fcbbb837f'';';
+-- QUERY END: UpdateDNDBTDbObjectRecordQuery
+
+-- QUERY START: AlterTableQuery
+EXECUTE 'ALTER TABLE "MyTable2"
+    ALTER COLUMN "MyColumn2" DROP DEFAULT;';
+-- QUERY END: AlterTableQuery
+
+-- QUERY START: UpdateDNDBTDbObjectRecordQuery
+EXECUTE 'UPDATE "DNDBTDbObjects" SET
+    "Name" = ''MyColumn2'',
+    "Code" = NULL
+WHERE "ID" = ''5a0d1926-3270-4eb2-92eb-00be56c7af23'';';
+-- QUERY END: UpdateDNDBTDbObjectRecordQuery
+
+-- QUERY START: AlterTableQuery
+EXECUTE 'ALTER TABLE "MyTable5"
+    ALTER COLUMN "MyColumn1" DROP DEFAULT,
+    ALTER COLUMN "MyColumn201" DROP DEFAULT;';
+-- QUERY END: AlterTableQuery
+
+-- QUERY START: UpdateDNDBTDbObjectRecordQuery
+EXECUTE 'UPDATE "DNDBTDbObjects" SET
+    "Name" = ''MyColumn1'',
+    "Code" = NULL
+WHERE "ID" = ''5309d66f-2030-402e-912e-5547babaa072'';';
+-- QUERY END: UpdateDNDBTDbObjectRecordQuery
+
+-- QUERY START: UpdateDNDBTDbObjectRecordQuery
+EXECUTE 'UPDATE "DNDBTDbObjects" SET
+    "Name" = ''MyColumn201'',
+    "Code" = NULL
+WHERE "ID" = ''5c455ec9-9830-4d0b-a88c-57341899dc4a'';';
+-- QUERY END: UpdateDNDBTDbObjectRecordQuery
+
+-- QUERY START: DropViewQuery
+EXECUTE 'DROP VIEW "MyView1";';
+-- QUERY END: DropViewQuery
+
+-- QUERY START: DeleteDNDBTDbObjectRecordQuery
+EXECUTE 'DELETE FROM "DNDBTDbObjects"
+WHERE "ID" = ''e2569aae-d5da-4a77-b3cd-51adbdb272d9'';';
+-- QUERY END: DeleteDNDBTDbObjectRecordQuery
+
+-- QUERY START: AlterSequenceQuery
+EXECUTE 'ALTER SEQUENCE "MySequence2" RENAME TO "_DNDBTTemp_MySequence2";
+ALTER SEQUENCE "_DNDBTTemp_MySequence2"
+    OWNED BY NONE';
+-- QUERY END: AlterSequenceQuery
+
+-- QUERY START: DeleteDNDBTDbObjectRecordQuery
+EXECUTE 'DELETE FROM "DNDBTDbObjects"
+WHERE "ID" = ''59c3bf9d-4938-40df-9528-f1aa8367c6e3'';';
+-- QUERY END: DeleteDNDBTDbObjectRecordQuery
+
+-- QUERY START: RenameProgrammableObjectToTempQuery
+EXECUTE 'ALTER FUNCTION "MyFunction1" RENAME TO "_DNDBTTemp_MyFunction1";';
+-- QUERY END: RenameProgrammableObjectToTempQuery
+
+-- QUERY START: DeleteDNDBTDbObjectRecordQuery
+EXECUTE 'DELETE FROM "DNDBTDbObjects"
+WHERE "ID" = ''63d3a414-2893-4462-b3f8-04633101263a'';';
+-- QUERY END: DeleteDNDBTDbObjectRecordQuery
+
+-- QUERY START: RenameProgrammableObjectToTempQuery
+EXECUTE 'ALTER FUNCTION "TR_MyTable2_MyTrigger1_Handler" RENAME TO "_DNDBTTemp_TR_MyTable2_MyTrigger1_Handler";';
+-- QUERY END: RenameProgrammableObjectToTempQuery
+
+-- QUERY START: DeleteDNDBTDbObjectRecordQuery
+EXECUTE 'DELETE FROM "DNDBTDbObjects"
+WHERE "ID" = ''8edd4469-e048-48bd-956e-a26113355f80'';';
+-- QUERY END: DeleteDNDBTDbObjectRecordQuery
+
 -- QUERY START: RenameTypeToTempQuery
 EXECUTE 'ALTER TYPE "MyCompositeType1" RENAME TO "_DNDBTTemp_MyCompositeType1";';
 -- QUERY END: RenameTypeToTempQuery
@@ -118,15 +192,6 @@ EXECUTE 'ALTER TYPE "MyCompositeType1" RENAME TO "_DNDBTTemp_MyCompositeType1";'
 -- QUERY START: DeleteDNDBTDbObjectRecordQuery
 EXECUTE 'DELETE FROM "DNDBTDbObjects"
 WHERE "ID" = ''29bf2520-1d74-49ab-a602-14bd692371f2'';';
--- QUERY END: DeleteDNDBTDbObjectRecordQuery
-
--- QUERY START: RenameTypeToTempQuery
-EXECUTE 'ALTER TYPE "MyEnumType1" RENAME TO "_DNDBTTemp_MyEnumType1";';
--- QUERY END: RenameTypeToTempQuery
-
--- QUERY START: DeleteDNDBTDbObjectRecordQuery
-EXECUTE 'DELETE FROM "DNDBTDbObjects"
-WHERE "ID" = ''9286cc1d-f0a5-4046-adc0-b9ae298c6f91'';';
 -- QUERY END: DeleteDNDBTDbObjectRecordQuery
 
 -- QUERY START: RenameTypeToTempQuery
@@ -149,6 +214,15 @@ WHERE "ID" = ''7905b7a8-cf45-4328-8a2b-00616d98235e'';';
 -- QUERY END: DeleteDNDBTDbObjectRecordQuery
 
 -- QUERY START: RenameTypeToTempQuery
+EXECUTE 'ALTER TYPE "MyEnumType1" RENAME TO "_DNDBTTemp_MyEnumType1";';
+-- QUERY END: RenameTypeToTempQuery
+
+-- QUERY START: DeleteDNDBTDbObjectRecordQuery
+EXECUTE 'DELETE FROM "DNDBTDbObjects"
+WHERE "ID" = ''9286cc1d-f0a5-4046-adc0-b9ae298c6f91'';';
+-- QUERY END: DeleteDNDBTDbObjectRecordQuery
+
+-- QUERY START: RenameTypeToTempQuery
 EXECUTE 'DO $DNDBTPlPgSqlBlock$
 BEGIN
 ALTER TYPE "MyRangeType1" RENAME TO "_DNDBTTemp_MyRangeType1";
@@ -168,6 +242,100 @@ $DNDBTPlPgSqlBlock$';
 EXECUTE 'DELETE FROM "DNDBTDbObjects"
 WHERE "ID" = ''b02db666-fbbc-4cd7-a14d-4049251b9a7b'';';
 -- QUERY END: DeleteDNDBTDbObjectRecordQuery
+
+-- QUERY START: AlterSequenceQuery
+EXECUTE 'ALTER SEQUENCE "MySequence1" RENAME TO "MySequence1NewName";
+ALTER SEQUENCE "MySequence1NewName"
+    AS SMALLINT
+    MINVALUE -2000 MAXVALUE 1500 NO CYCLE';
+-- QUERY END: AlterSequenceQuery
+
+-- QUERY START: UpdateDNDBTDbObjectRecordQuery
+EXECUTE 'UPDATE "DNDBTDbObjects" SET
+    "Name" = ''MySequence1NewName'',
+    "Code" = NULL
+WHERE "ID" = ''f54a1a93-8cd2-4125-aede-b38cc7f8a750'';';
+-- QUERY END: UpdateDNDBTDbObjectRecordQuery
+
+-- QUERY START: CreateFunctionQuery
+EXECUTE 'CREATE FUNCTION "MyFunction1"(a INT, b INT)
+RETURNS INT
+LANGUAGE SQL
+IMMUTABLE
+AS
+$FuncBody$
+SELECT a + b;
+$FuncBody$';
+-- QUERY END: CreateFunctionQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''63d3a414-2893-4462-b3f8-04633101263a'',
+    NULL,
+    ''Function'',
+    ''MyFunction1'',
+    ''CREATE FUNCTION "MyFunction1"(a INT, b INT)
+RETURNS INT
+LANGUAGE SQL
+IMMUTABLE
+AS
+$FuncBody$
+SELECT a + b;
+$FuncBody$''
+);';
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: CreateFunctionQuery
+EXECUTE 'CREATE FUNCTION "TR_MyTable2_MyTrigger1_Handler"()
+RETURNS TRIGGER
+LANGUAGE PLPGSQL
+AS
+$FuncBody$
+BEGIN
+    INSERT INTO "MyTable4"("MyColumn1")
+    VALUES(NEW."MyColumn1NewName");
+    RETURN NULL;
+END;
+$FuncBody$';
+-- QUERY END: CreateFunctionQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''8edd4469-e048-48bd-956e-a26113355f80'',
+    NULL,
+    ''Function'',
+    ''TR_MyTable2_MyTrigger1_Handler'',
+    ''CREATE FUNCTION "TR_MyTable2_MyTrigger1_Handler"()
+RETURNS TRIGGER
+LANGUAGE PLPGSQL
+AS
+$FuncBody$
+BEGIN
+    INSERT INTO "MyTable4"("MyColumn1")
+    VALUES(NEW."MyColumn1NewName");
+    RETURN NULL;
+END;
+$FuncBody$''
+);';
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
 
 -- QUERY START: CreateCompositeTypeQuery
 EXECUTE 'CREATE TYPE "MyCompositeType1" AS
@@ -192,34 +360,6 @@ VALUES
     NULL,
     ''UserDefinedType'',
     ''MyCompositeType1'',
-    NULL
-);';
--- QUERY END: InsertDNDBTDbObjectRecordQuery
-
--- QUERY START: CreateEnumTypeQuery
-EXECUTE 'CREATE TYPE "MyEnumType1" AS ENUM
-(
-    ''Label1'',
-    ''Label2'',
-    ''Label3''
-);';
--- QUERY END: CreateEnumTypeQuery
-
--- QUERY START: InsertDNDBTDbObjectRecordQuery
-EXECUTE 'INSERT INTO "DNDBTDbObjects"
-(
-    "ID",
-    "ParentID",
-    "Type",
-    "Name",
-    "Code"
-)
-VALUES
-(
-    ''9286cc1d-f0a5-4046-adc0-b9ae298c6f91'',
-    NULL,
-    ''UserDefinedType'',
-    ''MyEnumType1'',
     NULL
 );';
 -- QUERY END: InsertDNDBTDbObjectRecordQuery
@@ -288,6 +428,34 @@ VALUES
 );';
 -- QUERY END: InsertDNDBTDbObjectRecordQuery
 
+-- QUERY START: CreateEnumTypeQuery
+EXECUTE 'CREATE TYPE "MyEnumType1" AS ENUM
+(
+    ''Label1'',
+    ''Label2'',
+    ''Label3''
+);';
+-- QUERY END: CreateEnumTypeQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''9286cc1d-f0a5-4046-adc0-b9ae298c6f91'',
+    NULL,
+    ''UserDefinedType'',
+    ''MyEnumType1'',
+    NULL
+);';
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
 -- QUERY START: CreateRangeTypeQuery
 EXECUTE 'DO $DNDBTPlPgSqlBlock$
 BEGIN
@@ -350,22 +518,14 @@ WHERE "ID" = ''f3064a8c-346a-4b3d-af2c-d967b39841e4'';';
 -- QUERY START: AlterTableQuery
 EXECUTE 'ALTER TABLE "MyTable1" RENAME TO "MyTable1NewName";
 ALTER TABLE "MyTable1NewName"
-    DROP CONSTRAINT "CK_MyTable1_MyCheck1",
     DROP CONSTRAINT "UQ_MyTable1_MyColumn4",
     DROP CONSTRAINT "PK_MyTable1",
     DROP COLUMN "MyColumn2",
     DROP COLUMN "MyColumn3",
     ALTER COLUMN "MyColumn1" SET DATA TYPE BIGINT
         USING ("MyColumn1"::text::BIGINT),
-    ALTER COLUMN "MyColumn1" DROP NOT NULL,
-    ALTER COLUMN "MyColumn4" DROP DEFAULT,
-    ADD CONSTRAINT "CK_MyTable1_MyCheck1" CHECK ("MyColumn4" >= 1);';
+    ALTER COLUMN "MyColumn1" DROP NOT NULL;';
 -- QUERY END: AlterTableQuery
-
--- QUERY START: DeleteDNDBTDbObjectRecordQuery
-EXECUTE 'DELETE FROM "DNDBTDbObjects"
-WHERE "ID" = ''eb9c59b5-bc7e-49d7-adaa-f5600b6a19a2'';';
--- QUERY END: DeleteDNDBTDbObjectRecordQuery
 
 -- QUERY START: DeleteDNDBTDbObjectRecordQuery
 EXECUTE 'DELETE FROM "DNDBTDbObjects"
@@ -394,39 +554,6 @@ EXECUTE 'UPDATE "DNDBTDbObjects" SET
 WHERE "ID" = ''299675e6-4faa-4d0f-a36a-224306ba5bcb'';';
 -- QUERY END: UpdateDNDBTDbObjectRecordQuery
 
--- QUERY START: UpdateDNDBTDbObjectRecordQuery
-EXECUTE 'UPDATE "DNDBTDbObjects" SET
-    "Name" = ''MyColumn1'',
-    "Code" = ''15''
-WHERE "ID" = ''a2f2a4de-1337-4594-ae41-72ed4d05f317'';';
--- QUERY END: UpdateDNDBTDbObjectRecordQuery
-
--- QUERY START: UpdateDNDBTDbObjectRecordQuery
-EXECUTE 'UPDATE "DNDBTDbObjects" SET
-    "Name" = ''MyColumn4'',
-    "Code" = NULL
-WHERE "ID" = ''867ac528-e87e-4c93-b6e3-dd2fcbbb837f'';';
--- QUERY END: UpdateDNDBTDbObjectRecordQuery
-
--- QUERY START: InsertDNDBTDbObjectRecordQuery
-EXECUTE 'INSERT INTO "DNDBTDbObjects"
-(
-    "ID",
-    "ParentID",
-    "Type",
-    "Name",
-    "Code"
-)
-VALUES
-(
-    ''eb9c59b5-bc7e-49d7-adaa-f5600b6a19a2'',
-    ''299675e6-4faa-4d0f-a36a-224306ba5bcb'',
-    ''CheckConstraint'',
-    ''CK_MyTable1_MyCheck1'',
-    ''"MyColumn4" >= 1''
-);';
--- QUERY END: InsertDNDBTDbObjectRecordQuery
-
 -- QUERY START: AlterTableQuery
 EXECUTE 'ALTER TABLE "MyTable2" RENAME COLUMN "MyColumn1" TO "MyColumn1NewName";
 ALTER TABLE "MyTable2"
@@ -449,13 +576,6 @@ WHERE "ID" = ''3a43615b-40b3-4a13-99e7-93af7c56e8ce'';';
 EXECUTE 'DELETE FROM "DNDBTDbObjects"
 WHERE "ID" = ''5a0d1926-3270-4eb2-92eb-00be56c7af23'';';
 -- QUERY END: DeleteDNDBTDbObjectRecordQuery
-
--- QUERY START: UpdateDNDBTDbObjectRecordQuery
-EXECUTE 'UPDATE "DNDBTDbObjects" SET
-    "Name" = ''MyTable2'',
-    "Code" = NULL
-WHERE "ID" = ''bfb9030c-a8c3-4882-9c42-1c6ad025cf8f'';';
--- QUERY END: UpdateDNDBTDbObjectRecordQuery
 
 -- QUERY START: UpdateDNDBTDbObjectRecordQuery
 EXECUTE 'UPDATE "DNDBTDbObjects" SET
@@ -544,7 +664,6 @@ VALUES
 EXECUTE 'ALTER TABLE "MyTable5"
     DROP CONSTRAINT "UQ_MyTable5_CustomName",
     DROP CONSTRAINT "PK_MyTable5_CustomName",
-    ALTER COLUMN "MyColumn1" SET DEFAULT abS(-15),
     ALTER COLUMN "MyColumn101" SET DATA TYPE "MyCompositeType1"
         USING ("MyColumn101"::text::"MyCompositeType1"),
     ALTER COLUMN "MyColumn102" SET DATA TYPE "MyDomain1"
@@ -568,62 +687,6 @@ WHERE "ID" = ''5293b58a-9f63-4f0f-8d6f-18416ebbd751'';';
 EXECUTE 'DELETE FROM "DNDBTDbObjects"
 WHERE "ID" = ''79384d48-a39b-4a22-900e-066b2ca67ba2'';';
 -- QUERY END: DeleteDNDBTDbObjectRecordQuery
-
--- QUERY START: UpdateDNDBTDbObjectRecordQuery
-EXECUTE 'UPDATE "DNDBTDbObjects" SET
-    "Name" = ''MyTable5'',
-    "Code" = NULL
-WHERE "ID" = ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'';';
--- QUERY END: UpdateDNDBTDbObjectRecordQuery
-
--- QUERY START: UpdateDNDBTDbObjectRecordQuery
-EXECUTE 'UPDATE "DNDBTDbObjects" SET
-    "Name" = ''MyColumn1'',
-    "Code" = ''abS(-15)''
-WHERE "ID" = ''5309d66f-2030-402e-912e-5547babaa072'';';
--- QUERY END: UpdateDNDBTDbObjectRecordQuery
-
--- QUERY START: UpdateDNDBTDbObjectRecordQuery
-EXECUTE 'UPDATE "DNDBTDbObjects" SET
-    "Name" = ''MyColumn101'',
-    "Code" = NULL
-WHERE "ID" = ''15ae6061-426d-4485-85e6-ecd3e0f98882'';';
--- QUERY END: UpdateDNDBTDbObjectRecordQuery
-
--- QUERY START: UpdateDNDBTDbObjectRecordQuery
-EXECUTE 'UPDATE "DNDBTDbObjects" SET
-    "Name" = ''MyColumn102'',
-    "Code" = NULL
-WHERE "ID" = ''45856161-db66-49f6-afde-9214d2d2d4b0'';';
--- QUERY END: UpdateDNDBTDbObjectRecordQuery
-
--- QUERY START: UpdateDNDBTDbObjectRecordQuery
-EXECUTE 'UPDATE "DNDBTDbObjects" SET
-    "Name" = ''MyColumn103'',
-    "Code" = NULL
-WHERE "ID" = ''b45d163b-f49e-499f-a9e5-2538cd073b80'';';
--- QUERY END: UpdateDNDBTDbObjectRecordQuery
-
--- QUERY START: UpdateDNDBTDbObjectRecordQuery
-EXECUTE 'UPDATE "DNDBTDbObjects" SET
-    "Name" = ''MyColumn104'',
-    "Code" = NULL
-WHERE "ID" = ''c8b03b75-a8a2-47e0-bf5c-f3e4f1b8f500'';';
--- QUERY END: UpdateDNDBTDbObjectRecordQuery
-
--- QUERY START: UpdateDNDBTDbObjectRecordQuery
-EXECUTE 'UPDATE "DNDBTDbObjects" SET
-    "Name" = ''MyColumn339'',
-    "Code" = NULL
-WHERE "ID" = ''a9863561-9309-4911-94d8-c12d21b0884e'';';
--- QUERY END: UpdateDNDBTDbObjectRecordQuery
-
--- QUERY START: UpdateDNDBTDbObjectRecordQuery
-EXECUTE 'UPDATE "DNDBTDbObjects" SET
-    "Name" = ''MyColumn340'',
-    "Code" = NULL
-WHERE "ID" = ''0d33ed85-9909-46e7-8369-eee86b563519'';';
--- QUERY END: UpdateDNDBTDbObjectRecordQuery
 
 -- QUERY START: CreateTableQuery
 EXECUTE 'CREATE TABLE "MyTable3"
@@ -710,12 +773,20 @@ VALUES
 );';
 -- QUERY END: InsertDNDBTDbObjectRecordQuery
 
--- QUERY START: DropTypeQuery
-EXECUTE 'DROP TYPE "_DNDBTTemp_MyCompositeType1";';
--- QUERY END: DropTypeQuery
+-- QUERY START: AlterSequenceQuery
+EXECUTE 'ALTER SEQUENCE "MySequence1NewName"
+    OWNED BY NONE';
+-- QUERY END: AlterSequenceQuery
+
+-- QUERY START: UpdateDNDBTDbObjectRecordQuery
+EXECUTE 'UPDATE "DNDBTDbObjects" SET
+    "Name" = ''MySequence1NewName'',
+    "Code" = NULL
+WHERE "ID" = ''f54a1a93-8cd2-4125-aede-b38cc7f8a750'';';
+-- QUERY END: UpdateDNDBTDbObjectRecordQuery
 
 -- QUERY START: DropTypeQuery
-EXECUTE 'DROP TYPE "_DNDBTTemp_MyEnumType1";';
+EXECUTE 'DROP TYPE "_DNDBTTemp_MyCompositeType1";';
 -- QUERY END: DropTypeQuery
 
 -- QUERY START: DropTypeQuery
@@ -723,8 +794,117 @@ EXECUTE 'DROP DOMAIN "_DNDBTTemp_MyDomain1";';
 -- QUERY END: DropTypeQuery
 
 -- QUERY START: DropTypeQuery
+EXECUTE 'DROP TYPE "_DNDBTTemp_MyEnumType1";';
+-- QUERY END: DropTypeQuery
+
+-- QUERY START: DropTypeQuery
 EXECUTE 'DROP TYPE "_DNDBTTemp_MyRangeType1";';
 -- QUERY END: DropTypeQuery
+
+-- QUERY START: DropFunctionQuery
+EXECUTE 'DROP FUNCTION "_DNDBTTemp_MyFunction1";';
+-- QUERY END: DropFunctionQuery
+
+-- QUERY START: DropFunctionQuery
+EXECUTE 'DROP FUNCTION "_DNDBTTemp_TR_MyTable2_MyTrigger1_Handler";';
+-- QUERY END: DropFunctionQuery
+
+-- QUERY START: DropSequenceQuery
+EXECUTE 'DROP SEQUENCE "_DNDBTTemp_MySequence2";';
+-- QUERY END: DropSequenceQuery
+
+-- QUERY START: CreateViewQuery
+EXECUTE 'CREATE VIEW "MyView1" AS
+SELECT
+    t1."MyColumn1",
+    t1."MyColumn4",
+    t2."MyColumn2"
+FROM "MyTable1NewName" t1
+LEFT JOIN "MyTable2" t2
+    ON t2."MyColumn1NewName" = t1."MyColumn1"';
+-- QUERY END: CreateViewQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''e2569aae-d5da-4a77-b3cd-51adbdb272d9'',
+    NULL,
+    ''View'',
+    ''MyView1'',
+    ''CREATE VIEW "MyView1" AS
+SELECT
+    t1."MyColumn1",
+    t1."MyColumn4",
+    t2."MyColumn2"
+FROM "MyTable1NewName" t1
+LEFT JOIN "MyTable2" t2
+    ON t2."MyColumn1NewName" = t1."MyColumn1"''
+);';
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: AlterTableQuery
+EXECUTE 'ALTER TABLE "MyTable2"
+    ALTER COLUMN "MyColumn2" SET DEFAULT ''\x000408'';';
+-- QUERY END: AlterTableQuery
+
+-- QUERY START: UpdateDNDBTDbObjectRecordQuery
+EXECUTE 'UPDATE "DNDBTDbObjects" SET
+    "Name" = ''MyColumn2'',
+    "Code" = ''''''\x000408''''''
+WHERE "ID" = ''c2df19c2-e029-4014-8a5b-4ab42fecb6b8'';';
+-- QUERY END: UpdateDNDBTDbObjectRecordQuery
+
+-- QUERY START: AlterTableQuery
+EXECUTE 'ALTER TABLE "MyTable5"
+    ALTER COLUMN "MyColumn1" SET DEFAULT abS(-15),
+    ALTER COLUMN "MyColumn201" SET DEFAULT "MyFunction1"(-25, 10);';
+-- QUERY END: AlterTableQuery
+
+-- QUERY START: UpdateDNDBTDbObjectRecordQuery
+EXECUTE 'UPDATE "DNDBTDbObjects" SET
+    "Name" = ''MyColumn1'',
+    "Code" = ''abS(-15)''
+WHERE "ID" = ''5309d66f-2030-402e-912e-5547babaa072'';';
+-- QUERY END: UpdateDNDBTDbObjectRecordQuery
+
+-- QUERY START: UpdateDNDBTDbObjectRecordQuery
+EXECUTE 'UPDATE "DNDBTDbObjects" SET
+    "Name" = ''MyColumn201'',
+    "Code" = ''"MyFunction1"(-25, 10)''
+WHERE "ID" = ''5c455ec9-9830-4d0b-a88c-57341899dc4a'';';
+-- QUERY END: UpdateDNDBTDbObjectRecordQuery
+
+-- QUERY START: AlterTableQuery
+EXECUTE 'ALTER TABLE "MyTable1NewName"
+    ADD CONSTRAINT "CK_MyTable1_MyCheck1" CHECK ("MyColumn4" >= 1);';
+-- QUERY END: AlterTableQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''eb9c59b5-bc7e-49d7-adaa-f5600b6a19a2'',
+    ''299675e6-4faa-4d0f-a36a-224306ba5bcb'',
+    ''CheckConstraint'',
+    ''CK_MyTable1_MyCheck1'',
+    ''"MyColumn4" >= 1''
+);';
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
 
 -- QUERY START: CreateIndexQuery
 EXECUTE 'CREATE UNIQUE INDEX "IDX_MyTable2_MyIndex1"
@@ -799,86 +979,6 @@ VALUES
     ''ForeignKey'',
     ''FK_MyTable2_MyColumns34_MyTable3_MyColumns12'',
     NULL
-);';
--- QUERY END: InsertDNDBTDbObjectRecordQuery
-
--- QUERY START: CreateFunctionQuery
-EXECUTE 'CREATE FUNCTION "TR_MyTable2_MyTrigger1_Handler"()
-RETURNS TRIGGER
-LANGUAGE PLPGSQL
-AS
-$FuncBody$
-BEGIN
-    INSERT INTO "MyTable4"("MyColumn1")
-    VALUES(NEW."MyColumn1NewName");
-    RETURN NULL;
-END;
-$FuncBody$';
--- QUERY END: CreateFunctionQuery
-
--- QUERY START: InsertDNDBTDbObjectRecordQuery
-EXECUTE 'INSERT INTO "DNDBTDbObjects"
-(
-    "ID",
-    "ParentID",
-    "Type",
-    "Name",
-    "Code"
-)
-VALUES
-(
-    ''8edd4469-e048-48bd-956e-a26113355f80'',
-    NULL,
-    ''Function'',
-    ''TR_MyTable2_MyTrigger1_Handler'',
-    ''CREATE FUNCTION "TR_MyTable2_MyTrigger1_Handler"()
-RETURNS TRIGGER
-LANGUAGE PLPGSQL
-AS
-$FuncBody$
-BEGIN
-    INSERT INTO "MyTable4"("MyColumn1")
-    VALUES(NEW."MyColumn1NewName");
-    RETURN NULL;
-END;
-$FuncBody$''
-);';
--- QUERY END: InsertDNDBTDbObjectRecordQuery
-
--- QUERY START: CreateViewQuery
-EXECUTE 'CREATE VIEW "MyView1" AS
-SELECT
-    t1."MyColumn1",
-    t1."MyColumn4",
-    t2."MyColumn2"
-FROM "MyTable1NewName" t1
-LEFT JOIN "MyTable2" t2
-    ON t2."MyColumn1NewName" = t1."MyColumn1"';
--- QUERY END: CreateViewQuery
-
--- QUERY START: InsertDNDBTDbObjectRecordQuery
-EXECUTE 'INSERT INTO "DNDBTDbObjects"
-(
-    "ID",
-    "ParentID",
-    "Type",
-    "Name",
-    "Code"
-)
-VALUES
-(
-    ''e2569aae-d5da-4a77-b3cd-51adbdb272d9'',
-    NULL,
-    ''View'',
-    ''MyView1'',
-    ''CREATE VIEW "MyView1" AS
-SELECT
-    t1."MyColumn1",
-    t1."MyColumn4",
-    t2."MyColumn2"
-FROM "MyTable1NewName" t1
-LEFT JOIN "MyTable2" t2
-    ON t2."MyColumn1NewName" = t1."MyColumn1"''
 );';
 -- QUERY END: InsertDNDBTDbObjectRecordQuery
 

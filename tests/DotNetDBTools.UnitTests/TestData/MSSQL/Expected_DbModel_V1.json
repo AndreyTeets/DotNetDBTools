@@ -5,14 +5,13 @@
       "$id": "DbObject { ID: '0cd1e71c-cc9c-440f-ac0b-81a1d6f7ddaa', Name: 'MyUserDefinedType1' }",
       "UnderlyingType": {
         "$id": "CDC4CAFD4712BB20",
-        "Name": "NVARCHAR(100)"
+        "Name": "NVARCHAR(100)",
+        "DependsOn": []
       },
       "NotNull": false,
       "ID": "0cd1e71c-cc9c-440f-ac0b-81a1d6f7ddaa",
       "Name": "MyUserDefinedType1",
-      "Parent": null,
-      "DependsOn": [],
-      "IsDependencyOf": []
+      "Parent": null
     }
   ],
   "UserDefinedTableTypes": [],
@@ -29,95 +28,95 @@
           "DefaultConstraintName": "DF_MyTable1_MyColumn1",
           "DataType": {
             "$id": "213584E6F496185B",
-            "Name": "INT"
+            "Name": "INT",
+            "DependsOn": []
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
             "$id": "E26185F24E980850",
-            "Code": "15"
+            "Code": "15",
+            "DependsOn": []
           },
           "ID": "a2f2a4de-1337-4594-ae41-72ed4d05f317",
           "Name": "MyColumn1",
-          "Parent": null,
-          "DependsOn": [],
-          "IsDependencyOf": []
+          "Parent": null
         },
         {
           "$id": "DbObject { ID: 'fe68ee3d-09d0-40ac-93f9-5e441fbb4f70', Name: 'MyColumn2' }",
           "DefaultConstraintName": null,
           "DataType": {
             "$id": "35CA18045D160D04",
-            "Name": "NVARCHAR(MAX)"
+            "Name": "NVARCHAR(MAX)",
+            "DependsOn": []
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
             "$id": "D12CC50BBB155503",
-            "Code": null
+            "Code": null,
+            "DependsOn": []
           },
           "ID": "fe68ee3d-09d0-40ac-93f9-5e441fbb4f70",
           "Name": "MyColumn2",
-          "Parent": null,
-          "DependsOn": [],
-          "IsDependencyOf": []
+          "Parent": null
         },
         {
           "$id": "DbObject { ID: '6e95de30-e01a-4fb4-b8b7-8f0c40bb682c', Name: 'MyColumn3' }",
           "DefaultConstraintName": null,
           "DataType": {
             "$id": "213584E6F496185B",
-            "Name": "INT"
+            "Name": "INT",
+            "DependsOn": []
           },
           "NotNull": true,
           "Identity": true,
           "Default": {
             "$id": "D12CC50BBB155503",
-            "Code": null
+            "Code": null,
+            "DependsOn": []
           },
           "ID": "6e95de30-e01a-4fb4-b8b7-8f0c40bb682c",
           "Name": "MyColumn3",
-          "Parent": null,
-          "DependsOn": [],
-          "IsDependencyOf": []
+          "Parent": null
         },
         {
           "$id": "DbObject { ID: '867ac528-e87e-4c93-b6e3-dd2fcbbb837f', Name: 'MyColumn4' }",
           "DefaultConstraintName": "DF_MyTable1_MyColumn4",
           "DataType": {
             "$id": "174568B0147AF3E5",
-            "Name": "DECIMAL(18,0)"
+            "Name": "DECIMAL(18,0)",
+            "DependsOn": []
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
             "$id": "EE86FAD38751ABCA",
-            "Code": "736"
+            "Code": "736",
+            "DependsOn": []
           },
           "ID": "867ac528-e87e-4c93-b6e3-dd2fcbbb837f",
           "Name": "MyColumn4",
-          "Parent": null,
-          "DependsOn": [],
-          "IsDependencyOf": []
+          "Parent": null
         },
         {
           "$id": "DbObject { ID: 'ebbef06c-c7de-4b36-a911-827566639630', Name: 'MyColumn5' }",
           "DefaultConstraintName": "DF_MyTable1_MyColumn5",
           "DataType": {
             "$id": "EDF049B8249E640F",
-            "Name": "VARCHAR(1000)"
+            "Name": "VARCHAR(1000)",
+            "DependsOn": []
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
             "$id": "085124D68A1754B2",
-            "Code": "'some text'"
+            "Code": "'some text'",
+            "DependsOn": []
           },
           "ID": "ebbef06c-c7de-4b36-a911-827566639630",
           "Name": "MyColumn5",
-          "Parent": null,
-          "DependsOn": [],
-          "IsDependencyOf": []
+          "Parent": null
         }
       ],
       "PrimaryKey": {
@@ -127,9 +126,7 @@
         ],
         "ID": "37a45def-f4a0-4be7-8bfb-8fbed4a7d705",
         "Name": "PK_MyTable1",
-        "Parent": null,
-        "DependsOn": [],
-        "IsDependencyOf": []
+        "Parent": null
       },
       "UniqueConstraints": [
         {
@@ -139,9 +136,7 @@
           ],
           "ID": "f3f08522-26ee-4950-9135-22edf2e4e0cf",
           "Name": "UQ_MyTable1_MyColumn4",
-          "Parent": null,
-          "DependsOn": [],
-          "IsDependencyOf": []
+          "Parent": null
         }
       ],
       "CheckConstraints": [
@@ -149,13 +144,12 @@
           "$id": "DbObject { ID: 'eb9c59b5-bc7e-49d7-adaa-f5600b6a19a2', Name: 'CK_MyTable1_MyCheck1' }",
           "Expression": {
             "$id": "18B33C4E09E168E6",
-            "Code": "MyColumn4 >= 0"
+            "Code": "MyColumn4 >= 0",
+            "DependsOn": []
           },
           "ID": "eb9c59b5-bc7e-49d7-adaa-f5600b6a19a2",
           "Name": "CK_MyTable1_MyCheck1",
-          "Parent": null,
-          "DependsOn": [],
-          "IsDependencyOf": []
+          "Parent": null
         }
       ],
       "ForeignKeys": [
@@ -173,18 +167,14 @@
           "OnDelete": "CASCADE",
           "ID": "d11b2a53-32db-432f-bb6b-f91788844ba9",
           "Name": "FK_MyTable1_MyColumn1_MyTable2_MyColumn1",
-          "Parent": null,
-          "DependsOn": [],
-          "IsDependencyOf": []
+          "Parent": null
         }
       ],
       "Indexes": [],
       "Triggers": [],
       "ID": "299675e6-4faa-4d0f-a36a-224306ba5bcb",
       "Name": "MyTable1",
-      "Parent": null,
-      "DependsOn": [],
-      "IsDependencyOf": []
+      "Parent": null
     },
     {
       "$id": "DbObject { ID: 'bfb9030c-a8c3-4882-9c42-1c6ad025cf8f', Name: 'MyTable2' }",
@@ -194,38 +184,38 @@
           "DefaultConstraintName": "DF_MyTable2_MyColumn1",
           "DataType": {
             "$id": "213584E6F496185B",
-            "Name": "INT"
+            "Name": "INT",
+            "DependsOn": []
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
             "$id": "3FFA66CD9357353A",
-            "Code": "333"
+            "Code": "333",
+            "DependsOn": []
           },
           "ID": "c480f22f-7c01-4f41-b282-35e9f5cd1fe3",
           "Name": "MyColumn1",
-          "Parent": null,
-          "DependsOn": [],
-          "IsDependencyOf": []
+          "Parent": null
         },
         {
           "$id": "DbObject { ID: '5a0d1926-3270-4eb2-92eb-00be56c7af23', Name: 'MyColumn2' }",
           "DefaultConstraintName": "DF_MyTable2_MyColumn2",
           "DataType": {
             "$id": "FC65D9A1A613CD68",
-            "Name": "VARBINARY(22)"
+            "Name": "VARBINARY(22)",
+            "DependsOn": []
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
             "$id": "6595DB0AA2197DEB",
-            "Code": "0x000408"
+            "Code": "0x000408",
+            "DependsOn": []
           },
           "ID": "5a0d1926-3270-4eb2-92eb-00be56c7af23",
           "Name": "MyColumn2",
-          "Parent": null,
-          "DependsOn": [],
-          "IsDependencyOf": []
+          "Parent": null
         }
       ],
       "PrimaryKey": {
@@ -235,9 +225,7 @@
         ],
         "ID": "3a43615b-40b3-4a13-99e7-93af7c56e8ce",
         "Name": "PK_MyTable2_CustomName",
-        "Parent": null,
-        "DependsOn": [],
-        "IsDependencyOf": []
+        "Parent": null
       },
       "UniqueConstraints": [],
       "CheckConstraints": [],
@@ -254,9 +242,7 @@
           "Unique": true,
           "ID": "74390b3c-bc39-4860-a42e-12baa400f927",
           "Name": "IDX_MyTable2_MyIndex1",
-          "Parent": null,
-          "DependsOn": [],
-          "IsDependencyOf": []
+          "Parent": null
         }
       ],
       "Triggers": [
@@ -265,20 +251,17 @@
           "TableName": "MyTable2",
           "CreateStatement": {
             "$id": "58048D311EF486B1",
-            "Code": "CREATE TRIGGER [TR_MyTable2_MyTrigger1]\nON [MyTable2]\nAFTER INSERT\nAS\nBEGIN\n    INSERT INTO [MyTable4]([MyColumn1])\n    SELECT i.[MyColumn1] FROM inserted i;\nEND"
+            "Code": "CREATE TRIGGER [TR_MyTable2_MyTrigger1]\nON [MyTable2]\nAFTER INSERT\nAS\nBEGIN\n    INSERT INTO [MyTable4]([MyColumn1])\n    SELECT i.[MyColumn1] FROM inserted i;\nEND",
+            "DependsOn": []
           },
           "ID": "ee64ffc3-5536-4624-beaf-bc3a61d06a1a",
           "Name": "TR_MyTable2_MyTrigger1",
-          "Parent": null,
-          "DependsOn": [],
-          "IsDependencyOf": []
+          "Parent": null
         }
       ],
       "ID": "bfb9030c-a8c3-4882-9c42-1c6ad025cf8f",
       "Name": "MyTable2",
-      "Parent": null,
-      "DependsOn": [],
-      "IsDependencyOf": []
+      "Parent": null
     },
     {
       "$id": "DbObject { ID: 'b12a6a37-7739-48e0-a9e1-499ae7d2a395', Name: 'MyTable4' }",
@@ -288,38 +271,38 @@
           "DefaultConstraintName": null,
           "DataType": {
             "$id": "85552F008B207EC8",
-            "Name": "BIGINT"
+            "Name": "BIGINT",
+            "DependsOn": []
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
             "$id": "D12CC50BBB155503",
-            "Code": null
+            "Code": null,
+            "DependsOn": []
           },
           "ID": "de0425b8-9f99-4d76-9a64-09e52f8b5d5a",
           "Name": "MyColumn1",
-          "Parent": null,
-          "DependsOn": [],
-          "IsDependencyOf": []
+          "Parent": null
         },
         {
           "$id": "DbObject { ID: 'a6354ea4-7113-4c14-8047-648f0cfc7163', Name: 'MyColumn2' }",
           "DefaultConstraintName": null,
           "DataType": {
             "$id": "213584E6F496185B",
-            "Name": "INT"
+            "Name": "INT",
+            "DependsOn": []
           },
           "NotNull": true,
           "Identity": true,
           "Default": {
             "$id": "D12CC50BBB155503",
-            "Code": null
+            "Code": null,
+            "DependsOn": []
           },
           "ID": "a6354ea4-7113-4c14-8047-648f0cfc7163",
           "Name": "MyColumn2",
-          "Parent": null,
-          "DependsOn": [],
-          "IsDependencyOf": []
+          "Parent": null
         }
       ],
       "PrimaryKey": {
@@ -329,9 +312,7 @@
         ],
         "ID": "53ad5415-7fea-4a51-bcae-65e349a2e477",
         "Name": "PK_MyTable4",
-        "Parent": null,
-        "DependsOn": [],
-        "IsDependencyOf": []
+        "Parent": null
       },
       "UniqueConstraints": [],
       "CheckConstraints": [],
@@ -340,9 +321,7 @@
       "Triggers": [],
       "ID": "b12a6a37-7739-48e0-a9e1-499ae7d2a395",
       "Name": "MyTable4",
-      "Parent": null,
-      "DependsOn": [],
-      "IsDependencyOf": []
+      "Parent": null
     },
     {
       "$id": "DbObject { ID: '6ca51f29-c1bc-4349-b9c1-6f1ea170f162', Name: 'MyTable5' }",
@@ -352,247 +331,249 @@
           "DefaultConstraintName": "DF_MyTable5_MyColumn1",
           "DataType": {
             "$id": "213584E6F496185B",
-            "Name": "INT"
+            "Name": "INT",
+            "DependsOn": []
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
             "$id": "104C42D037A2D975",
-            "Code": "ABs(-15)"
+            "Code": "ABs(-15)",
+            "DependsOn": []
           },
           "ID": "5309d66f-2030-402e-912e-5547babaa072",
           "Name": "MyColumn1",
-          "Parent": null,
-          "DependsOn": [],
-          "IsDependencyOf": []
+          "Parent": null
         },
         {
           "$id": "DbObject { ID: 'cba4849b-3d84-4e38-b2c8-f9dbdff22fa6', Name: 'MyColumn10' }",
           "DefaultConstraintName": "DF_MyTable5_MyColumn10",
           "DataType": {
             "$id": "19335A7C598342C5",
-            "Name": "TIME"
+            "Name": "TIME",
+            "DependsOn": []
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
             "$id": "9684A056E0D52C95",
-            "Code": "'16:17:18'"
+            "Code": "'16:17:18'",
+            "DependsOn": []
           },
           "ID": "cba4849b-3d84-4e38-b2c8-f9dbdff22fa6",
           "Name": "MyColumn10",
-          "Parent": null,
-          "DependsOn": [],
-          "IsDependencyOf": []
+          "Parent": null
         },
         {
           "$id": "DbObject { ID: '15ae6061-426d-4485-85e6-ecd3e0f98882', Name: 'MyColumn101' }",
           "DefaultConstraintName": "DF_MyTable5_MyColumn101",
           "DataType": {
             "$id": "F1CB8BFF52E2E05E",
-            "Name": "MyUserDefinedType1"
+            "Name": "MyUserDefinedType1",
+            "DependsOn": [
+              "DbObject { ID: '0cd1e71c-cc9c-440f-ac0b-81a1d6f7ddaa', Name: 'MyUserDefinedType1' }"
+            ]
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
             "$id": "66503E4509673D13",
-            "Code": "'cc'"
+            "Code": "'cc'",
+            "DependsOn": []
           },
           "ID": "15ae6061-426d-4485-85e6-ecd3e0f98882",
           "Name": "MyColumn101",
-          "Parent": null,
-          "DependsOn": [],
-          "IsDependencyOf": []
+          "Parent": null
         },
         {
           "$id": "DbObject { ID: '4dde852d-ec19-4b61-80f9-da428d8ff41a', Name: 'MyColumn11' }",
           "DefaultConstraintName": "DF_MyTable5_MyColumn11",
           "DataType": {
             "$id": "0E41450AD4F830A7",
-            "Name": "DATETIME2"
+            "Name": "DATETIME2",
+            "DependsOn": []
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
             "$id": "9ECBFD81A61B061D",
-            "Code": "'2022-02-15 16:17:18'"
+            "Code": "'2022-02-15 16:17:18'",
+            "DependsOn": []
           },
           "ID": "4dde852d-ec19-4b61-80f9-da428d8ff41a",
           "Name": "MyColumn11",
-          "Parent": null,
-          "DependsOn": [],
-          "IsDependencyOf": []
+          "Parent": null
         },
         {
           "$id": "DbObject { ID: '685faf2e-fef7-4e6b-a960-acd093f1f004', Name: 'MyColumn12' }",
           "DefaultConstraintName": "DF_MyTable5_MyColumn12",
           "DataType": {
             "$id": "CC7D8C899ED45BD1",
-            "Name": "DATETIMEOFFSET"
+            "Name": "DATETIMEOFFSET",
+            "DependsOn": []
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
             "$id": "F3C7AD2B6834B840",
-            "Code": "'2022-02-15 16:17:18+01:30'"
+            "Code": "'2022-02-15 16:17:18+01:30'",
+            "DependsOn": []
           },
           "ID": "685faf2e-fef7-4e6b-a960-acd093f1f004",
           "Name": "MyColumn12",
-          "Parent": null,
-          "DependsOn": [],
-          "IsDependencyOf": []
+          "Parent": null
         },
         {
           "$id": "DbObject { ID: '11ef8e25-3691-42d4-b2fa-88d724f73b61', Name: 'MyColumn2' }",
           "DefaultConstraintName": "DF_MyTable5_MyColumn2",
           "DataType": {
             "$id": "B6B9277D8FA9295E",
-            "Name": "NCHAR(4)"
+            "Name": "NCHAR(4)",
+            "DependsOn": []
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
             "$id": "535E28DC8CBF60E2",
-            "Code": "'test'"
+            "Code": "'test'",
+            "DependsOn": []
           },
           "ID": "11ef8e25-3691-42d4-b2fa-88d724f73b61",
           "Name": "MyColumn2",
-          "Parent": null,
-          "DependsOn": [],
-          "IsDependencyOf": []
+          "Parent": null
         },
         {
           "$id": "DbObject { ID: '6ed0ab37-aad3-4294-9ba6-c0921f0e67af', Name: 'MyColumn3' }",
           "DefaultConstraintName": "DF_MyTable5_MyColumn3",
           "DataType": {
             "$id": "739D70B87A3A4448",
-            "Name": "BINARY(3)"
+            "Name": "BINARY(3)",
+            "DependsOn": []
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
             "$id": "83364C5D73BAFD1F",
-            "Code": "0x000204"
+            "Code": "0x000204",
+            "DependsOn": []
           },
           "ID": "6ed0ab37-aad3-4294-9ba6-c0921f0e67af",
           "Name": "MyColumn3",
-          "Parent": null,
-          "DependsOn": [],
-          "IsDependencyOf": []
+          "Parent": null
         },
         {
           "$id": "DbObject { ID: 'aca57fd6-80d0-4c18-b2ca-aabcb06bea10', Name: 'MyColumn4' }",
           "DefaultConstraintName": "DF_MyTable5_MyColumn4",
           "DataType": {
             "$id": "2C323B643F101E9E",
-            "Name": "FLOAT"
+            "Name": "FLOAT",
+            "DependsOn": []
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
             "$id": "F6364828BCF6D51A",
-            "Code": "123.456"
+            "Code": "123.456",
+            "DependsOn": []
           },
           "ID": "aca57fd6-80d0-4c18-b2ca-aabcb06bea10",
           "Name": "MyColumn4",
-          "Parent": null,
-          "DependsOn": [],
-          "IsDependencyOf": []
+          "Parent": null
         },
         {
           "$id": "DbObject { ID: '47666b8b-ca72-4507-86b2-04c47a84aed4', Name: 'MyColumn5' }",
           "DefaultConstraintName": "DF_MyTable5_MyColumn5",
           "DataType": {
             "$id": "915C29E8A4178D06",
-            "Name": "REAL"
+            "Name": "REAL",
+            "DependsOn": []
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
             "$id": "9EA3BD2290545711",
-            "Code": "12345.6789"
+            "Code": "12345.6789",
+            "DependsOn": []
           },
           "ID": "47666b8b-ca72-4507-86b2-04c47a84aed4",
           "Name": "MyColumn5",
-          "Parent": null,
-          "DependsOn": [],
-          "IsDependencyOf": []
+          "Parent": null
         },
         {
           "$id": "DbObject { ID: '98fded6c-d486-4a2e-9c9a-1ec31c9d5830', Name: 'MyColumn6' }",
           "DefaultConstraintName": "DF_MyTable5_MyColumn6",
           "DataType": {
             "$id": "83D2318088D8047B",
-            "Name": "DECIMAL(6,1)"
+            "Name": "DECIMAL(6,1)",
+            "DependsOn": []
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
             "$id": "DC954864BBC971C3",
-            "Code": "12.3"
+            "Code": "12.3",
+            "DependsOn": []
           },
           "ID": "98fded6c-d486-4a2e-9c9a-1ec31c9d5830",
           "Name": "MyColumn6",
-          "Parent": null,
-          "DependsOn": [],
-          "IsDependencyOf": []
+          "Parent": null
         },
         {
           "$id": "DbObject { ID: '2502cade-458a-48ee-9421-e6d7850493f7', Name: 'MyColumn7' }",
           "DefaultConstraintName": "DF_MyTable5_MyColumn7",
           "DataType": {
             "$id": "F166DC1240A803A2",
-            "Name": "BIT"
+            "Name": "BIT",
+            "DependsOn": []
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
             "$id": "E7DB4A48EFB0B59F",
-            "Code": "1"
+            "Code": "1",
+            "DependsOn": []
           },
           "ID": "2502cade-458a-48ee-9421-e6d7850493f7",
           "Name": "MyColumn7",
-          "Parent": null,
-          "DependsOn": [],
-          "IsDependencyOf": []
+          "Parent": null
         },
         {
           "$id": "DbObject { ID: 'ed044a8a-6858-41e2-a867-9e5b01f226c8', Name: 'MyColumn8' }",
           "DefaultConstraintName": "DF_MyTable5_MyColumn8",
           "DataType": {
             "$id": "665BA8545DEEDA59",
-            "Name": "UNIQUEIDENTIFIER"
+            "Name": "UNIQUEIDENTIFIER",
+            "DependsOn": []
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
             "$id": "72BA57B8A134275E",
-            "Code": "'8e2f99ad-0fc8-456d-b0e4-ec3ba572dd15'"
+            "Code": "'8e2f99ad-0fc8-456d-b0e4-ec3ba572dd15'",
+            "DependsOn": []
           },
           "ID": "ed044a8a-6858-41e2-a867-9e5b01f226c8",
           "Name": "MyColumn8",
-          "Parent": null,
-          "DependsOn": [],
-          "IsDependencyOf": []
+          "Parent": null
         },
         {
           "$id": "DbObject { ID: '9939d676-73b7-42d1-ba3e-5c13aed5ce34', Name: 'MyColumn9' }",
           "DefaultConstraintName": "DF_MyTable5_MyColumn9",
           "DataType": {
             "$id": "84A2390B7167BC18",
-            "Name": "DATE"
+            "Name": "DATE",
+            "DependsOn": []
           },
           "NotNull": true,
           "Identity": false,
           "Default": {
             "$id": "B9960A22E04D580C",
-            "Code": "'2022-02-15'"
+            "Code": "'2022-02-15'",
+            "DependsOn": []
           },
           "ID": "9939d676-73b7-42d1-ba3e-5c13aed5ce34",
           "Name": "MyColumn9",
-          "Parent": null,
-          "DependsOn": [],
-          "IsDependencyOf": []
+          "Parent": null
         }
       ],
       "PrimaryKey": {
@@ -603,9 +584,7 @@
         ],
         "ID": "79384d48-a39b-4a22-900e-066b2ca67ba2",
         "Name": "PK_MyTable5_CustomName",
-        "Parent": null,
-        "DependsOn": [],
-        "IsDependencyOf": []
+        "Parent": null
       },
       "UniqueConstraints": [
         {
@@ -617,9 +596,7 @@
           ],
           "ID": "5293b58a-9f63-4f0f-8d6f-18416ebbd751",
           "Name": "UQ_MyTable5_CustomName",
-          "Parent": null,
-          "DependsOn": [],
-          "IsDependencyOf": []
+          "Parent": null
         }
       ],
       "CheckConstraints": [],
@@ -635,17 +612,13 @@
           "Unique": false,
           "ID": "1d632285-9914-4c5d-98e6-a618a99bd799",
           "Name": "IDX_MyTable5_CustomName",
-          "Parent": null,
-          "DependsOn": [],
-          "IsDependencyOf": []
+          "Parent": null
         }
       ],
       "Triggers": [],
       "ID": "6ca51f29-c1bc-4349-b9c1-6f1ea170f162",
       "Name": "MyTable5",
-      "Parent": null,
-      "DependsOn": [],
-      "IsDependencyOf": []
+      "Parent": null
     },
     {
       "$id": "DbObject { ID: 'f3064a8c-346a-4b3d-af2c-d967b39841e4', Name: 'MyTable6' }",
@@ -655,38 +628,38 @@
           "DefaultConstraintName": null,
           "DataType": {
             "$id": "B6B9277D8FA9295E",
-            "Name": "NCHAR(4)"
+            "Name": "NCHAR(4)",
+            "DependsOn": []
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
             "$id": "D12CC50BBB155503",
-            "Code": null
+            "Code": null,
+            "DependsOn": []
           },
           "ID": "bfa08c82-5c8f-4ab4-bd41-1f1d85cf3c85",
           "Name": "MyColumn1",
-          "Parent": null,
-          "DependsOn": [],
-          "IsDependencyOf": []
+          "Parent": null
         },
         {
           "$id": "DbObject { ID: 'a402e2b7-c826-4cfd-a304-97c9bc346ba2', Name: 'MyColumn2' }",
           "DefaultConstraintName": null,
           "DataType": {
             "$id": "213584E6F496185B",
-            "Name": "INT"
+            "Name": "INT",
+            "DependsOn": []
           },
           "NotNull": false,
           "Identity": false,
           "Default": {
             "$id": "D12CC50BBB155503",
-            "Code": null
+            "Code": null,
+            "DependsOn": []
           },
           "ID": "a402e2b7-c826-4cfd-a304-97c9bc346ba2",
           "Name": "MyColumn2",
-          "Parent": null,
-          "DependsOn": [],
-          "IsDependencyOf": []
+          "Parent": null
         }
       ],
       "PrimaryKey": null,
@@ -709,18 +682,14 @@
           "OnDelete": "NO ACTION",
           "ID": "ae453b22-d270-41fc-8184-9ac26b7a0569",
           "Name": "FK_MyTable6_MyTable5_CustomName",
-          "Parent": null,
-          "DependsOn": [],
-          "IsDependencyOf": []
+          "Parent": null
         }
       ],
       "Indexes": [],
       "Triggers": [],
       "ID": "f3064a8c-346a-4b3d-af2c-d967b39841e4",
       "Name": "MyTable6",
-      "Parent": null,
-      "DependsOn": [],
-      "IsDependencyOf": []
+      "Parent": null
     }
   ],
   "Views": [
@@ -728,13 +697,12 @@
       "$id": "DbObject { ID: 'e2569aae-d5da-4a77-b3cd-51adbdb272d9', Name: 'MyView1' }",
       "CreateStatement": {
         "$id": "21918E4E39FF5395",
-        "Code": "CREATE VIEW MyView1 AS\nSELECT\n    t1.MyColumn1,\n    t1.MyColumn4,\n    t2.MyColumn2\nFROM MyTable1 t1\nLEFT JOIN MyTable2 t2\n    ON t2.MyColumn1 = t1.MyColumn1"
+        "Code": "CREATE VIEW MyView1 AS\nSELECT\n    t1.MyColumn1,\n    t1.MyColumn4,\n    t2.MyColumn2\nFROM MyTable1 t1\nLEFT JOIN MyTable2 t2\n    ON t2.MyColumn1 = t1.MyColumn1",
+        "DependsOn": []
       },
       "ID": "e2569aae-d5da-4a77-b3cd-51adbdb272d9",
       "Name": "MyView1",
-      "Parent": null,
-      "DependsOn": [],
-      "IsDependencyOf": []
+      "Parent": null
     }
   ],
   "Scripts": [
@@ -745,13 +713,12 @@
       "MaxDbVersionToExecute": 9223372036854775807,
       "Text": {
         "$id": "79E79E32ED1A0D1B",
-        "Code": "INSERT INTO [MyTable4]([MyColumn1])\nSELECT * FROM\n(\n    SELECT 1\n    UNION ALL\n    SELECT 2\n    UNION ALL\n    SELECT 3\n) t(Col1)\nWHERE NOT EXISTS (SELECT * FROM [MyTable4])"
+        "Code": "INSERT INTO [MyTable4]([MyColumn1])\nSELECT * FROM\n(\n    SELECT 1\n    UNION ALL\n    SELECT 2\n    UNION ALL\n    SELECT 3\n) t(Col1)\nWHERE NOT EXISTS (SELECT * FROM [MyTable4])",
+        "DependsOn": []
       },
       "ID": "100d624a-01aa-4730-b86f-f991ac3ed936",
       "Name": "InsertSomeInitialData",
-      "Parent": null,
-      "DependsOn": [],
-      "IsDependencyOf": []
+      "Parent": null
     }
   ]
 }

@@ -1,4 +1,6 @@
-﻿using DotNetDBTools.Deploy.Core.Queries.DDL;
+﻿using System;
+using System.Linq;
+using DotNetDBTools.Deploy.Core.Queries.DDL;
 using DotNetDBTools.Deploy.Core.Queries.DNDBTSysInfo;
 using DotNetDBTools.Generation.Core;
 using DotNetDBTools.Models.Core;
@@ -84,21 +86,31 @@ internal abstract class TableEditor<
             QueryExecutor.Execute(Create<TDeleteDNDBTDbObjectRecordQuery>(uc.ID));
         if (tableDiff.PrimaryKeyToDrop is not null)
             QueryExecutor.Execute(Create<TDeleteDNDBTDbObjectRecordQuery>(tableDiff.PrimaryKeyToDrop.ID));
-        foreach (Column column in tableDiff.RemovedColumns)
+        foreach (Column column in tableDiff.ColumnsToDrop)
             QueryExecutor.Execute(Create<TDeleteDNDBTDbObjectRecordQuery>(column.ID));
 
-        QueryExecutor.Execute(Create<TUpdateDNDBTDbObjectRecordQuery>(tableDiff.NewTable.ID, tableDiff.NewTable.Name));
-        foreach (ColumnDiff cDiff in tableDiff.ChangedColumns)
-            QueryExecutor.Execute(Create<TUpdateDNDBTDbObjectRecordQuery>(cDiff.NewColumn.ID, cDiff.NewColumn.Name, cDiff.NewColumn.GetDefault()));
+        // TODO remove .NewTable/OldTable for diff objects
+        Guid tableID = tableDiff.TableID == Guid.Empty ? tableDiff.NewTable.ID : tableDiff.TableID;
+        if (tableDiff.NewTableName != tableDiff.OldTableName || tableDiff.NewTable.Name != tableDiff.OldTable.Name)
+            QueryExecutor.Execute(Create<TUpdateDNDBTDbObjectRecordQuery>(tableID, tableDiff.NewTable.Name));
+        foreach (ColumnDiff cDiff in tableDiff.ColumnsToAlter.Where(x =>
+            x.NewColumn.Name != x.OldColumn.Name
+            || x.NewColumn.Default.Code != x.OldColumn.Default.Code
+            || x.DefaultToSet != null
+            || x.DefaultToDrop != null))
+        {
+            string defaultCode = cDiff.DefaultToSet != null ? cDiff.DefaultToSet.Code : cDiff.NewColumn.GetDefault();
+            QueryExecutor.Execute(Create<TUpdateDNDBTDbObjectRecordQuery>(cDiff.NewColumn.ID, cDiff.NewColumn.Name, defaultCode));
+        }
 
-        foreach (Column c in tableDiff.AddedColumns)
-            QueryExecutor.Execute(Create<TInsertDNDBTDbObjectRecordQuery>(c.ID, tableDiff.NewTable.ID, DbObjectType.Column, c.Name, c.GetDefault()));
+        foreach (Column c in tableDiff.ColumnsToAdd)
+            QueryExecutor.Execute(Create<TInsertDNDBTDbObjectRecordQuery>(c.ID, tableID, DbObjectType.Column, c.Name, c.GetDefault()));
         PrimaryKey pk = tableDiff.PrimaryKeyToCreate;
         if (pk is not null)
-            QueryExecutor.Execute(Create<TInsertDNDBTDbObjectRecordQuery>(pk.ID, tableDiff.NewTable.ID, DbObjectType.PrimaryKey, pk.Name));
+            QueryExecutor.Execute(Create<TInsertDNDBTDbObjectRecordQuery>(pk.ID, tableID, DbObjectType.PrimaryKey, pk.Name));
         foreach (UniqueConstraint uc in tableDiff.UniqueConstraintsToCreate)
-            QueryExecutor.Execute(Create<TInsertDNDBTDbObjectRecordQuery>(uc.ID, tableDiff.NewTable.ID, DbObjectType.UniqueConstraint, uc.Name));
+            QueryExecutor.Execute(Create<TInsertDNDBTDbObjectRecordQuery>(uc.ID, tableID, DbObjectType.UniqueConstraint, uc.Name));
         foreach (CheckConstraint ck in tableDiff.CheckConstraintsToCreate)
-            QueryExecutor.Execute(Create<TInsertDNDBTDbObjectRecordQuery>(ck.ID, tableDiff.NewTable.ID, DbObjectType.CheckConstraint, ck.Name, ck.GetExpression()));
+            QueryExecutor.Execute(Create<TInsertDNDBTDbObjectRecordQuery>(ck.ID, tableID, DbObjectType.CheckConstraint, ck.Name, ck.GetExpression()));
     }
 }

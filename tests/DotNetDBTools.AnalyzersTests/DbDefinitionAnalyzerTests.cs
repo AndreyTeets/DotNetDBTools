@@ -51,7 +51,7 @@ namespace SampleTestCode
 
         public Trigger {|#2:TR_TestName1|} = new(""EE64FFC3-5536-4624-BEAF-BC3A61D06A1A"")
         {
-            CreateStatement = @""CREATE TRIGGER TR_TestName1 bla bla"",
+            CreateStatement = ""CREATE TRIGGER \""TR_TestName1\"" after insert on \""TestTable2\"" for each row execute function f1()"",
         };
     }
 
@@ -86,8 +86,8 @@ namespace SampleTestCode
                 @"ReferencedTable = nameof(TestTable2),",
                 @"ReferencedTable = ""NonExistentTableName"",")
             .Replace(
-                @"CreateStatement = @""CREATE TRIGGER TR_TestName1 bla bla"",",
-                @"CreateStatement = @""CREATE TRIGGER TR_OtherTriggerName bla bla"",");
+                @"CreateStatement = ""CREATE TRIGGER \""TR_TestName1\""",
+                @"CreateStatement = ""CREATE TRIGGER \""TR_OtherTriggerName\""");
 
         string expectedColumnErrorMessage =
 "Column 'TestColumn1' in table 'TestTable2' datatype is invalid: Unknown data type '\"SomeNonExistentType\"'.";

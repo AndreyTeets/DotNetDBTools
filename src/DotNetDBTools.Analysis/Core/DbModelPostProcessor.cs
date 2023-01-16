@@ -1,4 +1,5 @@
-﻿using DotNetDBTools.Analysis.Extensions;
+﻿using System.Linq;
+using DotNetDBTools.Analysis.Extensions;
 using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.Analysis.Core;
@@ -18,17 +19,17 @@ internal abstract class DbModelPostProcessor : IDbModelPostProcessor
 
     private void OrderDbObjectsByName(Database database)
     {
-        database.Tables = database.Tables.OrderByName();
-        database.Views = database.Views.OrderByName();
-        database.Scripts = database.Scripts.OrderByName();
+        database.Tables = database.Tables.OrderByNameThenByType().ToList();
+        database.Views = database.Views.OrderByNameThenByType().ToList();
+        database.Scripts = database.Scripts.OrderByNameThenByType().ToList();
         foreach (Table table in database.Tables)
         {
-            table.Columns = table.Columns.OrderByName();
-            table.UniqueConstraints = table.UniqueConstraints.OrderByName();
-            table.CheckConstraints = table.CheckConstraints.OrderByName();
-            table.Indexes = table.Indexes.OrderByName();
-            table.Triggers = table.Triggers.OrderByName();
-            table.ForeignKeys = table.ForeignKeys.OrderByName();
+            table.Columns = table.Columns.OrderByNameThenByType().ToList();
+            table.UniqueConstraints = table.UniqueConstraints.OrderByNameThenByType().ToList();
+            table.CheckConstraints = table.CheckConstraints.OrderByNameThenByType().ToList();
+            table.Indexes = table.Indexes.OrderByNameThenByType().ToList();
+            table.Triggers = table.Triggers.OrderByNameThenByType().ToList();
+            table.ForeignKeys = table.ForeignKeys.OrderByNameThenByType().ToList();
         }
         OrderAdditionalDbObjects(database);
     }

@@ -102,7 +102,14 @@ public class ExtensionMethodsTests
                 new PostgreSQLEnumType()
                 {
                     AllowedValues = new List<string>() { "Val1", "Val2" },
-                }
+                },
+            },
+            DomainTypes = new List<PostgreSQLDomainType>()
+            {
+                new PostgreSQLDomainType()
+                {
+                    Default = new CodePiece() { Code = "some expr" },
+                },
             },
             Functions = null,
         };
@@ -110,8 +117,8 @@ public class ExtensionMethodsTests
         db.Tables.Single().PrimaryKey.Parent = db.Tables.Single();
         db.Tables.Single().Parent = db.Tables.Single().PrimaryKey;
 
-        db.Tables.Single().Columns.First().DependsOn = new List<DbObject>() { db.EnumTypes.Single() };
-        db.EnumTypes.Single().DependsOn = new List<DbObject>() { db.Tables.Single().Columns.First() };
+        db.Tables.Single().Columns.First().DataType.DependsOn = new List<DbObject>() { db.DomainTypes.Single() };
+        db.DomainTypes.Single().Default.DependsOn = new List<DbObject>() { db.Tables.Single().Columns.First() };
 
         return db;
     }

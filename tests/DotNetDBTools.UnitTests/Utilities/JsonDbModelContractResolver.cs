@@ -14,9 +14,9 @@ public class JsonDbModelContractResolver : DefaultContractResolver
     {
         JsonProperty property = base.CreateProperty(member, memberSerialization);
 
-        if ((property.DeclaringType == typeof(CodePiece) || property.DeclaringType == typeof(DataType))
-            //&& (property.PropertyName == nameof(CodePiece.DependsOn) || property.PropertyName == nameof(DataType.DependsOn))
-            && property.PropertyType == typeof(List<DbObject>))
+        if (property.PropertyType == typeof(List<DbObject>)
+            && (property.DeclaringType == typeof(CodePiece) && property.PropertyName == nameof(CodePiece.DependsOn)
+                || property.DeclaringType == typeof(DataType) && property.PropertyName == nameof(DataType.DependsOn)))
         {
             property.Converter = new JsonDbModelDepsListConverter();
         }

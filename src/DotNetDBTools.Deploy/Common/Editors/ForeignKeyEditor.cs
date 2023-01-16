@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using DotNetDBTools.Deploy.Common.Queries.DDL;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Queries.DNDBTSysInfo;
@@ -29,23 +30,45 @@ internal abstract class ForeignKeyEditor<
     public void CreateForeignKeys(DatabaseDiff dbDiff)
     {
         Dictionary<Guid, Table> fkToTableMap = CreateFKToTableMap(dbDiff.NewDatabase.Tables);
-        foreach (ForeignKey fk in dbDiff.AllForeignKeysToCreate)
+        foreach (ForeignKey fk in GetAllForeignKeysToCreate(dbDiff))
             CreateForeignKey(fk, fkToTableMap[fk.ID]);
     }
 
     public void DropForeignKeys(DatabaseDiff dbDiff)
     {
-        foreach (ForeignKey fk in dbDiff.AllForeignKeysToDrop)
+        foreach (ForeignKey fk in GetAllForeignKeysToDrop(dbDiff))
             DropForeignKey(fk);
     }
 
-    public void CreateForeignKey(ForeignKey fk, Table table)
+    private static IEnumerable<ForeignKey> GetAllForeignKeysToCreate(DatabaseDiff dbDiff)
+    {
+        List<ForeignKey> allForeignKeysToCreate = new();
+        foreach (IEnumerable<ForeignKey> addedTableForeignKeys in dbDiff.AddedTables.Select(t => t.ForeignKeys))
+            allForeignKeysToCreate.AddRange(addedTableForeignKeys);
+        foreach (TableDiff tableDiff in dbDiff.ChangedTables)
+            allForeignKeysToCreate.AddRange(tableDiff.ForeignKeysToCreate);
+        allForeignKeysToCreate.AddRange(dbDiff.UnchangedForeignKeysToRecreateBecauseOfDeps);
+        return allForeignKeysToCreate;
+    }
+
+    private static IEnumerable<ForeignKey> GetAllForeignKeysToDrop(DatabaseDiff dbDiff)
+    {
+        List<ForeignKey> allForeignKeysToDrop = new();
+        foreach (IEnumerable<ForeignKey> addedTableForeignKeys in dbDiff.RemovedTables.Select(t => t.ForeignKeys))
+            allForeignKeysToDrop.AddRange(addedTableForeignKeys);
+        foreach (TableDiff tableDiff in dbDiff.ChangedTables)
+            allForeignKeysToDrop.AddRange(tableDiff.ForeignKeysToDrop);
+        allForeignKeysToDrop.AddRange(dbDiff.UnchangedForeignKeysToRecreateBecauseOfDeps);
+        return allForeignKeysToDrop;
+    }
+
+    private void CreateForeignKey(ForeignKey fk, Table table)
     {
         _queryExecutor.Execute(Create<TCreateForeignKeyQuery>(fk));
         _queryExecutor.Execute(Create<TInsertDNDBTDbObjectRecordQuery>(fk.ID, table.ID, DbObjectType.ForeignKey, fk.Name));
     }
 
-    public void DropForeignKey(ForeignKey fk)
+    private void DropForeignKey(ForeignKey fk)
     {
         _queryExecutor.Execute(Create<TDropForeignKeyQuery>(fk));
         _queryExecutor.Execute(Create<TDeleteDNDBTDbObjectRecordQuery>(fk.ID));

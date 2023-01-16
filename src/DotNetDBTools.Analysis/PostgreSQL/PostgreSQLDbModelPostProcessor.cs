@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
+using System.Linq;
 using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.Analysis.Extensions;
 using DotNetDBTools.CodeParsing;
@@ -28,14 +28,18 @@ internal class PostgreSQLDbModelPostProcessor : DbModelPostProcessor
             foreach (Column column in table.Columns)
                 PostProcessDataType(column.DataType, $"Column '{column.Name}' in table '{table.Name}'");
         }
-        foreach (PostgreSQLDomainType type in db.DomainTypes)
+        foreach (PostgreSQLSequence sequence in db.Sequences)
         {
-            PostProcessDataType(type.UnderlyingType, $"Domain type '{type.Name}' underlying");
+            PostProcessDataType(sequence.DataType, $"Sequence '{sequence.Name}'");
         }
         foreach (PostgreSQLCompositeType type in db.CompositeTypes)
         {
             foreach (PostgreSQLCompositeTypeAttribute attr in type.Attributes)
                 PostProcessDataType(attr.DataType, $"Attribute '{attr.Name}' in composite type '{type.Name}'");
+        }
+        foreach (PostgreSQLDomainType type in db.DomainTypes)
+        {
+            PostProcessDataType(type.UnderlyingType, $"Domain type '{type.Name}' underlying");
         }
         foreach (PostgreSQLRangeType type in db.RangeTypes)
         {
@@ -114,13 +118,14 @@ internal class PostgreSQLDbModelPostProcessor : DbModelPostProcessor
     {
         PostgreSQLDatabase db = (PostgreSQLDatabase)database;
 
-        db.CompositeTypes = db.CompositeTypes.OrderByName();
-        db.DomainTypes = db.DomainTypes.OrderByName();
-        db.EnumTypes = db.EnumTypes.OrderByName();
-        db.RangeTypes = db.RangeTypes.OrderByName();
+        db.Sequences = db.Sequences.OrderByNameThenByType().ToList();
+        db.CompositeTypes = db.CompositeTypes.OrderByNameThenByType().ToList();
+        db.DomainTypes = db.DomainTypes.OrderByNameThenByType().ToList();
+        db.EnumTypes = db.EnumTypes.OrderByNameThenByType().ToList();
+        db.RangeTypes = db.RangeTypes.OrderByNameThenByType().ToList();
 
-        db.Functions = db.Functions.OrderByName();
-        db.Procedures = db.Procedures.OrderByName();
+        db.Functions = db.Functions.OrderByNameThenByType().ToList();
+        db.Procedures = db.Procedures.OrderByNameThenByType().ToList();
     }
 
     private void AddFunctionModelsFromTriggersCodeIfAny(PostgreSQLDatabase database)

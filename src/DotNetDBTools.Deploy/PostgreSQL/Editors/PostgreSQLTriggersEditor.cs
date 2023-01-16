@@ -4,10 +4,10 @@ using DotNetDBTools.Deploy.PostgreSQL.Queries.DNDBTSysInfo;
 
 namespace DotNetDBTools.Deploy.PostgreSQL.Editors;
 
-internal class PostgreSQLTriggerEditor : TriggerEditor<
+internal class PostgreSQLTriggersEditor : TriggerEditor<
     PostgreSQLInsertDNDBTDbObjectRecordQuery,
     PostgreSQLDeleteDNDBTDbObjectRecordQuery>
 {
-    public PostgreSQLTriggerEditor(IQueryExecutor queryExecutor)
+    public PostgreSQLTriggersEditor(IQueryExecutor queryExecutor)
         : base(queryExecutor) { }
 }

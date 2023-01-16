@@ -34,7 +34,7 @@ $@"{GetIdDeclarationText(table, 0)}CREATE TABLE ""{table.Name}""
         if (tableDiff.NewTable.Name != tableDiff.OldTable.Name)
             sb.AppendLine(Statements.RenameTable(tableDiff.OldTable.Name, tableDiff.NewTable.Name));
 
-        foreach (ColumnDiff columnDiff in tableDiff.ChangedColumns.Where(x => x.NewColumn.Name != x.OldColumn.Name))
+        foreach (ColumnDiff columnDiff in tableDiff.ColumnsToAlter.Where(x => x.NewColumn.Name != x.OldColumn.Name))
             sb.AppendLine(Statements.RenameColumn(tableDiff.NewTable.Name, columnDiff.OldColumn.Name, columnDiff.NewColumn.Name));
 
         string tableAlters = GetTableAltersText(tableDiff);
@@ -100,13 +100,13 @@ $@"    {GetIdDeclarationText(fk, 4)}{Statements.DefForeignKey(fk)}"));
 
     private void AppendColumnsAlters(StringBuilder sb, TableDiff tableDiff)
     {
-        foreach (Column column in tableDiff.RemovedColumns)
+        foreach (Column column in tableDiff.ColumnsToDrop)
             sb.Append(Statements.DropColumn(column));
 
-        foreach (ColumnDiff columnDiff in tableDiff.ChangedColumns)
+        foreach (ColumnDiff columnDiff in tableDiff.ColumnsToAlter)
         {
-            if (columnDiff.DataTypeChanged)
-                sb.Append(Statements.AlterColumnType(columnDiff.NewColumn));
+            if (columnDiff.DataTypeToSet != null)
+                sb.Append(Statements.AlterColumnType(columnDiff.NewColumn.Name, columnDiff.DataTypeToSet));
 
             if (columnDiff.NewColumn.NotNull && !columnDiff.OldColumn.NotNull)
                 sb.Append(Statements.SetColumnNotNull(columnDiff.NewColumn));
@@ -115,19 +115,43 @@ $@"    {GetIdDeclarationText(fk, 4)}{Statements.DefForeignKey(fk)}"));
 
             bool defaultChagned = columnDiff.NewColumn.GetDefault() != columnDiff.OldColumn.GetDefault();
             if (columnDiff.NewColumn.GetDefault() is not null && defaultChagned)
-                sb.Append(Statements.AddDefaultConstraint(columnDiff.NewColumn));
+                sb.Append(Statements.AddDefaultConstraint(columnDiff.NewColumn.Name, columnDiff.NewColumn.Default));
             else if (columnDiff.NewColumn.GetDefault() is null && defaultChagned)
-                sb.Append(Statements.DropDefaultConstraint(columnDiff.NewColumn));
+                sb.Append(Statements.DropDefaultConstraint(columnDiff.NewColumn.Name));
+
+            if (columnDiff.DefaultToDrop is not null)
+                sb.Append(Statements.DropDefaultConstraint(columnDiff.NewColumn.Name));
+            if (columnDiff.DefaultToSet is not null)
+                sb.Append(Statements.AddDefaultConstraint(columnDiff.NewColumn.Name, columnDiff.DefaultToSet));
+
+            if (columnDiff is PostgreSQLColumnDiff cDiff && cDiff.IdentitySequenceOptionsToSet is not null)
+                SetIdentitySequenceOptions(cDiff.NewColumn.Name, cDiff.IdentitySequenceOptionsToSet);
         }
 
-        foreach (Column column in tableDiff.AddedColumns)
+        foreach (Column column in tableDiff.ColumnsToAdd)
             sb.Append(Statements.AddColumn(column));
+
+        void SetIdentitySequenceOptions(string cName, PostgreSQLSequenceOptions so)
+        {
+            if (so.StartWith != null)
+                sb.Append(Statements.SetSequenceOption(cName, $"START {so.StartWith}"));
+            if (so.IncrementBy != null)
+                sb.Append(Statements.SetSequenceOption(cName, $"INCREMENT {so.IncrementBy}"));
+            if (so.MinValue != null)
+                sb.Append(Statements.SetSequenceOption(cName, $"MINVALUE {so.MinValue}"));
+            if (so.MaxValue != null)
+                sb.Append(Statements.SetSequenceOption(cName, $"MAXVALUE {so.MaxValue}"));
+            if (so.Cache != null)
+                sb.Append(Statements.SetSequenceOption(cName, $"CACHE {so.Cache}"));
+            if (so.Cycle != null)
+                sb.Append(so.Cycle.Value ? $"CYCLE" : "NO CYCLE");
+        }
     }
 
     private static class Statements
     {
         public static string DefColumn(Column c) =>
-$@"""{c.Name}"" {c.DataType.Name}{Identity(c)} {Nullability(c)}{Default(c)}"
+$@"""{c.Name}"" {c.DataType.Name}{Identity((PostgreSQLColumn)c)} {Nullability(c)}{Default(c)}"
             ;
         public static string DefPrimaryKey(PrimaryKey pk) =>
 $@"CONSTRAINT ""{pk.Name}"" PRIMARY KEY ({string.Join(", ", pk.Columns.Select(x => $@"""{x}"""))})"
@@ -160,10 +184,10 @@ $@"
 $@"
     DROP COLUMN ""{c.Name}"","
             ;
-        public static string AlterColumnType(Column c) =>
+        public static string AlterColumnType(string cName, DataType dataType) =>
 $@"
-    ALTER COLUMN ""{c.Name}"" SET DATA TYPE {c.DataType.Name}
-        USING (""{c.Name}""::text::{c.DataType.Name}),"
+    ALTER COLUMN ""{cName}"" SET DATA TYPE {dataType.Name}
+        USING (""{cName}""::text::{dataType.Name}),"
             ; // TODO Add TypeChangeConversions<srcTypeName,destTypeName,usingCode> in deploy/generation options?
         public static string SetColumnNotNull(Column c) =>
 $@"
@@ -173,13 +197,13 @@ $@"
 $@"
     ALTER COLUMN ""{c.Name}"" DROP NOT NULL,"
             ;
-        public static string AddDefaultConstraint(Column c) =>
+        public static string AddDefaultConstraint(string cName, CodePiece dValue) =>
 $@"
-    ALTER COLUMN ""{c.Name}"" SET DEFAULT {c.GetDefault()},"
+    ALTER COLUMN ""{cName}"" SET DEFAULT {dValue.Code},"
             ;
-        public static string DropDefaultConstraint(Column c) =>
+        public static string DropDefaultConstraint(string cName) =>
 $@"
-    ALTER COLUMN ""{c.Name}"" DROP DEFAULT,"
+    ALTER COLUMN ""{cName}"" DROP DEFAULT,"
             ;
 
         public static string AddPrimaryKey(PrimaryKey pk) =>
@@ -218,8 +242,8 @@ $@"
     DROP CONSTRAINT ""{fk.Name}"","
             ;
 
-        private static string Identity(Column c) =>
-c.Identity ? " GENERATED ALWAYS AS IDENTITY" : ""
+        private static string Identity(PostgreSQLColumn c) =>
+c.Identity ? $" GENERATED {c.IdentityGenerationKind} AS IDENTITY{SequenceOptions(c.IdentitySequenceOptions)}" : ""
             ;
         private static string Nullability(Column c) =>
 c.NotNull ? "NOT NULL" : "NULL"
@@ -227,5 +251,32 @@ c.NotNull ? "NOT NULL" : "NULL"
         private static string Default(Column c) =>
 c.GetDefault() is not null ? $@" DEFAULT {c.GetDefault()}" : ""
             ;
+
+        public static string SetSequenceOption(string cName, string sequence_option) =>
+$@"
+    ALTER COLUMN ""{cName}"" SET {sequence_option},"
+            ;
+
+        private static string SequenceOptions(PostgreSQLSequenceOptions so)
+        {
+            List<string> res = new();
+            if (so.StartWith != null)
+                res.Add($"START {so.StartWith}");
+            if (so.IncrementBy != null)
+                res.Add($"INCREMENT {so.IncrementBy}");
+            if (so.MinValue != null)
+                res.Add($"MINVALUE {so.MinValue}");
+            if (so.MaxValue != null)
+                res.Add($"MAXVALUE {so.MaxValue}");
+            if (so.Cache != null)
+                res.Add($"CACHE {so.Cache}");
+            if (so.Cycle != null)
+                res.Add(so.Cycle.Value ? $"CYCLE" : "NO CYCLE");
+
+            if (res.Count > 0)
+                return $" ({string.Join(" ", res)})";
+            else
+                return "";
+        }
     }
 }

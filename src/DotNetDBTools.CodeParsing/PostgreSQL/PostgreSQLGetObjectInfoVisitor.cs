@@ -26,6 +26,8 @@ internal class PostgreSQLGetObjectInfoVisitor : PostgreSQLParserBaseVisitor<Obje
             return GetIndexInfo(context.create_index_statement());
         else if (context.create_trigger_statement() != null)
             return GetTriggerInfo(context.create_trigger_statement());
+        else if (context.create_sequence_statement() != null)
+            return GetSequenceInfo(context.create_sequence_statement());
         else if (context.create_type_statement() != null)
             return GetTypeInfo(context.create_type_statement());
         else if (context.create_domain_statement() != null)
@@ -75,9 +77,17 @@ internal class PostgreSQLGetObjectInfoVisitor : PostgreSQLParserBaseVisitor<Obje
         index.Table = UnquoteIdentifier(context.schema_qualified_name().GetText());
         if (context.UNIQUE() != null)
             index.Unique = true;
-        foreach (string column in context.index_columns().index_column().Select(x => UnquoteIdentifier(x.vex().GetText())))
-            index.Columns.Add(column);
+        foreach (Index_columnContext columnContext in context.index_columns().index_column())
+            AddColumnOrSetExpression(columnContext);
         return index;
+
+        void AddColumnOrSetExpression(Index_columnContext context)
+        {
+            if (context.vex().value_expression_primary().indirection_var() != null)
+                index.Columns.Add(UnquoteIdentifier(context.vex().GetText()));
+            else
+                index.Expression = HM.GetInitialText(context);
+        }
     }
 
     private TriggerInfo GetTriggerInfo(Create_trigger_statementContext context)
@@ -92,6 +102,42 @@ internal class PostgreSQLGetObjectInfoVisitor : PostgreSQLParserBaseVisitor<Obje
         if (context.dndbt_id != null)
             trigger.CreateStatement = trigger.CreateStatement.Remove(0, context.dndbt_id.Text.Length);
         return trigger;
+    }
+
+    private SequenceInfo GetSequenceInfo(Create_sequence_statementContext context)
+    {
+        SequenceInfo sequence = new();
+        sequence.Name = UnquoteIdentifier(context.schema_qualified_name().GetText());
+        if (!_ignoreIds)
+            HM.SetObjectID(sequence, $"sequence '{sequence.Name}'", context.dndbt_id?.Text);
+
+        foreach (Sequence_bodyContext opt in context.sequence_body())
+        {
+            if (opt.AS() != null)
+                sequence.DataType = opt.type.Text;
+            else if (opt.START() != null)
+                sequence.StartWith = long.Parse(opt.start_val.GetText());
+            else if (opt.INCREMENT() != null)
+                sequence.IncrementBy = long.Parse(opt.incr.GetText());
+            else if (opt.MINVALUE() != null && opt.NO() == null)
+                sequence.MinValue = long.Parse(opt.minval.GetText());
+            else if (opt.MAXVALUE() != null && opt.NO() == null)
+                sequence.MaxValue = long.Parse(opt.maxval.GetText());
+            else if (opt.CACHE() != null)
+                sequence.Cache = long.Parse(opt.cache_val.GetText());
+            else if (opt.CYCLE() != null)
+                sequence.Cycle = opt.NO() == null;
+            else if (opt.OWNED() != null)
+                SetOwnedBy(sequence, opt.owned_by.GetText());
+        }
+        return sequence;
+
+        static void SetOwnedBy(SequenceInfo sequence, string ownedByText)
+        {
+            string[] tableNameColumnName = ownedByText.Split('.');
+            sequence.OwnedByTableName = UnquoteIdentifier(tableNameColumnName[0]);
+            sequence.OwnedByColumnName = UnquoteIdentifier(tableNameColumnName[1]);
+        }
     }
 
     private TypeInfo GetTypeInfo(Create_type_statementContext context)

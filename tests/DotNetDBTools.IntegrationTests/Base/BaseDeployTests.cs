@@ -204,7 +204,9 @@ public abstract class BaseDeployTests<TDatabase, TDbConnection, TDeployManager>
     {
         dbModel1.Should().BeEquivalentTo(dbModel2, options =>
         {
-            EquivalencyAssertionOptions<TDatabase> configuredOptions = options.WithStrictOrdering();
+            EquivalencyAssertionOptions<TDatabase> configuredOptions = options.WithStrictOrdering()
+                .Excluding(x => x.Path.EndsWith(".Parent", StringComparison.Ordinal))
+                .Excluding(x => x.Path.EndsWith(".DependsOn", StringComparison.Ordinal));
 
             if (compareMode.HasFlag(CompareMode.IgnoreIDs))
                 configuredOptions = configuredOptions.Excluding(database => database.Path.EndsWith(".ID", StringComparison.Ordinal));

@@ -62,7 +62,7 @@ $@"DECLARE @SqlText NVARCHAR(MAX) =
                 LEFT JOIN INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc
                     ON tc.CONSTRAINT_NAME = ccu.CONSTRAINT_NAME
                         AND tc.CONSTRAINT_TYPE IN ('UNIQUE', 'PRIMARY KEY')
-                WHERE c.DOMAIN_NAME = '{udtDiff.OldUserDefinedType.Name}'
+                WHERE c.DOMAIN_NAME = '_DNDBTTemp_{udtDiff.OldUserDefinedType.Name}'
             ) cci
         ) t FOR XML PATH('')), 1, 2, '')
 );

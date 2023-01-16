@@ -9,6 +9,8 @@ using DotNetDBTools.Analysis.MySQL;
 using DotNetDBTools.Analysis.PostgreSQL;
 using DotNetDBTools.Analysis.SQLite;
 using DotNetDBTools.Models.Core;
+using DotNetDBTools.Models.PostgreSQL;
+using DotNetDBTools.Models.PostgreSQL.UserDefinedTypes;
 
 namespace DotNetDBTools.Analysis;
 
@@ -30,12 +32,23 @@ public class AnalysisManager : IAnalysisManager
     public bool DatabasesAreEquivalentExcludingDNDBTInfo(Database database1, Database database2, out string diffLog)
     {
         DNDBTModelsEqualityComparer comparer = new();
-        comparer.IgnoredProperties.Add(new PropInfo { Name = "Version", DeclaringTypeName = nameof(Database) });
-        comparer.IgnoredProperties.Add(new PropInfo { Name = "Scripts", DeclaringTypeName = nameof(Database) });
-        comparer.IgnoredProperties.Add(new PropInfo { Name = "ID", DeclaringTypeName = nameof(DbObject) });
-        comparer.IgnoredProperties.Add(new PropInfo { Name = "Code", DeclaringTypeName = nameof(CodePiece) });
+        comparer.IgnoredProperties.Add(new PropInfo { Name = nameof(Database.Version), InType = nameof(Database) });
+        comparer.IgnoredProperties.Add(new PropInfo { Name = nameof(Database.Scripts), InType = nameof(Database) });
+        comparer.IgnoredProperties.Add(new PropInfo { Name = nameof(DbObject.ID), InType = nameof(DbObject) });
+        comparer.IgnoredProperties.Add(new PropInfo { Name = nameof(CodePiece.Code), InType = nameof(CodePiece) });
 
         bool res = comparer.Equals(database1, database2);
+        diffLog = comparer.DiffLog;
+        return res;
+    }
+
+    public bool DbObjectsAreEquivalentExcludingDNDBTInfo(DbObject dbObject1, DbObject dbObject2, out string diffLog)
+    {
+        DNDBTModelsEqualityComparer comparer = new();
+        comparer.IgnoredProperties.Add(new PropInfo { Name = nameof(DbObject.ID), InType = nameof(DbObject) });
+        comparer.IgnoredProperties.Add(new PropInfo { Name = nameof(CodePiece.Code), InType = nameof(CodePiece) });
+
+        bool res = comparer.Equals(dbObject1, dbObject2);
         diffLog = comparer.DiffLog;
         return res;
     }
@@ -57,13 +70,33 @@ public class AnalysisManager : IAnalysisManager
         return DiffAnalyzer.IsEmpty(dbDiff);
     }
 
+    public static bool DiffIsEmpty(TableDiff tableDiff)
+    {
+        return DiffAnalyzer.IsEmpty(tableDiff);
+    }
+
+    public static bool DiffIsEmpty(ColumnDiff columnDiff)
+    {
+        return DiffAnalyzer.IsEmpty(columnDiff);
+    }
+
+    public static bool DiffIsEmpty(PostgreSQLSequenceDiff sequenceDiff)
+    {
+        return DiffAnalyzer.IsEmpty(sequenceDiff);
+    }
+
+    public static bool DiffIsEmpty(PostgreSQLDomainTypeDiff typeDiff)
+    {
+        return DiffAnalyzer.IsEmpty(typeDiff);
+    }
+
     public bool DiffLeadsToDataLoss(DatabaseDiff dbDiff)
     {
         if (dbDiff.RemovedTables.Any())
             return true;
         foreach (TableDiff tableDiff in dbDiff.ChangedTables)
         {
-            if (tableDiff.RemovedColumns.Any())
+            if (tableDiff.ColumnsToDrop.Any())
                 return true;
         }
         return false;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.Analysis.Extensions;
 using DotNetDBTools.Models.Core;
@@ -32,8 +33,8 @@ internal class MySQLDbModelPostProcessor : DbModelPostProcessor
     protected override void OrderAdditionalDbObjects(Database database)
     {
         MySQLDatabase db = (MySQLDatabase)database;
-        db.Functions = db.Functions.OrderByName();
-        db.Procedures = db.Procedures.OrderByName();
+        db.Functions = db.Functions.OrderByNameThenByType().ToList();
+        db.Procedures = db.Procedures.OrderByNameThenByType().ToList();
     }
 
     private void ReplaceUniqueConstraintsWithUniqueIndexes(MySQLDatabase database)

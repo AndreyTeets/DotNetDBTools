@@ -15,6 +15,12 @@ internal class DNDBTModelsEqualityComparer : IEqualityComparer<object>
     public string DiffLog => _diffInfoSb.ToString().NormalizeLineEndings().TrimEnd();
 
     private readonly StringBuilder _diffInfoSb = new();
+    private readonly HashSet<PropInfo> _alwaysIgnoredProperties = new()
+    {
+        new PropInfo { Name = nameof(DbObject.Parent), InType = nameof(DbObject) },
+        new PropInfo { Name = nameof(CodePiece.DependsOn), InType = nameof(CodePiece) },
+        new PropInfo { Name = nameof(DataType.DependsOn), InType = nameof(DataType) },
+    };
 
     public new bool Equals(object x, object y)
     {
@@ -176,9 +182,13 @@ internal class DNDBTModelsEqualityComparer : IEqualityComparer<object>
 
     private bool IsIgnoredProperty(PropertyInfo property)
     {
-        return IgnoredProperties.Any(x =>
-            x.Name == property.Name &&
-            (x.DeclaringTypeName is null || x.DeclaringTypeName == property.DeclaringType.Name));
+        return _alwaysIgnoredProperties.Any(Match) || IgnoredProperties.Any(Match);
+
+        bool Match(PropInfo propInfo)
+        {
+            return propInfo.Name == property.Name
+                && (propInfo.InType is null || propInfo.InType == property.DeclaringType.Name);
+        }
     }
 
     private bool LogDiffAndReturnFalse(object val1, object val2, string place)

@@ -13,23 +13,24 @@ internal class PostgreSQLGetViewDependenciesVisitor : PostgreSQLParserBaseVisito
 
     public List<Dependency> GetDependencies() => _dependencies.ToList();
 
-    public override object VisitFrom_primary([NotNull] From_primaryContext context)
+    public override object VisitData_type([NotNull] Data_typeContext context)
     {
-        if (context.schema_qualified_name() != null)
-        {
-            string tableOrViewName = Unquote(context.schema_qualified_name().GetText());
-            _dependencies.Add(new Dependency { Type = DependencyType.TableOrView, Name = tableOrViewName });
-        }
-        else if (context.function_call().Any())
-        {
-            string functionName = Unquote(context.function_call(0).schema_qualified_name_for_func_name().GetText());
-            _dependencies.Add(new Dependency { Type = DependencyType.Function, Name = functionName });
-        }
-        return base.VisitFrom_primary(context);
+        if (PostgreSQLHelperMethods.TryGetDependency(context, out Dependency? dependency))
+            _dependencies.Add(dependency.Value);
+        return base.VisitData_type(context);
     }
 
-    private static string Unquote(string quotedIdentifier)
+    public override object VisitFunction_call([NotNull] Function_callContext context)
     {
-        return quotedIdentifier.Replace("\"", "");
+        if (PostgreSQLHelperMethods.TryGetDependency(context, out Dependency? dependency))
+            _dependencies.Add(dependency.Value);
+        return base.VisitFunction_call(context);
+    }
+
+    public override object VisitFrom_primary([NotNull] From_primaryContext context)
+    {
+        if (PostgreSQLHelperMethods.TryGetDependency(context, out Dependency? dependency))
+            _dependencies.Add(dependency.Value);
+        return base.VisitFrom_primary(context);
     }
 }

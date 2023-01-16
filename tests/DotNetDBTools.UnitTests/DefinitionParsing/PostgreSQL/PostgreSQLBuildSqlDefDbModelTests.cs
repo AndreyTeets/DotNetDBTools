@@ -29,7 +29,7 @@ public class PostgreSQLBuildSqlDefDbModelTests : BaseBuildSqlDefDbModelTests<Pos
                 Name = "Table1",
                 Columns = new()
                 {
-                    new Column()
+                    new PostgreSQLColumn()
                     {
                         ID = new Guid("5C36AE77-B7E4-40C3-824F-BD20DC270A14"),
                         Name = "Col1".ToLower(),
@@ -37,14 +37,14 @@ public class PostgreSQLBuildSqlDefDbModelTests : BaseBuildSqlDefDbModelTests<Pos
                         Default = new CodePiece() { Code = "15" },
                         NotNull = true,
                     },
-                    new Column()
+                    new PostgreSQLColumn()
                     {
                         ID = new Guid("6C36AE77-B7E4-40C3-824F-BD20DC270A14"),
                         Name = "Col2",
                         DataType = new DataType() { Name = "DECIMAL(6,1)" },
                         Default = new CodePiece() { Code = "7.36" },
                     },
-                    new Column()
+                    new PostgreSQLColumn()
                     {
                         ID = new Guid("7C36AE77-B7E4-40C3-824F-BD20DC270A14"),
                         Name = "Col3".ToLower(),
@@ -53,7 +53,7 @@ public class PostgreSQLBuildSqlDefDbModelTests : BaseBuildSqlDefDbModelTests<Pos
                         NotNull = true,
                         Identity = true,
                     },
-                    new Column()
+                    new PostgreSQLColumn()
                     {
                         ID = new Guid("8C36AE77-B7E4-40C3-824F-BD20DC270A14"),
                         Name = "Col4".ToLower(),
@@ -61,7 +61,7 @@ public class PostgreSQLBuildSqlDefDbModelTests : BaseBuildSqlDefDbModelTests<Pos
                         Default = new CodePiece() { Code = "'CONSTRAINT CK_String_Check1 CHECK (Col3 >= 0),'" },
                         NotNull = true,
                     },
-                    new Column()
+                    new PostgreSQLColumn()
                     {
                         ID = new Guid("9C36AE77-B7E4-40C3-824F-BD20DC270A14"),
                         Name = "Col5",

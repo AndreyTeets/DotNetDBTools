@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo;
 using DotNetDBTools.Models.Core;
+using DotNetDBTools.Models.PostgreSQL;
 
 namespace DotNetDBTools.Deploy.PostgreSQL.Queries.DBMSSysInfo;
 
@@ -23,8 +24,8 @@ $@"SELECT
     s.seqincrement AS ""{nameof(PostgreSQLColumnRecord.IdentitySequenceIncrementBy)}"",
     s.seqmin AS ""{nameof(PostgreSQLColumnRecord.IdentitySequenceMinValue)}"",
     s.seqmax AS ""{nameof(PostgreSQLColumnRecord.IdentitySequenceMaxValue)}"",
-    s.seqcycle AS ""{nameof(PostgreSQLColumnRecord.IdentitySequenceCycle)}"",
-    s.seqcache AS ""{nameof(PostgreSQLColumnRecord.IdentitySequenceCache)}""
+    s.seqcache AS ""{nameof(PostgreSQLColumnRecord.IdentitySequenceCache)}"",
+    s.seqcycle AS ""{nameof(PostgreSQLColumnRecord.IdentitySequenceCycle)}""
 FROM pg_catalog.pg_class c
 INNER JOIN pg_catalog.pg_namespace n
     ON n.oid = c.relnamespace
@@ -45,10 +46,10 @@ LEFT JOIN LATERAL (
         ON dep.objid = sq.seqrelid
             AND dep.classid = 'pg_class'::regclass
             AND dep.refclassid = 'pg_class'::regclass
-    WHERE dep.refobjid = a.attrelid
-        AND dep.refobjsubid = a.attnum
-        AND (a.attidentity = 'a' OR a.attidentity = 'd')
-    ) s ON TRUE
+            AND dep.deptype = 'i'
+            AND dep.refobjid = a.attrelid
+            AND dep.refobjsubid = a.attnum
+    ) s ON (a.attidentity = 'a' OR a.attidentity = 'd')
 WHERE c.relkind = 'r'
     AND n.nspname NOT IN ('information_schema', 'pg_catalog')
     AND c.relname NOT IN ({DNDBTSysTables.AllTablesForInClause});";
@@ -66,8 +67,8 @@ WHERE c.relkind = 'r'
         public long IdentitySequenceIncrementBy { get; set; }
         public long IdentitySequenceMinValue { get; set; }
         public long IdentitySequenceMaxValue { get; set; }
-        public bool IdentitySequenceCycle { get; set; }
         public long IdentitySequenceCache { get; set; }
+        public bool IdentitySequenceCycle { get; set; }
     }
 
     public class PostgreSQLRecordsLoader : RecordsLoader
@@ -88,7 +89,7 @@ WHERE c.relkind = 'r'
                 cr.Length,
                 cr.ArrayDims);
 
-            return new Column()
+            PostgreSQLColumn columnModel = new PostgreSQLColumn()
             {
                 ID = Guid.NewGuid(),
                 Name = cr.ColumnName,
@@ -97,6 +98,22 @@ WHERE c.relkind = 'r'
                 Identity = cr.Identity == "a" || cr.Identity == "d",
                 Default = PostgreSQLQueriesHelper.ParseDefault(cr.Default),
             };
+
+            if (columnModel.Identity)
+            {
+                columnModel.IdentityGenerationKind = cr.Identity == "a" ? "ALWAYS" : "BY DEFAULT";
+                columnModel.IdentitySequenceOptions = new PostgreSQLSequenceOptions()
+                {
+                    StartWith = cr.IdentitySequenceStartWith,
+                    IncrementBy = cr.IdentitySequenceIncrementBy,
+                    MinValue = cr.IdentitySequenceMinValue,
+                    MaxValue = cr.IdentitySequenceMaxValue,
+                    Cache = cr.IdentitySequenceCache,
+                    Cycle = cr.IdentitySequenceCycle,
+                };
+            }
+
+            return columnModel;
         }
     }
 }

@@ -139,6 +139,7 @@ public class GenerationManager : IGenerationManager
             PostgreSQLView x => new PostgreSQLViewStatementsGenerator(),
             PostgreSQLIndex x => new PostgreSQLIndexStatementsGenerator(),
             PostgreSQLTrigger x => new PostgreSQLTriggerStatementsGenerator(),
+            PostgreSQLSequence x => new PostgreSQLSequenceStatementsGenerator(),
             PostgreSQLCompositeType x => new PostgreSQLCompositeTypeStatementsGenerator(),
             PostgreSQLDomainType x => new PostgreSQLDomainTypeStatementsGenerator(),
             PostgreSQLEnumType x => new PostgreSQLEnumTypeStatementsGenerator(),

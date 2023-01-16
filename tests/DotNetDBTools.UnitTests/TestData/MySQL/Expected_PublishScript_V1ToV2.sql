@@ -52,15 +52,6 @@ DELETE FROM `DNDBTDbObjects`
 WHERE `ID` = 'ee64ffc3-5536-4624-beaf-bc3a61d06a1a';
 -- QUERY END: DeleteDNDBTDbObjectRecordQuery
 
--- QUERY START: DropViewQuery
-DROP VIEW `MyView1`;
--- QUERY END: DropViewQuery
-
--- QUERY START: DeleteDNDBTDbObjectRecordQuery
-DELETE FROM `DNDBTDbObjects`
-WHERE `ID` = 'e2569aae-d5da-4a77-b3cd-51adbdb272d9';
--- QUERY END: DeleteDNDBTDbObjectRecordQuery
-
 -- QUERY START: DropForeignKeyQuery
 ALTER TABLE `MyTable6` DROP CONSTRAINT `FK_MyTable6_MyTable5_CustomName`;
 -- QUERY END: DropForeignKeyQuery
@@ -113,6 +104,15 @@ DROP INDEX `UQ_MyTable5_CustomName` ON `MyTable5`;
 -- QUERY START: DeleteDNDBTDbObjectRecordQuery
 DELETE FROM `DNDBTDbObjects`
 WHERE `ID` = '5293b58a-9f63-4f0f-8d6f-18416ebbd751';
+-- QUERY END: DeleteDNDBTDbObjectRecordQuery
+
+-- QUERY START: DropViewQuery
+DROP VIEW `MyView1`;
+-- QUERY END: DropViewQuery
+
+-- QUERY START: DeleteDNDBTDbObjectRecordQuery
+DELETE FROM `DNDBTDbObjects`
+WHERE `ID` = 'e2569aae-d5da-4a77-b3cd-51adbdb272d9';
 -- QUERY END: DeleteDNDBTDbObjectRecordQuery
 
 -- QUERY START: DropTableQuery
@@ -176,13 +176,6 @@ WHERE `ID` = '299675e6-4faa-4d0f-a36a-224306ba5bcb';
 
 -- QUERY START: UpdateDNDBTDbObjectRecordQuery
 UPDATE `DNDBTDbObjects` SET
-    `Name` = 'MyColumn1',
-    `Code` = '15'
-WHERE `ID` = 'a2f2a4de-1337-4594-ae41-72ed4d05f317';
--- QUERY END: UpdateDNDBTDbObjectRecordQuery
-
--- QUERY START: UpdateDNDBTDbObjectRecordQuery
-UPDATE `DNDBTDbObjects` SET
     `Name` = 'MyColumn4',
     `Code` = NULL
 WHERE `ID` = '867ac528-e87e-4c93-b6e3-dd2fcbbb837f';
@@ -228,13 +221,6 @@ WHERE `ID` = '3a43615b-40b3-4a13-99e7-93af7c56e8ce';
 DELETE FROM `DNDBTDbObjects`
 WHERE `ID` = '5a0d1926-3270-4eb2-92eb-00be56c7af23';
 -- QUERY END: DeleteDNDBTDbObjectRecordQuery
-
--- QUERY START: UpdateDNDBTDbObjectRecordQuery
-UPDATE `DNDBTDbObjects` SET
-    `Name` = 'MyTable2',
-    `Code` = NULL
-WHERE `ID` = 'bfb9030c-a8c3-4882-9c42-1c6ad025cf8f';
--- QUERY END: UpdateDNDBTDbObjectRecordQuery
 
 -- QUERY START: UpdateDNDBTDbObjectRecordQuery
 UPDATE `DNDBTDbObjects` SET
@@ -331,13 +317,6 @@ WHERE `ID` = '79384d48-a39b-4a22-900e-066b2ca67ba2';
 
 -- QUERY START: UpdateDNDBTDbObjectRecordQuery
 UPDATE `DNDBTDbObjects` SET
-    `Name` = 'MyTable5',
-    `Code` = NULL
-WHERE `ID` = '6ca51f29-c1bc-4349-b9c1-6f1ea170f162';
--- QUERY END: UpdateDNDBTDbObjectRecordQuery
-
--- QUERY START: UpdateDNDBTDbObjectRecordQuery
-UPDATE `DNDBTDbObjects` SET
     `Name` = 'MyColumn1',
     `Code` = '(abS(-15))'
 WHERE `ID` = '5309d66f-2030-402e-912e-5547babaa072';
@@ -405,6 +384,43 @@ VALUES
     'Column',
     'MyColumn2',
     NULL
+);
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: CreateViewQuery
+CREATE VIEW MyView1 AS
+SELECT
+    t1.MyColumn1,
+    t1.MyColumn4,
+    t2.MyColumn2
+FROM MyTable1NewName t1
+LEFT JOIN MyTable2 t2
+    ON t2.MyColumn1NewName = t1.MyColumn1;
+-- QUERY END: CreateViewQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+INSERT INTO `DNDBTDbObjects`
+(
+    `ID`,
+    `ParentID`,
+    `Type`,
+    `Name`,
+    `Code`
+)
+VALUES
+(
+    'e2569aae-d5da-4a77-b3cd-51adbdb272d9',
+    NULL,
+    'View',
+    'MyView1',
+    'CREATE VIEW MyView1 AS
+SELECT
+    t1.MyColumn1,
+    t1.MyColumn4,
+    t2.MyColumn2
+FROM MyTable1NewName t1
+LEFT JOIN MyTable2 t2
+    ON t2.MyColumn1NewName = t1.MyColumn1'
 );
 -- QUERY END: InsertDNDBTDbObjectRecordQuery
 
@@ -503,43 +519,6 @@ VALUES
     'ForeignKey',
     'FK_MyTable2_MyColumns34_MyTable3_MyColumns12',
     NULL
-);
--- QUERY END: InsertDNDBTDbObjectRecordQuery
-
--- QUERY START: CreateViewQuery
-CREATE VIEW MyView1 AS
-SELECT
-    t1.MyColumn1,
-    t1.MyColumn4,
-    t2.MyColumn2
-FROM MyTable1NewName t1
-LEFT JOIN MyTable2 t2
-    ON t2.MyColumn1NewName = t1.MyColumn1;
--- QUERY END: CreateViewQuery
-
--- QUERY START: InsertDNDBTDbObjectRecordQuery
-INSERT INTO `DNDBTDbObjects`
-(
-    `ID`,
-    `ParentID`,
-    `Type`,
-    `Name`,
-    `Code`
-)
-VALUES
-(
-    'e2569aae-d5da-4a77-b3cd-51adbdb272d9',
-    NULL,
-    'View',
-    'MyView1',
-    'CREATE VIEW MyView1 AS
-SELECT
-    t1.MyColumn1,
-    t1.MyColumn4,
-    t2.MyColumn2
-FROM MyTable1NewName t1
-LEFT JOIN MyTable2 t2
-    ON t2.MyColumn1NewName = t1.MyColumn1'
 );
 -- QUERY END: InsertDNDBTDbObjectRecordQuery
 

@@ -7,7 +7,13 @@ namespace DotNetDBTools.Analysis.Core;
 
 internal abstract class DiffCreator
 {
-    private readonly DNDBTModelsEqualityComparer _dndbtModelsEqualityComparer = new();
+    private readonly DNDBTModelsEqualityComparer _comparer = new();
+
+    public DiffCreator()
+    {
+        _comparer.IgnoredProperties.Add(new PropInfo { Name = nameof(Table.Indexes), InType = nameof(Table) });
+        _comparer.IgnoredProperties.Add(new PropInfo { Name = nameof(Table.Triggers), InType = nameof(Table) });
+    }
 
     public abstract DatabaseDiff CreateDatabaseDiff(Database newDatabase, Database oldDatabase);
 
@@ -33,16 +39,11 @@ internal abstract class DiffCreator
 
     protected void BuildViewsDiff(DatabaseDiff dbDiff)
     {
-        List<View> viewsToCreate = null;
-        List<View> viewsToDrop = null;
-        FillAddedAndRemovedItemsAndApplyActionToChangedItems(
-            dbDiff.NewDatabase.Views, dbDiff.OldDatabase.Views,
-            ref viewsToCreate, ref viewsToDrop,
-            (newView, oldView) =>
-            {
-                viewsToCreate.Add(newView);
-                viewsToDrop.Add(oldView);
-            });
+        FillAddedAndRemovedItemsAndAddChangedToBoth(
+            dbDiff.NewDatabase.Views,
+            dbDiff.OldDatabase.Views,
+            out List<View> viewsToCreate,
+            out List<View> viewsToDrop);
 
         dbDiff.ViewsToCreate = viewsToCreate;
         dbDiff.ViewsToDrop = viewsToDrop;
@@ -50,12 +51,11 @@ internal abstract class DiffCreator
 
     protected void BuildScriptsDiff(DatabaseDiff dbDiff)
     {
-        List<Script> addedScripts = null;
-        List<Script> removedScripts = null;
-        FillAddedAndRemovedItemsAndApplyActionToChangedItems(
-            dbDiff.NewDatabase.Scripts, dbDiff.OldDatabase.Scripts,
-            ref addedScripts, ref removedScripts,
-            (newView, oldView) => { });
+        FillAddedAndRemovedItemsAndAddChangedToBoth(
+            dbDiff.NewDatabase.Scripts,
+            dbDiff.OldDatabase.Scripts,
+            out List<Script> addedScripts,
+            out List<Script> removedScripts);
 
         dbDiff.AddedScripts = addedScripts;
         dbDiff.RemovedScripts = removedScripts;
@@ -74,8 +74,6 @@ internal abstract class DiffCreator
         BuildPrimaryKeyDiff(tableDiff, newDbTable, oldDbTable);
         BuildUniqueConstraintsDiff(tableDiff, newDbTable, oldDbTable);
         BuildCheckConstraintsDiff(tableDiff, newDbTable, oldDbTable);
-        BuildIndexesDiff(tableDiff);
-        BuildTriggersDiff(tableDiff);
         BuildForeignKeysDiff(tableDiff, newDbTable, oldDbTable);
         return tableDiff;
     }
@@ -96,18 +94,21 @@ internal abstract class DiffCreator
                     NewColumn = newColumn,
                     OldColumn = oldColumn,
                 };
-                SetDataTypeChanged(columnDiff);
+                if (!AreEqual(columnDiff.NewColumn.DataType, columnDiff.OldColumn.DataType))
+                    columnDiff.DataTypeToSet = columnDiff.NewColumn.DataType;
+                if (!AreEqual(columnDiff.NewColumn.Default, columnDiff.OldColumn.Default))
+                {
+                    if (columnDiff.NewColumn.Default.Code != null)
+                        columnDiff.DefaultToSet = columnDiff.NewColumn.Default;
+                    if (columnDiff.OldColumn.Default.Code != null)
+                        columnDiff.DefaultToDrop = columnDiff.OldColumn.Default;
+                }
                 changedColumns.Add(columnDiff);
             });
 
-        tableDiff.AddedColumns = addedColumns;
-        tableDiff.RemovedColumns = removedColumns;
-        tableDiff.ChangedColumns = changedColumns;
-    }
-    protected virtual void SetDataTypeChanged(ColumnDiff columnDiff)
-    {
-        if (columnDiff.NewColumn.DataType.Name != columnDiff.OldColumn.DataType.Name)
-            columnDiff.DataTypeChanged = true;
+        tableDiff.ColumnsToAdd = addedColumns;
+        tableDiff.ColumnsToDrop = removedColumns;
+        tableDiff.ColumnsToAlter = changedColumns;
     }
 
     private void BuildPrimaryKeyDiff<TTableDiff>(TTableDiff tableDiff, Table newDbTable, Table oldDbTable)
@@ -115,7 +116,7 @@ internal abstract class DiffCreator
     {
         PrimaryKey primaryKeyToCreate = null;
         PrimaryKey primaryKeyToDrop = null;
-        if (!_dndbtModelsEqualityComparer.Equals(newDbTable.PrimaryKey, oldDbTable.PrimaryKey))
+        if (!_comparer.Equals(newDbTable.PrimaryKey, oldDbTable.PrimaryKey))
         {
             primaryKeyToCreate = newDbTable.PrimaryKey;
             primaryKeyToDrop = oldDbTable.PrimaryKey;
@@ -128,16 +129,11 @@ internal abstract class DiffCreator
     private void BuildUniqueConstraintsDiff<TTableDiff>(TTableDiff tableDiff, Table newDbTable, Table oldDbTable)
         where TTableDiff : TableDiff, new()
     {
-        List<UniqueConstraint> uniqueConstraintsToCreate = null;
-        List<UniqueConstraint> uniqueConstraintsToDrop = null;
-        FillAddedAndRemovedItemsAndApplyActionToChangedItems(
-            newDbTable.UniqueConstraints, oldDbTable.UniqueConstraints,
-            ref uniqueConstraintsToCreate, ref uniqueConstraintsToDrop,
-            (newUC, oldUC) =>
-            {
-                uniqueConstraintsToCreate.Add(newUC);
-                uniqueConstraintsToDrop.Add(oldUC);
-            });
+        FillAddedAndRemovedItemsAndAddChangedToBoth(
+            newDbTable.UniqueConstraints,
+            oldDbTable.UniqueConstraints,
+            out List<UniqueConstraint> uniqueConstraintsToCreate,
+            out List<UniqueConstraint> uniqueConstraintsToDrop);
 
         tableDiff.UniqueConstraintsToCreate = uniqueConstraintsToCreate;
         tableDiff.UniqueConstraintsToDrop = uniqueConstraintsToDrop;
@@ -146,73 +142,98 @@ internal abstract class DiffCreator
     private void BuildCheckConstraintsDiff<TTableDiff>(TTableDiff tableDiff, Table newDbTable, Table oldDbTable)
         where TTableDiff : TableDiff, new()
     {
-        List<CheckConstraint> checkConstraintsToCreate = null;
-        List<CheckConstraint> checkConstraintsToDrop = null;
-        FillAddedAndRemovedItemsAndApplyActionToChangedItems(
-            newDbTable.CheckConstraints, oldDbTable.CheckConstraints,
-            ref checkConstraintsToCreate, ref checkConstraintsToDrop,
-            (newCK, oldCK) =>
-            {
-                checkConstraintsToCreate.Add(newCK);
-                checkConstraintsToDrop.Add(oldCK);
-            });
+        FillAddedAndRemovedItemsAndAddChangedToBoth(
+            newDbTable.CheckConstraints,
+            oldDbTable.CheckConstraints,
+            out List<CheckConstraint> checkConstraintsToCreate,
+            out List<CheckConstraint> checkConstraintsToDrop);
 
         tableDiff.CheckConstraintsToCreate = checkConstraintsToCreate;
         tableDiff.CheckConstraintsToDrop = checkConstraintsToDrop;
     }
 
-    private void BuildIndexesDiff<TTableDiff>(TTableDiff tableDiff)
-        where TTableDiff : TableDiff, new()
+    protected void BuildIndexesDiff(DatabaseDiff dbDiff)
     {
-        List<Index> indexesToCreate = null;
-        List<Index> indexesToDrop = null;
-        FillAddedAndRemovedItemsAndApplyActionToChangedItems(
-            tableDiff.NewTable.Indexes, tableDiff.OldTable.Indexes,
-            ref indexesToCreate, ref indexesToDrop,
-            (newIndex, oldIndex) =>
-            {
-                indexesToCreate.Add(newIndex);
-                indexesToDrop.Add(oldIndex);
-            });
+        foreach (Table table in dbDiff.AddedTables)
+            dbDiff.IndexesToCreate.AddRange(table.Indexes);
+        foreach (Table table in dbDiff.RemovedTables)
+            dbDiff.IndexesToDrop.AddRange(table.Indexes);
 
-        tableDiff.IndexesToCreate = indexesToCreate;
-        tableDiff.IndexesToDrop = indexesToDrop;
+        Dictionary<Guid, Table> oldDbTableIdToTableMap = dbDiff.OldDatabase.Tables.ToDictionary(x => x.ID, x => x);
+        foreach (Table table in dbDiff.NewDatabase.Tables.Except(dbDiff.AddedTables))
+        {
+            List<Index> indexesToCreate = null;
+            List<Index> indexesToDrop = null;
+            FillAddedAndRemovedItemsAndApplyActionToChangedItems(
+                table.Indexes, oldDbTableIdToTableMap[table.ID].Indexes,
+                ref indexesToCreate, ref indexesToDrop,
+                (newIndex, oldIndex) =>
+                {
+                    indexesToCreate.Add(newIndex);
+                    indexesToDrop.Add(oldIndex);
+                });
+
+            dbDiff.IndexesToCreate.AddRange(indexesToCreate);
+            dbDiff.IndexesToDrop.AddRange(indexesToDrop);
+        }
     }
 
-    private void BuildTriggersDiff<TTableDiff>(TTableDiff tableDiff)
-        where TTableDiff : TableDiff, new()
+    protected void BuildTriggersDiff(DatabaseDiff dbDiff)
     {
-        List<Trigger> triggersToCreate = null;
-        List<Trigger> triggersToDrop = null;
-        FillAddedAndRemovedItemsAndApplyActionToChangedItems(
-            tableDiff.NewTable.Triggers, tableDiff.OldTable.Triggers,
-            ref triggersToCreate, ref triggersToDrop,
-            (newTrigger, oldTrigger) =>
-            {
-                triggersToCreate.Add(newTrigger);
-                triggersToDrop.Add(oldTrigger);
-            });
+        foreach (Table table in dbDiff.AddedTables)
+            dbDiff.TriggersToCreate.AddRange(table.Triggers);
+        foreach (Table table in dbDiff.RemovedTables)
+            dbDiff.TriggersToDrop.AddRange(table.Triggers);
 
-        tableDiff.TriggersToCreate = triggersToCreate;
-        tableDiff.TriggersToDrop = triggersToDrop;
+        Dictionary<Guid, Table> oldDbTableIdToTableMap = dbDiff.OldDatabase.Tables.ToDictionary(x => x.ID, x => x);
+        foreach (Table table in dbDiff.NewDatabase.Tables.Except(dbDiff.AddedTables))
+        {
+            FillAddedAndRemovedItemsAndAddChangedToBoth(
+                table.Triggers,
+                oldDbTableIdToTableMap[table.ID].Triggers,
+                out List<Trigger> triggersToCreate,
+                out List<Trigger> triggersToDrop);
+
+            dbDiff.TriggersToCreate.AddRange(triggersToCreate);
+            dbDiff.TriggersToDrop.AddRange(triggersToDrop);
+        }
     }
 
     private void BuildForeignKeysDiff<TTableDiff>(TTableDiff tableDiff, Table newDbTable, Table oldDbTable)
         where TTableDiff : TableDiff, new()
     {
-        List<ForeignKey> foreignKeysToCreate = null;
-        List<ForeignKey> foreignKeysToDrop = null;
-        FillAddedAndRemovedItemsAndApplyActionToChangedItems(
-            newDbTable.ForeignKeys, oldDbTable.ForeignKeys,
-            ref foreignKeysToCreate, ref foreignKeysToDrop,
-            (newFK, oldFK) =>
-            {
-                foreignKeysToCreate.Add(newFK);
-                foreignKeysToDrop.Add(oldFK);
-            });
+        FillAddedAndRemovedItemsAndAddChangedToBoth(
+            newDbTable.ForeignKeys,
+            oldDbTable.ForeignKeys,
+            out List<ForeignKey> foreignKeysToCreate,
+            out List<ForeignKey> foreignKeysToDrop);
 
         tableDiff.ForeignKeysToCreate = foreignKeysToCreate;
         tableDiff.ForeignKeysToDrop = foreignKeysToDrop;
+    }
+
+    protected void FillAddedAndRemovedItemsAndAddChangedToBoth<TCollection, TItem>(
+        TCollection newCollection,
+        TCollection oldCollection,
+        out List<TItem> addedItems,
+        out List<TItem> removedItems)
+        where TCollection : IEnumerable<TItem>
+        where TItem : DbObject
+    {
+        List<TItem> addedItemsRes = null;
+        List<TItem> removedItemsRes = null;
+        FillAddedAndRemovedItemsAndApplyActionToChangedItems(
+            newCollection,
+            oldCollection,
+            ref addedItemsRes,
+            ref removedItemsRes,
+            (newItem, oldItem) =>
+            {
+                addedItemsRes.Add(newItem);
+                removedItemsRes.Add(oldItem);
+            });
+        addedItems = addedItemsRes;
+        removedItems = removedItemsRes;
     }
 
     protected void FillAddedAndRemovedItemsAndApplyActionToChangedItems<TCollection, TItem>(
@@ -236,17 +257,30 @@ internal abstract class DiffCreator
 
         foreach (TItem newCollectionItem in newCollection)
         {
-            if (oldCollectionItemIDToItemMap.TryGetValue(newCollectionItem.ID, out TItem oldCollectionItem) &&
-                (!_dndbtModelsEqualityComparer.Equals(newCollectionItem, oldCollectionItem) ||
-                    AdditionalItemsNonEqualityConditionIsTrue(newCollectionItem, oldCollectionItem)))
+            bool itemExistsInBoth = oldCollectionItemIDToItemMap.TryGetValue(newCollectionItem.ID, out TItem oldCollectionItem);
+            if (!itemExistsInBoth)
+            {
+                OnAddedItemProcessed(newCollectionItem);
+                continue;
+            }
+
+            if (!AreEqual(newCollectionItem, oldCollectionItem))
             {
                 changedItemFoundAction(newCollectionItem, oldCollectionItem);
+                OnChangedItemProcessed(newCollectionItem, oldCollectionItem);
+            }
+            else
+            {
+                OnUnchangedItemProcessed(newCollectionItem);
             }
         }
     }
+    protected virtual void OnAddedItemProcessed<TItem>(TItem item) where TItem : DbObject { }
+    protected virtual void OnChangedItemProcessed<TItem>(TItem newItem, TItem oldItem) where TItem : DbObject { }
+    protected virtual void OnUnchangedItemProcessed<TItem>(TItem item) where TItem : DbObject { }
 
-    protected virtual bool AdditionalItemsNonEqualityConditionIsTrue<TItem>(TItem newItem, TItem oldItem)
+    protected bool AreEqual(object x, object y)
     {
-        return false;
+        return _comparer.Equals(x, y);
     }
 }
