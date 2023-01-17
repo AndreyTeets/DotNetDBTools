@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 using DotNetDBTools.Deploy.Core.Queries;
 using DotNetDBTools.Generation.Core;
 
@@ -57,13 +59,43 @@ internal abstract class GenSqlScriptQueryExecutor : IGenSqlScriptQueryExecutor
         return string.Join("\n\n", _queries).NormalizeLineEndings();
     }
 
+    protected string ReplaceParameters(IQuery query)
+    {
+        if (query.Parameters.Count() > 0)
+        {
+            // No user sql code is called with parameters, only dndbt system queries do, and since the latter
+            // don't contain any comments or any other complicated stuff, this simple regex is good enough.
+            if (!IsDNDBTDbObjectRecordQuery(query))
+                throw new Exception($"Query type '{query.GetType()}' us not expected to have parameters");
+
+            int replacedCount = 0;
+            string res = Regex.Replace(query.Sql, @"(@.+?)([\s|\)|,|;|$])", match =>
+            {
+                replacedCount++;
+                string pName = match.Groups[1].Value;
+                string strAfterPName = match.Groups[2].Value;
+                QueryParameter queryParameter = query.Parameters.Single(x => x.Name == pName);
+                return GetQuotedParameterValue(queryParameter) + strAfterPName;
+            });
+
+            if (query.Parameters.Count() != replacedCount)
+                throw new Exception($"Failed to replace all parameters for query type '{query.GetType()}'");
+            return res;
+        }
+        else
+        {
+            return query.Sql;
+        }
+    }
+    protected abstract string GetQuotedParameterValue(QueryParameter queryParameter);
+
     private static bool IsDNDBTDbObjectRecordQuery(IQuery query)
     {
         string queryNamespace = query.GetType().Namespace;
-        bool isDNDBTDbObjectRecordQuery = queryNamespace.EndsWith("DNDBTSysInfo", StringComparison.Ordinal);
+        bool isDNDBTDbObjectRecordQuery = queryNamespace.EndsWith(nameof(Queries.DNDBTSysInfo), StringComparison.Ordinal);
 
         if (!isDNDBTDbObjectRecordQuery &&
-            !queryNamespace.EndsWith("DDL", StringComparison.Ordinal) &&
+            !queryNamespace.EndsWith(nameof(Queries.DDL), StringComparison.Ordinal) &&
             !(query.GetType() == typeof(GenericQuery)))
         {
             throw new Exception($"Invalid query type '{query.GetType()}' during script generation");

@@ -18,24 +18,7 @@ SELECT [MyColumn1], [MyColumn2] FROM [MyTable2]';
 -- QUERY END: GenericQuery
 
 -- QUERY START: InsertDNDBTScriptExecutionRecordQuery
-EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''7f72f0df-4eda-4063-99d8-99c1f37819d2'';
-DECLARE @Type NVARCHAR(MAX) = N''BeforePublishOnce'';
-DECLARE @Name NVARCHAR(MAX) = N''SaveRecreatedColumnsData'';
-DECLARE @Code NVARCHAR(MAX) = N''IF EXISTS (SELECT * FROM [sysobjects] WHERE [name]=''''_MyTable2'''' AND [xtype]=''''U'''')
-    DROP TABLE [_MyTable2];
-
-CREATE TABLE [_MyTable2]
-(
-    [MyColumn1] BIGINT NOT NULL PRIMARY KEY,
-    [MyColumn2] VARBINARY(22)
-);
-
-INSERT INTO [_MyTable2] ([MyColumn1], [MyColumn2])
-SELECT [MyColumn1], [MyColumn2] FROM [MyTable2]'';
-DECLARE @MinDbVersionToExecute BIGINT = 1;
-DECLARE @MaxDbVersionToExecute BIGINT = 1;
-DECLARE @ExecutedOnDbVersion BIGINT = 1;
-INSERT INTO [DNDBTScriptExecutions]
+EXEC sp_executesql N'INSERT INTO [DNDBTScriptExecutions]
 (
     [ID],
     [Type],
@@ -47,13 +30,23 @@ INSERT INTO [DNDBTScriptExecutions]
 )
 VALUES
 (
-    @ID,
-    @Type,
-    @Name,
-    @Code,
-    @MinDbVersionToExecute,
-    @MaxDbVersionToExecute,
-    @ExecutedOnDbVersion
+    N''7f72f0df-4eda-4063-99d8-99c1f37819d2'',
+    N''BeforePublishOnce'',
+    N''SaveRecreatedColumnsData'',
+    N''IF EXISTS (SELECT * FROM [sysobjects] WHERE [name]=''''_MyTable2'''' AND [xtype]=''''U'''')
+    DROP TABLE [_MyTable2];
+
+CREATE TABLE [_MyTable2]
+(
+    [MyColumn1] BIGINT NOT NULL PRIMARY KEY,
+    [MyColumn2] VARBINARY(22)
+);
+
+INSERT INTO [_MyTable2] ([MyColumn1], [MyColumn2])
+SELECT [MyColumn1], [MyColumn2] FROM [MyTable2]'',
+    1,
+    1,
+    1
 );';
 -- QUERY END: InsertDNDBTScriptExecutionRecordQuery
 
@@ -144,11 +137,7 @@ EXEC sp_executesql N'CREATE TYPE [MyUserDefinedType1] FROM NVARCHAR(110);';
 -- QUERY END: CreateTypeQuery
 
 -- QUERY START: InsertDNDBTDbObjectRecordQuery
-EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''0cd1e71c-cc9c-440f-ac0b-81a1d6f7ddaa'';
-DECLARE @ParentID UNIQUEIDENTIFIER = NULL;
-DECLARE @Name NVARCHAR(MAX) = N''MyUserDefinedType1'';
-DECLARE @Code NVARCHAR(MAX) = NULL;
-INSERT INTO [DNDBTDbObjects]
+EXEC sp_executesql N'INSERT INTO [DNDBTDbObjects]
 (
     [ID],
     [ParentID],
@@ -158,11 +147,11 @@ INSERT INTO [DNDBTDbObjects]
 )
 VALUES
 (
-    @ID,
-    @ParentID,
+    N''0cd1e71c-cc9c-440f-ac0b-81a1d6f7ddaa'',
+    NULL,
     ''UserDefinedType'',
-    @Name,
-    @Code
+    N''MyUserDefinedType1'',
+    NULL
 );';
 -- QUERY END: InsertDNDBTDbObjectRecordQuery
 
@@ -263,31 +252,21 @@ WHERE [ID] = ''6e95de30-e01a-4fb4-b8b7-8f0c40bb682c'';';
 -- QUERY END: DeleteDNDBTDbObjectRecordQuery
 
 -- QUERY START: UpdateDNDBTDbObjectRecordQuery
-EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''299675e6-4faa-4d0f-a36a-224306ba5bcb'';
-DECLARE @Name NVARCHAR(MAX) = N''MyTable1NewName'';
-DECLARE @Code NVARCHAR(MAX) = NULL;
-UPDATE [DNDBTDbObjects] SET
-    [Name] = @Name,
-    [Code] = @Code
-WHERE [ID] = @ID;';
+EXEC sp_executesql N'UPDATE [DNDBTDbObjects] SET
+    [Name] = N''MyTable1NewName'',
+    [Code] = NULL
+WHERE [ID] = N''299675e6-4faa-4d0f-a36a-224306ba5bcb'';';
 -- QUERY END: UpdateDNDBTDbObjectRecordQuery
 
 -- QUERY START: UpdateDNDBTDbObjectRecordQuery
-EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''867ac528-e87e-4c93-b6e3-dd2fcbbb837f'';
-DECLARE @Name NVARCHAR(MAX) = N''MyColumn4'';
-DECLARE @Code NVARCHAR(MAX) = NULL;
-UPDATE [DNDBTDbObjects] SET
-    [Name] = @Name,
-    [Code] = @Code
-WHERE [ID] = @ID;';
+EXEC sp_executesql N'UPDATE [DNDBTDbObjects] SET
+    [Name] = N''MyColumn4'',
+    [Code] = NULL
+WHERE [ID] = N''867ac528-e87e-4c93-b6e3-dd2fcbbb837f'';';
 -- QUERY END: UpdateDNDBTDbObjectRecordQuery
 
 -- QUERY START: InsertDNDBTDbObjectRecordQuery
-EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''eb9c59b5-bc7e-49d7-adaa-f5600b6a19a2'';
-DECLARE @ParentID UNIQUEIDENTIFIER = N''299675e6-4faa-4d0f-a36a-224306ba5bcb'';
-DECLARE @Name NVARCHAR(MAX) = N''CK_MyTable1_MyCheck1'';
-DECLARE @Code NVARCHAR(MAX) = N''MyColumn4 >= 1'';
-INSERT INTO [DNDBTDbObjects]
+EXEC sp_executesql N'INSERT INTO [DNDBTDbObjects]
 (
     [ID],
     [ParentID],
@@ -297,11 +276,11 @@ INSERT INTO [DNDBTDbObjects]
 )
 VALUES
 (
-    @ID,
-    @ParentID,
+    N''eb9c59b5-bc7e-49d7-adaa-f5600b6a19a2'',
+    N''299675e6-4faa-4d0f-a36a-224306ba5bcb'',
     ''CheckConstraint'',
-    @Name,
-    @Code
+    N''CK_MyTable1_MyCheck1'',
+    N''MyColumn4 >= 1''
 );';
 -- QUERY END: InsertDNDBTDbObjectRecordQuery
 
@@ -331,21 +310,14 @@ WHERE [ID] = ''5a0d1926-3270-4eb2-92eb-00be56c7af23'';';
 -- QUERY END: DeleteDNDBTDbObjectRecordQuery
 
 -- QUERY START: UpdateDNDBTDbObjectRecordQuery
-EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''c480f22f-7c01-4f41-b282-35e9f5cd1fe3'';
-DECLARE @Name NVARCHAR(MAX) = N''MyColumn1NewName'';
-DECLARE @Code NVARCHAR(MAX) = N''333'';
-UPDATE [DNDBTDbObjects] SET
-    [Name] = @Name,
-    [Code] = @Code
-WHERE [ID] = @ID;';
+EXEC sp_executesql N'UPDATE [DNDBTDbObjects] SET
+    [Name] = N''MyColumn1NewName'',
+    [Code] = N''333''
+WHERE [ID] = N''c480f22f-7c01-4f41-b282-35e9f5cd1fe3'';';
 -- QUERY END: UpdateDNDBTDbObjectRecordQuery
 
 -- QUERY START: InsertDNDBTDbObjectRecordQuery
-EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''c2df19c2-e029-4014-8a5b-4ab42fecb6b8'';
-DECLARE @ParentID UNIQUEIDENTIFIER = N''bfb9030c-a8c3-4882-9c42-1c6ad025cf8f'';
-DECLARE @Name NVARCHAR(MAX) = N''MyColumn2'';
-DECLARE @Code NVARCHAR(MAX) = N''0x000408'';
-INSERT INTO [DNDBTDbObjects]
+EXEC sp_executesql N'INSERT INTO [DNDBTDbObjects]
 (
     [ID],
     [ParentID],
@@ -355,20 +327,16 @@ INSERT INTO [DNDBTDbObjects]
 )
 VALUES
 (
-    @ID,
-    @ParentID,
+    N''c2df19c2-e029-4014-8a5b-4ab42fecb6b8'',
+    N''bfb9030c-a8c3-4882-9c42-1c6ad025cf8f'',
     ''Column'',
-    @Name,
-    @Code
+    N''MyColumn2'',
+    N''0x000408''
 );';
 -- QUERY END: InsertDNDBTDbObjectRecordQuery
 
 -- QUERY START: InsertDNDBTDbObjectRecordQuery
-EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''99bc3f49-3151-4f52-87f7-104b424ed7bf'';
-DECLARE @ParentID UNIQUEIDENTIFIER = N''bfb9030c-a8c3-4882-9c42-1c6ad025cf8f'';
-DECLARE @Name NVARCHAR(MAX) = N''MyColumn3'';
-DECLARE @Code NVARCHAR(MAX) = NULL;
-INSERT INTO [DNDBTDbObjects]
+EXEC sp_executesql N'INSERT INTO [DNDBTDbObjects]
 (
     [ID],
     [ParentID],
@@ -378,20 +346,16 @@ INSERT INTO [DNDBTDbObjects]
 )
 VALUES
 (
-    @ID,
-    @ParentID,
+    N''99bc3f49-3151-4f52-87f7-104b424ed7bf'',
+    N''bfb9030c-a8c3-4882-9c42-1c6ad025cf8f'',
     ''Column'',
-    @Name,
-    @Code
+    N''MyColumn3'',
+    NULL
 );';
 -- QUERY END: InsertDNDBTDbObjectRecordQuery
 
 -- QUERY START: InsertDNDBTDbObjectRecordQuery
-EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''87950a3f-2072-42db-ac3c-a4e85b79720d'';
-DECLARE @ParentID UNIQUEIDENTIFIER = N''bfb9030c-a8c3-4882-9c42-1c6ad025cf8f'';
-DECLARE @Name NVARCHAR(MAX) = N''MyColumn4'';
-DECLARE @Code NVARCHAR(MAX) = NULL;
-INSERT INTO [DNDBTDbObjects]
+EXEC sp_executesql N'INSERT INTO [DNDBTDbObjects]
 (
     [ID],
     [ParentID],
@@ -401,20 +365,16 @@ INSERT INTO [DNDBTDbObjects]
 )
 VALUES
 (
-    @ID,
-    @ParentID,
+    N''87950a3f-2072-42db-ac3c-a4e85b79720d'',
+    N''bfb9030c-a8c3-4882-9c42-1c6ad025cf8f'',
     ''Column'',
-    @Name,
-    @Code
+    N''MyColumn4'',
+    NULL
 );';
 -- QUERY END: InsertDNDBTDbObjectRecordQuery
 
 -- QUERY START: InsertDNDBTDbObjectRecordQuery
-EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''3a43615b-40b3-4a13-99e7-93af7c56e8ce'';
-DECLARE @ParentID UNIQUEIDENTIFIER = N''bfb9030c-a8c3-4882-9c42-1c6ad025cf8f'';
-DECLARE @Name NVARCHAR(MAX) = N''PK_MyTable2_CustomName'';
-DECLARE @Code NVARCHAR(MAX) = NULL;
-INSERT INTO [DNDBTDbObjects]
+EXEC sp_executesql N'INSERT INTO [DNDBTDbObjects]
 (
     [ID],
     [ParentID],
@@ -424,11 +384,11 @@ INSERT INTO [DNDBTDbObjects]
 )
 VALUES
 (
-    @ID,
-    @ParentID,
+    N''3a43615b-40b3-4a13-99e7-93af7c56e8ce'',
+    N''bfb9030c-a8c3-4882-9c42-1c6ad025cf8f'',
     ''PrimaryKey'',
-    @Name,
-    @Code
+    N''PK_MyTable2_CustomName'',
+    NULL
 );';
 -- QUERY END: InsertDNDBTDbObjectRecordQuery
 
@@ -453,23 +413,17 @@ WHERE [ID] = ''79384d48-a39b-4a22-900e-066b2ca67ba2'';';
 -- QUERY END: DeleteDNDBTDbObjectRecordQuery
 
 -- QUERY START: UpdateDNDBTDbObjectRecordQuery
-EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''5309d66f-2030-402e-912e-5547babaa072'';
-DECLARE @Name NVARCHAR(MAX) = N''MyColumn1'';
-DECLARE @Code NVARCHAR(MAX) = N''abS(-15)'';
-UPDATE [DNDBTDbObjects] SET
-    [Name] = @Name,
-    [Code] = @Code
-WHERE [ID] = @ID;';
+EXEC sp_executesql N'UPDATE [DNDBTDbObjects] SET
+    [Name] = N''MyColumn1'',
+    [Code] = N''abS(-15)''
+WHERE [ID] = N''5309d66f-2030-402e-912e-5547babaa072'';';
 -- QUERY END: UpdateDNDBTDbObjectRecordQuery
 
 -- QUERY START: UpdateDNDBTDbObjectRecordQuery
-EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''15ae6061-426d-4485-85e6-ecd3e0f98882'';
-DECLARE @Name NVARCHAR(MAX) = N''MyColumn101'';
-DECLARE @Code NVARCHAR(MAX) = N''''''cc'''''';
-UPDATE [DNDBTDbObjects] SET
-    [Name] = @Name,
-    [Code] = @Code
-WHERE [ID] = @ID;';
+EXEC sp_executesql N'UPDATE [DNDBTDbObjects] SET
+    [Name] = N''MyColumn101'',
+    [Code] = N''''''cc''''''
+WHERE [ID] = N''15ae6061-426d-4485-85e6-ecd3e0f98882'';';
 -- QUERY END: UpdateDNDBTDbObjectRecordQuery
 
 -- QUERY START: DropTypeQuery
@@ -486,11 +440,7 @@ EXEC sp_executesql N'CREATE TABLE [MyTable3]
 -- QUERY END: CreateTableQuery
 
 -- QUERY START: InsertDNDBTDbObjectRecordQuery
-EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''474cd761-2522-4529-9d20-2b94115f9626'';
-DECLARE @ParentID UNIQUEIDENTIFIER = NULL;
-DECLARE @Name NVARCHAR(MAX) = N''MyTable3'';
-DECLARE @Code NVARCHAR(MAX) = NULL;
-INSERT INTO [DNDBTDbObjects]
+EXEC sp_executesql N'INSERT INTO [DNDBTDbObjects]
 (
     [ID],
     [ParentID],
@@ -500,20 +450,16 @@ INSERT INTO [DNDBTDbObjects]
 )
 VALUES
 (
-    @ID,
-    @ParentID,
+    N''474cd761-2522-4529-9d20-2b94115f9626'',
+    NULL,
     ''Table'',
-    @Name,
-    @Code
+    N''MyTable3'',
+    NULL
 );';
 -- QUERY END: InsertDNDBTDbObjectRecordQuery
 
 -- QUERY START: InsertDNDBTDbObjectRecordQuery
-EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''726f503a-d944-46ee-a0ff-6a2c2faab46e'';
-DECLARE @ParentID UNIQUEIDENTIFIER = N''474cd761-2522-4529-9d20-2b94115f9626'';
-DECLARE @Name NVARCHAR(MAX) = N''MyColumn1'';
-DECLARE @Code NVARCHAR(MAX) = N''444'';
-INSERT INTO [DNDBTDbObjects]
+EXEC sp_executesql N'INSERT INTO [DNDBTDbObjects]
 (
     [ID],
     [ParentID],
@@ -523,20 +469,16 @@ INSERT INTO [DNDBTDbObjects]
 )
 VALUES
 (
-    @ID,
-    @ParentID,
+    N''726f503a-d944-46ee-a0ff-6a2c2faab46e'',
+    N''474cd761-2522-4529-9d20-2b94115f9626'',
     ''Column'',
-    @Name,
-    @Code
+    N''MyColumn1'',
+    N''444''
 );';
 -- QUERY END: InsertDNDBTDbObjectRecordQuery
 
 -- QUERY START: InsertDNDBTDbObjectRecordQuery
-EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''169824e1-8b74-4b60-af17-99656d6dbbee'';
-DECLARE @ParentID UNIQUEIDENTIFIER = N''474cd761-2522-4529-9d20-2b94115f9626'';
-DECLARE @Name NVARCHAR(MAX) = N''MyColumn2'';
-DECLARE @Code NVARCHAR(MAX) = NULL;
-INSERT INTO [DNDBTDbObjects]
+EXEC sp_executesql N'INSERT INTO [DNDBTDbObjects]
 (
     [ID],
     [ParentID],
@@ -546,20 +488,16 @@ INSERT INTO [DNDBTDbObjects]
 )
 VALUES
 (
-    @ID,
-    @ParentID,
+    N''169824e1-8b74-4b60-af17-99656d6dbbee'',
+    N''474cd761-2522-4529-9d20-2b94115f9626'',
     ''Column'',
-    @Name,
-    @Code
+    N''MyColumn2'',
+    NULL
 );';
 -- QUERY END: InsertDNDBTDbObjectRecordQuery
 
 -- QUERY START: InsertDNDBTDbObjectRecordQuery
-EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''fd288e38-35ba-4bb1-ace3-597c99ef26c7'';
-DECLARE @ParentID UNIQUEIDENTIFIER = N''474cd761-2522-4529-9d20-2b94115f9626'';
-DECLARE @Name NVARCHAR(MAX) = N''UQ_MyTable3_MyColumns12'';
-DECLARE @Code NVARCHAR(MAX) = NULL;
-INSERT INTO [DNDBTDbObjects]
+EXEC sp_executesql N'INSERT INTO [DNDBTDbObjects]
 (
     [ID],
     [ParentID],
@@ -569,11 +507,11 @@ INSERT INTO [DNDBTDbObjects]
 )
 VALUES
 (
-    @ID,
-    @ParentID,
+    N''fd288e38-35ba-4bb1-ace3-597c99ef26c7'',
+    N''474cd761-2522-4529-9d20-2b94115f9626'',
     ''UniqueConstraint'',
-    @Name,
-    @Code
+    N''UQ_MyTable3_MyColumns12'',
+    NULL
 );';
 -- QUERY END: InsertDNDBTDbObjectRecordQuery
 
@@ -589,18 +527,7 @@ LEFT JOIN MyTable2 t2
 -- QUERY END: CreateViewQuery
 
 -- QUERY START: InsertDNDBTDbObjectRecordQuery
-EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''e2569aae-d5da-4a77-b3cd-51adbdb272d9'';
-DECLARE @ParentID UNIQUEIDENTIFIER = NULL;
-DECLARE @Name NVARCHAR(MAX) = N''MyView1'';
-DECLARE @Code NVARCHAR(MAX) = N''CREATE VIEW MyView1 AS
-SELECT
-    t1.MyColumn1,
-    t1.MyColumn4,
-    t2.MyColumn2
-FROM MyTable1NewName t1
-LEFT JOIN MyTable2 t2
-    ON t2.MyColumn1NewName = t1.MyColumn1'';
-INSERT INTO [DNDBTDbObjects]
+EXEC sp_executesql N'INSERT INTO [DNDBTDbObjects]
 (
     [ID],
     [ParentID],
@@ -610,11 +537,18 @@ INSERT INTO [DNDBTDbObjects]
 )
 VALUES
 (
-    @ID,
-    @ParentID,
+    N''e2569aae-d5da-4a77-b3cd-51adbdb272d9'',
+    NULL,
     ''View'',
-    @Name,
-    @Code
+    N''MyView1'',
+    N''CREATE VIEW MyView1 AS
+SELECT
+    t1.MyColumn1,
+    t1.MyColumn4,
+    t2.MyColumn2
+FROM MyTable1NewName t1
+LEFT JOIN MyTable2 t2
+    ON t2.MyColumn1NewName = t1.MyColumn1''
 );';
 -- QUERY END: InsertDNDBTDbObjectRecordQuery
 
@@ -624,11 +558,7 @@ EXEC sp_executesql N'CREATE UNIQUE INDEX [IDX_MyTable2_MyIndex1]
 -- QUERY END: CreateIndexQuery
 
 -- QUERY START: InsertDNDBTDbObjectRecordQuery
-EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''74390b3c-bc39-4860-a42e-12baa400f927'';
-DECLARE @ParentID UNIQUEIDENTIFIER = N''bfb9030c-a8c3-4882-9c42-1c6ad025cf8f'';
-DECLARE @Name NVARCHAR(MAX) = N''IDX_MyTable2_MyIndex1'';
-DECLARE @Code NVARCHAR(MAX) = NULL;
-INSERT INTO [DNDBTDbObjects]
+EXEC sp_executesql N'INSERT INTO [DNDBTDbObjects]
 (
     [ID],
     [ParentID],
@@ -638,11 +568,11 @@ INSERT INTO [DNDBTDbObjects]
 )
 VALUES
 (
-    @ID,
-    @ParentID,
+    N''74390b3c-bc39-4860-a42e-12baa400f927'',
+    N''bfb9030c-a8c3-4882-9c42-1c6ad025cf8f'',
     ''Index'',
-    @Name,
-    @Code
+    N''IDX_MyTable2_MyIndex1'',
+    NULL
 );';
 -- QUERY END: InsertDNDBTDbObjectRecordQuery
 
@@ -653,11 +583,7 @@ EXEC sp_executesql N'ALTER TABLE [MyTable1NewName] ADD CONSTRAINT [FK_MyTable1_M
 -- QUERY END: CreateForeignKeyQuery
 
 -- QUERY START: InsertDNDBTDbObjectRecordQuery
-EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''d11b2a53-32db-432f-bb6b-f91788844ba9'';
-DECLARE @ParentID UNIQUEIDENTIFIER = N''299675e6-4faa-4d0f-a36a-224306ba5bcb'';
-DECLARE @Name NVARCHAR(MAX) = N''FK_MyTable1_MyColumn1_MyTable2_MyColumn1'';
-DECLARE @Code NVARCHAR(MAX) = NULL;
-INSERT INTO [DNDBTDbObjects]
+EXEC sp_executesql N'INSERT INTO [DNDBTDbObjects]
 (
     [ID],
     [ParentID],
@@ -667,11 +593,11 @@ INSERT INTO [DNDBTDbObjects]
 )
 VALUES
 (
-    @ID,
-    @ParentID,
+    N''d11b2a53-32db-432f-bb6b-f91788844ba9'',
+    N''299675e6-4faa-4d0f-a36a-224306ba5bcb'',
     ''ForeignKey'',
-    @Name,
-    @Code
+    N''FK_MyTable1_MyColumn1_MyTable2_MyColumn1'',
+    NULL
 );';
 -- QUERY END: InsertDNDBTDbObjectRecordQuery
 
@@ -682,11 +608,7 @@ EXEC sp_executesql N'ALTER TABLE [MyTable2] ADD CONSTRAINT [FK_MyTable2_MyColumn
 -- QUERY END: CreateForeignKeyQuery
 
 -- QUERY START: InsertDNDBTDbObjectRecordQuery
-EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''480f3508-9d51-4190-88aa-45bc20e49119'';
-DECLARE @ParentID UNIQUEIDENTIFIER = N''bfb9030c-a8c3-4882-9c42-1c6ad025cf8f'';
-DECLARE @Name NVARCHAR(MAX) = N''FK_MyTable2_MyColumns34_MyTable3_MyColumns12'';
-DECLARE @Code NVARCHAR(MAX) = NULL;
-INSERT INTO [DNDBTDbObjects]
+EXEC sp_executesql N'INSERT INTO [DNDBTDbObjects]
 (
     [ID],
     [ParentID],
@@ -696,11 +618,11 @@ INSERT INTO [DNDBTDbObjects]
 )
 VALUES
 (
-    @ID,
-    @ParentID,
+    N''480f3508-9d51-4190-88aa-45bc20e49119'',
+    N''bfb9030c-a8c3-4882-9c42-1c6ad025cf8f'',
     ''ForeignKey'',
-    @Name,
-    @Code
+    N''FK_MyTable2_MyColumns34_MyTable3_MyColumns12'',
+    NULL
 );';
 -- QUERY END: InsertDNDBTDbObjectRecordQuery
 
@@ -716,18 +638,7 @@ END';
 -- QUERY END: CreateTriggerQuery
 
 -- QUERY START: InsertDNDBTDbObjectRecordQuery
-EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''ee64ffc3-5536-4624-beaf-bc3a61d06a1a'';
-DECLARE @ParentID UNIQUEIDENTIFIER = N''bfb9030c-a8c3-4882-9c42-1c6ad025cf8f'';
-DECLARE @Name NVARCHAR(MAX) = N''TR_MyTable2_MyTrigger1'';
-DECLARE @Code NVARCHAR(MAX) = N''CREATE TRIGGER [TR_MyTable2_MyTrigger1]
-ON [MyTable2]
-AFTER INSERT
-AS
-BEGIN
-    INSERT INTO [MyTable4]([MyColumn1])
-    SELECT i.[MyColumn1NewName] FROM inserted i;
-END'';
-INSERT INTO [DNDBTDbObjects]
+EXEC sp_executesql N'INSERT INTO [DNDBTDbObjects]
 (
     [ID],
     [ParentID],
@@ -737,11 +648,18 @@ INSERT INTO [DNDBTDbObjects]
 )
 VALUES
 (
-    @ID,
-    @ParentID,
+    N''ee64ffc3-5536-4624-beaf-bc3a61d06a1a'',
+    N''bfb9030c-a8c3-4882-9c42-1c6ad025cf8f'',
     ''Trigger'',
-    @Name,
-    @Code
+    N''TR_MyTable2_MyTrigger1'',
+    N''CREATE TRIGGER [TR_MyTable2_MyTrigger1]
+ON [MyTable2]
+AFTER INSERT
+AS
+BEGIN
+    INSERT INTO [MyTable4]([MyColumn1])
+    SELECT i.[MyColumn1NewName] FROM inserted i;
+END''
 );';
 -- QUERY END: InsertDNDBTDbObjectRecordQuery
 
@@ -758,22 +676,7 @@ END';
 -- QUERY END: GenericQuery
 
 -- QUERY START: InsertDNDBTScriptExecutionRecordQuery
-EXEC sp_executesql N'DECLARE @ID UNIQUEIDENTIFIER = N''8ccaf36e-e587-466e-86f7-45c0061ae521'';
-DECLARE @Type NVARCHAR(MAX) = N''AfterPublishOnce'';
-DECLARE @Name NVARCHAR(MAX) = N''RestoreRecreatedColumnsData'';
-DECLARE @Code NVARCHAR(MAX) = N''IF OBJECT_ID(''''_MyTable2'''', ''''U'''') IS NOT NULL
-BEGIN
-    UPDATE [MyTable2] SET
-        [MyColumn2] = [t].[MyColumn2]
-    FROM [_MyTable2] AS [t]
-    WHERE [MyTable2].[MyColumn1NewName] = [t].[MyColumn1];
-
-    DROP TABLE [_MyTable2];
-END'';
-DECLARE @MinDbVersionToExecute BIGINT = 1;
-DECLARE @MaxDbVersionToExecute BIGINT = 1;
-DECLARE @ExecutedOnDbVersion BIGINT = 1;
-INSERT INTO [DNDBTScriptExecutions]
+EXEC sp_executesql N'INSERT INTO [DNDBTScriptExecutions]
 (
     [ID],
     [Type],
@@ -785,20 +688,27 @@ INSERT INTO [DNDBTScriptExecutions]
 )
 VALUES
 (
-    @ID,
-    @Type,
-    @Name,
-    @Code,
-    @MinDbVersionToExecute,
-    @MaxDbVersionToExecute,
-    @ExecutedOnDbVersion
+    N''8ccaf36e-e587-466e-86f7-45c0061ae521'',
+    N''AfterPublishOnce'',
+    N''RestoreRecreatedColumnsData'',
+    N''IF OBJECT_ID(''''_MyTable2'''', ''''U'''') IS NOT NULL
+BEGIN
+    UPDATE [MyTable2] SET
+        [MyColumn2] = [t].[MyColumn2]
+    FROM [_MyTable2] AS [t]
+    WHERE [MyTable2].[MyColumn1NewName] = [t].[MyColumn1];
+
+    DROP TABLE [_MyTable2];
+END'',
+    1,
+    1,
+    1
 );';
 -- QUERY END: InsertDNDBTScriptExecutionRecordQuery
 
 -- QUERY START: UpdateDNDBTDbAttributesRecordQuery
-EXEC sp_executesql N'DECLARE @Version BIGINT = 2;
-UPDATE [DNDBTDbAttributes] SET
-    [Version] = @Version;';
+EXEC sp_executesql N'UPDATE [DNDBTDbAttributes] SET
+    [Version] = 2;';
 -- QUERY END: UpdateDNDBTDbAttributesRecordQuery
 
     COMMIT TRANSACTION;

@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Data;
-using System.Linq;
-using System.Text.RegularExpressions;
 using DotNetDBTools.Deploy.Core;
 
 namespace DotNetDBTools.Deploy.SQLite;
@@ -27,17 +25,7 @@ BEGIN TRANSACTION;";
 @"COMMIT TRANSACTION;";
     }
 
-    private static string ReplaceParameters(IQuery query)
-    {
-        string pattern = @"(@.+?)([\s|,|;|$])";
-        string result = Regex.Replace(query.Sql, pattern, match =>
-        {
-            return Quote(query.Parameters.Single(x => x.Name == match.Groups[1].Value)) + match.Groups[2].Value;
-        });
-        return result;
-    }
-
-    private static string Quote(QueryParameter queryParameter)
+    protected override string GetQuotedParameterValue(QueryParameter queryParameter)
     {
         if (queryParameter.Value is null)
             return "NULL";

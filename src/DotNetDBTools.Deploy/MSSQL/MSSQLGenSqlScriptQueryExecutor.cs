@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Data;
-using System.Linq;
 using DotNetDBTools.Deploy.Core;
 
 namespace DotNetDBTools.Deploy.MSSQL;
@@ -9,9 +8,8 @@ internal class MSSQLGenSqlScriptQueryExecutor : GenSqlScriptQueryExecutor
 {
     protected override string CreateQueryText(IQuery query)
     {
-        string paremeterDeclarations = GetParameterDeclarations(query);
-        string queryWithParameterDeclarations = $"{paremeterDeclarations}{query.Sql}";
-        string execQueryStatement = $"EXEC sp_executesql N'{queryWithParameterDeclarations.Replace("'", "''")}';";
+        string queryWithParametersReplacedWithValues = ReplaceParameters(query);
+        string execQueryStatement = $"EXEC sp_executesql N'{queryWithParametersReplacedWithValues.Replace("'", "''")}';";
         return execQueryStatement;
     }
 
@@ -38,23 +36,7 @@ BEGIN CATCH;
 END CATCH;";
     }
 
-    private static string GetParameterDeclarations(IQuery query)
-    {
-        return string.Join("", query.Parameters.Select(x => $"DECLARE {x.Name} {GetSqlType(x)} = {Quote(x)};\n"));
-    }
-
-    private static string GetSqlType(QueryParameter queryParameter)
-    {
-        return queryParameter.Type switch
-        {
-            DbType.String => "NVARCHAR(MAX)",
-            DbType.Guid => "UNIQUEIDENTIFIER",
-            DbType.Int64 => "BIGINT",
-            _ => throw new InvalidOperationException($"Invalid query parameter type: '{queryParameter.Type}'")
-        };
-    }
-
-    private static string Quote(QueryParameter queryParameter)
+    protected override string GetQuotedParameterValue(QueryParameter queryParameter)
     {
         if (queryParameter.Value is null)
             return "NULL";
