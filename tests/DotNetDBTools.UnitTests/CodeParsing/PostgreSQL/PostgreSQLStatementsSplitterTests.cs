@@ -9,7 +9,7 @@ namespace DotNetDBTools.UnitTests.CodeParsing.PostgreSQL;
 
 public class PostgreSQLStatementsSplitterTests
 {
-    private const string TestDataDir = "./TestData/PostgreSQL";
+    private const string TestDataDir = "./TestData/PostgreSQL/Parsing";
 
     [Fact]
     public void ParseToStatementsList_GetsCorrectData()

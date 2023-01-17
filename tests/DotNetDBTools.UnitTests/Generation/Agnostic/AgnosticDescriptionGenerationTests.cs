@@ -10,6 +10,8 @@ namespace DotNetDBTools.UnitTests.Generation.Agnostic;
 
 public class AgnosticDescriptionGenerationTests
 {
+    private const string TestDataDir = "./TestData/Agnostic/SampleDbRelated";
+
     [Fact]
     public void GenerateDescription_CreatesCorrectDescription()
     {
@@ -17,7 +19,7 @@ public class AgnosticDescriptionGenerationTests
         Database database = new DefinitionParsingManager().CreateDbModel(dbAssembly);
         GenerationOptions options = new() { DatabaseName = "DotNetDBToolsSampleDBAgnostic" };
         string actualDescriptionCode = new GenerationManager(options).GenerateDescription(database);
-        string expectedDescriptionCode = MiscHelper.ReadFromFile(@"TestData/Agnostic/Expected_Description_V1.cs");
+        string expectedDescriptionCode = MiscHelper.ReadFromFile($"{TestDataDir}/Expected_Description_V1.cs");
         actualDescriptionCode.Should().Be(expectedDescriptionCode);
     }
 }

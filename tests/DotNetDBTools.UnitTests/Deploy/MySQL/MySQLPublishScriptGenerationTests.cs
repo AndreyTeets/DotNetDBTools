@@ -7,5 +7,5 @@ public class MySQLPublishScriptGenerationTests : BasePublishScriptGenerationTest
 {
     protected override string SpecificDbmsSampleDbV1AssemblyName => "DotNetDBTools.SampleDB.MySQL";
     protected override string SpecificDbmsSampleDbV2AssemblyName => "DotNetDBTools.SampleDBv2.MySQL";
-    protected override string ExpectedFilesDir => "./TestData/MySQL";
+    protected override string ExpectedFilesDir => "./TestData/MySQL/SampleDbRelated";
 }

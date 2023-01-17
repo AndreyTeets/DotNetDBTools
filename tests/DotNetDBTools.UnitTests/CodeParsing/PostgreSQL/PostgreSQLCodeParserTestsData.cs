@@ -8,7 +8,7 @@ namespace DotNetDBTools.UnitTests.CodeParsing.PostgreSQL;
 
 public class PostgreSQLCodeParserTestsData : BaseCodeParserTestsData
 {
-    public override string TestDataDir => "./TestData/PostgreSQL";
+    public override string TestDataDir => "./TestData/PostgreSQL/Parsing";
     public override TableInfo ExpectedTable => GetExpectedTable();
     public override TableInfo ExpectedTableWithPkColumn => GetExpectedTableWithPkColumn();
     public override ViewInfo ExpectedView => GetExpectedView();

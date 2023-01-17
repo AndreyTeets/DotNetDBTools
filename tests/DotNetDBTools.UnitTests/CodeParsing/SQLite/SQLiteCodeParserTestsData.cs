@@ -8,7 +8,7 @@ namespace DotNetDBTools.UnitTests.CodeParsing.SQLite;
 
 public class SQLiteCodeParserTestsData : BaseCodeParserTestsData
 {
-    public override string TestDataDir => "./TestData/SQLite";
+    public override string TestDataDir => "./TestData/SQLite/Parsing";
     public override TableInfo ExpectedTable => GetExpectedTable();
     public override TableInfo ExpectedTableWithPkColumn => GetExpectedTableWithPkColumn();
     public override ViewInfo ExpectedView => GetExpectedView();

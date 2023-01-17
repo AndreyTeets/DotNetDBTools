@@ -9,13 +9,14 @@ namespace DotNetDBTools.UnitTests.DefinitionParsing.SQLite;
 
 public class SQLiteBuildSqlDefDbModelTests : BaseBuildSqlDefDbModelTests<SQLiteDatabase>
 {
+    private const string TestDataDir = "./TestData/SQLite/Parsing";
     protected override string SpecificDbmsSampleDbV2AssemblyName => "DotNetDBTools.SampleDBv2.SQLite";
     protected override string SpecificDbmsSampleDbV2SqlDefAssemblyName => "DotNetDBTools.SampleDBv2SqlDef.SQLite";
 
     protected override List<string> ListOfSqlStatementsForDbModelCreation => new()
     {
-        MiscHelper.ReadFromFile("./TestData/SQLite/CreateTable.sql"),
-        MiscHelper.ReadFromFile("./TestData/SQLite/CreateView.sql"),
+        MiscHelper.ReadFromFile($"{TestDataDir}/CreateTable.sql"),
+        MiscHelper.ReadFromFile($"{TestDataDir}/CreateView.sql"),
     };
     protected override DatabaseKind DatabaseKindForDbModelCreation => DatabaseKind.SQLite;
     protected override SQLiteDatabase ExpectedDbModelFromListOfSqlStatements => new()
@@ -146,7 +147,7 @@ public class SQLiteBuildSqlDefDbModelTests : BaseBuildSqlDefDbModelTests<SQLiteD
                 Name = "MyView1",
                 CreateStatement = new CodePiece()
                 {
-                    Code = MiscHelper.ReadFromFileWithoutIdDeclarations("./TestData/SQLite/CreateView.sql"),
+                    Code = MiscHelper.ReadFromFileWithoutIdDeclarations($"{TestDataDir}/CreateView.sql"),
                 },
             },
         },

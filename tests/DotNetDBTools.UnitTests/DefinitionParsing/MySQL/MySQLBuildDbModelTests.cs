@@ -5,6 +5,6 @@ namespace DotNetDBTools.UnitTests.DefinitionParsing.MySQL;
 
 public class MySQLBuildDbModelTests : BaseBuildDbModelTests<MySQLDatabase>
 {
-    protected override string ExpectedFilesDir => "./TestData/MySQL";
+    protected override string ExpectedFilesDir => "./TestData/MySQL/SampleDbRelated";
     protected override string SpecificDbmsSampleDbV1AssemblyName => "DotNetDBTools.SampleDB.MySQL";
 }

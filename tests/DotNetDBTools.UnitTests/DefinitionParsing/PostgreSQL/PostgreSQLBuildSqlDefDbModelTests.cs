@@ -9,13 +9,14 @@ namespace DotNetDBTools.UnitTests.DefinitionParsing.PostgreSQL;
 
 public class PostgreSQLBuildSqlDefDbModelTests : BaseBuildSqlDefDbModelTests<PostgreSQLDatabase>
 {
+    private const string TestDataDir = "./TestData/PostgreSQL/Parsing";
     protected override string SpecificDbmsSampleDbV2AssemblyName => "DotNetDBTools.SampleDBv2.PostgreSQL";
     protected override string SpecificDbmsSampleDbV2SqlDefAssemblyName => "DotNetDBTools.SampleDBv2SqlDef.PostgreSQL";
 
     protected override List<string> ListOfSqlStatementsForDbModelCreation => new()
     {
-        MiscHelper.ReadFromFile("./TestData/PostgreSQL/CreateTable.sql"),
-        MiscHelper.ReadFromFile("./TestData/PostgreSQL/CreateView.sql"),
+        MiscHelper.ReadFromFile($"{TestDataDir}/CreateTable.sql"),
+        MiscHelper.ReadFromFile($"{TestDataDir}/CreateView.sql"),
     };
     protected override DatabaseKind DatabaseKindForDbModelCreation => DatabaseKind.PostgreSQL;
     protected override PostgreSQLDatabase ExpectedDbModelFromListOfSqlStatements => new()
@@ -147,7 +148,7 @@ public class PostgreSQLBuildSqlDefDbModelTests : BaseBuildSqlDefDbModelTests<Pos
                 Name = "MyView1",
                 CreateStatement = new CodePiece()
                 {
-                    Code = MiscHelper.ReadFromFileWithoutIdDeclarations("./TestData/PostgreSQL/CreateView.sql"),
+                    Code = MiscHelper.ReadFromFileWithoutIdDeclarations($"{TestDataDir}/CreateView.sql"),
                 },
             },
         },
