@@ -112,12 +112,12 @@ Also provides declarative means for defining database structure with different s
 # State of development
 + MSSQL - definition (as c#) of only basic "standard relational db entities" and it's deployment+generation seem to work, database analysis using just a few example checks.
 + MySQL - definition (as c#) of only basic "standard relational db entities" and it's deployment+generation seem to work, database analysis using just a few example checks.
-+ PostgreSQL - definition (as c# and as sql) of most "standard relational db entities" and it's deployment+generation seem to work, database analysis using just a few example checks.
-+ SQLite - definition (as c# and as sql) of all "standard sqlite entities" and it's deployment+generation seem to work, database analysis using just a few example checks.
++ PostgreSQL - definition (as c# and as sql) of almost all "postgres entities" and it's deployment+generation seem to work, database analysis using just a few example checks.
++ SQLite - definition (as c# and as sql) of all "sqlite entities" and it's deployment+generation seem to work, database analysis using just a few example checks.
 + Agnostic definition for "standard relational db entities" and it's deployment to all the above DBMS according with corresponding development state of the specific DBMS above.
 
 # How to use
-1. Create a netstandard2.0 project for a database decription.
+1. Create a netstandard2.0 project for a database description.
 2. Add reference to `DotNetDBTools.Definition` nuget package.
 3. Optionally add references to additional analyzer-packages for database analysis and additional description classes source-generation.
    * `DotNetDBTools.DefinitionAnalyzer`
@@ -202,12 +202,12 @@ public interface IDeployManager
 ```
 
 ## Example code to publish database
-Note: database must exist and has to be registered with DotNetDBTools using `deployManager.RegisterAsDNDBT(connection)` method before using publish methods.
+Note: database must exist and has to be registered (except for generation NoDNDBTInfo publish scripts) with DotNetDBTools using `deployManager.RegisterAsDNDBT(connection)` method before using publish methods.
 
 Create an instance of IDeployManager for the appropriate DBMS using non-default options if needed and a IDbConnection instance to pass to deployManager methods
 ```
-IDeployManager deployManager = new MSSQLDeployManager(new DeployOptions() { AllowDataLoss = true });
-using IDbConnection connection = new SqlConnection(SomeMSSQLConnectionString);
+IDeployManager deployManager = new PostgreSQLDeployManager(new DeployOptions() { AllowDataLoss = true });
+using IDbConnection connection = new SqlConnection(SomePostgreSQLConnectionString);
 ```
 And then publish database like this
 ```
@@ -227,6 +227,67 @@ Or create publish sql-script and later execute it like this
 string scriptText = deployManager.GeneratePublishScript("./MyDatabase.dll", connection);
 File.WriteAllText("./publishScript.sql", scriptText);
 connection.Execute(File.ReadAllText("./publishScript.sql")); // Dapper call
+```
+Or do something more complex like this
+```
+using Dapper;
+using DotNetDBTools.Analysis;
+using DotNetDBTools.DefinitionParsing;
+using DotNetDBTools.Deploy;
+using DotNetDBTools.Generation;
+using DotNetDBTools.Models.Core;
+using Npgsql;
+
+const string ConnectionString = @"Host=127.0.0.1;Port=5007;Database=my_db;Username=postgres;Password=Strong(!)Passw0rd";
+const string PathToGeneratedProject = "./generated_project";
+const string PathToUpdateScriptFile = "./update.sql";
+
+using NpgsqlConnection connection = new(ConnectionString);
+
+// Load db model from currently existing non-dndbt-registered database.
+PostgreSQLDeployManager deployManager = new();
+Database dbNow = deployManager.CreateDatabaseModelUsingDBMSSysInfo(connection);
+
+// Generate definition for it in sql-definition format.
+GenerationManager generator = new(new GenerationOptions() { OutputDefinitionKind = OutputDefinitionKind.Sql });
+generator.GenerateDefinition(dbNow, PathToGeneratedProject);
+// Save created sql files to git repo, modify something.
+
+// Load modified db model from sql files.
+List<string> statements = new();
+foreach (string filePath in Directory.GetFiles(PathToGeneratedProject, "*.sql", SearchOption.AllDirectories))
+{
+    string createDbObjectStatementWithIdDeclarations = File.ReadAllText(filePath);
+    statements.Add(createDbObjectStatementWithIdDeclarations);
+}
+DefinitionParsingManager definitionParser = new();
+Database dbToUpdateTo = definitionParser.CreateDbModel(statements, dbVersion: 2, DatabaseKind.PostgreSQL);
+
+// Write out all removed tables/columns.
+AnalysisManager analyzer = new();
+DatabaseDiff dbDiff = analyzer.CreateDatabaseDiff(dbToUpdateTo, dbNow);
+foreach (Table table in dbDiff.RemovedTables)
+{
+    string tableSqlDefinition = GenerationManager.GenerateSqlCreateStatement(table, includeIdDeclarations: true);
+    Console.WriteLine($"Table was removed:\n{tableSqlDefinition}");
+}
+foreach (TableDiff tDiff in dbDiff.ChangedTables)
+{
+    foreach (Column c in tDiff.ColumnsToDrop)
+    {
+        string changeInfo = $"Table {tDiff.OldTableName} (TableID={tDiff.TableID}) column {c.Name} was removed.";
+        Console.WriteLine(changeInfo);
+    }
+}
+// Manually inspect/validate it.
+
+// Generate an update script without any DNDBT info for updating to new state.
+string updateScript = deployManager.GenerateNoDNDBTInfoPublishScript(dbToUpdateTo, dbNow);
+File.AppendAllText(PathToUpdateScriptFile, updateScript);
+// Manually inspect/validate it.
+
+// Execute update script later.
+connection.Execute(File.ReadAllText(PathToUpdateScriptFile));
 ```
 
 # Additional information
@@ -262,6 +323,7 @@ public interface DotNetDBTools.Analysis.IAnalysisManager
 {
     public bool DbIsValid(Database database, out List<DbError> dbErrors);
     public bool DatabasesAreEquivalentExcludingDNDBTInfo(Database database1, Database database2, out string diffLog);
+    public bool DbObjectsAreEquivalentExcludingDNDBTInfo(DbObject dbObject1, DbObject dbObject2, out string diffLog)
 
     public DatabaseDiff CreateDatabaseDiff(Database newDatabase, Database oldDatabase);
     public bool DiffIsEmpty(DatabaseDiff dbDiff);
@@ -282,14 +344,19 @@ public static class DotNetDBTools.CodeParsing.PostgreSQLStatementsSplitter
 
 public class DotNetDBTools.CodeParsing.PostgreSQLCodeParser
 {
-    public List<Dependency> GetFunctionDependencies(string createFunctionStatement);
+    public List<Dependency> GetFunctionDependencies(string createFunctionStatement, out string language);
     public List<Dependency> GetViewDependencies(string createViewStatement);
+    public List<Dependency> GetExpressionDependencies(string expressionStatement)
 }
 
-public static class DotNetDBTools.Analysis.Extensions.OrderingExtensions
+public static class DotNetDBTools.Analysis.Extensions.DbObjectsExtensions
 {
-    public static IEnumerable<DbObject> OrderByDependenciesLast(this IEnumerable<DbObject> dbObjects);
-    public static IEnumerable<DbObject> OrderByDependenciesFirst(this IEnumerable<DbObject> dbObjects);
+    public static IEnumerable<DbObject> GetTransitiveDependencies(
+        this DbObject dbObject, Func<DbObject, IEnumerable<DbObject>> getDependenciesFunc)
+    public static IEnumerable<DbObject> OrderByDependenciesLast(
+        this IEnumerable<DbObject> dbObjects, Func<DbObject, IEnumerable<DbObject>> getDependenciesFunc);
+    public static IEnumerable<DbObject> OrderByDependenciesFirst(
+        this IEnumerable<DbObject> dbObjects, Func<DbObject, IEnumerable<DbObject>> getDependenciesFunc);
 }
 
 public static class DotNetDBTools.Models.ExtensionMethods
