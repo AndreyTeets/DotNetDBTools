@@ -124,6 +124,14 @@ EXECUTE 'CREATE TYPE "tp_9" AS
 );';
 -- QUERY END: CreateCompositeTypeQuery
 
+-- QUERY START: CreateEnumTypeQuery
+EXECUTE 'CREATE TYPE "tp_u_1" AS ENUM
+(
+    ''l1'',
+    ''l2''
+);';
+-- QUERY END: CreateEnumTypeQuery
+
 -- QUERY START: CreateDomainTypeQuery
 EXECUTE 'CREATE DOMAIN "d_a_1" AS
     INT NULL DEFAULT (1000 + nextval(''s_1''));';
@@ -200,6 +208,21 @@ EXECUTE 'CREATE DOMAIN "d_b_7" AS
 -- QUERY END: CreateDomainTypeQuery
 
 -- QUERY START: CreateDomainTypeQuery
+EXECUTE 'CREATE DOMAIN "d_u_1" AS
+    "tp_u_1" NULL;';
+-- QUERY END: CreateDomainTypeQuery
+
+-- QUERY START: CreateDomainTypeQuery
+EXECUTE 'CREATE DOMAIN "d_u_2" AS
+    INT NULL;';
+-- QUERY END: CreateDomainTypeQuery
+
+-- QUERY START: CreateDomainTypeQuery
+EXECUTE 'CREATE DOMAIN "d_u_3" AS
+    INT NULL;';
+-- QUERY END: CreateDomainTypeQuery
+
+-- QUERY START: CreateDomainTypeQuery
 EXECUTE 'CREATE DOMAIN "tp_1" AS
     "tp_6" NULL;';
 -- QUERY END: CreateDomainTypeQuery
@@ -244,6 +267,49 @@ EXECUTE 'CREATE TYPE "tp_8" AS ENUM
     ''l2''
 );';
 -- QUERY END: CreateEnumTypeQuery
+
+-- QUERY START: CreateCompositeTypeQuery
+EXECUTE 'CREATE TYPE "tp_u_2" AS
+(
+    "a1" INT
+);';
+-- QUERY END: CreateCompositeTypeQuery
+
+-- QUERY START: CreateCompositeTypeQuery
+EXECUTE 'CREATE TYPE "tp_u_3" AS
+(
+    "a1" INT
+);';
+-- QUERY END: CreateCompositeTypeQuery
+
+-- QUERY START: CreateEnumTypeQuery
+EXECUTE 'CREATE TYPE "tp_u_4" AS ENUM
+(
+    ''l1'',
+    ''l2''
+);';
+-- QUERY END: CreateEnumTypeQuery
+
+-- QUERY START: CreateCompositeTypeQuery
+EXECUTE 'CREATE TYPE "tp_u_5" AS
+(
+    "a1" INT
+);';
+-- QUERY END: CreateCompositeTypeQuery
+
+-- QUERY START: CreateCompositeTypeQuery
+EXECUTE 'CREATE TYPE "tp_u_6" AS
+(
+    "a1" INT
+);';
+-- QUERY END: CreateCompositeTypeQuery
+
+-- QUERY START: CreateCompositeTypeQuery
+EXECUTE 'CREATE TYPE "tp_u_7" AS
+(
+    "a1" INT
+);';
+-- QUERY END: CreateCompositeTypeQuery
 
 -- QUERY START: CreateTableQuery
 EXECUTE 'CREATE TABLE "t_1"
@@ -400,6 +466,29 @@ EXECUTE 'CREATE TABLE "t_c_5"
 );';
 -- QUERY END: CreateTableQuery
 
+-- QUERY START: CreateTableQuery
+EXECUTE 'CREATE TABLE "t_u_4"
+(
+    "c1" "tp_u_4" NULL
+);';
+-- QUERY END: CreateTableQuery
+
+-- QUERY START: CreateTableQuery
+EXECUTE 'CREATE TABLE "t_u_5"
+(
+    "c1" INT NULL DEFAULT (''(5)''::tp_u_5).a1::int,
+    "c2" INT NULL
+);';
+-- QUERY END: CreateTableQuery
+
+-- QUERY START: CreateTableQuery
+EXECUTE 'CREATE TABLE "t_u_6"
+(
+    "c1" INT NULL,
+    CONSTRAINT "ck_t_u_6" CHECK (c1 != (''(5)''::tp_u_6).a1::int)
+);';
+-- QUERY END: CreateTableQuery
+
 -- QUERY START: CreateFunctionQuery
 EXECUTE 'create function f_a_1_s() returns int language sql as $$select 5::tp_3::int$$';
 -- QUERY END: CreateFunctionQuery
@@ -424,6 +513,10 @@ EXECUTE 'create view v_a_7 as select (''(5)''::tp_9).a1::int';
 EXECUTE 'create view v_a_8 as select c1 from t_1';
 -- QUERY END: CreateViewQuery
 
+-- QUERY START: CreateViewQuery
+EXECUTE 'create view v_u_7 as select (''(5)''::tp_u_7).a1::int';
+-- QUERY END: CreateViewQuery
+
 -- QUERY START: AlterDomainTypeQuery
 EXECUTE 'ALTER DOMAIN "d_a_6" SET DEFAULT 5::tp_3::int;';
 -- QUERY END: AlterDomainTypeQuery
@@ -433,11 +526,19 @@ EXECUTE 'ALTER DOMAIN "d_a_7" SET DEFAULT (''(5)''::tp_9).a1::int;';
 -- QUERY END: AlterDomainTypeQuery
 
 -- QUERY START: AlterDomainTypeQuery
+EXECUTE 'ALTER DOMAIN "d_u_2" SET DEFAULT (''(5)''::tp_u_2).a1::int;';
+-- QUERY END: AlterDomainTypeQuery
+
+-- QUERY START: AlterDomainTypeQuery
 EXECUTE 'ALTER DOMAIN "d_b_6" ADD CONSTRAINT "ck_d_b_6" CHECK (value != 5::tp_3::int);';
 -- QUERY END: AlterDomainTypeQuery
 
 -- QUERY START: AlterDomainTypeQuery
 EXECUTE 'ALTER DOMAIN "d_b_7" ADD CONSTRAINT "ck_d_b_7" CHECK (value != (''(5)''::tp_9).a1::int);';
+-- QUERY END: AlterDomainTypeQuery
+
+-- QUERY START: AlterDomainTypeQuery
+EXECUTE 'ALTER DOMAIN "d_u_3" ADD CONSTRAINT "ck_d_u_2" CHECK (value != (''(5)''::tp_u_3).a1::int);';
 -- QUERY END: AlterDomainTypeQuery
 
 -- QUERY START: CreateIndexQuery

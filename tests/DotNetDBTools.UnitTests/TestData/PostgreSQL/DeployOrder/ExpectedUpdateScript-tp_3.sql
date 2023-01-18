@@ -6,6 +6,10 @@ EXECUTE 'ALTER DOMAIN "tp_3" DROP CONSTRAINT "ck_tp_3";';
 -- QUERY END: AlterDomainTypeQuery
 
 -- QUERY START: AlterDomainTypeQuery
+EXECUTE 'ALTER DOMAIN "tp_3" DROP DEFAULT;';
+-- QUERY END: AlterDomainTypeQuery
+
+-- QUERY START: AlterDomainTypeQuery
 EXECUTE 'ALTER DOMAIN "tp_3" RENAME TO "tp_3x";';
 -- QUERY END: AlterDomainTypeQuery
 

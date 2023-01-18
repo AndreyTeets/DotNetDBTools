@@ -61,6 +61,16 @@ public class PostgreSQLDeployOrderTests
     [InlineData("v_1", "All required objects depending on view are altered/recreated in correct order when it is changed")]
     [InlineData("i_a_1", "Index gets recreated when referenced in expression function is changed")]
     [InlineData("tr_a_1", "Trigger gets recreated when referenced in definition function is changed")]
+    [InlineData("d_u_1", "Domain gets renamed and does not get recreated when it's name is changed")]
+    [InlineData("d_u_1-2", "Domain gets recreated when it's name is changed and at the same time underlying type is recreated")]
+    [InlineData("d_u_2", "Domain default gets recreated when it's name is changed and at the same time default dependency is changed")]
+    [InlineData("d_u_3", "Domain CK gets recreated when it's name is changed and at the same time CK dependency is changed")]
+    [InlineData("t_u_4", "Table column gets renamed and does not get redefined when it's name is changed")]
+    [InlineData("t_u_4-2", "Table column gets redefined when it's name is changed and at the same time it's data type is recreated")]
+    [InlineData("t_u_5", "Table column default gets recreated when it's name is changed and at the same time default dependency is changed")]
+    [InlineData("t_u_6", "Table CK gets recreated when it's name is changed and at the same time CK dependency is changed")]
+    [InlineData("v_u_7", "View gets recreated when it's name is changed")]
+    [InlineData("v_u_7-2", "View gets recreated when it's name is changed and at the same time dependency is changed")]
     public void UpdateDatabase_GeneratesOnlyRequiredDDLStatements_AndInCorrectOrder(string caseName, string caseDescription)
     {
         switch (caseName)
@@ -144,6 +154,93 @@ public class PostgreSQLDeployOrderTests
                 {
                     PostgreSQLFunction x = db.Functions.Single(x => x.Name == "f_5_p");
                     x.CreateStatement.Code = x.CreateStatement.Code.Replace("f_2_s(8)", "118");
+                }, caseName, caseDescription);
+                break;
+            case "d_u_1":
+                TestCase(db =>
+                {
+                    PostgreSQLDomainType x = db.DomainTypes.Single(x => x.Name == "d_u_1");
+                    x.Name = "d_u_1x";
+                }, caseName, caseDescription);
+                break;
+            case "d_u_1-2":
+                TestCase(db =>
+                {
+                    PostgreSQLDomainType x = db.DomainTypes.Single(x => x.Name == "d_u_1");
+                    x.Name = "d_u_1x";
+                    PostgreSQLEnumType y = db.EnumTypes.Single(x => x.Name == "tp_u_1");
+                    y.AllowedValues = new() { "l1x" };
+                }, caseName, caseDescription);
+                break;
+            case "d_u_2":
+                TestCase(db =>
+                {
+                    PostgreSQLDomainType x = db.DomainTypes.Single(x => x.Name == "d_u_2");
+                    x.Name = "d_u_2x";
+                    PostgreSQLCompositeType y = db.CompositeTypes.Single(x => x.Name == "tp_u_2");
+                    y.Attributes.Single().DataType.Name = "BIGINT";
+                }, caseName, caseDescription);
+                break;
+            case "d_u_3":
+                TestCase(db =>
+                {
+                    PostgreSQLDomainType x = db.DomainTypes.Single(x => x.Name == "d_u_3");
+                    x.Name = "d_u_3x";
+                    PostgreSQLCompositeType y = db.CompositeTypes.Single(x => x.Name == "tp_u_3");
+                    y.Attributes.Single().DataType.Name = "BIGINT";
+                }, caseName, caseDescription);
+                break;
+            case "t_u_4":
+                TestCase(db =>
+                {
+                    Column x = db.Tables.Single(x => x.Name == "t_u_4").Columns.Single(x => x.Name == "c1");
+                    x.Name = "c1x";
+                }, caseName, caseDescription);
+                break;
+            case "t_u_4-2":
+                TestCase(db =>
+                {
+                    Column x = db.Tables.Single(x => x.Name == "t_u_4").Columns.Single(x => x.Name == "c1");
+                    x.Name = "c1x";
+                    PostgreSQLEnumType y = db.EnumTypes.Single(x => x.Name == "tp_u_4");
+                    y.AllowedValues = new() { "l1x" };
+                }, caseName, caseDescription);
+                break;
+            case "t_u_5":
+                TestCase(db =>
+                {
+                    Column x = db.Tables.Single(x => x.Name == "t_u_5").Columns.Single(x => x.Name == "c1");
+                    x.Name = "c1x";
+                    x.Name = "c1x";
+                    PostgreSQLCompositeType y = db.CompositeTypes.Single(x => x.Name == "tp_u_5");
+                    y.Attributes.Single().DataType.Name = "BIGINT";
+                }, caseName, caseDescription);
+                break;
+            case "t_u_6":
+                TestCase(db =>
+                {
+                    Table x = db.Tables.Single(x => x.Name == "t_u_6");
+                    x.Name = "t_u_6x";
+                    PostgreSQLCompositeType y = db.CompositeTypes.Single(x => x.Name == "tp_u_6");
+                    y.Attributes.Single().DataType.Name = "BIGINT";
+                }, caseName, caseDescription);
+                break;
+            case "v_u_7":
+                TestCase(db =>
+                {
+                    View x = db.Views.Single(x => x.Name == "v_u_7");
+                    x.Name = "v_u_7x";
+                    x.CreateStatement.Code = x.CreateStatement.Code.Replace("v_u_7", "v_u_7x");
+                }, caseName, caseDescription);
+                break;
+            case "v_u_7-2":
+                TestCase(db =>
+                {
+                    View x = db.Views.Single(x => x.Name == "v_u_7");
+                    x.Name = "v_u_7x";
+                    x.CreateStatement.Code = x.CreateStatement.Code.Replace("v_u_7", "v_u_7x");
+                    PostgreSQLCompositeType y = db.CompositeTypes.Single(x => x.Name == "tp_u_7");
+                    y.Attributes.Single().DataType.Name = "BIGINT";
                 }, caseName, caseDescription);
                 break;
             default:

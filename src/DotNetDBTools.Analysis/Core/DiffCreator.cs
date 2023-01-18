@@ -94,8 +94,10 @@ internal abstract class DiffCreator
                     NewColumn = newColumn,
                     OldColumn = oldColumn,
                 };
+
                 if (!AreEqual(columnDiff.NewColumn.DataType, columnDiff.OldColumn.DataType))
                     columnDiff.DataTypeToSet = columnDiff.NewColumn.DataType;
+
                 if (!AreEqual(columnDiff.NewColumn.Default, columnDiff.OldColumn.Default))
                 {
                     if (columnDiff.NewColumn.Default.Code != null)
@@ -103,6 +105,7 @@ internal abstract class DiffCreator
                     if (columnDiff.OldColumn.Default.Code != null)
                         columnDiff.DefaultToDrop = columnDiff.OldColumn.Default;
                 }
+
                 changedColumns.Add(columnDiff);
             });
 

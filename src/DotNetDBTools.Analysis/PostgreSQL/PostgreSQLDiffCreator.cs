@@ -67,12 +67,12 @@ internal class PostgreSQLDiffCreator : DiffCreator
             if (newItem is Column column)
                 _objectsThatRequireRedefinition.Add(column.Parent.ID);
         }
-        Mark_Types_Columns_ProgrammableObjects_ForRedefinitionIfDepsChanged(newItem);
+        MarkObjectForRedefinitionIfDepsChanged(newItem);
     }
 
     protected override void OnUnchangedItemProcessed<TItem>(TItem item)
     {
-        Mark_Types_Columns_ProgrammableObjects_ForRedefinitionIfDepsChanged(item);
+        MarkObjectForRedefinitionIfDepsChanged(item);
     }
 
     private void FillDomainTypesThatHaveTableColumnTransitivelyDependingOnItThroughComplexType(Database database)
@@ -157,7 +157,9 @@ internal class PostgreSQLDiffCreator : DiffCreator
             ref objectsToDrop,
             (newObject, oldObject) =>
             {
-                if (newObject is PostgreSQLDomainType && CanBeAlteredWithoutRedefinition(newObject, oldObject))
+                if (newObject is PostgreSQLDomainType
+                    && CanBeAlteredWithoutRedefinition(newObject, oldObject)
+                    && !DependencyRequiresRedefinition(newObject))
                 {
                     PostgreSQLDomainTypeDiff domainTypeDiff = CreateDomainTypeDiff(
                         (PostgreSQLDomainType)newObject, (PostgreSQLDomainType)oldObject);
@@ -200,7 +202,7 @@ internal class PostgreSQLDiffCreator : DiffCreator
                 out List<CheckConstraint> checkConstraintsToCreate,
                 out List<CheckConstraint> checkConstraintsToDrop);
 
-            bool defaultChanged = newType.Default.Code != oldType.Default.Code;
+            bool defaultChanged = !AreEqual(newType.Default, oldType.Default);
             return new PostgreSQLDomainTypeDiff()
             {
                 TypeID = newType.ID,
@@ -208,7 +210,7 @@ internal class PostgreSQLDiffCreator : DiffCreator
                 OldTypeName = oldType.Name,
                 NotNullToSet = newType.NotNull != oldType.NotNull ? newType.NotNull : null,
                 DefaultToSet = defaultChanged && newType.Default.Code != null ? newType.Default : null,
-                DefaultToDrop = defaultChanged && newType.Default.Code == null ? oldType.Default : null,
+                DefaultToDrop = defaultChanged && oldType.Default.Code != null ? oldType.Default : null,
                 CheckConstraintsToCreate = checkConstraintsToCreate,
                 CheckConstraintsToDrop = checkConstraintsToDrop,
             };
@@ -265,7 +267,7 @@ internal class PostgreSQLDiffCreator : DiffCreator
         return false;
     }
 
-    private void Mark_Types_Columns_ProgrammableObjects_ForRedefinitionIfDepsChanged(DbObject dbObject)
+    private void MarkObjectForRedefinitionIfDepsChanged(DbObject dbObject)
     {
         if (dbObject is PostgreSQLTable table)
         {
@@ -283,21 +285,6 @@ internal class PostgreSQLDiffCreator : DiffCreator
             if (dbObject is Column column)
                 _objectsThatRequireRedefinition.Add(column.Parent.ID);
         }
-
-        bool DependencyRequiresRedefinition(DbObject dbObject)
-        {
-            return dbObject switch
-            {
-                PostgreSQLCompositeType x => x.Attributes.Any(a => AnyRequireRedefinition(a.DataType.DependsOn)),
-                PostgreSQLDomainType x => AnyRequireRedefinition(x.UnderlyingType.DependsOn),
-                PostgreSQLRangeType x => AnyRequireRedefinition(x.Subtype.DependsOn),
-                PostgreSQLColumn x => AnyRequireRedefinition(x.DataType.DependsOn),
-                PostgreSQLView x => AnyRequireRedefinition(x.CreateStatement.DependsOn),
-                PostgreSQLFunction x => AnyRequireRedefinition(x.CreateStatement.DependsOn),
-                PostgreSQLProcedure x => AnyRequireRedefinition(x.CreateStatement.DependsOn),
-                _ => false,
-            };
-        }
     }
 
     private void Mark_Defaults_CKs_Indexes_Triggers_ForRedefinitionIfDepsChanged(PostgreSQLDatabaseDiff dbDiff)
@@ -305,14 +292,14 @@ internal class PostgreSQLDiffCreator : DiffCreator
         PostgreSQLDatabase newDb = (PostgreSQLDatabase)dbDiff.NewDatabase;
         foreach (PostgreSQLDomainType type in newDb.DomainTypes)
         {
-            if (DependencyRequiresRedefinition(type))
+            if (DependencyRequiresDefaultRedefinition(type))
                 _objectsThatRequireDefaultRedefinition.Add(type.ID);
             foreach (CheckConstraint ck in type.CheckConstraints.Where(DependencyRequiresRedefinition))
                 _objectsThatRequireRedefinition.Add(ck.ID);
         }
         foreach (Table table in newDb.Tables)
         {
-            foreach (Column column in table.Columns.Where(DependencyRequiresRedefinition))
+            foreach (Column column in table.Columns.Where(DependencyRequiresDefaultRedefinition))
                 _objectsThatRequireDefaultRedefinition.Add(column.ID);
             foreach (CheckConstraint ck in table.CheckConstraints.Where(DependencyRequiresRedefinition))
                 _objectsThatRequireRedefinition.Add(ck.ID);
@@ -320,19 +307,6 @@ internal class PostgreSQLDiffCreator : DiffCreator
                 _objectsThatRequireRedefinition.Add(index.ID);
             foreach (Trigger trigger in table.Triggers.Where(DependencyRequiresRedefinition))
                 _objectsThatRequireRedefinition.Add(trigger.ID);
-        }
-
-        bool DependencyRequiresRedefinition(DbObject dbObject)
-        {
-            return dbObject switch
-            {
-                PostgreSQLDomainType x => AnyRequireRedefinition(x.Default.DependsOn),
-                PostgreSQLColumn x => AnyRequireRedefinition(x.Default.DependsOn),
-                CheckConstraint x => AnyRequireRedefinition(x.Expression.DependsOn),
-                PostgreSQLIndex x => x.Expression != null && AnyRequireRedefinition(x.Expression.DependsOn),
-                PostgreSQLTrigger x => AnyRequireRedefinition(x.CreateStatement.DependsOn),
-                _ => false,
-            };
         }
     }
 
@@ -356,14 +330,15 @@ internal class PostgreSQLDiffCreator : DiffCreator
 
             Dictionary<Guid, PostgreSQLDomainTypeDiff> typeIdToTypeDiffMap = dbDiff.DomainTypesToAlter
                 .ToDictionary(x => x.TypeID, x => x);
-            foreach (PostgreSQLDomainType type in newDb.DomainTypes.Where(IsUnchanged))
+            foreach (PostgreSQLDomainType type in newDb.DomainTypes.Where(IsNotAdded))
             {
-                if (_objectsThatRequireRedefinition.Contains(type.ID))
+                // Those that changed and require redefinition are already added when change processed
+                if (_objectsThatRequireRedefinition.Contains(type.ID) && IsUnchanged(type))
                 {
                     dbDiff.DomainTypesToCreate.Add(type);
                     dbDiff.DomainTypesToDrop.Add(type);
                 }
-                else if (_objectsThatRequireDefaultRedefinition.Contains(type.ID) && type.Default.Code != null
+                else if (RequiresDefaultRedifinition(type)
                     || AnyUnchangedCheckConstraintRequiresRedefinition(type))
                 {
                     PostgreSQLDomainTypeDiff typeDiff = typeIdToTypeDiffMap.ContainsKey(type.ID)
@@ -372,8 +347,8 @@ internal class PostgreSQLDiffCreator : DiffCreator
                     if (!typeIdToTypeDiffMap.ContainsKey(type.ID))
                         dbDiff.DomainTypesToAlter.Add(typeDiff);
 
-                    if (_objectsThatRequireDefaultRedefinition.Contains(type.ID)
-                        && type.Default.Code != null)
+                    bool defaultChanged = typeDiff.DefaultToSet != null || typeDiff.DefaultToDrop != null;
+                    if (RequiresDefaultRedifinition(type) && !defaultChanged)
                     {
                         typeDiff.DefaultToSet = type.Default;
                         typeDiff.DefaultToDrop = type.Default;
@@ -399,10 +374,16 @@ internal class PostgreSQLDiffCreator : DiffCreator
                 }
             }
 
+            bool RequiresDefaultRedifinition(PostgreSQLDomainType type)
+            {
+                return _objectsThatRequireDefaultRedefinition.Contains(type.ID)
+                    && type.Default.Code != null;
+            }
+
             bool AnyUnchangedCheckConstraintRequiresRedefinition(PostgreSQLDomainType type)
             {
-                return type.CheckConstraints.Any(x => IsUnchanged(x) &&
-                    _objectsThatRequireRedefinition.Contains(x.ID));
+                return type.CheckConstraints.Any(x => IsUnchanged(x)
+                    && _objectsThatRequireRedefinition.Contains(x.ID));
             }
         }
 
@@ -412,7 +393,7 @@ internal class PostgreSQLDiffCreator : DiffCreator
                 .ToDictionary(x => x.NewTable.ID, x => (PostgreSQLTableDiff)x);
             foreach (Table table in newDb.Tables.Where(IsNotAdded))
             {
-                if (AnyUnchangedColumnRequiresDataTypeOrDefaultRedefinition(table)
+                if (table.Columns.Any(RequiresDataTypeOrDefaultRedifinition)
                     || AnyUnchangedCheckConstraintRequiresRedefinition(table))
                 {
                     PostgreSQLTableDiff tableDiff = tableIdToTableDiffMap.ContainsKey(table.ID)
@@ -423,11 +404,9 @@ internal class PostgreSQLDiffCreator : DiffCreator
 
                     Dictionary<Guid, ColumnDiff> columnIdToColumnDiffMap = tableDiff.ColumnsToAlter
                         .ToDictionary(x => x.NewColumn.ID, x => x);
-                    foreach (Column column in table.Columns.Where(IsUnchanged))
+                    foreach (Column column in table.Columns.Where(IsNotAdded))
                     {
-                        if (_objectsThatRequireRedefinition.Contains(column.ID)
-                            || _objectsThatRequireDefaultRedefinition.Contains(column.ID)
-                                && column.Default.Code != null)
+                        if (RequiresDataTypeOrDefaultRedifinition(column))
                         {
                             ColumnDiff columnDiff = columnIdToColumnDiffMap.ContainsKey(column.ID)
                                 ? columnIdToColumnDiffMap[column.ID]
@@ -435,10 +414,11 @@ internal class PostgreSQLDiffCreator : DiffCreator
                             if (!columnIdToColumnDiffMap.ContainsKey(column.ID))
                                 tableDiff.ColumnsToAlter.Add(columnDiff);
 
-                            if (_objectsThatRequireRedefinition.Contains(column.ID))
+                            if (RequiresDataTypeRedifinition(column))
                                 columnDiff.DataTypeToSet = column.DataType;
-                            if (_objectsThatRequireDefaultRedefinition.Contains(column.ID)
-                                && column.Default.Code != null)
+
+                            bool defaultChanged = columnDiff.DefaultToSet != null || columnDiff.DefaultToDrop != null;
+                            if (RequiresDefaultRedifinition(column) && !defaultChanged)
                             {
                                 columnDiff.DefaultToSet = column.Default;
                                 columnDiff.DefaultToDrop = column.Default;
@@ -475,18 +455,27 @@ internal class PostgreSQLDiffCreator : DiffCreator
                 }
             }
 
-            bool AnyUnchangedColumnRequiresDataTypeOrDefaultRedefinition(Table table)
+            bool RequiresDataTypeOrDefaultRedifinition(Column column)
             {
-                return table.Columns.Any(x => IsUnchanged(x) &&
-                    (_objectsThatRequireRedefinition.Contains(x.ID)
-                    || _objectsThatRequireDefaultRedefinition.Contains(x.ID)
-                        && x.Default.Code != null));
+                return RequiresDataTypeRedifinition(column)
+                    || RequiresDefaultRedifinition(column);
+            }
+
+            bool RequiresDataTypeRedifinition(Column column)
+            {
+                return _objectsThatRequireRedefinition.Contains(column.ID);
+            }
+
+            bool RequiresDefaultRedifinition(Column column)
+            {
+                return _objectsThatRequireDefaultRedefinition.Contains(column.ID)
+                    && column.Default.Code != null;
             }
 
             bool AnyUnchangedCheckConstraintRequiresRedefinition(Table table)
             {
-                return table.CheckConstraints.Any(x => IsUnchanged(x) &&
-                    _objectsThatRequireRedefinition.Contains(x.ID));
+                return table.CheckConstraints.Any(x => IsUnchanged(x)
+                    && _objectsThatRequireRedefinition.Contains(x.ID));
             }
         }
 
@@ -527,6 +516,34 @@ internal class PostgreSQLDiffCreator : DiffCreator
         {
             return !_addedObjects.Contains(dbObject.ID) && !_changedObjects.Contains(dbObject.ID);
         }
+    }
+
+    private bool DependencyRequiresRedefinition(DbObject dbObject)
+    {
+        return dbObject switch
+        {
+            PostgreSQLCompositeType x => x.Attributes.Any(a => AnyRequireRedefinition(a.DataType.DependsOn)),
+            PostgreSQLDomainType x => AnyRequireRedefinition(x.UnderlyingType.DependsOn),
+            PostgreSQLRangeType x => AnyRequireRedefinition(x.Subtype.DependsOn),
+            PostgreSQLColumn x => AnyRequireRedefinition(x.DataType.DependsOn),
+            PostgreSQLView x => AnyRequireRedefinition(x.CreateStatement.DependsOn),
+            PostgreSQLFunction x => AnyRequireRedefinition(x.CreateStatement.DependsOn),
+            PostgreSQLProcedure x => AnyRequireRedefinition(x.CreateStatement.DependsOn),
+            CheckConstraint x => AnyRequireRedefinition(x.Expression.DependsOn),
+            PostgreSQLIndex x => x.Expression != null && AnyRequireRedefinition(x.Expression.DependsOn),
+            PostgreSQLTrigger x => AnyRequireRedefinition(x.CreateStatement.DependsOn),
+            _ => false,
+        };
+    }
+
+    private bool DependencyRequiresDefaultRedefinition(DbObject dbObject)
+    {
+        return dbObject switch
+        {
+            PostgreSQLDomainType x => AnyRequireRedefinition(x.Default.DependsOn),
+            PostgreSQLColumn x => AnyRequireRedefinition(x.Default.DependsOn),
+            _ => false,
+        };
     }
 
     private bool AnyRequireRedefinition(IEnumerable<DbObject> dependencies)

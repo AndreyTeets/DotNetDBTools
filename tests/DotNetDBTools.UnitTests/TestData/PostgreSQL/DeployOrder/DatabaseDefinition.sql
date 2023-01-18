@@ -363,3 +363,56 @@ create index i_a_1 on t_1 (f_4_s(c1));
 
 --ID:#{3C20BC64-4CA6-4859-9536-3378F6132CD0}#
 create trigger tr_a_1 after insert on t_1 for each row execute function f_5_p();
+
+
+--Objects with dependencies unique to them only
+
+--ID:#{1EFCE56F-F8AB-41B0-8749-159D190E4CA0}#
+create type tp_u_1 as enum ('l1', 'l2');
+--ID:#{2D96D529-3E4A-4EFC-AD7F-1D5550075ED0}#
+create domain d_u_1 as tp_u_1;
+
+--ID:#{368AEDFA-52ED-4B1A-8265-E41681AC7D15}#
+create type tp_u_2 as (a1 int);
+--ID:#{92DDEF4A-2141-4A73-986B-22E270CBE509}#
+create domain d_u_2 as int default ('(5)'::tp_u_2).a1::int;
+
+--ID:#{4DA75E8F-5E61-473F-80B8-C3562CB11642}#
+create type tp_u_3 as (a1 int);
+--ID:#{F99DD6D9-28FD-40F9-BABB-63D8BC3F7EF2}#
+create domain d_u_3 as int
+    --ID:#{DC77D8FC-B089-4A19-AE5D-3B346CA1B3AC}#
+    constraint ck_d_u_2 check (value != ('(5)'::tp_u_3).a1::int);
+
+--ID:#{1B8DC87F-4AB6-4103-BC4E-18628F21E2B2}#
+create type tp_u_4 as enum ('l1', 'l2');
+--ID:#{EEC4E849-13FA-4AF9-B412-CFB98A26F9F1}#
+create table t_u_4(
+    --ID:#{2290D4A9-7DCA-4C18-84D2-79EEA4DDBDE7}#
+    c1 tp_u_4
+);
+
+--ID:#{EDF966DF-E96C-4B15-AABF-D7B4A40A2851}#
+create type tp_u_5 as (a1 int);
+--ID:#{94ABD47F-02D2-4248-B232-1A569C4503AB}#
+create table t_u_5(
+    --ID:#{3A343802-C747-4075-8871-AB2EF3B73494}#
+    c1 int default ('(5)'::tp_u_5).a1::int,
+    --ID:#{B184B27A-6D84-497D-963E-6C831DD1CD67}#
+    c2 int
+);
+
+--ID:#{F69EEAE8-5C18-4B80-B203-34C1A4B515D8}#
+create type tp_u_6 as (a1 int);
+--ID:#{FA4A63F7-FAB7-4624-BA69-20AB5F24C000}#
+create table t_u_6(
+    --ID:#{B6EAEF0A-FDA9-4BF4-B140-A2B236A3BAE3}#
+    c1 int,
+    --ID:#{E1560B35-DF8E-4C03-98A6-835BD730A167}#
+    constraint ck_t_u_6 check (c1 != ('(5)'::tp_u_6).a1::int)
+);
+
+--ID:#{23AD495C-3DA1-4CEC-9804-380C0CB3CBF1}#
+create type tp_u_7 as (a1 int);
+--ID:#{93092560-6D56-455B-83BA-47350BFF3D80}#
+create view v_u_7 as select ('(5)'::tp_u_7).a1::int;
