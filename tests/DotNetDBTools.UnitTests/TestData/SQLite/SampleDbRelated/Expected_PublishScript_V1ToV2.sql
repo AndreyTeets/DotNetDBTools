@@ -162,8 +162,7 @@ WHERE [ID] = '6e95de30-e01a-4fb4-b8b7-8f0c40bb682c';
 
 -- QUERY START: UpdateDNDBTDbObjectRecordQuery
 UPDATE [DNDBTDbObjects] SET
-    [Name] = 'MyTable1NewName',
-    [Code] = NULL
+    [Name] = 'MyTable1NewName'
 WHERE [ID] = '299675e6-4faa-4d0f-a36a-224306ba5bcb';
 -- QUERY END: UpdateDNDBTDbObjectRecordQuery
 

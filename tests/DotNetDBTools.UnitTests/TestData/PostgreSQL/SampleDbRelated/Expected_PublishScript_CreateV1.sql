@@ -222,6 +222,30 @@ VALUES
 );';
 -- QUERY END: InsertDNDBTDbObjectRecordQuery
 
+-- QUERY START: CreateDomainTypeQuery
+EXECUTE 'CREATE DOMAIN "MyDomain2" AS
+    "MyCompositeType1" NOT NULL DEFAULT ''("some string", "{42.78, -4, 0}")'';';
+-- QUERY END: CreateDomainTypeQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''2200d040-a892-43b5-9b5e-db9f6458187f'',
+    NULL,
+    ''UserDefinedType'',
+    ''MyDomain2'',
+    ''''''("some string", "{42.78, -4, 0}")''''''
+);';
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
 -- QUERY START: CreateEnumTypeQuery
 EXECUTE 'CREATE TYPE "MyEnumType1" AS ENUM
 (
@@ -657,6 +681,7 @@ EXECUTE 'CREATE TABLE "MyTable5"
     "MyColumn12" TIMESTAMPTZ NOT NULL DEFAULT ''2022-02-15 14:47:18+00'',
     "MyColumn2" CHAR(4) NOT NULL DEFAULT ''test'',
     "MyColumn201" INT NULL DEFAULT "MyFunction1"(-25, 10),
+    "MyColumn202" "MyDomain2" NOT NULL,
     "MyColumn3" BYTEA NOT NULL DEFAULT ''\x000204'',
     "MyColumn301" SMALLINT NULL,
     "MyColumn302" SMALLINT NULL,
@@ -915,6 +940,25 @@ VALUES
     ''Column'',
     ''MyColumn201'',
     ''"MyFunction1"(-25, 10)''
+);';
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''029a13bc-d972-45c8-8a6e-6e1acc3f25b1'',
+    ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
+    ''Column'',
+    ''MyColumn202'',
+    NULL
 );';
 -- QUERY END: InsertDNDBTDbObjectRecordQuery
 
@@ -1921,8 +1965,7 @@ EXECUTE 'ALTER SEQUENCE "MySequence1"
 
 -- QUERY START: UpdateDNDBTDbObjectRecordQuery
 EXECUTE 'UPDATE "DNDBTDbObjects" SET
-    "Name" = ''MySequence1'',
-    "Code" = NULL
+    "Name" = ''MySequence1''
 WHERE "ID" = ''f54a1a93-8cd2-4125-aede-b38cc7f8a750'';';
 -- QUERY END: UpdateDNDBTDbObjectRecordQuery
 
@@ -1933,8 +1976,7 @@ EXECUTE 'ALTER SEQUENCE "MySequence2"
 
 -- QUERY START: UpdateDNDBTDbObjectRecordQuery
 EXECUTE 'UPDATE "DNDBTDbObjects" SET
-    "Name" = ''MySequence2'',
-    "Code" = NULL
+    "Name" = ''MySequence2''
 WHERE "ID" = ''59c3bf9d-4938-40df-9528-f1aa8367c6e3'';';
 -- QUERY END: UpdateDNDBTDbObjectRecordQuery
 

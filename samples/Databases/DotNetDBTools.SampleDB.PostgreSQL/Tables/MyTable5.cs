@@ -125,6 +125,12 @@ namespace DotNetDBTools.SampleDB.PostgreSQL.Tables
             Default = new VerbatimDefaultValue($"{nameof(MyFunction1).Quote()}(-25, 10)"),
         };
 
+        public Column MyColumn202 = new("029A13BC-D972-45C8-8A6E-6E1ACC3F25B1")
+        {
+            DataType = new VerbatimDataType($"{nameof(MyDomain2).Quote()}"),
+            NotNull = true,
+        };
+
         public Column MyColumn301 = new("5A6FDF6E-F39E-41BF-84FD-6B1BECAB248B")
         {
             DataType = new IntDataType() { Size = IntSize.Int8 },

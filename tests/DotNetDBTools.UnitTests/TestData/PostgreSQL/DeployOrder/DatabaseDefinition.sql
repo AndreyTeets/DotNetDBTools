@@ -18,12 +18,16 @@ create type tp_9 as (a1 int);
 --ID:#{19711A29-BF7D-4860-8ADE-DFB871EFD128}#
 create domain tp_3 as int default 4
     --ID:#{400068A6-AB8B-4FD0-AA49-F5C0003B9E83}#
-    constraint ck_tp_3 check (value != 6);
+    constraint ck_tp_3 check (value != 6)
+    --ID:#{CD9D1D45-7592-43DA-81F8-F6C788338B5C}#
+    constraint ck_tp_3_2 check (value != 62);
 
 --ID:#{C16FA77D-D1E2-4387-9CDB-EC067E494690}#
 create domain tp_30 as int default 34
     --ID:#{5A1685B8-2877-49A8-AA33-558D32628B8E}#
-    constraint ck_tp_30 check (value != 36);
+    constraint ck_tp_30 check (value != 36)
+    --ID:#{9C5AD9BD-9681-462C-9F59-7CCFEB90BCB4}#
+    constraint ck_tp_30_2 check (value != 362);
 
 --ID:#{62CA48F0-DA8A-469B-B82F-140A2BC096CD}#
 create table t_1(

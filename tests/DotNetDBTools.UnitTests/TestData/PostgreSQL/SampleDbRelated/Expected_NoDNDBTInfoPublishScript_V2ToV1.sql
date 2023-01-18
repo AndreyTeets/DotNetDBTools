@@ -48,11 +48,11 @@ EXECUTE 'ALTER FUNCTION "TR_MyTable2_MyTrigger1_Handler" RENAME TO "_DNDBTTemp_T
 -- QUERY END: RenameProgrammableObjectToTempQuery
 
 -- QUERY START: RenameTypeToTempQuery
-EXECUTE 'ALTER TYPE "MyCompositeType1" RENAME TO "_DNDBTTemp_MyCompositeType1";';
+EXECUTE 'ALTER DOMAIN "MyDomain1" RENAME TO "_DNDBTTemp_MyDomain1";';
 -- QUERY END: RenameTypeToTempQuery
 
 -- QUERY START: RenameTypeToTempQuery
-EXECUTE 'ALTER DOMAIN "MyDomain1" RENAME TO "_DNDBTTemp_MyDomain1";';
+EXECUTE 'ALTER DOMAIN "MyDomain2" RENAME TO "_DNDBTTemp_MyDomain2";';
 -- QUERY END: RenameTypeToTempQuery
 
 -- QUERY START: RenameTypeToTempQuery
@@ -73,6 +73,10 @@ ALTER FUNCTION "MyRangeType1_multirange" RENAME TO "_DNDBTTemp_MyRangeType1_mult
 END IF;
 END;
 $DNDBTPlPgSqlBlock$';
+-- QUERY END: RenameTypeToTempQuery
+
+-- QUERY START: RenameTypeToTempQuery
+EXECUTE 'ALTER TYPE "MyCompositeType1" RENAME TO "_DNDBTTemp_MyCompositeType1";';
 -- QUERY END: RenameTypeToTempQuery
 
 -- QUERY START: AlterSequenceQuery
@@ -126,6 +130,11 @@ EXECUTE 'CREATE DOMAIN "MyDomain1" AS
     VARCHAR(100) NULL
     CONSTRAINT "MyDomain1_CK1" CHECK (value = lower(value))
     CONSTRAINT "MyDomain1_CK2" CHECK (char_length(value) > 3);';
+-- QUERY END: CreateDomainTypeQuery
+
+-- QUERY START: CreateDomainTypeQuery
+EXECUTE 'CREATE DOMAIN "MyDomain2" AS
+    "MyCompositeType1" NOT NULL DEFAULT ''("some string", "{42.78, -4, 0}")'';';
 -- QUERY END: CreateDomainTypeQuery
 
 -- QUERY START: CreateEnumTypeQuery
@@ -196,6 +205,8 @@ EXECUTE 'ALTER TABLE "MyTable5"
         USING ("MyColumn103"::text::"MyEnumType1"),
     ALTER COLUMN "MyColumn104" SET DATA TYPE "MyRangeType1"
         USING ("MyColumn104"::text::"MyRangeType1"),
+    ALTER COLUMN "MyColumn202" SET DATA TYPE "MyDomain2"
+        USING ("MyColumn202"::text::"MyDomain2"),
     ALTER COLUMN "MyColumn339" SET DATA TYPE "MyCompositeType1"[]
         USING ("MyColumn339"::text::"MyCompositeType1"[]),
     ALTER COLUMN "MyColumn340" SET DATA TYPE "MyCompositeType1"[]
@@ -223,11 +234,11 @@ EXECUTE 'ALTER SEQUENCE "MySequence1"
 -- QUERY END: AlterSequenceQuery
 
 -- QUERY START: DropTypeQuery
-EXECUTE 'DROP TYPE "_DNDBTTemp_MyCompositeType1";';
+EXECUTE 'DROP DOMAIN "_DNDBTTemp_MyDomain1";';
 -- QUERY END: DropTypeQuery
 
 -- QUERY START: DropTypeQuery
-EXECUTE 'DROP DOMAIN "_DNDBTTemp_MyDomain1";';
+EXECUTE 'DROP DOMAIN "_DNDBTTemp_MyDomain2";';
 -- QUERY END: DropTypeQuery
 
 -- QUERY START: DropTypeQuery
@@ -236,6 +247,10 @@ EXECUTE 'DROP TYPE "_DNDBTTemp_MyEnumType1";';
 
 -- QUERY START: DropTypeQuery
 EXECUTE 'DROP TYPE "_DNDBTTemp_MyRangeType1";';
+-- QUERY END: DropTypeQuery
+
+-- QUERY START: DropTypeQuery
+EXECUTE 'DROP TYPE "_DNDBTTemp_MyCompositeType1";';
 -- QUERY END: DropTypeQuery
 
 -- QUERY START: DropFunctionQuery

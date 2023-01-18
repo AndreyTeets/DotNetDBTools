@@ -8,6 +8,7 @@ using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.PostgreSQL.Queries.DDL;
 using DotNetDBTools.Deploy.PostgreSQL.Queries.DNDBTSysInfo;
 using DotNetDBTools.Generation.Core;
+using DotNetDBTools.Generation.PostgreSQL;
 using DotNetDBTools.Models;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.PostgreSQL;
@@ -270,7 +271,7 @@ internal class PostgreSQLTypesEditor
     private void CreateDomainType(PostgreSQLDomainType type)
     {
         QueryExecutor.Execute(new PostgreSQLCreateDomainTypeQuery(type));
-        QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(type.ID, null, DbObjectType.UserDefinedType, type.Name));
+        QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(type.ID, null, DbObjectType.UserDefinedType, type.Name, type.GetDefault()));
         foreach (CheckConstraint ck in type.CheckConstraints)
             QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(ck.ID, type.ID, DbObjectType.CheckConstraint, ck.Name, ck.GetExpression()));
     }
@@ -297,7 +298,12 @@ internal class PostgreSQLTypesEditor
     private void AlterDomainType(PostgreSQLDomainTypeDiff typeDiff)
     {
         QueryExecutor.Execute(new PostgreSQLAlterDomainTypeQuery(typeDiff));
-        QueryExecutor.Execute(new PostgreSQLUpdateDNDBTDbObjectRecordQuery(typeDiff.TypeID, typeDiff.NewTypeName));
+
+        bool updateCode = typeDiff.DefaultToSet != null || typeDiff.DefaultToDrop != null;
+        string objectCode = typeDiff.DefaultToSet != null ? typeDiff.DefaultToSet.Code : null;
+        QueryExecutor.Execute(new PostgreSQLUpdateDNDBTDbObjectRecordQuery(
+            typeDiff.TypeID, typeDiff.NewTypeName, updateCode, objectCode));
+
         foreach (CheckConstraint ck in typeDiff.CheckConstraintsToDrop)
             QueryExecutor.Execute(new PostgreSQLDeleteDNDBTDbObjectRecordQuery(ck.ID));
         foreach (CheckConstraint ck in typeDiff.CheckConstraintsToCreate)

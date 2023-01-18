@@ -186,15 +186,6 @@ WHERE "ID" = ''8edd4469-e048-48bd-956e-a26113355f80'';';
 -- QUERY END: DeleteDNDBTDbObjectRecordQuery
 
 -- QUERY START: RenameTypeToTempQuery
-EXECUTE 'ALTER TYPE "MyCompositeType1" RENAME TO "_DNDBTTemp_MyCompositeType1";';
--- QUERY END: RenameTypeToTempQuery
-
--- QUERY START: DeleteDNDBTDbObjectRecordQuery
-EXECUTE 'DELETE FROM "DNDBTDbObjects"
-WHERE "ID" = ''29bf2520-1d74-49ab-a602-14bd692371f2'';';
--- QUERY END: DeleteDNDBTDbObjectRecordQuery
-
--- QUERY START: RenameTypeToTempQuery
 EXECUTE 'ALTER DOMAIN "MyDomain1" RENAME TO "_DNDBTTemp_MyDomain1";';
 -- QUERY END: RenameTypeToTempQuery
 
@@ -211,6 +202,15 @@ WHERE "ID" = ''7a053cee-abcc-4993-8eea-12b87c5194e6'';';
 -- QUERY START: DeleteDNDBTDbObjectRecordQuery
 EXECUTE 'DELETE FROM "DNDBTDbObjects"
 WHERE "ID" = ''7905b7a8-cf45-4328-8a2b-00616d98235e'';';
+-- QUERY END: DeleteDNDBTDbObjectRecordQuery
+
+-- QUERY START: RenameTypeToTempQuery
+EXECUTE 'ALTER DOMAIN "MyDomain2" RENAME TO "_DNDBTTemp_MyDomain2";';
+-- QUERY END: RenameTypeToTempQuery
+
+-- QUERY START: DeleteDNDBTDbObjectRecordQuery
+EXECUTE 'DELETE FROM "DNDBTDbObjects"
+WHERE "ID" = ''2200d040-a892-43b5-9b5e-db9f6458187f'';';
 -- QUERY END: DeleteDNDBTDbObjectRecordQuery
 
 -- QUERY START: RenameTypeToTempQuery
@@ -243,6 +243,15 @@ EXECUTE 'DELETE FROM "DNDBTDbObjects"
 WHERE "ID" = ''b02db666-fbbc-4cd7-a14d-4049251b9a7b'';';
 -- QUERY END: DeleteDNDBTDbObjectRecordQuery
 
+-- QUERY START: RenameTypeToTempQuery
+EXECUTE 'ALTER TYPE "MyCompositeType1" RENAME TO "_DNDBTTemp_MyCompositeType1";';
+-- QUERY END: RenameTypeToTempQuery
+
+-- QUERY START: DeleteDNDBTDbObjectRecordQuery
+EXECUTE 'DELETE FROM "DNDBTDbObjects"
+WHERE "ID" = ''29bf2520-1d74-49ab-a602-14bd692371f2'';';
+-- QUERY END: DeleteDNDBTDbObjectRecordQuery
+
 -- QUERY START: AlterSequenceQuery
 EXECUTE 'ALTER SEQUENCE "MySequence1" RENAME TO "MySequence1NewName";
 ALTER SEQUENCE "MySequence1NewName"
@@ -252,8 +261,7 @@ ALTER SEQUENCE "MySequence1NewName"
 
 -- QUERY START: UpdateDNDBTDbObjectRecordQuery
 EXECUTE 'UPDATE "DNDBTDbObjects" SET
-    "Name" = ''MySequence1NewName'',
-    "Code" = NULL
+    "Name" = ''MySequence1NewName''
 WHERE "ID" = ''f54a1a93-8cd2-4125-aede-b38cc7f8a750'';';
 -- QUERY END: UpdateDNDBTDbObjectRecordQuery
 
@@ -428,6 +436,30 @@ VALUES
 );';
 -- QUERY END: InsertDNDBTDbObjectRecordQuery
 
+-- QUERY START: CreateDomainTypeQuery
+EXECUTE 'CREATE DOMAIN "MyDomain2" AS
+    "MyCompositeType1" NOT NULL DEFAULT ''("some string", "{42.78, -4, 0}")'';';
+-- QUERY END: CreateDomainTypeQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''2200d040-a892-43b5-9b5e-db9f6458187f'',
+    NULL,
+    ''UserDefinedType'',
+    ''MyDomain2'',
+    ''''''("some string", "{42.78, -4, 0}")''''''
+);';
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
 -- QUERY START: CreateEnumTypeQuery
 EXECUTE 'CREATE TYPE "MyEnumType1" AS ENUM
 (
@@ -549,8 +581,7 @@ WHERE "ID" = ''6e95de30-e01a-4fb4-b8b7-8f0c40bb682c'';';
 
 -- QUERY START: UpdateDNDBTDbObjectRecordQuery
 EXECUTE 'UPDATE "DNDBTDbObjects" SET
-    "Name" = ''MyTable1NewName'',
-    "Code" = NULL
+    "Name" = ''MyTable1NewName''
 WHERE "ID" = ''299675e6-4faa-4d0f-a36a-224306ba5bcb'';';
 -- QUERY END: UpdateDNDBTDbObjectRecordQuery
 
@@ -672,6 +703,8 @@ EXECUTE 'ALTER TABLE "MyTable5"
         USING ("MyColumn103"::text::"MyEnumType1"),
     ALTER COLUMN "MyColumn104" SET DATA TYPE "MyRangeType1"
         USING ("MyColumn104"::text::"MyRangeType1"),
+    ALTER COLUMN "MyColumn202" SET DATA TYPE "MyDomain2"
+        USING ("MyColumn202"::text::"MyDomain2"),
     ALTER COLUMN "MyColumn339" SET DATA TYPE "MyCompositeType1"[]
         USING ("MyColumn339"::text::"MyCompositeType1"[]),
     ALTER COLUMN "MyColumn340" SET DATA TYPE "MyCompositeType1"[]
@@ -780,17 +813,16 @@ EXECUTE 'ALTER SEQUENCE "MySequence1NewName"
 
 -- QUERY START: UpdateDNDBTDbObjectRecordQuery
 EXECUTE 'UPDATE "DNDBTDbObjects" SET
-    "Name" = ''MySequence1NewName'',
-    "Code" = NULL
+    "Name" = ''MySequence1NewName''
 WHERE "ID" = ''f54a1a93-8cd2-4125-aede-b38cc7f8a750'';';
 -- QUERY END: UpdateDNDBTDbObjectRecordQuery
 
 -- QUERY START: DropTypeQuery
-EXECUTE 'DROP TYPE "_DNDBTTemp_MyCompositeType1";';
+EXECUTE 'DROP DOMAIN "_DNDBTTemp_MyDomain1";';
 -- QUERY END: DropTypeQuery
 
 -- QUERY START: DropTypeQuery
-EXECUTE 'DROP DOMAIN "_DNDBTTemp_MyDomain1";';
+EXECUTE 'DROP DOMAIN "_DNDBTTemp_MyDomain2";';
 -- QUERY END: DropTypeQuery
 
 -- QUERY START: DropTypeQuery
@@ -799,6 +831,10 @@ EXECUTE 'DROP TYPE "_DNDBTTemp_MyEnumType1";';
 
 -- QUERY START: DropTypeQuery
 EXECUTE 'DROP TYPE "_DNDBTTemp_MyRangeType1";';
+-- QUERY END: DropTypeQuery
+
+-- QUERY START: DropTypeQuery
+EXECUTE 'DROP TYPE "_DNDBTTemp_MyCompositeType1";';
 -- QUERY END: DropTypeQuery
 
 -- QUERY START: DropFunctionQuery

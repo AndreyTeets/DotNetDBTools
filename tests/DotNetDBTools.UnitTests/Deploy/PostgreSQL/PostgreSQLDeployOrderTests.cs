@@ -101,14 +101,14 @@ public class PostgreSQLDeployOrderTests
                     PostgreSQLDomainType x = db.DomainTypes.Single(x => x.Name == "tp_3");
                     x.Name = "tp_3x";
                     x.Default.Code = "444";
-                    x.CheckConstraints.Single().Expression.Code = "value != 9";
+                    x.CheckConstraints.Single(x => x.Name == "ck_tp_3").Expression.Code = "value != 9";
                 }, caseName, caseDescription);
                 break;
             case "tp_30":
                 TestCase(db =>
                 {
                     PostgreSQLDomainType x = db.DomainTypes.Single(x => x.Name == "tp_30");
-                    x.CheckConstraints.Single().Expression.Code = "value != 39";
+                    x.CheckConstraints.Single(x => x.Name == "ck_tp_30").Expression.Code = "value != 39";
                 }, caseName, caseDescription);
                 break;
             case "tp_9":

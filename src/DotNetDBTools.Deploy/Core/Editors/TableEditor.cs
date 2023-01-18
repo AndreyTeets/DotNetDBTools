@@ -99,8 +99,17 @@ internal abstract class TableEditor<
             || x.DefaultToSet != null
             || x.DefaultToDrop != null))
         {
-            string defaultCode = cDiff.DefaultToSet != null ? cDiff.DefaultToSet.Code : cDiff.NewColumn.GetDefault();
-            QueryExecutor.Execute(Create<TUpdateDNDBTDbObjectRecordQuery>(cDiff.NewColumn.ID, cDiff.NewColumn.Name, defaultCode));
+            bool updateCode = cDiff.DefaultToSet != null || cDiff.DefaultToDrop != null;
+            string objectCode = cDiff.DefaultToSet != null ? cDiff.DefaultToSet.Code : null;
+
+            // TODO remove this when refactored to ToSet|ToDrop without [New|Old]Column
+            if (cDiff.ColumnID == Guid.Empty) // Old diff using [New|Old]Column
+            {
+                updateCode = true;
+                objectCode = cDiff.NewColumn.GetDefault();
+            }
+            QueryExecutor.Execute(Create<TUpdateDNDBTDbObjectRecordQuery>(
+                cDiff.NewColumn.ID, cDiff.NewColumn.Name, updateCode, objectCode));
         }
 
         foreach (Column c in tableDiff.ColumnsToAdd)

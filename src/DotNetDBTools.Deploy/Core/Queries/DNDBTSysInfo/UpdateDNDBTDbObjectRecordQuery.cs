@@ -11,12 +11,12 @@ internal abstract class UpdateDNDBTDbObjectRecordQuery : IQuery
     private readonly string _sql;
     private readonly List<QueryParameter> _parameters;
 
-    public UpdateDNDBTDbObjectRecordQuery(Guid objectID, string objectName, string objectCode)
+    public UpdateDNDBTDbObjectRecordQuery(Guid objectID, string objectName, bool updateCode, string objectCode)
     {
-        _sql = GetSql();
-        _parameters = GetParameters(objectID, objectName, objectCode);
+        _sql = GetSql(updateCode);
+        _parameters = GetParameters(objectID, objectName, updateCode, objectCode);
     }
 
-    protected abstract string GetSql();
-    protected abstract List<QueryParameter> GetParameters(Guid objectID, string objectName, string objectCode);
+    protected abstract string GetSql(bool updateCode);
+    protected abstract List<QueryParameter> GetParameters(Guid objectID, string objectName, bool updateCode, string objectCode);
 }

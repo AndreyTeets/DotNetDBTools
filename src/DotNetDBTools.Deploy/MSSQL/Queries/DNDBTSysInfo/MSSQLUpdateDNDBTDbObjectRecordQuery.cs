@@ -12,27 +12,34 @@ internal class MSSQLUpdateDNDBTDbObjectRecordQuery : UpdateDNDBTDbObjectRecordQu
     private const string NameParameterName = "@Name";
     private const string CodeParameterName = "@Code";
 
-    public MSSQLUpdateDNDBTDbObjectRecordQuery(Guid objectID, string objectName, string objectCode = null)
-        : base(objectID, objectName, objectCode) { }
+    public MSSQLUpdateDNDBTDbObjectRecordQuery(Guid objectID, string objectName, bool updateCode = false, string objectCode = null)
+        : base(objectID, objectName, updateCode, objectCode) { }
 
-    protected override string GetSql()
+    protected override string GetSql(bool updateCode)
     {
+        string setCodeExpr = !updateCode ? "" :
+$@",
+    [{DNDBTSysTables.DNDBTDbObjects.Code}] = {CodeParameterName}";
+
         string query =
 $@"UPDATE [{DNDBTSysTables.DNDBTDbObjects}] SET
-    [{DNDBTSysTables.DNDBTDbObjects.Name}] = {NameParameterName},
-    [{DNDBTSysTables.DNDBTDbObjects.Code}] = {CodeParameterName}
+    [{DNDBTSysTables.DNDBTDbObjects.Name}] = {NameParameterName}{setCodeExpr}
 WHERE [{DNDBTSysTables.DNDBTDbObjects.ID}] = {IDParameterName};";
 
         return query;
     }
 
-    protected override List<QueryParameter> GetParameters(Guid objectID, string objectName, string objectCode)
+    protected override List<QueryParameter> GetParameters(Guid objectID, string objectName, bool updateCode, string objectCode)
     {
-        return new List<QueryParameter>
+        List<QueryParameter> parameters = new()
         {
             new QueryParameter(IDParameterName, objectID, DbType.Guid),
             new QueryParameter(NameParameterName, objectName, DbType.String),
-            new QueryParameter(CodeParameterName, objectCode, DbType.String),
         };
+
+        if (updateCode)
+            parameters.Add(new QueryParameter(CodeParameterName, objectCode, DbType.String));
+
+        return parameters;
     }
 }

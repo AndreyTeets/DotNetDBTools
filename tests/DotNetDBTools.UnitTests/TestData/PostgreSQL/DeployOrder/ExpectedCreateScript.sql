@@ -94,7 +94,8 @@ EXECUTE 'create view v_a_9 as select c1 from v_1';
 -- QUERY START: CreateDomainTypeQuery
 EXECUTE 'CREATE DOMAIN "tp_30" AS
     INT NULL DEFAULT 34
-    CONSTRAINT "ck_tp_30" CHECK (value != 36);';
+    CONSTRAINT "ck_tp_30" CHECK (value != 36)
+    CONSTRAINT "ck_tp_30_2" CHECK (value != 362);';
 -- QUERY END: CreateDomainTypeQuery
 
 -- QUERY START: CreateDomainTypeQuery
@@ -105,7 +106,8 @@ EXECUTE 'CREATE DOMAIN "tp_2" AS
 -- QUERY START: CreateDomainTypeQuery
 EXECUTE 'CREATE DOMAIN "tp_3" AS
     INT NULL DEFAULT 4
-    CONSTRAINT "ck_tp_3" CHECK (value != 6);';
+    CONSTRAINT "ck_tp_3" CHECK (value != 6)
+    CONSTRAINT "ck_tp_3_2" CHECK (value != 62);';
 -- QUERY END: CreateDomainTypeQuery
 
 -- QUERY START: CreateCompositeTypeQuery

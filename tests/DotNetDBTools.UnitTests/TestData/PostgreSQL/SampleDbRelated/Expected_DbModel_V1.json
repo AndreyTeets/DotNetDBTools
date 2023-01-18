@@ -1,5 +1,5 @@
 {
-  "$id": "5D296EFAB6209229",
+  "$id": "70452F1D892694E7",
   "Sequences": [
     {
       "$id": "DbObject { ID: 'f54a1a93-8cd2-4125-aede-b38cc7f8a750', Name: 'MySequence1' }",
@@ -124,6 +124,26 @@
       ],
       "ID": "a28bcb6c-3cbc-467e-a52c-ac740c98a537",
       "Name": "MyDomain1",
+      "Parent": null
+    },
+    {
+      "$id": "DbObject { ID: '2200d040-a892-43b5-9b5e-db9f6458187f', Name: 'MyDomain2' }",
+      "UnderlyingType": {
+        "$id": "4F9148B6D978F321",
+        "Name": "\"MyCompositeType1\"",
+        "DependsOn": [
+          "DbObject { ID: '29bf2520-1d74-49ab-a602-14bd692371f2', Name: 'MyCompositeType1' }"
+        ]
+      },
+      "NotNull": true,
+      "Default": {
+        "$id": "BE7239A800F330B7",
+        "Code": "'(\"some string\", \"{42.78, -4, 0}\")'",
+        "DependsOn": []
+      },
+      "CheckConstraints": [],
+      "ID": "2200d040-a892-43b5-9b5e-db9f6458187f",
+      "Name": "MyDomain2",
       "Parent": null
     }
   ],
@@ -773,6 +793,30 @@
           },
           "ID": "5c455ec9-9830-4d0b-a88c-57341899dc4a",
           "Name": "MyColumn201",
+          "Parent": {
+            "$ref": "DbObject { ID: '6ca51f29-c1bc-4349-b9c1-6f1ea170f162', Name: 'MyTable5' }"
+          }
+        },
+        {
+          "$id": "DbObject { ID: '029a13bc-d972-45c8-8a6e-6e1acc3f25b1', Name: 'MyColumn202' }",
+          "IdentityGenerationKind": null,
+          "IdentitySequenceOptions": null,
+          "DataType": {
+            "$id": "93BF2E72FFA98270",
+            "Name": "\"MyDomain2\"",
+            "DependsOn": [
+              "DbObject { ID: '2200d040-a892-43b5-9b5e-db9f6458187f', Name: 'MyDomain2' }"
+            ]
+          },
+          "NotNull": true,
+          "Identity": false,
+          "Default": {
+            "$id": "D12CC50BBB155503",
+            "Code": null,
+            "DependsOn": []
+          },
+          "ID": "029a13bc-d972-45c8-8a6e-6e1acc3f25b1",
+          "Name": "MyColumn202",
           "Parent": {
             "$ref": "DbObject { ID: '6ca51f29-c1bc-4349-b9c1-6f1ea170f162', Name: 'MyTable5' }"
           }

@@ -36,7 +36,8 @@ EXECUTE 'ALTER DOMAIN "tp_30" RENAME TO "_DNDBTTemp_tp_30";';
 -- QUERY START: CreateDomainTypeQuery
 EXECUTE 'CREATE DOMAIN "tp_30" AS
     INT NULL DEFAULT 34
-    CONSTRAINT "ck_tp_30" CHECK (value != 39);';
+    CONSTRAINT "ck_tp_30" CHECK (value != 39)
+    CONSTRAINT "ck_tp_30_2" CHECK (value != 362);';
 -- QUERY END: CreateDomainTypeQuery
 
 -- QUERY START: CreateDomainTypeQuery

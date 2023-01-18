@@ -170,13 +170,16 @@ internal class PostgreSQLDbModelFromDBMSProvider : DbModelFromDBMSProvider<
                 typesMap.Add(typeRecord.TypeName, type);
             }
 
-            CheckConstraint checkConstraint = new()
+            if (typeRecord.CheckConstrantName != null)
             {
-                ID = Guid.NewGuid(),
-                Name = typeRecord.CheckConstrantName,
-                Expression = new CodePiece { Code = typeRecord.CheckConstrantDefinition.ParseOutCheckExpression() },
-            };
-            typesMap[typeRecord.TypeName].CheckConstraints.Add(checkConstraint);
+                CheckConstraint checkConstraint = new()
+                {
+                    ID = Guid.NewGuid(),
+                    Name = typeRecord.CheckConstrantName,
+                    Expression = new CodePiece { Code = typeRecord.CheckConstrantDefinition.ParseOutCheckExpression() },
+                };
+                typesMap[typeRecord.TypeName].CheckConstraints.Add(checkConstraint);
+            }
         }
         return typesMap.Select(x => x.Value).ToList();
     }
