@@ -1,7 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.Linq;
 using Dapper;
+using DotNetDBTools.Analysis;
+using DotNetDBTools.Analysis.Errors;
+using DotNetDBTools.DefinitionParsing;
+using DotNetDBTools.Deploy;
+using DotNetDBTools.Generation;
+using DotNetDBTools.Generation.Core;
+using DotNetDBTools.Models.Core;
+using DotNetDBTools.Models.PostgreSQL;
+using FluentAssertions;
 using Npgsql;
 using NUnit.Framework;
 using static DotNetDBTools.IntegrationTests.Constants;
@@ -10,16 +21,57 @@ namespace DotNetDBTools.IntegrationTests.PostgreSQL;
 
 public class PostgreSQLUnitTestsTestDataSqlScriptsValidation
 {
+    private static string SpecificDbmsSampleDbV1AssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDB.PostgreSQL.dll";
+    private static string SpecificDbmsSampleDbV2AssemblyPath => $"{SamplesOutputDir}/DotNetDBTools.SampleDBv2.PostgreSQL.dll";
     private static string UnitTestsTestDataDir => $"{RepoRoot}/tests/DotNetDBTools.UnitTests/TestData";
     private static string DeployOrderTestDataDir => $"{UnitTestsTestDataDir}/PostgreSQL/DeployOrder";
     private static string ConnectionStringWithoutDb => PostgreSQLContainerHelper.PostgreSQLContainerConnectionString;
     private static string CurrentTestName => TestContext.CurrentContext.Test.Name;
 
     [Test]
-    public void DeployOrderTests_DatabaseDefinitionScript_IsValid()
+    // TODO move this test somewhere else more appropriate
+    public void SampleDb_CreateScript_IsValid_AndCreatesValidParsableDatabase()
     {
-        using IDbConnection connection = RecreateDbAndCreateConnection(CurrentTestName);
-        connection.Execute(File.ReadAllText($"{DeployOrderTestDataDir}/DatabaseDefinition.sql"));
+        TestCase(SpecificDbmsSampleDbV1AssemblyPath);
+        TestCase(SpecificDbmsSampleDbV2AssemblyPath);
+
+        void TestCase(string dbAssemblyPath)
+        {
+            Database dbFromDefinition = new DefinitionParsingManager().CreateDbModel(dbAssemblyPath);
+            string createScript = new PostgreSQLDeployManager().GenerateNoDNDBTInfoPublishScript(dbFromDefinition);
+
+            IDbConnection connection = RecreateDbAndCreateConnection(CurrentTestName);
+            connection.Execute(createScript);
+
+            Database db = new PostgreSQLDeployManager().CreateDatabaseModelUsingDBMSSysInfo(connection);
+            Database reparsedDb = ReparseDatabaseModelFromGeneratedDefinition(db);
+
+            AssertDbModelEquivalence(db, reparsedDb);
+        }
+    }
+
+    [Test]
+    // TODO move this test somewhere else more appropriate
+    public void DeployOrderTests_DefinitionScriptAndCreateScript_AreValid_AndCreateValidParsableEquivalentDatabaseModels()
+    {
+        Database dbFromDefinitionScript = RecreateDb_ExecuteScript_CreateDbModelFromDBMS("DatabaseDefinition.sql");
+        Database dbFromCreateScript = RecreateDb_ExecuteScript_CreateDbModelFromDBMS("ExpectedCreateScript.sql");
+
+        AssertDbModelEquivalence(dbFromCreateScript, dbFromDefinitionScript);
+
+        Database reparsedDbFromDefinitionScript = ReparseDatabaseModelFromGeneratedDefinition(dbFromDefinitionScript);
+        Database reparsedDbFromCreateScript = ReparseDatabaseModelFromGeneratedDefinition(dbFromCreateScript);
+
+        AssertDbModelEquivalence(reparsedDbFromCreateScript, reparsedDbFromDefinitionScript);
+        AssertDbModelEquivalence(reparsedDbFromCreateScript, dbFromCreateScript);
+
+        Database RecreateDb_ExecuteScript_CreateDbModelFromDBMS(string scriptName)
+        {
+            IDbConnection connection = RecreateDbAndCreateConnection(CurrentTestName);
+            connection.Execute(File.ReadAllText($"{DeployOrderTestDataDir}/{scriptName}"));
+            Database db = new PostgreSQLDeployManager().CreateDatabaseModelUsingDBMSSysInfo(connection);
+            return db;
+        }
     }
 
     [Test]
@@ -47,6 +99,24 @@ public class PostgreSQLUnitTestsTestDataSqlScriptsValidation
         }
     }
 
+    private Database ReparseDatabaseModelFromGeneratedDefinition(Database db)
+    {
+        List<string> statements = new();
+        GenerationManager generator = new(new GenerationOptions() { OutputDefinitionKind = OutputDefinitionKind.Sql });
+        foreach (DefinitionSourceFile file in generator.GenerateDefinition(db))
+        {
+            if (file.RelativePath.EndsWith(".sql", StringComparison.OrdinalIgnoreCase))
+                statements.Add(file.SourceText);
+        }
+
+        Database reparsedDb = new DefinitionParsingManager().CreateDbModel(
+            statements, dbVersion: 0, DatabaseKind.PostgreSQL);
+        if (!new AnalysisManager().DbIsValid(reparsedDb, out List<DbError> dbErrors))
+            throw new Exception($"Db is invalid:\n{string.Join("\n", dbErrors.Select(x => x.ErrorMessage))}");
+
+        return reparsedDb;
+    }
+
     private IDbConnection RecreateDbAndCreateConnection(string databaseName)
     {
         PostgreSQLDatabaseHelper.DropDatabaseIfExists(ConnectionStringWithoutDb, databaseName);
@@ -56,5 +126,40 @@ public class PostgreSQLUnitTestsTestDataSqlScriptsValidation
         NpgsqlConnection connection = new();
         connection.ConnectionString = PostgreSQLDatabaseHelper.CreateConnectionString(ConnectionStringWithoutDb, databaseName);
         return connection;
+    }
+
+    private static void AssertDbModelEquivalence(Database dbModel1, Database dbModel2)
+    {
+        ((PostgreSQLDatabase)dbModel1).Should().BeEquivalentTo((PostgreSQLDatabase)dbModel2, options =>
+            options.WithStrictOrdering()
+                .Excluding(x => x.Path.EndsWith(".Parent", StringComparison.Ordinal))
+                .Excluding(x => x.Path.EndsWith(".DependsOn", StringComparison.Ordinal))
+                .Excluding(x => x.Path.EndsWith(".ID", StringComparison.Ordinal))
+                .Using(new NormalizeSemicolonComparer()));
+    }
+
+    private class NormalizeSemicolonComparer : IEqualityComparer<CodePiece>
+    {
+        public bool Equals(CodePiece x, CodePiece y)
+        {
+            if (x is null && y is null)
+                return true;
+            else if (x is null || y is null)
+                return false;
+
+            if (x.Code is null && y.Code is null)
+                return true;
+            else if (x.Code is null || y.Code is null)
+                return false;
+
+            string xNormalizedCode = x.Code.AppendSemicolonIfAbsent();
+            string yNormalizedCode = y.Code.AppendSemicolonIfAbsent();
+            return xNormalizedCode == yNormalizedCode;
+        }
+
+        public int GetHashCode(CodePiece obj)
+        {
+            return obj.Code?.GetHashCode() ?? 0;
+        }
     }
 }

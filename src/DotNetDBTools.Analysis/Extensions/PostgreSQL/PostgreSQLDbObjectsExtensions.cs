@@ -24,7 +24,7 @@ public static class PostgreSQLDbObjectsExtensions
             PostgreSQLEnumType x => new List<DbObject>(),
             PostgreSQLRangeType x => x.Subtype.DependsOn,
             PostgreSQLTable x => x.Columns
-            .Select(y => (IEnumerable<DbObject>)y.DataType.DependsOn)
+                .Select(y => (IEnumerable<DbObject>)y.DataType.DependsOn)
                 .Aggregate((y1, y2) => y1.Concat(y2)),
             PostgreSQLColumn x => x.DataType.DependsOn,
             PostgreSQLView x => x.CreateStatement.DependsOn,

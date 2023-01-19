@@ -298,7 +298,7 @@ public class PostgreSQLCodeParserTestsData : BaseCodeParserTestsData
         return new()
         {
             ID = new Guid("316C7688-D510-4A61-9D09-E15D465D0EFF"),
-            Name = "public._Some_Complex_PLPGSQL_Function",
+            Name = "_Some_Complex_PLPGSQL_Function",
             CreateStatement = MiscHelper.ReadFromFileWithoutIdDeclarations($@"{TestDataDir}/CreatePLPGSQLFunction.sql"),
         };
     }

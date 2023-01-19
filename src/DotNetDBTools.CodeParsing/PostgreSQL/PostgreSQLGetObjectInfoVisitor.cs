@@ -4,6 +4,7 @@ using DotNetDBTools.CodeParsing.Generated;
 using DotNetDBTools.CodeParsing.Models;
 using static DotNetDBTools.CodeParsing.Generated.PostgreSQLParser;
 using HM = DotNetDBTools.CodeParsing.Core.HelperMethods;
+using HMs = DotNetDBTools.CodeParsing.PostgreSQL.PostgreSQLHelperMethods;
 
 namespace DotNetDBTools.CodeParsing.PostgreSQL;
 
@@ -41,7 +42,7 @@ internal class PostgreSQLGetObjectInfoVisitor : PostgreSQLParserBaseVisitor<Obje
     private TableInfo GetTableInfo(Create_table_statementContext context)
     {
         TableInfo table = new();
-        table.Name = UnquoteIdentifier(context.schema_qualified_name().GetText());
+        table.Name = HMs.Unquote(context.schema_qualified_name().GetText());
         if (!_ignoreIds)
             HM.SetObjectID(table, $"table '{table.Name}'", context.dndbt_id?.Text);
 
@@ -57,7 +58,7 @@ internal class PostgreSQLGetObjectInfoVisitor : PostgreSQLParserBaseVisitor<Obje
     private ViewInfo GetViewInfo(Create_view_statementContext context)
     {
         ViewInfo view = new();
-        view.Name = UnquoteIdentifier(context.schema_qualified_name().GetText());
+        view.Name = HMs.Unquote(context.schema_qualified_name().GetText());
         if (!_ignoreIds)
             HM.SetObjectID(view, $"view '{view.Name}'", context.dndbt_id?.Text);
 
@@ -70,11 +71,11 @@ internal class PostgreSQLGetObjectInfoVisitor : PostgreSQLParserBaseVisitor<Obje
     private IndexInfo GetIndexInfo(Create_index_statementContext context)
     {
         IndexInfo index = new();
-        index.Name = UnquoteIdentifier(context.name.GetText());
+        index.Name = HMs.Unquote(context.name.GetText());
         if (!_ignoreIds)
             HM.SetObjectID(index, $"index '{index.Name}'", context.dndbt_id?.Text);
 
-        index.Table = UnquoteIdentifier(context.schema_qualified_name().GetText());
+        index.Table = HMs.Unquote(context.schema_qualified_name().GetText());
         if (context.UNIQUE() != null)
             index.Unique = true;
         foreach (Index_columnContext columnContext in context.index_columns().index_column())
@@ -84,7 +85,7 @@ internal class PostgreSQLGetObjectInfoVisitor : PostgreSQLParserBaseVisitor<Obje
         void AddColumnOrSetExpression(Index_columnContext context)
         {
             if (context.vex().value_expression_primary().indirection_var() != null)
-                index.Columns.Add(UnquoteIdentifier(context.vex().GetText()));
+                index.Columns.Add(HMs.Unquote(context.vex().GetText()));
             else
                 index.Expression = HM.GetInitialText(context);
         }
@@ -93,11 +94,11 @@ internal class PostgreSQLGetObjectInfoVisitor : PostgreSQLParserBaseVisitor<Obje
     private TriggerInfo GetTriggerInfo(Create_trigger_statementContext context)
     {
         TriggerInfo trigger = new();
-        trigger.Name = UnquoteIdentifier(context.name.GetText());
+        trigger.Name = HMs.Unquote(context.name.GetText());
         if (!_ignoreIds)
             HM.SetObjectID(trigger, $"trigger '{trigger.Name}'", context.dndbt_id?.Text);
 
-        trigger.Table = UnquoteIdentifier(context.table_name.GetText());
+        trigger.Table = HMs.Unquote(HMs.RemoveSchemeIfAny(context.table_name.GetText(), out string scheme));
         trigger.CreateStatement = HM.GetInitialText(context);
         if (context.dndbt_id != null)
             trigger.CreateStatement = trigger.CreateStatement.Remove(0, context.dndbt_id.Text.Length);
@@ -107,7 +108,7 @@ internal class PostgreSQLGetObjectInfoVisitor : PostgreSQLParserBaseVisitor<Obje
     private SequenceInfo GetSequenceInfo(Create_sequence_statementContext context)
     {
         SequenceInfo sequence = new();
-        sequence.Name = UnquoteIdentifier(context.schema_qualified_name().GetText());
+        sequence.Name = HMs.Unquote(context.schema_qualified_name().GetText());
         if (!_ignoreIds)
             HM.SetObjectID(sequence, $"sequence '{sequence.Name}'", context.dndbt_id?.Text);
 
@@ -135,15 +136,15 @@ internal class PostgreSQLGetObjectInfoVisitor : PostgreSQLParserBaseVisitor<Obje
         static void SetOwnedBy(SequenceInfo sequence, string ownedByText)
         {
             string[] tableNameColumnName = ownedByText.Split('.');
-            sequence.OwnedByTableName = UnquoteIdentifier(tableNameColumnName[0]);
-            sequence.OwnedByColumnName = UnquoteIdentifier(tableNameColumnName[1]);
+            sequence.OwnedByTableName = HMs.Unquote(tableNameColumnName[0]);
+            sequence.OwnedByColumnName = HMs.Unquote(tableNameColumnName[1]);
         }
     }
 
     private TypeInfo GetTypeInfo(Create_type_statementContext context)
     {
         TypeInfo type = new();
-        type.Name = UnquoteIdentifier(context.name.GetText());
+        type.Name = HMs.Unquote(context.name.GetText());
         if (!_ignoreIds)
             HM.SetObjectID(type, $"type '{type.Name}'", context.dndbt_id?.Text);
 
@@ -152,8 +153,8 @@ internal class PostgreSQLGetObjectInfoVisitor : PostgreSQLParserBaseVisitor<Obje
             type.TypeType = TypeType.Composite;
             foreach (Table_column_definitionContext attrContext in context._attrs)
             {
-                string attrName = UnquoteIdentifier(attrContext.identifier().GetText());
-                string attrDataType = UnquoteIdentifier(HM.GetInitialText(attrContext.data_type()));
+                string attrName = HMs.Unquote(attrContext.identifier().GetText());
+                string attrDataType = HMs.Unquote(HM.GetInitialText(attrContext.data_type()));
                 type.Attributes.Add(attrName, attrDataType);
             }
         }
@@ -165,12 +166,12 @@ internal class PostgreSQLGetObjectInfoVisitor : PostgreSQLParserBaseVisitor<Obje
         else if (context.RANGE() != null)
         {
             type.TypeType = TypeType.Range;
-            type.Subtype = UnquoteIdentifier(HM.GetInitialText(context.subtype_name));
-            type.SubtypeOperatorClass = UnquoteIdentifier(HM.GetInitialTextOrNull(context.subtype_operator_class));
-            type.Collation = UnquoteIdentifier(HM.GetInitialTextOrNull(context.collation));
-            type.CanonicalFunction = UnquoteIdentifier(HM.GetInitialTextOrNull(context.canonical_function));
-            type.SubtypeDiff = UnquoteIdentifier(HM.GetInitialTextOrNull(context.subtype_diff_function));
-            type.MultirangeTypeName = UnquoteIdentifier(HM.GetInitialTextOrNull(context.multirange_name));
+            type.Subtype = HMs.Unquote(HM.GetInitialText(context.subtype_name));
+            type.SubtypeOperatorClass = HMs.Unquote(HM.GetInitialTextOrNull(context.subtype_operator_class));
+            type.Collation = HMs.Unquote(HM.GetInitialTextOrNull(context.collation));
+            type.CanonicalFunction = HMs.Unquote(HM.GetInitialTextOrNull(context.canonical_function));
+            type.SubtypeDiff = HMs.Unquote(HM.GetInitialTextOrNull(context.subtype_diff_function));
+            type.MultirangeTypeName = HMs.Unquote(HM.GetInitialTextOrNull(context.multirange_name));
         }
 
         return type;
@@ -195,7 +196,7 @@ internal class PostgreSQLGetObjectInfoVisitor : PostgreSQLParserBaseVisitor<Obje
     {
         TypeInfo type = new();
         type.TypeType = TypeType.Domain;
-        type.Name = UnquoteIdentifier(context.name.GetText());
+        type.Name = HMs.Unquote(context.name.GetText());
         if (!_ignoreIds)
             HM.SetObjectID(type, $"type '{type.Name}'", context.dndbt_id?.Text);
 
@@ -216,7 +217,7 @@ internal class PostgreSQLGetObjectInfoVisitor : PostgreSQLParserBaseVisitor<Obje
         {
             ConstraintInfo constraint = new();
             if (constrContext.name != null)
-                constraint.Name = UnquoteIdentifier(constrContext.name.GetText());
+                constraint.Name = HMs.Unquote(constrContext.name.GetText());
             if (!_ignoreIds)
                 HM.SetObjectID(constraint, $"constraint '{constraint.Name}' in domain '{domainName}'", constrContext.dndbt_id?.Text);
 
@@ -229,7 +230,8 @@ internal class PostgreSQLGetObjectInfoVisitor : PostgreSQLParserBaseVisitor<Obje
     private FunctionInfo GetFunctionInfo(Create_function_statementContext context)
     {
         FunctionInfo function = new();
-        function.Name = UnquoteIdentifier(context.function_parameters().schema_qualified_name().GetText());
+        string funcNameText = context.function_parameters().schema_qualified_name().GetText();
+        function.Name = HMs.Unquote(HMs.RemoveSchemeIfAny(funcNameText, out string scheme));
         if (!_ignoreIds)
             HM.SetObjectID(function, $"function '{function.Name}'", context.dndbt_id?.Text);
 
@@ -242,11 +244,11 @@ internal class PostgreSQLGetObjectInfoVisitor : PostgreSQLParserBaseVisitor<Obje
     private ColumnInfo GetTableColumnInfo(Table_item_definitionContext context, string tableName)
     {
         ColumnInfo column = new();
-        column.Name = UnquoteIdentifier(context.table_column_definition().identifier().GetText());
+        column.Name = HMs.Unquote(context.table_column_definition().identifier().GetText());
         if (!_ignoreIds)
             HM.SetObjectID(column, $"column '{column.Name}' in table '{tableName}'", context.dndbt_id?.Text);
 
-        column.DataType = UnquoteIdentifier(HM.GetInitialText(context.table_column_definition().data_type()));
+        column.DataType = HMs.Unquote(HM.GetInitialText(context.table_column_definition().data_type()));
         foreach (Constraint_commonContext constraintCtx in context.table_column_definition().constraint_common())
             AddColumnConstraint(column, constraintCtx.constr_body());
         return column;
@@ -270,7 +272,7 @@ internal class PostgreSQLGetObjectInfoVisitor : PostgreSQLParserBaseVisitor<Obje
     {
         ConstraintInfo constraint = new();
         if (context.constraint_common().identifier() != null)
-            constraint.Name = UnquoteIdentifier(context.constraint_common().identifier().GetText());
+            constraint.Name = HMs.Unquote(context.constraint_common().identifier().GetText());
         if (!_ignoreIds)
             HM.SetObjectID(constraint, $"constraint '{constraint.Name}' in table '{tableName}'", context.dndbt_id?.Text);
 
@@ -295,25 +297,25 @@ internal class PostgreSQLGetObjectInfoVisitor : PostgreSQLParserBaseVisitor<Obje
         static void AddPrimaryKeyConstraintInfo(ConstraintInfo constraint, Constr_bodyContext context)
         {
             constraint.Type = ConstraintType.PrimaryKey;
-            foreach (string column in context.cols.names_references().schema_qualified_name().Select(x => UnquoteIdentifier(x.GetText())))
+            foreach (string column in context.cols.names_references().schema_qualified_name().Select(x => HMs.Unquote(x.GetText())))
                 constraint.Columns.Add(column);
         }
 
         static void AddUniqueConstraintInfo(ConstraintInfo constraint, Constr_bodyContext context)
         {
             constraint.Type = ConstraintType.Unique;
-            foreach (string column in context.cols.names_references().schema_qualified_name().Select(x => UnquoteIdentifier(x.GetText())))
+            foreach (string column in context.cols.names_references().schema_qualified_name().Select(x => HMs.Unquote(x.GetText())))
                 constraint.Columns.Add(column);
         }
 
         static void AddForeignKeyConstraintInfo(ConstraintInfo constraint, Constr_bodyContext context)
         {
             constraint.Type = ConstraintType.ForeignKey;
-            foreach (string column in context.cols.names_references().schema_qualified_name().Select(x => UnquoteIdentifier(x.GetText())))
+            foreach (string column in context.cols.names_references().schema_qualified_name().Select(x => HMs.Unquote(x.GetText())))
                 constraint.Columns.Add(column);
 
-            constraint.RefTable = UnquoteIdentifier(context.schema_qualified_name().GetText());
-            foreach (string column in context.refcols.names_references().schema_qualified_name().Select(x => UnquoteIdentifier(x.GetText())))
+            constraint.RefTable = HMs.Unquote(context.schema_qualified_name().GetText());
+            foreach (string column in context.refcols.names_references().schema_qualified_name().Select(x => HMs.Unquote(x.GetText())))
                 constraint.RefColumns.Add(column);
 
             foreach (Fk_action_clauseContext fkActionClause in context.fk_action_clause())
@@ -324,10 +326,5 @@ internal class PostgreSQLGetObjectInfoVisitor : PostgreSQLParserBaseVisitor<Obje
                     constraint.DeleteAction = HM.GetInitialText(fkActionClause.fk_action());
             }
         }
-    }
-
-    private static string UnquoteIdentifier(string quotedIdentifier)
-    {
-        return quotedIdentifier?.Replace("\"", "");
     }
 }

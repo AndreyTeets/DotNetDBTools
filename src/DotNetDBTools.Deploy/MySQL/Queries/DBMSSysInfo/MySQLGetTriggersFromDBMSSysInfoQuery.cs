@@ -1,4 +1,5 @@
 ﻿using System;
+using DotNetDBTools.Analysis.Extensions;
 using DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.MySQL;
@@ -30,7 +31,7 @@ WHERE t.TRIGGER_SCHEMA = (select DATABASE());";
                 ID = Guid.NewGuid(),
                 Name = triggerRecord.TriggerName,
                 TableName = triggerRecord.TableName,
-                CreateStatement = new CodePiece { Code = triggerRecord.TriggerCode },
+                CreateStatement = new CodePiece { Code = triggerRecord.TriggerCode.NormalizeLineEndings() },
             };
         }
     }

@@ -232,6 +232,7 @@ Or do something more complex like this
 ```
 using Dapper;
 using DotNetDBTools.Analysis;
+using DotNetDBTools.Analysis.Errors;
 using DotNetDBTools.DefinitionParsing;
 using DotNetDBTools.Deploy;
 using DotNetDBTools.Generation;
@@ -239,33 +240,45 @@ using DotNetDBTools.Models.Core;
 using Npgsql;
 
 const string ConnectionString = @"Host=127.0.0.1;Port=5007;Database=my_db;Username=postgres;Password=Strong(!)Passw0rd";
-const string PathToGeneratedProject = "./generated_project";
-const string PathToUpdateScriptFile = "./update.sql";
+const string PathToGeneratedProjectV1 = "./generated_project_v1";
+const string PathToGeneratedProjectV2 = "./generated_project_v2";
+const string PathToUpdateScriptFile = "./update_v1_to_v2.sql";
 
 using NpgsqlConnection connection = new(ConnectionString);
 
 // Load db model from currently existing non-dndbt-registered database.
-PostgreSQLDeployManager deployManager = new();
-Database dbNow = deployManager.CreateDatabaseModelUsingDBMSSysInfo(connection);
+IDeployManager deployManager = new PostgreSQLDeployManager(new DeployOptions() { AllowDataLoss = true });
+Database dbLoadedFromDbms = deployManager.CreateDatabaseModelUsingDBMSSysInfo(connection);
 
 // Generate definition for it in sql-definition format.
-GenerationManager generator = new(new GenerationOptions() { OutputDefinitionKind = OutputDefinitionKind.Sql });
-generator.GenerateDefinition(dbNow, PathToGeneratedProject);
-// Save created sql files to git repo, modify something.
+GenerationOptions generationOptions = new GenerationOptions() { OutputDefinitionKind = OutputDefinitionKind.Sql };
+IGenerationManager generator = new GenerationManager(generationOptions);
+generator.GenerateDefinition(dbLoadedFromDbms, PathToGeneratedProjectV1);
+generator.GenerateDefinition(dbLoadedFromDbms, PathToGeneratedProjectV2);
+// Save created sql files to git repo, modify something in v2.
 
-// Load modified db model from sql files.
-List<string> statements = new();
-foreach (string filePath in Directory.GetFiles(PathToGeneratedProject, "*.sql", SearchOption.AllDirectories))
+// Load old and modified db model from sql files.
+// (loading v1 from DBMS again would generate new IDs for every object because it's unregistered)
+static Database LoadDatabaseDirectlyFromSqlFiles(string pathToProject, int versionToSetInDbModel)
 {
-    string createDbObjectStatementWithIdDeclarations = File.ReadAllText(filePath);
-    statements.Add(createDbObjectStatementWithIdDeclarations);
+    List<string> statements = new();
+    foreach (string filePath in Directory.GetFiles(pathToProject, "*.sql", SearchOption.AllDirectories))
+    {
+        string createDbObjectStatementWithIdDeclarations = File.ReadAllText(filePath);
+        statements.Add(createDbObjectStatementWithIdDeclarations);
+    }
+    DefinitionParsingManager definitionParser = new();
+    Database db = definitionParser.CreateDbModel(statements, dbVersion: versionToSetInDbModel, DatabaseKind.PostgreSQL);
+    if (!new AnalysisManager().DbIsValid(db, out List<DbError> dbErrors))
+        throw new Exception($"Db is invalid:\n{string.Join("\n", dbErrors.Select(x => x.ErrorMessage))}");
+    return db;
 }
-DefinitionParsingManager definitionParser = new();
-Database dbToUpdateTo = definitionParser.CreateDbModel(statements, dbVersion: 2, DatabaseKind.PostgreSQL);
+Database dbV1 = LoadDatabaseDirectlyFromSqlFiles(PathToGeneratedProjectV1, 1);
+Database dbV2 = LoadDatabaseDirectlyFromSqlFiles(PathToGeneratedProjectV2, 2);
 
 // Write out all removed tables/columns.
 AnalysisManager analyzer = new();
-DatabaseDiff dbDiff = analyzer.CreateDatabaseDiff(dbToUpdateTo, dbNow);
+DatabaseDiff dbDiff = analyzer.CreateDatabaseDiff(dbV2, dbV1);
 foreach (Table table in dbDiff.RemovedTables)
 {
     string tableSqlDefinition = GenerationManager.GenerateSqlCreateStatement(table, includeIdDeclarations: true);
@@ -282,8 +295,8 @@ foreach (TableDiff tDiff in dbDiff.ChangedTables)
 // Manually inspect/validate it.
 
 // Generate an update script without any DNDBT info for updating to new state.
-string updateScript = deployManager.GenerateNoDNDBTInfoPublishScript(dbToUpdateTo, dbNow);
-File.AppendAllText(PathToUpdateScriptFile, updateScript);
+string updateScript = deployManager.GenerateNoDNDBTInfoPublishScript(dbV2, dbV1);
+File.WriteAllText(PathToUpdateScriptFile, updateScript);
 // Manually inspect/validate it.
 
 // Execute update script later.

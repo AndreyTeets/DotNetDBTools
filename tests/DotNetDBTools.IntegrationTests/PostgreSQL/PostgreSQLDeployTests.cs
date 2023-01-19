@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using System.Text.RegularExpressions;
 using DotNetDBTools.Deploy;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.PostgreSQL;
@@ -27,14 +28,15 @@ public class PostgreSQLDeployTests : BaseDeployTests<
     protected override EquivalencyAssertionOptions<PostgreSQLDatabase> AddAdditionalDbModelEquivalenceyOptions(
         EquivalencyAssertionOptions<PostgreSQLDatabase> options, CompareMode compareMode)
     {
-        if (compareMode.HasFlag(CompareMode.NormalizeCodePieces))
-            options = options.Excluding(database => database.Functions);
         return options;
     }
 
     protected override string GetNormalizedCodeFromCodePiece(CodePiece codePiece)
     {
-        return codePiece.Code.ToUpper()
+        string res = codePiece.Code.ToUpper();
+        res = Regex.Replace(res, @"(\s)INT([,)\s])", m => $"{m.Groups[1].Value}INTEGER{m.Groups[2].Value}");
+
+        res = res
             .Replace("\r", "")
             .Replace("\n", "")
             .Replace(" ", "")
@@ -53,8 +55,12 @@ public class PostgreSQLDeployTests : BaseDeployTests<
             .Replace("::TIMESTAMPWITHTIMEZONE", "")
             .Replace("::\"MYCOMPOSITETYPE1\"", "")
             .Replace(".00", "")
+            .Replace("$FUNCBODY$", "$FUNCTION$")
+            .Replace("CREATEORREPLACE", "CREATE")
             .Replace("EXECUTEPROCEDURE", "EXECUTEFUNCTION")
             .Replace("PUBLIC.", "");
+
+        return res;
     }
 
     protected override void CreateDatabase(string testName)

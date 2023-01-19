@@ -55,6 +55,9 @@ internal class PostgreSQLDiffCreator : DiffCreator
     {
         _addedObjects.Add(item.ID);
         _objectsThatRequireRedefinition.Add(item.ID);
+        // TODO don't add table when parsing column deps works
+        if (item is Column column)
+            _objectsThatRequireRedefinition.Add(column.Parent.ID);
     }
 
     protected override void OnChangedItemProcessed<TItem>(TItem newItem, TItem oldItem)

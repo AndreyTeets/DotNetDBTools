@@ -191,7 +191,7 @@ internal abstract class DbModelFromDBMSProvider<
             {
                 ID = Guid.NewGuid(),
                 Name = viewRecord.ViewName,
-                CreateStatement = new CodePiece { Code = viewRecord.ViewCode },
+                CreateStatement = new CodePiece { Code = viewRecord.ViewCode.NormalizeLineEndings() },
             };
             views.Add(view);
         }

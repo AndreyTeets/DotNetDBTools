@@ -64,8 +64,15 @@ internal static class PostgreSQLHelperMethods
         return res.Replace("'", "");
     }
 
+    public static string RemoveSchemeIfAny(string quotedIdentifier, out string scheme)
+    {
+        string[] identifierParts = quotedIdentifier.Split('.');
+        scheme = identifierParts.Length == 1 ? null : identifierParts[identifierParts.Length - 2];
+        return identifierParts[identifierParts.Length - 1];
+    }
+
     public static string Unquote(string quotedIdentifier)
     {
-        return quotedIdentifier.Replace("\"", "");
+        return quotedIdentifier?.Replace("\"", "");
     }
 }

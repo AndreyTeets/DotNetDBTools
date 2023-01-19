@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DotNetDBTools.Analysis.Extensions;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Queries;
 using DotNetDBTools.Deploy.PostgreSQL.Queries.DBMSSysInfo;
@@ -242,7 +243,7 @@ internal class PostgreSQLDbModelFromDBMSProvider : DbModelFromDBMSProvider<
             {
                 ID = Guid.NewGuid(),
                 Name = funcRecord.FunctionName,
-                CreateStatement = new CodePiece { Code = funcRecord.FunctionCode },
+                CreateStatement = new CodePiece { Code = funcRecord.FunctionCode.NormalizeLineEndings() },
             };
             funcsList.Add(func);
         }
