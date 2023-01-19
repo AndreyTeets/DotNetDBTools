@@ -244,22 +244,19 @@ const string PathToGeneratedProjectV1 = "./generated_project_v1";
 const string PathToGeneratedProjectV2 = "./generated_project_v2";
 const string PathToUpdateScriptFile = "./update_v1_to_v2.sql";
 
-using NpgsqlConnection connection = new(ConnectionString);
-
 // Load db model from currently existing non-dndbt-registered database.
-IDeployManager deployManager = new PostgreSQLDeployManager(new DeployOptions() { AllowDataLoss = true });
-Database dbLoadedFromDbms = deployManager.CreateDatabaseModelUsingDBMSSysInfo(connection);
+using NpgsqlConnection connection = new(ConnectionString);
+Database dbLoadedFromDbms = new PostgreSQLDeployManager().CreateDatabaseModelUsingDBMSSysInfo(connection);
 
 // Generate definition for it in sql-definition format.
-GenerationOptions generationOptions = new GenerationOptions() { OutputDefinitionKind = OutputDefinitionKind.Sql };
-IGenerationManager generator = new GenerationManager(generationOptions);
+GenerationManager generator = new(new GenerationOptions() { OutputDefinitionKind = OutputDefinitionKind.Sql });
 generator.GenerateDefinition(dbLoadedFromDbms, PathToGeneratedProjectV1);
 generator.GenerateDefinition(dbLoadedFromDbms, PathToGeneratedProjectV2);
 // Save created sql files to git repo, modify something in v2.
 
 // Load old and modified db model from sql files.
 // (loading v1 from DBMS again would generate new IDs for every object because it's unregistered)
-static Database LoadDatabaseDirectlyFromSqlFiles(string pathToProject, int versionToSetInDbModel)
+static Database LoadDatabaseDirectlyFromSqlFiles(string pathToProject, int versionToSetForDbModel)
 {
     List<string> statements = new();
     foreach (string filePath in Directory.GetFiles(pathToProject, "*.sql", SearchOption.AllDirectories))
@@ -267,8 +264,7 @@ static Database LoadDatabaseDirectlyFromSqlFiles(string pathToProject, int versi
         string createDbObjectStatementWithIdDeclarations = File.ReadAllText(filePath);
         statements.Add(createDbObjectStatementWithIdDeclarations);
     }
-    DefinitionParsingManager definitionParser = new();
-    Database db = definitionParser.CreateDbModel(statements, dbVersion: versionToSetInDbModel, DatabaseKind.PostgreSQL);
+    Database db = new DefinitionParsingManager().CreateDbModel(statements, versionToSetForDbModel, DatabaseKind.PostgreSQL);
     if (!new AnalysisManager().DbIsValid(db, out List<DbError> dbErrors))
         throw new Exception($"Db is invalid:\n{string.Join("\n", dbErrors.Select(x => x.ErrorMessage))}");
     return db;
@@ -277,8 +273,7 @@ Database dbV1 = LoadDatabaseDirectlyFromSqlFiles(PathToGeneratedProjectV1, 1);
 Database dbV2 = LoadDatabaseDirectlyFromSqlFiles(PathToGeneratedProjectV2, 2);
 
 // Write out all removed tables/columns.
-AnalysisManager analyzer = new();
-DatabaseDiff dbDiff = analyzer.CreateDatabaseDiff(dbV2, dbV1);
+DatabaseDiff dbDiff = new AnalysisManager().CreateDatabaseDiff(dbV2, dbV1);
 foreach (Table table in dbDiff.RemovedTables)
 {
     string tableSqlDefinition = GenerationManager.GenerateSqlCreateStatement(table, includeIdDeclarations: true);
@@ -288,14 +283,15 @@ foreach (TableDiff tDiff in dbDiff.ChangedTables)
 {
     foreach (Column c in tDiff.ColumnsToDrop)
     {
-        string changeInfo = $"Table {tDiff.OldTableName} (TableID={tDiff.TableID}) column {c.Name} was removed.";
+        string changeInfo = $"Column was removed: TableName: {tDiff.OldTableName}, ColumnName: {c.Name}";
         Console.WriteLine(changeInfo);
     }
 }
 // Manually inspect/validate it.
 
 // Generate an update script without any DNDBT info for updating to new state.
-string updateScript = deployManager.GenerateNoDNDBTInfoPublishScript(dbV2, dbV1);
+string updateScript = new PostgreSQLDeployManager(new DeployOptions() { AllowDataLoss = true })
+    .GenerateNoDNDBTInfoPublishScript(dbV2, dbV1);
 File.WriteAllText(PathToUpdateScriptFile, updateScript);
 // Manually inspect/validate it.
 

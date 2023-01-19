@@ -32,6 +32,7 @@ public abstract class DeployManager<TDatabase> : IDeployManager
         _definitionParsingManager = new DefinitionParsingManager();
     }
 
+    /// <inheritdoc />
     public bool IsRegisteredAsDNDBT(IDbConnection connection)
     {
         Events.InvokeEventFired(EventType.IsRegisteredBegan);
@@ -41,21 +42,25 @@ public abstract class DeployManager<TDatabase> : IDeployManager
         Events.InvokeEventFired(EventType.IsRegisteredFinished);
         return isRegistered;
     }
+    /// <inheritdoc />
     public void RegisterAsDNDBT(IDbConnection connection)
     {
         Database dbWithDNDBTInfo = CreateDbModelFromDBMS(connection, ExpectedRegistrationState.Unregistered, useDNDBTSysInfoIfAvailable: null);
         RegisterAsDNDBTImpl(connection, dbWithDNDBTInfo);
     }
+    /// <inheritdoc />
     public void RegisterAsDNDBT(IDbConnection connection, string dbWithDNDBTInfoAssemblyPath)
     {
         Assembly dbAssembly = _definitionParsingManager.LoadDbAssembly(dbWithDNDBTInfoAssemblyPath);
         RegisterAsDNDBT(connection, dbAssembly);
     }
+    /// <inheritdoc />
     public void RegisterAsDNDBT(IDbConnection connection, Assembly dbWithDNDBTInfoAssembly)
     {
         Database dbWithDNDBTInfo = CreateDbModelFromDefinition(dbWithDNDBTInfoAssembly);
         RegisterAsDNDBT(connection, dbWithDNDBTInfo);
     }
+    /// <inheritdoc />
     public void RegisterAsDNDBT(IDbConnection connection, Database dbWithDNDBTInfo)
     {
         Database actualDb = CreateDbModelFromDBMS(connection, ExpectedRegistrationState.Unregistered, useDNDBTSysInfoIfAvailable: null);
@@ -63,6 +68,7 @@ public abstract class DeployManager<TDatabase> : IDeployManager
             throw new Exception($"Actual database differs from the one provided for DNDBTInfo. DiffLog:\n{diffLog}");
         RegisterAsDNDBTImpl(connection, dbWithDNDBTInfo);
     }
+    /// <inheritdoc />
     public void UnregisterAsDNDBT(IDbConnection connection)
     {
         Events.InvokeEventFired(EventType.UnregisterBegan);
@@ -71,16 +77,19 @@ public abstract class DeployManager<TDatabase> : IDeployManager
         Events.InvokeEventFired(EventType.UnregisterFinished);
     }
 
+    /// <inheritdoc />
     public void PublishDatabase(string dbAssemblyPath, IDbConnection connection)
     {
         Assembly dbAssembly = _definitionParsingManager.LoadDbAssembly(dbAssemblyPath);
         PublishDatabase(dbAssembly, connection);
     }
+    /// <inheritdoc />
     public void PublishDatabase(Assembly dbAssembly, IDbConnection connection)
     {
         Database newDatabase = CreateDbModelFromDefinition(dbAssembly);
         PublishDatabase(newDatabase, connection);
     }
+    /// <inheritdoc />
     public void PublishDatabase(Database database, IDbConnection connection)
     {
         Database oldDatabase = CreateDbModelFromDBMS(connection, ExpectedRegistrationState.Registered, useDNDBTSysInfoIfAvailable: true);
@@ -90,93 +99,109 @@ public abstract class DeployManager<TDatabase> : IDeployManager
         Events.InvokeEventFired(EventType.PublishFinished);
     }
 
+    /// <inheritdoc />
     public string GeneratePublishScript(string dbAssemblyPath, IDbConnection connection)
     {
         Assembly newDbAssembly = _definitionParsingManager.LoadDbAssembly(dbAssemblyPath);
         return GeneratePublishScript(newDbAssembly, connection);
     }
+    /// <inheritdoc />
     public string GeneratePublishScript(Assembly dbAssembly, IDbConnection connection)
     {
         Database newDatabase = CreateDbModelFromDefinition(dbAssembly);
         return GeneratePublishScript(newDatabase, connection);
     }
+    /// <inheritdoc />
     public string GeneratePublishScript(Database database, IDbConnection connection)
     {
         Database oldDatabase = CreateDbModelFromDBMS(connection, ExpectedRegistrationState.Registered, useDNDBTSysInfoIfAvailable: true);
         return GeneratePublishScriptImpl(database, oldDatabase, noDNDBTInfo: false);
     }
 
+    /// <inheritdoc />
     public string GeneratePublishScript(string dbAssemblyPath)
     {
         Assembly dbAssembly = _definitionParsingManager.LoadDbAssembly(dbAssemblyPath);
         return GeneratePublishScript(dbAssembly);
     }
+    /// <inheritdoc />
     public string GeneratePublishScript(Assembly dbAssembly)
     {
         Database newDatabase = CreateDbModelFromDefinition(dbAssembly);
         return GeneratePublishScript(newDatabase);
     }
+    /// <inheritdoc />
     public string GeneratePublishScript(Database database)
     {
         Database oldDatabase = CreateEmptyDbModel();
         return GeneratePublishScriptImpl(database, oldDatabase, noDNDBTInfo: false);
     }
 
+    /// <inheritdoc />
     public string GeneratePublishScript(string newDbAssemblyPath, string oldDbAssemblyPath)
     {
         Assembly newDbAssembly = _definitionParsingManager.LoadDbAssembly(newDbAssemblyPath);
         Assembly oldDbAssembly = _definitionParsingManager.LoadDbAssembly(oldDbAssemblyPath);
         return GeneratePublishScript(newDbAssembly, oldDbAssembly);
     }
+    /// <inheritdoc />
     public string GeneratePublishScript(Assembly newDbAssembly, Assembly oldDbAssembly)
     {
         Database newDatabase = CreateDbModelFromDefinition(newDbAssembly);
         Database oldDatabase = CreateDbModelFromDefinition(oldDbAssembly);
         return GeneratePublishScript(newDatabase, oldDatabase);
     }
+    /// <inheritdoc />
     public string GeneratePublishScript(Database newDatabase, Database oldDatabase)
     {
         return GeneratePublishScriptImpl(newDatabase, oldDatabase, noDNDBTInfo: false);
     }
 
+    /// <inheritdoc />
     public string GenerateNoDNDBTInfoPublishScript(string dbAssemblyPath)
     {
         Assembly dbAssembly = _definitionParsingManager.LoadDbAssembly(dbAssemblyPath);
         return GenerateNoDNDBTInfoPublishScript(dbAssembly);
     }
+    /// <inheritdoc />
     public string GenerateNoDNDBTInfoPublishScript(Assembly dbAssembly)
     {
         Database newDatabase = CreateDbModelFromDefinition(dbAssembly);
         return GenerateNoDNDBTInfoPublishScript(newDatabase);
     }
+    /// <inheritdoc />
     public string GenerateNoDNDBTInfoPublishScript(Database database)
     {
         Database oldDatabase = CreateEmptyDbModel();
         return GeneratePublishScriptImpl(database, oldDatabase, noDNDBTInfo: true);
     }
 
+    /// <inheritdoc />
     public string GenerateNoDNDBTInfoPublishScript(string newDbAssemblyPath, string oldDbAssemblyPath)
     {
         Assembly newDbAssembly = _definitionParsingManager.LoadDbAssembly(newDbAssemblyPath);
         Assembly oldDbAssembly = _definitionParsingManager.LoadDbAssembly(oldDbAssemblyPath);
         return GenerateNoDNDBTInfoPublishScript(newDbAssembly, oldDbAssembly);
     }
+    /// <inheritdoc />
     public string GenerateNoDNDBTInfoPublishScript(Assembly newDbAssembly, Assembly oldDbAssembly)
     {
         Database newDatabase = CreateDbModelFromDefinition(newDbAssembly);
         Database oldDatabase = CreateDbModelFromDefinition(oldDbAssembly);
         return GenerateNoDNDBTInfoPublishScript(newDatabase, oldDatabase);
     }
+    /// <inheritdoc />
     public string GenerateNoDNDBTInfoPublishScript(Database newDatabase, Database oldDatabase)
     {
         return GeneratePublishScriptImpl(newDatabase, oldDatabase, noDNDBTInfo: true);
     }
 
+    /// <inheritdoc />
     public void GenerateDefinition(IDbConnection connection, string outputDirectory)
     {
         GenerateDefinition(connection, new GenerationOptions(), outputDirectory);
     }
-
+    /// <inheritdoc />
     public void GenerateDefinition(IDbConnection connection, GenerationOptions generationOptions, string outputDirectory)
     {
         Database database = CreateDbModelFromDBMS(connection, ExpectedRegistrationState.Any, useDNDBTSysInfoIfAvailable: true);
@@ -185,10 +210,12 @@ public abstract class DeployManager<TDatabase> : IDeployManager
         Events.InvokeEventFired(EventType.GenerateDefinitionFinished);
     }
 
+    /// <inheritdoc />
     public Database CreateDatabaseModelUsingDNDBTSysInfo(IDbConnection connection)
     {
         return CreateDbModelFromDBMS(connection, ExpectedRegistrationState.Registered, useDNDBTSysInfoIfAvailable: true);
     }
+    /// <inheritdoc />
     public Database CreateDatabaseModelUsingDBMSSysInfo(IDbConnection connection)
     {
         return CreateDbModelFromDBMS(connection, ExpectedRegistrationState.Any, useDNDBTSysInfoIfAvailable: false);

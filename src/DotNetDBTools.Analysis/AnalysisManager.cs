@@ -16,6 +16,7 @@ namespace DotNetDBTools.Analysis;
 
 public class AnalysisManager : IAnalysisManager
 {
+    /// <inheritdoc />
     public bool DbIsValid(Database database, out List<DbError> dbErrors)
     {
         return database.Kind switch
@@ -28,7 +29,7 @@ public class AnalysisManager : IAnalysisManager
             _ => throw new InvalidOperationException($"Invalid {nameof(DbIsValid)} dbKind: {database.Kind}"),
         };
     }
-
+    /// <inheritdoc />
     public bool DatabasesAreEquivalentExcludingDNDBTInfo(Database database1, Database database2, out string diffLog)
     {
         DNDBTModelsEqualityComparer comparer = new();
@@ -41,7 +42,7 @@ public class AnalysisManager : IAnalysisManager
         diffLog = comparer.DiffLog;
         return res;
     }
-
+    /// <inheritdoc />
     public bool DbObjectsAreEquivalentExcludingDNDBTInfo(DbObject dbObject1, DbObject dbObject2, out string diffLog)
     {
         DNDBTModelsEqualityComparer comparer = new();
@@ -53,6 +54,7 @@ public class AnalysisManager : IAnalysisManager
         return res;
     }
 
+    /// <inheritdoc />
     public DatabaseDiff CreateDatabaseDiff(Database newDatabase, Database oldDatabase)
     {
         return newDatabase.Kind switch
@@ -64,7 +66,7 @@ public class AnalysisManager : IAnalysisManager
             _ => throw new InvalidOperationException($"Invalid {nameof(CreateDatabaseDiff)} dbKind: {newDatabase.Kind}"),
         };
     }
-
+    /// <inheritdoc />
     public bool DiffIsEmpty(DatabaseDiff dbDiff)
     {
         return DiffAnalyzer.IsEmpty(dbDiff);
@@ -89,7 +91,7 @@ public class AnalysisManager : IAnalysisManager
     {
         return DiffAnalyzer.IsEmpty(typeDiff);
     }
-
+    /// <inheritdoc />
     public bool DiffLeadsToDataLoss(DatabaseDiff dbDiff)
     {
         if (dbDiff.RemovedTables.Any())
@@ -102,6 +104,7 @@ public class AnalysisManager : IAnalysisManager
         return false;
     }
 
+    /// <inheritdoc />
     public Database ConvertFromAgnostic(Database database, DatabaseKind targetKind)
     {
         return targetKind switch
@@ -113,7 +116,7 @@ public class AnalysisManager : IAnalysisManager
             _ => throw new InvalidOperationException($"Invalid {nameof(ConvertFromAgnostic)} dbKind: {targetKind}"),
         };
     }
-
+    /// <inheritdoc />
     public DataType ConvertDataType(CSharpDataType dataType, DatabaseKind targetKind)
     {
         return targetKind switch
@@ -125,7 +128,7 @@ public class AnalysisManager : IAnalysisManager
             _ => throw new InvalidOperationException($"Invalid {nameof(ConvertDataType)} dbKind: {targetKind}"),
         };
     }
-
+    /// <inheritdoc />
     public CodePiece ConvertDefaultValue(CSharpDefaultValue defaultValue, DatabaseKind targetKind)
     {
         return targetKind switch
@@ -138,6 +141,7 @@ public class AnalysisManager : IAnalysisManager
         };
     }
 
+    /// <inheritdoc />
     public void DoCreateSpecificDbmsDbModelFromDefinitionPostProcessing(Database database)
     {
         IDbModelPostProcessor dbModelPostProcessor = database.Kind switch
@@ -150,7 +154,7 @@ public class AnalysisManager : IAnalysisManager
         };
         dbModelPostProcessor.DoSpecificDbmsDbModelCreationFromDefinitionPostProcessing(database);
     }
-
+    /// <inheritdoc />
     public void DoPostProcessing(Database database)
     {
         IDbModelPostProcessor dbModelPostProcessor = database.Kind switch
@@ -164,7 +168,7 @@ public class AnalysisManager : IAnalysisManager
         };
         dbModelPostProcessor.DoPostProcessing(database);
     }
-
+    /// <inheritdoc />
     public void BuildDependencies(Database database)
     {
         IDependenciesBuilder dependenciesBuilder = database.Kind switch

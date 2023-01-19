@@ -7,6 +7,7 @@ namespace DotNetDBTools.CodeParsing;
 
 public class SQLiteCodeParser : CodeParser<SQLiteParser, SQLiteLexer>
 {
+    /// <inheritdoc />
     public override ObjectInfo GetObjectInfo(string createStatement)
     {
         if (ScriptDeclarationParser.TryParseScriptInfo(createStatement, out ScriptInfo scriptInfo))

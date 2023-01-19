@@ -42,6 +42,7 @@ public class GenerationManager : IGenerationManager
         Options = options;
     }
 
+    /// <inheritdoc />
     public void GenerateDescription(Database database, string outputPath)
     {
         string generatedDescription = GenerateDescription(database);
@@ -49,7 +50,7 @@ public class GenerationManager : IGenerationManager
         Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
         File.WriteAllText(fullPath, generatedDescription);
     }
-
+    /// <inheritdoc />
     public string GenerateDescription(Database database)
     {
         return database.Kind switch
@@ -63,6 +64,7 @@ public class GenerationManager : IGenerationManager
         };
     }
 
+    /// <inheritdoc />
     public void GenerateDefinition(Database database, string outputDirectory)
     {
         if (Directory.Exists(outputDirectory))
@@ -76,7 +78,7 @@ public class GenerationManager : IGenerationManager
             File.WriteAllText(fullPath, file.SourceText);
         }
     }
-
+    /// <inheritdoc />
     public IEnumerable<DefinitionSourceFile> GenerateDefinition(Database database)
     {
         IDefinitionGenerator definitionGenerator = database.Kind switch

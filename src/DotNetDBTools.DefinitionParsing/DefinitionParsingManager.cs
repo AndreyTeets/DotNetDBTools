@@ -15,6 +15,7 @@ namespace DotNetDBTools.DefinitionParsing;
 
 public class DefinitionParsingManager : IDefinitionParsingManager
 {
+    /// <inheritdoc />
     public Assembly LoadDbAssembly(string dbAssemblyPath)
     {
         string fullDbAssemblyPath = Path.GetFullPath(dbAssemblyPath);
@@ -23,12 +24,13 @@ public class DefinitionParsingManager : IDefinitionParsingManager
         return dbAssembly;
     }
 
+    /// <inheritdoc />
     public Database CreateDbModel(string dbAssemblyPath)
     {
         Assembly dbAssembly = LoadDbAssembly(dbAssemblyPath);
         return CreateDbModel(dbAssembly);
     }
-
+    /// <inheritdoc />
     public Database CreateDbModel(Assembly dbAssembly)
     {
         (DefinitionKind defKind, DatabaseKind dbKind) = DbAssemblyInfoHelper.GetDbKind(dbAssembly);
@@ -42,7 +44,7 @@ public class DefinitionParsingManager : IDefinitionParsingManager
             _ => throw new InvalidOperationException($"Invalid defKind: {defKind}"),
         };
     }
-
+    /// <inheritdoc />
     public Database CreateDbModel(IEnumerable<string> definitionSqlStatements, long dbVersion, DatabaseKind dbKind)
     {
         IDbModelFromSqlDefinitionProvider dbModelFromDefinitionProvider = dbKind switch

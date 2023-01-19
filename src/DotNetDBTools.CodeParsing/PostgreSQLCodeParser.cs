@@ -9,6 +9,7 @@ namespace DotNetDBTools.CodeParsing;
 
 public class PostgreSQLCodeParser : CodeParser<PostgreSQLParser, PostgreSQLLexer>
 {
+    /// <inheritdoc />
     public override ObjectInfo GetObjectInfo(string createStatement)
     {
         if (ScriptDeclarationParser.TryParseScriptInfo(createStatement, out ScriptInfo scriptInfo))

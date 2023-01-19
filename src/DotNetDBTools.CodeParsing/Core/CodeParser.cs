@@ -21,6 +21,7 @@ public abstract class CodeParser<TParser, TLexer> : ICodeParser
 
     private readonly ErrorListener _errorListener = new();
 
+    /// <inheritdoc />
     public abstract ObjectInfo GetObjectInfo(string createStatement);
 
     protected ObjectInfo ParseObjectInfo<TGetObjectInfoVisitor>(string input, Func<TParser, IParseTree> startRule)
