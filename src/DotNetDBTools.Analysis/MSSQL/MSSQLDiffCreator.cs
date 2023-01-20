@@ -62,25 +62,14 @@ internal class MSSQLDiffCreator : DiffCreator
 
     private void BuildUserDefinedTypesDiff(MSSQLDatabaseDiff dbDiff)
     {
-        List<MSSQLUserDefinedType> addedUserDefinedTypes = null;
-        List<MSSQLUserDefinedType> removedUserDefinedTypes = null;
-        List<MSSQLUserDefinedTypeDiff> changedUserDefinedTypes = new();
-        FillAddedAndRemovedItemsAndApplyActionToChangedItems(
-            ((MSSQLDatabase)dbDiff.NewDatabase).UserDefinedTypes, ((MSSQLDatabase)dbDiff.OldDatabase).UserDefinedTypes,
-            ref addedUserDefinedTypes, ref removedUserDefinedTypes,
-            (newType, oldType) =>
-            {
-                MSSQLUserDefinedTypeDiff udtDiff = new()
-                {
-                    NewUserDefinedType = newType,
-                    OldUserDefinedType = oldType,
-                };
-                changedUserDefinedTypes.Add(udtDiff);
-            });
+        FillAddedAndRemovedItemsAndAddChangedToBoth(
+            ((MSSQLDatabase)dbDiff.NewDatabase).UserDefinedTypes,
+            ((MSSQLDatabase)dbDiff.OldDatabase).UserDefinedTypes,
+            out List<MSSQLUserDefinedType> addedUserDefinedTypes,
+            out List<MSSQLUserDefinedType> removedUserDefinedTypes);
 
-        dbDiff.AddedUserDefinedTypes = addedUserDefinedTypes;
-        dbDiff.RemovedUserDefinedTypes = removedUserDefinedTypes;
-        dbDiff.ChangedUserDefinedTypes = changedUserDefinedTypes;
+        dbDiff.UserDefinedTypesToCreate = addedUserDefinedTypes;
+        dbDiff.UserDefinedTypesToDrop = removedUserDefinedTypes;
     }
 
     private bool CanBeAlteredWithoutRedefinition(DbObject newDbObject, DbObject oldDbObject)

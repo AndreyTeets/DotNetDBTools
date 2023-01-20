@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using DotNetDBTools.Deploy.Common.Editors;
+﻿using DotNetDBTools.Deploy.Common.Editors;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Editors;
 using DotNetDBTools.Deploy.Core.Queries;
@@ -103,15 +102,13 @@ internal class MSSQLDbEditor : DbEditor<
 
         _tableEditor.DropTables(dbDiff);
 
-        foreach (MSSQLUserDefinedType udt in dbDiff.RemovedUserDefinedTypes.Concat(dbDiff.ChangedUserDefinedTypes.Select(x => x.OldUserDefinedType)))
+        foreach (MSSQLUserDefinedType udt in dbDiff.UserDefinedTypesToDrop)
             RenameUserDefinedTypeToTemp(udt);
-        foreach (MSSQLUserDefinedType udt in dbDiff.AddedUserDefinedTypes.Concat(dbDiff.ChangedUserDefinedTypes.Select(x => x.NewUserDefinedType)))
+        foreach (MSSQLUserDefinedType udt in dbDiff.UserDefinedTypesToCreate)
             CreateUserDefinedType(udt);
-        foreach (MSSQLUserDefinedTypeDiff udtDiff in dbDiff.ChangedUserDefinedTypes)
-            UseNewUDTInAllTables(udtDiff);
 
         _tableEditor.AlterTables(dbDiff);
-        foreach (MSSQLUserDefinedType udt in dbDiff.RemovedUserDefinedTypes.Concat(dbDiff.ChangedUserDefinedTypes.Select(x => x.OldUserDefinedType)))
+        foreach (MSSQLUserDefinedType udt in dbDiff.UserDefinedTypesToDrop)
             Drop_RenamedToTemp_UserDefinedType(udt);
 
         _tableEditor.CreateTables(dbDiff);
@@ -152,11 +149,6 @@ internal class MSSQLDbEditor : DbEditor<
         MSSQLUserDefinedType renamedUdt = udt.CopyModel();
         renamedUdt.Name = $"_DNDBTTemp_{udt.Name}";
         QueryExecutor.Execute(new MSSQLDropTypeQuery(renamedUdt));
-    }
-
-    private void UseNewUDTInAllTables(MSSQLUserDefinedTypeDiff udtDiff)
-    {
-        QueryExecutor.Execute(new MSSQLUseNewUDTInAllTablesQuery(udtDiff));
     }
 
     private void CreateUserDefinedTableType(MSSQLUserDefinedTableType udtt)

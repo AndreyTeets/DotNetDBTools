@@ -6,9 +6,8 @@ namespace DotNetDBTools.Models.MSSQL;
 
 public class MSSQLDatabaseDiff : DatabaseDiff
 {
-    public List<MSSQLUserDefinedType> AddedUserDefinedTypes { get; set; } = new();
-    public List<MSSQLUserDefinedType> RemovedUserDefinedTypes { get; set; } = new();
-    public List<MSSQLUserDefinedTypeDiff> ChangedUserDefinedTypes { get; set; } = new();
+    public List<MSSQLUserDefinedType> UserDefinedTypesToCreate { get; set; } = new();
+    public List<MSSQLUserDefinedType> UserDefinedTypesToDrop { get; set; } = new();
 
     public List<MSSQLUserDefinedTableType> UserDefinedTableTypesToCreate { get; set; } = new();
     public List<MSSQLUserDefinedTableType> UserDefinedTableTypesToDrop { get; set; } = new();
