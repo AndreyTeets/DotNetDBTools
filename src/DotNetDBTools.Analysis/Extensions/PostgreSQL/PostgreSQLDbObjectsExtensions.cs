@@ -50,7 +50,7 @@ public static class PostgreSQLDbObjectsExtensions
     }
 
     /// <summary>
-    /// Creates empty table diff model and sets ColumnID and [New|Old]ColumnName
+    /// Creates empty column diff model and sets ColumnID and [New|Old]ColumnName
     /// </summary>
     public static PostgreSQLColumnDiff CreateEmptyColumnDiff(this Column column)
     {
@@ -59,8 +59,6 @@ public static class PostgreSQLDbObjectsExtensions
             ColumnID = column.ID,
             NewColumnName = column.Name,
             OldColumnName = column.Name,
-            NewColumn = new PostgreSQLColumn() { ID = column.ID, Name = column.Name, Default = new CodePiece() },
-            OldColumn = new PostgreSQLColumn() { ID = column.ID, Name = column.Name, Default = new CodePiece() },
         };
     }
 

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using DotNetDBTools.Generation.Core;
@@ -33,8 +34,8 @@ $@"{GetIdDeclarationText(table, 0)}CREATE TABLE [{table.Name}]
         if (tableDiff.NewTable.Name != tableDiff.OldTable.Name)
             sb.AppendLine(Statements.RenameTable(tableDiff.OldTable.Name, tableDiff.NewTable.Name));
 
-        foreach (ColumnDiff columnDiff in tableDiff.ColumnsToAlter.Where(x => x.NewColumn.Name != x.OldColumn.Name))
-            sb.AppendLine(Statements.RenameColumn(tableDiff.NewTable.Name, columnDiff.OldColumn.Name, columnDiff.NewColumn.Name));
+        foreach (ColumnDiff columnDiff in tableDiff.ColumnsToAlter.Where(x => x.NewColumnName != x.OldColumnName))
+            sb.AppendLine(Statements.RenameColumn(tableDiff.NewTable.Name, columnDiff.OldColumnName, columnDiff.NewColumnName));
 
         string tableAlters = GetTableAltersText(tableDiff);
         if (!string.IsNullOrEmpty(tableAlters))
@@ -100,34 +101,29 @@ $@"    {GetIdDeclarationText(fk, 4)}{Statements.DefForeignKey(fk)}"));
         foreach (Column column in tableDiff.ColumnsToDrop)
         {
             if (column.GetDefault() is not null)
-                sb.Append(Statements.DropDefaultConstraint(tableDiff.NewTable.Name, column));
+                sb.Append(Statements.DropDefaultConstraint(tableDiff.NewTable.Name, ((MSSQLColumn)column).DefaultConstraintName));
             sb.Append(Statements.DropColumn(tableDiff.NewTable.Name, column));
         }
 
         foreach (ColumnDiff columnDiff in tableDiff.ColumnsToAlter)
         {
-            bool defaultChagned = columnDiff.NewColumn.GetDefault() != columnDiff.OldColumn.GetDefault()
-                || ((MSSQLColumn)columnDiff.NewColumn).DefaultConstraintName != ((MSSQLColumn)columnDiff.OldColumn).DefaultConstraintName;
+            MSSQLColumnDiff cDiff = (MSSQLColumnDiff)columnDiff;
+            if (cDiff.DefaultToDrop is not null)
+                sb.Append(Statements.DropDefaultConstraint(tableDiff.NewTable.Name, cDiff.DefaultToDropConstraintName));
 
-            bool typeOrNullabilityChanged = columnDiff.DataTypeToSet != null ||
-                columnDiff.NewColumn.NotNull != columnDiff.OldColumn.NotNull;
-
-            if (columnDiff.OldColumn.GetDefault() is not null && (defaultChagned || typeOrNullabilityChanged))
-                sb.Append(Statements.DropDefaultConstraint(tableDiff.NewTable.Name, columnDiff.OldColumn));
-            else if (columnDiff.DefaultToDrop is not null)
-                sb.Append(Statements.DropDefaultConstraint(tableDiff.NewTable.Name, columnDiff.OldColumn));
-
-            if (typeOrNullabilityChanged)
+            if (cDiff.DataTypeToSet is not null || cDiff.NotNullToSet is not null)
             {
-                DataType dataType = columnDiff.DataTypeToSet ?? columnDiff.NewColumn.DataType;
-                sb.Append(Statements.AlterColumnTypeAndNullability(tableDiff.NewTable.Name, columnDiff.NewColumn, dataType));
+                if (cDiff.DataTypeToSet is null || cDiff.NotNullToSet is null)
+                    throw new Exception($"Invalid columnDiff with only one of [DataType|NotNull]ToSet specified");
+                sb.Append(Statements.AlterColumnTypeAndNullability(
+                    tableDiff.NewTable.Name, cDiff.NewColumnName, cDiff.DataTypeToSet, cDiff.NotNullToSet.Value));
             }
 
-            if (columnDiff.NewColumn.GetDefault() is not null && (defaultChagned || typeOrNullabilityChanged))
-                sb.Append(Statements.AddDefaultConstraint(tableDiff.NewTable.Name, columnDiff.NewColumn));
-            else if (columnDiff.DefaultToSet is not null)
-                sb.Append(Statements.AddDefaultConstraint(columnDiff.NewColumn.Name, columnDiff.NewColumn));
-
+            if (cDiff.DefaultToSet is not null)
+            {
+                sb.Append(Statements.AddDefaultConstraint(
+                    tableDiff.NewTable.Name, cDiff.NewColumnName, cDiff.DefaultToSet, cDiff.DefaultToSetConstraintName));
+            }
         }
 
         foreach (Column column in tableDiff.ColumnsToAdd)
@@ -137,7 +133,7 @@ $@"    {GetIdDeclarationText(fk, 4)}{Statements.DefForeignKey(fk)}"));
     private static class Statements
     {
         public static string DefColumn(Column c) =>
-$@"[{c.Name}] {c.DataType.Name}{Identity(c)} {Nullability(c)}{Default(c)}"
+$@"[{c.Name}] {c.DataType.Name}{Identity(c)} {Nullability(c.NotNull)}{Default(c.Default, ((MSSQLColumn)c).DefaultConstraintName)}"
             ;
         public static string DefPrimaryKey(PrimaryKey pk) =>
 $@"CONSTRAINT [{pk.Name}] PRIMARY KEY ({string.Join(", ", pk.Columns.Select(x => $@"[{x}]"))})"
@@ -170,18 +166,18 @@ ALTER TABLE [{tableName}] ADD {DefColumn(c)}{WithValues(c)};"
 $@"
 ALTER TABLE [{tableName}] DROP COLUMN [{c.Name}];"
             ;
-        public static string AlterColumnTypeAndNullability(string tableName, Column c, DataType dataType) =>
+        public static string AlterColumnTypeAndNullability(string tableName, string cName, DataType dataType, bool notNull) =>
 $@"
-ALTER TABLE [{tableName}] ALTER COLUMN [{c.Name}] {dataType.Name} {Nullability(c)};"
+ALTER TABLE [{tableName}] ALTER COLUMN [{cName}] {dataType.Name} {Nullability(notNull)};"
             ;
 
-        public static string AddDefaultConstraint(string tableName, Column c) =>
+        public static string AddDefaultConstraint(string tableName, string cName, CodePiece dValue, string defaultConstraintName) =>
 $@"
-ALTER TABLE [{tableName}] ADD{Default(c)} FOR [{c.Name}];"
+ALTER TABLE [{tableName}] ADD{Default(dValue, defaultConstraintName)} FOR [{cName}];"
             ;
-        public static string DropDefaultConstraint(string tableName, Column c) =>
+        public static string DropDefaultConstraint(string tableName, string defaultConstraintName) =>
 $@"
-ALTER TABLE [{tableName}] DROP CONSTRAINT [{((MSSQLColumn)c).DefaultConstraintName}];"
+ALTER TABLE [{tableName}] DROP CONSTRAINT [{defaultConstraintName}];"
             ;
 
         public static string AddPrimaryKey(string tableName, PrimaryKey pk) =>
@@ -223,11 +219,11 @@ ALTER TABLE [{fk.ThisTableName}] DROP CONSTRAINT [{fk.Name}];"
         private static string Identity(Column c) =>
 c.Identity ? " IDENTITY" : ""
             ;
-        private static string Nullability(Column c) =>
-c.NotNull ? "NOT NULL" : "NULL"
+        private static string Nullability(bool notNull) =>
+notNull ? "NOT NULL" : "NULL"
             ;
-        private static string Default(Column c) =>
-c.GetDefault() is not null ? $@" CONSTRAINT [{((MSSQLColumn)c).DefaultConstraintName}] DEFAULT {c.GetDefault()}" : ""
+        private static string Default(CodePiece dValue, string defaultConstraintName) =>
+dValue.Code is not null ? $@" CONSTRAINT [{defaultConstraintName}] DEFAULT {dValue.Code}" : ""
             ;
         private static string WithValues(Column c) =>
 !c.NotNull && c.GetDefault() is not null ? " WITH VALUES" : ""

@@ -17,8 +17,9 @@ internal abstract class DiffCreator
 
     public abstract DatabaseDiff CreateDatabaseDiff(Database newDatabase, Database oldDatabase);
 
-    protected void BuildTablesDiff<TTableDiff>(DatabaseDiff dbDiff)
+    protected void BuildTablesDiff<TTableDiff, TColumnDiff>(DatabaseDiff dbDiff)
         where TTableDiff : TableDiff, new()
+        where TColumnDiff : ColumnDiff, new()
     {
         List<Table> addedTables = null;
         List<Table> removedTables = null;
@@ -28,7 +29,7 @@ internal abstract class DiffCreator
             ref addedTables, ref removedTables,
             (newTable, oldTable) =>
             {
-                TableDiff tableDiff = CreateTableDiff<TTableDiff>(newTable, oldTable);
+                TableDiff tableDiff = CreateTableDiff<TTableDiff, TColumnDiff>(newTable, oldTable);
                 changedTables.Add(tableDiff);
             });
 
@@ -61,8 +62,9 @@ internal abstract class DiffCreator
         dbDiff.RemovedScripts = removedScripts;
     }
 
-    private TTableDiff CreateTableDiff<TTableDiff>(Table newDbTable, Table oldDbTable)
+    private TTableDiff CreateTableDiff<TTableDiff, TColumnDiff>(Table newDbTable, Table oldDbTable)
         where TTableDiff : TableDiff, new()
+        where TColumnDiff : ColumnDiff, new()
     {
         TTableDiff tableDiff = new()
         {
@@ -70,7 +72,7 @@ internal abstract class DiffCreator
             OldTable = oldDbTable,
         };
 
-        BuildColumnsDiff(tableDiff, newDbTable, oldDbTable);
+        BuildColumnsDiff<TTableDiff, TColumnDiff>(tableDiff, newDbTable, oldDbTable);
         BuildPrimaryKeyDiff(tableDiff, newDbTable, oldDbTable);
         BuildUniqueConstraintsDiff(tableDiff, newDbTable, oldDbTable);
         BuildCheckConstraintsDiff(tableDiff, newDbTable, oldDbTable);
@@ -78,8 +80,9 @@ internal abstract class DiffCreator
         return tableDiff;
     }
 
-    private void BuildColumnsDiff<TTableDiff>(TTableDiff tableDiff, Table newDbTable, Table oldDbTable)
+    private void BuildColumnsDiff<TTableDiff, TColumnDiff>(TTableDiff tableDiff, Table newDbTable, Table oldDbTable)
         where TTableDiff : TableDiff, new()
+        where TColumnDiff : ColumnDiff, new()
     {
         List<Column> addedColumns = null;
         List<Column> removedColumns = null;
@@ -89,22 +92,23 @@ internal abstract class DiffCreator
             ref addedColumns, ref removedColumns,
             (newColumn, oldColumn) =>
             {
-                ColumnDiff columnDiff = new()
+                TColumnDiff columnDiff = new()
                 {
-                    NewColumn = newColumn,
-                    OldColumn = oldColumn,
+                    ColumnID = newColumn.ID,
+                    NewColumnName = newColumn.Name,
+                    OldColumnName = oldColumn.Name,
                 };
 
-                if (!AreEqual(columnDiff.NewColumn.DataType, columnDiff.OldColumn.DataType))
-                    columnDiff.DataTypeToSet = columnDiff.NewColumn.DataType;
+                if (!AreEqual(newColumn.DataType, oldColumn.DataType))
+                    columnDiff.DataTypeToSet = newColumn.DataType;
 
-                if (!AreEqual(columnDiff.NewColumn.Default, columnDiff.OldColumn.Default))
-                {
-                    if (columnDiff.NewColumn.Default.Code != null)
-                        columnDiff.DefaultToSet = columnDiff.NewColumn.Default;
-                    if (columnDiff.OldColumn.Default.Code != null)
-                        columnDiff.DefaultToDrop = columnDiff.OldColumn.Default;
-                }
+                if (!AreEqual(newColumn.NotNull, oldColumn.NotNull))
+                    columnDiff.NotNullToSet = newColumn.NotNull;
+
+                if (!AreEqual(newColumn.Default, oldColumn.Default))
+                    SetDefaultChanged(columnDiff, newColumn, oldColumn);
+
+                BuildAdditionalColumnDiffProperties(columnDiff, newColumn, oldColumn);
 
                 changedColumns.Add(columnDiff);
             });
@@ -113,6 +117,14 @@ internal abstract class DiffCreator
         tableDiff.ColumnsToDrop = removedColumns;
         tableDiff.ColumnsToAlter = changedColumns;
     }
+    protected void SetDefaultChanged(ColumnDiff columnDiff, Column newColumn, Column oldColumn)
+    {
+        if (newColumn.Default.Code != null)
+            columnDiff.DefaultToSet = newColumn.Default;
+        if (oldColumn.Default.Code != null)
+            columnDiff.DefaultToDrop = oldColumn.Default;
+    }
+    protected virtual void BuildAdditionalColumnDiffProperties(ColumnDiff columnDiff, Column newColumn, Column oldColumn) { }
 
     private void BuildPrimaryKeyDiff<TTableDiff>(TTableDiff tableDiff, Table newDbTable, Table oldDbTable)
         where TTableDiff : TableDiff, new()

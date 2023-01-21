@@ -253,8 +253,7 @@ WHERE [ID] = '5a0d1926-3270-4eb2-92eb-00be56c7af23';
 
 -- QUERY START: UpdateDNDBTDbObjectRecordQuery
 UPDATE [DNDBTDbObjects] SET
-    [Name] = 'MyColumn1NewName',
-    [Code] = '333'
+    [Name] = 'MyColumn1NewName'
 WHERE [ID] = 'c480f22f-7c01-4f41-b282-35e9f5cd1fe3';
 -- QUERY END: UpdateDNDBTDbObjectRecordQuery
 

@@ -29,7 +29,7 @@ internal class MSSQLDiffCreator : DiffCreator
         };
 
         BuildUserDefinedTypesDiff(dbDiff);
-        BuildTablesDiff<MSSQLTableDiff>(dbDiff);
+        BuildTablesDiff<MSSQLTableDiff, MSSQLColumnDiff>(dbDiff);
         BuildViewsDiff(dbDiff);
 
         BuildIndexesDiff(dbDiff);
@@ -40,6 +40,24 @@ internal class MSSQLDiffCreator : DiffCreator
 
         BuildScriptsDiff(dbDiff);
         return dbDiff;
+    }
+
+    protected override void BuildAdditionalColumnDiffProperties(ColumnDiff columnDiff, Column newColumn, Column oldColumn)
+    {
+        if (columnDiff.DataTypeToSet is not null || columnDiff.NotNullToSet is not null)
+        {
+            columnDiff.DataTypeToSet = newColumn.DataType;
+            columnDiff.NotNullToSet = newColumn.NotNull;
+            SetDefaultChanged(columnDiff, newColumn, oldColumn);
+        }
+
+        if (!AreEqual(((MSSQLColumn)newColumn).DefaultConstraintName, ((MSSQLColumn)oldColumn).DefaultConstraintName))
+            SetDefaultChanged(columnDiff, newColumn, oldColumn);
+
+        if (columnDiff.DefaultToSet is not null)
+            ((MSSQLColumnDiff)columnDiff).DefaultToSetConstraintName = ((MSSQLColumn)newColumn).DefaultConstraintName;
+        if (columnDiff.DefaultToDrop is not null)
+            ((MSSQLColumnDiff)columnDiff).DefaultToDropConstraintName = ((MSSQLColumn)oldColumn).DefaultConstraintName;
     }
 
     protected override void OnAddedItemProcessed<TItem>(TItem item)
@@ -121,31 +139,34 @@ internal class MSSQLDiffCreator : DiffCreator
                     if (!tableIdToTableDiffMap.ContainsKey(table.ID))
                         dbDiff.ChangedTables.Add(tableDiff);
 
-                    Dictionary<Guid, ColumnDiff> columnIdToColumnDiffMap = tableDiff.ColumnsToAlter
-                        .ToDictionary(x => x.NewColumn.ID, x => x);
+                    Dictionary<Guid, MSSQLColumnDiff> columnIdToColumnDiffMap = tableDiff.ColumnsToAlter
+                        .ToDictionary(x => x.ColumnID, x => (MSSQLColumnDiff)x);
                     foreach (Column column in table.Columns.Where(IsNotAdded))
                     {
                         if (RequiresDataTypeOrDefaultRedifinition(column))
                         {
-                            ColumnDiff columnDiff = columnIdToColumnDiffMap.ContainsKey(column.ID)
+                            MSSQLColumnDiff columnDiff = columnIdToColumnDiffMap.ContainsKey(column.ID)
                                 ? columnIdToColumnDiffMap[column.ID]
                                 : column.CreateEmptyColumnDiff();
                             if (!columnIdToColumnDiffMap.ContainsKey(column.ID))
                                 tableDiff.ColumnsToAlter.Add(columnDiff);
 
                             if (RequiresDataTypeRedifinition(column))
+                            {
                                 columnDiff.DataTypeToSet = column.DataType;
+                                columnDiff.NotNullToSet = column.NotNull;
+                            }
 
-                            bool defaultChanged = columnDiff.DefaultToSet != null || columnDiff.DefaultToDrop != null;
-                            if (RequiresDefaultRedifinition(column) && !defaultChanged)
+                            bool defaultChanged = columnDiff.DefaultToSet is not null || columnDiff.DefaultToDrop is not null;
+                            if (!defaultChanged)
                             {
                                 string defaultConstraintName = ((MSSQLColumn)column).DefaultConstraintName;
+
                                 columnDiff.DefaultToSet = column.Default;
+                                columnDiff.DefaultToSetConstraintName = defaultConstraintName;
+
                                 columnDiff.DefaultToDrop = column.Default;
-                                columnDiff.NewColumn.Default = column.Default;
-                                columnDiff.OldColumn.Default = column.Default;
-                                ((MSSQLColumn)columnDiff.NewColumn).DefaultConstraintName = defaultConstraintName;
-                                ((MSSQLColumn)columnDiff.OldColumn).DefaultConstraintName = defaultConstraintName;
+                                columnDiff.DefaultToDropConstraintName = defaultConstraintName;
                             }
                         }
                     }

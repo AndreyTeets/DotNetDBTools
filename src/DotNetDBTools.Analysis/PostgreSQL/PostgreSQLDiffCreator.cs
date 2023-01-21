@@ -37,7 +37,7 @@ internal class PostgreSQLDiffCreator : DiffCreator
 
         BuildSequencesDiff(dbDiff);
         BuildTypesDiff(dbDiff);
-        BuildTablesDiff<PostgreSQLTableDiff>(dbDiff);
+        BuildTablesDiff<PostgreSQLTableDiff, PostgreSQLColumnDiff>(dbDiff);
         BuildProgrammableObjectsDiff(dbDiff);
 
         BuildIndexesDiff(dbDiff);
@@ -350,7 +350,7 @@ internal class PostgreSQLDiffCreator : DiffCreator
                     if (!typeIdToTypeDiffMap.ContainsKey(type.ID))
                         dbDiff.DomainTypesToAlter.Add(typeDiff);
 
-                    bool defaultChanged = typeDiff.DefaultToSet != null || typeDiff.DefaultToDrop != null;
+                    bool defaultChanged = typeDiff.DefaultToSet is not null || typeDiff.DefaultToDrop is not null;
                     if (RequiresDefaultRedifinition(type) && !defaultChanged)
                     {
                         typeDiff.DefaultToSet = type.Default;
@@ -406,7 +406,7 @@ internal class PostgreSQLDiffCreator : DiffCreator
                         dbDiff.ChangedTables.Add(tableDiff);
 
                     Dictionary<Guid, ColumnDiff> columnIdToColumnDiffMap = tableDiff.ColumnsToAlter
-                        .ToDictionary(x => x.NewColumn.ID, x => x);
+                        .ToDictionary(x => x.ColumnID, x => x);
                     foreach (Column column in table.Columns.Where(IsNotAdded))
                     {
                         if (RequiresDataTypeOrDefaultRedifinition(column))
@@ -420,7 +420,7 @@ internal class PostgreSQLDiffCreator : DiffCreator
                             if (RequiresDataTypeRedifinition(column))
                                 columnDiff.DataTypeToSet = column.DataType;
 
-                            bool defaultChanged = columnDiff.DefaultToSet != null || columnDiff.DefaultToDrop != null;
+                            bool defaultChanged = columnDiff.DefaultToSet is not null || columnDiff.DefaultToDrop is not null;
                             if (RequiresDefaultRedifinition(column) && !defaultChanged)
                             {
                                 columnDiff.DefaultToSet = column.Default;

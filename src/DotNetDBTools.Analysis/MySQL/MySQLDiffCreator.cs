@@ -15,7 +15,7 @@ internal class MySQLDiffCreator : DiffCreator
             OldDatabase = oldDatabase,
         };
 
-        BuildTablesDiff<MySQLTableDiff>(dbDiff);
+        BuildTablesDiff<MySQLTableDiff, ColumnDiff>(dbDiff);
         BuildViewsDiff(dbDiff);
         BuildIndexesDiff(dbDiff);
         BuildTriggersDiff(dbDiff);
@@ -23,5 +23,15 @@ internal class MySQLDiffCreator : DiffCreator
 
         BuildScriptsDiff(dbDiff);
         return dbDiff;
+    }
+
+    protected override void BuildAdditionalColumnDiffProperties(ColumnDiff columnDiff, Column newColumn, Column oldColumn)
+    {
+        if (columnDiff.DataTypeToSet is not null || columnDiff.NotNullToSet is not null)
+        {
+            columnDiff.DataTypeToSet = newColumn.DataType;
+            columnDiff.NotNullToSet = newColumn.NotNull;
+            SetDefaultChanged(columnDiff, newColumn, oldColumn);
+        }
     }
 }

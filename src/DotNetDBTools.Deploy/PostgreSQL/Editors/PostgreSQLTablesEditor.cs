@@ -133,7 +133,12 @@ internal class PostgreSQLTablesEditor : TableEditor<
 
             foreach (ColumnDiff columnDiff in tableDiff.ColumnsToAlter.Where(x => x.DefaultToSet != null))
             {
-                ColumnDiff columnDiffWithDefaultChange = columnDiff.NewColumn.CreateEmptyColumnDiff();
+                PostgreSQLColumnDiff columnDiffWithDefaultChange = new()
+                {
+                    ColumnID = columnDiff.ColumnID,
+                    NewColumnName = columnDiff.NewColumnName,
+                    OldColumnName = columnDiff.NewColumnName,
+                };
                 columnDiffWithDefaultChange.DefaultToSet = columnDiff.DefaultToSet;
                 tableDiffForSettingColumnsDefault.ColumnsToAlter.Add(columnDiffWithDefaultChange);
             }
@@ -175,7 +180,12 @@ internal class PostgreSQLTablesEditor : TableEditor<
 
             foreach (ColumnDiff columnDiff in tableDiff.ColumnsToAlter.Where(x => x.DefaultToDrop != null))
             {
-                ColumnDiff columnDiffWithDefaultChange = columnDiff.OldColumn.CreateEmptyColumnDiff();
+                PostgreSQLColumnDiff columnDiffWithDefaultChange = new()
+                {
+                    ColumnID = columnDiff.ColumnID,
+                    NewColumnName = columnDiff.OldColumnName,
+                    OldColumnName = columnDiff.OldColumnName,
+                };
                 columnDiffWithDefaultChange.DefaultToDrop = columnDiff.DefaultToDrop;
                 tableDiffForDroppingColumnsDefault.ColumnsToAlter.Add(columnDiffWithDefaultChange);
             }

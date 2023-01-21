@@ -14,7 +14,7 @@ internal class SQLiteDiffCreator : DiffCreator
             OldDatabase = oldDatabase,
         };
 
-        BuildTablesDiff<SQLiteTableDiff>(dbDiff);
+        BuildTablesDiff<SQLiteTableDiff, ColumnDiff>(dbDiff);
         BuildIndexesDiff(dbDiff);
         BuildTriggersDiff(dbDiff);
 

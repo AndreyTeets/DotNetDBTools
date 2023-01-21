@@ -34,8 +34,8 @@ $@"{GetIdDeclarationText(table, 0)}CREATE TABLE ""{table.Name}""
         if (tableDiff.NewTable.Name != tableDiff.OldTable.Name)
             sb.AppendLine(Statements.RenameTable(tableDiff.OldTable.Name, tableDiff.NewTable.Name));
 
-        foreach (ColumnDiff columnDiff in tableDiff.ColumnsToAlter.Where(x => x.NewColumn.Name != x.OldColumn.Name))
-            sb.AppendLine(Statements.RenameColumn(tableDiff.NewTable.Name, columnDiff.OldColumn.Name, columnDiff.NewColumn.Name));
+        foreach (ColumnDiff columnDiff in tableDiff.ColumnsToAlter.Where(x => x.NewColumnName != x.OldColumnName))
+            sb.AppendLine(Statements.RenameColumn(tableDiff.NewTable.Name, columnDiff.OldColumnName, columnDiff.NewColumnName));
 
         string tableAlters = GetTableAltersText(tableDiff);
         if (!string.IsNullOrEmpty(tableAlters))
@@ -105,27 +105,21 @@ $@"    {GetIdDeclarationText(fk, 4)}{Statements.DefForeignKey(fk)}"));
 
         foreach (ColumnDiff columnDiff in tableDiff.ColumnsToAlter)
         {
-            if (columnDiff.DataTypeToSet != null)
-                sb.Append(Statements.AlterColumnType(columnDiff.NewColumn.Name, columnDiff.DataTypeToSet));
+            if (columnDiff.DataTypeToSet is not null)
+                sb.Append(Statements.AlterColumnType(columnDiff.NewColumnName, columnDiff.DataTypeToSet));
 
-            if (columnDiff.NewColumn.NotNull && !columnDiff.OldColumn.NotNull)
-                sb.Append(Statements.SetColumnNotNull(columnDiff.NewColumn));
-            else if (!columnDiff.NewColumn.NotNull && columnDiff.OldColumn.NotNull)
-                sb.Append(Statements.DropColumnNotNull(columnDiff.NewColumn));
-
-            bool defaultChagned = columnDiff.NewColumn.GetDefault() != columnDiff.OldColumn.GetDefault();
-            if (columnDiff.NewColumn.GetDefault() is not null && defaultChagned)
-                sb.Append(Statements.AddDefaultConstraint(columnDiff.NewColumn.Name, columnDiff.NewColumn.Default));
-            else if (columnDiff.NewColumn.GetDefault() is null && defaultChagned)
-                sb.Append(Statements.DropDefaultConstraint(columnDiff.NewColumn.Name));
+            if (columnDiff.NotNullToSet is not null && columnDiff.NotNullToSet == true)
+                sb.Append(Statements.SetColumnNotNull(columnDiff.NewColumnName));
+            else if (columnDiff.NotNullToSet is not null && columnDiff.NotNullToSet == false)
+                sb.Append(Statements.DropColumnNotNull(columnDiff.NewColumnName));
 
             if (columnDiff.DefaultToDrop is not null)
-                sb.Append(Statements.DropDefaultConstraint(columnDiff.NewColumn.Name));
+                sb.Append(Statements.DropDefaultConstraint(columnDiff.NewColumnName));
             if (columnDiff.DefaultToSet is not null)
-                sb.Append(Statements.AddDefaultConstraint(columnDiff.NewColumn.Name, columnDiff.DefaultToSet));
+                sb.Append(Statements.AddDefaultConstraint(columnDiff.NewColumnName, columnDiff.DefaultToSet));
 
             if (columnDiff is PostgreSQLColumnDiff cDiff && cDiff.IdentitySequenceOptionsToSet is not null)
-                SetIdentitySequenceOptions(cDiff.NewColumn.Name, cDiff.IdentitySequenceOptionsToSet);
+                SetIdentitySequenceOptions(columnDiff.NewColumnName, cDiff.IdentitySequenceOptionsToSet);
         }
 
         foreach (Column column in tableDiff.ColumnsToAdd)
@@ -133,17 +127,17 @@ $@"    {GetIdDeclarationText(fk, 4)}{Statements.DefForeignKey(fk)}"));
 
         void SetIdentitySequenceOptions(string cName, PostgreSQLSequenceOptions so)
         {
-            if (so.StartWith != null)
+            if (so.StartWith is not null)
                 sb.Append(Statements.SetSequenceOption(cName, $"START {so.StartWith}"));
-            if (so.IncrementBy != null)
+            if (so.IncrementBy is not null)
                 sb.Append(Statements.SetSequenceOption(cName, $"INCREMENT {so.IncrementBy}"));
-            if (so.MinValue != null)
+            if (so.MinValue is not null)
                 sb.Append(Statements.SetSequenceOption(cName, $"MINVALUE {so.MinValue}"));
-            if (so.MaxValue != null)
+            if (so.MaxValue is not null)
                 sb.Append(Statements.SetSequenceOption(cName, $"MAXVALUE {so.MaxValue}"));
-            if (so.Cache != null)
+            if (so.Cache is not null)
                 sb.Append(Statements.SetSequenceOption(cName, $"CACHE {so.Cache}"));
-            if (so.Cycle != null)
+            if (so.Cycle is not null)
                 sb.Append(so.Cycle.Value ? $"CYCLE" : "NO CYCLE");
         }
     }
@@ -189,13 +183,13 @@ $@"
     ALTER COLUMN ""{cName}"" SET DATA TYPE {dataType.Name}
         USING (""{cName}""::text::{dataType.Name}),"
             ; // TODO Add TypeChangeConversions<srcTypeName,destTypeName,usingCode> in deploy/generation options?
-        public static string SetColumnNotNull(Column c) =>
+        public static string SetColumnNotNull(string cName) =>
 $@"
-    ALTER COLUMN ""{c.Name}"" SET NOT NULL,"
+    ALTER COLUMN ""{cName}"" SET NOT NULL,"
             ;
-        public static string DropColumnNotNull(Column c) =>
+        public static string DropColumnNotNull(string cName) =>
 $@"
-    ALTER COLUMN ""{c.Name}"" DROP NOT NULL,"
+    ALTER COLUMN ""{cName}"" DROP NOT NULL,"
             ;
         public static string AddDefaultConstraint(string cName, CodePiece dValue) =>
 $@"
@@ -260,17 +254,17 @@ $@"
         private static string SequenceOptions(PostgreSQLSequenceOptions so)
         {
             List<string> res = new();
-            if (so.StartWith != null)
+            if (so.StartWith is not null)
                 res.Add($"START {so.StartWith}");
-            if (so.IncrementBy != null)
+            if (so.IncrementBy is not null)
                 res.Add($"INCREMENT {so.IncrementBy}");
-            if (so.MinValue != null)
+            if (so.MinValue is not null)
                 res.Add($"MINVALUE {so.MinValue}");
-            if (so.MaxValue != null)
+            if (so.MaxValue is not null)
                 res.Add($"MAXVALUE {so.MaxValue}");
-            if (so.Cache != null)
+            if (so.Cache is not null)
                 res.Add($"CACHE {so.Cache}");
-            if (so.Cycle != null)
+            if (so.Cycle is not null)
                 res.Add(so.Cycle.Value ? $"CYCLE" : "NO CYCLE");
 
             if (res.Count > 0)

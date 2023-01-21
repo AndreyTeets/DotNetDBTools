@@ -41,7 +41,7 @@ internal static class DiffAnalyzer
     public static bool IsEmpty(ColumnDiff columnDiff)
     {
         IEnumerable<PropertyInfo> properties = GetProperties(columnDiff.GetType());
-        if (columnDiff.NewColumnName != columnDiff.OldColumnName || columnDiff.NewColumn.Name != columnDiff.OldColumn.Name)
+        if (columnDiff.NewColumnName != columnDiff.OldColumnName)
             return false;
         foreach (PropertyInfo property in properties)
         {

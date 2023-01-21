@@ -94,22 +94,12 @@ internal abstract class TableEditor<
         if (tableDiff.NewTableName != tableDiff.OldTableName || tableDiff.NewTable.Name != tableDiff.OldTable.Name)
             QueryExecutor.Execute(Create<TUpdateDNDBTDbObjectRecordQuery>(tableID, tableDiff.NewTable.Name));
         foreach (ColumnDiff cDiff in tableDiff.ColumnsToAlter.Where(x =>
-            x.NewColumn.Name != x.OldColumn.Name
-            || x.NewColumn.Default.Code != x.OldColumn.Default.Code
-            || x.DefaultToSet != null
-            || x.DefaultToDrop != null))
+            x.NewColumnName != x.OldColumnName
+            || DefaultCodeChanged(x)))
         {
-            bool updateCode = cDiff.DefaultToSet != null || cDiff.DefaultToDrop != null;
-            string objectCode = cDiff.DefaultToSet != null ? cDiff.DefaultToSet.Code : null;
-
-            // TODO remove this when refactored to ToSet|ToDrop without [New|Old]Column
-            if (cDiff.ColumnID == Guid.Empty) // Old diff using [New|Old]Column
-            {
-                updateCode = true;
-                objectCode = cDiff.NewColumn.GetDefault();
-            }
+            string objectCode = cDiff.DefaultToSet is not null ? cDiff.DefaultToSet.Code : null;
             QueryExecutor.Execute(Create<TUpdateDNDBTDbObjectRecordQuery>(
-                cDiff.NewColumn.ID, cDiff.NewColumn.Name, updateCode, objectCode));
+                cDiff.ColumnID, cDiff.NewColumnName, DefaultCodeChanged(cDiff), objectCode));
         }
 
         foreach (Column c in tableDiff.ColumnsToAdd)
@@ -121,5 +111,13 @@ internal abstract class TableEditor<
             QueryExecutor.Execute(Create<TInsertDNDBTDbObjectRecordQuery>(uc.ID, tableID, DbObjectType.UniqueConstraint, uc.Name));
         foreach (CheckConstraint ck in tableDiff.CheckConstraintsToCreate)
             QueryExecutor.Execute(Create<TInsertDNDBTDbObjectRecordQuery>(ck.ID, tableID, DbObjectType.CheckConstraint, ck.Name, ck.GetExpression()));
+
+        static bool DefaultCodeChanged(ColumnDiff cDiff)
+        {
+            return cDiff.DefaultToSet is not null && cDiff.DefaultToDrop is null
+                || cDiff.DefaultToSet is null && cDiff.DefaultToDrop is not null
+                || cDiff.DefaultToSet is not null && cDiff.DefaultToDrop is not null
+                    && cDiff.DefaultToSet.Code != cDiff.DefaultToDrop.Code;
+        }
     }
 }

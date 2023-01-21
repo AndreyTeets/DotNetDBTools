@@ -21,17 +21,15 @@ public static class MSSQLDbObjectsExtensions
     }
 
     /// <summary>
-    /// Creates empty table diff model and sets ColumnID and [New|Old]ColumnName
+    /// Creates empty column diff model and sets ColumnID and [New|Old]ColumnName
     /// </summary>
-    public static ColumnDiff CreateEmptyColumnDiff(this Column column)
+    public static MSSQLColumnDiff CreateEmptyColumnDiff(this Column column)
     {
         return new()
         {
             ColumnID = column.ID,
             NewColumnName = column.Name,
             OldColumnName = column.Name,
-            NewColumn = new MSSQLColumn() { ID = column.ID, Name = column.Name, Default = new CodePiece() },
-            OldColumn = new MSSQLColumn() { ID = column.ID, Name = column.Name, Default = new CodePiece() },
         };
     }
 }

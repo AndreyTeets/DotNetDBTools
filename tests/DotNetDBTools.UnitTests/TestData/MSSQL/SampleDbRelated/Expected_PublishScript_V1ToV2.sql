@@ -256,8 +256,7 @@ WHERE [ID] = ''5a0d1926-3270-4eb2-92eb-00be56c7af23'';';
 
 -- QUERY START: UpdateDNDBTDbObjectRecordQuery
 EXEC sp_executesql N'UPDATE [DNDBTDbObjects] SET
-    [Name] = N''MyColumn1NewName'',
-    [Code] = N''333''
+    [Name] = N''MyColumn1NewName''
 WHERE [ID] = N''c480f22f-7c01-4f41-b282-35e9f5cd1fe3'';';
 -- QUERY END: UpdateDNDBTDbObjectRecordQuery
 
@@ -362,13 +361,6 @@ EXEC sp_executesql N'UPDATE [DNDBTDbObjects] SET
     [Name] = N''MyColumn1'',
     [Code] = N''abS(-15)''
 WHERE [ID] = N''5309d66f-2030-402e-912e-5547babaa072'';';
--- QUERY END: UpdateDNDBTDbObjectRecordQuery
-
--- QUERY START: UpdateDNDBTDbObjectRecordQuery
-EXEC sp_executesql N'UPDATE [DNDBTDbObjects] SET
-    [Name] = N''MyColumn101'',
-    [Code] = N''''''cc''''''
-WHERE [ID] = N''15ae6061-426d-4485-85e6-ecd3e0f98882'';';
 -- QUERY END: UpdateDNDBTDbObjectRecordQuery
 
 -- QUERY START: DropTypeQuery
