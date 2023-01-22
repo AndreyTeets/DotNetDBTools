@@ -20,7 +20,7 @@ internal static class DiffAnalyzer
     public static bool IsEmpty(TableDiff tableDiff)
     {
         IEnumerable<PropertyInfo> properties = GetProperties(tableDiff.GetType());
-        if (tableDiff.NewTableName != tableDiff.OldTableName || tableDiff.NewTable.Name != tableDiff.OldTable.Name)
+        if (tableDiff.NewTableName != tableDiff.OldTableName)
             return false;
         foreach (PropertyInfo property in properties)
         {

@@ -817,7 +817,8 @@ VALUES
 -- QUERY END: InsertDNDBTDbObjectRecordQuery
 
 -- QUERY START: CreateForeignKeyQuery
-ALTER TABLE `MyTable1` ADD CONSTRAINT `FK_MyTable1_MyColumn1_MyTable2_MyColumn1` FOREIGN KEY (`MyColumn1`)
+ALTER TABLE `MyTable1`
+    ADD CONSTRAINT `FK_MyTable1_MyColumn1_MyTable2_MyColumn1` FOREIGN KEY (`MyColumn1`)
         REFERENCES `MyTable2` (`MyColumn1`)
         ON UPDATE NO ACTION ON DELETE CASCADE;
 -- QUERY END: CreateForeignKeyQuery
@@ -842,7 +843,8 @@ VALUES
 -- QUERY END: InsertDNDBTDbObjectRecordQuery
 
 -- QUERY START: CreateForeignKeyQuery
-ALTER TABLE `MyTable6` ADD CONSTRAINT `FK_MyTable6_MyTable5_CustomName` FOREIGN KEY (`MyColumn1`, `MyColumn2`)
+ALTER TABLE `MyTable6`
+    ADD CONSTRAINT `FK_MyTable6_MyTable5_CustomName` FOREIGN KEY (`MyColumn1`, `MyColumn2`)
         REFERENCES `MyTable5` (`MyColumn2`, `MyColumn1`)
         ON UPDATE NO ACTION ON DELETE NO ACTION;
 -- QUERY END: CreateForeignKeyQuery

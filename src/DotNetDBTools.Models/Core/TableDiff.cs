@@ -9,9 +9,6 @@ public abstract class TableDiff
     public string NewTableName { get; set; }
     public string OldTableName { get; set; }
 
-    public Table NewTable { get; set; }
-    public Table OldTable { get; set; }
-
     public List<Column> ColumnsToAdd { get; set; } = new();
     public List<Column> ColumnsToDrop { get; set; } = new();
     public List<ColumnDiff> ColumnsToAlter { get; set; } = new();

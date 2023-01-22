@@ -53,7 +53,8 @@ WHERE `ID` = 'ee64ffc3-5536-4624-beaf-bc3a61d06a1a';
 -- QUERY END: DeleteDNDBTDbObjectRecordQuery
 
 -- QUERY START: DropForeignKeyQuery
-ALTER TABLE `MyTable6` DROP CONSTRAINT `FK_MyTable6_MyTable5_CustomName`;
+ALTER TABLE `MyTable6`
+    DROP CONSTRAINT `FK_MyTable6_MyTable5_CustomName`;
 -- QUERY END: DropForeignKeyQuery
 
 -- QUERY START: DeleteDNDBTDbObjectRecordQuery
@@ -62,7 +63,8 @@ WHERE `ID` = 'ae453b22-d270-41fc-8184-9ac26b7a0569';
 -- QUERY END: DeleteDNDBTDbObjectRecordQuery
 
 -- QUERY START: DropForeignKeyQuery
-ALTER TABLE `MyTable1` DROP CONSTRAINT `FK_MyTable1_MyColumn1_MyTable2_MyColumn1`;
+ALTER TABLE `MyTable1`
+    DROP CONSTRAINT `FK_MyTable1_MyColumn1_MyTable2_MyColumn1`;
 -- QUERY END: DropForeignKeyQuery
 
 -- QUERY START: DeleteDNDBTDbObjectRecordQuery
@@ -136,17 +138,14 @@ WHERE `ID` = 'f3064a8c-346a-4b3d-af2c-d967b39841e4';
 
 -- QUERY START: AlterTableQuery
 RENAME TABLE `MyTable1` TO `MyTable1NewName`;
-
-ALTER TABLE `MyTable1NewName` DROP CONSTRAINT `CK_MyTable1_MyCheck1`;
-ALTER TABLE `MyTable1NewName` DROP PRIMARY KEY,
-    MODIFY COLUMN `MyColumn3` INT NOT NULL;
-ALTER TABLE `MyTable1NewName` DROP COLUMN `MyColumn2`;
-ALTER TABLE `MyTable1NewName` DROP COLUMN `MyColumn3`;
-ALTER TABLE `MyTable1NewName` ALTER COLUMN `MyColumn1` DROP DEFAULT;
-ALTER TABLE `MyTable1NewName` MODIFY COLUMN `MyColumn1` BIGINT NULL;
-ALTER TABLE `MyTable1NewName` ALTER COLUMN `MyColumn1` SET DEFAULT 15;
-ALTER TABLE `MyTable1NewName` ALTER COLUMN `MyColumn4` DROP DEFAULT;
-ALTER TABLE `MyTable1NewName` ADD CONSTRAINT `CK_MyTable1_MyCheck1` CHECK (MyColumn4 >= 1);
+ALTER TABLE `MyTable1NewName`
+    DROP CONSTRAINT `CK_MyTable1_MyCheck1`,
+    DROP PRIMARY KEY,
+    DROP COLUMN `MyColumn2`,
+    DROP COLUMN `MyColumn3`,
+    MODIFY COLUMN `MyColumn1` BIGINT NULL DEFAULT 15,
+    ALTER COLUMN `MyColumn4` DROP DEFAULT,
+    ADD CONSTRAINT `CK_MyTable1_MyCheck1` CHECK (MyColumn4 >= 1);
 -- QUERY END: AlterTableQuery
 
 -- QUERY START: DeleteDNDBTDbObjectRecordQuery
@@ -203,16 +202,14 @@ VALUES
 
 -- QUERY START: AlterTableQuery
 ALTER TABLE `MyTable2` RENAME COLUMN `MyColumn1` TO `MyColumn1NewName`;
-
-ALTER TABLE `MyTable2` DROP PRIMARY KEY;
-ALTER TABLE `MyTable2` DROP COLUMN `MyColumn2`;
-ALTER TABLE `MyTable2` ALTER COLUMN `MyColumn1NewName` DROP DEFAULT;
-ALTER TABLE `MyTable2` MODIFY COLUMN `MyColumn1NewName` BIGINT NOT NULL;
-ALTER TABLE `MyTable2` ALTER COLUMN `MyColumn1NewName` SET DEFAULT 333;
-ALTER TABLE `MyTable2` ADD COLUMN `MyColumn2` VARBINARY(22) NULL DEFAULT (0x000408);
-ALTER TABLE `MyTable2` ADD COLUMN `MyColumn3` BIGINT NULL;
-ALTER TABLE `MyTable2` ADD COLUMN `MyColumn4` VARCHAR(50) NULL;
-ALTER TABLE `MyTable2` ADD PRIMARY KEY (`MyColumn1NewName`);
+ALTER TABLE `MyTable2`
+    DROP PRIMARY KEY,
+    DROP COLUMN `MyColumn2`,
+    MODIFY COLUMN `MyColumn1NewName` BIGINT NOT NULL DEFAULT 333,
+    ADD COLUMN `MyColumn2` VARBINARY(22) NULL DEFAULT (0x000408),
+    ADD COLUMN `MyColumn3` BIGINT NULL,
+    ADD COLUMN `MyColumn4` VARCHAR(50) NULL,
+    ADD PRIMARY KEY (`MyColumn1NewName`);
 -- QUERY END: AlterTableQuery
 
 -- QUERY START: DeleteDNDBTDbObjectRecordQuery
@@ -308,9 +305,9 @@ VALUES
 -- QUERY END: InsertDNDBTDbObjectRecordQuery
 
 -- QUERY START: AlterTableQuery
-ALTER TABLE `MyTable5` DROP PRIMARY KEY;
-ALTER TABLE `MyTable5` ALTER COLUMN `MyColumn1` DROP DEFAULT;
-ALTER TABLE `MyTable5` ALTER COLUMN `MyColumn1` SET DEFAULT (abS(-15));
+ALTER TABLE `MyTable5`
+    DROP PRIMARY KEY,
+    ALTER COLUMN `MyColumn1` SET DEFAULT (abS(-15));
 -- QUERY END: AlterTableQuery
 
 -- QUERY START: DeleteDNDBTDbObjectRecordQuery
@@ -476,7 +473,8 @@ VALUES
 -- QUERY END: InsertDNDBTDbObjectRecordQuery
 
 -- QUERY START: CreateForeignKeyQuery
-ALTER TABLE `MyTable1NewName` ADD CONSTRAINT `FK_MyTable1_MyColumn1_MyTable2_MyColumn1` FOREIGN KEY (`MyColumn1`)
+ALTER TABLE `MyTable1NewName`
+    ADD CONSTRAINT `FK_MyTable1_MyColumn1_MyTable2_MyColumn1` FOREIGN KEY (`MyColumn1`)
         REFERENCES `MyTable2` (`MyColumn1NewName`)
         ON UPDATE NO ACTION ON DELETE SET NULL;
 -- QUERY END: CreateForeignKeyQuery
@@ -501,7 +499,8 @@ VALUES
 -- QUERY END: InsertDNDBTDbObjectRecordQuery
 
 -- QUERY START: CreateForeignKeyQuery
-ALTER TABLE `MyTable2` ADD CONSTRAINT `FK_MyTable2_MyColumns34_MyTable3_MyColumns12` FOREIGN KEY (`MyColumn3`, `MyColumn4`)
+ALTER TABLE `MyTable2`
+    ADD CONSTRAINT `FK_MyTable2_MyColumns34_MyTable3_MyColumns12` FOREIGN KEY (`MyColumn3`, `MyColumn4`)
         REFERENCES `MyTable3` (`MyColumn1`, `MyColumn2`)
         ON UPDATE NO ACTION ON DELETE SET DEFAULT;
 -- QUERY END: CreateForeignKeyQuery

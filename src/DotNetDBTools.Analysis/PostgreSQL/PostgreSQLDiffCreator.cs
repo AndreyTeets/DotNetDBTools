@@ -393,7 +393,7 @@ internal class PostgreSQLDiffCreator : DiffCreator
         void AddForTableObjects()
         {
             Dictionary<Guid, PostgreSQLTableDiff> tableIdToTableDiffMap = dbDiff.ChangedTables
-                .ToDictionary(x => x.NewTable.ID, x => (PostgreSQLTableDiff)x);
+                .ToDictionary(x => x.TableID, x => (PostgreSQLTableDiff)x);
             foreach (Table table in newDb.Tables.Where(IsNotAdded))
             {
                 if (table.Columns.Any(RequiresDataTypeOrDefaultRedifinition)

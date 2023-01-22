@@ -24,8 +24,9 @@ internal abstract class CreateForeignKeyQuery : NoParametersQuery
         TTable table = new() { Name = fk.ThisTableName };
         TTableDiff tableDiff = new()
         {
-            NewTable = table,
-            OldTable = table,
+            TableID = table.ID,
+            NewTableName = table.Name,
+            OldTableName = table.Name,
             ForeignKeysToCreate = new List<ForeignKey>() { fk },
         };
         return GenerationManager.GenerateSqlAlterStatement(tableDiff);

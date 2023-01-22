@@ -38,6 +38,6 @@ internal class SQLiteTableEditor : TableEditor<
             QueryExecutor.Execute(new SQLiteDeleteDNDBTDbObjectRecordQuery(fk.ID));
 
         foreach (ForeignKey fk in tableDiff.ForeignKeysToCreate)
-            QueryExecutor.Execute(new SQLiteInsertDNDBTDbObjectRecordQuery(fk.ID, tableDiff.NewTable.ID, DbObjectType.ForeignKey, fk.Name));
+            QueryExecutor.Execute(new SQLiteInsertDNDBTDbObjectRecordQuery(fk.ID, tableDiff.TableID, DbObjectType.ForeignKey, fk.Name));
     }
 }

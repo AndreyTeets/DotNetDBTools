@@ -44,8 +44,6 @@ public static class PostgreSQLDbObjectsExtensions
             TableID = table.ID,
             NewTableName = table.Name,
             OldTableName = table.Name,
-            NewTable = new PostgreSQLTable() { Name = table.Name },
-            OldTable = new PostgreSQLTable() { Name = table.Name },
         };
     }
 

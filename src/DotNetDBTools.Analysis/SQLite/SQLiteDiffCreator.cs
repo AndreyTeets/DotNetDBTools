@@ -22,4 +22,11 @@ internal class SQLiteDiffCreator : DiffCreator
         BuildScriptsDiff(dbDiff);
         return dbDiff;
     }
+
+    protected override void BuildAdditionalTableDiffProperties(TableDiff tableDiff, Table newTable, Table oldTable)
+    {
+        SQLiteTableDiff tDiff = (SQLiteTableDiff)tableDiff;
+        tDiff.NewTable = newTable;
+        tDiff.OldTable = oldTable;
+    }
 }

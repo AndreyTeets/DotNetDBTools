@@ -128,7 +128,7 @@ internal class MSSQLDiffCreator : DiffCreator
         void AddForTableObjects()
         {
             Dictionary<Guid, MSSQLTableDiff> tableIdToTableDiffMap = dbDiff.ChangedTables
-                .ToDictionary(x => x.NewTable.ID, x => (MSSQLTableDiff)x);
+                .ToDictionary(x => x.TableID, x => (MSSQLTableDiff)x);
             foreach (Table table in newDb.Tables.Where(IsNotAdded))
             {
                 if (table.Columns.Any(RequiresDataTypeOrDefaultRedifinition))

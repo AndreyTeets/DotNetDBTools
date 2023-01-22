@@ -62,25 +62,30 @@ internal abstract class DiffCreator
         dbDiff.RemovedScripts = removedScripts;
     }
 
-    private TTableDiff CreateTableDiff<TTableDiff, TColumnDiff>(Table newDbTable, Table oldDbTable)
+    private TTableDiff CreateTableDiff<TTableDiff, TColumnDiff>(Table newTable, Table oldTable)
         where TTableDiff : TableDiff, new()
         where TColumnDiff : ColumnDiff, new()
     {
         TTableDiff tableDiff = new()
         {
-            NewTable = newDbTable,
-            OldTable = oldDbTable,
+            TableID = newTable.ID,
+            NewTableName = newTable.Name,
+            OldTableName = oldTable.Name,
         };
 
-        BuildColumnsDiff<TTableDiff, TColumnDiff>(tableDiff, newDbTable, oldDbTable);
-        BuildPrimaryKeyDiff(tableDiff, newDbTable, oldDbTable);
-        BuildUniqueConstraintsDiff(tableDiff, newDbTable, oldDbTable);
-        BuildCheckConstraintsDiff(tableDiff, newDbTable, oldDbTable);
-        BuildForeignKeysDiff(tableDiff, newDbTable, oldDbTable);
+        BuildColumnsDiff<TTableDiff, TColumnDiff>(tableDiff, newTable, oldTable);
+        BuildPrimaryKeyDiff(tableDiff, newTable, oldTable);
+        BuildUniqueConstraintsDiff(tableDiff, newTable, oldTable);
+        BuildCheckConstraintsDiff(tableDiff, newTable, oldTable);
+        BuildForeignKeysDiff(tableDiff, newTable, oldTable);
+
+        BuildAdditionalTableDiffProperties(tableDiff, newTable, oldTable);
+
         return tableDiff;
     }
+    protected virtual void BuildAdditionalTableDiffProperties(TableDiff tableDiff, Table newTable, Table oldTable) { }
 
-    private void BuildColumnsDiff<TTableDiff, TColumnDiff>(TTableDiff tableDiff, Table newDbTable, Table oldDbTable)
+    private void BuildColumnsDiff<TTableDiff, TColumnDiff>(TTableDiff tableDiff, Table newTable, Table oldTable)
         where TTableDiff : TableDiff, new()
         where TColumnDiff : ColumnDiff, new()
     {
@@ -88,7 +93,7 @@ internal abstract class DiffCreator
         List<Column> removedColumns = null;
         List<ColumnDiff> changedColumns = new();
         FillAddedAndRemovedItemsAndApplyActionToChangedItems(
-            newDbTable.Columns, oldDbTable.Columns,
+            newTable.Columns, oldTable.Columns,
             ref addedColumns, ref removedColumns,
             (newColumn, oldColumn) =>
             {
@@ -126,27 +131,27 @@ internal abstract class DiffCreator
     }
     protected virtual void BuildAdditionalColumnDiffProperties(ColumnDiff columnDiff, Column newColumn, Column oldColumn) { }
 
-    private void BuildPrimaryKeyDiff<TTableDiff>(TTableDiff tableDiff, Table newDbTable, Table oldDbTable)
+    private void BuildPrimaryKeyDiff<TTableDiff>(TTableDiff tableDiff, Table newTable, Table oldTable)
         where TTableDiff : TableDiff, new()
     {
         PrimaryKey primaryKeyToCreate = null;
         PrimaryKey primaryKeyToDrop = null;
-        if (!_comparer.Equals(newDbTable.PrimaryKey, oldDbTable.PrimaryKey))
+        if (!_comparer.Equals(newTable.PrimaryKey, oldTable.PrimaryKey))
         {
-            primaryKeyToCreate = newDbTable.PrimaryKey;
-            primaryKeyToDrop = oldDbTable.PrimaryKey;
+            primaryKeyToCreate = newTable.PrimaryKey;
+            primaryKeyToDrop = oldTable.PrimaryKey;
         }
 
         tableDiff.PrimaryKeyToCreate = primaryKeyToCreate;
         tableDiff.PrimaryKeyToDrop = primaryKeyToDrop;
     }
 
-    private void BuildUniqueConstraintsDiff<TTableDiff>(TTableDiff tableDiff, Table newDbTable, Table oldDbTable)
+    private void BuildUniqueConstraintsDiff<TTableDiff>(TTableDiff tableDiff, Table newTable, Table oldTable)
         where TTableDiff : TableDiff, new()
     {
         FillAddedAndRemovedItemsAndAddChangedToBoth(
-            newDbTable.UniqueConstraints,
-            oldDbTable.UniqueConstraints,
+            newTable.UniqueConstraints,
+            oldTable.UniqueConstraints,
             out List<UniqueConstraint> uniqueConstraintsToCreate,
             out List<UniqueConstraint> uniqueConstraintsToDrop);
 
@@ -154,12 +159,12 @@ internal abstract class DiffCreator
         tableDiff.UniqueConstraintsToDrop = uniqueConstraintsToDrop;
     }
 
-    private void BuildCheckConstraintsDiff<TTableDiff>(TTableDiff tableDiff, Table newDbTable, Table oldDbTable)
+    private void BuildCheckConstraintsDiff<TTableDiff>(TTableDiff tableDiff, Table newTable, Table oldTable)
         where TTableDiff : TableDiff, new()
     {
         FillAddedAndRemovedItemsAndAddChangedToBoth(
-            newDbTable.CheckConstraints,
-            oldDbTable.CheckConstraints,
+            newTable.CheckConstraints,
+            oldTable.CheckConstraints,
             out List<CheckConstraint> checkConstraintsToCreate,
             out List<CheckConstraint> checkConstraintsToDrop);
 

@@ -59,11 +59,12 @@ internal static class ForeignKeysHelper
         foreach (IEnumerable<Column> removedTableColumns in dbDiff.RemovedTables.Select(t => t.Columns))
             columnsChangedOrReferencedByChangedObjects.UnionWith(removedTableColumns.Select(c => c.ID));
 
+        Dictionary<Guid, Table> oldDbTables = dbDiff.OldDatabase.Tables.ToDictionary(x => x.ID, x => x);
         foreach (TableDiff tableDiff in dbDiff.ChangedTables)
         {
             columnsChangedOrReferencedByChangedObjects.UnionWith(tableDiff.ColumnsToDrop.Select(c => c.ID));
             columnsChangedOrReferencedByChangedObjects.UnionWith(tableDiff.ColumnsToAlter.Select(cd => cd.ColumnID));
-            Dictionary<string, Guid> oldTableColumnIDs = tableDiff.OldTable.Columns.ToDictionary(c => c.Name, c => c.ID);
+            Dictionary<string, Guid> oldTableColumnIDs = oldDbTables[tableDiff.TableID].Columns.ToDictionary(c => c.Name, c => c.ID);
             if (tableDiff.PrimaryKeyToDrop is not null)
                 columnsChangedOrReferencedByChangedObjects.UnionWith(tableDiff.PrimaryKeyToDrop.Columns.Select(cn => oldTableColumnIDs[cn]));
             foreach (UniqueConstraint uc in tableDiff.UniqueConstraintsToDrop)

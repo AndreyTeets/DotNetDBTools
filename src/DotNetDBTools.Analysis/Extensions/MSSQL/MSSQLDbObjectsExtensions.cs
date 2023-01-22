@@ -15,8 +15,6 @@ public static class MSSQLDbObjectsExtensions
             TableID = table.ID,
             NewTableName = table.Name,
             OldTableName = table.Name,
-            NewTable = new MSSQLTable() { Name = table.Name },
-            OldTable = new MSSQLTable() { Name = table.Name },
         };
     }
 

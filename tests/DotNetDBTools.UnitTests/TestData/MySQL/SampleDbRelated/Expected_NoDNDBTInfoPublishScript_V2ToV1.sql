@@ -3,11 +3,13 @@ DROP TRIGGER `TR_MyTable2_MyTrigger1`;
 -- QUERY END: DropTriggerQuery
 
 -- QUERY START: DropForeignKeyQuery
-ALTER TABLE `MyTable1NewName` DROP CONSTRAINT `FK_MyTable1_MyColumn1_MyTable2_MyColumn1`;
+ALTER TABLE `MyTable1NewName`
+    DROP CONSTRAINT `FK_MyTable1_MyColumn1_MyTable2_MyColumn1`;
 -- QUERY END: DropForeignKeyQuery
 
 -- QUERY START: DropForeignKeyQuery
-ALTER TABLE `MyTable2` DROP CONSTRAINT `FK_MyTable2_MyColumns34_MyTable3_MyColumns12`;
+ALTER TABLE `MyTable2`
+    DROP CONSTRAINT `FK_MyTable2_MyColumns34_MyTable3_MyColumns12`;
 -- QUERY END: DropForeignKeyQuery
 
 -- QUERY START: DropIndexQuery
@@ -28,36 +30,32 @@ DROP TABLE `MyTable3`;
 
 -- QUERY START: AlterTableQuery
 RENAME TABLE `MyTable1NewName` TO `MyTable1`;
-
-ALTER TABLE `MyTable1` DROP CONSTRAINT `CK_MyTable1_MyCheck1`;
-ALTER TABLE `MyTable1` ALTER COLUMN `MyColumn1` DROP DEFAULT;
-ALTER TABLE `MyTable1` MODIFY COLUMN `MyColumn1` INT NOT NULL;
-ALTER TABLE `MyTable1` ALTER COLUMN `MyColumn1` SET DEFAULT 15;
-ALTER TABLE `MyTable1` ALTER COLUMN `MyColumn4` SET DEFAULT 736;
-ALTER TABLE `MyTable1` ADD COLUMN `MyColumn2` LONGTEXT NULL;
-ALTER TABLE `MyTable1` ADD COLUMN `MyColumn3` INT AUTO_INCREMENT NOT NULL,
-     ADD PRIMARY KEY (`MyColumn3`);
-ALTER TABLE `MyTable1` ADD CONSTRAINT `CK_MyTable1_MyCheck1` CHECK (MyColumn4 >= 0);
+ALTER TABLE `MyTable1`
+    DROP CONSTRAINT `CK_MyTable1_MyCheck1`,
+    MODIFY COLUMN `MyColumn1` INT NOT NULL DEFAULT 15,
+    ALTER COLUMN `MyColumn4` SET DEFAULT 736,
+    ADD COLUMN `MyColumn2` LONGTEXT NULL,
+    ADD COLUMN `MyColumn3` INT AUTO_INCREMENT NOT NULL,
+    ADD PRIMARY KEY (`MyColumn3`),
+    ADD CONSTRAINT `CK_MyTable1_MyCheck1` CHECK (MyColumn4 >= 0);
 -- QUERY END: AlterTableQuery
 
 -- QUERY START: AlterTableQuery
 ALTER TABLE `MyTable2` RENAME COLUMN `MyColumn1NewName` TO `MyColumn1`;
-
-ALTER TABLE `MyTable2` DROP PRIMARY KEY;
-ALTER TABLE `MyTable2` DROP COLUMN `MyColumn2`;
-ALTER TABLE `MyTable2` DROP COLUMN `MyColumn3`;
-ALTER TABLE `MyTable2` DROP COLUMN `MyColumn4`;
-ALTER TABLE `MyTable2` ALTER COLUMN `MyColumn1` DROP DEFAULT;
-ALTER TABLE `MyTable2` MODIFY COLUMN `MyColumn1` INT NOT NULL;
-ALTER TABLE `MyTable2` ALTER COLUMN `MyColumn1` SET DEFAULT 333;
-ALTER TABLE `MyTable2` ADD COLUMN `MyColumn2` VARBINARY(22) NULL DEFAULT (0x000408);
-ALTER TABLE `MyTable2` ADD PRIMARY KEY (`MyColumn1`);
+ALTER TABLE `MyTable2`
+    DROP PRIMARY KEY,
+    DROP COLUMN `MyColumn2`,
+    DROP COLUMN `MyColumn3`,
+    DROP COLUMN `MyColumn4`,
+    MODIFY COLUMN `MyColumn1` INT NOT NULL DEFAULT 333,
+    ADD COLUMN `MyColumn2` VARBINARY(22) NULL DEFAULT (0x000408),
+    ADD PRIMARY KEY (`MyColumn1`);
 -- QUERY END: AlterTableQuery
 
 -- QUERY START: AlterTableQuery
-ALTER TABLE `MyTable5` ALTER COLUMN `MyColumn1` DROP DEFAULT;
-ALTER TABLE `MyTable5` ALTER COLUMN `MyColumn1` SET DEFAULT (ABs(-15));
-ALTER TABLE `MyTable5` ADD PRIMARY KEY (`MyColumn2`, `MyColumn1`);
+ALTER TABLE `MyTable5`
+    ALTER COLUMN `MyColumn1` SET DEFAULT (ABs(-15)),
+    ADD PRIMARY KEY (`MyColumn2`, `MyColumn1`);
 -- QUERY END: AlterTableQuery
 
 -- QUERY START: CreateTableQuery
@@ -100,13 +98,15 @@ CREATE UNIQUE INDEX `UQ_MyTable5_CustomName`
 -- QUERY END: CreateIndexQuery
 
 -- QUERY START: CreateForeignKeyQuery
-ALTER TABLE `MyTable6` ADD CONSTRAINT `FK_MyTable6_MyTable5_CustomName` FOREIGN KEY (`MyColumn1`, `MyColumn2`)
+ALTER TABLE `MyTable6`
+    ADD CONSTRAINT `FK_MyTable6_MyTable5_CustomName` FOREIGN KEY (`MyColumn1`, `MyColumn2`)
         REFERENCES `MyTable5` (`MyColumn2`, `MyColumn1`)
         ON UPDATE NO ACTION ON DELETE NO ACTION;
 -- QUERY END: CreateForeignKeyQuery
 
 -- QUERY START: CreateForeignKeyQuery
-ALTER TABLE `MyTable1` ADD CONSTRAINT `FK_MyTable1_MyColumn1_MyTable2_MyColumn1` FOREIGN KEY (`MyColumn1`)
+ALTER TABLE `MyTable1`
+    ADD CONSTRAINT `FK_MyTable1_MyColumn1_MyTable2_MyColumn1` FOREIGN KEY (`MyColumn1`)
         REFERENCES `MyTable2` (`MyColumn1`)
         ON UPDATE NO ACTION ON DELETE CASCADE;
 -- QUERY END: CreateForeignKeyQuery

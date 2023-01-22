@@ -31,15 +31,15 @@ $@"{GetIdDeclarationText(table, 0)}CREATE TABLE ""{table.Name}""
     {
         StringBuilder sb = new();
 
-        if (tableDiff.NewTable.Name != tableDiff.OldTable.Name)
-            sb.AppendLine(Statements.RenameTable(tableDiff.OldTable.Name, tableDiff.NewTable.Name));
+        if (tableDiff.NewTableName != tableDiff.OldTableName)
+            sb.AppendLine(Statements.RenameTable(tableDiff.OldTableName, tableDiff.NewTableName));
 
         foreach (ColumnDiff columnDiff in tableDiff.ColumnsToAlter.Where(x => x.NewColumnName != x.OldColumnName))
-            sb.AppendLine(Statements.RenameColumn(tableDiff.NewTable.Name, columnDiff.OldColumnName, columnDiff.NewColumnName));
+            sb.AppendLine(Statements.RenameColumn(tableDiff.NewTableName, columnDiff.OldColumnName, columnDiff.NewColumnName));
 
         string tableAlters = GetTableAltersText(tableDiff);
         if (!string.IsNullOrEmpty(tableAlters))
-            sb.AppendLine($@"ALTER TABLE ""{tableDiff.NewTable.Name}""{tableAlters};");
+            sb.AppendLine($@"ALTER TABLE ""{tableDiff.NewTableName}""{tableAlters};");
 
         return sb.ToString();
     }
@@ -113,10 +113,10 @@ $@"    {GetIdDeclarationText(fk, 4)}{Statements.DefForeignKey(fk)}"));
             else if (columnDiff.NotNullToSet is not null && columnDiff.NotNullToSet == false)
                 sb.Append(Statements.DropColumnNotNull(columnDiff.NewColumnName));
 
-            if (columnDiff.DefaultToDrop is not null)
-                sb.Append(Statements.DropDefaultConstraint(columnDiff.NewColumnName));
             if (columnDiff.DefaultToSet is not null)
-                sb.Append(Statements.AddDefaultConstraint(columnDiff.NewColumnName, columnDiff.DefaultToSet));
+                sb.Append(Statements.SetColumnDefault(columnDiff.NewColumnName, columnDiff.DefaultToSet));
+            else if (columnDiff.DefaultToDrop is not null)
+                sb.Append(Statements.DropColumnDefault(columnDiff.NewColumnName));
 
             if (columnDiff is PostgreSQLColumnDiff cDiff && cDiff.IdentitySequenceOptionsToSet is not null)
                 SetIdentitySequenceOptions(columnDiff.NewColumnName, cDiff.IdentitySequenceOptionsToSet);
@@ -191,11 +191,11 @@ $@"
 $@"
     ALTER COLUMN ""{cName}"" DROP NOT NULL,"
             ;
-        public static string AddDefaultConstraint(string cName, CodePiece dValue) =>
+        public static string SetColumnDefault(string cName, CodePiece dValue) =>
 $@"
     ALTER COLUMN ""{cName}"" SET DEFAULT {dValue.Code},"
             ;
-        public static string DropDefaultConstraint(string cName) =>
+        public static string DropColumnDefault(string cName) =>
 $@"
     ALTER COLUMN ""{cName}"" DROP DEFAULT,"
             ;
