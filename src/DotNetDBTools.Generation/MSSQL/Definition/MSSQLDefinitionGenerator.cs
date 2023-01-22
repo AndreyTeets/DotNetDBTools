@@ -6,7 +6,7 @@ using DotNetDBTools.Models.MSSQL.UserDefinedTypes;
 
 namespace DotNetDBTools.Generation.MSSQL.Definition;
 
-internal class MSSQLDefinitionGenerator : DefinitionGenerator
+internal class MSSQLDefinitionGenerator : DefinitionGenerator<MSSQLTablesCSharpDefinitionGenerator>
 {
     protected override void AddDbmsSpecificObjectsFiles(
         List<DefinitionSourceFile> files, Database database, string projectNamespace)

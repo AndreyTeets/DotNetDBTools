@@ -7,7 +7,7 @@ using DotNetDBTools.UnitTests.Utilities;
 
 namespace DotNetDBTools.UnitTests.DefinitionParsing.SQLite;
 
-public class SQLiteBuildSqlDefDbModelTests : BaseBuildSqlDefDbModelTests<SQLiteDatabase>
+public class SQLiteBuildSqlDefDbModelTests : BaseBuildSqlDefDbModelTests
 {
     private const string TestDataDir = "./TestData/SQLite/Parsing";
     protected override string SpecificDbmsSampleDbV2AssemblyName => "DotNetDBTools.SampleDBv2.SQLite";
@@ -19,7 +19,7 @@ public class SQLiteBuildSqlDefDbModelTests : BaseBuildSqlDefDbModelTests<SQLiteD
         MiscHelper.ReadFromFile($"{TestDataDir}/CreateView.sql"),
     };
     protected override DatabaseKind DatabaseKindForDbModelCreation => DatabaseKind.SQLite;
-    protected override SQLiteDatabase ExpectedDbModelFromListOfSqlStatements => new()
+    protected override Database ExpectedDbModelFromListOfSqlStatements => new SQLiteDatabase()
     {
         Version = 3,
         Tables = new()

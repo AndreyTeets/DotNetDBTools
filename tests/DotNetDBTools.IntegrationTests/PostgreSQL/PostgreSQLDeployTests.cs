@@ -5,7 +5,6 @@ using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.PostgreSQL;
 using DotNetDBTools.IntegrationTests.Base;
 using DotNetDBTools.Models.Core;
-using DotNetDBTools.Models.PostgreSQL;
 using FluentAssertions.Equivalency;
 using Npgsql;
 using static DotNetDBTools.IntegrationTests.Constants;
@@ -13,7 +12,6 @@ using static DotNetDBTools.IntegrationTests.Constants;
 namespace DotNetDBTools.IntegrationTests.PostgreSQL;
 
 public class PostgreSQLDeployTests : BaseDeployTests<
-    PostgreSQLDatabase,
     NpgsqlConnection,
     PostgreSQLDeployManager>
 {
@@ -25,8 +23,8 @@ public class PostgreSQLDeployTests : BaseDeployTests<
 
     public PostgreSQLDeployTests() : base(DatabaseKind.PostgreSQL) { }
 
-    protected override EquivalencyAssertionOptions<PostgreSQLDatabase> AddAdditionalDbModelEquivalenceyOptions(
-        EquivalencyAssertionOptions<PostgreSQLDatabase> options, CompareMode compareMode)
+    protected override EquivalencyAssertionOptions<Database> AddAdditionalDbModelEquivalenceyOptions(
+        EquivalencyAssertionOptions<Database> options, CompareMode compareMode)
     {
         return options;
     }

@@ -4,7 +4,6 @@ using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.SQLite;
 using DotNetDBTools.IntegrationTests.Base;
 using DotNetDBTools.Models.Core;
-using DotNetDBTools.Models.SQLite;
 using FluentAssertions.Equivalency;
 using Microsoft.Data.Sqlite;
 using static DotNetDBTools.IntegrationTests.Constants;
@@ -12,7 +11,6 @@ using static DotNetDBTools.IntegrationTests.Constants;
 namespace DotNetDBTools.IntegrationTests.SQLite;
 
 public class SQLiteDeployTests : BaseDeployTests<
-    SQLiteDatabase,
     SqliteConnection,
     SQLiteDeployManager>
 {
@@ -24,8 +22,8 @@ public class SQLiteDeployTests : BaseDeployTests<
 
     public SQLiteDeployTests() : base(DatabaseKind.SQLite) { }
 
-    protected override EquivalencyAssertionOptions<SQLiteDatabase> AddAdditionalDbModelEquivalenceyOptions(
-        EquivalencyAssertionOptions<SQLiteDatabase> options, CompareMode compareMode)
+    protected override EquivalencyAssertionOptions<Database> AddAdditionalDbModelEquivalenceyOptions(
+        EquivalencyAssertionOptions<Database> options, CompareMode compareMode)
     {
         return options;
     }

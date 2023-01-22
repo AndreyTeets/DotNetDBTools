@@ -6,9 +6,9 @@ using static DotNetDBTools.Generation.Core.Definition.CSharpDefinitionGeneration
 
 namespace DotNetDBTools.Generation.Core.Definition;
 
-internal static class TablesCSharpDefinitionGenerator
+internal class TablesCSharpDefinitionGenerator
 {
-    public static IEnumerable<DefinitionSourceFile> Create(Database database, string projectNamespace)
+    public IEnumerable<DefinitionSourceFile> Create(Database database, string projectNamespace)
     {
         List<DefinitionSourceFile> res = new();
         foreach (Table table in database.Tables)
@@ -26,6 +26,8 @@ internal static class TablesCSharpDefinitionGenerator
                     propsDeclarations.Add($@"            Identity = {DeclareBool(column.Identity)},");
                 if (column.Default is not null)
                     propsDeclarations.Add($@"            Default = {DeclareDefaultValue(column.Default)},");
+
+                AddAdditionalColumnPropsDeclarations(propsDeclarations, column);
 
                 string columnDeclaration =
 $@"        public Column {column.Name} = new(""{column.ID}"")
@@ -155,6 +157,7 @@ namespace {projectNamespace}.Tables
         }
         return res;
     }
+    protected virtual void AddAdditionalColumnPropsDeclarations(List<string> columnDeclarations, Column column) { }
 
     private static string CreateColumnsDeclaration(string propName, IEnumerable<string> columns)
     {

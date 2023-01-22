@@ -6,7 +6,7 @@ using DotNetDBTools.Models.PostgreSQL.UserDefinedTypes;
 
 namespace DotNetDBTools.Generation.PostgreSQL.Definition;
 
-internal class PostgreSQLDefinitionGenerator : DefinitionGenerator
+internal class PostgreSQLDefinitionGenerator : DefinitionGenerator<PostgreSQLTablesCSharpDefinitionGenerator>
 {
     protected override void AddDbmsSpecificObjectsFiles(
         List<DefinitionSourceFile> files, Database database, string projectNamespace)

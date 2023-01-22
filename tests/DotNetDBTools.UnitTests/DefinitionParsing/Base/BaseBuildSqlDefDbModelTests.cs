@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Reflection;
 using DotNetDBTools.DefinitionParsing;
 using DotNetDBTools.Models.Core;
@@ -9,14 +8,13 @@ using Xunit;
 
 namespace DotNetDBTools.UnitTests.DefinitionParsing.Base;
 
-public abstract class BaseBuildSqlDefDbModelTests<TDatabase>
-    where TDatabase : Database, new()
+public abstract class BaseBuildSqlDefDbModelTests
 {
     protected abstract string SpecificDbmsSampleDbV2AssemblyName { get; }
     protected abstract string SpecificDbmsSampleDbV2SqlDefAssemblyName { get; }
     protected abstract List<string> ListOfSqlStatementsForDbModelCreation { get; }
     protected abstract DatabaseKind DatabaseKindForDbModelCreation { get; }
-    protected abstract TDatabase ExpectedDbModelFromListOfSqlStatements { get; }
+    protected abstract Database ExpectedDbModelFromListOfSqlStatements { get; }
 
     private readonly Assembly _specificDbmsDbAssemblyV2;
     private readonly Assembly _specificDbmsDbAssemblyV2SqlDef;
@@ -30,21 +28,27 @@ public abstract class BaseBuildSqlDefDbModelTests<TDatabase>
     [Fact]
     public void DbModelFromSqlDef_IsEquivalentTo_DbModelFromCSharpDef()
     {
-        TDatabase databaseCSharp = (TDatabase)new DefinitionParsingManager().CreateDbModel(_specificDbmsDbAssemblyV2);
-        TDatabase databaseSql = (TDatabase)new DefinitionParsingManager().CreateDbModel(_specificDbmsDbAssemblyV2SqlDef);
-        databaseSql.Should().BeEquivalentTo(databaseCSharp, options => options.WithStrictOrdering()
-            .Excluding(x => x.Path.EndsWith(".Parent", StringComparison.Ordinal))
-            .Excluding(x => x.Path.EndsWith(".DependsOn", StringComparison.Ordinal)));
+        Database databaseCSharp = new DefinitionParsingManager().CreateDbModel(_specificDbmsDbAssemblyV2);
+        Database databaseSql = new DefinitionParsingManager().CreateDbModel(_specificDbmsDbAssemblyV2SqlDef);
+        databaseSql.Should().BeEquivalentTo(databaseCSharp, options => options
+            .RespectingRuntimeTypes()
+            .WithStrictOrdering()
+            .Excluding(mi => mi.Name == nameof(DbObject.Parent) && mi.DeclaringType == typeof(DbObject))
+            .Excluding(mi => mi.Name == nameof(CodePiece.DependsOn) && mi.DeclaringType == typeof(CodePiece))
+            .Excluding(mi => mi.Name == nameof(DataType.DependsOn) && mi.DeclaringType == typeof(DataType)));
     }
 
     [Fact]
     public void CreateDbModel_FromListOfSqlStatements_CreatesCorrectModel()
     {
-        TDatabase actualDbModel = (TDatabase)new DefinitionParsingManager().CreateDbModel(
+        Database actualDbModel = new DefinitionParsingManager().CreateDbModel(
             ListOfSqlStatementsForDbModelCreation, 3, DatabaseKindForDbModelCreation);
 
-        actualDbModel.Should().BeEquivalentTo(ExpectedDbModelFromListOfSqlStatements, options => options.WithoutStrictOrdering()
-            .Excluding(x => x.Path.EndsWith(".Parent", StringComparison.Ordinal))
-            .Excluding(x => x.Path.EndsWith(".DependsOn", StringComparison.Ordinal)));
+        actualDbModel.Should().BeEquivalentTo(ExpectedDbModelFromListOfSqlStatements, options => options
+            .RespectingRuntimeTypes()
+            .WithoutStrictOrdering()
+            .Excluding(mi => mi.Name == nameof(DbObject.Parent) && mi.DeclaringType == typeof(DbObject))
+            .Excluding(mi => mi.Name == nameof(CodePiece.DependsOn) && mi.DeclaringType == typeof(CodePiece))
+            .Excluding(mi => mi.Name == nameof(DataType.DependsOn) && mi.DeclaringType == typeof(DataType)));
     }
 }

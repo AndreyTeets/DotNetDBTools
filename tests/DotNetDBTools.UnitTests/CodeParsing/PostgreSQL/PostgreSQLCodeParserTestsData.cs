@@ -52,6 +52,14 @@ public class PostgreSQLCodeParserTestsData : BaseCodeParserTestsData
                     DataType = "BIGINT",
                     NotNull = true,
                     Identity = true,
+                    IdentityGenerationKind = "ALWAYS",
+                    IdentitySequenceOptions = new()
+                    {
+                        StartWith = 0,
+                        IncrementBy = -3,
+                        MinValue = -2222,
+                        Cycle = false,
+                    },
                 },
                 new ColumnInfo()
                 {
@@ -163,6 +171,8 @@ public class PostgreSQLCodeParserTestsData : BaseCodeParserTestsData
                     NotNull = true,
                     Identity = true,
                     PrimaryKey = true,
+                    IdentityGenerationKind = "BY DEFAULT",
+                    IdentitySequenceOptions = new(),
                 },
             },
             Constraints = new List<ConstraintInfo>()

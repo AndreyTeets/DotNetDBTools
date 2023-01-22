@@ -34,6 +34,15 @@ internal class PostgreSQLDbModelFromSqlDefinitionProvider : DbModelFromSqlDefini
         db.Functions = BuildFunctionModels(dbObjects.OfType<FunctionInfo>());
     }
 
+    protected override void BuildAdditionalColumnModelProperties(PostgreSQLColumn columnModel, ColumnInfo column, string tableName)
+    {
+        if (columnModel.Identity)
+        {
+            columnModel.IdentityGenerationKind = column.IdentityGenerationKind is null ? "ALWAYS" : column.IdentityGenerationKind;
+            columnModel.IdentitySequenceOptions = MapToSequenceOptionsModel(column.IdentitySequenceOptions);
+        }
+    }
+
     protected override void BuildAdditionalIndexModelProperties(Index indexModel, IndexInfo index)
     {
         if (index.Expression is not null)
@@ -50,15 +59,7 @@ internal class PostgreSQLDbModelFromSqlDefinitionProvider : DbModelFromSqlDefini
                 ID = sequence.ID.Value,
                 Name = sequence.Name,
                 DataType = new DataType { Name = sequence.DataType ?? PostgreSQLDataTypeNames.INT },
-                Options = new PostgreSQLSequenceOptions()
-                {
-                    StartWith = sequence.StartWith ?? 1,
-                    IncrementBy = sequence.IncrementBy ?? 1,
-                    MinValue = sequence.MinValue ?? 1,
-                    MaxValue = sequence.MaxValue ?? int.MaxValue,
-                    Cache = sequence.Cache ?? 1,
-                    Cycle = sequence.Cycle ?? false,
-                },
+                Options = MapToSequenceOptionsModel(sequence.Options),
                 OwnedBy = (sequence.OwnedByTableName, sequence.OwnedByColumnName),
             };
             sequenceModels.Add(sequenceModel);
@@ -171,5 +172,18 @@ internal class PostgreSQLDbModelFromSqlDefinitionProvider : DbModelFromSqlDefini
             functionModels.Add(functionModel);
         }
         return functionModels;
+    }
+
+    private static PostgreSQLSequenceOptions MapToSequenceOptionsModel(SequenceOptions options)
+    {
+        return new PostgreSQLSequenceOptions()
+        {
+            StartWith = options.StartWith ?? 1,
+            IncrementBy = options.IncrementBy ?? 1,
+            MinValue = options.MinValue ?? 1,
+            MaxValue = options.MaxValue ?? int.MaxValue,
+            Cache = options.Cache ?? 1,
+            Cycle = options.Cycle ?? false,
+        };
     }
 }

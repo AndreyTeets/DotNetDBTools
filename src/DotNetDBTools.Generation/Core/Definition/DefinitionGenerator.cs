@@ -3,7 +3,8 @@ using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.Generation.Core.Definition;
 
-internal abstract class DefinitionGenerator : IDefinitionGenerator
+internal abstract class DefinitionGenerator<TTablesCSharpDefinitionGenerator> : IDefinitionGenerator
+    where TTablesCSharpDefinitionGenerator : TablesCSharpDefinitionGenerator, new()
 {
     public OutputDefinitionKind OutputDefinitionKind { get; set; }
 
@@ -19,7 +20,7 @@ internal abstract class DefinitionGenerator : IDefinitionGenerator
 
         if (OutputDefinitionKind == OutputDefinitionKind.CSharp)
         {
-            files.AddRange(TablesCSharpDefinitionGenerator.Create(database, projectNamespace));
+            files.AddRange(new TTablesCSharpDefinitionGenerator().Create(database, projectNamespace));
             files.AddRange(ViewsCSharpDefinitionGenerator.Create(database, projectNamespace));
         }
         else

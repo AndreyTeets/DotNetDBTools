@@ -61,14 +61,14 @@ public abstract class BaseCodeParserTests<TCodeParser>
             .Should().Throw<ParseException>().WithMessage($"Failed to parse object info: ID declaration comment is missing for *");
     }
 
-    protected void Assert_GetObjectInfo_ParsesObjectCorrectly<TObjectInfo>(
-        string sqlFileName, TObjectInfo expectedObjectInfo)
-        where TObjectInfo : ObjectInfo
+    protected void Assert_GetObjectInfo_ParsesObjectCorrectly(
+        string sqlFileName, ObjectInfo expectedObjectInfo)
     {
         string input = MiscHelper.ReadFromFile($@"{TestData.TestDataDir}/{sqlFileName}");
         TCodeParser parser = new();
-        TObjectInfo actualObjectInfo = (TObjectInfo)parser.GetObjectInfo(input);
+        ObjectInfo actualObjectInfo = parser.GetObjectInfo(input);
 
-        actualObjectInfo.Should().BeEquivalentTo(expectedObjectInfo, options => options.WithStrictOrdering());
+        actualObjectInfo.Should().BeEquivalentTo(expectedObjectInfo, options => options
+            .RespectingRuntimeTypes().WithStrictOrdering());
     }
 }

@@ -131,12 +131,14 @@ public class PostgreSQLUnitTestsTestDataSqlScriptsValidation
 
     private void AssertDbModelEquivalence(Database dbModel1, Database dbModel2)
     {
-        ((PostgreSQLDatabase)dbModel1).Should().BeEquivalentTo((PostgreSQLDatabase)dbModel2, options =>
-            options.WithStrictOrdering()
-                .Excluding(x => x.Path.EndsWith(".Parent", StringComparison.Ordinal))
-                .Excluding(x => x.Path.EndsWith(".DependsOn", StringComparison.Ordinal))
-                .Excluding(x => x.Path.EndsWith(".ID", StringComparison.Ordinal))
-                .Using<CodePiece>(CompareCodePiece).WhenTypeIs<CodePiece>());
+        dbModel1.Should().BeEquivalentTo(dbModel2, options => options
+            .RespectingRuntimeTypes()
+            .WithStrictOrdering()
+            .Excluding(mi => mi.Name == nameof(DbObject.Parent) && mi.DeclaringType == typeof(DbObject))
+            .Excluding(mi => mi.Name == nameof(CodePiece.DependsOn) && mi.DeclaringType == typeof(CodePiece))
+            .Excluding(mi => mi.Name == nameof(DataType.DependsOn) && mi.DeclaringType == typeof(DataType))
+            .Excluding(mi => mi.Name == nameof(DbObject.ID) && mi.DeclaringType == typeof(DbObject))
+            .Using<CodePiece>(CompareCodePiece).WhenTypeIs<CodePiece>());
     }
 
     private void CompareCodePiece(IAssertionContext<CodePiece> ctx)

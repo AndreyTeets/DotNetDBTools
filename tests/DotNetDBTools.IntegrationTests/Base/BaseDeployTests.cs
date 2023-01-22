@@ -1,5 +1,4 @@
-﻿using System;
-using System.Data;
+﻿using System.Data;
 using System.IO;
 using Dapper;
 using DotNetDBTools.Analysis;
@@ -16,8 +15,7 @@ using static DotNetDBTools.IntegrationTests.Constants;
 namespace DotNetDBTools.IntegrationTests.Base;
 
 [TestFixture]
-public abstract class BaseDeployTests<TDatabase, TDbConnection, TDeployManager>
-    where TDatabase : Database
+public abstract class BaseDeployTests<TDbConnection, TDeployManager>
     where TDbConnection : IDbConnection, new()
     where TDeployManager : IDeployManager, new()
 {
@@ -68,10 +66,10 @@ public abstract class BaseDeployTests<TDatabase, TDbConnection, TDeployManager>
             File.WriteAllText(updateV1toV2Script, _deployManager.GenerateNoDNDBTInfoPublishScript(assemblyV2Path, assemblyV1Path));
             File.WriteAllText(updateV2toV1Script, _deployManager.GenerateNoDNDBTInfoPublishScript(assemblyV1Path, assemblyV2Path));
 
-            TDatabase dbModelFromDefinitionV1 = CreateDbModelFromDefinition(assemblyV1Path);
-            TDatabase dbModelFromDefinitionV2 = CreateDbModelFromDefinition(assemblyV2Path);
-            TDatabase dbModelFromDBMSSSysInfoV1;
-            TDatabase dbModelFromDBMSSSysInfoV2;
+            Database dbModelFromDefinitionV1 = CreateDbModelFromDefinition(assemblyV1Path);
+            Database dbModelFromDefinitionV2 = CreateDbModelFromDefinition(assemblyV2Path);
+            Database dbModelFromDBMSSSysInfoV1;
+            Database dbModelFromDBMSSSysInfoV2;
 
             DumpDbModel(serializedDbModelFromDefinitionV1, dbModelFromDefinitionV1);
             DumpDbModel(serializedDbModelFromDefinitionV2, dbModelFromDefinitionV2);
@@ -118,8 +116,8 @@ public abstract class BaseDeployTests<TDatabase, TDbConnection, TDeployManager>
 
         void TestCase(string assemblyV1Path, string assemblyV2Path, string testCaseId)
         {
-            TDatabase dbModelFromDefinitionV1 = CreateDbModelFromDefinition(assemblyV1Path);
-            TDatabase dbModelFromDefinitionV2 = CreateDbModelFromDefinition(assemblyV2Path);
+            Database dbModelFromDefinitionV1 = CreateDbModelFromDefinition(assemblyV1Path);
+            Database dbModelFromDefinitionV2 = CreateDbModelFromDefinition(assemblyV2Path);
 
             using IDbConnection connection = RecreateDbAndCreateConnection(CreateTestCaseName(testCaseId));
 
@@ -165,7 +163,7 @@ public abstract class BaseDeployTests<TDatabase, TDbConnection, TDeployManager>
             AssertDbModelEquivalence(CreateDbModelFromDBMSSysInfo(connection), dbModelFromDefinitionV1, CompareMode.IgnoreAllDNDBT);
             DataTester.Assert_SampleDb_Data(connection, BaseDataTester.AssertKind.V1Rollbacked);
 
-            TDatabase dbModelFromDBMSSysInfoV1 = CreateDbModelFromDBMSSysInfo(connection);
+            Database dbModelFromDBMSSysInfoV1 = CreateDbModelFromDBMSSysInfo(connection);
             dbModelFromDBMSSysInfoV1.Version = 1;
 
             using IDbConnection connection2 = RecreateDbAndCreateConnection($"Db2_{CreateTestCaseName(testCaseId)}");
@@ -179,36 +177,39 @@ public abstract class BaseDeployTests<TDatabase, TDbConnection, TDeployManager>
         }
     }
 
-    private TDatabase CreateDbModelFromDefinition(string sampleDbAssemblyPath)
+    private Database CreateDbModelFromDefinition(string sampleDbAssemblyPath)
     {
         Database database = _definitionParsingManager.CreateDbModel(sampleDbAssemblyPath);
 
         if (database.Kind == DatabaseKind.Agnostic)
-            return (TDatabase)new AnalysisManager().ConvertFromAgnostic(database, _databaseKind);
+            return new AnalysisManager().ConvertFromAgnostic(database, _databaseKind);
         else
-            return (TDatabase)database;
+            return database;
     }
 
-    private TDatabase CreateDbModelFromDBMSSysInfo(IDbConnection connection)
+    private Database CreateDbModelFromDBMSSysInfo(IDbConnection connection)
     {
-        return (TDatabase)_deployManager.CreateDatabaseModelUsingDBMSSysInfo(connection);
+        return _deployManager.CreateDatabaseModelUsingDBMSSysInfo(connection);
     }
 
-    private TDatabase CreateDbModelFromDNDBTSysInfo(IDbConnection connection)
+    private Database CreateDbModelFromDNDBTSysInfo(IDbConnection connection)
     {
-        return (TDatabase)_deployManager.CreateDatabaseModelUsingDNDBTSysInfo(connection);
+        return _deployManager.CreateDatabaseModelUsingDNDBTSysInfo(connection);
     }
 
-    private void AssertDbModelEquivalence(TDatabase dbModel1, TDatabase dbModel2, CompareMode compareMode)
+    private void AssertDbModelEquivalence(Database dbModel1, Database dbModel2, CompareMode compareMode)
     {
         dbModel1.Should().BeEquivalentTo(dbModel2, options =>
         {
-            EquivalencyAssertionOptions<TDatabase> configuredOptions = options.WithStrictOrdering()
-                .Excluding(x => x.Path.EndsWith(".Parent", StringComparison.Ordinal))
-                .Excluding(x => x.Path.EndsWith(".DependsOn", StringComparison.Ordinal));
+            EquivalencyAssertionOptions<Database> configuredOptions = options
+                .RespectingRuntimeTypes()
+                .WithStrictOrdering()
+                .Excluding(mi => mi.Name == nameof(DbObject.Parent) && mi.DeclaringType == typeof(DbObject))
+                .Excluding(mi => mi.Name == nameof(CodePiece.DependsOn) && mi.DeclaringType == typeof(CodePiece))
+                .Excluding(mi => mi.Name == nameof(DataType.DependsOn) && mi.DeclaringType == typeof(DataType));
 
             if (compareMode.HasFlag(CompareMode.IgnoreIDs))
-                configuredOptions = configuredOptions.Excluding(database => database.Path.EndsWith(".ID", StringComparison.Ordinal));
+                configuredOptions = configuredOptions.Excluding(mi => mi.Name == nameof(DbObject.ID) && mi.DeclaringType == typeof(DbObject));
 
             if (compareMode.HasFlag(CompareMode.NormalizeCodePieces))
                 configuredOptions = configuredOptions.Using<CodePiece>(CompareCodePiece).WhenTypeIs<CodePiece>();
@@ -234,7 +235,7 @@ public abstract class BaseDeployTests<TDatabase, TDbConnection, TDeployManager>
         return connection;
     }
 
-    private static void DumpDbModel(string filePath, TDatabase dbModel)
+    private static void DumpDbModel(string filePath, Database dbModel)
     {
         JsonSerializerSettings jsonSettings = new()
         {
@@ -250,8 +251,8 @@ public abstract class BaseDeployTests<TDatabase, TDbConnection, TDeployManager>
         return testCaseId + "_" + CurrentTestName;
     }
 
-    protected abstract EquivalencyAssertionOptions<TDatabase> AddAdditionalDbModelEquivalenceyOptions(
-        EquivalencyAssertionOptions<TDatabase> options, CompareMode compareMode);
+    protected abstract EquivalencyAssertionOptions<Database> AddAdditionalDbModelEquivalenceyOptions(
+        EquivalencyAssertionOptions<Database> options, CompareMode compareMode);
     protected abstract string GetNormalizedCodeFromCodePiece(CodePiece codePiece);
     protected abstract void CreateDatabase(string testName);
     protected abstract void DropDatabaseIfExists(string testName);

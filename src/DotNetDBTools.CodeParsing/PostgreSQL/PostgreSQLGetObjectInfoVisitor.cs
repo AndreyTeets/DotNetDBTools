@@ -112,24 +112,15 @@ internal class PostgreSQLGetObjectInfoVisitor : PostgreSQLParserBaseVisitor<Obje
         if (!_ignoreIds)
             HM.SetObjectID(sequence, $"sequence '{sequence.Name}'", context.dndbt_id?.Text);
 
+        sequence.Options = new();
         foreach (Sequence_bodyContext opt in context.sequence_body())
         {
             if (opt.AS() is not null)
                 sequence.DataType = opt.type.Text;
-            else if (opt.START() is not null)
-                sequence.StartWith = long.Parse(opt.start_val.GetText());
-            else if (opt.INCREMENT() is not null)
-                sequence.IncrementBy = long.Parse(opt.incr.GetText());
-            else if (opt.MINVALUE() is not null && opt.NO() is null)
-                sequence.MinValue = long.Parse(opt.minval.GetText());
-            else if (opt.MAXVALUE() is not null && opt.NO() is null)
-                sequence.MaxValue = long.Parse(opt.maxval.GetText());
-            else if (opt.CACHE() is not null)
-                sequence.Cache = long.Parse(opt.cache_val.GetText());
-            else if (opt.CYCLE() is not null)
-                sequence.Cycle = opt.NO() is null;
             else if (opt.OWNED() is not null)
                 SetOwnedBy(sequence, opt.owned_by.GetText());
+            else
+                AddSequenceOption(sequence.Options, opt);
         }
         return sequence;
 
@@ -261,10 +252,23 @@ internal class PostgreSQLGetObjectInfoVisitor : PostgreSQLParserBaseVisitor<Obje
                 column.PrimaryKey = true;
             else if (context.UNIQUE() is not null)
                 column.Unique = true;
-            else if (context.identity_body() is not null && context.identity_body().ALWAYS() is not null)
-                column.Identity = true;
+            else if (context.identity_body() is not null)
+                AddIdentityOptions(column, context.identity_body());
             else if (context.DEFAULT() is not null)
                 column.Default = HM.GetInitialText(context.vex());
+        }
+
+        void AddIdentityOptions(ColumnInfo column, Identity_bodyContext context)
+        {
+            column.Identity = true;
+            if (context.ALWAYS() is not null)
+                column.IdentityGenerationKind = "ALWAYS";
+            else if (context.DEFAULT() is not null)
+                column.IdentityGenerationKind = "BY DEFAULT";
+
+            column.IdentitySequenceOptions = new();
+            foreach (Sequence_bodyContext opt in context.sequence_body())
+                AddSequenceOption(column.IdentitySequenceOptions, opt);
         }
     }
 
@@ -326,5 +330,21 @@ internal class PostgreSQLGetObjectInfoVisitor : PostgreSQLParserBaseVisitor<Obje
                     constraint.DeleteAction = HM.GetInitialText(fkActionClause.fk_action());
             }
         }
+    }
+
+    private static void AddSequenceOption(SequenceOptions so, Sequence_bodyContext opt)
+    {
+        if (opt.START() is not null)
+            so.StartWith = long.Parse(opt.start_val.GetText());
+        else if (opt.INCREMENT() is not null)
+            so.IncrementBy = long.Parse(opt.incr.GetText());
+        else if (opt.MINVALUE() is not null && opt.NO() is null)
+            so.MinValue = long.Parse(opt.minval.GetText());
+        else if (opt.MAXVALUE() is not null && opt.NO() is null)
+            so.MaxValue = long.Parse(opt.maxval.GetText());
+        else if (opt.CACHE() is not null)
+            so.Cache = long.Parse(opt.cache_val.GetText());
+        else if (opt.CYCLE() is not null)
+            so.Cycle = opt.NO() is null;
     }
 }

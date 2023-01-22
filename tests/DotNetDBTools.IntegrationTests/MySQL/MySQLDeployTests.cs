@@ -14,7 +14,6 @@ using static DotNetDBTools.IntegrationTests.Constants;
 namespace DotNetDBTools.IntegrationTests.MySQL;
 
 public class MySQLDeployTests : BaseDeployTests<
-    MySQLDatabase,
     MySqlConnection,
     MySQLDeployManager>
 {
@@ -26,11 +25,11 @@ public class MySQLDeployTests : BaseDeployTests<
 
     public MySQLDeployTests() : base(DatabaseKind.MySQL) { }
 
-    protected override EquivalencyAssertionOptions<MySQLDatabase> AddAdditionalDbModelEquivalenceyOptions(
-        EquivalencyAssertionOptions<MySQLDatabase> options, CompareMode compareMode)
+    protected override EquivalencyAssertionOptions<Database> AddAdditionalDbModelEquivalenceyOptions(
+        EquivalencyAssertionOptions<Database> options, CompareMode compareMode)
     {
         if (compareMode.HasFlag(CompareMode.NormalizeCodePieces))
-            options = options.Excluding(database => database.Functions);
+            options = options.Excluding(database => ((MySQLDatabase)database).Functions);
         return options;
     }
 

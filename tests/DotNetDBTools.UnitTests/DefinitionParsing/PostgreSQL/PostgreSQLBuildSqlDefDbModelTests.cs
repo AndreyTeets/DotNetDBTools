@@ -7,7 +7,7 @@ using DotNetDBTools.UnitTests.Utilities;
 
 namespace DotNetDBTools.UnitTests.DefinitionParsing.PostgreSQL;
 
-public class PostgreSQLBuildSqlDefDbModelTests : BaseBuildSqlDefDbModelTests<PostgreSQLDatabase>
+public class PostgreSQLBuildSqlDefDbModelTests : BaseBuildSqlDefDbModelTests
 {
     private const string TestDataDir = "./TestData/PostgreSQL/Parsing";
     protected override string SpecificDbmsSampleDbV2AssemblyName => "DotNetDBTools.SampleDBv2.PostgreSQL";
@@ -19,7 +19,7 @@ public class PostgreSQLBuildSqlDefDbModelTests : BaseBuildSqlDefDbModelTests<Pos
         MiscHelper.ReadFromFile($"{TestDataDir}/CreateView.sql"),
     };
     protected override DatabaseKind DatabaseKindForDbModelCreation => DatabaseKind.PostgreSQL;
-    protected override PostgreSQLDatabase ExpectedDbModelFromListOfSqlStatements => new()
+    protected override Database ExpectedDbModelFromListOfSqlStatements => new PostgreSQLDatabase()
     {
         Version = 3,
         Tables = new()
@@ -52,6 +52,16 @@ public class PostgreSQLBuildSqlDefDbModelTests : BaseBuildSqlDefDbModelTests<Pos
                         DataType = new DataType() { Name = "BIGINT" },
                         NotNull = true,
                         Identity = true,
+                        IdentityGenerationKind = "ALWAYS",
+                        IdentitySequenceOptions = new()
+                        {
+                            StartWith = 0,
+                            IncrementBy = -3,
+                            MinValue = -2222,
+                            MaxValue = int.MaxValue,
+                            Cache = 1,
+                            Cycle = false,
+                        },
                     },
                     new PostgreSQLColumn()
                     {

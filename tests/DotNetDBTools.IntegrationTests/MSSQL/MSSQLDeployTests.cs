@@ -14,7 +14,6 @@ using static DotNetDBTools.IntegrationTests.Constants;
 namespace DotNetDBTools.IntegrationTests.MSSQL;
 
 public class MSSQLDeployTests : BaseDeployTests<
-    MSSQLDatabase,
     SqlConnection,
     MSSQLDeployManager>
 {
@@ -26,11 +25,11 @@ public class MSSQLDeployTests : BaseDeployTests<
 
     public MSSQLDeployTests() : base(DatabaseKind.MSSQL) { }
 
-    protected override EquivalencyAssertionOptions<MSSQLDatabase> AddAdditionalDbModelEquivalenceyOptions(
-        EquivalencyAssertionOptions<MSSQLDatabase> options, CompareMode compareMode)
+    protected override EquivalencyAssertionOptions<Database> AddAdditionalDbModelEquivalenceyOptions(
+        EquivalencyAssertionOptions<Database> options, CompareMode compareMode)
     {
         if (compareMode.HasFlag(CompareMode.NormalizeCodePieces))
-            options = options.Excluding(database => database.Functions);
+            options = options.Excluding(database => ((MSSQLDatabase)database).Functions);
         return options;
     }
 

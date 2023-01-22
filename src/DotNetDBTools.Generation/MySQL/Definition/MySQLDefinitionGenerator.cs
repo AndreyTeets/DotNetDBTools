@@ -5,7 +5,7 @@ using DotNetDBTools.Models.MySQL;
 
 namespace DotNetDBTools.Generation.MySQL.Definition;
 
-internal class MySQLDefinitionGenerator : DefinitionGenerator
+internal class MySQLDefinitionGenerator : DefinitionGenerator<TablesCSharpDefinitionGenerator>
 {
     protected override void AddDbmsSpecificObjectsFiles(
         List<DefinitionSourceFile> files, Database database, string projectNamespace)

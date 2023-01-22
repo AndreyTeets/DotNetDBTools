@@ -1,11 +1,10 @@
 ﻿using DotNetDBTools.Generation;
-using DotNetDBTools.Models.PostgreSQL;
 using DotNetDBTools.UnitTests.Generation.Base;
 using Xunit;
 
 namespace DotNetDBTools.UnitTests.Generation.PostgreSQL;
 
-public class PostgreSQLDefinitionGenerationTests : BaseDefinitionGenerationTests<PostgreSQLDatabase>
+public class PostgreSQLDefinitionGenerationTests : BaseDefinitionGenerationTests
 {
     protected override string SpecificDbmsSampleDbV1AssemblyName => "DotNetDBTools.SampleDB.PostgreSQL";
     protected override string SpecificDbmsSampleDbV2AssemblyName => "DotNetDBTools.SampleDBv2.PostgreSQL";
