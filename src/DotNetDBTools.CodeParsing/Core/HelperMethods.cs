@@ -9,7 +9,7 @@ internal static class HelperMethods
 {
     public static string GetInitialTextOrNull(ParserRuleContext context)
     {
-        if (context == null)
+        if (context is null)
             return null;
         return GetInitialText(context);
     }

@@ -10,10 +10,10 @@ internal static class CSharpDefinitionGenerationHelper
         return $@"new VerbatimDataType({DeclareString(dataType.Name)})";
     }
 
-    public static string DeclareDefaultValue(CodePiece codePiece)
+    public static string DeclareDefaultValue(CodePiece dValue)
     {
-        if (codePiece.Code is not null)
-            return $@"new VerbatimDefaultValue({DeclareString(codePiece.Code)})";
+        if (dValue is not null)
+            return $@"new VerbatimDefaultValue({DeclareString(dValue.Code)})";
         else
             return "null";
     }

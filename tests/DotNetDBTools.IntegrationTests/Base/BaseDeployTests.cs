@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using Dapper;
@@ -212,7 +211,7 @@ public abstract class BaseDeployTests<TDatabase, TDbConnection, TDeployManager>
                 configuredOptions = configuredOptions.Excluding(database => database.Path.EndsWith(".ID", StringComparison.Ordinal));
 
             if (compareMode.HasFlag(CompareMode.NormalizeCodePieces))
-                configuredOptions = configuredOptions.Using(new CodePieceComparer(GetNormalizedCodeFromCodePiece));
+                configuredOptions = configuredOptions.Using<CodePiece>(CompareCodePiece).WhenTypeIs<CodePiece>();
 
             if (compareMode.HasFlag(CompareMode.IgnoreScripts))
                 configuredOptions = configuredOptions.Excluding(database => database.Scripts);
@@ -270,35 +269,16 @@ public abstract class BaseDeployTests<TDatabase, TDbConnection, TDeployManager>
         IgnoreAllDNDBT = 1 | 2 | 4 | 8,
     }
 
-    private class CodePieceComparer : IEqualityComparer<CodePiece>
+    private void CompareCodePiece(IAssertionContext<CodePiece> ctx)
     {
-        private readonly Func<CodePiece, string> _getNormalizedCodeFromCodePiece;
-
-        public CodePieceComparer(Func<CodePiece, string> getNormalizedCodeFromCodePiece)
+        if (ctx.Subject is null || ctx.Expectation is null)
         {
-            _getNormalizedCodeFromCodePiece = getNormalizedCodeFromCodePiece;
+            ctx.Subject.Should().Be(ctx.Expectation);
+            return;
         }
 
-        public bool Equals(CodePiece x, CodePiece y)
-        {
-            if (x is null && y is null)
-                return true;
-            else if (x is null || y is null)
-                return false;
-
-            if (x.Code is null && y.Code is null)
-                return true;
-            else if (x.Code is null || y.Code is null)
-                return false;
-
-            string xNormalizedCode = _getNormalizedCodeFromCodePiece(x);
-            string yNormalizedCode = _getNormalizedCodeFromCodePiece(y);
-            return string.Equals(xNormalizedCode, yNormalizedCode, StringComparison.OrdinalIgnoreCase);
-        }
-
-        public int GetHashCode(CodePiece obj)
-        {
-            return obj.Code?.GetHashCode() ?? 0;
-        }
+        string subjectNormalizedCode = GetNormalizedCodeFromCodePiece(ctx.Subject);
+        string expectationNormalizedCode = GetNormalizedCodeFromCodePiece(ctx.Expectation);
+        subjectNormalizedCode.Should().Be(expectationNormalizedCode);
     }
 }

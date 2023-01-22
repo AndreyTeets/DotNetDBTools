@@ -19,21 +19,21 @@ internal class PostgreSQLGetObjectInfoVisitor : PostgreSQLParserBaseVisitor<Obje
 
     public override ObjectInfo VisitDndbt_sqldef_create_statement([NotNull] Dndbt_sqldef_create_statementContext context)
     {
-        if (context.create_table_statement() != null)
+        if (context.create_table_statement() is not null)
             return GetTableInfo(context.create_table_statement());
-        else if (context.create_view_statement() != null)
+        else if (context.create_view_statement() is not null)
             return GetViewInfo(context.create_view_statement());
-        else if (context.create_index_statement() != null)
+        else if (context.create_index_statement() is not null)
             return GetIndexInfo(context.create_index_statement());
-        else if (context.create_trigger_statement() != null)
+        else if (context.create_trigger_statement() is not null)
             return GetTriggerInfo(context.create_trigger_statement());
-        else if (context.create_sequence_statement() != null)
+        else if (context.create_sequence_statement() is not null)
             return GetSequenceInfo(context.create_sequence_statement());
-        else if (context.create_type_statement() != null)
+        else if (context.create_type_statement() is not null)
             return GetTypeInfo(context.create_type_statement());
-        else if (context.create_domain_statement() != null)
+        else if (context.create_domain_statement() is not null)
             return GetDomainInfo(context.create_domain_statement());
-        else if (context.create_function_statement() != null)
+        else if (context.create_function_statement() is not null)
             return GetFunctionInfo(context.create_function_statement());
         else
             throw new ParseException($"Unexpected create statement type {HM.GetStartLineAndPos(context)}");
@@ -47,9 +47,9 @@ internal class PostgreSQLGetObjectInfoVisitor : PostgreSQLParserBaseVisitor<Obje
             HM.SetObjectID(table, $"table '{table.Name}'", context.dndbt_id?.Text);
 
         Table_item_definitionContext[] tableItems = context.define_table().define_table_items().table_item_definition();
-        foreach (Table_item_definitionContext columnCtx in tableItems.Where(x => x.table_column_definition() != null))
+        foreach (Table_item_definitionContext columnCtx in tableItems.Where(x => x.table_column_definition() is not null))
             table.Columns.Add(GetTableColumnInfo(columnCtx, table.Name));
-        foreach (Table_item_definitionContext constraintCtx in tableItems.Where(x => x.constraint_common() != null))
+        foreach (Table_item_definitionContext constraintCtx in tableItems.Where(x => x.constraint_common() is not null))
             table.Constraints.Add(GetTableConstraintInfo(constraintCtx, table.Name));
 
         return table;
@@ -63,7 +63,7 @@ internal class PostgreSQLGetObjectInfoVisitor : PostgreSQLParserBaseVisitor<Obje
             HM.SetObjectID(view, $"view '{view.Name}'", context.dndbt_id?.Text);
 
         view.CreateStatement = HM.GetInitialText(context);
-        if (context.dndbt_id != null)
+        if (context.dndbt_id is not null)
             view.CreateStatement = view.CreateStatement.Remove(0, context.dndbt_id.Text.Length);
         return view;
     }
@@ -76,7 +76,7 @@ internal class PostgreSQLGetObjectInfoVisitor : PostgreSQLParserBaseVisitor<Obje
             HM.SetObjectID(index, $"index '{index.Name}'", context.dndbt_id?.Text);
 
         index.Table = HMs.Unquote(context.schema_qualified_name().GetText());
-        if (context.UNIQUE() != null)
+        if (context.UNIQUE() is not null)
             index.Unique = true;
         foreach (Index_columnContext columnContext in context.index_columns().index_column())
             AddColumnOrSetExpression(columnContext);
@@ -84,7 +84,7 @@ internal class PostgreSQLGetObjectInfoVisitor : PostgreSQLParserBaseVisitor<Obje
 
         void AddColumnOrSetExpression(Index_columnContext context)
         {
-            if (context.vex().value_expression_primary().indirection_var() != null)
+            if (context.vex().value_expression_primary().indirection_var() is not null)
                 index.Columns.Add(HMs.Unquote(context.vex().GetText()));
             else
                 index.Expression = HM.GetInitialText(context);
@@ -100,7 +100,7 @@ internal class PostgreSQLGetObjectInfoVisitor : PostgreSQLParserBaseVisitor<Obje
 
         trigger.Table = HMs.Unquote(HMs.RemoveSchemeIfAny(context.table_name.GetText(), out string scheme));
         trigger.CreateStatement = HM.GetInitialText(context);
-        if (context.dndbt_id != null)
+        if (context.dndbt_id is not null)
             trigger.CreateStatement = trigger.CreateStatement.Remove(0, context.dndbt_id.Text.Length);
         return trigger;
     }
@@ -114,21 +114,21 @@ internal class PostgreSQLGetObjectInfoVisitor : PostgreSQLParserBaseVisitor<Obje
 
         foreach (Sequence_bodyContext opt in context.sequence_body())
         {
-            if (opt.AS() != null)
+            if (opt.AS() is not null)
                 sequence.DataType = opt.type.Text;
-            else if (opt.START() != null)
+            else if (opt.START() is not null)
                 sequence.StartWith = long.Parse(opt.start_val.GetText());
-            else if (opt.INCREMENT() != null)
+            else if (opt.INCREMENT() is not null)
                 sequence.IncrementBy = long.Parse(opt.incr.GetText());
-            else if (opt.MINVALUE() != null && opt.NO() == null)
+            else if (opt.MINVALUE() is not null && opt.NO() is null)
                 sequence.MinValue = long.Parse(opt.minval.GetText());
-            else if (opt.MAXVALUE() != null && opt.NO() == null)
+            else if (opt.MAXVALUE() is not null && opt.NO() is null)
                 sequence.MaxValue = long.Parse(opt.maxval.GetText());
-            else if (opt.CACHE() != null)
+            else if (opt.CACHE() is not null)
                 sequence.Cache = long.Parse(opt.cache_val.GetText());
-            else if (opt.CYCLE() != null)
-                sequence.Cycle = opt.NO() == null;
-            else if (opt.OWNED() != null)
+            else if (opt.CYCLE() is not null)
+                sequence.Cycle = opt.NO() is null;
+            else if (opt.OWNED() is not null)
                 SetOwnedBy(sequence, opt.owned_by.GetText());
         }
         return sequence;
@@ -158,12 +158,12 @@ internal class PostgreSQLGetObjectInfoVisitor : PostgreSQLParserBaseVisitor<Obje
                 type.Attributes.Add(attrName, attrDataType);
             }
         }
-        else if (context.ENUM() != null)
+        else if (context.ENUM() is not null)
         {
             type.TypeType = TypeType.Enum;
             type.AllowedValues = context._enums.Select(x => GetAllowedEnumValue(x)).ToList();
         }
-        else if (context.RANGE() != null)
+        else if (context.RANGE() is not null)
         {
             type.TypeType = TypeType.Range;
             type.Subtype = HMs.Unquote(HM.GetInitialText(context.subtype_name));
@@ -178,7 +178,7 @@ internal class PostgreSQLGetObjectInfoVisitor : PostgreSQLParserBaseVisitor<Obje
 
         static string GetAllowedEnumValue(Character_stringContext context)
         {
-            if (context.BeginDollarStringConstant() != null)
+            if (context.BeginDollarStringConstant() is not null)
             {
                 string dollarConstant = context.BeginDollarStringConstant().GetText();
                 string quotedValue = context.GetText();
@@ -201,13 +201,13 @@ internal class PostgreSQLGetObjectInfoVisitor : PostgreSQLParserBaseVisitor<Obje
             HM.SetObjectID(type, $"type '{type.Name}'", context.dndbt_id?.Text);
 
         type.UnderlyingType = HM.GetInitialText(context.data_type());
-        if (context.def_value != null)
+        if (context.def_value is not null)
             type.Default = HM.GetInitialText(context.def_value);
         foreach (Domain_constraintContext constrContext in context.domain_constraint())
         {
-            if (constrContext.NOT() != null && constrContext.NULL() != null)
+            if (constrContext.NOT() is not null && constrContext.NULL() is not null)
                 type.NotNull = true;
-            else if (constrContext.CHECK() != null)
+            else if (constrContext.CHECK() is not null)
                 type.CheckConstraints.Add(GetCheckConstraintInfo(constrContext, type.Name));
         }
 
@@ -216,7 +216,7 @@ internal class PostgreSQLGetObjectInfoVisitor : PostgreSQLParserBaseVisitor<Obje
         ConstraintInfo GetCheckConstraintInfo(Domain_constraintContext constrContext, string domainName)
         {
             ConstraintInfo constraint = new();
-            if (constrContext.name != null)
+            if (constrContext.name is not null)
                 constraint.Name = HMs.Unquote(constrContext.name.GetText());
             if (!_ignoreIds)
                 HM.SetObjectID(constraint, $"constraint '{constraint.Name}' in domain '{domainName}'", constrContext.dndbt_id?.Text);
@@ -236,7 +236,7 @@ internal class PostgreSQLGetObjectInfoVisitor : PostgreSQLParserBaseVisitor<Obje
             HM.SetObjectID(function, $"function '{function.Name}'", context.dndbt_id?.Text);
 
         function.CreateStatement = HM.GetInitialText(context);
-        if (context.dndbt_id != null)
+        if (context.dndbt_id is not null)
             function.CreateStatement = function.CreateStatement.Remove(0, context.dndbt_id.Text.Length);
         return function;
     }
@@ -255,15 +255,15 @@ internal class PostgreSQLGetObjectInfoVisitor : PostgreSQLParserBaseVisitor<Obje
 
         void AddColumnConstraint(ColumnInfo column, Constr_bodyContext context)
         {
-            if (context.NOT() != null && context.NULL() != null)
+            if (context.NOT() is not null && context.NULL() is not null)
                 column.NotNull = true;
-            else if (context.PRIMARY() != null && context.KEY() != null)
+            else if (context.PRIMARY() is not null && context.KEY() is not null)
                 column.PrimaryKey = true;
-            else if (context.UNIQUE() != null)
+            else if (context.UNIQUE() is not null)
                 column.Unique = true;
-            else if (context.identity_body() != null && context.identity_body().ALWAYS() != null)
+            else if (context.identity_body() is not null && context.identity_body().ALWAYS() is not null)
                 column.Identity = true;
-            else if (context.DEFAULT() != null)
+            else if (context.DEFAULT() is not null)
                 column.Default = HM.GetInitialText(context.vex());
         }
     }
@@ -271,19 +271,19 @@ internal class PostgreSQLGetObjectInfoVisitor : PostgreSQLParserBaseVisitor<Obje
     private ConstraintInfo GetTableConstraintInfo(Table_item_definitionContext context, string tableName)
     {
         ConstraintInfo constraint = new();
-        if (context.constraint_common().identifier() != null)
+        if (context.constraint_common().identifier() is not null)
             constraint.Name = HMs.Unquote(context.constraint_common().identifier().GetText());
         if (!_ignoreIds)
             HM.SetObjectID(constraint, $"constraint '{constraint.Name}' in table '{tableName}'", context.dndbt_id?.Text);
 
         Constr_bodyContext constrBodyContext = context.constraint_common().constr_body();
-        if (constrBodyContext.CHECK() != null)
+        if (constrBodyContext.CHECK() is not null)
             AddCheckConstraintInfo(constraint, constrBodyContext);
-        else if (constrBodyContext.PRIMARY() != null && constrBodyContext.KEY() != null)
+        else if (constrBodyContext.PRIMARY() is not null && constrBodyContext.KEY() is not null)
             AddPrimaryKeyConstraintInfo(constraint, constrBodyContext);
-        else if (constrBodyContext.UNIQUE() != null)
+        else if (constrBodyContext.UNIQUE() is not null)
             AddUniqueConstraintInfo(constraint, constrBodyContext);
-        else if (constrBodyContext.FOREIGN() != null && constrBodyContext.KEY() != null)
+        else if (constrBodyContext.FOREIGN() is not null && constrBodyContext.KEY() is not null)
             AddForeignKeyConstraintInfo(constraint, constrBodyContext);
 
         return constraint;
@@ -320,9 +320,9 @@ internal class PostgreSQLGetObjectInfoVisitor : PostgreSQLParserBaseVisitor<Obje
 
             foreach (Fk_action_clauseContext fkActionClause in context.fk_action_clause())
             {
-                if (fkActionClause.ON() != null && fkActionClause.UPDATE() != null)
+                if (fkActionClause.ON() is not null && fkActionClause.UPDATE() is not null)
                     constraint.UpdateAction = HM.GetInitialText(fkActionClause.fk_action());
-                if (fkActionClause.ON() != null && fkActionClause.DELETE() != null)
+                if (fkActionClause.ON() is not null && fkActionClause.DELETE() is not null)
                     constraint.DeleteAction = HM.GetInitialText(fkActionClause.fk_action());
             }
         }

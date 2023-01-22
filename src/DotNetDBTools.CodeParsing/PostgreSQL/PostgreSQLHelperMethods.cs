@@ -10,18 +10,18 @@ internal static class PostgreSQLHelperMethods
     public static bool TryGetDependency(Data_typeContext context, out Dependency? dependency)
     {
         dependency = null;
-        if (context.predefined_type().schema_qualified_name_nontype() != null)
+        if (context.predefined_type().schema_qualified_name_nontype() is not null)
         {
             string typeName = Unquote(context.predefined_type().schema_qualified_name_nontype().GetText());
             dependency = new Dependency { Type = DependencyType.DataType, Name = typeName };
         }
-        return dependency != null;
+        return dependency is not null;
     }
 
     public static bool TryGetDependency(Function_callContext context, out Dependency? dependency)
     {
         dependency = null;
-        if (context.schema_qualified_name_for_func_name() != null)
+        if (context.schema_qualified_name_for_func_name() is not null)
         {
             string functionName = Unquote(context.schema_qualified_name_for_func_name().GetText());
             if (functionName.ToLower() == "nextval")
@@ -29,7 +29,7 @@ internal static class PostgreSQLHelperMethods
             else
                 dependency = new Dependency { Type = DependencyType.Function, Name = functionName };
         }
-        return dependency != null;
+        return dependency is not null;
 
         string GetSequenceName()
         {
@@ -40,7 +40,7 @@ internal static class PostgreSQLHelperMethods
     public static bool TryGetDependency(From_primaryContext context, out Dependency? dependency)
     {
         dependency = null;
-        if (context.schema_qualified_name() != null)
+        if (context.schema_qualified_name() is not null)
         {
             string tableOrViewName = Unquote(context.schema_qualified_name().GetText());
             dependency = new Dependency { Type = DependencyType.TableOrView, Name = tableOrViewName };
@@ -51,13 +51,13 @@ internal static class PostgreSQLHelperMethods
             if (!dependency.HasValue)
                 throw new ParseException($"Failed to get function dependency from [{HM.GetInitialText(context)}]");
         }
-        return dependency != null;
+        return dependency is not null;
     }
 
     public static string GetSequenceName(VexContext funcArgContext)
     {
         string res;
-        if (funcArgContext.CAST_EXPRESSION() != null)
+        if (funcArgContext.CAST_EXPRESSION() is not null)
             res = funcArgContext.vex()[0].GetText();
         else
             res = funcArgContext.GetText();

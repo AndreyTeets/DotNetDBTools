@@ -66,7 +66,7 @@ internal static class PostgreSQLHelperMethods
         standardSqlTypeNameBase = TryGetStandardSqlTypeNameBase(name);
         if (standardSqlTypeNameBase == PgDt.INTERVAL)
             return $"{(standardSqlTypeNameBase + " " + name2.ToSingleSpaces().ToUpper()).Trim()}{p.ToNoWhiteSpace()}";
-        else if (standardSqlTypeNameBase != null)
+        else if (standardSqlTypeNameBase is not null)
             return (standardSqlTypeNameBase + p).ToNoWhiteSpace().ToUpper();
         else
             return $@"""{name}""";

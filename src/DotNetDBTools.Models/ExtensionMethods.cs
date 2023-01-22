@@ -25,7 +25,7 @@ public static class ExtensionMethods
 
     private static object InternalCopy(object originalObject, IDictionary<object, object> visited)
     {
-        if (originalObject == null)
+        if (originalObject is null)
             return null;
         Type typeToReflect = originalObject.GetType();
         if (IsPrimitive(typeToReflect))
@@ -69,7 +69,7 @@ public static class ExtensionMethods
         object cloneObject,
         Type typeToReflect)
     {
-        if (typeToReflect.BaseType != null)
+        if (typeToReflect.BaseType is not null)
         {
             RecursiveCopyBaseTypePrivateFields(
                 originalObject,
@@ -96,7 +96,7 @@ public static class ExtensionMethods
     {
         foreach (FieldInfo fieldInfo in typeToReflect.GetFields(bindingFlags))
         {
-            if (filter != null && filter(fieldInfo) == false)
+            if (filter is not null && filter(fieldInfo) == false)
                 continue;
             if (IsPrimitive(fieldInfo.FieldType))
                 continue;
@@ -121,7 +121,7 @@ public static class ExtensionMethods
         }
         public override int GetHashCode(object obj)
         {
-            if (obj == null)
+            if (obj is null)
                 return 0;
             return obj.GetHashCode();
         }

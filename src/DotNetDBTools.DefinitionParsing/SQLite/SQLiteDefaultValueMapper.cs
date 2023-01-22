@@ -11,7 +11,7 @@ internal class SQLiteDefaultValueMapper : DefaultValueMapper
     public override CodePiece MapToDefaultValueModel(IDefaultValue defaultValue)
     {
         if (defaultValue is null)
-            return new CodePiece { Code = null };
+            return null;
         if (defaultValue is VerbatimDefaultValue vdv)
             return new CodePiece { Code = vdv.Expression };
         return new AnalysisManager().ConvertDefaultValue(CreateCSharpDefaultValueModel(defaultValue), DatabaseKind.SQLite);

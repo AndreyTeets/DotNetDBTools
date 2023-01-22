@@ -1,5 +1,5 @@
 {
-  "$id": "7F4AD427FB972097",
+  "$id": "97F50E346023440E",
   "UserDefinedTypes": [
     {
       "$id": "DbObject { ID: '0cd1e71c-cc9c-440f-ac0b-81a1d6f7ddaa', Name: 'MyUserDefinedType1' }",
@@ -52,11 +52,7 @@
           },
           "NotNull": false,
           "Identity": false,
-          "Default": {
-            "$id": "D12CC50BBB155503",
-            "Code": null,
-            "DependsOn": []
-          },
+          "Default": null,
           "ID": "fe68ee3d-09d0-40ac-93f9-5e441fbb4f70",
           "Name": "MyColumn2",
           "Parent": null
@@ -71,11 +67,7 @@
           },
           "NotNull": true,
           "Identity": true,
-          "Default": {
-            "$id": "D12CC50BBB155503",
-            "Code": null,
-            "DependsOn": []
-          },
+          "Default": null,
           "ID": "6e95de30-e01a-4fb4-b8b7-8f0c40bb682c",
           "Name": "MyColumn3",
           "Parent": null
@@ -276,11 +268,7 @@
           },
           "NotNull": true,
           "Identity": false,
-          "Default": {
-            "$id": "D12CC50BBB155503",
-            "Code": null,
-            "DependsOn": []
-          },
+          "Default": null,
           "ID": "de0425b8-9f99-4d76-9a64-09e52f8b5d5a",
           "Name": "MyColumn1",
           "Parent": null
@@ -295,11 +283,7 @@
           },
           "NotNull": true,
           "Identity": true,
-          "Default": {
-            "$id": "D12CC50BBB155503",
-            "Code": null,
-            "DependsOn": []
-          },
+          "Default": null,
           "ID": "a6354ea4-7113-4c14-8047-648f0cfc7163",
           "Name": "MyColumn2",
           "Parent": null
@@ -633,11 +617,7 @@
           },
           "NotNull": false,
           "Identity": false,
-          "Default": {
-            "$id": "D12CC50BBB155503",
-            "Code": null,
-            "DependsOn": []
-          },
+          "Default": null,
           "ID": "bfa08c82-5c8f-4ab4-bd41-1f1d85cf3c85",
           "Name": "MyColumn1",
           "Parent": null
@@ -652,11 +632,7 @@
           },
           "NotNull": false,
           "Identity": false,
-          "Default": {
-            "$id": "D12CC50BBB155503",
-            "Code": null,
-            "DependsOn": []
-          },
+          "Default": null,
           "ID": "a402e2b7-c826-4cfd-a304-97c9bc346ba2",
           "Name": "MyColumn2",
           "Parent": null

@@ -10,7 +10,7 @@ internal class AgnosticDefaultValueMapper : DefaultValueMapper
     public override CodePiece MapToDefaultValueModel(IDefaultValue defaultValue)
     {
         if (defaultValue is null)
-            return AgnosticDbObjectCodeMapper.CreateAgnosticCodePiece(dk => null);
+            return null;
         if (defaultValue is VerbatimDefaultValue vdv)
             return AgnosticDbObjectCodeMapper.CreateAgnosticCodePiece(vdv.Expression);
         return CreateCSharpDefaultValueModel(defaultValue);

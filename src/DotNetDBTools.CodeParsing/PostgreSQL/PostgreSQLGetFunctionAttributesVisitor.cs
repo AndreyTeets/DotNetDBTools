@@ -18,7 +18,7 @@ internal class PostgreSQLGetFunctionAttributesVisitor : PostgreSQLParserBaseVisi
 
     public override object VisitFunction_def([NotNull] Function_defContext context)
     {
-        if (context.character_string(0).BeginDollarStringConstant() != null)
+        if (context.character_string(0).BeginDollarStringConstant() is not null)
         {
             string dollarConstant = context.character_string(0).BeginDollarStringConstant().GetText();
             string quotedFuncBody = context.character_string(0).GetText();
@@ -37,10 +37,10 @@ internal class PostgreSQLGetFunctionAttributesVisitor : PostgreSQLParserBaseVisi
 
     public override object VisitFunction_actions_common([NotNull] Function_actions_commonContext context)
     {
-        if (context.lang_name != null)
+        if (context.lang_name is not null)
         {
             string lang = context.lang_name.GetText().ToUpper();
-            if (context.lang_name.Character_String_Literal() != null)
+            if (context.lang_name.Character_String_Literal() is not null)
                 FunctionLanguage = lang.Substring(1, lang.Length - 2).Replace("''", "'");
             else
                 FunctionLanguage = lang;

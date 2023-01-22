@@ -23,7 +23,7 @@ internal class MSSQLDbModelConverter : DbModelConverter<
 
     protected override void BuildAdditionalColumnProperties(MSSQLColumn column, string tableName)
     {
-        column.DefaultConstraintName = column.Default.Code is not null
+        column.DefaultConstraintName = column.Default is not null
             ? $"DF_{tableName}_{column.Name}"
             : null;
     }

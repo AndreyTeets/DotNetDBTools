@@ -137,7 +137,7 @@ $@"CONSTRAINT [{fk.Name}] FOREIGN KEY ({string.Join(", ", fk.ThisColumnNames.Sel
 c.NotNull ? "NOT NULL" : "NULL"
             ;
         private static string Default(Column c) =>
-c.GetDefault() is not null ? $@" DEFAULT {c.GetDefault()}" : ""
+c.Default is not null ? $@" DEFAULT {c.GetDefault()}" : ""
             ;
     }
 }

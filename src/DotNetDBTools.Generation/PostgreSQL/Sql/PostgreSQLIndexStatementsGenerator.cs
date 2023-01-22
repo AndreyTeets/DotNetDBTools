@@ -18,7 +18,7 @@ $@"{GetIdDeclarationText(index, 0)}CREATE{Statements.Unique(index)} INDEX ""{ind
 
     private static string GetColumnsListOrExpression(PostgreSQLIndex index)
     {
-        if (index.Expression != null)
+        if (index.Expression is not null)
             return index.Expression.Code;
         else
             return string.Join(", ", index.Columns.Select(x => $@"""{x}"""));

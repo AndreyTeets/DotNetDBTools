@@ -62,7 +62,7 @@ WHERE sm.type = 'table'
         {
             string value = columnRecord.Default;
             if (value is null)
-                return new CodePiece { Code = null };
+                return null;
             if (IsFunction(value))
                 return new CodePiece { Code = $"({value})" };
             return new CodePiece { Code = value };

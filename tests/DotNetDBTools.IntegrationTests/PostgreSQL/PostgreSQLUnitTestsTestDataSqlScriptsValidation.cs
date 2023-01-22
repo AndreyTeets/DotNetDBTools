@@ -13,6 +13,7 @@ using DotNetDBTools.Generation.Core;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.PostgreSQL;
 using FluentAssertions;
+using FluentAssertions.Equivalency;
 using Npgsql;
 using NUnit.Framework;
 using static DotNetDBTools.IntegrationTests.Constants;
@@ -128,38 +129,26 @@ public class PostgreSQLUnitTestsTestDataSqlScriptsValidation
         return connection;
     }
 
-    private static void AssertDbModelEquivalence(Database dbModel1, Database dbModel2)
+    private void AssertDbModelEquivalence(Database dbModel1, Database dbModel2)
     {
         ((PostgreSQLDatabase)dbModel1).Should().BeEquivalentTo((PostgreSQLDatabase)dbModel2, options =>
             options.WithStrictOrdering()
                 .Excluding(x => x.Path.EndsWith(".Parent", StringComparison.Ordinal))
                 .Excluding(x => x.Path.EndsWith(".DependsOn", StringComparison.Ordinal))
                 .Excluding(x => x.Path.EndsWith(".ID", StringComparison.Ordinal))
-                .Using(new NormalizeSemicolonComparer()));
+                .Using<CodePiece>(CompareCodePiece).WhenTypeIs<CodePiece>());
     }
 
-    private class NormalizeSemicolonComparer : IEqualityComparer<CodePiece>
+    private void CompareCodePiece(IAssertionContext<CodePiece> ctx)
     {
-        public bool Equals(CodePiece x, CodePiece y)
+        if (ctx.Subject is null || ctx.Expectation is null)
         {
-            if (x is null && y is null)
-                return true;
-            else if (x is null || y is null)
-                return false;
-
-            if (x.Code is null && y.Code is null)
-                return true;
-            else if (x.Code is null || y.Code is null)
-                return false;
-
-            string xNormalizedCode = x.Code.AppendSemicolonIfAbsent();
-            string yNormalizedCode = y.Code.AppendSemicolonIfAbsent();
-            return xNormalizedCode == yNormalizedCode;
+            ctx.Subject.Should().Be(ctx.Expectation);
+            return;
         }
 
-        public int GetHashCode(CodePiece obj)
-        {
-            return obj.Code?.GetHashCode() ?? 0;
-        }
+        string subjectNormalizedCode = ctx.Subject.Code.AppendSemicolonIfAbsent();
+        string expectationNormalizedCode = ctx.Expectation.Code.AppendSemicolonIfAbsent();
+        subjectNormalizedCode.Should().Be(expectationNormalizedCode);
     }
 }

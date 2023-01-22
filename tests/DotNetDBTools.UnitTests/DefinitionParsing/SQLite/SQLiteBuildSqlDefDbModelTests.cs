@@ -50,7 +50,6 @@ public class SQLiteBuildSqlDefDbModelTests : BaseBuildSqlDefDbModelTests<SQLiteD
                         ID = new Guid("7C36AE77-B7E4-40C3-824F-BD20DC270A14"),
                         Name = "Col3",
                         DataType = new DataType() { Name = "INTEGER" },
-                        Default = new CodePiece(),
                         NotNull = true,
                     },
                     new Column()

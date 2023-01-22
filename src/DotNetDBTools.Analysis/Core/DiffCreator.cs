@@ -119,9 +119,9 @@ internal abstract class DiffCreator
     }
     protected void SetDefaultChanged(ColumnDiff columnDiff, Column newColumn, Column oldColumn)
     {
-        if (newColumn.Default.Code != null)
+        if (newColumn.Default is not null)
             columnDiff.DefaultToSet = newColumn.Default;
-        if (oldColumn.Default.Code != null)
+        if (oldColumn.Default is not null)
             columnDiff.DefaultToDrop = oldColumn.Default;
     }
     protected virtual void BuildAdditionalColumnDiffProperties(ColumnDiff columnDiff, Column newColumn, Column oldColumn) { }

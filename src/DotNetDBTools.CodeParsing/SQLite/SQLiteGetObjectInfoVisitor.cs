@@ -19,13 +19,13 @@ internal class SQLiteGetObjectInfoVisitor : SQLiteParserBaseVisitor<ObjectInfo>
 
     public override ObjectInfo VisitDndbt_sqldef_create_statement([NotNull] Dndbt_sqldef_create_statementContext context)
     {
-        if (context.create_table_stmt() != null)
+        if (context.create_table_stmt() is not null)
             return GetTableInfo(context.create_table_stmt());
-        else if (context.create_view_stmt() != null)
+        else if (context.create_view_stmt() is not null)
             return GetViewInfo(context.create_view_stmt());
-        else if (context.create_index_stmt() != null)
+        else if (context.create_index_stmt() is not null)
             return GetIndexInfo(context.create_index_stmt());
-        else if (context.create_trigger_stmt() != null)
+        else if (context.create_trigger_stmt() is not null)
             return GetTriggerInfo(context.create_trigger_stmt());
         else
             throw new ParseException($"Unexpected create statement type {HM.GetStartLineAndPos(context)}");
@@ -58,7 +58,7 @@ internal class SQLiteGetObjectInfoVisitor : SQLiteParserBaseVisitor<ObjectInfo>
             HM.SetObjectID(view, $"view '{view.Name}'", context.dndbt_id?.Text);
 
         view.CreateStatement = HM.GetInitialText(context);
-        if (context.dndbt_id != null)
+        if (context.dndbt_id is not null)
             view.CreateStatement = view.CreateStatement.Remove(0, context.dndbt_id.Text.Length);
         return view;
     }
@@ -71,7 +71,7 @@ internal class SQLiteGetObjectInfoVisitor : SQLiteParserBaseVisitor<ObjectInfo>
             HM.SetObjectID(index, $"index '{index.Name}'", context.dndbt_id?.Text);
 
         index.Table = UnquoteIdentifier(context.table_name().GetText());
-        if (context.UNIQUE_() != null)
+        if (context.UNIQUE_() is not null)
             index.Unique = true;
         foreach (string column in context.indexed_column().Select(x => UnquoteIdentifier(x.GetText())))
             index.Columns.Add(column);
@@ -87,7 +87,7 @@ internal class SQLiteGetObjectInfoVisitor : SQLiteParserBaseVisitor<ObjectInfo>
 
         trigger.Table = UnquoteIdentifier(context.table_name().GetText());
         trigger.CreateStatement = HM.GetInitialText(context);
-        if (context.dndbt_id != null)
+        if (context.dndbt_id is not null)
             trigger.CreateStatement = trigger.CreateStatement.Remove(0, context.dndbt_id.Text.Length);
         return trigger;
     }
@@ -109,25 +109,25 @@ internal class SQLiteGetObjectInfoVisitor : SQLiteParserBaseVisitor<ObjectInfo>
 
         void AddColumnConstraint(ColumnInfo column, Column_constraintContext context)
         {
-            if (context.NOT_() != null && context.NULL_() != null)
+            if (context.NOT_() is not null && context.NULL_() is not null)
                 column.NotNull = true;
-            else if (context.PRIMARY_() != null && context.KEY_() != null)
+            else if (context.PRIMARY_() is not null && context.KEY_() is not null)
                 column.PrimaryKey = true;
-            else if (context.UNIQUE_() != null)
+            else if (context.UNIQUE_() is not null)
                 column.Unique = true;
-            else if (context.DEFAULT_() != null)
+            else if (context.DEFAULT_() is not null)
                 AddColumnDefault(column, context);
 
-            if (column.PrimaryKey && context.AUTOINCREMENT_() != null)
+            if (column.PrimaryKey && context.AUTOINCREMENT_() is not null)
                 column.Identity = true;
 
             void AddColumnDefault(ColumnInfo column, Column_constraintContext context)
             {
-                if (context.signed_number() != null)
+                if (context.signed_number() is not null)
                     column.Default = context.signed_number().GetText();
-                else if (context.literal_value() != null)
+                else if (context.literal_value() is not null)
                     column.Default = context.literal_value().GetText();
-                else if (context.expr() != null)
+                else if (context.expr() is not null)
                     column.Default = $"({HM.GetInitialText(context.expr())})";
             }
         }
@@ -170,18 +170,18 @@ internal class SQLiteGetObjectInfoVisitor : SQLiteParserBaseVisitor<ObjectInfo>
     private ConstraintInfo GetTableConstraintInfo(Table_constraintContext context, string tableName)
     {
         ConstraintInfo constraint = new();
-        if (context.name() != null)
+        if (context.name() is not null)
             constraint.Name = UnquoteIdentifier(context.name().GetText());
         if (!_ignoreIds)
             HM.SetObjectID(constraint, $"constraint '{constraint.Name}' in table '{tableName}'", context.dndbt_id?.Text);
 
-        if (context.CHECK_() != null)
+        if (context.CHECK_() is not null)
             AddCheckConstraintInfo(constraint, context);
-        else if (context.PRIMARY_() != null && context.KEY_() != null)
+        else if (context.PRIMARY_() is not null && context.KEY_() is not null)
             AddPrimaryKeyConstraintInfo(constraint, context);
-        else if (context.UNIQUE_() != null)
+        else if (context.UNIQUE_() is not null)
             AddUniqueConstraintInfo(constraint, context);
-        else if (context.FOREIGN_() != null && context.KEY_() != null)
+        else if (context.FOREIGN_() is not null && context.KEY_() is not null)
             AddForeignKeyConstraintInfo(constraint, context);
 
         return constraint;
@@ -219,9 +219,9 @@ internal class SQLiteGetObjectInfoVisitor : SQLiteParserBaseVisitor<ObjectInfo>
 
             foreach (Foreign_key_action_clauseContext fkActionClause in fkClause.foreign_key_action_clause())
             {
-                if (fkActionClause.ON_() != null && fkActionClause.UPDATE_() != null)
+                if (fkActionClause.ON_() is not null && fkActionClause.UPDATE_() is not null)
                     constraint.UpdateAction = HM.GetInitialText(fkActionClause.foreign_key_action());
-                if (fkActionClause.ON_() != null && fkActionClause.DELETE_() != null)
+                if (fkActionClause.ON_() is not null && fkActionClause.DELETE_() is not null)
                     constraint.DeleteAction = HM.GetInitialText(fkActionClause.foreign_key_action());
             }
         }

@@ -169,7 +169,7 @@ internal abstract class DbModelFromSqlDefinitionProvider<
                 DataType = new DataType { Name = column.DataType },
                 NotNull = column.NotNull,
                 Identity = column.Identity,
-                Default = new CodePiece { Code = column.Default },
+                Default = column.Default is null ? null : new CodePiece { Code = column.Default },
             };
             BuildAdditionalColumnModelProperties(columnModel, column, table.Name);
             columnModels.Add(columnModel);

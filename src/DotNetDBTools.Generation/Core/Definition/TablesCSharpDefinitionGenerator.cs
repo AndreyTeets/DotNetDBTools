@@ -24,7 +24,7 @@ internal static class TablesCSharpDefinitionGenerator
                     propsDeclarations.Add($@"            NotNull = {DeclareBool(column.NotNull)},");
                 if (column.Identity)
                     propsDeclarations.Add($@"            Identity = {DeclareBool(column.Identity)},");
-                if (column.GetDefault() is not null)
+                if (column.Default is not null)
                     propsDeclarations.Add($@"            Default = {DeclareDefaultValue(column.Default)},");
 
                 string columnDeclaration =

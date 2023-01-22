@@ -5,7 +5,7 @@ namespace DotNetDBTools.Generation.PostgreSQL;
 
 public static class PostgreSQLHelperExtensions
 {
-    public static string GetDefault(this PostgreSQLDomainType type) => type.Default.Code;
+    public static string GetDefault(this PostgreSQLDomainType type) => type.Default?.Code;
     public static string GetCreateStatement(this PostgreSQLFunction func) => func.CreateStatement.Code;
     public static string GetCreateStatement(this PostgreSQLProcedure proc) => proc.CreateStatement.Code;
 

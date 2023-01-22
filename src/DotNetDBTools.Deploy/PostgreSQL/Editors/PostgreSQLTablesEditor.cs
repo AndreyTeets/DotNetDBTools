@@ -65,10 +65,10 @@ internal class PostgreSQLTablesEditor : TableEditor<
         foreach (Table table in tables)
         {
             Table strippedTableModel = table.CopyModel();
-            foreach (Column column in strippedTableModel.Columns.Where(x => x.Default.Code != null))
+            foreach (Column column in strippedTableModel.Columns.Where(x => x.Default is not null))
             {
                 if (column.Default.DependsOn.Any(IsComplexDependency))
-                    column.Default.Code = null;
+                    column.Default = null;
             }
             strippedTableModel.CheckConstraints.RemoveAll(x => x.Expression.DependsOn.Any(IsComplexDependency));
             res.Add(strippedTableModel);
@@ -82,14 +82,14 @@ internal class PostgreSQLTablesEditor : TableEditor<
         foreach (TableDiff tableDiff in tableDiffs)
         {
             TableDiff strippedTableDiffModel = tableDiff.CopyModel();
-            foreach (Column column in strippedTableDiffModel.ColumnsToAdd.Where(x => x.Default.Code != null))
+            foreach (Column column in strippedTableDiffModel.ColumnsToAdd.Where(x => x.Default is not null))
             {
                 if (column.Default.DependsOn.Any(IsComplexDependency))
-                    column.Default.Code = null;
+                    column.Default = null;
             }
-            foreach (ColumnDiff columnDiff in strippedTableDiffModel.ColumnsToAlter.Where(x => x.DefaultToSet != null))
+            foreach (ColumnDiff columnDiff in strippedTableDiffModel.ColumnsToAlter.Where(x => x.DefaultToSet is not null))
                 columnDiff.DefaultToSet = null;
-            foreach (ColumnDiff columnDiff in strippedTableDiffModel.ColumnsToAlter.Where(x => x.DefaultToDrop != null))
+            foreach (ColumnDiff columnDiff in strippedTableDiffModel.ColumnsToAlter.Where(x => x.DefaultToDrop is not null))
                 columnDiff.DefaultToDrop = null;
             strippedTableDiffModel.ColumnsToAlter.RemoveAll(AnalysisManager.DiffIsEmpty);
 
@@ -108,7 +108,7 @@ internal class PostgreSQLTablesEditor : TableEditor<
         foreach (Table table in dbDiff.AddedTables)
         {
             PostgreSQLTableDiff tableDiffForSettingColumnsDefault = table.CreateEmptyTableDiff();
-            foreach (Column column in table.Columns.Where(x => x.Default.Code != null))
+            foreach (Column column in table.Columns.Where(x => x.Default is not null))
             {
                 if (column.Default.DependsOn.Any(IsComplexDependency))
                 {
@@ -124,14 +124,14 @@ internal class PostgreSQLTablesEditor : TableEditor<
         foreach (TableDiff tableDiff in dbDiff.ChangedTables)
         {
             PostgreSQLTableDiff tableDiffForSettingColumnsDefault = tableDiff.NewTable.CreateEmptyTableDiff();
-            foreach (Column column in tableDiff.ColumnsToAdd.Where(x => x.Default.Code != null))
+            foreach (Column column in tableDiff.ColumnsToAdd.Where(x => x.Default is not null))
             {
                 ColumnDiff columnDiffWithDefaultChange = column.CreateEmptyColumnDiff();
                 columnDiffWithDefaultChange.DefaultToSet = column.Default;
                 tableDiffForSettingColumnsDefault.ColumnsToAlter.Add(columnDiffWithDefaultChange);
             }
 
-            foreach (ColumnDiff columnDiff in tableDiff.ColumnsToAlter.Where(x => x.DefaultToSet != null))
+            foreach (ColumnDiff columnDiff in tableDiff.ColumnsToAlter.Where(x => x.DefaultToSet is not null))
             {
                 PostgreSQLColumnDiff columnDiffWithDefaultChange = new()
                 {
@@ -155,7 +155,7 @@ internal class PostgreSQLTablesEditor : TableEditor<
         foreach (Table table in dbDiff.RemovedTables)
         {
             PostgreSQLTableDiff tableDiffForDroppingColumnsDefault = table.CreateEmptyTableDiff();
-            foreach (Column column in table.Columns.Where(x => x.Default.Code != null))
+            foreach (Column column in table.Columns.Where(x => x.Default is not null))
             {
                 if (column.Default.DependsOn.Any(IsComplexDependency))
                 {
@@ -171,14 +171,14 @@ internal class PostgreSQLTablesEditor : TableEditor<
         foreach (TableDiff tableDiff in dbDiff.ChangedTables)
         {
             PostgreSQLTableDiff tableDiffForDroppingColumnsDefault = tableDiff.OldTable.CreateEmptyTableDiff();
-            foreach (Column column in tableDiff.ColumnsToDrop.Where(x => x.Default.Code != null))
+            foreach (Column column in tableDiff.ColumnsToDrop.Where(x => x.Default is not null))
             {
                 ColumnDiff columnDiffWithDefaultChange = column.CreateEmptyColumnDiff();
                 columnDiffWithDefaultChange.DefaultToDrop = column.Default;
                 tableDiffForDroppingColumnsDefault.ColumnsToAlter.Add(columnDiffWithDefaultChange);
             }
 
-            foreach (ColumnDiff columnDiff in tableDiff.ColumnsToAlter.Where(x => x.DefaultToDrop != null))
+            foreach (ColumnDiff columnDiff in tableDiff.ColumnsToAlter.Where(x => x.DefaultToDrop is not null))
             {
                 PostgreSQLColumnDiff columnDiffWithDefaultChange = new()
                 {

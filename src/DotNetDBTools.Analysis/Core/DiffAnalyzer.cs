@@ -31,7 +31,7 @@ internal static class DiffAnalyzer
                 && property.Name != nameof(TableDiff.OldTableName))
             {
                 object propertyValue = property.GetValue(tableDiff, null);
-                if (propertyValue != null)
+                if (propertyValue is not null)
                     return false;
             }
         }
@@ -52,7 +52,7 @@ internal static class DiffAnalyzer
                 && property.Name != nameof(ColumnDiff.OldColumnName))
             {
                 object propertyValue = property.GetValue(columnDiff, null);
-                if (propertyValue != null)
+                if (propertyValue is not null)
                     return false;
             }
         }
@@ -72,7 +72,7 @@ internal static class DiffAnalyzer
                 && property.Name != nameof(PostgreSQLSequenceDiff.OldSequenceName))
             {
                 object propertyValue = property.GetValue(sequenceDiff, null);
-                if (propertyValue != null)
+                if (propertyValue is not null)
                     return false;
             }
         }
@@ -92,7 +92,7 @@ internal static class DiffAnalyzer
                 && property.Name != nameof(PostgreSQLDomainTypeDiff.OldTypeName))
             {
                 object propertyValue = property.GetValue(typeDiff, null);
-                if (propertyValue != null)
+                if (propertyValue is not null)
                     return false;
             }
         }

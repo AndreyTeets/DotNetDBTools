@@ -74,7 +74,7 @@ WHERE t.TABLE_SCHEMA = (select DATABASE())
         {
             string value = columnRecord.Default;
             if (value is null)
-                return new CodePiece() { Code = value };
+                return null;
             if (IsFunction(value))
                 return new CodePiece() { Code = $"({value})" };
 

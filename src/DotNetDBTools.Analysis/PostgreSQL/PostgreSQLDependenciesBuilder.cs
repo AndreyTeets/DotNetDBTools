@@ -51,7 +51,7 @@ internal class PostgreSQLDependenciesBuilder : IDependenciesBuilder
             {
                 AddDependencyIfTypeIsUdt(type.UnderlyingType.DependsOn, type.UnderlyingType.Name);
 
-                if (type.Default.Code != null)
+                if (type.Default is not null)
                 {
                     List<Dependency> deps = ExecuteParsingFunc(
                         () => parser.GetExpressionDependencies(type.Default.Code),
@@ -88,7 +88,7 @@ internal class PostgreSQLDependenciesBuilder : IDependenciesBuilder
 
                     AddDependencyIfTypeIsUdt(column.DataType.DependsOn, column.DataType.Name);
 
-                    if (column.Default.Code != null)
+                    if (column.Default is not null)
                     {
                         List<Dependency> deps = ExecuteParsingFunc(
                         () => parser.GetExpressionDependencies(column.Default.Code),
@@ -111,7 +111,7 @@ internal class PostgreSQLDependenciesBuilder : IDependenciesBuilder
                 {
                     index.Parent = table;
 
-                    if (index.Expression != null)
+                    if (index.Expression is not null)
                     {
                         List<Dependency> deps = ExecuteParsingFunc(
                         () => parser.GetExpressionDependencies(index.Expression.Code),

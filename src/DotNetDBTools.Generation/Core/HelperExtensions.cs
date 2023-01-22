@@ -5,7 +5,7 @@ namespace DotNetDBTools.Generation.Core;
 
 public static class HelperExtensions
 {
-    public static string GetDefault(this Column column) => column.Default.Code;
+    public static string GetDefault(this Column column) => column.Default?.Code;
     public static string GetExpression(this CheckConstraint ck) => ck.Expression.Code;
     public static string GetCreateStatement(this Trigger trg) => trg.CreateStatement.Code;
     public static string GetCreateStatement(this View view) => view.CreateStatement.Code;

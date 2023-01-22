@@ -22,13 +22,13 @@ internal class PostgreSQLAlterDomainTypeQuery : NoParametersQuery
         List<string> definitions = new();
         if (typeDiff.NewTypeName != typeDiff.OldTypeName)
             definitions.Add($@"ALTER DOMAIN ""{typeDiff.OldTypeName}"" RENAME TO ""{typeDiff.NewTypeName}"";");
-        if (typeDiff.NotNullToSet != null && typeDiff.NotNullToSet == false)
+        if (typeDiff.NotNullToSet is not null && typeDiff.NotNullToSet == false)
             definitions.Add($@"{ad} DROP NOT NULL;");
-        if (typeDiff.NotNullToSet != null && typeDiff.NotNullToSet == true)
+        if (typeDiff.NotNullToSet is not null && typeDiff.NotNullToSet == true)
             definitions.Add($@"{ad} SET NOT NULL;");
-        if (typeDiff.DefaultToDrop != null)
+        if (typeDiff.DefaultToDrop is not null)
             definitions.Add($@"{ad} DROP DEFAULT;");
-        if (typeDiff.DefaultToSet != null)
+        if (typeDiff.DefaultToSet is not null)
             definitions.Add($@"{ad} SET DEFAULT {typeDiff.DefaultToSet.Code};");
         foreach (CheckConstraint ck in typeDiff.CheckConstraintsToDrop)
             definitions.Add($@"{ad} DROP CONSTRAINT ""{ck.Name}"";");

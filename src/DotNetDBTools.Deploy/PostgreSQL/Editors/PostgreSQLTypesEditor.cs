@@ -87,8 +87,8 @@ internal class PostgreSQLTypesEditor
             foreach (PostgreSQLDomainType type in dbDiff.DomainTypesToCreate)
             {
                 PostgreSQLDomainType strippedTypeModel = type.CopyModel();
-                if (type.Default.DependsOn.Any(IsComplexDependency))
-                    strippedTypeModel.Default.Code = null;
+                if (type.Default is not null && type.Default.DependsOn.Any(IsComplexDependency))
+                    strippedTypeModel.Default = null;
                 strippedTypeModel.CheckConstraints.RemoveAll(x => x.Expression.DependsOn.Any(IsComplexDependency));
                 res.Add(strippedTypeModel);
             }
@@ -128,7 +128,7 @@ internal class PostgreSQLTypesEditor
         foreach (PostgreSQLDomainType type in dbDiff.DomainTypesToCreate)
         {
             PostgreSQLDomainTypeDiff diffForSettingDefault = type.CreateEmptyDomainTypeDiff();
-            if (type.Default.Code != null && type.Default.DependsOn.Any(IsComplexDependency))
+            if (type.Default is not null && type.Default.DependsOn.Any(IsComplexDependency))
             {
                 diffForSettingDefault.DefaultToSet = type.Default;
                 res.Add(diffForSettingDefault);
@@ -144,7 +144,7 @@ internal class PostgreSQLTypesEditor
             };
             diffForSettingDefault.DefaultToSet = typeDiff.DefaultToSet;
 
-            if (diffForSettingDefault.DefaultToSet != null)
+            if (diffForSettingDefault.DefaultToSet is not null)
                 res.Add(diffForSettingDefault);
         }
         return res;
@@ -156,7 +156,7 @@ internal class PostgreSQLTypesEditor
         foreach (PostgreSQLDomainType type in dbDiff.DomainTypesToDrop)
         {
             PostgreSQLDomainTypeDiff diffForDroppingDefault = type.CreateEmptyDomainTypeDiff();
-            if (type.Default.Code != null && type.Default.DependsOn.Any(IsComplexDependency))
+            if (type.Default is not null && type.Default.DependsOn.Any(IsComplexDependency))
             {
                 diffForDroppingDefault.DefaultToDrop = type.Default;
                 res.Add(diffForDroppingDefault);
@@ -172,7 +172,7 @@ internal class PostgreSQLTypesEditor
             };
             diffForDroppingDefault.DefaultToDrop = typeDiff.DefaultToDrop;
 
-            if (diffForDroppingDefault.DefaultToDrop != null)
+            if (diffForDroppingDefault.DefaultToDrop is not null)
                 res.Add(diffForDroppingDefault);
         }
         return res;
@@ -299,15 +299,22 @@ internal class PostgreSQLTypesEditor
     {
         QueryExecutor.Execute(new PostgreSQLAlterDomainTypeQuery(typeDiff));
 
-        bool updateCode = typeDiff.DefaultToSet != null || typeDiff.DefaultToDrop != null;
-        string objectCode = typeDiff.DefaultToSet != null ? typeDiff.DefaultToSet.Code : null;
+        string objectCode = typeDiff.DefaultToSet is not null ? typeDiff.DefaultToSet.Code : null;
         QueryExecutor.Execute(new PostgreSQLUpdateDNDBTDbObjectRecordQuery(
-            typeDiff.TypeID, typeDiff.NewTypeName, updateCode, objectCode));
+            typeDiff.TypeID, typeDiff.NewTypeName, DefaultCodeChanged(), objectCode));
 
         foreach (CheckConstraint ck in typeDiff.CheckConstraintsToDrop)
             QueryExecutor.Execute(new PostgreSQLDeleteDNDBTDbObjectRecordQuery(ck.ID));
         foreach (CheckConstraint ck in typeDiff.CheckConstraintsToCreate)
             QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(ck.ID, typeDiff.TypeID, DbObjectType.CheckConstraint, ck.Name, ck.GetExpression()));
+
+        bool DefaultCodeChanged()
+        {
+            return typeDiff.DefaultToSet is not null && typeDiff.DefaultToDrop is null
+                || typeDiff.DefaultToSet is null && typeDiff.DefaultToDrop is not null
+                || typeDiff.DefaultToSet is not null && typeDiff.DefaultToDrop is not null
+                    && typeDiff.DefaultToSet.Code != typeDiff.DefaultToDrop.Code;
+        }
     }
 
     private static bool IsComplexDependency(DbObject dbObject)

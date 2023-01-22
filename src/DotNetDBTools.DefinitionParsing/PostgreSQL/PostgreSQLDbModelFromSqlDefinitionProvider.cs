@@ -36,7 +36,7 @@ internal class PostgreSQLDbModelFromSqlDefinitionProvider : DbModelFromSqlDefini
 
     protected override void BuildAdditionalIndexModelProperties(Index indexModel, IndexInfo index)
     {
-        if (index.Expression != null)
+        if (index.Expression is not null)
             ((PostgreSQLIndex)indexModel).Expression = new CodePiece() { Code = index.Expression };
     }
 
@@ -97,7 +97,7 @@ internal class PostgreSQLDbModelFromSqlDefinitionProvider : DbModelFromSqlDefini
                 Name = type.Name,
                 UnderlyingType = new DataType { Name = type.UnderlyingType },
                 NotNull = type.NotNull,
-                Default = new CodePiece { Code = type.Default },
+                Default = type.Default is null ? null : new CodePiece { Code = type.Default },
                 CheckConstraints = BuildCheckConstraintModels(type),
             };
             typeModelsList.Add(typeModel);

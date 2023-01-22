@@ -243,7 +243,7 @@ c.Identity ? " AUTO_INCREMENT" : ""
 notNull ? "NOT NULL" : "NULL"
             ;
         private static string Default(CodePiece dValue) =>
-dValue.Code is not null ? $@" DEFAULT {dValue.Code}" : ""
+dValue is not null ? $@" DEFAULT {dValue.Code}" : ""
             ;
     }
 }

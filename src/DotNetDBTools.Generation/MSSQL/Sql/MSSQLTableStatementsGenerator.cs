@@ -100,7 +100,7 @@ $@"    {GetIdDeclarationText(fk, 4)}{Statements.DefForeignKey(fk)}"));
     {
         foreach (Column column in tableDiff.ColumnsToDrop)
         {
-            if (column.GetDefault() is not null)
+            if (column.Default is not null)
                 sb.Append(Statements.DropDefaultConstraint(tableDiff.NewTable.Name, ((MSSQLColumn)column).DefaultConstraintName));
             sb.Append(Statements.DropColumn(tableDiff.NewTable.Name, column));
         }
@@ -223,10 +223,10 @@ c.Identity ? " IDENTITY" : ""
 notNull ? "NOT NULL" : "NULL"
             ;
         private static string Default(CodePiece dValue, string defaultConstraintName) =>
-dValue.Code is not null ? $@" CONSTRAINT [{defaultConstraintName}] DEFAULT {dValue.Code}" : ""
+dValue is not null ? $@" CONSTRAINT [{defaultConstraintName}] DEFAULT {dValue.Code}" : ""
             ;
         private static string WithValues(Column c) =>
-!c.NotNull && c.GetDefault() is not null ? " WITH VALUES" : ""
+!c.NotNull && c.Default is not null ? " WITH VALUES" : ""
             ;
     }
 }

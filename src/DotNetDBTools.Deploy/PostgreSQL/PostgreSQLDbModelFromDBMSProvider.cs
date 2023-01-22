@@ -68,7 +68,8 @@ internal class PostgreSQLDbModelFromDBMSProvider : DbModelFromDBMSProvider<
         {
             DNDBTInfo dndbtInfo = dbObjectIDsMap[$"{DbObjectType.UserDefinedType}_{type.Name}_{null}"];
             type.ID = dndbtInfo.ID;
-            type.Default.Code = dndbtInfo.Code;
+            if (type.Default is not null)
+                type.Default.Code = dndbtInfo.Code;
 
             foreach (CheckConstraint ck in type.CheckConstraints)
             {
@@ -171,7 +172,7 @@ internal class PostgreSQLDbModelFromDBMSProvider : DbModelFromDBMSProvider<
                 typesMap.Add(typeRecord.TypeName, type);
             }
 
-            if (typeRecord.CheckConstrantName != null)
+            if (typeRecord.CheckConstrantName is not null)
             {
                 CheckConstraint checkConstraint = new()
                 {
@@ -219,9 +220,9 @@ internal class PostgreSQLDbModelFromDBMSProvider : DbModelFromDBMSProvider<
             };
 
             type.Subtype = PostgreSQLQueriesHelper.CreateDataTypeModel(
-                typeRecord.SubtypeArrayElemDataType != null ? typeRecord.SubtypeArrayElemDataType : typeRecord.SubtypeName,
+                typeRecord.SubtypeArrayElemDataType is not null ? typeRecord.SubtypeArrayElemDataType : typeRecord.SubtypeName,
                 "-1",
-                typeRecord.SubtypeArrayElemDataType != null ? 1 : 0);
+                typeRecord.SubtypeArrayElemDataType is not null ? 1 : 0);
             type.SubtypeOperatorClass = typeRecord.SubtypeOperatorClass;
             type.Collation = typeRecord.Collation;
             type.CanonicalFunction = typeRecord.CanonicalFunction == "-" ? null : typeRecord.CanonicalFunction;

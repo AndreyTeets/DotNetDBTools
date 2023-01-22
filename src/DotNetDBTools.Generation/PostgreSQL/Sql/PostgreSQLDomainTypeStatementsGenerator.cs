@@ -44,7 +44,7 @@ $@"    {GetIdDeclarationText(ck, 4)}{Statements.DefCheckConstraint(ck)}");
 type.NotNull ? "NOT NULL" : "NULL"
             ;
         public static string Default(PostgreSQLDomainType type) =>
-type.GetDefault() is not null ? $@" DEFAULT {type.GetDefault()}" : ""
+type.Default is not null ? $@" DEFAULT {type.GetDefault()}" : ""
             ;
 
         public static string DefCheckConstraint(CheckConstraint ck) =>

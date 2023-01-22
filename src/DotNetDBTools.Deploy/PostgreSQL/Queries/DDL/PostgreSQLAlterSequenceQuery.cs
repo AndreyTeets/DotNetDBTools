@@ -21,9 +21,9 @@ internal class PostgreSQLAlterSequenceQuery : NoParametersQuery
             definitions.Add($@"ALTER SEQUENCE ""{sDiff.OldSequenceName}"" RENAME TO ""{sDiff.NewSequenceName}"";");
 
         List<string> subdefinitions = new();
-        if (sDiff.DataTypeToSet != null)
+        if (sDiff.DataTypeToSet is not null)
             subdefinitions.Add($@"    AS {sDiff.DataTypeToSet.Name}");
-        if (sDiff.OptionsToSet != null && SequenceOptions(sDiff.OptionsToSet) != "")
+        if (sDiff.OptionsToSet is not null && SequenceOptions(sDiff.OptionsToSet) != "")
             subdefinitions.Add($@"    {SequenceOptions(sDiff.OptionsToSet)}");
         if (sDiff.OwnedByToDrop != (null, null))
             subdefinitions.Add($@"    OWNED BY NONE");
@@ -43,17 +43,17 @@ $@"ALTER SEQUENCE ""{sDiff.NewSequenceName}""
     private static string SequenceOptions(PostgreSQLSequenceOptions so)
     {
         List<string> res = new();
-        if (so.StartWith != null)
+        if (so.StartWith is not null)
             res.Add($"START {so.StartWith}");
-        if (so.IncrementBy != null)
+        if (so.IncrementBy is not null)
             res.Add($"INCREMENT {so.IncrementBy}");
-        if (so.MinValue != null)
+        if (so.MinValue is not null)
             res.Add($"MINVALUE {so.MinValue}");
-        if (so.MaxValue != null)
+        if (so.MaxValue is not null)
             res.Add($"MAXVALUE {so.MaxValue}");
-        if (so.Cache != null)
+        if (so.Cache is not null)
             res.Add($"CACHE {so.Cache}");
-        if (so.Cycle != null)
+        if (so.Cycle is not null)
             res.Add(so.Cycle.Value ? $"CYCLE" : "NO CYCLE");
 
         if (res.Count > 0)

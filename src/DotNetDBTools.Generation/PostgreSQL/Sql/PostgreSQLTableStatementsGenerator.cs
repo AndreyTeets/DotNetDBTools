@@ -243,7 +243,7 @@ c.Identity ? $" GENERATED {c.IdentityGenerationKind} AS IDENTITY{SequenceOptions
 c.NotNull ? "NOT NULL" : "NULL"
             ;
         private static string Default(Column c) =>
-c.GetDefault() is not null ? $@" DEFAULT {c.GetDefault()}" : ""
+c.Default is not null ? $@" DEFAULT {c.GetDefault()}" : ""
             ;
 
         public static string SetSequenceOption(string cName, string sequence_option) =>

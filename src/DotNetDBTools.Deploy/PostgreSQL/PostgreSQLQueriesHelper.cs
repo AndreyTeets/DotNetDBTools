@@ -13,7 +13,7 @@ internal static class PostgreSQLQueriesHelper
     public static DataType CreateDataTypeModel(string dataType, string lengthStr, int arrayDims)
     {
         string baseName = AnalysisManager.GetStandardSqlTypeNameBase(dataType, DatabaseKind.PostgreSQL);
-        if (baseName == null)
+        if (baseName is null)
             return new DataType { Name = AppendArrayDims(dataType, arrayDims) };
         else
             return new DataType { Name = AppendArrayDims(AddPrecisionToBaseName(baseName, lengthStr), arrayDims) };
@@ -155,6 +155,8 @@ internal static class PostgreSQLQueriesHelper
 
     public static CodePiece ParseDefault(string value)
     {
+        if (value is null)
+            return null;
         return new CodePiece() { Code = value };
     }
 }

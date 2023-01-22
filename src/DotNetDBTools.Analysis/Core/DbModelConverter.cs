@@ -90,10 +90,6 @@ internal abstract class DbModelConverter<
                 ? new DataType { Name = ConvertCodePiece(avdt.NameCodePiece).Code }
                 : _dataTypeConverter.Convert((CSharpDataType)column.DataType);
 
-            CodePiece defaultValue = column.Default is AgnosticCodePiece acp
-                ? ConvertCodePiece(acp)
-                : _defaultValueConverter.Convert((CSharpDefaultValue)column.Default);
-
             TColumn specificDbmsColumn = new()
             {
                 ID = column.ID,
@@ -101,12 +97,21 @@ internal abstract class DbModelConverter<
                 DataType = dataType,
                 NotNull = column.NotNull,
                 Identity = column.Identity,
-                Default = defaultValue
+                Default = ConvertDefaultValue(column.Default),
             };
             BuildAdditionalColumnProperties(specificDbmsColumn, tableName);
             specificDbmsColumns.Add(specificDbmsColumn);
         }
         return specificDbmsColumns;
+
+        CodePiece ConvertDefaultValue(CodePiece dValue)
+        {
+            if (dValue is null)
+                return null;
+            if (dValue is AgnosticCodePiece acp)
+                return ConvertCodePiece(acp);
+            return _defaultValueConverter.Convert((CSharpDefaultValue)dValue);
+        }
     }
     protected virtual void BuildAdditionalColumnProperties(TColumn column, string tableName) { }
 

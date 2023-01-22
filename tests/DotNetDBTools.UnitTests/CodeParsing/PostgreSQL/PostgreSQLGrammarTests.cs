@@ -83,22 +83,22 @@ $"Failed to parse body(lang={body.lang}, line={CurrentLinesStackTrace(body.line)
             string text = null;
             string line = $"{context.Start.Line}";
 
-            if (context.function_body() != null)
+            if (context.function_body() is not null)
                 text = HelperMethods.GetInitialText(context.function_body());
 
             foreach (Function_actions_commonContext actContext in context.function_actions_common())
             {
-                if (actContext.function_def() != null)
+                if (actContext.function_def() is not null)
                 {
-                    if (actContext.function_def().character_string(0).BeginDollarStringConstant() != null)
+                    if (actContext.function_def().character_string(0).BeginDollarStringConstant() is not null)
                         text = ExtractTextFromDollarConstant(actContext.function_def().character_string(0));
                     else
                         text = ExtractTextFromSimpleStringConstant(actContext.function_def().character_string(0));
                 }
-                else if (actContext.lang_name != null)
+                else if (actContext.lang_name is not null)
                 {
                     lang = actContext.lang_name.GetText().ToUpper();
-                    if (actContext.lang_name.Character_String_Literal() != null)
+                    if (actContext.lang_name.Character_String_Literal() is not null)
                         lang = lang.Substring(1, lang.Length - 2).Replace("''", "'");
                 }
             }
@@ -113,7 +113,7 @@ $"Failed to parse body(lang={body.lang}, line={CurrentLinesStackTrace(body.line)
             string lang = "AnonymousBlock";
             string text;
             string line = $"{context.Start.Line}";
-            if (context.character_string(0).BeginDollarStringConstant() != null)
+            if (context.character_string(0).BeginDollarStringConstant() is not null)
                 text = ExtractTextFromDollarConstant(context.character_string(0));
             else
                 text = ExtractTextFromSimpleStringConstant(context.character_string(0));
@@ -125,12 +125,12 @@ $"Failed to parse body(lang={body.lang}, line={CurrentLinesStackTrace(body.line)
         public override object VisitExecute_stmt([NotNull] Execute_stmtContext context)
         {
             Character_stringContext str = context.vex()?.value_expression_primary()?.unsigned_value_specification()?.character_string();
-            if (str != null)
+            if (str is not null)
             {
                 string lang = "ExecuteBody";
                 string text;
                 string line = $"{context.Start.Line}";
-                if (str.BeginDollarStringConstant() != null)
+                if (str.BeginDollarStringConstant() is not null)
                     text = ExtractTextFromDollarConstant(str);
                 else
                     text = ExtractTextFromSimpleStringConstant(str);

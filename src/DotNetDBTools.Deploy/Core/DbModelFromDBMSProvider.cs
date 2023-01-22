@@ -103,7 +103,8 @@ internal abstract class DbModelFromDBMSProvider<
             {
                 DNDBTInfo dndbtInfo = dbObjectIDsMap[$"{DbObjectType.Column}_{column.Name}_{table.ID}"];
                 column.ID = dndbtInfo.ID;
-                column.Default.Code = dndbtInfo.Code;
+                if (column.Default is not null)
+                    column.Default.Code = dndbtInfo.Code;
             }
 
             if (table.PrimaryKey is not null)

@@ -187,7 +187,7 @@ internal class MSSQLDiffCreator : DiffCreator
             bool RequiresDefaultRedifinition(Column column)
             {
                 return _objectsThatRequireDefaultRedefinition.Contains(column.ID)
-                    && column.Default.Code != null;
+                    && column.Default is not null;
             }
         }
 

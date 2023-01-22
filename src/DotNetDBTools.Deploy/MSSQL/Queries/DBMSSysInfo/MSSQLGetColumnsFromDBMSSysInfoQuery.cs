@@ -84,7 +84,7 @@ WHERE t.name NOT IN ({DNDBTSysTables.AllTablesForInClause});";
         {
             string valueFromDBMSSysTable = columnRecord.Default;
             if (valueFromDBMSSysTable is null)
-                return new CodePiece() { Code = null };
+                return null;
             string value = TrimOuterParantheses(valueFromDBMSSysTable);
             return new CodePiece() { Code = value };
 

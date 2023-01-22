@@ -50,7 +50,6 @@ public class PostgreSQLBuildSqlDefDbModelTests : BaseBuildSqlDefDbModelTests<Pos
                         ID = new Guid("7C36AE77-B7E4-40C3-824F-BD20DC270A14"),
                         Name = "Col3".ToLower(),
                         DataType = new DataType() { Name = "BIGINT" },
-                        Default = new CodePiece(),
                         NotNull = true,
                         Identity = true,
                     },

@@ -212,8 +212,8 @@ internal class PostgreSQLDiffCreator : DiffCreator
                 NewTypeName = newType.Name,
                 OldTypeName = oldType.Name,
                 NotNullToSet = newType.NotNull != oldType.NotNull ? newType.NotNull : null,
-                DefaultToSet = defaultChanged && newType.Default.Code != null ? newType.Default : null,
-                DefaultToDrop = defaultChanged && oldType.Default.Code != null ? oldType.Default : null,
+                DefaultToSet = defaultChanged && newType.Default is not null ? newType.Default : null,
+                DefaultToDrop = defaultChanged && oldType.Default is not null ? oldType.Default : null,
                 CheckConstraintsToCreate = checkConstraintsToCreate,
                 CheckConstraintsToDrop = checkConstraintsToDrop,
             };
@@ -380,7 +380,7 @@ internal class PostgreSQLDiffCreator : DiffCreator
             bool RequiresDefaultRedifinition(PostgreSQLDomainType type)
             {
                 return _objectsThatRequireDefaultRedefinition.Contains(type.ID)
-                    && type.Default.Code != null;
+                    && type.Default is not null;
             }
 
             bool AnyUnchangedCheckConstraintRequiresRedefinition(PostgreSQLDomainType type)
@@ -472,7 +472,7 @@ internal class PostgreSQLDiffCreator : DiffCreator
             bool RequiresDefaultRedifinition(Column column)
             {
                 return _objectsThatRequireDefaultRedefinition.Contains(column.ID)
-                    && column.Default.Code != null;
+                    && column.Default is not null;
             }
 
             bool AnyUnchangedCheckConstraintRequiresRedefinition(Table table)
@@ -533,7 +533,7 @@ internal class PostgreSQLDiffCreator : DiffCreator
             PostgreSQLFunction x => AnyRequireRedefinition(x.CreateStatement.DependsOn),
             PostgreSQLProcedure x => AnyRequireRedefinition(x.CreateStatement.DependsOn),
             CheckConstraint x => AnyRequireRedefinition(x.Expression.DependsOn),
-            PostgreSQLIndex x => x.Expression != null && AnyRequireRedefinition(x.Expression.DependsOn),
+            PostgreSQLIndex x => x.Expression is not null && AnyRequireRedefinition(x.Expression.DependsOn),
             PostgreSQLTrigger x => AnyRequireRedefinition(x.CreateStatement.DependsOn),
             _ => false,
         };
@@ -543,8 +543,8 @@ internal class PostgreSQLDiffCreator : DiffCreator
     {
         return dbObject switch
         {
-            PostgreSQLDomainType x => AnyRequireRedefinition(x.Default.DependsOn),
-            PostgreSQLColumn x => AnyRequireRedefinition(x.Default.DependsOn),
+            PostgreSQLDomainType x => x.Default is not null && AnyRequireRedefinition(x.Default.DependsOn),
+            PostgreSQLColumn x => x.Default is not null && AnyRequireRedefinition(x.Default.DependsOn),
             _ => false,
         };
     }
