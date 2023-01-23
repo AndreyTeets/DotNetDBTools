@@ -51,6 +51,21 @@ internal class PostgreSQLDiffCreator : DiffCreator
         return dbDiff;
     }
 
+    protected override void BuildAdditionalColumnDiffProperties(ColumnDiff columnDiff, Column newColumn, Column oldColumn)
+    {
+        PostgreSQLColumnDiff cDiff = (PostgreSQLColumnDiff)columnDiff;
+        PostgreSQLColumn newC = (PostgreSQLColumn)newColumn;
+        PostgreSQLColumn oldC = (PostgreSQLColumn)oldColumn;
+
+        if (newC.IdentityGenerationKind != oldC.IdentityGenerationKind)
+            cDiff.IdentityGenerationKindToSet = newC.IdentityGenerationKind;
+
+        if (newC.IdentitySequenceOptions is not null && oldC.IdentitySequenceOptions is null)
+            cDiff.IdentitySequenceOptionsToSet = newC.IdentitySequenceOptions;
+        else if (newC.IdentitySequenceOptions is not null && oldC.IdentitySequenceOptions is not null)
+            cDiff.IdentitySequenceOptionsToSet = GetChangedSequenceOptions(newC.IdentitySequenceOptions, oldC.IdentitySequenceOptions);
+    }
+
     protected override void OnAddedItemProcessed<TItem>(TItem item)
     {
         _addedObjects.Add(item.ID);
@@ -111,24 +126,6 @@ internal class PostgreSQLDiffCreator : DiffCreator
             ref addedSequences, ref removedSequences,
             (newSequence, oldSequence) =>
             {
-                PostgreSQLSequenceOptions optionsToSet = null;
-                if (!AreEqual(newSequence.Options, oldSequence.Options))
-                {
-                    optionsToSet = new PostgreSQLSequenceOptions();
-                    if (newSequence.Options.StartWith != oldSequence.Options.StartWith)
-                        optionsToSet.StartWith = newSequence.Options.StartWith;
-                    if (newSequence.Options.IncrementBy != oldSequence.Options.IncrementBy)
-                        optionsToSet.IncrementBy = newSequence.Options.IncrementBy;
-                    if (newSequence.Options.MinValue != oldSequence.Options.MinValue)
-                        optionsToSet.MinValue = newSequence.Options.MinValue;
-                    if (newSequence.Options.MaxValue != oldSequence.Options.MaxValue)
-                        optionsToSet.MaxValue = newSequence.Options.MaxValue;
-                    if (newSequence.Options.Cache != oldSequence.Options.Cache)
-                        optionsToSet.Cache = newSequence.Options.Cache;
-                    if (newSequence.Options.Cycle != oldSequence.Options.Cycle)
-                        optionsToSet.Cycle = newSequence.Options.Cycle;
-                }
-
                 bool ownedByChanged = !AreEqual(newSequence.OwnedBy, oldSequence.OwnedBy);
                 PostgreSQLSequenceDiff sequenceDiff = new()
                 {
@@ -136,7 +133,7 @@ internal class PostgreSQLDiffCreator : DiffCreator
                     NewSequenceName = newSequence.Name,
                     OldSequenceName = oldSequence.Name,
                     DataTypeToSet = !AreEqual(newSequence.DataType, oldSequence.DataType) ? newSequence.DataType : null,
-                    OptionsToSet = optionsToSet,
+                    OptionsToSet = GetChangedSequenceOptions(newSequence.Options, oldSequence.Options),
                     OwnedByToSet = ownedByChanged && newSequence.OwnedBy != (null, null) ? newSequence.OwnedBy : (null, null),
                     OwnedByToDrop = ownedByChanged && newSequence.OwnedBy == (null, null) ? oldSequence.OwnedBy : (null, null),
                 };
@@ -557,5 +554,28 @@ internal class PostgreSQLDiffCreator : DiffCreator
                 return true;
         }
         return false;
+    }
+
+    private PostgreSQLSequenceOptions GetChangedSequenceOptions(
+        PostgreSQLSequenceOptions newOptions, PostgreSQLSequenceOptions oldOptions)
+    {
+        PostgreSQLSequenceOptions changedOptions = null;
+        if (!AreEqual(newOptions, oldOptions))
+        {
+            changedOptions = new PostgreSQLSequenceOptions();
+            if (newOptions.StartWith != oldOptions.StartWith)
+                changedOptions.StartWith = newOptions.StartWith;
+            if (newOptions.IncrementBy != oldOptions.IncrementBy)
+                changedOptions.IncrementBy = newOptions.IncrementBy;
+            if (newOptions.MinValue != oldOptions.MinValue)
+                changedOptions.MinValue = newOptions.MinValue;
+            if (newOptions.MaxValue != oldOptions.MaxValue)
+                changedOptions.MaxValue = newOptions.MaxValue;
+            if (newOptions.Cache != oldOptions.Cache)
+                changedOptions.Cache = newOptions.Cache;
+            if (newOptions.Cycle != oldOptions.Cycle)
+                changedOptions.Cycle = newOptions.Cycle;
+        }
+        return changedOptions;
     }
 }

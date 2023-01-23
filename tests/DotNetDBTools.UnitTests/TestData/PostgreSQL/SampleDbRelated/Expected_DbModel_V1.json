@@ -1,5 +1,5 @@
 {
-  "$id": "77747AA746F0F2B9",
+  "$id": "85C46732F463011E",
   "Sequences": [
     {
       "$id": "DbObject { ID: 'f54a1a93-8cd2-4125-aede-b38cc7f8a750', Name: 'MySequence1' }",
@@ -777,6 +777,32 @@
           "Default": null,
           "ID": "029a13bc-d972-45c8-8a6e-6e1acc3f25b1",
           "Name": "MyColumn202",
+          "Parent": {
+            "$ref": "DbObject { ID: '6ca51f29-c1bc-4349-b9c1-6f1ea170f162', Name: 'MyTable5' }"
+          }
+        },
+        {
+          "$id": "DbObject { ID: 'c1f037d5-0656-43d1-8f30-f0b7b452d594', Name: 'MyColumn203' }",
+          "IdentityGenerationKind": "ALWAYS",
+          "IdentitySequenceOptions": {
+            "$id": "1B094D7B33D034A3",
+            "StartWith": 1000,
+            "IncrementBy": -2,
+            "MinValue": -2147483648,
+            "MaxValue": 2147483647,
+            "Cache": 1,
+            "Cycle": false
+          },
+          "DataType": {
+            "$id": "213584E6F496185B",
+            "Name": "INT",
+            "DependsOn": []
+          },
+          "NotNull": true,
+          "Identity": true,
+          "Default": null,
+          "ID": "c1f037d5-0656-43d1-8f30-f0b7b452d594",
+          "Name": "MyColumn203",
           "Parent": {
             "$ref": "DbObject { ID: '6ca51f29-c1bc-4349-b9c1-6f1ea170f162', Name: 'MyTable5' }"
           }

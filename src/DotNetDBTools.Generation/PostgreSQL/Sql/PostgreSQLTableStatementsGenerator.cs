@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using DotNetDBTools.Generation.Core;
@@ -49,7 +50,7 @@ $@"{GetIdDeclarationText(table, 0)}CREATE TABLE ""{table.Name}""
         List<string> tableDefinitions = new();
 
         tableDefinitions.AddRange(table.Columns.Select(c =>
-$@"    {GetIdDeclarationText(c, 4)}{Statements.DefColumn(c)}"));
+$@"    {GetIdDeclarationText(c, 4)}{Statements.DefColumn((PostgreSQLColumn)c)}"));
 
         if (table.PrimaryKey is not null)
         {
@@ -118,8 +119,24 @@ $@"    {GetIdDeclarationText(fk, 4)}{Statements.DefForeignKey(fk)}"));
             else if (columnDiff.DefaultToDrop is not null)
                 sb.Append(Statements.DropColumnDefault(columnDiff.NewColumnName));
 
-            if (columnDiff is PostgreSQLColumnDiff cDiff && cDiff.IdentitySequenceOptionsToSet is not null)
-                SetIdentitySequenceOptions(columnDiff.NewColumnName, cDiff.IdentitySequenceOptionsToSet);
+            PostgreSQLColumnDiff cDiff = (PostgreSQLColumnDiff)columnDiff;
+            if (cDiff.IdentityToSet is not null && cDiff.IdentityToSet == true)
+            {
+                if (cDiff.IdentityGenerationKindToSet is null || cDiff.IdentitySequenceOptionsToSet is null)
+                    throw new Exception($"Invalid columnDiff with missing Identity[GenerationKind|SequenceOptions]ToSet");
+                sb.Append(Statements.AddIdentity(columnDiff.NewColumnName, cDiff.IdentityGenerationKindToSet, cDiff.IdentitySequenceOptionsToSet));
+            }
+            else if (cDiff.IdentityToSet is not null && cDiff.IdentityToSet == false)
+            {
+                sb.Append(Statements.DropIdentity(columnDiff.NewColumnName));
+            }
+            else
+            {
+                if (cDiff.IdentityGenerationKindToSet is not null)
+                    sb.Append(Statements.SetIdentityGenerationKind(columnDiff.NewColumnName, cDiff.IdentityGenerationKindToSet));
+                if (cDiff.IdentitySequenceOptionsToSet is not null)
+                    SetIdentitySequenceOptions(columnDiff.NewColumnName, cDiff.IdentitySequenceOptionsToSet);
+            }
         }
 
         foreach (Column column in tableDiff.ColumnsToAdd)
@@ -128,24 +145,24 @@ $@"    {GetIdDeclarationText(fk, 4)}{Statements.DefForeignKey(fk)}"));
         void SetIdentitySequenceOptions(string cName, PostgreSQLSequenceOptions so)
         {
             if (so.StartWith is not null)
-                sb.Append(Statements.SetSequenceOption(cName, $"START {so.StartWith}"));
+                sb.Append(Statements.SetIdentitySequenceOption(cName, $"START {so.StartWith}"));
             if (so.IncrementBy is not null)
-                sb.Append(Statements.SetSequenceOption(cName, $"INCREMENT {so.IncrementBy}"));
+                sb.Append(Statements.SetIdentitySequenceOption(cName, $"INCREMENT {so.IncrementBy}"));
             if (so.MinValue is not null)
-                sb.Append(Statements.SetSequenceOption(cName, $"MINVALUE {so.MinValue}"));
+                sb.Append(Statements.SetIdentitySequenceOption(cName, $"MINVALUE {so.MinValue}"));
             if (so.MaxValue is not null)
-                sb.Append(Statements.SetSequenceOption(cName, $"MAXVALUE {so.MaxValue}"));
+                sb.Append(Statements.SetIdentitySequenceOption(cName, $"MAXVALUE {so.MaxValue}"));
             if (so.Cache is not null)
-                sb.Append(Statements.SetSequenceOption(cName, $"CACHE {so.Cache}"));
+                sb.Append(Statements.SetIdentitySequenceOption(cName, $"CACHE {so.Cache}"));
             if (so.Cycle is not null)
-                sb.Append(so.Cycle.Value ? $"CYCLE" : "NO CYCLE");
+                sb.Append(Statements.SetIdentitySequenceOption(cName, so.Cycle.Value ? $"CYCLE" : "NO CYCLE"));
         }
     }
 
     private static class Statements
     {
-        public static string DefColumn(Column c) =>
-$@"""{c.Name}"" {c.DataType.Name}{Identity((PostgreSQLColumn)c)} {Nullability(c)}{Default(c)}"
+        public static string DefColumn(PostgreSQLColumn c) =>
+$@"""{c.Name}"" {c.DataType.Name}{Identity(c.IdentityGenerationKind, c.IdentitySequenceOptions)} {Nullability(c)}{Default(c)}"
             ;
         public static string DefPrimaryKey(PrimaryKey pk) =>
 $@"CONSTRAINT ""{pk.Name}"" PRIMARY KEY ({string.Join(", ", pk.Columns.Select(x => $@"""{x}"""))})"
@@ -172,17 +189,19 @@ ALTER TABLE ""{tableName}"" RENAME COLUMN ""{oldColumnName}"" TO ""{newColumnNam
 
         public static string AddColumn(Column c) =>
 $@"
-    ADD COLUMN {DefColumn(c)},"
+    ADD COLUMN {DefColumn((PostgreSQLColumn)c)},"
             ;
         public static string DropColumn(Column c) =>
 $@"
     DROP COLUMN ""{c.Name}"","
             ;
+
         public static string AlterColumnType(string cName, DataType dataType) =>
 $@"
     ALTER COLUMN ""{cName}"" SET DATA TYPE {dataType.Name}
         USING (""{cName}""::text::{dataType.Name}),"
             ; // TODO Add TypeChangeConversions<srcTypeName,destTypeName,usingCode> in deploy/generation options?
+
         public static string SetColumnNotNull(string cName) =>
 $@"
     ALTER COLUMN ""{cName}"" SET NOT NULL,"
@@ -191,6 +210,7 @@ $@"
 $@"
     ALTER COLUMN ""{cName}"" DROP NOT NULL,"
             ;
+
         public static string SetColumnDefault(string cName, CodePiece dValue) =>
 $@"
     ALTER COLUMN ""{cName}"" SET DEFAULT {dValue.Code},"
@@ -236,8 +256,26 @@ $@"
     DROP CONSTRAINT ""{fk.Name}"","
             ;
 
-        private static string Identity(PostgreSQLColumn c) =>
-c.Identity ? $" GENERATED {c.IdentityGenerationKind} AS IDENTITY{SequenceOptions(c.IdentitySequenceOptions)}" : ""
+        public static string AddIdentity(string cName, string generationKind, PostgreSQLSequenceOptions sequenceOptions) =>
+$@"
+    ALTER COLUMN ""{cName}"" ADD {Identity(generationKind, sequenceOptions)},"
+            ;
+        public static string DropIdentity(string cName) =>
+$@"
+    ALTER COLUMN ""{cName}"" DROP IDENTITY,"
+            ;
+
+        public static string SetIdentityGenerationKind(string cName, string generationKind) =>
+$@"
+    ALTER COLUMN ""{cName}"" SET GENERATED {generationKind},"
+            ;
+        public static string SetIdentitySequenceOption(string cName, string sequence_option) =>
+$@"
+    ALTER COLUMN ""{cName}"" SET {sequence_option},"
+            ;
+
+        private static string Identity(string generationKind, PostgreSQLSequenceOptions sequenceOptions) =>
+generationKind is not null ? $" GENERATED {generationKind} AS IDENTITY{IdentitySequenceOptions(sequenceOptions)}" : ""
             ;
         private static string Nullability(Column c) =>
 c.NotNull ? "NOT NULL" : "NULL"
@@ -246,12 +284,7 @@ c.NotNull ? "NOT NULL" : "NULL"
 c.Default is not null ? $@" DEFAULT {c.GetDefault()}" : ""
             ;
 
-        public static string SetSequenceOption(string cName, string sequence_option) =>
-$@"
-    ALTER COLUMN ""{cName}"" SET {sequence_option},"
-            ;
-
-        private static string SequenceOptions(PostgreSQLSequenceOptions so)
+        private static string IdentitySequenceOptions(PostgreSQLSequenceOptions so)
         {
             List<string> res = new();
             if (so.StartWith is not null)

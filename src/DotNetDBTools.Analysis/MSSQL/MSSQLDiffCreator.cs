@@ -44,6 +44,9 @@ internal class MSSQLDiffCreator : DiffCreator
 
     protected override void BuildAdditionalColumnDiffProperties(ColumnDiff columnDiff, Column newColumn, Column oldColumn)
     {
+        if (columnDiff.IdentityToSet is not null)
+            throw new Exception($"Identity change for existing column is not supported (ColumnID='{columnDiff.ColumnID}')");
+
         if (columnDiff.DataTypeToSet is not null || columnDiff.NotNullToSet is not null)
         {
             columnDiff.DataTypeToSet = newColumn.DataType;

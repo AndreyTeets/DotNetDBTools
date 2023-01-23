@@ -110,6 +110,9 @@ internal abstract class DiffCreator
                 if (!AreEqual(newColumn.NotNull, oldColumn.NotNull))
                     columnDiff.NotNullToSet = newColumn.NotNull;
 
+                if (!AreEqual(newColumn.Identity, oldColumn.Identity))
+                    columnDiff.IdentityToSet = newColumn.Identity;
+
                 if (!AreEqual(newColumn.Default, oldColumn.Default))
                     SetDefaultChanged(columnDiff, newColumn, oldColumn);
 

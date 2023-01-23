@@ -682,6 +682,7 @@ EXECUTE 'CREATE TABLE "MyTable5"
     "MyColumn2" CHAR(4) NOT NULL DEFAULT ''test'',
     "MyColumn201" INT NULL DEFAULT "MyFunction1"(-25, 10),
     "MyColumn202" "MyDomain2" NOT NULL,
+    "MyColumn203" INT GENERATED ALWAYS AS IDENTITY (START 1000 INCREMENT -2 MINVALUE -2147483648 MAXVALUE 2147483647 CACHE 1 NO CYCLE) NOT NULL,
     "MyColumn3" BYTEA NOT NULL DEFAULT ''\x000204'',
     "MyColumn301" SMALLINT NULL,
     "MyColumn302" SMALLINT NULL,
@@ -958,6 +959,25 @@ VALUES
     ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
     ''Column'',
     ''MyColumn202'',
+    NULL
+);';
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''c1f037d5-0656-43d1-8f30-f0b7b452d594'',
+    ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
+    ''Column'',
+    ''MyColumn203'',
     NULL
 );';
 -- QUERY END: InsertDNDBTDbObjectRecordQuery

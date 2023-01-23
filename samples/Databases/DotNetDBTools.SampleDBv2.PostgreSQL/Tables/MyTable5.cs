@@ -131,6 +131,21 @@ namespace DotNetDBTools.SampleDB.PostgreSQL.Tables
             NotNull = true,
         };
 
+        public Column MyColumn203 = new("C1F037D5-0656-43D1-8F30-F0B7B452D594")
+        {
+            DataType = new IntDataType(),
+            NotNull = true,
+            Identity = true,
+            IdentityGenerationKind = IdentityGenerationKind.ByDefault,
+            IdentitySequenceOptions = new()
+            {
+                IncrementBy = -4,
+                MinValue = int.MinValue,
+                MaxValue = 9999,
+                Cycle = true,
+            },
+        };
+
         public Column MyColumn301 = new("5A6FDF6E-F39E-41BF-84FD-6B1BECAB248B")
         {
             DataType = new IntDataType() { Size = IntSize.Int8 },
