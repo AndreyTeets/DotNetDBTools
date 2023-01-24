@@ -11,7 +11,6 @@ using DotNetDBTools.Deploy;
 using DotNetDBTools.Generation;
 using DotNetDBTools.Generation.Core;
 using DotNetDBTools.Models.Core;
-using DotNetDBTools.Models.PostgreSQL;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
 using Npgsql;

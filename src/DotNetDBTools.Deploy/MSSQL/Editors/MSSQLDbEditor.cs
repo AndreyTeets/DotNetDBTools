@@ -17,7 +17,10 @@ namespace DotNetDBTools.Deploy.MSSQL.Editors;
 internal class MSSQLDbEditor : DbEditor<
     MSSQLCheckDNDBTSysTablesExistQuery,
     MSSQLCreateDNDBTSysTablesQuery,
-    MSSQLDropDNDBTSysTablesQuery>
+    MSSQLDropDNDBTSysTablesQuery,
+    MSSQLInsertDNDBTDbObjectRecordQuery,
+    MSSQLInsertDNDBTScriptExecutionRecordQuery,
+    MSSQLInsertDNDBTDbAttributesRecordQuery>
 {
     private readonly IScriptExecutor _scriptExecutor;
     private readonly ITableEditor _tableEditor;
@@ -35,42 +38,18 @@ internal class MSSQLDbEditor : DbEditor<
         _foreignKeyEditor = new MSSQLForeignKeyEditor(queryExecutor);
     }
 
-    public override void PopulateDNDBTSysTables(Database database)
+    protected override void PopulateDNDBTSysTablesWithAdditionalObjects(Database database)
     {
         MSSQLDatabase db = (MSSQLDatabase)database;
         foreach (MSSQLUserDefinedType udt in db.UserDefinedTypes)
             QueryExecutor.Execute(new MSSQLInsertDNDBTDbObjectRecordQuery(udt, DbObjectType.UserDefinedType));
-        foreach (MSSQLTable table in db.Tables)
-        {
-            QueryExecutor.Execute(new MSSQLInsertDNDBTDbObjectRecordQuery(table, DbObjectType.Table));
-            foreach (Column c in table.Columns)
-                QueryExecutor.Execute(new MSSQLInsertDNDBTDbObjectRecordQuery(c, DbObjectType.Column, c.GetDefault()));
-            PrimaryKey pk = table.PrimaryKey;
-            if (pk is not null)
-                QueryExecutor.Execute(new MSSQLInsertDNDBTDbObjectRecordQuery(pk, DbObjectType.PrimaryKey));
-            foreach (UniqueConstraint uc in table.UniqueConstraints)
-                QueryExecutor.Execute(new MSSQLInsertDNDBTDbObjectRecordQuery(uc, DbObjectType.UniqueConstraint));
-            foreach (CheckConstraint ck in table.CheckConstraints)
-                QueryExecutor.Execute(new MSSQLInsertDNDBTDbObjectRecordQuery(ck, DbObjectType.CheckConstraint, ck.GetExpression()));
-            foreach (Index idx in table.Indexes)
-                QueryExecutor.Execute(new MSSQLInsertDNDBTDbObjectRecordQuery(idx, DbObjectType.Index));
-            foreach (Trigger trg in table.Triggers)
-                QueryExecutor.Execute(new MSSQLInsertDNDBTDbObjectRecordQuery(trg, DbObjectType.Trigger, trg.GetCreateStatement()));
-            foreach (ForeignKey fk in table.ForeignKeys)
-                QueryExecutor.Execute(new MSSQLInsertDNDBTDbObjectRecordQuery(fk, DbObjectType.ForeignKey));
-        }
         foreach (MSSQLUserDefinedTableType udtt in db.UserDefinedTableTypes)
             QueryExecutor.Execute(new MSSQLInsertDNDBTDbObjectRecordQuery(udtt, DbObjectType.UserDefinedTableType));
-        foreach (MSSQLView view in db.Views)
-            QueryExecutor.Execute(new MSSQLInsertDNDBTDbObjectRecordQuery(view, DbObjectType.View, view.GetCreateStatement()));
+
         foreach (MSSQLFunction func in db.Functions)
             QueryExecutor.Execute(new MSSQLInsertDNDBTDbObjectRecordQuery(func, DbObjectType.Function, func.GetCreateStatement()));
         foreach (MSSQLProcedure proc in db.Procedures)
             QueryExecutor.Execute(new MSSQLInsertDNDBTDbObjectRecordQuery(proc, DbObjectType.Procedure, proc.GetCreateStatement()));
-
-        foreach (Script script in db.Scripts)
-            QueryExecutor.Execute(new MSSQLInsertDNDBTScriptExecutionRecordQuery(script, -1));
-        QueryExecutor.Execute(new MSSQLInsertDNDBTDbAttributesRecordQuery(database));
     }
 
     public override void ApplyDatabaseDiff(DatabaseDiff databaseDiff, DeployOptions options)

@@ -14,7 +14,10 @@ namespace DotNetDBTools.Deploy.MySQL.Editors;
 internal class MySQLDbEditor : DbEditor<
     MySQLCheckDNDBTSysTablesExistQuery,
     MySQLCreateDNDBTSysTablesQuery,
-    MySQLDropDNDBTSysTablesQuery>
+    MySQLDropDNDBTSysTablesQuery,
+    MySQLInsertDNDBTDbObjectRecordQuery,
+    MySQLInsertDNDBTScriptExecutionRecordQuery,
+    MySQLInsertDNDBTDbAttributesRecordQuery>
 {
     private readonly IScriptExecutor _scriptExecutor;
     private readonly ITableEditor _tableEditor;
@@ -32,39 +35,13 @@ internal class MySQLDbEditor : DbEditor<
         _foreignKeyEditor = new MySQLForeignKeyEditor(queryExecutor);
     }
 
-    public override void PopulateDNDBTSysTables(Database database)
+    protected override void PopulateDNDBTSysTablesWithAdditionalObjects(Database database)
     {
         MySQLDatabase db = (MySQLDatabase)database;
-        foreach (MySQLTable table in db.Tables)
-        {
-            QueryExecutor.Execute(new MySQLInsertDNDBTDbObjectRecordQuery(table, DbObjectType.Table));
-            foreach (Column c in table.Columns)
-                QueryExecutor.Execute(new MySQLInsertDNDBTDbObjectRecordQuery(c, DbObjectType.Column, c.GetDefault()));
-            PrimaryKey pk = table.PrimaryKey;
-            if (pk is not null)
-                QueryExecutor.Execute(new MySQLInsertDNDBTDbObjectRecordQuery(pk, DbObjectType.PrimaryKey));
-            foreach (UniqueConstraint uc in table.UniqueConstraints)
-                QueryExecutor.Execute(new MySQLInsertDNDBTDbObjectRecordQuery(uc, DbObjectType.UniqueConstraint));
-            foreach (CheckConstraint ck in table.CheckConstraints)
-                QueryExecutor.Execute(new MySQLInsertDNDBTDbObjectRecordQuery(ck, DbObjectType.CheckConstraint, ck.GetExpression()));
-            foreach (Index idx in table.Indexes)
-                QueryExecutor.Execute(new MySQLInsertDNDBTDbObjectRecordQuery(idx, DbObjectType.Index));
-            foreach (Trigger trg in table.Triggers)
-                QueryExecutor.Execute(new MySQLInsertDNDBTDbObjectRecordQuery(trg, DbObjectType.Trigger, trg.GetCreateStatement()));
-            foreach (ForeignKey fk in table.ForeignKeys)
-                QueryExecutor.Execute(new MySQLInsertDNDBTDbObjectRecordQuery(fk, DbObjectType.ForeignKey));
-        }
-
-        foreach (MySQLView view in db.Views)
-            QueryExecutor.Execute(new MySQLInsertDNDBTDbObjectRecordQuery(view, DbObjectType.View, view.GetCreateStatement()));
         foreach (MySQLFunction func in db.Functions)
             QueryExecutor.Execute(new MySQLInsertDNDBTDbObjectRecordQuery(func, DbObjectType.Function, func.GetCreateStatement()));
         foreach (MySQLProcedure proc in db.Procedures)
             QueryExecutor.Execute(new MySQLInsertDNDBTDbObjectRecordQuery(proc, DbObjectType.Procedure, proc.GetCreateStatement()));
-
-        foreach (Script script in db.Scripts)
-            QueryExecutor.Execute(new MySQLInsertDNDBTScriptExecutionRecordQuery(script, -1));
-        QueryExecutor.Execute(new MySQLInsertDNDBTDbAttributesRecordQuery(database));
     }
 
     public override void ApplyDatabaseDiff(DatabaseDiff databaseDiff, DeployOptions options)
