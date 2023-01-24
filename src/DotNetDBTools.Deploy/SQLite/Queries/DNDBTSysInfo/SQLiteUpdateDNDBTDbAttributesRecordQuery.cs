@@ -2,14 +2,13 @@
 using System.Data;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Queries.DNDBTSysInfo;
-using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.Deploy.SQLite.Queries.DNDBTSysInfo;
 
 internal class SQLiteUpdateDNDBTDbAttributesRecordQuery : UpdateDNDBTDbAttributesRecordQuery
 {
-    public SQLiteUpdateDNDBTDbAttributesRecordQuery(Database database)
-        : base(database) { }
+    public SQLiteUpdateDNDBTDbAttributesRecordQuery(long databaseVersion)
+        : base(databaseVersion) { }
 
     protected override string GetSql()
     {
@@ -20,11 +19,11 @@ $@"UPDATE [{DNDBTSysTables.DNDBTDbAttributes}] SET
         return query;
     }
 
-    protected override List<QueryParameter> GetParameters(Database database)
+    protected override List<QueryParameter> GetParameters(long databaseVersion)
     {
         return new List<QueryParameter>
         {
-            new QueryParameter(VersionParameterName, database.Version, DbType.Int64),
+            new QueryParameter(VersionParameterName, databaseVersion, DbType.Int64),
         };
     }
 }

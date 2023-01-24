@@ -11,7 +11,7 @@ internal class PostgreSQLIndexStatementsGenerator : StatementsGenerator<PostgreS
     {
         string res =
 $@"{GetIdDeclarationText(index, 0)}CREATE{Statements.Unique(index)} INDEX ""{index.Name}""
-    ON ""{index.TableName}"" ({GetColumnsListOrExpression(index)});";
+    ON ""{index.Parent.Name}"" ({GetColumnsListOrExpression(index)});";
 
         return res;
     }

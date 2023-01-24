@@ -17,7 +17,7 @@ internal abstract class DiffCreator
 
     public abstract DatabaseDiff CreateDatabaseDiff(Database newDatabase, Database oldDatabase);
 
-    protected void BuildTablesDiff<TTableDiff, TColumnDiff>(DatabaseDiff dbDiff)
+    protected void BuildTablesDiff<TTableDiff, TColumnDiff>(DatabaseDiff dbDiff, Database newDb, Database oldDb)
         where TTableDiff : TableDiff, new()
         where TColumnDiff : ColumnDiff, new()
     {
@@ -25,7 +25,7 @@ internal abstract class DiffCreator
         List<Table> removedTables = null;
         List<TableDiff> changedTables = new();
         FillAddedAndRemovedItemsAndApplyActionToChangedItems(
-            dbDiff.NewDatabase.Tables, dbDiff.OldDatabase.Tables,
+            newDb.Tables, oldDb.Tables,
             ref addedTables, ref removedTables,
             (newTable, oldTable) =>
             {
@@ -38,11 +38,11 @@ internal abstract class DiffCreator
         dbDiff.ChangedTables = changedTables;
     }
 
-    protected void BuildViewsDiff(DatabaseDiff dbDiff)
+    protected void BuildViewsDiff(DatabaseDiff dbDiff, Database newDb, Database oldDb)
     {
         FillAddedAndRemovedItemsAndAddChangedToBoth(
-            dbDiff.NewDatabase.Views,
-            dbDiff.OldDatabase.Views,
+            newDb.Views,
+            oldDb.Views,
             out List<View> viewsToCreate,
             out List<View> viewsToDrop);
 
@@ -50,11 +50,11 @@ internal abstract class DiffCreator
         dbDiff.ViewsToDrop = viewsToDrop;
     }
 
-    protected void BuildScriptsDiff(DatabaseDiff dbDiff)
+    protected void BuildScriptsDiff(DatabaseDiff dbDiff, Database newDb, Database oldDb)
     {
         FillAddedAndRemovedItemsAndAddChangedToBoth(
-            dbDiff.NewDatabase.Scripts,
-            dbDiff.OldDatabase.Scripts,
+            newDb.Scripts,
+            oldDb.Scripts,
             out List<Script> addedScripts,
             out List<Script> removedScripts);
 
@@ -175,15 +175,15 @@ internal abstract class DiffCreator
         tableDiff.CheckConstraintsToDrop = checkConstraintsToDrop;
     }
 
-    protected void BuildIndexesDiff(DatabaseDiff dbDiff)
+    protected void BuildIndexesDiff(DatabaseDiff dbDiff, Database newDb, Database oldDb)
     {
         foreach (Table table in dbDiff.AddedTables)
             dbDiff.IndexesToCreate.AddRange(table.Indexes);
         foreach (Table table in dbDiff.RemovedTables)
             dbDiff.IndexesToDrop.AddRange(table.Indexes);
 
-        Dictionary<Guid, Table> oldDbTableIdToTableMap = dbDiff.OldDatabase.Tables.ToDictionary(x => x.ID, x => x);
-        foreach (Table table in dbDiff.NewDatabase.Tables.Except(dbDiff.AddedTables))
+        Dictionary<Guid, Table> oldDbTableIdToTableMap = oldDb.Tables.ToDictionary(x => x.ID, x => x);
+        foreach (Table table in newDb.Tables.Except(dbDiff.AddedTables))
         {
             List<Index> indexesToCreate = null;
             List<Index> indexesToDrop = null;
@@ -201,15 +201,15 @@ internal abstract class DiffCreator
         }
     }
 
-    protected void BuildTriggersDiff(DatabaseDiff dbDiff)
+    protected void BuildTriggersDiff(DatabaseDiff dbDiff, Database newDb, Database oldDb)
     {
         foreach (Table table in dbDiff.AddedTables)
             dbDiff.TriggersToCreate.AddRange(table.Triggers);
         foreach (Table table in dbDiff.RemovedTables)
             dbDiff.TriggersToDrop.AddRange(table.Triggers);
 
-        Dictionary<Guid, Table> oldDbTableIdToTableMap = dbDiff.OldDatabase.Tables.ToDictionary(x => x.ID, x => x);
-        foreach (Table table in dbDiff.NewDatabase.Tables.Except(dbDiff.AddedTables))
+        Dictionary<Guid, Table> oldDbTableIdToTableMap = oldDb.Tables.ToDictionary(x => x.ID, x => x);
+        foreach (Table table in newDb.Tables.Except(dbDiff.AddedTables))
         {
             FillAddedAndRemovedItemsAndAddChangedToBoth(
                 table.Triggers,

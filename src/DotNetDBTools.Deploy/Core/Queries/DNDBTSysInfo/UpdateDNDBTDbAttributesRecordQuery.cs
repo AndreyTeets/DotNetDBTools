@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.Deploy.Core.Queries.DNDBTSysInfo;
 
@@ -13,12 +12,12 @@ internal abstract class UpdateDNDBTDbAttributesRecordQuery : IQuery
     private readonly string _sql;
     private readonly List<QueryParameter> _parameters;
 
-    public UpdateDNDBTDbAttributesRecordQuery(Database database)
+    public UpdateDNDBTDbAttributesRecordQuery(long databaseVersion)
     {
         _sql = GetSql();
-        _parameters = GetParameters(database);
+        _parameters = GetParameters(databaseVersion);
     }
 
     protected abstract string GetSql();
-    protected abstract List<QueryParameter> GetParameters(Database database);
+    protected abstract List<QueryParameter> GetParameters(long databaseVersion);
 }

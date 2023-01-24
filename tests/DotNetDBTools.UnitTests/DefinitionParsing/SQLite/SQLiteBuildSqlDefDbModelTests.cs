@@ -117,7 +117,6 @@ public class SQLiteBuildSqlDefDbModelTests : BaseBuildSqlDefDbModelTests
                     {
                         ID = new Guid("A436AE77-B7E4-40C3-824F-BD20DC270A14"),
                         Name = "FK_Table1_Col1_Table2_Col1",
-                        ThisTableName = "Table1",
                         ThisColumnNames = new() { "Col1" },
                         ReferencedTableName = "Table2",
                         ReferencedTableColumnNames = new() { "Col1" },
@@ -128,7 +127,6 @@ public class SQLiteBuildSqlDefDbModelTests : BaseBuildSqlDefDbModelTests
                     {
                         ID = new Guid("A536AE77-B7E4-40C3-824F-BD20DC270A14"),
                         Name = "FK_Table1_Col1Col2_Table2_Col2Col4",
-                        ThisTableName = "Table1",
                         ThisColumnNames = new() { "Col1", "Col2" },
                         ReferencedTableName = "Table2",
                         ReferencedTableColumnNames = new() { "Col2", "Col4" },

@@ -10,12 +10,24 @@ using DotNetDBTools.Models.PostgreSQL.UserDefinedTypes;
 
 namespace DotNetDBTools.Analysis.PostgreSQL;
 
-internal class PostgreSQLDependenciesBuilder : IDependenciesBuilder
+internal class PostgreSQLDependenciesBuilder : DependenciesBuilder
 {
-    public void BuildDependencies(Database database)
+    public override void BuildDependencies(Database database)
     {
         PostgreSQLDatabase db = (PostgreSQLDatabase)database;
+        Build_Parent_Property_ForAllObjects(db);
         Build_DependsOn_Property_ForAllObjects(db);
+    }
+
+    private void Build_Parent_Property_ForAllObjects(PostgreSQLDatabase database)
+    {
+        foreach (PostgreSQLDomainType type in database.DomainTypes)
+        {
+            foreach (CheckConstraint ck in type.CheckConstraints)
+                ck.Parent = type;
+        }
+
+        Build_Parent_Property_ForTableChildObjects(database);
     }
 
     private void Build_DependsOn_Property_ForAllObjects(PostgreSQLDatabase database)
@@ -62,8 +74,6 @@ internal class PostgreSQLDependenciesBuilder : IDependenciesBuilder
 
                 foreach (CheckConstraint ck in type.CheckConstraints)
                 {
-                    ck.Parent = type;
-
                     List<Dependency> deps = ExecuteParsingFunc(
                         () => parser.GetExpressionDependencies(ck.Expression.Code),
                         $"Error while parsing domain type '{type.Name}' check constraint '{ck.Name}' expression");
@@ -84,8 +94,6 @@ internal class PostgreSQLDependenciesBuilder : IDependenciesBuilder
             {
                 foreach (PostgreSQLColumn column in table.Columns)
                 {
-                    column.Parent = table;
-
                     AddDependencyIfTypeIsUdt(column.DataType.DependsOn, column.DataType.Name);
 
                     if (column.Default is not null)
@@ -99,8 +107,6 @@ internal class PostgreSQLDependenciesBuilder : IDependenciesBuilder
                 }
                 foreach (CheckConstraint ck in table.CheckConstraints)
                 {
-                    ck.Parent = table;
-
                     List<Dependency> deps = ExecuteParsingFunc(
                         () => parser.GetExpressionDependencies(ck.Expression.Code),
                         $"Error while parsing table '{table.Name}' check constraint '{ck.Name}' expression");
@@ -109,8 +115,6 @@ internal class PostgreSQLDependenciesBuilder : IDependenciesBuilder
                 }
                 foreach (PostgreSQLIndex index in table.Indexes)
                 {
-                    index.Parent = table;
-
                     if (index.Expression is not null)
                     {
                         List<Dependency> deps = ExecuteParsingFunc(
@@ -122,8 +126,6 @@ internal class PostgreSQLDependenciesBuilder : IDependenciesBuilder
                 }
                 foreach (PostgreSQLTrigger trigger in table.Triggers)
                 {
-                    trigger.Parent = table;
-
                     List<Dependency> deps = ExecuteParsingFunc(
                         () => parser.GetTriggerDependencies(trigger.CreateStatement.Code),
                         $"Error while parsing trigger '{trigger.Name}' expression");

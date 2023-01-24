@@ -22,23 +22,25 @@ internal class MSSQLDiffCreator : DiffCreator
         _objectsThatRequireRedefinition.Clear();
         _objectsThatRequireDefaultRedefinition.Clear();
 
+        MSSQLDatabase newDb = (MSSQLDatabase)newDatabase;
+        MSSQLDatabase oldDb = (MSSQLDatabase)oldDatabase;
         MSSQLDatabaseDiff dbDiff = new()
         {
-            NewDatabase = newDatabase,
-            OldDatabase = oldDatabase,
+            NewDatabaseVersion = newDatabase.Version,
+            OldDatabaseVersion = oldDatabase.Version,
         };
 
-        BuildUserDefinedTypesDiff(dbDiff);
-        BuildTablesDiff<MSSQLTableDiff, MSSQLColumnDiff>(dbDiff);
-        BuildViewsDiff(dbDiff);
+        BuildUserDefinedTypesDiff(dbDiff, newDb, oldDb);
+        BuildTablesDiff<MSSQLTableDiff, MSSQLColumnDiff>(dbDiff, newDb, oldDb);
+        BuildViewsDiff(dbDiff, newDb, oldDb);
 
-        BuildIndexesDiff(dbDiff);
-        BuildTriggersDiff(dbDiff);
+        BuildIndexesDiff(dbDiff, newDb, oldDb);
+        BuildTriggersDiff(dbDiff, newDb, oldDb);
 
-        AddDiffsForUnchangedItemsIfMarkedForRedefinition(dbDiff);
-        ForeignKeysHelper.BuildUnchangedForeignKeysToRecreateBecauseOfDeps(dbDiff);
+        AddDiffsForUnchangedItemsIfMarkedForRedefinition(dbDiff, newDb);
+        ForeignKeysHelper.BuildUnchangedForeignKeysToRecreateBecauseOfDeps(dbDiff, oldDb);
 
-        BuildScriptsDiff(dbDiff);
+        BuildScriptsDiff(dbDiff, newDb, oldDb);
         return dbDiff;
     }
 
@@ -81,11 +83,11 @@ internal class MSSQLDiffCreator : DiffCreator
         MarkObjectForRedefinitionIfDepsChanged(item);
     }
 
-    private void BuildUserDefinedTypesDiff(MSSQLDatabaseDiff dbDiff)
+    private void BuildUserDefinedTypesDiff(MSSQLDatabaseDiff dbDiff, MSSQLDatabase newDb, MSSQLDatabase oldDb)
     {
         FillAddedAndRemovedItemsAndAddChangedToBoth(
-            ((MSSQLDatabase)dbDiff.NewDatabase).UserDefinedTypes,
-            ((MSSQLDatabase)dbDiff.OldDatabase).UserDefinedTypes,
+            newDb.UserDefinedTypes,
+            oldDb.UserDefinedTypes,
             out List<MSSQLUserDefinedType> addedUserDefinedTypes,
             out List<MSSQLUserDefinedType> removedUserDefinedTypes);
 
@@ -123,9 +125,8 @@ internal class MSSQLDiffCreator : DiffCreator
         }
     }
 
-    private void AddDiffsForUnchangedItemsIfMarkedForRedefinition(MSSQLDatabaseDiff dbDiff)
+    private void AddDiffsForUnchangedItemsIfMarkedForRedefinition(MSSQLDatabaseDiff dbDiff, MSSQLDatabase newDb)
     {
-        MSSQLDatabase newDb = (MSSQLDatabase)dbDiff.NewDatabase;
         AddForTableObjects();
 
         void AddForTableObjects()

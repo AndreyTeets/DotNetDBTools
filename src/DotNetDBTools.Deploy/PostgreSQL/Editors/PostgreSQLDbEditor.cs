@@ -105,8 +105,8 @@ internal class PostgreSQLDbEditor : DbEditor<
 
         _scriptsExecutor.ExecuteScripts(dbDiff, ScriptKind.AfterPublishOnce);
 
-        if (dbDiff.NewDatabase.Version != dbDiff.OldDatabase.Version)
-            QueryExecutor.Execute(new PostgreSQLUpdateDNDBTDbAttributesRecordQuery(dbDiff.NewDatabase));
+        if (dbDiff.NewDatabaseVersion != dbDiff.OldDatabaseVersion)
+            QueryExecutor.Execute(new PostgreSQLUpdateDNDBTDbAttributesRecordQuery(dbDiff.NewDatabaseVersion));
     }
 
     private void InsertUserDefinedTypesInfos(PostgreSQLDatabase db)

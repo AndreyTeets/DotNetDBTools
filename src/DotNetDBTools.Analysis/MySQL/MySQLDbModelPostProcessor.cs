@@ -47,7 +47,6 @@ internal class MySQLDbModelPostProcessor : DbModelPostProcessor
                 {
                     ID = uc.ID,
                     Name = uc.Name,
-                    TableName = table.Name,
                     Columns = uc.Columns,
                     Unique = true,
                 };

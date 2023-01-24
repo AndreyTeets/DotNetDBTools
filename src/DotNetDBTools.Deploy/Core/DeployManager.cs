@@ -304,7 +304,7 @@ public abstract class DeployManager<TDatabase> : IDeployManager
         }
 
         if (!Options.AllowUnchangedDbVersionForNonEmptyDbDiff &&
-            !_analysisManager.DiffIsEmpty(dbDiff) && dbDiff.NewDatabase.Version == dbDiff.OldDatabase.Version)
+            !_analysisManager.DiffIsEmpty(dbDiff) && dbDiff.NewDatabaseVersion == dbDiff.OldDatabaseVersion)
         {
             throw new Exception(
 "New and old databases are different but their versions are the same. This check can be disabled in DeployOptions.");

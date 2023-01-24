@@ -43,7 +43,6 @@ WHERE thisTable.name NOT IN ({DNDBTSysTables.AllTablesForInClause});";
             {
                 ID = Guid.NewGuid(),
                 Name = fkr.ForeignKeyName,
-                ThisTableName = fkr.ThisTableName,
                 ReferencedTableName = fkr.ReferencedTableName,
                 OnUpdate = MapUpdateActionName(fkr.OnUpdate),
                 OnDelete = MapUpdateActionName(fkr.OnDelete),

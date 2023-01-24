@@ -3,9 +3,15 @@ using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.Analysis.MySQL;
 
-internal class MySQLDependenciesBuilder : IDependenciesBuilder
+internal class MySQLDependenciesBuilder : DependenciesBuilder
 {
-    public void BuildDependencies(Database database)
+    public override void BuildDependencies(Database database)
     {
+        Build_Parent_Property_ForAllObjects(database);
+    }
+
+    private void Build_Parent_Property_ForAllObjects(Database database)
+    {
+        Build_Parent_Property_ForTableChildObjects(database);
     }
 }

@@ -73,7 +73,7 @@ public class DNDBTModelsEqualityComparerTests
         _comparer.Equals(dbDiff1, dbDiff2).Should().BeFalse();
 
         DatabaseDiff dbDiff3 = _analysisManager.CreateDatabaseDiff(databaseV1, databaseV2);
-        dbDiff3.NewDatabase = databaseV2;
+        dbDiff3.NewDatabaseVersion++;
         _comparer.Equals(dbDiff1, dbDiff3).Should().BeFalse();
 
         dbDiff3 = _analysisManager.CreateDatabaseDiff(databaseV1, databaseV2);
@@ -244,7 +244,6 @@ Values [DotNetDBTools.Models.Core.PrimaryKey] and [DotNetDBTools.Models.Core.Pri
                 {
                     ID = new Guid("65C65B34-E769-4826-8F06-B8E83BF7D06A"),
                     Name = "IDX_T1_1",
-                    TableName = "T1",
                     Columns = new List<string>() { "C1" },
                     IncludeColumns = null,
                     Unique = true,
@@ -257,7 +256,6 @@ Values [DotNetDBTools.Models.Core.PrimaryKey] and [DotNetDBTools.Models.Core.Pri
                 {
                     ID = new Guid("D23109D4-CB94-40B2-BDB2-BC6292F4A5FA"),
                     Name = "FK_T1_1",
-                    ThisTableName = "T1",
                     ThisColumnNames = new List<string>() { "C1", "C2" },
                     ReferencedTableName = "T2",
                     ReferencedTableColumnNames = new List<string>() { "C1", "C2" },

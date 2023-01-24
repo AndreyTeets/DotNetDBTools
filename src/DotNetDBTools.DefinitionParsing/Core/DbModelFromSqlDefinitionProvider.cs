@@ -241,7 +241,6 @@ internal abstract class DbModelFromSqlDefinitionProvider<
             {
                 ID = fk.ID.Value,
                 Name = fk.Name,
-                ThisTableName = table.Name,
                 ThisColumnNames = fk.Columns,
                 ReferencedTableName = fk.RefTable,
                 ReferencedTableColumnNames = fk.RefColumns,
@@ -265,7 +264,6 @@ internal abstract class DbModelFromSqlDefinitionProvider<
             {
                 ID = index.ID.Value,
                 Name = index.Name,
-                TableName = index.Table,
                 Columns = index.Columns,
                 Unique = index.Unique,
             };
@@ -285,7 +283,6 @@ internal abstract class DbModelFromSqlDefinitionProvider<
             {
                 ID = trigger.ID.Value,
                 Name = trigger.Name,
-                TableName = trigger.Table,
                 CreateStatement = new CodePiece { Code = trigger.CreateStatement.NormalizeLineEndings() },
             };
             BuildAdditionalTriggerModelProperties(triggerModel, trigger);

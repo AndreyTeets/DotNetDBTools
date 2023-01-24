@@ -9,5 +9,5 @@ internal class MSSQLCreateForeignKeyQuery : CreateForeignKeyQuery
     public MSSQLCreateForeignKeyQuery(ForeignKey fk)
         : base(fk) { }
 
-    protected override string GetSql(ForeignKey fk) => GetSqlBase<MSSQLTable, MSSQLTableDiff>(fk);
+    protected override string GetSql(ForeignKey fk) => GetSqlBase<MSSQLTableDiff>(fk);
 }

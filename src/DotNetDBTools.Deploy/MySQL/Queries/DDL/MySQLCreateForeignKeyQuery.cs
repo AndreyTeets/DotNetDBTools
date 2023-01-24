@@ -9,5 +9,5 @@ internal class MySQLCreateForeignKeyQuery : CreateForeignKeyQuery
     public MySQLCreateForeignKeyQuery(ForeignKey fk)
         : base(fk) { }
 
-    protected override string GetSql(ForeignKey fk) => GetSqlBase<MySQLTable, MySQLTableDiff>(fk);
+    protected override string GetSql(ForeignKey fk) => GetSqlBase<MySQLTableDiff>(fk);
 }

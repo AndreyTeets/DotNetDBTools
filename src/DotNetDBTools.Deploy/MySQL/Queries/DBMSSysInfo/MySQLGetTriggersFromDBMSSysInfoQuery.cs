@@ -30,7 +30,6 @@ WHERE t.TRIGGER_SCHEMA = (select DATABASE());";
             {
                 ID = Guid.NewGuid(),
                 Name = triggerRecord.TriggerName,
-                TableName = triggerRecord.TableName,
                 CreateStatement = new CodePiece { Code = triggerRecord.TriggerCode.NormalizeLineEndings() },
             };
         }

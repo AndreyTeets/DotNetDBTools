@@ -30,7 +30,6 @@ WHERE t.type = 'TR'
             {
                 ID = Guid.NewGuid(),
                 Name = triggerRecord.TriggerName,
-                TableName = triggerRecord.TableName,
                 CreateStatement = new CodePiece { Code = triggerRecord.TriggerCode.NormalizeLineEndings() },
             };
         }

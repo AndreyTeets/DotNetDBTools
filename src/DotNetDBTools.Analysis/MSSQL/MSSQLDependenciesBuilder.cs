@@ -5,12 +5,18 @@ using DotNetDBTools.Models.MSSQL;
 
 namespace DotNetDBTools.Analysis.MSSQL;
 
-internal class MSSQLDependenciesBuilder : IDependenciesBuilder
+internal class MSSQLDependenciesBuilder : DependenciesBuilder
 {
-    public void BuildDependencies(Database database)
+    public override void BuildDependencies(Database database)
     {
         MSSQLDatabase db = (MSSQLDatabase)database;
+        Build_Parent_Property_ForAllObjects(database);
         Build_DependsOn_Property_ForAllObjects(db);
+    }
+
+    private void Build_Parent_Property_ForAllObjects(Database database)
+    {
+        Build_Parent_Property_ForTableChildObjects(database);
     }
 
     private void Build_DependsOn_Property_ForAllObjects(MSSQLDatabase database)

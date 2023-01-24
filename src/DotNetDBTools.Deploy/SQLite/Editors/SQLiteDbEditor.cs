@@ -85,8 +85,8 @@ internal class SQLiteDbEditor : DbEditor<
 
         _scriptExecutor.ExecuteScripts(dbDiff, ScriptKind.AfterPublishOnce);
 
-        if (dbDiff.NewDatabase.Version != dbDiff.OldDatabase.Version)
-            QueryExecutor.Execute(new SQLiteUpdateDNDBTDbAttributesRecordQuery(dbDiff.NewDatabase));
+        if (dbDiff.NewDatabaseVersion != dbDiff.OldDatabaseVersion)
+            QueryExecutor.Execute(new SQLiteUpdateDNDBTDbAttributesRecordQuery(dbDiff.NewDatabaseVersion));
     }
 
     private void CreateView(SQLiteView view)

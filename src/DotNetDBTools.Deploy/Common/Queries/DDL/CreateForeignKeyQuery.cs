@@ -17,16 +17,14 @@ internal abstract class CreateForeignKeyQuery : NoParametersQuery
 
     protected abstract string GetSql(ForeignKey fk);
 
-    protected string GetSqlBase<TTable, TTableDiff>(ForeignKey fk)
-        where TTable : Table, new()
+    protected string GetSqlBase<TTableDiff>(ForeignKey fk)
         where TTableDiff : TableDiff, new()
     {
-        TTable table = new() { Name = fk.ThisTableName };
         TTableDiff tableDiff = new()
         {
-            TableID = table.ID,
-            NewTableName = table.Name,
-            OldTableName = table.Name,
+            TableID = fk.Parent.ID,
+            NewTableName = fk.Parent.Name,
+            OldTableName = fk.Parent.Name,
             ForeignKeysToCreate = new List<ForeignKey>() { fk },
         };
         return GenerationManager.GenerateSqlAlterStatement(tableDiff);

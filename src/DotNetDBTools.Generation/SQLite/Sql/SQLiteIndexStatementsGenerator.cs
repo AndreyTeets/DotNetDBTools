@@ -11,7 +11,7 @@ internal class SQLiteIndexStatementsGenerator : StatementsGenerator<SQLiteIndex>
     {
         string res =
 $@"{GetIdDeclarationText(index, 0)}CREATE{Statements.Unique(index)} INDEX [{index.Name}]
-    ON [{index.TableName}] ({string.Join(", ", index.Columns.Select(x => $@"[{x}]"))});";
+    ON [{index.Parent.Name}] ({string.Join(", ", index.Columns.Select(x => $@"[{x}]"))});";
 
         return res;
     }

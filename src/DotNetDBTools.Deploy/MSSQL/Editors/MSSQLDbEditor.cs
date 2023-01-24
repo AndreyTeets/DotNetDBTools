@@ -128,8 +128,8 @@ internal class MSSQLDbEditor : DbEditor<
 
         _scriptExecutor.ExecuteScripts(dbDiff, ScriptKind.AfterPublishOnce);
 
-        if (dbDiff.NewDatabase.Version != dbDiff.OldDatabase.Version)
-            QueryExecutor.Execute(new MSSQLUpdateDNDBTDbAttributesRecordQuery(dbDiff.NewDatabase));
+        if (dbDiff.NewDatabaseVersion != dbDiff.OldDatabaseVersion)
+            QueryExecutor.Execute(new MSSQLUpdateDNDBTDbAttributesRecordQuery(dbDiff.NewDatabaseVersion));
     }
 
     private void RenameUserDefinedTypeToTemp(MSSQLUserDefinedType udt)

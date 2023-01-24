@@ -4,8 +4,8 @@ namespace DotNetDBTools.Models.Core;
 
 public abstract class DatabaseDiff
 {
-    public Database NewDatabase { get; set; }
-    public Database OldDatabase { get; set; }
+    public long NewDatabaseVersion { get; set; }
+    public long OldDatabaseVersion { get; set; }
 
     public List<Table> AddedTables { get; set; } = new();
     public List<Table> RemovedTables { get; set; } = new();

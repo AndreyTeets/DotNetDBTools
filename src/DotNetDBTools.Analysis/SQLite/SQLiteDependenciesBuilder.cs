@@ -3,9 +3,15 @@ using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.Analysis.SQLite;
 
-internal class SQLiteDependenciesBuilder : IDependenciesBuilder
+internal class SQLiteDependenciesBuilder : DependenciesBuilder
 {
-    public void BuildDependencies(Database database)
+    public override void BuildDependencies(Database database)
     {
+        Build_Parent_Property_ForAllObjects(database);
+    }
+
+    private void Build_Parent_Property_ForAllObjects(Database database)
+    {
+        Build_Parent_Property_ForTableChildObjects(database);
     }
 }

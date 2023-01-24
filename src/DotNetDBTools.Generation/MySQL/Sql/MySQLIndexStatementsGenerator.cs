@@ -11,14 +11,14 @@ internal class MySQLIndexStatementsGenerator : StatementsGenerator<MySQLIndex>
     {
         string res =
 $@"{GetIdDeclarationText(index, 0)}CREATE{Statements.Unique(index)} INDEX `{index.Name}`
-    ON `{index.TableName}` ({string.Join(", ", index.Columns.Select(x => $@"`{x}`"))});";
+    ON `{index.Parent.Name}` ({string.Join(", ", index.Columns.Select(x => $@"`{x}`"))});";
 
         return res;
     }
 
     protected override string GetDropSqlImpl(MySQLIndex index)
     {
-        return $"DROP INDEX `{index.Name}` ON `{index.TableName}`;";
+        return $"DROP INDEX `{index.Name}` ON `{index.Parent.Name}`;";
     }
 
     private static class Statements

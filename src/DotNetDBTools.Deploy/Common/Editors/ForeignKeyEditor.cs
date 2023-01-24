@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using DotNetDBTools.Deploy.Common.Queries.DDL;
 using DotNetDBTools.Deploy.Core;
@@ -29,9 +28,8 @@ internal abstract class ForeignKeyEditor<
 
     public void CreateForeignKeys(DatabaseDiff dbDiff)
     {
-        Dictionary<Guid, Table> fkToTableMap = CreateFKToTableMap(dbDiff.NewDatabase.Tables);
         foreach (ForeignKey fk in GetAllForeignKeysToCreate(dbDiff))
-            CreateForeignKey(fk, fkToTableMap[fk.ID]);
+            CreateForeignKey(fk);
     }
 
     public void DropForeignKeys(DatabaseDiff dbDiff)
@@ -62,26 +60,15 @@ internal abstract class ForeignKeyEditor<
         return allForeignKeysToDrop;
     }
 
-    private void CreateForeignKey(ForeignKey fk, Table table)
+    private void CreateForeignKey(ForeignKey fk)
     {
         _queryExecutor.Execute(Create<TCreateForeignKeyQuery>(fk));
-        _queryExecutor.Execute(Create<TInsertDNDBTDbObjectRecordQuery>(fk.ID, table.ID, DbObjectType.ForeignKey, fk.Name));
+        _queryExecutor.Execute(Create<TInsertDNDBTDbObjectRecordQuery>(fk.ID, fk.Parent.ID, DbObjectType.ForeignKey, fk.Name));
     }
 
     private void DropForeignKey(ForeignKey fk)
     {
         _queryExecutor.Execute(Create<TDropForeignKeyQuery>(fk));
         _queryExecutor.Execute(Create<TDeleteDNDBTDbObjectRecordQuery>(fk.ID));
-    }
-
-    private static Dictionary<Guid, Table> CreateFKToTableMap(IEnumerable<Table> tables)
-    {
-        Dictionary<Guid, Table> fkToTableMap = new();
-        foreach (Table table in tables)
-        {
-            foreach (ForeignKey fk in table.ForeignKeys)
-                fkToTableMap.Add(fk.ID, table);
-        }
-        return fkToTableMap;
     }
 }

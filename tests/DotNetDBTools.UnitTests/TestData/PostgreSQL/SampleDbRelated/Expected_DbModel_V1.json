@@ -1,5 +1,5 @@
 {
-  "$id": "85C46732F463011E",
+  "$id": "A76DCA7809269FF5",
   "Sequences": [
     {
       "$id": "DbObject { ID: 'f54a1a93-8cd2-4125-aede-b38cc7f8a750', Name: 'MySequence1' }",
@@ -323,7 +323,9 @@
         ],
         "ID": "37a45def-f4a0-4be7-8bfb-8fbed4a7d705",
         "Name": "PK_MyTable1",
-        "Parent": null
+        "Parent": {
+          "$ref": "DbObject { ID: '299675e6-4faa-4d0f-a36a-224306ba5bcb', Name: 'MyTable1' }"
+        }
       },
       "UniqueConstraints": [
         {
@@ -333,7 +335,9 @@
           ],
           "ID": "f3f08522-26ee-4950-9135-22edf2e4e0cf",
           "Name": "UQ_MyTable1_MyColumn4",
-          "Parent": null
+          "Parent": {
+            "$ref": "DbObject { ID: '299675e6-4faa-4d0f-a36a-224306ba5bcb', Name: 'MyTable1' }"
+          }
         }
       ],
       "CheckConstraints": [
@@ -354,7 +358,6 @@
       "ForeignKeys": [
         {
           "$id": "DbObject { ID: 'd11b2a53-32db-432f-bb6b-f91788844ba9', Name: 'FK_MyTable1_MyColumn1_MyTable2_MyColumn1' }",
-          "ThisTableName": "MyTable1",
           "ThisColumnNames": [
             "MyColumn1"
           ],
@@ -366,7 +369,9 @@
           "OnDelete": "CASCADE",
           "ID": "d11b2a53-32db-432f-bb6b-f91788844ba9",
           "Name": "FK_MyTable1_MyColumn1_MyTable2_MyColumn1",
-          "Parent": null
+          "Parent": {
+            "$ref": "DbObject { ID: '299675e6-4faa-4d0f-a36a-224306ba5bcb', Name: 'MyTable1' }"
+          }
         }
       ],
       "Indexes": [],
@@ -431,7 +436,9 @@
         ],
         "ID": "3a43615b-40b3-4a13-99e7-93af7c56e8ce",
         "Name": "PK_MyTable2_CustomName",
-        "Parent": null
+        "Parent": {
+          "$ref": "DbObject { ID: 'bfb9030c-a8c3-4882-9c42-1c6ad025cf8f', Name: 'MyTable2' }"
+        }
       },
       "UniqueConstraints": [],
       "CheckConstraints": [],
@@ -440,7 +447,6 @@
         {
           "$id": "DbObject { ID: '74390b3c-bc39-4860-a42e-12baa400f927', Name: 'IDX_MyTable2_MyIndex1' }",
           "Expression": null,
-          "TableName": "MyTable2",
           "Columns": [
             "MyColumn1",
             "MyColumn2"
@@ -457,7 +463,6 @@
       "Triggers": [
         {
           "$id": "DbObject { ID: 'ee64ffc3-5536-4624-beaf-bc3a61d06a1a', Name: 'TR_MyTable2_MyTrigger1' }",
-          "TableName": "MyTable2",
           "CreateStatement": {
             "$id": "CA9618E28D247020",
             "Code": "CREATE TRIGGER \"TR_MyTable2_MyTrigger1\"\nAFTER INSERT\nON \"MyTable2\"\nFOR EACH ROW\nEXECUTE FUNCTION \"TR_MyTable2_MyTrigger1_Handler\"()",
@@ -532,7 +537,9 @@
         ],
         "ID": "53ad5415-7fea-4a51-bcae-65e349a2e477",
         "Name": "PK_MyTable4",
-        "Parent": null
+        "Parent": {
+          "$ref": "DbObject { ID: 'b12a6a37-7739-48e0-a9e1-499ae7d2a395', Name: 'MyTable4' }"
+        }
       },
       "UniqueConstraints": [],
       "CheckConstraints": [],
@@ -1694,7 +1701,9 @@
         ],
         "ID": "79384d48-a39b-4a22-900e-066b2ca67ba2",
         "Name": "PK_MyTable5_CustomName",
-        "Parent": null
+        "Parent": {
+          "$ref": "DbObject { ID: '6ca51f29-c1bc-4349-b9c1-6f1ea170f162', Name: 'MyTable5' }"
+        }
       },
       "UniqueConstraints": [
         {
@@ -1706,7 +1715,9 @@
           ],
           "ID": "5293b58a-9f63-4f0f-8d6f-18416ebbd751",
           "Name": "UQ_MyTable5_CustomName",
-          "Parent": null
+          "Parent": {
+            "$ref": "DbObject { ID: '6ca51f29-c1bc-4349-b9c1-6f1ea170f162', Name: 'MyTable5' }"
+          }
         }
       ],
       "CheckConstraints": [],
@@ -1715,7 +1726,6 @@
         {
           "$id": "DbObject { ID: '1d632285-9914-4c5d-98e6-a618a99bd799', Name: 'IDX_MyTable5_CustomName' }",
           "Expression": null,
-          "TableName": "MyTable5",
           "Columns": [
             "MyColumn8"
           ],
@@ -1780,7 +1790,6 @@
       "ForeignKeys": [
         {
           "$id": "DbObject { ID: 'ae453b22-d270-41fc-8184-9ac26b7a0569', Name: 'FK_MyTable6_MyTable5_CustomName' }",
-          "ThisTableName": "MyTable6",
           "ThisColumnNames": [
             "MyColumn1",
             "MyColumn2"
@@ -1794,7 +1803,9 @@
           "OnDelete": "NO ACTION",
           "ID": "ae453b22-d270-41fc-8184-9ac26b7a0569",
           "Name": "FK_MyTable6_MyTable5_CustomName",
-          "Parent": null
+          "Parent": {
+            "$ref": "DbObject { ID: 'f3064a8c-346a-4b3d-af2c-d967b39841e4', Name: 'MyTable6' }"
+          }
         }
       ],
       "Indexes": [],

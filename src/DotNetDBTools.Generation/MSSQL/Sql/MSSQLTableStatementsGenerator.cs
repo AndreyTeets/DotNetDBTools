@@ -209,11 +209,11 @@ ALTER TABLE [{tableName}] DROP CONSTRAINT [{ck.Name}];"
 
         public static string AddForeignKey(ForeignKey fk) =>
 $@"
-ALTER TABLE [{fk.ThisTableName}] ADD {DefForeignKey(fk)};"
+ALTER TABLE [{fk.Parent.Name}] ADD {DefForeignKey(fk)};"
             ;
         public static string DropForeignKey(ForeignKey fk) =>
 $@"
-ALTER TABLE [{fk.ThisTableName}] DROP CONSTRAINT [{fk.Name}];"
+ALTER TABLE [{fk.Parent.Name}] DROP CONSTRAINT [{fk.Name}];"
             ;
 
         private static string Identity(Column c) =>

@@ -11,17 +11,17 @@ internal class MySQLDiffCreator : DiffCreator
     {
         MySQLDatabaseDiff dbDiff = new()
         {
-            NewDatabase = newDatabase,
-            OldDatabase = oldDatabase,
+            NewDatabaseVersion = newDatabase.Version,
+            OldDatabaseVersion = oldDatabase.Version,
         };
 
-        BuildTablesDiff<MySQLTableDiff, MySQLColumnDiff>(dbDiff);
-        BuildViewsDiff(dbDiff);
-        BuildIndexesDiff(dbDiff);
-        BuildTriggersDiff(dbDiff);
-        ForeignKeysHelper.BuildUnchangedForeignKeysToRecreateBecauseOfDeps(dbDiff);
+        BuildTablesDiff<MySQLTableDiff, MySQLColumnDiff>(dbDiff, newDatabase, oldDatabase);
+        BuildViewsDiff(dbDiff, newDatabase, oldDatabase);
+        BuildIndexesDiff(dbDiff, newDatabase, oldDatabase);
+        BuildTriggersDiff(dbDiff, newDatabase, oldDatabase);
+        ForeignKeysHelper.BuildUnchangedForeignKeysToRecreateBecauseOfDeps(dbDiff, oldDatabase);
 
-        BuildScriptsDiff(dbDiff);
+        BuildScriptsDiff(dbDiff, newDatabase, oldDatabase);
         return dbDiff;
     }
 

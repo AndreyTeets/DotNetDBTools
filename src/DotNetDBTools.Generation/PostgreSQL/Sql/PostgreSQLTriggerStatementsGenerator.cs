@@ -16,6 +16,6 @@ $@"{GetIdDeclarationText(trigger, 0)}{trigger.GetCreateStatement()}";
 
     protected override string GetDropSqlImpl(PostgreSQLTrigger trigger)
     {
-        return $@"DROP TRIGGER ""{trigger.Name}"" ON ""{trigger.TableName}"";";
+        return $@"DROP TRIGGER ""{trigger.Name}"" ON ""{trigger.Parent.Name}"";";
     }
 }

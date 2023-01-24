@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using DotNetDBTools.Deploy.Core.Queries.DDL;
+﻿using DotNetDBTools.Deploy.Core.Queries.DDL;
 using DotNetDBTools.Deploy.Core.Queries.DNDBTSysInfo;
 using DotNetDBTools.Models.Core;
 using static DotNetDBTools.Deploy.Core.InstanceCreator;
@@ -23,9 +21,8 @@ internal abstract class IndexEditor<
 
     public void CreateIndexes(DatabaseDiff dbDiff)
     {
-        Dictionary<Guid, Table> indexToTableMap = CreateIndexToTableMap(dbDiff.NewDatabase.Tables);
         foreach (Index index in dbDiff.IndexesToCreate)
-            CreateIndex(index, indexToTableMap[index.ID]);
+            CreateIndex(index);
     }
 
     public void DropIndexes(DatabaseDiff dbDiff)
@@ -34,26 +31,15 @@ internal abstract class IndexEditor<
             DropIndex(index);
     }
 
-    private void CreateIndex(Index index, Table table)
+    private void CreateIndex(Index index)
     {
         _queryExecutor.Execute(new CreateIndexQuery(index));
-        _queryExecutor.Execute(Create<TInsertDNDBTDbObjectRecordQuery>(index.ID, table.ID, DbObjectType.Index, index.Name));
+        _queryExecutor.Execute(Create<TInsertDNDBTDbObjectRecordQuery>(index.ID, index.Parent.ID, DbObjectType.Index, index.Name));
     }
 
     private void DropIndex(Index index)
     {
         _queryExecutor.Execute(new DropIndexQuery(index));
         _queryExecutor.Execute(Create<TDeleteDNDBTDbObjectRecordQuery>(index.ID));
-    }
-
-    private static Dictionary<Guid, Table> CreateIndexToTableMap(IEnumerable<Table> tables)
-    {
-        Dictionary<Guid, Table> indexToTableMap = new();
-        foreach (Table table in tables)
-        {
-            foreach (Index index in table.Indexes)
-                indexToTableMap.Add(index.ID, table);
-        }
-        return indexToTableMap;
     }
 }

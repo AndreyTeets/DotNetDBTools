@@ -129,7 +129,6 @@ internal abstract class DbModelConverter<
             {
                 ID = index.ID,
                 Name = index.Name,
-                TableName = index.TableName,
                 Columns = index.Columns,
                 IncludeColumns = index.IncludeColumns,
                 Unique = index.Unique,
@@ -148,7 +147,6 @@ internal abstract class DbModelConverter<
             {
                 ID = trigger.ID,
                 Name = trigger.Name,
-                TableName = trigger.TableName,
                 CreateStatement = ConvertCodePiece(trigger.CreateStatement),
             };
             specificDbmsTriggers.Add(specificDbmsTrigger);

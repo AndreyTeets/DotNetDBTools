@@ -7,12 +7,12 @@ namespace DotNetDBTools.Analysis.Common;
 
 internal static class ForeignKeysHelper
 {
-    public static void BuildUnchangedForeignKeysToRecreateBecauseOfDeps(DatabaseDiff dbDiff)
+    public static void BuildUnchangedForeignKeysToRecreateBecauseOfDeps(DatabaseDiff dbDiff, Database oldDb)
     {
         HashSet<ForeignKey> changedForeignKeysToCreate = GetChangedForeignKeysToCreate(dbDiff);
         HashSet<ForeignKey> changedForeignKeysToDrop = GetChangedForeignKeysToDrop(dbDiff);
 
-        HashSet<ForeignKey> allForeignKeysToDrop = GetAllForeignKeysToDrop(dbDiff, changedForeignKeysToDrop);
+        HashSet<ForeignKey> allForeignKeysToDrop = GetAllForeignKeysToDrop(dbDiff, oldDb, changedForeignKeysToDrop);
 
         HashSet<ForeignKey> unchangedForeignKeysToRecreateBecauseOfDeps = new(allForeignKeysToDrop);
         unchangedForeignKeysToRecreateBecauseOfDeps.ExceptWith(changedForeignKeysToDrop);
@@ -42,10 +42,11 @@ internal static class ForeignKeysHelper
 
     private static HashSet<ForeignKey> GetAllForeignKeysToDrop(
         DatabaseDiff dbDiff,
+        Database oldDb,
         HashSet<ForeignKey> foreignKeysToDrop)
     {
-        HashSet<Guid> columnsChangedOrReferencedByChangedObjects = GetColumnsChangedOrReferencedByChangedObjects(dbDiff);
-        Dictionary<Guid, HashSet<ForeignKey>> colIDToReferencingFKMap = CreateColIDToReferencingFKMap(dbDiff.OldDatabase.Tables);
+        HashSet<Guid> columnsChangedOrReferencedByChangedObjects = GetColumnsChangedOrReferencedByChangedObjects(dbDiff, oldDb);
+        Dictionary<Guid, HashSet<ForeignKey>> colIDToReferencingFKMap = CreateColIDToReferencingFKMap(oldDb.Tables);
 
         HashSet<ForeignKey> allForeignKeysToDrop = new(foreignKeysToDrop);
         foreach (Guid columnID in columnsChangedOrReferencedByChangedObjects)
@@ -53,13 +54,13 @@ internal static class ForeignKeysHelper
         return allForeignKeysToDrop;
     }
 
-    private static HashSet<Guid> GetColumnsChangedOrReferencedByChangedObjects(DatabaseDiff dbDiff)
+    private static HashSet<Guid> GetColumnsChangedOrReferencedByChangedObjects(DatabaseDiff dbDiff, Database oldDb)
     {
         HashSet<Guid> columnsChangedOrReferencedByChangedObjects = new();
         foreach (IEnumerable<Column> removedTableColumns in dbDiff.RemovedTables.Select(t => t.Columns))
             columnsChangedOrReferencedByChangedObjects.UnionWith(removedTableColumns.Select(c => c.ID));
 
-        Dictionary<Guid, Table> oldDbTables = dbDiff.OldDatabase.Tables.ToDictionary(x => x.ID, x => x);
+        Dictionary<Guid, Table> oldDbTables = oldDb.Tables.ToDictionary(x => x.ID, x => x);
         foreach (TableDiff tableDiff in dbDiff.ChangedTables)
         {
             columnsChangedOrReferencedByChangedObjects.UnionWith(tableDiff.ColumnsToDrop.Select(c => c.ID));

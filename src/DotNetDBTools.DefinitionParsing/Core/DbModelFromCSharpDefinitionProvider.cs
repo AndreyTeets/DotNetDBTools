@@ -221,7 +221,6 @@ internal abstract class DbModelFromCSharpDefinitionProvider<
                 {
                     ID = fk.DNDBT_OBJECT_ID,
                     Name = x.Name,
-                    ThisTableName = table.GetType().Name,
                     ThisColumnNames = fk.ThisColumns.ToList(),
                     ReferencedTableName = fk.ReferencedTable,
                     ReferencedTableColumnNames = fk.ReferencedTableColumns.ToList(),
@@ -262,7 +261,6 @@ internal abstract class DbModelFromCSharpDefinitionProvider<
                 {
                     ID = index.DNDBT_OBJECT_ID,
                     Name = x.Name,
-                    TableName = table.GetType().Name,
                     Columns = index.Columns.ToList(),
                     Unique = index.Unique,
                 };
@@ -285,7 +283,6 @@ internal abstract class DbModelFromCSharpDefinitionProvider<
                 {
                     ID = trigger.DNDBT_OBJECT_ID,
                     Name = x.Name,
-                    TableName = table.GetType().Name,
                     CreateStatement = DbObjectCodeMapper.MapToCodePiece(trigger),
                 };
                 BuildAdditionalTriggerModelProperties(triggerModel, trigger);

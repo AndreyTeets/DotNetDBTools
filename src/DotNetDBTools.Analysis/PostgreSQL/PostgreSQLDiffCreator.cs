@@ -29,25 +29,27 @@ internal class PostgreSQLDiffCreator : DiffCreator
         _domainTypesThatHaveTableColumnTransitivelyDependingOnItThroughComplexType.Clear();
         FillDomainTypesThatHaveTableColumnTransitivelyDependingOnItThroughComplexType(newDatabase);
 
+        PostgreSQLDatabase newDb = (PostgreSQLDatabase)newDatabase;
+        PostgreSQLDatabase oldDb = (PostgreSQLDatabase)oldDatabase;
         PostgreSQLDatabaseDiff dbDiff = new()
         {
-            NewDatabase = newDatabase,
-            OldDatabase = oldDatabase,
+            NewDatabaseVersion = newDatabase.Version,
+            OldDatabaseVersion = oldDatabase.Version,
         };
 
-        BuildSequencesDiff(dbDiff);
-        BuildTypesDiff(dbDiff);
-        BuildTablesDiff<PostgreSQLTableDiff, PostgreSQLColumnDiff>(dbDiff);
-        BuildProgrammableObjectsDiff(dbDiff);
+        BuildSequencesDiff(dbDiff, newDb, oldDb);
+        BuildTypesDiff(dbDiff, newDb, oldDb);
+        BuildTablesDiff<PostgreSQLTableDiff, PostgreSQLColumnDiff>(dbDiff, newDb, oldDb);
+        BuildProgrammableObjectsDiff(dbDiff, newDb, oldDb);
 
-        BuildIndexesDiff(dbDiff);
-        BuildTriggersDiff(dbDiff);
-        Mark_Defaults_CKs_Indexes_Triggers_ForRedefinitionIfDepsChanged(dbDiff);
+        BuildIndexesDiff(dbDiff, newDb, oldDb);
+        BuildTriggersDiff(dbDiff, newDb, oldDb);
+        Mark_Defaults_CKs_Indexes_Triggers_ForRedefinitionIfDepsChanged(newDb);
 
-        AddDiffsForUnchangedItemsIfMarkedForRedefinition(dbDiff);
-        ForeignKeysHelper.BuildUnchangedForeignKeysToRecreateBecauseOfDeps(dbDiff);
+        AddDiffsForUnchangedItemsIfMarkedForRedefinition(dbDiff, newDb);
+        ForeignKeysHelper.BuildUnchangedForeignKeysToRecreateBecauseOfDeps(dbDiff, oldDb);
 
-        BuildScriptsDiff(dbDiff);
+        BuildScriptsDiff(dbDiff, newDb, oldDb);
         return dbDiff;
     }
 
@@ -116,13 +118,14 @@ internal class PostgreSQLDiffCreator : DiffCreator
         }
     }
 
-    private void BuildSequencesDiff(PostgreSQLDatabaseDiff dbDiff)
+    private void BuildSequencesDiff(PostgreSQLDatabaseDiff dbDiff, PostgreSQLDatabase newDb, PostgreSQLDatabase oldDb)
     {
         List<PostgreSQLSequence> addedSequences = null;
         List<PostgreSQLSequence> removedSequences = null;
         List<PostgreSQLSequenceDiff> changedSequences = new();
         FillAddedAndRemovedItemsAndApplyActionToChangedItems(
-            ((PostgreSQLDatabase)dbDiff.NewDatabase).Sequences, ((PostgreSQLDatabase)dbDiff.OldDatabase).Sequences,
+            newDb.Sequences,
+            oldDb.Sequences,
             ref addedSequences, ref removedSequences,
             (newSequence, oldSequence) =>
             {
@@ -145,14 +148,14 @@ internal class PostgreSQLDiffCreator : DiffCreator
         dbDiff.SequencesToAlter = changedSequences;
     }
 
-    private void BuildTypesDiff(PostgreSQLDatabaseDiff dbDiff)
+    private void BuildTypesDiff(PostgreSQLDatabaseDiff dbDiff, PostgreSQLDatabase newDb, PostgreSQLDatabase oldDb)
     {
         List<DbObject> objectsToCreate = null;
         List<DbObject> objectsToDrop = null;
         List<object> objectsToAlter = new();
         FillAddedAndRemovedItemsAndApplyActionToChangedItems(
-            GetObjectsOrderedByDependencies((PostgreSQLDatabase)dbDiff.NewDatabase),
-            GetObjectsOrderedByDependencies((PostgreSQLDatabase)dbDiff.OldDatabase),
+            GetObjectsOrderedByDependencies(newDb),
+            GetObjectsOrderedByDependencies(oldDb),
             ref objectsToCreate,
             ref objectsToDrop,
             (newObject, oldObject) =>
@@ -217,11 +220,11 @@ internal class PostgreSQLDiffCreator : DiffCreator
         }
     }
 
-    private void BuildProgrammableObjectsDiff(PostgreSQLDatabaseDiff dbDiff)
+    private void BuildProgrammableObjectsDiff(PostgreSQLDatabaseDiff dbDiff, PostgreSQLDatabase newDb, PostgreSQLDatabase oldDb)
     {
         FillAddedAndRemovedItemsAndAddChangedToBoth(
-            GetObjectsOrderedByDependencies((PostgreSQLDatabase)dbDiff.NewDatabase),
-            GetObjectsOrderedByDependencies((PostgreSQLDatabase)dbDiff.OldDatabase),
+            GetObjectsOrderedByDependencies(newDb),
+            GetObjectsOrderedByDependencies(oldDb),
             out List<DbObject> objectsToCreate,
             out List<DbObject> objectsToDrop);
 
@@ -287,9 +290,8 @@ internal class PostgreSQLDiffCreator : DiffCreator
         }
     }
 
-    private void Mark_Defaults_CKs_Indexes_Triggers_ForRedefinitionIfDepsChanged(PostgreSQLDatabaseDiff dbDiff)
+    private void Mark_Defaults_CKs_Indexes_Triggers_ForRedefinitionIfDepsChanged(PostgreSQLDatabase newDb)
     {
-        PostgreSQLDatabase newDb = (PostgreSQLDatabase)dbDiff.NewDatabase;
         foreach (PostgreSQLDomainType type in newDb.DomainTypes)
         {
             if (DependencyRequiresDefaultRedefinition(type))
@@ -310,9 +312,8 @@ internal class PostgreSQLDiffCreator : DiffCreator
         }
     }
 
-    private void AddDiffsForUnchangedItemsIfMarkedForRedefinition(PostgreSQLDatabaseDiff dbDiff)
+    private void AddDiffsForUnchangedItemsIfMarkedForRedefinition(PostgreSQLDatabaseDiff dbDiff, PostgreSQLDatabase newDb)
     {
-        PostgreSQLDatabase newDb = (PostgreSQLDatabase)dbDiff.NewDatabase;
         AddForTypes();
         AddForTableObjects();
         AddForProgrammableObjects();

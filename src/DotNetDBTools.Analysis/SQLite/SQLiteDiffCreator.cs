@@ -10,16 +10,16 @@ internal class SQLiteDiffCreator : DiffCreator
     {
         SQLiteDatabaseDiff dbDiff = new()
         {
-            NewDatabase = newDatabase,
-            OldDatabase = oldDatabase,
+            NewDatabaseVersion = newDatabase.Version,
+            OldDatabaseVersion = oldDatabase.Version,
         };
 
-        BuildTablesDiff<SQLiteTableDiff, ColumnDiff>(dbDiff);
-        BuildIndexesDiff(dbDiff);
-        BuildTriggersDiff(dbDiff);
+        BuildTablesDiff<SQLiteTableDiff, ColumnDiff>(dbDiff, newDatabase, oldDatabase);
+        BuildIndexesDiff(dbDiff, newDatabase, oldDatabase);
+        BuildTriggersDiff(dbDiff, newDatabase, oldDatabase);
 
-        BuildViewsDiff(dbDiff);
-        BuildScriptsDiff(dbDiff);
+        BuildViewsDiff(dbDiff, newDatabase, oldDatabase);
+        BuildScriptsDiff(dbDiff, newDatabase, oldDatabase);
         return dbDiff;
     }
 

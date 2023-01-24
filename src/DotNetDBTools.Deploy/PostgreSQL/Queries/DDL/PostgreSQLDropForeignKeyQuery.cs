@@ -9,5 +9,5 @@ internal class PostgreSQLDropForeignKeyQuery : DropForeignKeyQuery
     public PostgreSQLDropForeignKeyQuery(ForeignKey fk)
         : base(fk) { }
 
-    protected override string GetSql(ForeignKey fk) => GetSqlBase<PostgreSQLTable, PostgreSQLTableDiff>(fk);
+    protected override string GetSql(ForeignKey fk) => GetSqlBase<PostgreSQLTableDiff>(fk);
 }

@@ -106,8 +106,8 @@ internal class MySQLDbEditor : DbEditor<
 
         _scriptExecutor.ExecuteScripts(dbDiff, ScriptKind.AfterPublishOnce);
 
-        if (dbDiff.NewDatabase.Version != dbDiff.OldDatabase.Version)
-            QueryExecutor.Execute(new MySQLUpdateDNDBTDbAttributesRecordQuery(dbDiff.NewDatabase));
+        if (dbDiff.NewDatabaseVersion != dbDiff.OldDatabaseVersion)
+            QueryExecutor.Execute(new MySQLUpdateDNDBTDbAttributesRecordQuery(dbDiff.NewDatabaseVersion));
     }
 
     private void CreateFunction(MySQLFunction func)
