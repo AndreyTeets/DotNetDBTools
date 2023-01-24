@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Queries.DNDBTSysInfo;
+using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.Deploy.SQLite.Queries.DNDBTSysInfo;
 
@@ -10,13 +10,14 @@ internal class SQLiteInsertDNDBTDbObjectRecordQuery : InsertDNDBTDbObjectRecordQ
 {
     private const string IDParameterName = "@ID";
     private const string ParentIDParameterName = "@ParentID";
+    private const string TypeParameterName = "@Type";
     private const string NameParameterName = "@Name";
     private const string CodeParameterName = "@Code";
 
-    public SQLiteInsertDNDBTDbObjectRecordQuery(Guid objectID, Guid? parentObjectID, DbObjectType objectType, string objectName, string objectCode = null)
-        : base(objectID, parentObjectID, objectType, objectName, objectCode) { }
+    public SQLiteInsertDNDBTDbObjectRecordQuery(DbObject dbObject, DbObjectType objectType, string objectCode = null)
+        : base(dbObject, objectType, objectCode) { }
 
-    protected override string GetSql(DbObjectType objectType)
+    protected override string GetSql()
     {
         string query =
 $@"INSERT INTO [{DNDBTSysTables.DNDBTDbObjects}]
@@ -31,7 +32,7 @@ VALUES
 (
     {IDParameterName},
     {ParentIDParameterName},
-    '{objectType}',
+    {TypeParameterName},
     {NameParameterName},
     {CodeParameterName}
 );";
@@ -39,13 +40,14 @@ VALUES
         return query;
     }
 
-    protected override List<QueryParameter> GetParameters(Guid objectID, Guid? parentObjectID, string objectName, string objectCode)
+    protected override List<QueryParameter> GetParameters(DbObject dbObject, DbObjectType objectType, string objectCode)
     {
         return new List<QueryParameter>
         {
-            new QueryParameter(IDParameterName, objectID.ToString(), DbType.String),
-            new QueryParameter(ParentIDParameterName, parentObjectID?.ToString(), DbType.String),
-            new QueryParameter(NameParameterName, objectName, DbType.String),
+            new QueryParameter(IDParameterName, dbObject.ID.ToString(), DbType.String),
+            new QueryParameter(ParentIDParameterName, dbObject.Parent?.ID.ToString(), DbType.String),
+            new QueryParameter(TypeParameterName, objectType.ToString(), DbType.String),
+            new QueryParameter(NameParameterName, dbObject.Name, DbType.String),
             new QueryParameter(CodeParameterName, objectCode, DbType.String),
         };
     }

@@ -80,7 +80,7 @@ internal class PostgreSQLSequencesEditor
         PostgreSQLSequence sequenceWithoutOwner = sequence.CopyModel();
         sequenceWithoutOwner.OwnedBy = (null, null);
         QueryExecutor.Execute(new PostgreSQLCreateSequenceQuery(sequenceWithoutOwner));
-        QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(sequence.ID, null, DbObjectType.Sequence, sequence.Name));
+        QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(sequence, DbObjectType.Sequence));
     }
 
     private void Drop_RenamedToTemp_Sequence(PostgreSQLSequence sequence)

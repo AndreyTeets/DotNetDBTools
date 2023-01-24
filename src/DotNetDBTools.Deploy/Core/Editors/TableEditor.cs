@@ -49,16 +49,16 @@ internal abstract class TableEditor<
     protected virtual void CreateTable(Table table)
     {
         QueryExecutor.Execute(Create<TCreateTableQuery>(table));
-        QueryExecutor.Execute(Create<TInsertDNDBTDbObjectRecordQuery>(table.ID, null, DbObjectType.Table, table.Name));
+        QueryExecutor.Execute(Create<TInsertDNDBTDbObjectRecordQuery>(table, DbObjectType.Table));
         foreach (Column c in table.Columns)
-            QueryExecutor.Execute(Create<TInsertDNDBTDbObjectRecordQuery>(c.ID, table.ID, DbObjectType.Column, c.Name, c.GetDefault()));
+            QueryExecutor.Execute(Create<TInsertDNDBTDbObjectRecordQuery>(c, DbObjectType.Column, c.GetDefault()));
         PrimaryKey pk = table.PrimaryKey;
         if (pk is not null)
-            QueryExecutor.Execute(Create<TInsertDNDBTDbObjectRecordQuery>(pk.ID, table.ID, DbObjectType.PrimaryKey, pk.Name));
+            QueryExecutor.Execute(Create<TInsertDNDBTDbObjectRecordQuery>(pk, DbObjectType.PrimaryKey));
         foreach (UniqueConstraint uc in table.UniqueConstraints)
-            QueryExecutor.Execute(Create<TInsertDNDBTDbObjectRecordQuery>(uc.ID, table.ID, DbObjectType.UniqueConstraint, uc.Name));
+            QueryExecutor.Execute(Create<TInsertDNDBTDbObjectRecordQuery>(uc, DbObjectType.UniqueConstraint));
         foreach (CheckConstraint ck in table.CheckConstraints)
-            QueryExecutor.Execute(Create<TInsertDNDBTDbObjectRecordQuery>(ck.ID, table.ID, DbObjectType.CheckConstraint, ck.Name, ck.GetExpression()));
+            QueryExecutor.Execute(Create<TInsertDNDBTDbObjectRecordQuery>(ck, DbObjectType.CheckConstraint, ck.GetExpression()));
     }
 
     protected virtual void DropTable(Table table)
@@ -103,14 +103,14 @@ internal abstract class TableEditor<
         }
 
         foreach (Column c in tableDiff.ColumnsToAdd)
-            QueryExecutor.Execute(Create<TInsertDNDBTDbObjectRecordQuery>(c.ID, tableID, DbObjectType.Column, c.Name, c.GetDefault()));
+            QueryExecutor.Execute(Create<TInsertDNDBTDbObjectRecordQuery>(c, DbObjectType.Column, c.GetDefault()));
         PrimaryKey pk = tableDiff.PrimaryKeyToCreate;
         if (pk is not null)
-            QueryExecutor.Execute(Create<TInsertDNDBTDbObjectRecordQuery>(pk.ID, tableID, DbObjectType.PrimaryKey, pk.Name));
+            QueryExecutor.Execute(Create<TInsertDNDBTDbObjectRecordQuery>(pk, DbObjectType.PrimaryKey));
         foreach (UniqueConstraint uc in tableDiff.UniqueConstraintsToCreate)
-            QueryExecutor.Execute(Create<TInsertDNDBTDbObjectRecordQuery>(uc.ID, tableID, DbObjectType.UniqueConstraint, uc.Name));
+            QueryExecutor.Execute(Create<TInsertDNDBTDbObjectRecordQuery>(uc, DbObjectType.UniqueConstraint));
         foreach (CheckConstraint ck in tableDiff.CheckConstraintsToCreate)
-            QueryExecutor.Execute(Create<TInsertDNDBTDbObjectRecordQuery>(ck.ID, tableID, DbObjectType.CheckConstraint, ck.Name, ck.GetExpression()));
+            QueryExecutor.Execute(Create<TInsertDNDBTDbObjectRecordQuery>(ck, DbObjectType.CheckConstraint, ck.GetExpression()));
 
         static bool DefaultCodeChanged(ColumnDiff cDiff)
         {

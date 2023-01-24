@@ -125,7 +125,7 @@ internal class PostgreSQLProgrammableObjectsEditor
     private void CreateView(PostgreSQLView view)
     {
         QueryExecutor.Execute(new CreateViewQuery(view));
-        QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(view.ID, null, DbObjectType.View, view.Name, view.GetCreateStatement()));
+        QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(view, DbObjectType.View, view.GetCreateStatement()));
     }
 
     private void DropView(PostgreSQLView view)
@@ -136,7 +136,7 @@ internal class PostgreSQLProgrammableObjectsEditor
     private void CreateFunction(PostgreSQLFunction func)
     {
         QueryExecutor.Execute(new PostgreSQLCreateFunctionQuery(func));
-        QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(func.ID, null, DbObjectType.Function, func.Name, func.GetCreateStatement()));
+        QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(func, DbObjectType.Function, func.GetCreateStatement()));
     }
 
     private void DropFunction(PostgreSQLFunction func)
@@ -147,7 +147,7 @@ internal class PostgreSQLProgrammableObjectsEditor
     private void CreateProcedure(PostgreSQLProcedure proc)
     {
         QueryExecutor.Execute(new GenericQuery($"{proc.GetCreateStatement()}"));
-        QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(proc.ID, null, DbObjectType.Procedure, proc.Name, proc.GetCreateStatement()));
+        QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(proc, DbObjectType.Procedure, proc.GetCreateStatement()));
     }
 
     private void DropProcedure(PostgreSQLProcedure proc)

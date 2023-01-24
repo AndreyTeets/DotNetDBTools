@@ -20,7 +20,7 @@ internal class SQLiteTableEditor : TableEditor<
     {
         base.CreateTable(table);
         foreach (ForeignKey fk in table.ForeignKeys)
-            QueryExecutor.Execute(new SQLiteInsertDNDBTDbObjectRecordQuery(fk.ID, table.ID, DbObjectType.ForeignKey, fk.Name));
+            QueryExecutor.Execute(new SQLiteInsertDNDBTDbObjectRecordQuery(fk, DbObjectType.ForeignKey));
     }
 
     protected override void DropTable(Table table)
@@ -38,6 +38,6 @@ internal class SQLiteTableEditor : TableEditor<
             QueryExecutor.Execute(new SQLiteDeleteDNDBTDbObjectRecordQuery(fk.ID));
 
         foreach (ForeignKey fk in tableDiff.ForeignKeysToCreate)
-            QueryExecutor.Execute(new SQLiteInsertDNDBTDbObjectRecordQuery(fk.ID, tableDiff.TableID, DbObjectType.ForeignKey, fk.Name));
+            QueryExecutor.Execute(new SQLiteInsertDNDBTDbObjectRecordQuery(fk, DbObjectType.ForeignKey));
     }
 }

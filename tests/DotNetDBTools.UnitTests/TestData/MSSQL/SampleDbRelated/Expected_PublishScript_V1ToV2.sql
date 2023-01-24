@@ -149,7 +149,7 @@ VALUES
 (
     N''0cd1e71c-cc9c-440f-ac0b-81a1d6f7ddaa'',
     NULL,
-    ''UserDefinedType'',
+    N''UserDefinedType'',
     N''MyUserDefinedType1'',
     NULL
 );';
@@ -223,7 +223,7 @@ VALUES
 (
     N''eb9c59b5-bc7e-49d7-adaa-f5600b6a19a2'',
     N''299675e6-4faa-4d0f-a36a-224306ba5bcb'',
-    ''CheckConstraint'',
+    N''CheckConstraint'',
     N''CK_MyTable1_MyCheck1'',
     N''MyColumn4 >= 1''
 );';
@@ -273,7 +273,7 @@ VALUES
 (
     N''c2df19c2-e029-4014-8a5b-4ab42fecb6b8'',
     N''bfb9030c-a8c3-4882-9c42-1c6ad025cf8f'',
-    ''Column'',
+    N''Column'',
     N''MyColumn2'',
     N''0x000408''
 );';
@@ -292,7 +292,7 @@ VALUES
 (
     N''99bc3f49-3151-4f52-87f7-104b424ed7bf'',
     N''bfb9030c-a8c3-4882-9c42-1c6ad025cf8f'',
-    ''Column'',
+    N''Column'',
     N''MyColumn3'',
     NULL
 );';
@@ -311,7 +311,7 @@ VALUES
 (
     N''87950a3f-2072-42db-ac3c-a4e85b79720d'',
     N''bfb9030c-a8c3-4882-9c42-1c6ad025cf8f'',
-    ''Column'',
+    N''Column'',
     N''MyColumn4'',
     NULL
 );';
@@ -330,7 +330,7 @@ VALUES
 (
     N''3a43615b-40b3-4a13-99e7-93af7c56e8ce'',
     N''bfb9030c-a8c3-4882-9c42-1c6ad025cf8f'',
-    ''PrimaryKey'',
+    N''PrimaryKey'',
     N''PK_MyTable2_CustomName'',
     NULL
 );';
@@ -389,7 +389,7 @@ VALUES
 (
     N''474cd761-2522-4529-9d20-2b94115f9626'',
     NULL,
-    ''Table'',
+    N''Table'',
     N''MyTable3'',
     NULL
 );';
@@ -408,7 +408,7 @@ VALUES
 (
     N''726f503a-d944-46ee-a0ff-6a2c2faab46e'',
     N''474cd761-2522-4529-9d20-2b94115f9626'',
-    ''Column'',
+    N''Column'',
     N''MyColumn1'',
     N''444''
 );';
@@ -427,7 +427,7 @@ VALUES
 (
     N''169824e1-8b74-4b60-af17-99656d6dbbee'',
     N''474cd761-2522-4529-9d20-2b94115f9626'',
-    ''Column'',
+    N''Column'',
     N''MyColumn2'',
     NULL
 );';
@@ -446,7 +446,7 @@ VALUES
 (
     N''fd288e38-35ba-4bb1-ace3-597c99ef26c7'',
     N''474cd761-2522-4529-9d20-2b94115f9626'',
-    ''UniqueConstraint'',
+    N''UniqueConstraint'',
     N''UQ_MyTable3_MyColumns12'',
     NULL
 );';
@@ -476,7 +476,7 @@ VALUES
 (
     N''e2569aae-d5da-4a77-b3cd-51adbdb272d9'',
     NULL,
-    ''View'',
+    N''View'',
     N''MyView1'',
     N''CREATE VIEW MyView1 AS
 SELECT
@@ -507,7 +507,7 @@ VALUES
 (
     N''74390b3c-bc39-4860-a42e-12baa400f927'',
     N''bfb9030c-a8c3-4882-9c42-1c6ad025cf8f'',
-    ''Index'',
+    N''Index'',
     N''IDX_MyTable2_MyIndex1'',
     NULL
 );';
@@ -532,7 +532,7 @@ VALUES
 (
     N''d11b2a53-32db-432f-bb6b-f91788844ba9'',
     N''299675e6-4faa-4d0f-a36a-224306ba5bcb'',
-    ''ForeignKey'',
+    N''ForeignKey'',
     N''FK_MyTable1_MyColumn1_MyTable2_MyColumn1'',
     NULL
 );';
@@ -557,7 +557,7 @@ VALUES
 (
     N''480f3508-9d51-4190-88aa-45bc20e49119'',
     N''bfb9030c-a8c3-4882-9c42-1c6ad025cf8f'',
-    ''ForeignKey'',
+    N''ForeignKey'',
     N''FK_MyTable2_MyColumns34_MyTable3_MyColumns12'',
     NULL
 );';
@@ -587,7 +587,7 @@ VALUES
 (
     N''ee64ffc3-5536-4624-beaf-bc3a61d06a1a'',
     N''bfb9030c-a8c3-4882-9c42-1c6ad025cf8f'',
-    ''Trigger'',
+    N''Trigger'',
     N''TR_MyTable2_MyTrigger1'',
     N''CREATE TRIGGER [TR_MyTable2_MyTrigger1]
 ON [MyTable2]

@@ -39,34 +39,34 @@ internal class MSSQLDbEditor : DbEditor<
     {
         MSSQLDatabase db = (MSSQLDatabase)database;
         foreach (MSSQLUserDefinedType udt in db.UserDefinedTypes)
-            QueryExecutor.Execute(new MSSQLInsertDNDBTDbObjectRecordQuery(udt.ID, null, DbObjectType.UserDefinedType, udt.Name));
+            QueryExecutor.Execute(new MSSQLInsertDNDBTDbObjectRecordQuery(udt, DbObjectType.UserDefinedType));
         foreach (MSSQLTable table in db.Tables)
         {
-            QueryExecutor.Execute(new MSSQLInsertDNDBTDbObjectRecordQuery(table.ID, null, DbObjectType.Table, table.Name));
+            QueryExecutor.Execute(new MSSQLInsertDNDBTDbObjectRecordQuery(table, DbObjectType.Table));
             foreach (Column c in table.Columns)
-                QueryExecutor.Execute(new MSSQLInsertDNDBTDbObjectRecordQuery(c.ID, table.ID, DbObjectType.Column, c.Name, c.GetDefault()));
+                QueryExecutor.Execute(new MSSQLInsertDNDBTDbObjectRecordQuery(c, DbObjectType.Column, c.GetDefault()));
             PrimaryKey pk = table.PrimaryKey;
             if (pk is not null)
-                QueryExecutor.Execute(new MSSQLInsertDNDBTDbObjectRecordQuery(pk.ID, table.ID, DbObjectType.PrimaryKey, pk.Name));
+                QueryExecutor.Execute(new MSSQLInsertDNDBTDbObjectRecordQuery(pk, DbObjectType.PrimaryKey));
             foreach (UniqueConstraint uc in table.UniqueConstraints)
-                QueryExecutor.Execute(new MSSQLInsertDNDBTDbObjectRecordQuery(uc.ID, table.ID, DbObjectType.UniqueConstraint, uc.Name));
+                QueryExecutor.Execute(new MSSQLInsertDNDBTDbObjectRecordQuery(uc, DbObjectType.UniqueConstraint));
             foreach (CheckConstraint ck in table.CheckConstraints)
-                QueryExecutor.Execute(new MSSQLInsertDNDBTDbObjectRecordQuery(ck.ID, table.ID, DbObjectType.CheckConstraint, ck.Name, ck.GetExpression()));
+                QueryExecutor.Execute(new MSSQLInsertDNDBTDbObjectRecordQuery(ck, DbObjectType.CheckConstraint, ck.GetExpression()));
             foreach (Index idx in table.Indexes)
-                QueryExecutor.Execute(new MSSQLInsertDNDBTDbObjectRecordQuery(idx.ID, table.ID, DbObjectType.Index, idx.Name));
+                QueryExecutor.Execute(new MSSQLInsertDNDBTDbObjectRecordQuery(idx, DbObjectType.Index));
             foreach (Trigger trg in table.Triggers)
-                QueryExecutor.Execute(new MSSQLInsertDNDBTDbObjectRecordQuery(trg.ID, table.ID, DbObjectType.Trigger, trg.Name, trg.GetCreateStatement()));
+                QueryExecutor.Execute(new MSSQLInsertDNDBTDbObjectRecordQuery(trg, DbObjectType.Trigger, trg.GetCreateStatement()));
             foreach (ForeignKey fk in table.ForeignKeys)
-                QueryExecutor.Execute(new MSSQLInsertDNDBTDbObjectRecordQuery(fk.ID, table.ID, DbObjectType.ForeignKey, fk.Name));
+                QueryExecutor.Execute(new MSSQLInsertDNDBTDbObjectRecordQuery(fk, DbObjectType.ForeignKey));
         }
         foreach (MSSQLUserDefinedTableType udtt in db.UserDefinedTableTypes)
-            QueryExecutor.Execute(new MSSQLInsertDNDBTDbObjectRecordQuery(udtt.ID, null, DbObjectType.UserDefinedTableType, udtt.Name));
+            QueryExecutor.Execute(new MSSQLInsertDNDBTDbObjectRecordQuery(udtt, DbObjectType.UserDefinedTableType));
         foreach (MSSQLView view in db.Views)
-            QueryExecutor.Execute(new MSSQLInsertDNDBTDbObjectRecordQuery(view.ID, null, DbObjectType.View, view.Name, view.GetCreateStatement()));
+            QueryExecutor.Execute(new MSSQLInsertDNDBTDbObjectRecordQuery(view, DbObjectType.View, view.GetCreateStatement()));
         foreach (MSSQLFunction func in db.Functions)
-            QueryExecutor.Execute(new MSSQLInsertDNDBTDbObjectRecordQuery(func.ID, null, DbObjectType.Function, func.Name, func.GetCreateStatement()));
+            QueryExecutor.Execute(new MSSQLInsertDNDBTDbObjectRecordQuery(func, DbObjectType.Function, func.GetCreateStatement()));
         foreach (MSSQLProcedure proc in db.Procedures)
-            QueryExecutor.Execute(new MSSQLInsertDNDBTDbObjectRecordQuery(proc.ID, null, DbObjectType.Procedure, proc.Name, proc.GetCreateStatement()));
+            QueryExecutor.Execute(new MSSQLInsertDNDBTDbObjectRecordQuery(proc, DbObjectType.Procedure, proc.GetCreateStatement()));
 
         foreach (Script script in db.Scripts)
             QueryExecutor.Execute(new MSSQLInsertDNDBTScriptExecutionRecordQuery(script, -1));
@@ -141,7 +141,7 @@ internal class MSSQLDbEditor : DbEditor<
     private void CreateUserDefinedType(MSSQLUserDefinedType udt)
     {
         QueryExecutor.Execute(new MSSQLCreateTypeQuery(udt));
-        QueryExecutor.Execute(new MSSQLInsertDNDBTDbObjectRecordQuery(udt.ID, null, DbObjectType.UserDefinedType, udt.Name));
+        QueryExecutor.Execute(new MSSQLInsertDNDBTDbObjectRecordQuery(udt, DbObjectType.UserDefinedType));
     }
 
     private void Drop_RenamedToTemp_UserDefinedType(MSSQLUserDefinedType udt)
@@ -154,7 +154,7 @@ internal class MSSQLDbEditor : DbEditor<
     private void CreateUserDefinedTableType(MSSQLUserDefinedTableType udtt)
     {
         //QueryExecutor.Execute(new CreateTableQuery(udtt));
-        QueryExecutor.Execute(new MSSQLInsertDNDBTDbObjectRecordQuery(udtt.ID, null, DbObjectType.UserDefinedTableType, udtt.Name));
+        QueryExecutor.Execute(new MSSQLInsertDNDBTDbObjectRecordQuery(udtt, DbObjectType.UserDefinedTableType));
     }
 
     private void DropUserDefinedTableType(MSSQLUserDefinedTableType udtt)
@@ -166,7 +166,7 @@ internal class MSSQLDbEditor : DbEditor<
     private void CreateFunction(MSSQLFunction func)
     {
         QueryExecutor.Execute(new GenericQuery($"{func.GetCreateStatement()}"));
-        QueryExecutor.Execute(new MSSQLInsertDNDBTDbObjectRecordQuery(func.ID, null, DbObjectType.Function, func.Name, func.GetCreateStatement()));
+        QueryExecutor.Execute(new MSSQLInsertDNDBTDbObjectRecordQuery(func, DbObjectType.Function, func.GetCreateStatement()));
     }
 
     private void DropFunction(MSSQLFunction func)
@@ -178,7 +178,7 @@ internal class MSSQLDbEditor : DbEditor<
     private void CreateView(MSSQLView view)
     {
         QueryExecutor.Execute(new CreateViewQuery(view));
-        QueryExecutor.Execute(new MSSQLInsertDNDBTDbObjectRecordQuery(view.ID, null, DbObjectType.View, view.Name, view.GetCreateStatement()));
+        QueryExecutor.Execute(new MSSQLInsertDNDBTDbObjectRecordQuery(view, DbObjectType.View, view.GetCreateStatement()));
     }
 
     private void DropView(MSSQLView view)
@@ -190,7 +190,7 @@ internal class MSSQLDbEditor : DbEditor<
     private void CreateProcedure(MSSQLProcedure proc)
     {
         QueryExecutor.Execute(new GenericQuery($"{proc.GetCreateStatement()}"));
-        QueryExecutor.Execute(new MSSQLInsertDNDBTDbObjectRecordQuery(proc.ID, null, DbObjectType.Procedure, proc.Name, proc.GetCreateStatement()));
+        QueryExecutor.Execute(new MSSQLInsertDNDBTDbObjectRecordQuery(proc, DbObjectType.Procedure, proc.GetCreateStatement()));
     }
 
     private void DropProcedure(MSSQLProcedure proc)

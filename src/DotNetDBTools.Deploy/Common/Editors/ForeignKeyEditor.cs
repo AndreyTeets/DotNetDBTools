@@ -63,7 +63,7 @@ internal abstract class ForeignKeyEditor<
     private void CreateForeignKey(ForeignKey fk)
     {
         _queryExecutor.Execute(Create<TCreateForeignKeyQuery>(fk));
-        _queryExecutor.Execute(Create<TInsertDNDBTDbObjectRecordQuery>(fk.ID, fk.Parent.ID, DbObjectType.ForeignKey, fk.Name));
+        _queryExecutor.Execute(Create<TInsertDNDBTDbObjectRecordQuery>(fk, DbObjectType.ForeignKey));
     }
 
     private void DropForeignKey(ForeignKey fk)

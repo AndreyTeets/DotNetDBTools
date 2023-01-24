@@ -32,25 +32,25 @@ internal class SQLiteDbEditor : DbEditor<
         SQLiteDatabase db = (SQLiteDatabase)database;
         foreach (SQLiteTable table in db.Tables)
         {
-            QueryExecutor.Execute(new SQLiteInsertDNDBTDbObjectRecordQuery(table.ID, null, DbObjectType.Table, table.Name));
+            QueryExecutor.Execute(new SQLiteInsertDNDBTDbObjectRecordQuery(table, DbObjectType.Table));
             foreach (Column c in table.Columns)
-                QueryExecutor.Execute(new SQLiteInsertDNDBTDbObjectRecordQuery(c.ID, table.ID, DbObjectType.Column, c.Name, c.GetDefault()));
+                QueryExecutor.Execute(new SQLiteInsertDNDBTDbObjectRecordQuery(c, DbObjectType.Column, c.GetDefault()));
             PrimaryKey pk = table.PrimaryKey;
             if (pk is not null)
-                QueryExecutor.Execute(new SQLiteInsertDNDBTDbObjectRecordQuery(pk.ID, table.ID, DbObjectType.PrimaryKey, pk.Name));
+                QueryExecutor.Execute(new SQLiteInsertDNDBTDbObjectRecordQuery(pk, DbObjectType.PrimaryKey));
             foreach (UniqueConstraint uc in table.UniqueConstraints)
-                QueryExecutor.Execute(new SQLiteInsertDNDBTDbObjectRecordQuery(uc.ID, table.ID, DbObjectType.UniqueConstraint, uc.Name));
+                QueryExecutor.Execute(new SQLiteInsertDNDBTDbObjectRecordQuery(uc, DbObjectType.UniqueConstraint));
             foreach (CheckConstraint ck in table.CheckConstraints)
-                QueryExecutor.Execute(new SQLiteInsertDNDBTDbObjectRecordQuery(ck.ID, table.ID, DbObjectType.CheckConstraint, ck.Name, ck.GetExpression()));
+                QueryExecutor.Execute(new SQLiteInsertDNDBTDbObjectRecordQuery(ck, DbObjectType.CheckConstraint, ck.GetExpression()));
             foreach (Index idx in table.Indexes)
-                QueryExecutor.Execute(new SQLiteInsertDNDBTDbObjectRecordQuery(idx.ID, table.ID, DbObjectType.Index, idx.Name));
+                QueryExecutor.Execute(new SQLiteInsertDNDBTDbObjectRecordQuery(idx, DbObjectType.Index));
             foreach (Trigger trg in table.Triggers)
-                QueryExecutor.Execute(new SQLiteInsertDNDBTDbObjectRecordQuery(trg.ID, table.ID, DbObjectType.Trigger, trg.Name, trg.GetCreateStatement()));
+                QueryExecutor.Execute(new SQLiteInsertDNDBTDbObjectRecordQuery(trg, DbObjectType.Trigger, trg.GetCreateStatement()));
             foreach (ForeignKey fk in table.ForeignKeys)
-                QueryExecutor.Execute(new SQLiteInsertDNDBTDbObjectRecordQuery(fk.ID, table.ID, DbObjectType.ForeignKey, fk.Name));
+                QueryExecutor.Execute(new SQLiteInsertDNDBTDbObjectRecordQuery(fk, DbObjectType.ForeignKey));
         }
         foreach (SQLiteView view in db.Views)
-            QueryExecutor.Execute(new SQLiteInsertDNDBTDbObjectRecordQuery(view.ID, null, DbObjectType.View, view.Name, view.GetCreateStatement()));
+            QueryExecutor.Execute(new SQLiteInsertDNDBTDbObjectRecordQuery(view, DbObjectType.View, view.GetCreateStatement()));
 
         foreach (Script script in db.Scripts)
             QueryExecutor.Execute(new SQLiteInsertDNDBTScriptExecutionRecordQuery(script, -1));
@@ -92,7 +92,7 @@ internal class SQLiteDbEditor : DbEditor<
     private void CreateView(SQLiteView view)
     {
         QueryExecutor.Execute(new CreateViewQuery(view));
-        QueryExecutor.Execute(new SQLiteInsertDNDBTDbObjectRecordQuery(view.ID, null, DbObjectType.View, view.Name, view.GetCreateStatement()));
+        QueryExecutor.Execute(new SQLiteInsertDNDBTDbObjectRecordQuery(view, DbObjectType.View, view.GetCreateStatement()));
     }
 
     private void DropView(SQLiteView view)

@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.Deploy.Core.Queries.DNDBTSysInfo;
 
@@ -11,12 +11,12 @@ internal abstract class InsertDNDBTDbObjectRecordQuery : IQuery
     private readonly string _sql;
     private readonly List<QueryParameter> _parameters;
 
-    public InsertDNDBTDbObjectRecordQuery(Guid objectID, Guid? parentObjectID, DbObjectType objectType, string objectName, string objectCode)
+    public InsertDNDBTDbObjectRecordQuery(DbObject dbObject, DbObjectType objectType, string objectCode)
     {
-        _sql = GetSql(objectType);
-        _parameters = GetParameters(objectID, parentObjectID, objectName, objectCode);
+        _sql = GetSql();
+        _parameters = GetParameters(dbObject, objectType, objectCode);
     }
 
-    protected abstract string GetSql(DbObjectType objectType);
-    protected abstract List<QueryParameter> GetParameters(Guid objectID, Guid? parentObjectID, string objectName, string objectCode);
+    protected abstract string GetSql();
+    protected abstract List<QueryParameter> GetParameters(DbObject dbObject, DbObjectType objectType, string objectCode);
 }

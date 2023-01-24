@@ -37,30 +37,30 @@ internal class MySQLDbEditor : DbEditor<
         MySQLDatabase db = (MySQLDatabase)database;
         foreach (MySQLTable table in db.Tables)
         {
-            QueryExecutor.Execute(new MySQLInsertDNDBTDbObjectRecordQuery(table.ID, null, DbObjectType.Table, table.Name));
+            QueryExecutor.Execute(new MySQLInsertDNDBTDbObjectRecordQuery(table, DbObjectType.Table));
             foreach (Column c in table.Columns)
-                QueryExecutor.Execute(new MySQLInsertDNDBTDbObjectRecordQuery(c.ID, table.ID, DbObjectType.Column, c.Name, c.GetDefault()));
+                QueryExecutor.Execute(new MySQLInsertDNDBTDbObjectRecordQuery(c, DbObjectType.Column, c.GetDefault()));
             PrimaryKey pk = table.PrimaryKey;
             if (pk is not null)
-                QueryExecutor.Execute(new MySQLInsertDNDBTDbObjectRecordQuery(pk.ID, table.ID, DbObjectType.PrimaryKey, pk.Name));
+                QueryExecutor.Execute(new MySQLInsertDNDBTDbObjectRecordQuery(pk, DbObjectType.PrimaryKey));
             foreach (UniqueConstraint uc in table.UniqueConstraints)
-                QueryExecutor.Execute(new MySQLInsertDNDBTDbObjectRecordQuery(uc.ID, table.ID, DbObjectType.UniqueConstraint, uc.Name));
+                QueryExecutor.Execute(new MySQLInsertDNDBTDbObjectRecordQuery(uc, DbObjectType.UniqueConstraint));
             foreach (CheckConstraint ck in table.CheckConstraints)
-                QueryExecutor.Execute(new MySQLInsertDNDBTDbObjectRecordQuery(ck.ID, table.ID, DbObjectType.CheckConstraint, ck.Name, ck.GetExpression()));
+                QueryExecutor.Execute(new MySQLInsertDNDBTDbObjectRecordQuery(ck, DbObjectType.CheckConstraint, ck.GetExpression()));
             foreach (Index idx in table.Indexes)
-                QueryExecutor.Execute(new MySQLInsertDNDBTDbObjectRecordQuery(idx.ID, table.ID, DbObjectType.Index, idx.Name));
+                QueryExecutor.Execute(new MySQLInsertDNDBTDbObjectRecordQuery(idx, DbObjectType.Index));
             foreach (Trigger trg in table.Triggers)
-                QueryExecutor.Execute(new MySQLInsertDNDBTDbObjectRecordQuery(trg.ID, table.ID, DbObjectType.Trigger, trg.Name, trg.GetCreateStatement()));
+                QueryExecutor.Execute(new MySQLInsertDNDBTDbObjectRecordQuery(trg, DbObjectType.Trigger, trg.GetCreateStatement()));
             foreach (ForeignKey fk in table.ForeignKeys)
-                QueryExecutor.Execute(new MySQLInsertDNDBTDbObjectRecordQuery(fk.ID, table.ID, DbObjectType.ForeignKey, fk.Name));
+                QueryExecutor.Execute(new MySQLInsertDNDBTDbObjectRecordQuery(fk, DbObjectType.ForeignKey));
         }
 
         foreach (MySQLView view in db.Views)
-            QueryExecutor.Execute(new MySQLInsertDNDBTDbObjectRecordQuery(view.ID, null, DbObjectType.View, view.Name, view.GetCreateStatement()));
+            QueryExecutor.Execute(new MySQLInsertDNDBTDbObjectRecordQuery(view, DbObjectType.View, view.GetCreateStatement()));
         foreach (MySQLFunction func in db.Functions)
-            QueryExecutor.Execute(new MySQLInsertDNDBTDbObjectRecordQuery(func.ID, null, DbObjectType.Function, func.Name, func.GetCreateStatement()));
+            QueryExecutor.Execute(new MySQLInsertDNDBTDbObjectRecordQuery(func, DbObjectType.Function, func.GetCreateStatement()));
         foreach (MySQLProcedure proc in db.Procedures)
-            QueryExecutor.Execute(new MySQLInsertDNDBTDbObjectRecordQuery(proc.ID, null, DbObjectType.Procedure, proc.Name, proc.GetCreateStatement()));
+            QueryExecutor.Execute(new MySQLInsertDNDBTDbObjectRecordQuery(proc, DbObjectType.Procedure, proc.GetCreateStatement()));
 
         foreach (Script script in db.Scripts)
             QueryExecutor.Execute(new MySQLInsertDNDBTScriptExecutionRecordQuery(script, -1));
@@ -113,7 +113,7 @@ internal class MySQLDbEditor : DbEditor<
     private void CreateFunction(MySQLFunction func)
     {
         QueryExecutor.Execute(new GenericQuery($"{func.GetCreateStatement().AppendSemicolonIfAbsent()}"));
-        QueryExecutor.Execute(new MySQLInsertDNDBTDbObjectRecordQuery(func.ID, null, DbObjectType.Function, func.Name, func.GetCreateStatement()));
+        QueryExecutor.Execute(new MySQLInsertDNDBTDbObjectRecordQuery(func, DbObjectType.Function, func.GetCreateStatement()));
     }
 
     private void DropFunction(MySQLFunction func)
@@ -125,7 +125,7 @@ internal class MySQLDbEditor : DbEditor<
     private void CreateView(MySQLView view)
     {
         QueryExecutor.Execute(new CreateViewQuery(view));
-        QueryExecutor.Execute(new MySQLInsertDNDBTDbObjectRecordQuery(view.ID, null, DbObjectType.View, view.Name, view.GetCreateStatement()));
+        QueryExecutor.Execute(new MySQLInsertDNDBTDbObjectRecordQuery(view, DbObjectType.View, view.GetCreateStatement()));
     }
 
     private void DropView(MySQLView view)
@@ -137,7 +137,7 @@ internal class MySQLDbEditor : DbEditor<
     private void CreateProcedure(MySQLProcedure proc)
     {
         QueryExecutor.Execute(new GenericQuery($"{proc.GetCreateStatement().AppendSemicolonIfAbsent()}"));
-        QueryExecutor.Execute(new MySQLInsertDNDBTDbObjectRecordQuery(proc.ID, null, DbObjectType.Procedure, proc.Name, proc.GetCreateStatement()));
+        QueryExecutor.Execute(new MySQLInsertDNDBTDbObjectRecordQuery(proc, DbObjectType.Procedure, proc.GetCreateStatement()));
     }
 
     private void DropProcedure(MySQLProcedure proc)

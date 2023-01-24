@@ -34,7 +34,7 @@ internal abstract class IndexEditor<
     private void CreateIndex(Index index)
     {
         _queryExecutor.Execute(new CreateIndexQuery(index));
-        _queryExecutor.Execute(Create<TInsertDNDBTDbObjectRecordQuery>(index.ID, index.Parent.ID, DbObjectType.Index, index.Name));
+        _queryExecutor.Execute(Create<TInsertDNDBTDbObjectRecordQuery>(index, DbObjectType.Index));
     }
 
     private void DropIndex(Index index)

@@ -265,27 +265,27 @@ internal class PostgreSQLTypesEditor
     private void CreateCompositeType(PostgreSQLCompositeType type)
     {
         QueryExecutor.Execute(new PostgreSQLCreateCompositeTypeQuery(type));
-        QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(type.ID, null, DbObjectType.UserDefinedType, type.Name));
+        QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(type, DbObjectType.UserDefinedType));
     }
 
     private void CreateDomainType(PostgreSQLDomainType type)
     {
         QueryExecutor.Execute(new PostgreSQLCreateDomainTypeQuery(type));
-        QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(type.ID, null, DbObjectType.UserDefinedType, type.Name, type.GetDefault()));
+        QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(type, DbObjectType.UserDefinedType, type.GetDefault()));
         foreach (CheckConstraint ck in type.CheckConstraints)
-            QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(ck.ID, type.ID, DbObjectType.CheckConstraint, ck.Name, ck.GetExpression()));
+            QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(ck, DbObjectType.CheckConstraint, ck.GetExpression()));
     }
 
     private void CreateEnumType(PostgreSQLEnumType type)
     {
         QueryExecutor.Execute(new PostgreSQLCreateEnumTypeQuery(type));
-        QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(type.ID, null, DbObjectType.UserDefinedType, type.Name));
+        QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(type, DbObjectType.UserDefinedType));
     }
 
     private void CreateRangeType(PostgreSQLRangeType type)
     {
         QueryExecutor.Execute(new PostgreSQLCreateRangeTypeQuery(type));
-        QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(type.ID, null, DbObjectType.UserDefinedType, type.Name));
+        QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(type, DbObjectType.UserDefinedType));
     }
 
     private void Drop_RenamedToTemp_Type(DbObject type)
@@ -306,7 +306,7 @@ internal class PostgreSQLTypesEditor
         foreach (CheckConstraint ck in typeDiff.CheckConstraintsToDrop)
             QueryExecutor.Execute(new PostgreSQLDeleteDNDBTDbObjectRecordQuery(ck.ID));
         foreach (CheckConstraint ck in typeDiff.CheckConstraintsToCreate)
-            QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(ck.ID, typeDiff.TypeID, DbObjectType.CheckConstraint, ck.Name, ck.GetExpression()));
+            QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(ck, DbObjectType.CheckConstraint, ck.GetExpression()));
 
         bool DefaultCodeChanged()
         {
