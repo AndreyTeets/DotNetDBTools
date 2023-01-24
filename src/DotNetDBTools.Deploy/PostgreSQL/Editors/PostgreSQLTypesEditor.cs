@@ -116,7 +116,7 @@ internal class PostgreSQLTypesEditor
             strippedTypeDiffModel.CheckConstraintsToCreate.Clear();
             strippedTypeDiffModel.CheckConstraintsToDrop.Clear();
 
-            if (!AnalysisManager.DiffIsEmpty(strippedTypeDiffModel))
+            if (!new AnalysisManager().DiffIsEmpty(strippedTypeDiffModel))
                 res.Add(strippedTypeDiffModel);
         }
         return res;
@@ -138,9 +138,9 @@ internal class PostgreSQLTypesEditor
         {
             PostgreSQLDomainTypeDiff diffForSettingDefault = new()
             {
-                TypeID = typeDiff.TypeID,
-                NewTypeName = typeDiff.NewTypeName,
-                OldTypeName = typeDiff.NewTypeName,
+                ID = typeDiff.ID,
+                NewName = typeDiff.NewName,
+                OldName = typeDiff.NewName,
             };
             diffForSettingDefault.DefaultToSet = typeDiff.DefaultToSet;
 
@@ -166,9 +166,9 @@ internal class PostgreSQLTypesEditor
         {
             PostgreSQLDomainTypeDiff diffForDroppingDefault = new()
             {
-                TypeID = typeDiff.TypeID,
-                NewTypeName = typeDiff.OldTypeName,
-                OldTypeName = typeDiff.OldTypeName,
+                ID = typeDiff.ID,
+                NewName = typeDiff.OldName,
+                OldName = typeDiff.OldName,
             };
             diffForDroppingDefault.DefaultToDrop = typeDiff.DefaultToDrop;
 
@@ -194,9 +194,9 @@ internal class PostgreSQLTypesEditor
         {
             PostgreSQLDomainTypeDiff diffForAddingCheckConstraints = new()
             {
-                TypeID = typeDiff.TypeID,
-                NewTypeName = typeDiff.NewTypeName,
-                OldTypeName = typeDiff.NewTypeName,
+                ID = typeDiff.ID,
+                NewName = typeDiff.NewName,
+                OldName = typeDiff.NewName,
             };
             foreach (CheckConstraint ck in typeDiff.CheckConstraintsToCreate)
                 diffForAddingCheckConstraints.CheckConstraintsToCreate.Add(ck);
@@ -223,9 +223,9 @@ internal class PostgreSQLTypesEditor
         {
             PostgreSQLDomainTypeDiff diffForDroppingCheckConstraints = new()
             {
-                TypeID = typeDiff.TypeID,
-                NewTypeName = typeDiff.OldTypeName,
-                OldTypeName = typeDiff.OldTypeName,
+                ID = typeDiff.ID,
+                NewName = typeDiff.OldName,
+                OldName = typeDiff.OldName,
             };
             foreach (CheckConstraint ck in typeDiff.CheckConstraintsToDrop)
                 diffForDroppingCheckConstraints.CheckConstraintsToDrop.Add(ck);
@@ -301,7 +301,7 @@ internal class PostgreSQLTypesEditor
 
         string objectCode = typeDiff.DefaultToSet is not null ? typeDiff.DefaultToSet.Code : null;
         QueryExecutor.Execute(new PostgreSQLUpdateDNDBTDbObjectRecordQuery(
-            typeDiff.TypeID, typeDiff.NewTypeName, DefaultCodeChanged(), objectCode));
+            typeDiff.ID, typeDiff.NewName, DefaultCodeChanged(), objectCode));
 
         foreach (CheckConstraint ck in typeDiff.CheckConstraintsToDrop)
             QueryExecutor.Execute(new PostgreSQLDeleteDNDBTDbObjectRecordQuery(ck.ID));

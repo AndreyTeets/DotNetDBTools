@@ -6,6 +6,6 @@ namespace DotNetDBTools.Models.SQLite;
 public class SQLiteTableDiff : TableDiff
 {
     public Table NewTableToDefine { get; set; }
-    public List<string> CommonColumnsNewNames { get; set; }
-    public List<string> CommonColumnsOldNames { get; set; }
+    public List<string> ChangedColumnsNewNames { get; set; }
+    public List<string> ChangedColumnsOldNames { get; set; }
 }

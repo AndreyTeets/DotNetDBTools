@@ -26,8 +26,8 @@ internal class MSSQLDiffCreator : DiffCreator
         MSSQLDatabase oldDb = (MSSQLDatabase)oldDatabase;
         MSSQLDatabaseDiff dbDiff = new()
         {
-            NewDatabaseVersion = newDatabase.Version,
-            OldDatabaseVersion = oldDatabase.Version,
+            NewVersion = newDatabase.Version,
+            OldVersion = oldDatabase.Version,
         };
 
         BuildUserDefinedTypesDiff(dbDiff, newDb, oldDb);
@@ -47,7 +47,7 @@ internal class MSSQLDiffCreator : DiffCreator
     protected override void BuildAdditionalColumnDiffProperties(ColumnDiff columnDiff, Column newColumn, Column oldColumn)
     {
         if (columnDiff.IdentityToSet is not null)
-            throw new Exception($"Identity change for existing column is not supported (ColumnID='{columnDiff.ColumnID}')");
+            throw new Exception($"Identity change for existing column is not supported (ColumnID='{columnDiff.ID}')");
 
         if (columnDiff.DataTypeToSet is not null || columnDiff.NotNullToSet is not null)
         {
@@ -132,7 +132,7 @@ internal class MSSQLDiffCreator : DiffCreator
         void AddForTableObjects()
         {
             Dictionary<Guid, MSSQLTableDiff> tableIdToTableDiffMap = dbDiff.ChangedTables
-                .ToDictionary(x => x.TableID, x => (MSSQLTableDiff)x);
+                .ToDictionary(x => x.ID, x => (MSSQLTableDiff)x);
             foreach (Table table in newDb.Tables.Where(IsNotAdded))
             {
                 if (table.Columns.Any(RequiresDataTypeOrDefaultRedifinition))
@@ -144,7 +144,7 @@ internal class MSSQLDiffCreator : DiffCreator
                         dbDiff.ChangedTables.Add(tableDiff);
 
                     Dictionary<Guid, MSSQLColumnDiff> columnIdToColumnDiffMap = tableDiff.ColumnsToAlter
-                        .ToDictionary(x => x.ColumnID, x => (MSSQLColumnDiff)x);
+                        .ToDictionary(x => x.ID, x => (MSSQLColumnDiff)x);
                     foreach (Column column in table.Columns.Where(IsNotAdded))
                     {
                         if (RequiresDataTypeOrDefaultRedifinition(column))

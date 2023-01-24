@@ -55,9 +55,9 @@ internal class PostgreSQLSequencesEditor
             .Concat(dbDiff.SequencesToAlter.Where(x => x.OwnedByToSet != (null, null) || x.OwnedByToDrop != (null, null)).Select(x =>
                 new PostgreSQLSequenceDiff()
                 {
-                    SequenceID = x.SequenceID,
-                    NewSequenceName = x.NewSequenceName,
-                    OldSequenceName = x.NewSequenceName,
+                    ID = x.ID,
+                    NewName = x.NewName,
+                    OldName = x.NewName,
                     OwnedByToSet = x.OwnedByToSet,
                     OwnedByToDrop = x.OwnedByToDrop,
                 }));
@@ -70,7 +70,7 @@ internal class PostgreSQLSequencesEditor
     {
         PostgreSQLSequenceDiff sequenceDiff = sequence.CreateEmptySequenceDiff();
         sequenceDiff.OwnedByToDrop = sequence.OwnedBy;
-        sequenceDiff.NewSequenceName = $"_DNDBTTemp_{sequence.Name}";
+        sequenceDiff.NewName = $"_DNDBTTemp_{sequence.Name}";
         QueryExecutor.Execute(new PostgreSQLAlterSequenceQuery(sequenceDiff));
         QueryExecutor.Execute(new PostgreSQLDeleteDNDBTDbObjectRecordQuery(sequence.ID));
     }
@@ -95,13 +95,13 @@ internal class PostgreSQLSequencesEditor
         PostgreSQLSequenceDiff sequenceDiffExceptOwner = sequenceDiff.CopyModel();
         sequenceDiffExceptOwner.OwnedByToSet = (null, null);
         sequenceDiffExceptOwner.OwnedByToDrop = (null, null);
-        if (!AnalysisManager.DiffIsEmpty(sequenceDiffExceptOwner))
+        if (!new AnalysisManager().DiffIsEmpty(sequenceDiffExceptOwner))
             AlterSequence(sequenceDiffExceptOwner);
     }
 
     private void AlterSequence(PostgreSQLSequenceDiff sequenceDiff)
     {
         QueryExecutor.Execute(new PostgreSQLAlterSequenceQuery(sequenceDiff));
-        QueryExecutor.Execute(new PostgreSQLUpdateDNDBTDbObjectRecordQuery(sequenceDiff.SequenceID, sequenceDiff.NewSequenceName));
+        QueryExecutor.Execute(new PostgreSQLUpdateDNDBTDbObjectRecordQuery(sequenceDiff.ID, sequenceDiff.NewName));
     }
 }

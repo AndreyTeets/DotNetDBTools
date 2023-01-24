@@ -17,8 +17,8 @@ internal class PostgreSQLAlterSequenceQuery : NoParametersQuery
     private static string GetSql(PostgreSQLSequenceDiff sDiff)
     {
         List<string> definitions = new();
-        if (sDiff.NewSequenceName != sDiff.OldSequenceName)
-            definitions.Add($@"ALTER SEQUENCE ""{sDiff.OldSequenceName}"" RENAME TO ""{sDiff.NewSequenceName}"";");
+        if (sDiff.NewName != sDiff.OldName)
+            definitions.Add($@"ALTER SEQUENCE ""{sDiff.OldName}"" RENAME TO ""{sDiff.NewName}"";");
 
         List<string> subdefinitions = new();
         if (sDiff.DataTypeToSet is not null)
@@ -33,7 +33,7 @@ internal class PostgreSQLAlterSequenceQuery : NoParametersQuery
         if (subdefinitions.Count > 0)
         {
             definitions.Add(
-$@"ALTER SEQUENCE ""{sDiff.NewSequenceName}""
+$@"ALTER SEQUENCE ""{sDiff.NewName}""
 {string.Join("\n", subdefinitions)}");
         }
 

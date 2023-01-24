@@ -30,22 +30,22 @@ $@"{GetIdDeclarationText(table, 0)}CREATE TABLE [{table.Name}]
     protected override string GetAlterSqlImpl(SQLiteTableDiff tableDiff)
     {
         string res =
-$@"CREATE TABLE [{DNDBTTempPrefix}{tableDiff.NewTableName}]
+$@"CREATE TABLE [{DNDBTTempPrefix}{tableDiff.NewName}]
 (
 {GetTableDefinitionsText((SQLiteTable)tableDiff.NewTableToDefine)}
 );
 
-INSERT INTO [{DNDBTTempPrefix}{tableDiff.NewTableName}]
+INSERT INTO [{DNDBTTempPrefix}{tableDiff.NewName}]
 (
-{string.Join(",\n", tableDiff.CommonColumnsNewNames.Select(x => $@"    [{x}]"))}
+{string.Join(",\n", tableDiff.ChangedColumnsNewNames.Select(x => $@"    [{x}]"))}
 )
 SELECT
-{string.Join(",\n", tableDiff.CommonColumnsOldNames.Select(x => $@"    [{x}]"))}
-FROM [{tableDiff.OldTableName}];
+{string.Join(",\n", tableDiff.ChangedColumnsOldNames.Select(x => $@"    [{x}]"))}
+FROM [{tableDiff.OldName}];
 
-DROP TABLE [{tableDiff.OldTableName}];
+DROP TABLE [{tableDiff.OldName}];
 
-ALTER TABLE [{DNDBTTempPrefix}{tableDiff.NewTableName}] RENAME TO [{tableDiff.NewTableName}];";
+ALTER TABLE [{DNDBTTempPrefix}{tableDiff.NewName}] RENAME TO [{tableDiff.NewName}];";
 
         return res;
     }

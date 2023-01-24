@@ -31,11 +31,11 @@ $@"{GetIdDeclarationText(table, 0)}CREATE TABLE [{table.Name}]
     {
         StringBuilder sb = new();
 
-        if (tableDiff.NewTableName != tableDiff.OldTableName)
-            sb.AppendLine(Statements.RenameTable(tableDiff.OldTableName, tableDiff.NewTableName));
+        if (tableDiff.NewName != tableDiff.OldName)
+            sb.AppendLine(Statements.RenameTable(tableDiff.OldName, tableDiff.NewName));
 
-        foreach (ColumnDiff columnDiff in tableDiff.ColumnsToAlter.Where(x => x.NewColumnName != x.OldColumnName))
-            sb.AppendLine(Statements.RenameColumn(tableDiff.NewTableName, columnDiff.OldColumnName, columnDiff.NewColumnName));
+        foreach (ColumnDiff columnDiff in tableDiff.ColumnsToAlter.Where(x => x.NewName != x.OldName))
+            sb.AppendLine(Statements.RenameColumn(tableDiff.NewName, columnDiff.OldName, columnDiff.NewName));
 
         string tableAlters = GetTableAltersText(tableDiff);
         if (!string.IsNullOrEmpty(tableAlters))
@@ -76,20 +76,20 @@ $@"    {GetIdDeclarationText(fk, 4)}{Statements.DefForeignKey(fk)}"));
         foreach (ForeignKey fk in tableDiff.ForeignKeysToDrop)
             sb.Append(Statements.DropForeignKey(fk));
         foreach (CheckConstraint ck in tableDiff.CheckConstraintsToDrop)
-            sb.Append(Statements.DropCheckConstraint(tableDiff.NewTableName, ck));
+            sb.Append(Statements.DropCheckConstraint(tableDiff.NewName, ck));
         foreach (UniqueConstraint uc in tableDiff.UniqueConstraintsToDrop)
-            sb.Append(Statements.DropUniqueConstraint(tableDiff.NewTableName, uc));
+            sb.Append(Statements.DropUniqueConstraint(tableDiff.NewName, uc));
         if (tableDiff.PrimaryKeyToDrop is not null)
-            sb.Append(Statements.DropPrimaryKey(tableDiff.NewTableName, tableDiff.PrimaryKeyToDrop));
+            sb.Append(Statements.DropPrimaryKey(tableDiff.NewName, tableDiff.PrimaryKeyToDrop));
 
         AppendColumnsAlters(sb, tableDiff);
 
         if (tableDiff.PrimaryKeyToCreate is not null)
-            sb.Append(Statements.AddPrimaryKey(tableDiff.NewTableName, tableDiff.PrimaryKeyToCreate));
+            sb.Append(Statements.AddPrimaryKey(tableDiff.NewName, tableDiff.PrimaryKeyToCreate));
         foreach (UniqueConstraint uc in tableDiff.UniqueConstraintsToCreate)
-            sb.Append(Statements.AddUniqueConstraint(tableDiff.NewTableName, uc));
+            sb.Append(Statements.AddUniqueConstraint(tableDiff.NewName, uc));
         foreach (CheckConstraint ck in tableDiff.CheckConstraintsToCreate)
-            sb.Append(Statements.AddCheckConstraint(tableDiff.NewTableName, ck));
+            sb.Append(Statements.AddCheckConstraint(tableDiff.NewName, ck));
         foreach (ForeignKey fk in tableDiff.ForeignKeysToCreate)
             sb.Append(Statements.AddForeignKey(fk));
 
@@ -101,33 +101,33 @@ $@"    {GetIdDeclarationText(fk, 4)}{Statements.DefForeignKey(fk)}"));
         foreach (Column column in tableDiff.ColumnsToDrop)
         {
             if (column.Default is not null)
-                sb.Append(Statements.DropDefaultConstraint(tableDiff.NewTableName, ((MSSQLColumn)column).DefaultConstraintName));
-            sb.Append(Statements.DropColumn(tableDiff.NewTableName, column));
+                sb.Append(Statements.DropDefaultConstraint(tableDiff.NewName, ((MSSQLColumn)column).DefaultConstraintName));
+            sb.Append(Statements.DropColumn(tableDiff.NewName, column));
         }
 
         foreach (ColumnDiff columnDiff in tableDiff.ColumnsToAlter)
         {
             MSSQLColumnDiff cDiff = (MSSQLColumnDiff)columnDiff;
             if (cDiff.DefaultToDrop is not null)
-                sb.Append(Statements.DropDefaultConstraint(tableDiff.NewTableName, cDiff.DefaultToDropConstraintName));
+                sb.Append(Statements.DropDefaultConstraint(tableDiff.NewName, cDiff.DefaultToDropConstraintName));
 
             if (cDiff.DataTypeToSet is not null || cDiff.NotNullToSet is not null)
             {
                 if (cDiff.DataTypeToSet is null || cDiff.NotNullToSet is null)
                     throw new Exception($"Invalid columnDiff with only one of [DataType|NotNull]ToSet specified");
                 sb.Append(Statements.AlterColumnTypeAndNullability(
-                    tableDiff.NewTableName, cDiff.NewColumnName, cDiff.DataTypeToSet, cDiff.NotNullToSet.Value));
+                    tableDiff.NewName, cDiff.NewName, cDiff.DataTypeToSet, cDiff.NotNullToSet.Value));
             }
 
             if (cDiff.DefaultToSet is not null)
             {
                 sb.Append(Statements.AddDefaultConstraint(
-                    tableDiff.NewTableName, cDiff.NewColumnName, cDiff.DefaultToSet, cDiff.DefaultToSetConstraintName));
+                    tableDiff.NewName, cDiff.NewName, cDiff.DefaultToSet, cDiff.DefaultToSetConstraintName));
             }
         }
 
         foreach (Column column in tableDiff.ColumnsToAdd)
-            sb.Append(Statements.AddColumn(tableDiff.NewTableName, column));
+            sb.Append(Statements.AddColumn(tableDiff.NewName, column));
     }
 
     private static class Statements

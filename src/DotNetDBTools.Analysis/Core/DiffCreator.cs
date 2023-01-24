@@ -68,9 +68,9 @@ internal abstract class DiffCreator
     {
         TTableDiff tableDiff = new()
         {
-            TableID = newTable.ID,
-            NewTableName = newTable.Name,
-            OldTableName = oldTable.Name,
+            ID = newTable.ID,
+            NewName = newTable.Name,
+            OldName = oldTable.Name,
         };
 
         BuildColumnsDiff<TTableDiff, TColumnDiff>(tableDiff, newTable, oldTable);
@@ -99,9 +99,9 @@ internal abstract class DiffCreator
             {
                 TColumnDiff columnDiff = new()
                 {
-                    ColumnID = newColumn.ID,
-                    NewColumnName = newColumn.Name,
-                    OldColumnName = oldColumn.Name,
+                    ID = newColumn.ID,
+                    NewName = newColumn.Name,
+                    OldName = oldColumn.Name,
                 };
 
                 if (!AreEqual(newColumn.DataType, oldColumn.DataType))

@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using DotNetDBTools.Models.Core;
-using DotNetDBTools.Models.PostgreSQL;
-using DotNetDBTools.Models.PostgreSQL.UserDefinedTypes;
 
 namespace DotNetDBTools.Analysis.Core;
 
@@ -17,86 +15,24 @@ internal static class DiffAnalyzer
         return AllCollectionPropertiesAreEmpty(dbDiff, properties);
     }
 
-    public static bool IsEmpty(TableDiff tableDiff)
+    public static bool IsEmpty(DbObjectDiff dbObjectDiff)
     {
-        IEnumerable<PropertyInfo> properties = GetProperties(tableDiff.GetType());
-        if (tableDiff.NewTableName != tableDiff.OldTableName)
+        IEnumerable<PropertyInfo> properties = GetProperties(dbObjectDiff.GetType());
+        if (dbObjectDiff.NewName != dbObjectDiff.OldName)
             return false;
         foreach (PropertyInfo property in properties)
         {
             if (!IsCollection(property.PropertyType)
-                && !typeof(Table).IsAssignableFrom(property.PropertyType)
-                && property.Name != nameof(TableDiff.TableID)
-                && property.Name != nameof(TableDiff.NewTableName)
-                && property.Name != nameof(TableDiff.OldTableName))
+                && property.Name != nameof(DbObjectDiff.ID)
+                && property.Name != nameof(DbObjectDiff.NewName)
+                && property.Name != nameof(DbObjectDiff.OldName))
             {
-                object propertyValue = property.GetValue(tableDiff, null);
+                object propertyValue = property.GetValue(dbObjectDiff, null);
                 if (propertyValue is not null)
                     return false;
             }
         }
-        return AllCollectionPropertiesAreEmpty(tableDiff, properties);
-    }
-
-    public static bool IsEmpty(ColumnDiff columnDiff)
-    {
-        IEnumerable<PropertyInfo> properties = GetProperties(columnDiff.GetType());
-        if (columnDiff.NewColumnName != columnDiff.OldColumnName)
-            return false;
-        foreach (PropertyInfo property in properties)
-        {
-            if (!IsCollection(property.PropertyType)
-                && !typeof(Column).IsAssignableFrom(property.PropertyType)
-                && property.Name != nameof(ColumnDiff.ColumnID)
-                && property.Name != nameof(ColumnDiff.NewColumnName)
-                && property.Name != nameof(ColumnDiff.OldColumnName))
-            {
-                object propertyValue = property.GetValue(columnDiff, null);
-                if (propertyValue is not null)
-                    return false;
-            }
-        }
-        return AllCollectionPropertiesAreEmpty(columnDiff, properties);
-    }
-
-    public static bool IsEmpty(PostgreSQLSequenceDiff sequenceDiff)
-    {
-        IEnumerable<PropertyInfo> properties = GetProperties(sequenceDiff.GetType());
-        if (sequenceDiff.NewSequenceName != sequenceDiff.OldSequenceName)
-            return false;
-        foreach (PropertyInfo property in properties)
-        {
-            if (!IsCollection(property.PropertyType)
-                && property.Name != nameof(PostgreSQLSequenceDiff.SequenceID)
-                && property.Name != nameof(PostgreSQLSequenceDiff.NewSequenceName)
-                && property.Name != nameof(PostgreSQLSequenceDiff.OldSequenceName))
-            {
-                object propertyValue = property.GetValue(sequenceDiff, null);
-                if (propertyValue is not null)
-                    return false;
-            }
-        }
-        return AllCollectionPropertiesAreEmpty(sequenceDiff, properties);
-    }
-
-    public static bool IsEmpty(PostgreSQLDomainTypeDiff typeDiff)
-    {
-        IEnumerable<PropertyInfo> properties = GetProperties(typeDiff.GetType());
-        if (typeDiff.NewTypeName != typeDiff.OldTypeName)
-            return false;
-        foreach (PropertyInfo property in properties)
-        {
-            if (!IsCollection(property.PropertyType)
-                && property.Name != nameof(PostgreSQLDomainTypeDiff.TypeID)
-                && property.Name != nameof(PostgreSQLDomainTypeDiff.NewTypeName)
-                && property.Name != nameof(PostgreSQLDomainTypeDiff.OldTypeName))
-            {
-                object propertyValue = property.GetValue(typeDiff, null);
-                if (propertyValue is not null)
-                    return false;
-            }
-        }
-        return AllCollectionPropertiesAreEmpty(typeDiff, properties);
+        return AllCollectionPropertiesAreEmpty(dbObjectDiff, properties);
     }
 
     private static bool AllCollectionPropertiesAreEmpty(object obj, IEnumerable<PropertyInfo> properties)

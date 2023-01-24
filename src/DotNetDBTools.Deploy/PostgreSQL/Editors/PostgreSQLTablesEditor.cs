@@ -91,12 +91,12 @@ internal class PostgreSQLTablesEditor : TableEditor<
                 columnDiff.DefaultToSet = null;
             foreach (ColumnDiff columnDiff in strippedTableDiffModel.ColumnsToAlter.Where(x => x.DefaultToDrop is not null))
                 columnDiff.DefaultToDrop = null;
-            strippedTableDiffModel.ColumnsToAlter.RemoveAll(AnalysisManager.DiffIsEmpty);
+            strippedTableDiffModel.ColumnsToAlter.RemoveAll(new AnalysisManager().DiffIsEmpty);
 
             strippedTableDiffModel.CheckConstraintsToCreate.Clear();
             strippedTableDiffModel.CheckConstraintsToDrop.Clear();
 
-            if (!AnalysisManager.DiffIsEmpty(strippedTableDiffModel))
+            if (!new AnalysisManager().DiffIsEmpty(strippedTableDiffModel))
                 res.Add(strippedTableDiffModel);
         }
         return res;
@@ -125,9 +125,9 @@ internal class PostgreSQLTablesEditor : TableEditor<
         {
             PostgreSQLTableDiff tableDiffForSettingColumnsDefault = new()
             {
-                TableID = tableDiff.TableID,
-                NewTableName = tableDiff.NewTableName,
-                OldTableName = tableDiff.NewTableName,
+                ID = tableDiff.ID,
+                NewName = tableDiff.NewName,
+                OldName = tableDiff.NewName,
             };
             foreach (Column column in tableDiff.ColumnsToAdd.Where(x => x.Default is not null))
             {
@@ -140,9 +140,9 @@ internal class PostgreSQLTablesEditor : TableEditor<
             {
                 PostgreSQLColumnDiff columnDiffWithDefaultChange = new()
                 {
-                    ColumnID = columnDiff.ColumnID,
-                    NewColumnName = columnDiff.NewColumnName,
-                    OldColumnName = columnDiff.NewColumnName,
+                    ID = columnDiff.ID,
+                    NewName = columnDiff.NewName,
+                    OldName = columnDiff.NewName,
                 };
                 columnDiffWithDefaultChange.DefaultToSet = columnDiff.DefaultToSet;
                 tableDiffForSettingColumnsDefault.ColumnsToAlter.Add(columnDiffWithDefaultChange);
@@ -177,9 +177,9 @@ internal class PostgreSQLTablesEditor : TableEditor<
         {
             PostgreSQLTableDiff tableDiffForDroppingColumnsDefault = new()
             {
-                TableID = tableDiff.TableID,
-                NewTableName = tableDiff.OldTableName,
-                OldTableName = tableDiff.OldTableName,
+                ID = tableDiff.ID,
+                NewName = tableDiff.OldName,
+                OldName = tableDiff.OldName,
             };
             foreach (Column column in tableDiff.ColumnsToDrop.Where(x => x.Default is not null))
             {
@@ -192,9 +192,9 @@ internal class PostgreSQLTablesEditor : TableEditor<
             {
                 PostgreSQLColumnDiff columnDiffWithDefaultChange = new()
                 {
-                    ColumnID = columnDiff.ColumnID,
-                    NewColumnName = columnDiff.OldColumnName,
-                    OldColumnName = columnDiff.OldColumnName,
+                    ID = columnDiff.ID,
+                    NewName = columnDiff.OldName,
+                    OldName = columnDiff.OldName,
                 };
                 columnDiffWithDefaultChange.DefaultToDrop = columnDiff.DefaultToDrop;
                 tableDiffForDroppingColumnsDefault.ColumnsToAlter.Add(columnDiffWithDefaultChange);
@@ -222,9 +222,9 @@ internal class PostgreSQLTablesEditor : TableEditor<
         {
             PostgreSQLTableDiff tableDiffForAddingCheckConstraints = new()
             {
-                TableID = tableDiff.TableID,
-                NewTableName = tableDiff.NewTableName,
-                OldTableName = tableDiff.NewTableName,
+                ID = tableDiff.ID,
+                NewName = tableDiff.NewName,
+                OldName = tableDiff.NewName,
             };
             foreach (CheckConstraint ck in tableDiff.CheckConstraintsToCreate)
                 tableDiffForAddingCheckConstraints.CheckConstraintsToCreate.Add(ck);
@@ -251,9 +251,9 @@ internal class PostgreSQLTablesEditor : TableEditor<
         {
             PostgreSQLTableDiff tableDiffForDroppingCheckConstraints = new()
             {
-                TableID = tableDiff.TableID,
-                NewTableName = tableDiff.OldTableName,
-                OldTableName = tableDiff.OldTableName,
+                ID = tableDiff.ID,
+                NewName = tableDiff.OldName,
+                OldName = tableDiff.OldName,
             };
             foreach (CheckConstraint ck in tableDiff.CheckConstraintsToDrop)
                 tableDiffForDroppingCheckConstraints.CheckConstraintsToDrop.Add(ck);

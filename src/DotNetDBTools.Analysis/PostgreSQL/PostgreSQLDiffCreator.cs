@@ -33,8 +33,8 @@ internal class PostgreSQLDiffCreator : DiffCreator
         PostgreSQLDatabase oldDb = (PostgreSQLDatabase)oldDatabase;
         PostgreSQLDatabaseDiff dbDiff = new()
         {
-            NewDatabaseVersion = newDatabase.Version,
-            OldDatabaseVersion = oldDatabase.Version,
+            NewVersion = newDatabase.Version,
+            OldVersion = oldDatabase.Version,
         };
 
         BuildSequencesDiff(dbDiff, newDb, oldDb);
@@ -132,9 +132,9 @@ internal class PostgreSQLDiffCreator : DiffCreator
                 bool ownedByChanged = !AreEqual(newSequence.OwnedBy, oldSequence.OwnedBy);
                 PostgreSQLSequenceDiff sequenceDiff = new()
                 {
-                    SequenceID = newSequence.ID,
-                    NewSequenceName = newSequence.Name,
-                    OldSequenceName = oldSequence.Name,
+                    ID = newSequence.ID,
+                    NewName = newSequence.Name,
+                    OldName = oldSequence.Name,
                     DataTypeToSet = !AreEqual(newSequence.DataType, oldSequence.DataType) ? newSequence.DataType : null,
                     OptionsToSet = GetChangedSequenceOptions(newSequence.Options, oldSequence.Options),
                     OwnedByToSet = ownedByChanged && newSequence.OwnedBy != (null, null) ? newSequence.OwnedBy : (null, null),
@@ -208,9 +208,9 @@ internal class PostgreSQLDiffCreator : DiffCreator
             bool defaultChanged = !AreEqual(newType.Default, oldType.Default);
             return new PostgreSQLDomainTypeDiff()
             {
-                TypeID = newType.ID,
-                NewTypeName = newType.Name,
-                OldTypeName = oldType.Name,
+                ID = newType.ID,
+                NewName = newType.Name,
+                OldName = oldType.Name,
                 NotNullToSet = newType.NotNull != oldType.NotNull ? newType.NotNull : null,
                 DefaultToSet = defaultChanged && newType.Default is not null ? newType.Default : null,
                 DefaultToDrop = defaultChanged && oldType.Default is not null ? oldType.Default : null,
@@ -330,7 +330,7 @@ internal class PostgreSQLDiffCreator : DiffCreator
             }
 
             Dictionary<Guid, PostgreSQLDomainTypeDiff> typeIdToTypeDiffMap = dbDiff.DomainTypesToAlter
-                .ToDictionary(x => x.TypeID, x => x);
+                .ToDictionary(x => x.ID, x => x);
             foreach (PostgreSQLDomainType type in newDb.DomainTypes.Where(IsNotAdded))
             {
                 // Those that changed and require redefinition are already added when change processed
@@ -391,7 +391,7 @@ internal class PostgreSQLDiffCreator : DiffCreator
         void AddForTableObjects()
         {
             Dictionary<Guid, PostgreSQLTableDiff> tableIdToTableDiffMap = dbDiff.ChangedTables
-                .ToDictionary(x => x.TableID, x => (PostgreSQLTableDiff)x);
+                .ToDictionary(x => x.ID, x => (PostgreSQLTableDiff)x);
             foreach (Table table in newDb.Tables.Where(IsNotAdded))
             {
                 if (table.Columns.Any(RequiresDataTypeOrDefaultRedifinition)
@@ -404,7 +404,7 @@ internal class PostgreSQLDiffCreator : DiffCreator
                         dbDiff.ChangedTables.Add(tableDiff);
 
                     Dictionary<Guid, ColumnDiff> columnIdToColumnDiffMap = tableDiff.ColumnsToAlter
-                        .ToDictionary(x => x.ColumnID, x => x);
+                        .ToDictionary(x => x.ID, x => x);
                     foreach (Column column in table.Columns.Where(IsNotAdded))
                     {
                         if (RequiresDataTypeOrDefaultRedifinition(column))

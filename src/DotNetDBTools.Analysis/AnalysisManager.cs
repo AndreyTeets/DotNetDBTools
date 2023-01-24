@@ -9,8 +9,6 @@ using DotNetDBTools.Analysis.MySQL;
 using DotNetDBTools.Analysis.PostgreSQL;
 using DotNetDBTools.Analysis.SQLite;
 using DotNetDBTools.Models.Core;
-using DotNetDBTools.Models.PostgreSQL;
-using DotNetDBTools.Models.PostgreSQL.UserDefinedTypes;
 
 namespace DotNetDBTools.Analysis;
 
@@ -67,31 +65,6 @@ public class AnalysisManager : IAnalysisManager
         };
     }
     /// <inheritdoc />
-    public bool DiffIsEmpty(DatabaseDiff dbDiff)
-    {
-        return DiffAnalyzer.IsEmpty(dbDiff);
-    }
-
-    public static bool DiffIsEmpty(TableDiff tableDiff)
-    {
-        return DiffAnalyzer.IsEmpty(tableDiff);
-    }
-
-    public static bool DiffIsEmpty(ColumnDiff columnDiff)
-    {
-        return DiffAnalyzer.IsEmpty(columnDiff);
-    }
-
-    public static bool DiffIsEmpty(PostgreSQLSequenceDiff sequenceDiff)
-    {
-        return DiffAnalyzer.IsEmpty(sequenceDiff);
-    }
-
-    public static bool DiffIsEmpty(PostgreSQLDomainTypeDiff typeDiff)
-    {
-        return DiffAnalyzer.IsEmpty(typeDiff);
-    }
-    /// <inheritdoc />
     public bool DiffLeadsToDataLoss(DatabaseDiff dbDiff)
     {
         if (dbDiff.RemovedTables.Any())
@@ -102,6 +75,16 @@ public class AnalysisManager : IAnalysisManager
                 return true;
         }
         return false;
+    }
+    /// <inheritdoc />
+    public bool DiffIsEmpty(DatabaseDiff dbDiff)
+    {
+        return DiffAnalyzer.IsEmpty(dbDiff);
+    }
+    /// <inheritdoc />
+    public bool DiffIsEmpty(DbObjectDiff dbObjectDiff)
+    {
+        return DiffAnalyzer.IsEmpty(dbObjectDiff);
     }
 
     /// <inheritdoc />

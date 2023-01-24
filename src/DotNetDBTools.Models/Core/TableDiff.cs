@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace DotNetDBTools.Models.Core;
 
-public abstract class TableDiff
+public abstract class TableDiff : DbObjectDiff
 {
-    public Guid TableID { get; set; }
-    public string NewTableName { get; set; }
-    public string OldTableName { get; set; }
-
     public List<Column> ColumnsToAdd { get; set; } = new();
     public List<Column> ColumnsToDrop { get; set; } = new();
     public List<ColumnDiff> ColumnsToAlter { get; set; } = new();

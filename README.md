@@ -283,7 +283,7 @@ foreach (TableDiff tDiff in dbDiff.ChangedTables)
 {
     foreach (Column c in tDiff.ColumnsToDrop)
     {
-        string changeInfo = $"Column was removed: TableName: {tDiff.OldTableName}, ColumnName: {c.Name}";
+        string changeInfo = $"Column was removed: TableName: {tDiff.OldName}, ColumnName: {c.Name}";
         Console.WriteLine(changeInfo);
     }
 }
@@ -332,11 +332,12 @@ public interface DotNetDBTools.Analysis.IAnalysisManager
 {
     public bool DbIsValid(Database database, out List<DbError> dbErrors);
     public bool DatabasesAreEquivalentExcludingDNDBTInfo(Database database1, Database database2, out string diffLog);
-    public bool DbObjectsAreEquivalentExcludingDNDBTInfo(DbObject dbObject1, DbObject dbObject2, out string diffLog)
+    public bool DbObjectsAreEquivalentExcludingDNDBTInfo(DbObject dbObject1, DbObject dbObject2, out string diffLog);
 
     public DatabaseDiff CreateDatabaseDiff(Database newDatabase, Database oldDatabase);
-    public bool DiffIsEmpty(DatabaseDiff dbDiff);
     public bool DiffLeadsToDataLoss(DatabaseDiff dbDiff);
+    public bool DiffIsEmpty(DatabaseDiff dbDiff);
+    public bool DiffIsEmpty(DbObjectDiff dbObjectDiff);
 
     public Database ConvertFromAgnostic(Database database, DatabaseKind targetKind);
 }

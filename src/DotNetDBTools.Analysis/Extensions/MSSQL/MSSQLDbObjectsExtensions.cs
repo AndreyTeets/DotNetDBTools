@@ -12,9 +12,9 @@ public static class MSSQLDbObjectsExtensions
     {
         return new()
         {
-            TableID = table.ID,
-            NewTableName = table.Name,
-            OldTableName = table.Name,
+            ID = table.ID,
+            NewName = table.Name,
+            OldName = table.Name,
         };
     }
 
@@ -25,9 +25,9 @@ public static class MSSQLDbObjectsExtensions
     {
         return new()
         {
-            ColumnID = column.ID,
-            NewColumnName = column.Name,
-            OldColumnName = column.Name,
+            ID = column.ID,
+            NewName = column.Name,
+            OldName = column.Name,
         };
     }
 }

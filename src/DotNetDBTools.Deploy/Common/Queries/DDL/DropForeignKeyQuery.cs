@@ -22,9 +22,9 @@ internal abstract class DropForeignKeyQuery : NoParametersQuery
     {
         TTableDiff tableDiff = new()
         {
-            TableID = fk.Parent.ID,
-            NewTableName = fk.Parent.Name,
-            OldTableName = fk.Parent.Name,
+            ID = fk.Parent.ID,
+            NewName = fk.Parent.Name,
+            OldName = fk.Parent.Name,
             ForeignKeysToDrop = new List<ForeignKey>() { fk },
         };
         return GenerationManager.GenerateSqlAlterStatement(tableDiff);

@@ -18,10 +18,10 @@ internal class PostgreSQLAlterDomainTypeQuery : NoParametersQuery
 
     private static string GetSql(PostgreSQLDomainTypeDiff typeDiff)
     {
-        string ad = $@"ALTER DOMAIN ""{typeDiff.NewTypeName}""";
+        string ad = $@"ALTER DOMAIN ""{typeDiff.NewName}""";
         List<string> definitions = new();
-        if (typeDiff.NewTypeName != typeDiff.OldTypeName)
-            definitions.Add($@"ALTER DOMAIN ""{typeDiff.OldTypeName}"" RENAME TO ""{typeDiff.NewTypeName}"";");
+        if (typeDiff.NewName != typeDiff.OldName)
+            definitions.Add($@"ALTER DOMAIN ""{typeDiff.OldName}"" RENAME TO ""{typeDiff.NewName}"";");
         if (typeDiff.NotNullToSet is not null && typeDiff.NotNullToSet == false)
             definitions.Add($@"{ad} DROP NOT NULL;");
         if (typeDiff.NotNullToSet is not null && typeDiff.NotNullToSet == true)

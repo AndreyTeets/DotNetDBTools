@@ -30,15 +30,15 @@ $@"{GetIdDeclarationText(table, 0)}CREATE TABLE `{table.Name}`
     {
         StringBuilder sb = new();
 
-        if (tableDiff.NewTableName != tableDiff.OldTableName)
-            sb.AppendLine(Statements.RenameTable(tableDiff.OldTableName, tableDiff.NewTableName));
+        if (tableDiff.NewName != tableDiff.OldName)
+            sb.AppendLine(Statements.RenameTable(tableDiff.OldName, tableDiff.NewName));
 
-        foreach (ColumnDiff columnDiff in tableDiff.ColumnsToAlter.Where(x => x.NewColumnName != x.OldColumnName))
-            sb.AppendLine(Statements.RenameColumn(tableDiff.NewTableName, columnDiff.OldColumnName, columnDiff.NewColumnName));
+        foreach (ColumnDiff columnDiff in tableDiff.ColumnsToAlter.Where(x => x.NewName != x.OldName))
+            sb.AppendLine(Statements.RenameColumn(tableDiff.NewName, columnDiff.OldName, columnDiff.NewName));
 
         string tableAlters = GetTableAltersText(tableDiff);
         if (!string.IsNullOrEmpty(tableAlters))
-            sb.AppendLine($@"ALTER TABLE `{tableDiff.NewTableName}`{tableAlters};");
+            sb.AppendLine($@"ALTER TABLE `{tableDiff.NewName}`{tableAlters};");
 
         return sb.ToString();
     }
@@ -108,9 +108,9 @@ $@"    {GetIdDeclarationText(fk, 4)}{Statements.DefForeignKey(fk)}"));
             if (cDiff.DefinitionToSet is not null)
                 sb.Append(Statements.AlterColumnDefinition(cDiff.DefinitionToSet));
             else if (cDiff.DefaultToSet is not null)
-                sb.Append(Statements.SetColumnDefault(cDiff.NewColumnName, cDiff.DefaultToSet));
+                sb.Append(Statements.SetColumnDefault(cDiff.NewName, cDiff.DefaultToSet));
             else if (cDiff.DefaultToDrop is not null)
-                sb.Append(Statements.DropColumnDefault(cDiff.NewColumnName));
+                sb.Append(Statements.DropColumnDefault(cDiff.NewName));
         }
 
         foreach (Column column in tableDiff.ColumnsToAdd)

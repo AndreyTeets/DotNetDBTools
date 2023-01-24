@@ -32,15 +32,15 @@ $@"{GetIdDeclarationText(table, 0)}CREATE TABLE ""{table.Name}""
     {
         StringBuilder sb = new();
 
-        if (tableDiff.NewTableName != tableDiff.OldTableName)
-            sb.AppendLine(Statements.RenameTable(tableDiff.OldTableName, tableDiff.NewTableName));
+        if (tableDiff.NewName != tableDiff.OldName)
+            sb.AppendLine(Statements.RenameTable(tableDiff.OldName, tableDiff.NewName));
 
-        foreach (ColumnDiff columnDiff in tableDiff.ColumnsToAlter.Where(x => x.NewColumnName != x.OldColumnName))
-            sb.AppendLine(Statements.RenameColumn(tableDiff.NewTableName, columnDiff.OldColumnName, columnDiff.NewColumnName));
+        foreach (ColumnDiff columnDiff in tableDiff.ColumnsToAlter.Where(x => x.NewName != x.OldName))
+            sb.AppendLine(Statements.RenameColumn(tableDiff.NewName, columnDiff.OldName, columnDiff.NewName));
 
         string tableAlters = GetTableAltersText(tableDiff);
         if (!string.IsNullOrEmpty(tableAlters))
-            sb.AppendLine($@"ALTER TABLE ""{tableDiff.NewTableName}""{tableAlters};");
+            sb.AppendLine($@"ALTER TABLE ""{tableDiff.NewName}""{tableAlters};");
 
         return sb.ToString();
     }
@@ -107,35 +107,35 @@ $@"    {GetIdDeclarationText(fk, 4)}{Statements.DefForeignKey(fk)}"));
         foreach (ColumnDiff columnDiff in tableDiff.ColumnsToAlter)
         {
             if (columnDiff.DataTypeToSet is not null)
-                sb.Append(Statements.AlterColumnType(columnDiff.NewColumnName, columnDiff.DataTypeToSet));
+                sb.Append(Statements.AlterColumnType(columnDiff.NewName, columnDiff.DataTypeToSet));
 
             if (columnDiff.NotNullToSet is not null && columnDiff.NotNullToSet == true)
-                sb.Append(Statements.SetColumnNotNull(columnDiff.NewColumnName));
+                sb.Append(Statements.SetColumnNotNull(columnDiff.NewName));
             else if (columnDiff.NotNullToSet is not null && columnDiff.NotNullToSet == false)
-                sb.Append(Statements.DropColumnNotNull(columnDiff.NewColumnName));
+                sb.Append(Statements.DropColumnNotNull(columnDiff.NewName));
 
             if (columnDiff.DefaultToSet is not null)
-                sb.Append(Statements.SetColumnDefault(columnDiff.NewColumnName, columnDiff.DefaultToSet));
+                sb.Append(Statements.SetColumnDefault(columnDiff.NewName, columnDiff.DefaultToSet));
             else if (columnDiff.DefaultToDrop is not null)
-                sb.Append(Statements.DropColumnDefault(columnDiff.NewColumnName));
+                sb.Append(Statements.DropColumnDefault(columnDiff.NewName));
 
             PostgreSQLColumnDiff cDiff = (PostgreSQLColumnDiff)columnDiff;
             if (cDiff.IdentityToSet is not null && cDiff.IdentityToSet == true)
             {
                 if (cDiff.IdentityGenerationKindToSet is null || cDiff.IdentitySequenceOptionsToSet is null)
                     throw new Exception($"Invalid columnDiff with missing Identity[GenerationKind|SequenceOptions]ToSet");
-                sb.Append(Statements.AddIdentity(columnDiff.NewColumnName, cDiff.IdentityGenerationKindToSet, cDiff.IdentitySequenceOptionsToSet));
+                sb.Append(Statements.AddIdentity(columnDiff.NewName, cDiff.IdentityGenerationKindToSet, cDiff.IdentitySequenceOptionsToSet));
             }
             else if (cDiff.IdentityToSet is not null && cDiff.IdentityToSet == false)
             {
-                sb.Append(Statements.DropIdentity(columnDiff.NewColumnName));
+                sb.Append(Statements.DropIdentity(columnDiff.NewName));
             }
             else
             {
                 if (cDiff.IdentityGenerationKindToSet is not null)
-                    sb.Append(Statements.SetIdentityGenerationKind(columnDiff.NewColumnName, cDiff.IdentityGenerationKindToSet));
+                    sb.Append(Statements.SetIdentityGenerationKind(columnDiff.NewName, cDiff.IdentityGenerationKindToSet));
                 if (cDiff.IdentitySequenceOptionsToSet is not null)
-                    SetIdentitySequenceOptions(columnDiff.NewColumnName, cDiff.IdentitySequenceOptionsToSet);
+                    SetIdentitySequenceOptions(columnDiff.NewName, cDiff.IdentitySequenceOptionsToSet);
             }
         }
 

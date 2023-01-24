@@ -12,8 +12,8 @@ internal class SQLiteDiffCreator : DiffCreator
     {
         SQLiteDatabaseDiff dbDiff = new()
         {
-            NewDatabaseVersion = newDatabase.Version,
-            OldDatabaseVersion = oldDatabase.Version,
+            NewVersion = newDatabase.Version,
+            OldVersion = oldDatabase.Version,
         };
 
         BuildTablesDiff<SQLiteTableDiff, ColumnDiff>(dbDiff, newDatabase, oldDatabase);
@@ -29,17 +29,17 @@ internal class SQLiteDiffCreator : DiffCreator
     {
         SQLiteTableDiff tDiff = (SQLiteTableDiff)tableDiff;
         tDiff.NewTableToDefine = newTable;
-        tDiff.CommonColumnsNewNames = GetCommonColumnsNewNames();
-        tDiff.CommonColumnsOldNames = GetCommonColumnsOldNames();
+        tDiff.ChangedColumnsNewNames = GetChangedColumnsNewNames();
+        tDiff.ChangedColumnsOldNames = GetChangedColumnsOldNames();
 
-        List<string> GetCommonColumnsNewNames()
+        List<string> GetChangedColumnsNewNames()
         {
             return newTable.Columns.Select(x => x.Name)
                 .Except(tableDiff.ColumnsToAdd.Select(x => x.Name))
                 .ToList();
         }
 
-        List<string> GetCommonColumnsOldNames()
+        List<string> GetChangedColumnsOldNames()
         {
             return oldTable.Columns.Select(x => x.Name)
                 .Except(tableDiff.ColumnsToDrop.Select(x => x.Name))

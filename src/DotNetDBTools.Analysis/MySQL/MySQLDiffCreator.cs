@@ -11,8 +11,8 @@ internal class MySQLDiffCreator : DiffCreator
     {
         MySQLDatabaseDiff dbDiff = new()
         {
-            NewDatabaseVersion = newDatabase.Version,
-            OldDatabaseVersion = oldDatabase.Version,
+            NewVersion = newDatabase.Version,
+            OldVersion = oldDatabase.Version,
         };
 
         BuildTablesDiff<MySQLTableDiff, MySQLColumnDiff>(dbDiff, newDatabase, oldDatabase);

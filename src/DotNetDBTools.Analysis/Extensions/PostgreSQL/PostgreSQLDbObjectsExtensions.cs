@@ -41,9 +41,9 @@ public static class PostgreSQLDbObjectsExtensions
     {
         return new()
         {
-            TableID = table.ID,
-            NewTableName = table.Name,
-            OldTableName = table.Name,
+            ID = table.ID,
+            NewName = table.Name,
+            OldName = table.Name,
         };
     }
 
@@ -54,9 +54,9 @@ public static class PostgreSQLDbObjectsExtensions
     {
         return new()
         {
-            ColumnID = column.ID,
-            NewColumnName = column.Name,
-            OldColumnName = column.Name,
+            ID = column.ID,
+            NewName = column.Name,
+            OldName = column.Name,
         };
     }
 
@@ -67,9 +67,9 @@ public static class PostgreSQLDbObjectsExtensions
     {
         return new()
         {
-            SequenceID = sequence.ID,
-            NewSequenceName = sequence.Name,
-            OldSequenceName = sequence.Name,
+            ID = sequence.ID,
+            NewName = sequence.Name,
+            OldName = sequence.Name,
         };
     }
 
@@ -80,9 +80,9 @@ public static class PostgreSQLDbObjectsExtensions
     {
         return new()
         {
-            TypeID = type.ID,
-            NewTypeName = type.Name,
-            OldTypeName = type.Name,
+            ID = type.ID,
+            NewName = type.Name,
+            OldName = type.Name,
         };
     }
 }

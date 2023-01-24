@@ -27,7 +27,7 @@ internal abstract class ScriptExecutor<
     public void ExecuteScripts(DatabaseDiff dbDiff, ScriptKind scriptKind)
     {
         foreach (Script script in GetOrderedByNameScriptsToExecute(dbDiff, scriptKind))
-            ExecuteScript(script, dbDiff.OldDatabaseVersion);
+            ExecuteScript(script, dbDiff.OldVersion);
 
         foreach (Script script in GetScriptsToAddRecordWithoutExecution(dbDiff, scriptKind))
             AddScriptExecutionRecord(script, -1);
@@ -43,8 +43,8 @@ internal abstract class ScriptExecutor<
     {
         return dbDiff.AddedScripts
             .Where(x => x.Kind == scriptKind &&
-                dbDiff.OldDatabaseVersion >= x.MinDbVersionToExecute &&
-                dbDiff.OldDatabaseVersion <= x.MaxDbVersionToExecute)
+                dbDiff.OldVersion >= x.MinDbVersionToExecute &&
+                dbDiff.OldVersion <= x.MaxDbVersionToExecute)
             .OrderByNameThenByType();
     }
 

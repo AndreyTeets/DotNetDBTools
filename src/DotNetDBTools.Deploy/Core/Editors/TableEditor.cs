@@ -89,17 +89,17 @@ internal abstract class TableEditor<
         foreach (Column column in tableDiff.ColumnsToDrop)
             QueryExecutor.Execute(Create<TDeleteDNDBTDbObjectRecordQuery>(column.ID));
 
-        Guid tableID = tableDiff.TableID;
-        if (tableDiff.NewTableName != tableDiff.OldTableName)
-            QueryExecutor.Execute(Create<TUpdateDNDBTDbObjectRecordQuery>(tableID, tableDiff.NewTableName));
+        Guid tableID = tableDiff.ID;
+        if (tableDiff.NewName != tableDiff.OldName)
+            QueryExecutor.Execute(Create<TUpdateDNDBTDbObjectRecordQuery>(tableID, tableDiff.NewName));
 
         foreach (ColumnDiff cDiff in tableDiff.ColumnsToAlter.Where(x =>
-            x.NewColumnName != x.OldColumnName
+            x.NewName != x.OldName
             || DefaultCodeChanged(x)))
         {
             string objectCode = cDiff.DefaultToSet is not null ? cDiff.DefaultToSet.Code : null;
             QueryExecutor.Execute(Create<TUpdateDNDBTDbObjectRecordQuery>(
-                cDiff.ColumnID, cDiff.NewColumnName, DefaultCodeChanged(cDiff), objectCode));
+                cDiff.ID, cDiff.NewName, DefaultCodeChanged(cDiff), objectCode));
         }
 
         foreach (Column c in tableDiff.ColumnsToAdd)

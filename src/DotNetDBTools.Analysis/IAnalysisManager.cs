@@ -15,6 +15,10 @@ public interface IAnalysisManager
     /// Compares two database models ignoring properties Database.Version, Database.Scripts, DbObject.ID, CodePiece.Code.
     /// </summary>
     public bool DatabasesAreEquivalentExcludingDNDBTInfo(Database database1, Database database2, out string diffLog);
+    /// <summary>
+    /// Compares two db-object models ignoring properties DbObject.ID, CodePiece.Code.
+    /// </summary>
+    public bool DbObjectsAreEquivalentExcludingDNDBTInfo(DbObject dbObject1, DbObject dbObject2, out string diffLog);
 
     /// <summary>
     /// Creates database-diff model for the two provided.
@@ -22,13 +26,17 @@ public interface IAnalysisManager
     /// </summary>
     public DatabaseDiff CreateDatabaseDiff(Database newDatabase, Database oldDatabase);
     /// <summary>
+    /// Checks if database-diff model contains any changes that will result in data loss if applied.
+    /// </summary>
+    public bool DiffLeadsToDataLoss(DatabaseDiff dbDiff);
+    /// <summary>
     /// Checks if database-diff model contains no changes.
     /// </summary>
     public bool DiffIsEmpty(DatabaseDiff dbDiff);
     /// <summary>
-    /// Checks if database-diff model contains any changes that will result in data loss if applied.
+    /// Checks if db-object-diff model contains no changes.
     /// </summary>
-    public bool DiffLeadsToDataLoss(DatabaseDiff dbDiff);
+    public bool DiffIsEmpty(DbObjectDiff dbObjectDiff);
 
     /// <summary>
     /// Creates specific DBMS database model from the provided agnostic database model.

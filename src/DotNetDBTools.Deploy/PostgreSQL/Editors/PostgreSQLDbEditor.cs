@@ -120,7 +120,7 @@ internal class PostgreSQLDbEditor : DbEditor<
 
         _scriptsExecutor.ExecuteScripts(dbDiff, ScriptKind.AfterPublishOnce);
 
-        if (dbDiff.NewDatabaseVersion != dbDiff.OldDatabaseVersion)
-            QueryExecutor.Execute(new PostgreSQLUpdateDNDBTDbAttributesRecordQuery(dbDiff.NewDatabaseVersion));
+        if (dbDiff.NewVersion != dbDiff.OldVersion)
+            QueryExecutor.Execute(new PostgreSQLUpdateDNDBTDbAttributesRecordQuery(dbDiff.NewVersion));
     }
 }

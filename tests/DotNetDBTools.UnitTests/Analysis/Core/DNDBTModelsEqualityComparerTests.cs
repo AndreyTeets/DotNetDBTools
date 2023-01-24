@@ -73,11 +73,11 @@ public class DNDBTModelsEqualityComparerTests
         _comparer.Equals(dbDiff1, dbDiff2).Should().BeFalse();
 
         DatabaseDiff dbDiff3 = _analysisManager.CreateDatabaseDiff(databaseV1, databaseV2);
-        dbDiff3.NewDatabaseVersion++;
+        dbDiff3.NewVersion++;
         _comparer.Equals(dbDiff1, dbDiff3).Should().BeFalse();
 
         dbDiff3 = _analysisManager.CreateDatabaseDiff(databaseV1, databaseV2);
-        dbDiff3.ChangedTables.Single(x => x.NewTableName == "MyTable2").ColumnsToAlter = new List<ColumnDiff>();
+        dbDiff3.ChangedTables.Single(x => x.NewName == "MyTable2").ColumnsToAlter = new List<ColumnDiff>();
         _comparer.Equals(dbDiff1, dbDiff3).Should().BeFalse();
     }
 
