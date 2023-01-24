@@ -1,4 +1,6 @@
-﻿using DotNetDBTools.Analysis.Core;
+﻿using System.Collections.Generic;
+using System.Linq;
+using DotNetDBTools.Analysis.Core;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.SQLite;
 
@@ -26,7 +28,22 @@ internal class SQLiteDiffCreator : DiffCreator
     protected override void BuildAdditionalTableDiffProperties(TableDiff tableDiff, Table newTable, Table oldTable)
     {
         SQLiteTableDiff tDiff = (SQLiteTableDiff)tableDiff;
-        tDiff.NewTable = newTable;
-        tDiff.OldTable = oldTable;
+        tDiff.NewTableToDefine = newTable;
+        tDiff.CommonColumnsNewNames = GetCommonColumnsNewNames();
+        tDiff.CommonColumnsOldNames = GetCommonColumnsOldNames();
+
+        List<string> GetCommonColumnsNewNames()
+        {
+            return newTable.Columns.Select(x => x.Name)
+                .Except(tableDiff.ColumnsToAdd.Select(x => x.Name))
+                .ToList();
+        }
+
+        List<string> GetCommonColumnsOldNames()
+        {
+            return oldTable.Columns.Select(x => x.Name)
+                .Except(tableDiff.ColumnsToDrop.Select(x => x.Name))
+                .ToList();
+        }
     }
 }

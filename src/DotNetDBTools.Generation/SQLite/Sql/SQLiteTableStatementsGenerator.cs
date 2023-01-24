@@ -30,38 +30,24 @@ $@"{GetIdDeclarationText(table, 0)}CREATE TABLE [{table.Name}]
     protected override string GetAlterSqlImpl(SQLiteTableDiff tableDiff)
     {
         string res =
-$@"CREATE TABLE [{DNDBTTempPrefix}{tableDiff.NewTable.Name}]
+$@"CREATE TABLE [{DNDBTTempPrefix}{tableDiff.NewTableName}]
 (
-{GetTableDefinitionsText((SQLiteTable)tableDiff.NewTable)}
+{GetTableDefinitionsText((SQLiteTable)tableDiff.NewTableToDefine)}
 );
 
-INSERT INTO [{DNDBTTempPrefix}{tableDiff.NewTable.Name}]
+INSERT INTO [{DNDBTTempPrefix}{tableDiff.NewTableName}]
 (
-{GetCommonColumnsNewNamesText(tableDiff)}
+{string.Join(",\n", tableDiff.CommonColumnsNewNames.Select(x => $@"    [{x}]"))}
 )
 SELECT
-{GetCommonColumnsOldNamesText(tableDiff)}
-FROM [{tableDiff.OldTable.Name}];
+{string.Join(",\n", tableDiff.CommonColumnsOldNames.Select(x => $@"    [{x}]"))}
+FROM [{tableDiff.OldTableName}];
 
-DROP TABLE [{tableDiff.OldTable.Name}];
+DROP TABLE [{tableDiff.OldTableName}];
 
-ALTER TABLE [{DNDBTTempPrefix}{tableDiff.NewTable.Name}] RENAME TO [{tableDiff.NewTable.Name}];";
+ALTER TABLE [{DNDBTTempPrefix}{tableDiff.NewTableName}] RENAME TO [{tableDiff.NewTableName}];";
 
         return res;
-
-        static string GetCommonColumnsNewNamesText(SQLiteTableDiff tableDiff)
-        {
-            IEnumerable<string> commonNewOldColumnsNames = tableDiff.NewTable.Columns.Select(x => x.Name)
-                .Except(tableDiff.ColumnsToAdd.Select(x => x.Name));
-            return string.Join(",\n", commonNewOldColumnsNames.Select(x => $@"    [{x}]"));
-        }
-
-        static string GetCommonColumnsOldNamesText(SQLiteTableDiff tableDiff)
-        {
-            IEnumerable<string> commonNewOldColumnsNames = tableDiff.OldTable.Columns.Select(x => x.Name)
-                .Except(tableDiff.ColumnsToDrop.Select(x => x.Name));
-            return string.Join(",\n", commonNewOldColumnsNames.Select(x => $@"    [{x}]"));
-        }
     }
 
     private string GetTableDefinitionsText(Table table)

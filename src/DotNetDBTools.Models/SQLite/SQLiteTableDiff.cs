@@ -1,9 +1,11 @@
-﻿using DotNetDBTools.Models.Core;
+﻿using System.Collections.Generic;
+using DotNetDBTools.Models.Core;
 
 namespace DotNetDBTools.Models.SQLite;
 
 public class SQLiteTableDiff : TableDiff
 {
-    public Table NewTable { get; set; }
-    public Table OldTable { get; set; }
+    public Table NewTableToDefine { get; set; }
+    public List<string> CommonColumnsNewNames { get; set; }
+    public List<string> CommonColumnsOldNames { get; set; }
 }
