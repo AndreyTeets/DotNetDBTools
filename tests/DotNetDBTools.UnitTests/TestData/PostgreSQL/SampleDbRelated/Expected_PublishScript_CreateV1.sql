@@ -2000,6 +2000,41 @@ EXECUTE 'UPDATE "DNDBTDbObjects" SET
 WHERE "ID" = ''59c3bf9d-4938-40df-9528-f1aa8367c6e3'';';
 -- QUERY END: UpdateDNDBTDbObjectRecordQuery
 
+-- QUERY START: CreateProcedureQuery
+EXECUTE 'CREATE PROCEDURE "MyProcedure1"(in a INT, in b INT)
+LANGUAGE SQL
+AS
+$ProcBody$
+INSERT INTO "MyTable4"("MyColumn1") VALUES (a);
+INSERT INTO "MyTable4"("MyColumn1") VALUES (b + 1);
+$ProcBody$';
+-- QUERY END: CreateProcedureQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''c4bf4926-bd3b-4c95-bc3e-1249445aec14'',
+    NULL,
+    ''Procedure'',
+    ''MyProcedure1'',
+    ''CREATE PROCEDURE "MyProcedure1"(in a INT, in b INT)
+LANGUAGE SQL
+AS
+$ProcBody$
+INSERT INTO "MyTable4"("MyColumn1") VALUES (a);
+INSERT INTO "MyTable4"("MyColumn1") VALUES (b + 1);
+$ProcBody$''
+);';
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
 -- QUERY START: CreateViewQuery
 EXECUTE 'CREATE VIEW "MyView1" AS
 SELECT

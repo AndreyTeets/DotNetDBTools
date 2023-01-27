@@ -14,6 +14,7 @@ using static DotNetDBTools.Deploy.PostgreSQL.Queries.DBMSSysInfo.PostgreSQLGetCo
 using static DotNetDBTools.Deploy.PostgreSQL.Queries.DBMSSysInfo.PostgreSQLGetDomainTypesFromDBMSSysInfoQuery;
 using static DotNetDBTools.Deploy.PostgreSQL.Queries.DBMSSysInfo.PostgreSQLGetEnumTypesFromDBMSSysInfoQuery;
 using static DotNetDBTools.Deploy.PostgreSQL.Queries.DBMSSysInfo.PostgreSQLGetFunctionsFromDBMSSysInfoQuery;
+using static DotNetDBTools.Deploy.PostgreSQL.Queries.DBMSSysInfo.PostgreSQLGetProceduresFromDBMSSysInfoQuery;
 using static DotNetDBTools.Deploy.PostgreSQL.Queries.DBMSSysInfo.PostgreSQLGetRangeTypesFromDBMSSysInfoQuery;
 using static DotNetDBTools.Deploy.PostgreSQL.Queries.DBMSSysInfo.PostgreSQLGetSequencesFromDBMSSysInfoQuery;
 
@@ -55,6 +56,7 @@ internal class PostgreSQLDbModelFromDBMSProvider : DbModelFromDBMSProvider<
         db.EnumTypes = BuildEnumTypes(new PostgreSQLGetEnumTypesFromDBMSSysInfoQuery());
         db.RangeTypes = BuildRangeTypes(new PostgreSQLGetRangeTypesFromDBMSSysInfoQuery(_dbmsVersion));
         db.Functions = BuildFunctions(new PostgreSQLGetFunctionsFromDBMSSysInfoQuery());
+        db.Procedures = BuildProcedures(new PostgreSQLGetProceduresFromDBMSSysInfoQuery());
     }
 
     protected override void ReplaceAdditionalDbModelObjectsIDsAndCodeWithDNDBTSysInfo(Database database, Dictionary<string, DNDBTInfo> dbObjectIDsMap)
@@ -87,6 +89,12 @@ internal class PostgreSQLDbModelFromDBMSProvider : DbModelFromDBMSProvider<
             DNDBTInfo dndbtInfo = dbObjectIDsMap[$"{DbObjectType.Function}_{func.Name}_{null}"];
             func.ID = dndbtInfo.ID;
             func.CreateStatement.Code = dndbtInfo.Code;
+        }
+        foreach (PostgreSQLProcedure proc in db.Procedures)
+        {
+            DNDBTInfo dndbtInfo = dbObjectIDsMap[$"{DbObjectType.Procedure}_{proc.Name}_{null}"];
+            proc.ID = dndbtInfo.ID;
+            proc.CreateStatement.Code = dndbtInfo.Code;
         }
     }
 
@@ -249,5 +257,22 @@ internal class PostgreSQLDbModelFromDBMSProvider : DbModelFromDBMSProvider<
             funcsList.Add(func);
         }
         return funcsList;
+    }
+
+    private List<PostgreSQLProcedure> BuildProcedures(PostgreSQLGetProceduresFromDBMSSysInfoQuery query)
+    {
+        IEnumerable<ProcedureRecord> procRecordsList = QueryExecutor.Query<ProcedureRecord>(query);
+        List<PostgreSQLProcedure> procsList = new();
+        foreach (ProcedureRecord procRecord in procRecordsList)
+        {
+            PostgreSQLProcedure proc = new()
+            {
+                ID = Guid.NewGuid(),
+                Name = procRecord.ProcedureName,
+                CreateStatement = new CodePiece { Code = procRecord.ProcedureCode.NormalizeLineEndings() },
+            };
+            procsList.Add(proc);
+        }
+        return procsList;
     }
 }

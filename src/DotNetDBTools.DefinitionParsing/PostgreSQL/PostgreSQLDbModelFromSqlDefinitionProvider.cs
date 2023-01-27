@@ -32,6 +32,7 @@ internal class PostgreSQLDbModelFromSqlDefinitionProvider : DbModelFromSqlDefini
         db.EnumTypes = BuildEnumTypeModels(dbObjects.OfType<TypeInfo>().Where(x => x.TypeType == TypeType.Enum));
         db.RangeTypes = BuildRangeTypeModels(dbObjects.OfType<TypeInfo>().Where(x => x.TypeType == TypeType.Range));
         db.Functions = BuildFunctionModels(dbObjects.OfType<FunctionInfo>());
+        db.Procedures = BuildProcedureModels(dbObjects.OfType<ProcedureInfo>());
     }
 
     protected override void BuildAdditionalColumnModelProperties(PostgreSQLColumn columnModel, ColumnInfo column, string tableName)
@@ -172,6 +173,22 @@ internal class PostgreSQLDbModelFromSqlDefinitionProvider : DbModelFromSqlDefini
             functionModels.Add(functionModel);
         }
         return functionModels;
+    }
+
+    private List<PostgreSQLProcedure> BuildProcedureModels(IEnumerable<ProcedureInfo> procedures)
+    {
+        List<PostgreSQLProcedure> procedureModels = new();
+        foreach (ProcedureInfo procedure in procedures)
+        {
+            PostgreSQLProcedure procedureModel = new()
+            {
+                ID = procedure.ID.Value,
+                Name = procedure.Name,
+                CreateStatement = new CodePiece { Code = procedure.CreateStatement.NormalizeLineEndings() },
+            };
+            procedureModels.Add(procedureModel);
+        }
+        return procedureModels;
     }
 
     private static PostgreSQLSequenceOptions MapToSequenceOptionsModel(SequenceOptions options)

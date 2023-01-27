@@ -32,6 +32,10 @@ EXECUTE 'ALTER FUNCTION "f_4_s" RENAME TO "_DNDBTTemp_f_4_s";';
 -- QUERY END: RenameProgrammableObjectToTempQuery
 
 -- QUERY START: RenameProgrammableObjectToTempQuery
+EXECUTE 'ALTER PROCEDURE "p_7_s" RENAME TO "_DNDBTTemp_p_7_s";';
+-- QUERY END: RenameProgrammableObjectToTempQuery
+
+-- QUERY START: RenameProgrammableObjectToTempQuery
 EXECUTE 'ALTER VIEW "v_a_1" RENAME TO "_DNDBTTemp_v_a_1";';
 -- QUERY END: RenameProgrammableObjectToTempQuery
 
@@ -53,6 +57,10 @@ EXECUTE 'create function f_7_s() returns int language sql as $$select nextval(''
 EXECUTE 'create function f_4_s(x int) returns int language sql immutable as $$select x + f_7_s()$$';
 -- QUERY END: CreateFunctionQuery
 
+-- QUERY START: CreateProcedureQuery
+EXECUTE 'create procedure p_7_s() language sql as $$select nextval(''s_1'')$$';
+-- QUERY END: CreateProcedureQuery
+
 -- QUERY START: CreateViewQuery
 EXECUTE 'create view v_a_1 as select (1000 + nextval(''s_1''))';
 -- QUERY END: CreateViewQuery
@@ -60,6 +68,10 @@ EXECUTE 'create view v_a_1 as select (1000 + nextval(''s_1''))';
 -- QUERY START: DropFunctionQuery
 EXECUTE 'DROP FUNCTION "_DNDBTTemp_f_4_s";';
 -- QUERY END: DropFunctionQuery
+
+-- QUERY START: DropProcedureQuery
+EXECUTE 'DROP PROCEDURE "_DNDBTTemp_p_7_s";';
+-- QUERY END: DropProcedureQuery
 
 -- QUERY START: DropViewQuery
 EXECUTE 'DROP VIEW "_DNDBTTemp_v_a_1";';

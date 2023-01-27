@@ -33,6 +33,7 @@ public class PostgreSQLDeployTests : BaseDeployTests<
     {
         string res = codePiece.Code.ToUpper();
         res = Regex.Replace(res, @"(\s)INT([,)\s])", m => $"{m.Groups[1].Value}INTEGER{m.Groups[2].Value}");
+        res = Regex.Replace(res, @"(?:IN\s)?(\w+\s)INTEGER([,)\s])", m => $"{m.Groups[1].Value}INTEGER{m.Groups[2].Value}");
 
         res = res
             .Replace("\r", "")
@@ -52,8 +53,10 @@ public class PostgreSQLDeployTests : BaseDeployTests<
             .Replace("::TIMESTAMPWITHOUTTIMEZONE", "")
             .Replace("::TIMESTAMPWITHTIMEZONE", "")
             .Replace("::\"MYCOMPOSITETYPE1\"", "")
+            .Replace("::\"MYPROCEDURE1\".", "")
             .Replace(".00", "")
             .Replace("$FUNCBODY$", "$FUNCTION$")
+            .Replace("$PROCBODY$", "$PROCEDURE$")
             .Replace("CREATEORREPLACE", "CREATE")
             .Replace("EXECUTEPROCEDURE", "EXECUTEFUNCTION")
             .Replace("PUBLIC.", "");

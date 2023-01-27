@@ -4,7 +4,6 @@ using System.Linq;
 using DotNetDBTools.Analysis.Extensions;
 using DotNetDBTools.Analysis.Extensions.PostgreSQL;
 using DotNetDBTools.Deploy.Core;
-using DotNetDBTools.Deploy.Core.Queries;
 using DotNetDBTools.Deploy.Core.Queries.DDL;
 using DotNetDBTools.Deploy.PostgreSQL.Queries.DDL;
 using DotNetDBTools.Deploy.PostgreSQL.Queries.DNDBTSysInfo;
@@ -146,13 +145,13 @@ internal class PostgreSQLProgrammableObjectsEditor
 
     private void CreateProcedure(PostgreSQLProcedure proc)
     {
-        QueryExecutor.Execute(new GenericQuery($"{proc.GetCreateStatement()}"));
+        QueryExecutor.Execute(new PostgreSQLCreateProcedureQuery(proc));
         QueryExecutor.Execute(new PostgreSQLInsertDNDBTDbObjectRecordQuery(proc, DbObjectType.Procedure, proc.GetCreateStatement()));
     }
 
     private void DropProcedure(PostgreSQLProcedure proc)
     {
-        QueryExecutor.Execute(new GenericQuery($@"DROP PROCEDURE ""{proc.Name}"";"));
+        QueryExecutor.Execute(new PostgreSQLDropProcedureQuery(proc));
     }
 
     private static bool IsComplexDepsObject(DbObject dbObject)

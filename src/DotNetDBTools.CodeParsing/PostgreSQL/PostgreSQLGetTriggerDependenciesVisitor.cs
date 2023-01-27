@@ -17,7 +17,7 @@ internal class PostgreSQLGetTriggerDependenciesVisitor : PostgreSQLParserBaseVis
     {
         string executedFunctionName = PostgreSQLHelperMethods.Unquote(
             context.func_name.schema_qualified_name_for_func_name().GetText());
-        _dependencies.Add(new Dependency { Type = DependencyType.Function, Name = executedFunctionName });
+        _dependencies.Add(new Dependency { Type = DependencyType.FunctionOrProcedure, Name = executedFunctionName });
         return base.VisitCreate_trigger_statement(context);
     }
 }

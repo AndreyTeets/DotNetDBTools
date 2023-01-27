@@ -27,9 +27,37 @@ EXECUTE 'create function f_7_s() returns int language sql as $$select nextval(''
 EXECUTE 'create function f_9_p() returns int language plpgsql as $$begin return (select (7 + 7)); end$$';
 -- QUERY END: CreateFunctionQuery
 
+-- QUERY START: CreateProcedureQuery
+EXECUTE 'create procedure p_1_p() language plpgsql as $$begin call p_2_s(); end$$';
+-- QUERY END: CreateProcedureQuery
+
+-- QUERY START: CreateProcedureQuery
+EXECUTE 'create procedure p_3_s() language sql as $$select (33 + 33)$$';
+-- QUERY END: CreateProcedureQuery
+
+-- QUERY START: CreateProcedureQuery
+EXECUTE 'create procedure p_9_p() language plpgsql as $$begin perform (select (77 + 77)); end$$';
+-- QUERY END: CreateProcedureQuery
+
 -- QUERY START: CreateViewQuery
 EXECUTE 'create view v_1 as select (8 + 8) as c1';
 -- QUERY END: CreateViewQuery
+
+-- QUERY START: CreateFunctionQuery
+EXECUTE 'create function f_10_s() returns int language sql as $$call p_3_s(); select 2$$';
+-- QUERY END: CreateFunctionQuery
+
+-- QUERY START: CreateFunctionQuery
+EXECUTE 'create function f_11_p() returns int language plpgsql as $$begin call p_3_s(); return (select 2); end$$';
+-- QUERY END: CreateFunctionQuery
+
+-- QUERY START: CreateFunctionQuery
+EXECUTE 'create function f_12_s() returns int language sql as $$call p_9_p(); select 2$$';
+-- QUERY END: CreateFunctionQuery
+
+-- QUERY START: CreateFunctionQuery
+EXECUTE 'create function f_13_s() returns int language plpgsql as $$begin call p_9_p(); return (select 2); end$$';
+-- QUERY END: CreateFunctionQuery
 
 -- QUERY START: CreateFunctionQuery
 EXECUTE 'create function f_4_s(x int) returns int language sql immutable as $$select x + f_7_s()$$';
@@ -66,6 +94,58 @@ EXECUTE 'create function f_a_7_p() returns int language plpgsql as $$begin retur
 -- QUERY START: CreateFunctionQuery
 EXECUTE 'create function f_a_8_p() returns int language plpgsql as $$begin return (select c1 from v_1); end$$';
 -- QUERY END: CreateFunctionQuery
+
+-- QUERY START: CreateProcedureQuery
+EXECUTE 'create procedure p_10_s() language sql as $$select f_3_s()$$';
+-- QUERY END: CreateProcedureQuery
+
+-- QUERY START: CreateProcedureQuery
+EXECUTE 'create procedure p_11_p() language plpgsql as $$begin perform f_3_s(); end$$';
+-- QUERY END: CreateProcedureQuery
+
+-- QUERY START: CreateProcedureQuery
+EXECUTE 'create procedure p_12_s() language sql as $$select f_9_p()$$';
+-- QUERY END: CreateProcedureQuery
+
+-- QUERY START: CreateProcedureQuery
+EXECUTE 'create procedure p_13_s() language plpgsql as $$begin perform f_9_p(); end$$';
+-- QUERY END: CreateProcedureQuery
+
+-- QUERY START: CreateProcedureQuery
+EXECUTE 'create procedure p_2_s() language sql as $$call p_3_s()$$';
+-- QUERY END: CreateProcedureQuery
+
+-- QUERY START: CreateProcedureQuery
+EXECUTE 'create procedure p_6_s() language sql as $$call p_1_p()$$';
+-- QUERY END: CreateProcedureQuery
+
+-- QUERY START: CreateProcedureQuery
+EXECUTE 'create procedure p_7_s() language sql as $$select nextval(''s_1'')$$';
+-- QUERY END: CreateProcedureQuery
+
+-- QUERY START: CreateProcedureQuery
+EXECUTE 'create procedure p_8_p() language plpgsql as $$begin perform nextval(''s_1''); end$$';
+-- QUERY END: CreateProcedureQuery
+
+-- QUERY START: CreateProcedureQuery
+EXECUTE 'create procedure p_a_4_s() language sql as $$select c1 from v_1$$';
+-- QUERY END: CreateProcedureQuery
+
+-- QUERY START: CreateProcedureQuery
+EXECUTE 'create procedure p_a_5_p() language plpgsql as $$begin perform 5::tp_3::int; end$$';
+-- QUERY END: CreateProcedureQuery
+
+-- QUERY START: CreateProcedureQuery
+EXECUTE 'create procedure p_a_6_p() language plpgsql as $$begin perform (''(5)''::tp_9).a1::int; end$$';
+-- QUERY END: CreateProcedureQuery
+
+-- QUERY START: CreateProcedureQuery
+EXECUTE 'create procedure p_a_7_p() language plpgsql as $$begin perform (select c1::int from t_1); end$$';
+-- QUERY END: CreateProcedureQuery
+
+-- QUERY START: CreateProcedureQuery
+EXECUTE 'create procedure p_a_8_p() language plpgsql as $$begin perform (select c1 from v_1); end$$';
+-- QUERY END: CreateProcedureQuery
 
 -- QUERY START: CreateViewQuery
 EXECUTE 'create view v_a_1 as select (1000 + nextval(''s_1''))';
@@ -500,6 +580,18 @@ EXECUTE 'create function f_a_2_s() returns int language sql as $$select (''(5)''
 -- QUERY START: CreateFunctionQuery
 EXECUTE 'create function f_a_3_s() returns int language sql as $$select c1::int from t_1$$';
 -- QUERY END: CreateFunctionQuery
+
+-- QUERY START: CreateProcedureQuery
+EXECUTE 'create procedure p_a_1_s() language sql as $$select 5::tp_3::int$$';
+-- QUERY END: CreateProcedureQuery
+
+-- QUERY START: CreateProcedureQuery
+EXECUTE 'create procedure p_a_2_s() language sql as $$select (''(5)''::tp_9).a1::int$$';
+-- QUERY END: CreateProcedureQuery
+
+-- QUERY START: CreateProcedureQuery
+EXECUTE 'create procedure p_a_3_s() language sql as $$select c1::int from t_1$$';
+-- QUERY END: CreateProcedureQuery
 
 -- QUERY START: CreateViewQuery
 EXECUTE 'create view v_a_6 as select 5::tp_3::int';

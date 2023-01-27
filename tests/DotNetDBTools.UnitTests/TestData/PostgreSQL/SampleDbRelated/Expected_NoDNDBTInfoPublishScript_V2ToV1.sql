@@ -35,6 +35,10 @@ EXECUTE 'ALTER TABLE "MyTable5"
     ALTER COLUMN "MyColumn201" DROP DEFAULT;';
 -- QUERY END: AlterTableQuery
 
+-- QUERY START: DropProcedureQuery
+EXECUTE 'DROP PROCEDURE "MyProcedure1";';
+-- QUERY END: DropProcedureQuery
+
 -- QUERY START: DropViewQuery
 EXECUTE 'DROP VIEW "MyView1";';
 -- QUERY END: DropViewQuery
@@ -265,6 +269,16 @@ EXECUTE 'DROP FUNCTION "_DNDBTTemp_MyFunction1";';
 -- QUERY START: DropFunctionQuery
 EXECUTE 'DROP FUNCTION "_DNDBTTemp_TR_MyTable2_MyTrigger1_Handler";';
 -- QUERY END: DropFunctionQuery
+
+-- QUERY START: CreateProcedureQuery
+EXECUTE 'CREATE PROCEDURE "MyProcedure1"(in a INT, in b INT)
+LANGUAGE SQL
+AS
+$ProcBody$
+INSERT INTO "MyTable4"("MyColumn1") VALUES (a);
+INSERT INTO "MyTable4"("MyColumn1") VALUES (b + 1);
+$ProcBody$';
+-- QUERY END: CreateProcedureQuery
 
 -- QUERY START: CreateViewQuery
 EXECUTE 'CREATE VIEW "MyView1" AS

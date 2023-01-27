@@ -17,6 +17,7 @@ internal class PostgreSQLDefinitionGenerator : DefinitionGenerator<PostgreSQLTab
             files.AddRange(PostgreSQLSequencesCSharpDefinitionGenerator.Create(database, projectNamespace));
             files.AddRange(PostgreSQLTypesCSharpDefinitionGenerator.Create(database, projectNamespace));
             files.AddRange(PostgreSQLFunctionsCSharpDefinitionGenerator.Create(database, projectNamespace));
+            files.AddRange(PostgreSQLProceduresCSharpDefinitionGenerator.Create(database, projectNamespace));
         }
         else
         {
@@ -32,6 +33,8 @@ internal class PostgreSQLDefinitionGenerator : DefinitionGenerator<PostgreSQLTab
                 AddFile(files, type, "Types");
             foreach (PostgreSQLFunction function in db.Functions)
                 AddFile(files, function, "Functions");
+            foreach (PostgreSQLProcedure procedure in db.Procedures)
+                AddFile(files, procedure, "Procedures");
         }
     }
 }

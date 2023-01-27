@@ -5,5 +5,5 @@ public enum DependencyType
     Sequence,
     DataType,
     TableOrView,
-    Function,
+    FunctionOrProcedure,
 }

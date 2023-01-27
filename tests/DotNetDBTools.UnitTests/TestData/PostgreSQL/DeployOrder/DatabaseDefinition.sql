@@ -9,6 +9,12 @@ create function f_3_s() returns int language sql as $$select (3 + 3)$$;
 --ID:#{59AE46D3-6E6D-4119-B7C7-53C8FEB6D4C1}#
 create function f_9_p() returns int language plpgsql as $$begin return (select (7 + 7)); end$$;
 
+--ID:#{3DA58AA1-BD0A-40EC-9895-032AAE1C230D}#
+create procedure p_3_s() language sql as $$select (33 + 33)$$;
+
+--ID:#{96293685-BB0F-4B41-9E76-09CC59CAA7E4}#
+create procedure p_9_p() language plpgsql as $$begin perform (select (77 + 77)); end$$;
+
 --ID:#{599B62BD-140E-4FDD-981F-F0303176F82B}#
 create type tp_8 as enum ('l1', 'l2');
 
@@ -41,7 +47,7 @@ create table t_1(
 create view v_1 as select (8 + 8) as c1;
 
 
---Functions depending on sequences/functions
+--Functions/Procedures depending on sequences/functions/procedures
 
 --ID:#{FEEF1184-0317-4361-A639-B5C2FEAF8C1F}#
 create function f_7_s() returns int language sql as $$select nextval('s_1')::int$$;
@@ -49,20 +55,59 @@ create function f_7_s() returns int language sql as $$select nextval('s_1')::int
 --ID:#{D75BBDF0-FE27-4F06-8A79-F0EF743E3120}#
 create function f_8_p() returns int language plpgsql as $$begin return (select nextval('s_1')); end$$;
 
+--ID:#{7B1EAEFB-E75E-499F-895F-6D3403F98BF6}#
+create procedure p_7_s() language sql as $$select nextval('s_1')$$;
+
+--ID:#{2FEC9BD1-0129-4EE0-BC4C-F780DAA10C3B}#
+create procedure p_8_p() language plpgsql as $$begin perform nextval('s_1'); end$$;
+
 --ID:#{231182BD-DFE1-47D3-A2E8-9A86DFAA8C6C}#
 create function f_2_s(x int) returns int language sql as $$select x + f_3_s()$$;
+
+--ID:#{9E86E22F-B7BF-47B7-B87B-9C4E80F98CF1}#
+create procedure p_2_s() language sql as $$call p_3_s()$$;
 
 --ID:#{343CDD13-72DB-4C2C-8B36-9B3D8BC400B3}#
 create function f_1_p() returns int language plpgsql as $$begin return (select f_2_s(8)); end$$;
 
+--ID:#{FA651406-C6EA-46F3-8DB2-8D569292A98D}#
+create procedure p_1_p() language plpgsql as $$begin call p_2_s(); end$$;
+
 --ID:#{6BB63614-A8C3-45B9-B89E-862A103083F0}#
 create function f_6_s() returns int language sql as $$select f_1_p()$$;
+
+--ID:#{8713DB49-14FB-42F6-A392-41BF56A190A7}#
+create procedure p_6_s() language sql as $$call p_1_p()$$;
 
 --ID:#{9404CA54-065C-4C24-A532-D3DA5BA56D84}#
 create function f_4_s(x int) returns int language sql immutable as $$select x + f_7_s()$$;
 
 --ID:#{B4B7C052-D033-45DA-A3B3-79794EEECB24}#
 create function f_5_p() returns trigger language plpgsql as $$begin perform (select f_2_s(8)); return NULL; end$$;
+
+--ID:#{9EDCA48C-AA56-472B-BB93-4B100B6100B4}#
+create function f_10_s() returns int language sql as $$call p_3_s(); select 2$$;
+
+--ID:#{F3DAA998-2F65-46C6-AED6-845126F25CF4}#
+create function f_11_p() returns int language plpgsql as $$begin call p_3_s(); return (select 2); end$$;
+
+--ID:#{4FE4F82C-58EA-455D-93C3-EE11597AFFA3}#
+create function f_12_s() returns int language sql as $$call p_9_p(); select 2$$;
+
+--ID:#{BD5C3526-E9EE-4AEC-9042-EE18778C1756}#
+create function f_13_s() returns int language plpgsql as $$begin call p_9_p(); return (select 2); end$$;
+
+--ID:#{7A6CCF61-BBCF-4800-BB67-73117A01F54A}#
+create procedure p_10_s() language sql as $$select f_3_s()$$;
+
+--ID:#{5D6180D9-AA19-45FE-937C-BC2DD4405FC5}#
+create procedure p_11_p() language plpgsql as $$begin perform f_3_s(); end$$;
+
+--ID:#{C5BCEAC8-A4AE-4E8F-9530-F1BA1B4D92B2}#
+create procedure p_12_s() language sql as $$select f_9_p()$$;
+
+--ID:#{26BA2802-CEA3-4FCC-9BFE-BE82A14D5FC0}#
+create procedure p_13_s() language plpgsql as $$begin perform f_9_p(); end$$;
 
 
 --Types depending on types
@@ -324,6 +369,33 @@ create function f_a_7_p() returns int language plpgsql as $$begin return (select
 
 --ID:#{4076696D-53E7-4004-B54A-117B89B06C88}#
 create function f_a_8_p() returns int language plpgsql as $$begin return (select c1 from v_1); end$$;
+
+
+--Procedures depending on types/tables/views
+
+--ID:#{864668AD-381B-48BE-88BF-5B8B26645254}#
+create procedure p_a_1_s() language sql as $$select 5::tp_3::int$$;
+
+--ID:#{563CC105-D40F-4FB7-A1ED-6811E965561B}#
+create procedure p_a_2_s() language sql as $$select ('(5)'::tp_9).a1::int$$;
+
+--ID:#{28074E35-C598-4122-BCDC-B43AEF1F0258}#
+create procedure p_a_3_s() language sql as $$select c1::int from t_1$$;
+
+--ID:#{8CE88B4C-6D5F-48B3-B0B9-8FD9FAA0038D}#
+create procedure p_a_4_s() language sql as $$select c1 from v_1$$;
+
+--ID:#{6FC404A6-520F-498A-8819-3085E5D334B9}#
+create procedure p_a_5_p() language plpgsql as $$begin perform 5::tp_3::int; end$$;
+
+--ID:#{DE923AB3-6208-4AB3-A6C5-E95F686B5B23}#
+create procedure p_a_6_p() language plpgsql as $$begin perform ('(5)'::tp_9).a1::int; end$$;
+
+--ID:#{7D92921B-F512-40A2-8906-51B1F00BB314}#
+create procedure p_a_7_p() language plpgsql as $$begin perform (select c1::int from t_1); end$$;
+
+--ID:#{0F849DB5-9D38-4292-B6E9-4922B99CF0EB}#
+create procedure p_a_8_p() language plpgsql as $$begin perform (select c1 from v_1); end$$;
 
 
 --Views depending on sequences/functions/types/tables/views

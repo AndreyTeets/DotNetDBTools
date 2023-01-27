@@ -27,7 +27,7 @@ internal static class PostgreSQLHelperMethods
             if (functionName.ToLower() == "nextval")
                 dependency = new Dependency { Type = DependencyType.Sequence, Name = GetSequenceName() };
             else
-                dependency = new Dependency { Type = DependencyType.Function, Name = functionName };
+                dependency = new Dependency { Type = DependencyType.FunctionOrProcedure, Name = functionName };
         }
         return dependency is not null;
 

@@ -49,6 +49,9 @@ BEGIN
 
     RETURN NULL;
 
+    CALL "MyProc1"();
+    CALL MyProc2(1, 2);
+
     -- Misc complex single-line statements
     "var1" = var1 + interval '2 day';
     var1 := "var1" + interval '2' day;

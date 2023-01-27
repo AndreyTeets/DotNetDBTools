@@ -44,7 +44,7 @@ public class PostgreSQLCodeParser : CodeParser<PostgreSQLParser, PostgreSQLLexer
     }
 
     /// <summary>
-    /// Parses the list of functions|views|tables referenced in the provided create view statement.
+    /// Parses the list of tables|views|functions referenced in the provided create view statement.
     /// </summary>
     public List<Dependency> GetViewDependencies(string createViewStatement)
     {
@@ -55,7 +55,7 @@ public class PostgreSQLCodeParser : CodeParser<PostgreSQLParser, PostgreSQLLexer
     }
 
     /// <summary>
-    /// Parses the list of functions|views|tables referenced in the provided create function statement.
+    /// Parses the list of tables|views|functions|procedures referenced in the provided create function statement.
     /// </summary>
     public List<Dependency> GetFunctionDependencies(string createFunctionStatement, out string language)
     {
@@ -78,11 +78,11 @@ public class PostgreSQLCodeParser : CodeParser<PostgreSQLParser, PostgreSQLLexer
     }
 
     /// <summary>
-    /// Parses the list of functions|views|tables referenced in the provided create procedure statement.
+    /// Parses the list of tables|views|functions|procedures referenced in the provided create procedure statement.
     /// </summary>
     public List<Dependency> GetProcedureDependencies(string createProcedureStatement, out string language)
     {
-        throw new System.NotImplementedException();
+        return GetFunctionDependencies(createProcedureStatement, out language);
     }
 
     /// <summary>

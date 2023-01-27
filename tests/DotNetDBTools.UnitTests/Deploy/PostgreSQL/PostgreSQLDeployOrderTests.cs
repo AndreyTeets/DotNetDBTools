@@ -52,6 +52,8 @@ public class PostgreSQLDeployOrderTests
     [InlineData("s_1-2", "All required objects depending on sequence are altered/recreated in correct order when it is recreated")]
     [InlineData("f_3_s", "All required objects depending on sql function are altered/recreated in correct order when it is changed")]
     [InlineData("f_9_p", "All required objects depending on plpgsql function are altered/recreated in correct order when it is changed")]
+    [InlineData("p_3_s", "All required objects depending on sql procedure are altered/recreated in correct order when it is changed")]
+    [InlineData("p_9_p", "All required objects depending on plpgsql procedure are altered/recreated in correct order when it is changed")]
     [InlineData("tp_3", "No objects depending on domain type are altered/recreated when it is renamed or" +
         " when only it's constraint is changed and there are no columns that depend on it through complex type")]
     [InlineData("tp_30", "All required objects depending on domain type are altered/recreated in correct order" +
@@ -103,6 +105,20 @@ public class PostgreSQLDeployOrderTests
                 {
                     PostgreSQLFunction x = db.Functions.Single(x => x.Name == "f_9_p");
                     x.CreateStatement.Code = x.CreateStatement.Code.Replace("7 + 7", "6 + 8");
+                }, caseName, caseDescription);
+                break;
+            case "p_3_s":
+                TestCase(db =>
+                {
+                    PostgreSQLProcedure x = db.Procedures.Single(x => x.Name == "p_3_s");
+                    x.CreateStatement.Code = x.CreateStatement.Code.Replace("33 + 33", "33 + 44");
+                }, caseName, caseDescription);
+                break;
+            case "p_9_p":
+                TestCase(db =>
+                {
+                    PostgreSQLProcedure x = db.Procedures.Single(x => x.Name == "p_9_p");
+                    x.CreateStatement.Code = x.CreateStatement.Code.Replace("77 + 77", "66 + 88");
                 }, caseName, caseDescription);
                 break;
             case "tp_3":

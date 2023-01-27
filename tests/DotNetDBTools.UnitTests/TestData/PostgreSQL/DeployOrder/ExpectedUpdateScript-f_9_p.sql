@@ -20,6 +20,10 @@ EXECUTE 'ALTER DOMAIN "d_a_4" DROP DEFAULT;';
 -- QUERY END: AlterDomainTypeQuery
 
 -- QUERY START: RenameProgrammableObjectToTempQuery
+EXECUTE 'ALTER PROCEDURE "p_12_s" RENAME TO "_DNDBTTemp_p_12_s";';
+-- QUERY END: RenameProgrammableObjectToTempQuery
+
+-- QUERY START: RenameProgrammableObjectToTempQuery
 EXECUTE 'ALTER VIEW "v_a_4" RENAME TO "_DNDBTTemp_v_a_4";';
 -- QUERY END: RenameProgrammableObjectToTempQuery
 
@@ -31,9 +35,17 @@ EXECUTE 'ALTER FUNCTION "f_9_p" RENAME TO "_DNDBTTemp_f_9_p";';
 EXECUTE 'create function f_9_p() returns int language plpgsql as $$begin return (select (6 + 8)); end$$';
 -- QUERY END: CreateFunctionQuery
 
+-- QUERY START: CreateProcedureQuery
+EXECUTE 'create procedure p_12_s() language sql as $$select f_9_p()$$';
+-- QUERY END: CreateProcedureQuery
+
 -- QUERY START: CreateViewQuery
 EXECUTE 'create view v_a_4 as select (1000 + f_9_p())';
 -- QUERY END: CreateViewQuery
+
+-- QUERY START: DropProcedureQuery
+EXECUTE 'DROP PROCEDURE "_DNDBTTemp_p_12_s";';
+-- QUERY END: DropProcedureQuery
 
 -- QUERY START: DropViewQuery
 EXECUTE 'DROP VIEW "_DNDBTTemp_v_a_4";';

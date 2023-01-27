@@ -1,0 +1,8 @@
+--ID:#{C4BF4926-BD3B-4C95-BC3E-1249445AEC14}#
+CREATE PROCEDURE "MyProcedure1"(in a INT, in b INT)
+LANGUAGE SQL
+AS
+$ProcBody$
+INSERT INTO "MyTable4"("MyColumn1") VALUES (a);
+INSERT INTO "MyTable4"("MyColumn1") VALUES (b);
+$ProcBody$

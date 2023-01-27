@@ -1,5 +1,5 @@
 {
-  "$id": "A76DCA7809269FF5",
+  "$id": "14A71BAE41770267",
   "Sequences": [
     {
       "$id": "DbObject { ID: 'f54a1a93-8cd2-4125-aede-b38cc7f8a750', Name: 'MySequence1' }",
@@ -197,7 +197,21 @@
       "Parent": null
     }
   ],
-  "Procedures": [],
+  "Procedures": [
+    {
+      "$id": "DbObject { ID: 'c4bf4926-bd3b-4c95-bc3e-1249445aec14', Name: 'MyProcedure1' }",
+      "CreateStatement": {
+        "$id": "D544646E70DBA442",
+        "Code": "CREATE PROCEDURE \"MyProcedure1\"(in a INT, in b INT)\nLANGUAGE SQL\nAS\n$ProcBody$\nINSERT INTO \"MyTable4\"(\"MyColumn1\") VALUES (a);\nINSERT INTO \"MyTable4\"(\"MyColumn1\") VALUES (b + 1);\n$ProcBody$",
+        "DependsOn": [
+          "DbObject { ID: 'b12a6a37-7739-48e0-a9e1-499ae7d2a395', Name: 'MyTable4' }"
+        ]
+      },
+      "ID": "c4bf4926-bd3b-4c95-bc3e-1249445aec14",
+      "Name": "MyProcedure1",
+      "Parent": null
+    }
+  ],
   "Kind": 3,
   "Version": 1,
   "Tables": [

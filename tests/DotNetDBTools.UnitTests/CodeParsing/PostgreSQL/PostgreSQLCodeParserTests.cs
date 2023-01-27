@@ -51,6 +51,18 @@ public class PostgreSQLCodeParserTests : BaseCodeParserTests<PostgreSQLCodeParse
     }
 
     [Fact]
+    public void GetObjectInfo_ParsesSQLProcedureCorrectly()
+    {
+        Assert_GetObjectInfo_ParsesObjectCorrectly("CreateSQLProcedure.sql", TD.ExpectedSQLProcedure);
+    }
+
+    [Fact]
+    public void GetObjectInfo_ParsesPLPGSQLProcedureCorrectly()
+    {
+        Assert_GetObjectInfo_ParsesObjectCorrectly("CreatePLPGSQLProcedure.sql", TD.ExpectedPLPGSQLProcedure);
+    }
+
+    [Fact]
     public void GetViewDependencies_GetsCorrectData()
     {
         string input = MiscHelper.ReadFromFile($@"{TestData.TestDataDir}/CreateView.sql");
@@ -61,13 +73,13 @@ public class PostgreSQLCodeParserTests : BaseCodeParserTests<PostgreSQLCodeParse
         {
             new Dependency { Type = DependencyType.TableOrView, Name = "MyTable2" },
             new Dependency { Type = DependencyType.TableOrView, Name = "MyView3".ToLower() },
-            new Dependency { Type = DependencyType.Function, Name = "MyFunc4" },
+            new Dependency { Type = DependencyType.FunctionOrProcedure, Name = "MyFunc4" },
         };
         dependencies.Should().BeEquivalentTo(expectedDependencies, options => options.WithStrictOrdering());
     }
 
     [Fact]
-    public void GetFunctionDependencies_GetsCorrectData_FromSQLFunc()
+    public void GetFunctionDependencies_GetsCorrectData_FromSQLFunction()
     {
         string input = MiscHelper.ReadFromFile($@"{TestData.TestDataDir}/CreateSQLFunction.sql");
         PostgreSQLCodeParser parser = new();
@@ -77,13 +89,13 @@ public class PostgreSQLCodeParserTests : BaseCodeParserTests<PostgreSQLCodeParse
         {
             new Dependency { Type = DependencyType.TableOrView, Name = "MyTable1" },
             new Dependency { Type = DependencyType.TableOrView, Name = "MyView2".ToLower() },
-            new Dependency { Type = DependencyType.Function, Name = "MyFunc3" },
+            new Dependency { Type = DependencyType.FunctionOrProcedure, Name = "MyFunc3" },
         };
         dependencies.Should().BeEquivalentTo(expectedDependencies, options => options.WithStrictOrdering());
     }
 
     [Fact]
-    public void GetFunctionDependencies_GetsCorrectData_FromPLPGSQLFunc()
+    public void GetFunctionDependencies_GetsCorrectData_FromPLPGSQLFunction()
     {
         string input = MiscHelper.ReadFromFile($@"{TestData.TestDataDir}/CreatePLPGSQLFunction.sql");
         PostgreSQLCodeParser parser = new();
@@ -128,27 +140,63 @@ public class PostgreSQLCodeParserTests : BaseCodeParserTests<PostgreSQLCodeParse
             new Dependency { Type = DependencyType.TableOrView, Name = "MyView4" },
             new Dependency { Type = DependencyType.TableOrView, Name = "MyView5" },
             new Dependency { Type = DependencyType.TableOrView, Name = "MyView6" },
-            new Dependency { Type = DependencyType.Function, Name = "MyFunc1" },
-            new Dependency { Type = DependencyType.Function, Name = "MyFunc2".ToLower() },
-            new Dependency { Type = DependencyType.Function, Name = "MyFunc3" },
-            new Dependency { Type = DependencyType.Function, Name = "_some_func" },
-            new Dependency { Type = DependencyType.Function, Name = "min" },
-            new Dependency { Type = DependencyType.Function, Name = "max" },
-            new Dependency { Type = DependencyType.Function, Name = "count" },
-            new Dependency { Type = DependencyType.Function, Name = "now" },
-            new Dependency { Type = DependencyType.Function, Name = "round" },
-            new Dependency { Type = DependencyType.Function, Name = "length" },
-            new Dependency { Type = DependencyType.Function, Name = "strpos" },
-            new Dependency { Type = DependencyType.Function, Name = "unnest" },
-            new Dependency { Type = DependencyType.Function, Name = "array_append" },
-            new Dependency { Type = DependencyType.Function, Name = "array_upper" },
-            new Dependency { Type = DependencyType.Function, Name = "array_cat" },
-            new Dependency { Type = DependencyType.Function, Name = "concat" },
-            new Dependency { Type = DependencyType.Function, Name = "string_agg" },
-            new Dependency { Type = DependencyType.Function, Name = "generate_series" },
-            new Dependency { Type = DependencyType.Function, Name = "abs" },
-            new Dependency { Type = DependencyType.Function, Name = "pg_sleep" },
-            new Dependency { Type = DependencyType.Function, Name = "pg_function_is_visible" },
+            new Dependency { Type = DependencyType.FunctionOrProcedure, Name = "MyFunc1" },
+            new Dependency { Type = DependencyType.FunctionOrProcedure, Name = "MyFunc2".ToLower() },
+            new Dependency { Type = DependencyType.FunctionOrProcedure, Name = "MyFunc3" },
+            new Dependency { Type = DependencyType.FunctionOrProcedure, Name = "_some_func" },
+            new Dependency { Type = DependencyType.FunctionOrProcedure, Name = "min" },
+            new Dependency { Type = DependencyType.FunctionOrProcedure, Name = "max" },
+            new Dependency { Type = DependencyType.FunctionOrProcedure, Name = "count" },
+            new Dependency { Type = DependencyType.FunctionOrProcedure, Name = "now" },
+            new Dependency { Type = DependencyType.FunctionOrProcedure, Name = "round" },
+            new Dependency { Type = DependencyType.FunctionOrProcedure, Name = "length" },
+            new Dependency { Type = DependencyType.FunctionOrProcedure, Name = "strpos" },
+            new Dependency { Type = DependencyType.FunctionOrProcedure, Name = "unnest" },
+            new Dependency { Type = DependencyType.FunctionOrProcedure, Name = "array_append" },
+            new Dependency { Type = DependencyType.FunctionOrProcedure, Name = "array_upper" },
+            new Dependency { Type = DependencyType.FunctionOrProcedure, Name = "array_cat" },
+            new Dependency { Type = DependencyType.FunctionOrProcedure, Name = "concat" },
+            new Dependency { Type = DependencyType.FunctionOrProcedure, Name = "string_agg" },
+            new Dependency { Type = DependencyType.FunctionOrProcedure, Name = "generate_series" },
+            new Dependency { Type = DependencyType.FunctionOrProcedure, Name = "abs" },
+            new Dependency { Type = DependencyType.FunctionOrProcedure, Name = "pg_sleep" },
+            new Dependency { Type = DependencyType.FunctionOrProcedure, Name = "pg_function_is_visible" },
+            new Dependency { Type = DependencyType.FunctionOrProcedure, Name = "MyProc1" },
+            new Dependency { Type = DependencyType.FunctionOrProcedure, Name = "MyProc2".ToLower() },
+        };
+
+        IEnumerable<Dependency> excessDeps = dependencies.Where(dep => !expectedDependencies.Contains(dep));
+        IEnumerable<Dependency> missingDeps = expectedDependencies.Where(dep => !dependencies.Contains(dep));
+
+        excessDeps.Should().BeEmpty();
+        missingDeps.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void GetProcedureDependencies_GetsCorrectData_FromSQLProcedure()
+    {
+        string input = MiscHelper.ReadFromFile($@"{TestData.TestDataDir}/CreateSQLProcedure.sql");
+        PostgreSQLCodeParser parser = new();
+        List<Dependency> dependencies = parser.GetProcedureDependencies(input, out string language);
+
+        List<Dependency> expectedDependencies = new()
+        {
+            new Dependency { Type = DependencyType.TableOrView, Name = "SomeTable" },
+        };
+        dependencies.Should().BeEquivalentTo(expectedDependencies, options => options.WithStrictOrdering());
+    }
+
+    [Fact]
+    public void GetProcedureDependencies_GetsCorrectData_FromPLPGSQLProcedure()
+    {
+        string input = MiscHelper.ReadFromFile($@"{TestData.TestDataDir}/CreatePLPGSQLProcedure.sql");
+        PostgreSQLCodeParser parser = new();
+        List<Dependency> dependencies = parser.GetProcedureDependencies(input, out string language);
+
+        List<Dependency> expectedDependencies = new()
+        {
+            new Dependency { Type = DependencyType.DataType, Name = "text" },
+            new Dependency { Type = DependencyType.FunctionOrProcedure, Name = "Proc2".ToLower() },
         };
 
         IEnumerable<Dependency> excessDeps = dependencies.Where(dep => !expectedDependencies.Contains(dep));

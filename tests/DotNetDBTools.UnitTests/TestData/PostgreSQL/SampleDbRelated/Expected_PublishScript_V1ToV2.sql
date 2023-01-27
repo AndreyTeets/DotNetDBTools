@@ -147,6 +147,15 @@ EXECUTE 'UPDATE "DNDBTDbObjects" SET
 WHERE "ID" = ''5c455ec9-9830-4d0b-a88c-57341899dc4a'';';
 -- QUERY END: UpdateDNDBTDbObjectRecordQuery
 
+-- QUERY START: DropProcedureQuery
+EXECUTE 'DROP PROCEDURE "MyProcedure1";';
+-- QUERY END: DropProcedureQuery
+
+-- QUERY START: DeleteDNDBTDbObjectRecordQuery
+EXECUTE 'DELETE FROM "DNDBTDbObjects"
+WHERE "ID" = ''c4bf4926-bd3b-4c95-bc3e-1249445aec14'';';
+-- QUERY END: DeleteDNDBTDbObjectRecordQuery
+
 -- QUERY START: DropViewQuery
 EXECUTE 'DROP VIEW "MyView1";';
 -- QUERY END: DropViewQuery
@@ -852,6 +861,41 @@ EXECUTE 'DROP FUNCTION "_DNDBTTemp_TR_MyTable2_MyTrigger1_Handler";';
 -- QUERY START: DropSequenceQuery
 EXECUTE 'DROP SEQUENCE "_DNDBTTemp_MySequence2";';
 -- QUERY END: DropSequenceQuery
+
+-- QUERY START: CreateProcedureQuery
+EXECUTE 'CREATE PROCEDURE "MyProcedure1"(in a INT, in b INT)
+LANGUAGE SQL
+AS
+$ProcBody$
+INSERT INTO "MyTable4"("MyColumn1") VALUES (a);
+INSERT INTO "MyTable4"("MyColumn1") VALUES (b);
+$ProcBody$';
+-- QUERY END: CreateProcedureQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''c4bf4926-bd3b-4c95-bc3e-1249445aec14'',
+    NULL,
+    ''Procedure'',
+    ''MyProcedure1'',
+    ''CREATE PROCEDURE "MyProcedure1"(in a INT, in b INT)
+LANGUAGE SQL
+AS
+$ProcBody$
+INSERT INTO "MyTable4"("MyColumn1") VALUES (a);
+INSERT INTO "MyTable4"("MyColumn1") VALUES (b);
+$ProcBody$''
+);';
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
 
 -- QUERY START: CreateViewQuery
 EXECUTE 'CREATE VIEW "MyView1" AS

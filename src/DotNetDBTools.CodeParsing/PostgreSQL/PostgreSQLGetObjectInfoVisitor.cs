@@ -33,8 +33,10 @@ internal class PostgreSQLGetObjectInfoVisitor : PostgreSQLParserBaseVisitor<Obje
             return GetTypeInfo(context.create_type_statement());
         else if (context.create_domain_statement() is not null)
             return GetDomainInfo(context.create_domain_statement());
-        else if (context.create_function_statement() is not null)
+        else if (context.create_function_statement() is not null && context.create_function_statement().FUNCTION() is not null)
             return GetFunctionInfo(context.create_function_statement());
+        else if (context.create_function_statement() is not null && context.create_function_statement().PROCEDURE() is not null)
+            return GetProcedureInfo(context.create_function_statement());
         else
             throw new ParseException($"Unexpected create statement type {HM.GetStartLineAndPos(context)}");
     }
@@ -230,6 +232,20 @@ internal class PostgreSQLGetObjectInfoVisitor : PostgreSQLParserBaseVisitor<Obje
         if (context.dndbt_id is not null)
             function.CreateStatement = function.CreateStatement.Remove(0, context.dndbt_id.Text.Length);
         return function;
+    }
+
+    private ProcedureInfo GetProcedureInfo(Create_function_statementContext context)
+    {
+        ProcedureInfo procedure = new();
+        string procNameText = context.function_parameters().schema_qualified_name().GetText();
+        procedure.Name = HMs.Unquote(HMs.RemoveSchemeIfAny(procNameText, out string scheme));
+        if (!_ignoreIds)
+            HM.SetObjectID(procedure, $"procedure '{procedure.Name}'", context.dndbt_id?.Text);
+
+        procedure.CreateStatement = HM.GetInitialText(context);
+        if (context.dndbt_id is not null)
+            procedure.CreateStatement = procedure.CreateStatement.Remove(0, context.dndbt_id.Text.Length);
+        return procedure;
     }
 
     private ColumnInfo GetTableColumnInfo(Table_item_definitionContext context, string tableName)

@@ -38,6 +38,7 @@ internal class PostgreSQLDbModelFromCSharpDefinitionProvider : DbModelFromCSharp
         db.EnumTypes = BuildEnumTypeModels(dbAssembly);
         db.RangeTypes = BuildRangeTypeModels(dbAssembly);
         db.Functions = BuildFunctionModels(dbAssembly);
+        db.Procedures = BuildProcedureModels(dbAssembly);
     }
 
     protected override void BuildAdditionalTableModelProperties(PostgreSQLTable tableModel, IBaseTable table)
@@ -204,6 +205,23 @@ internal class PostgreSQLDbModelFromCSharpDefinitionProvider : DbModelFromCSharp
             functionModels.Add(functionModel);
         }
         return functionModels;
+    }
+
+    private static List<PostgreSQLProcedure> BuildProcedureModels(Assembly dbAssembly)
+    {
+        IEnumerable<IProcedure> procedures = GetInstancesOfAllTypesImplementingInterface<IProcedure>(dbAssembly);
+        List<PostgreSQLProcedure> procedureModels = new();
+        foreach (IProcedure procedure in procedures)
+        {
+            PostgreSQLProcedure procedureModel = new()
+            {
+                ID = procedure.DNDBT_OBJECT_ID,
+                Name = procedure.GetType().Name,
+                CreateStatement = new CodePiece { Code = procedure.CreateStatement.NormalizeLineEndings() },
+            };
+            procedureModels.Add(procedureModel);
+        }
+        return procedureModels;
     }
 
     private static PostgreSQLSequenceOptions MapToSequenceOptionsModel(SequenceOptions options)

@@ -23,6 +23,10 @@ EXECUTE 'ALTER DOMAIN "d_a_7" DROP DEFAULT;';
 EXECUTE 'DROP FUNCTION "f_a_2_s";';
 -- QUERY END: DropFunctionQuery
 
+-- QUERY START: DropProcedureQuery
+EXECUTE 'DROP PROCEDURE "p_a_2_s";';
+-- QUERY END: DropProcedureQuery
+
 -- QUERY START: DropViewQuery
 EXECUTE 'DROP VIEW "v_a_7";';
 -- QUERY END: DropViewQuery
@@ -66,6 +70,10 @@ EXECUTE 'DROP TYPE "_DNDBTTemp_tp_9";';
 -- QUERY START: CreateFunctionQuery
 EXECUTE 'create function f_a_2_s() returns int language sql as $$select (''(5)''::tp_9).a1::int$$';
 -- QUERY END: CreateFunctionQuery
+
+-- QUERY START: CreateProcedureQuery
+EXECUTE 'create procedure p_a_2_s() language sql as $$select (''(5)''::tp_9).a1::int$$';
+-- QUERY END: CreateProcedureQuery
 
 -- QUERY START: CreateViewQuery
 EXECUTE 'create view v_a_7 as select (''(5)''::tp_9).a1::int';

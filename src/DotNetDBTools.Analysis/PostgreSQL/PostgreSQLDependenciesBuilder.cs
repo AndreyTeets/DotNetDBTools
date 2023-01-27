@@ -44,8 +44,9 @@ internal class PostgreSQLDependenciesBuilder : DependenciesBuilder
 
         Dictionary<string, Table> tableNameToTableMap = database.Tables.ToDictionary(x => x.Name, x => x);
         Dictionary<string, View> viewNameToViewMap = database.Views.ToDictionary(x => x.Name, x => x);
+        Dictionary<string, PostgreSQLSequence> sequenceNameToSequenceMap = database.Sequences.ToDictionary(x => x.Name, x => x);
         Dictionary<string, PostgreSQLFunction> funcNameToFuncMap = database.Functions.ToDictionary(x => x.Name, x => x);
-        Dictionary<string, PostgreSQLSequence> sequenceNameToFuncMap = database.Sequences.ToDictionary(x => x.Name, x => x);
+        Dictionary<string, PostgreSQLProcedure> procNameToProcMap = database.Procedures.ToDictionary(x => x.Name, x => x);
 
         PostgreSQLCodeParser parser = new();
         AddForTypes();
@@ -181,8 +182,8 @@ internal class PostgreSQLDependenciesBuilder : DependenciesBuilder
             {
                 if (dep.Type == DependencyType.Sequence)
                 {
-                    if (sequenceNameToFuncMap.ContainsKey(dep.Name))
-                        destDeps.Add(sequenceNameToFuncMap[dep.Name]);
+                    if (sequenceNameToSequenceMap.ContainsKey(dep.Name))
+                        destDeps.Add(sequenceNameToSequenceMap[dep.Name]);
                     // Otherwise it may be a system sequence
                 }
                 else if (dep.Type == DependencyType.DataType)
@@ -200,10 +201,12 @@ internal class PostgreSQLDependenciesBuilder : DependenciesBuilder
                         destDeps.Add(viewNameToViewMap[dep.Name]);
                     // Otherwise it may be a system table or view
                 }
-                else if (dep.Type == DependencyType.Function)
+                else if (dep.Type == DependencyType.FunctionOrProcedure)
                 {
                     if (funcNameToFuncMap.ContainsKey(dep.Name))
                         destDeps.Add(funcNameToFuncMap[dep.Name]);
+                    else if (procNameToProcMap.ContainsKey(dep.Name))
+                        destDeps.Add(procNameToProcMap[dep.Name]);
                     // Otherwise it may be a system function
                 }
                 else

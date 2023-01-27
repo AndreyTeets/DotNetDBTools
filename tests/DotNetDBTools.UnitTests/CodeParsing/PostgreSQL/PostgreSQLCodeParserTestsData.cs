@@ -20,6 +20,8 @@ public class PostgreSQLCodeParserTestsData : BaseCodeParserTestsData
     public TypeInfo ExpectedRangeType => GetExpectedRangeType();
     public FunctionInfo ExpectedSQLFunction => GetExpectedSQLFunction();
     public FunctionInfo ExpectedPLPGSQLFunction => GetExpectedPLPGSQLFunction();
+    public ProcedureInfo ExpectedSQLProcedure => GetExpectedSQLProcedure();
+    public ProcedureInfo ExpectedPLPGSQLProcedure => GetExpectedPLPGSQLProcedure();
 
     private TableInfo GetExpectedTable()
     {
@@ -310,6 +312,26 @@ public class PostgreSQLCodeParserTestsData : BaseCodeParserTestsData
             ID = new Guid("316C7688-D510-4A61-9D09-E15D465D0EFF"),
             Name = "_Some_Complex_PLPGSQL_Function",
             CreateStatement = MiscHelper.ReadFromFileWithoutIdDeclarations($@"{TestDataDir}/CreatePLPGSQLFunction.sql"),
+        };
+    }
+
+    private ProcedureInfo GetExpectedSQLProcedure()
+    {
+        return new()
+        {
+            ID = new Guid("1295DC5A-94C4-4EBB-BBC9-A332255C4FB5"),
+            Name = "MySQLProc1",
+            CreateStatement = MiscHelper.ReadFromFileWithoutIdDeclarations($@"{TestDataDir}/CreateSQLProcedure.sql"),
+        };
+    }
+
+    private ProcedureInfo GetExpectedPLPGSQLProcedure()
+    {
+        return new()
+        {
+            ID = new Guid("0649FE45-4560-49EA-B01C-C9B7B63338BF"),
+            Name = "MyPLPGSQLProc2".ToLower(),
+            CreateStatement = MiscHelper.ReadFromFileWithoutIdDeclarations($@"{TestDataDir}/CreatePLPGSQLProcedure.sql"),
         };
     }
 }

@@ -38,6 +38,10 @@ EXECUTE 'ALTER DOMAIN "d_a_3" DROP DEFAULT;';
 -- QUERY END: AlterDomainTypeQuery
 
 -- QUERY START: RenameProgrammableObjectToTempQuery
+EXECUTE 'ALTER PROCEDURE "p_10_s" RENAME TO "_DNDBTTemp_p_10_s";';
+-- QUERY END: RenameProgrammableObjectToTempQuery
+
+-- QUERY START: RenameProgrammableObjectToTempQuery
 EXECUTE 'ALTER VIEW "v_a_2" RENAME TO "_DNDBTTemp_v_a_2";';
 -- QUERY END: RenameProgrammableObjectToTempQuery
 
@@ -61,6 +65,10 @@ EXECUTE 'create function f_3_s() returns int language sql as $$select (3 + 4)$$'
 EXECUTE 'create function f_2_s(x int) returns int language sql as $$select x + f_3_s()$$';
 -- QUERY END: CreateFunctionQuery
 
+-- QUERY START: CreateProcedureQuery
+EXECUTE 'create procedure p_10_s() language sql as $$select f_3_s()$$';
+-- QUERY END: CreateProcedureQuery
+
 -- QUERY START: CreateViewQuery
 EXECUTE 'create view v_a_2 as select (1000 + f_3_s())';
 -- QUERY END: CreateViewQuery
@@ -68,6 +76,10 @@ EXECUTE 'create view v_a_2 as select (1000 + f_3_s())';
 -- QUERY START: CreateViewQuery
 EXECUTE 'create view v_a_3 as select (1000 + f_2_s(8))';
 -- QUERY END: CreateViewQuery
+
+-- QUERY START: DropProcedureQuery
+EXECUTE 'DROP PROCEDURE "_DNDBTTemp_p_10_s";';
+-- QUERY END: DropProcedureQuery
 
 -- QUERY START: DropViewQuery
 EXECUTE 'DROP VIEW "_DNDBTTemp_v_a_2";';

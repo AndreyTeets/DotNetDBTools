@@ -147,6 +147,7 @@ public class GenerationManager : IGenerationManager
             PostgreSQLEnumType x => new PostgreSQLEnumTypeStatementsGenerator(),
             PostgreSQLRangeType x => new PostgreSQLRangeTypeStatementsGenerator(),
             PostgreSQLFunction x => new PostgreSQLFunctionStatementsGenerator(),
+            PostgreSQLProcedure x => new PostgreSQLProcedureStatementsGenerator(),
             SQLiteTable x => new SQLiteTableStatementsGenerator(),
             SQLiteView x => new SQLiteViewStatementsGenerator(),
             SQLiteIndex x => new SQLiteIndexStatementsGenerator(),
