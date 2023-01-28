@@ -11,6 +11,11 @@ public static class HelperExtensions
     public static string GetCreateStatement(this View view) => view.CreateStatement.Code;
     public static string GetText(this Script script) => script.Text.Code;
 
+    // TODO refactor objects code to separate table DNDBTDbObjectsCode(ObjectID,CodeType,CodeText,PK(ObjectID,CodeType))
+    public static string GetCode(this Index index) => index is Models.PostgreSQL.PostgreSQLIndex idx
+        ? idx.Expression?.Code
+        : null;
+
     public static string AppendSemicolonIfAbsent(this string val)
     {
         if (!val.EndsWith(";", StringComparison.Ordinal))

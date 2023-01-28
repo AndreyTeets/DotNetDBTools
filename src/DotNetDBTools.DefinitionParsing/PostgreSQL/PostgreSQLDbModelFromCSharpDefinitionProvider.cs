@@ -52,15 +52,31 @@ internal class PostgreSQLDbModelFromCSharpDefinitionProvider : DbModelFromCSharp
         if (columnModel.Identity)
         {
             Definition.PostgreSQL.Column c = (Definition.PostgreSQL.Column)column;
-            columnModel.IdentityGenerationKind = c.IdentityGenerationKind == IdentityGenerationKind.Always ? "ALWAYS" : "BY DEFAULT";
+            columnModel.IdentityGenerationKind = c.IdentityGenerationKind == IdentityGenerationKind.Always
+                ? PostgreSQLIdentityGenerationKinds.Always
+                : PostgreSQLIdentityGenerationKinds.ByDefault;
             columnModel.IdentitySequenceOptions = MapToSequenceOptionsModel(c.IdentitySequenceOptions);
         }
     }
 
+    protected override List<string> GetIndexColumns(BaseIndex index)
+    {
+        Definition.PostgreSQL.Index idx = (Definition.PostgreSQL.Index)index;
+        string indexName = idx.GetType().Name;
+        if (idx.Columns is null && idx.Expression is null)
+            throw new Exception($"One of properties Columns or Expression must be specified for index '{indexName}'.");
+        if (idx.Columns is not null && idx.Expression is not null)
+            throw new Exception($"Both properties Columns and Expression can't be specified for index '{indexName}'.");
+        return index.Columns?.ToList() ?? new List<string>();
+    }
     protected override void BuildAdditionalIndexModelProperties(
         Models.Core.Index indexModel, BaseIndex index)
     {
-        indexModel.IncludeColumns = ((Definition.PostgreSQL.Index)index).IncludeColumns?.ToList() ?? new List<string>();
+        Definition.PostgreSQL.Index idx = (Definition.PostgreSQL.Index)index;
+        indexModel.IncludeColumns = idx.IncludeColumns?.ToList() ?? new List<string>();
+        ((PostgreSQLIndex)indexModel).Method = idx.Method.ToString().ToUpper();
+        if (idx.Expression is not null)
+            ((PostgreSQLIndex)indexModel).Expression = new CodePiece { Code = idx.Expression };
     }
 
     protected override string GetOnUpdateActionName(BaseForeignKey fk) =>

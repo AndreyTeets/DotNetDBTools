@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.Core.Queries.DBMSSysInfo;
 using DotNetDBTools.Models.Core;
@@ -21,10 +22,14 @@ $@"SELECT
     CASE WHEN col_map.col_pos > i.indnkeyatts
         THEN col_map.col_pos - i.indnkeyatts
         ELSE col_map.col_pos
-    END AS ""{nameof(IndexRecord.ColumnPosition)}""
+    END AS ""{nameof(IndexRecord.ColumnPosition)}"",
+	am.amname AS ""{nameof(PostgreSQLIndexRecord.IndexMethod)}"",
+	pg_catalog.pg_get_expr(i.indexprs, i.indrelid) AS ""{nameof(PostgreSQLIndexRecord.IndexExpression)}""
 FROM pg_index i
 INNER JOIN pg_class c
     ON c.oid = indexrelid
+INNER JOIN pg_am am
+	ON am.oid = c.relam
 INNER JOIN pg_class t
     ON t.oid = i.indrelid
 INNER JOIN pg_catalog.pg_namespace n
@@ -42,7 +47,22 @@ WHERE n.nspname NOT IN ('information_schema', 'pg_catalog', 'pg_toast')
     AND pc.oid IS NULL
     AND t.relname NOT IN ({DNDBTSysTables.AllTablesForInClause});";
 
+    public override RecordsLoader Loader => new PostgreSQLRecordsLoader();
     public override RecordMapper Mapper => new PostgreSQLRecordMapper();
+
+    public class PostgreSQLIndexRecord : IndexRecord
+    {
+        public string IndexMethod { get; set; }
+        public string IndexExpression { get; set; }
+    }
+
+    public class PostgreSQLRecordsLoader : RecordsLoader
+    {
+        public override IEnumerable<IndexRecord> GetRecords(IQueryExecutor queryExecutor, GetIndexesFromDBMSSysInfoQuery query)
+        {
+            return queryExecutor.Query<PostgreSQLIndexRecord>(query);
+        }
+    }
 
     public class PostgreSQLRecordMapper : RecordMapper
     {
@@ -53,7 +73,17 @@ WHERE n.nspname NOT IN ('information_schema', 'pg_catalog', 'pg_toast')
                 ID = Guid.NewGuid(),
                 Name = indexRecord.IndexName,
                 Unique = indexRecord.IsUnique,
+                Method = ((PostgreSQLIndexRecord)indexRecord).IndexMethod.ToUpper(),
+                Expression = MapExpression((PostgreSQLIndexRecord)indexRecord),
             };
+
+            static CodePiece MapExpression(PostgreSQLIndexRecord indexRecord)
+            {
+                if (indexRecord.IndexExpression is not null)
+                    return new CodePiece { Code = indexRecord.IndexExpression };
+                else
+                    return null;
+            }
         }
     }
 }

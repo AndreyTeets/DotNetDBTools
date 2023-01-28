@@ -61,6 +61,17 @@ internal class PostgreSQLDbModelFromDBMSProvider : DbModelFromDBMSProvider<
 
     protected override void ReplaceAdditionalDbModelObjectsIDsAndCodeWithDNDBTSysInfo(Database database, Dictionary<string, DNDBTInfo> dbObjectIDsMap)
     {
+        // TODO refactor objects code to separate table DNDBTDbObjectsCode(ObjectID,CodeType,CodeText,PK(ObjectID,CodeType))
+        foreach (Table table in database.Tables)
+        {
+            foreach (Index index in table.Indexes)
+            {
+                PostgreSQLIndex idx = (PostgreSQLIndex)index;
+                if (idx.Expression is not null)
+                    idx.Expression.Code = dbObjectIDsMap[$"{DbObjectType.Index}_{idx.Name}_{table.ID}"].Code;
+            }
+        }
+
         PostgreSQLDatabase db = (PostgreSQLDatabase)database;
         foreach (PostgreSQLSequence sequence in db.Sequences)
             sequence.ID = dbObjectIDsMap[$"{DbObjectType.Sequence}_{sequence.Name}_{null}"].ID;

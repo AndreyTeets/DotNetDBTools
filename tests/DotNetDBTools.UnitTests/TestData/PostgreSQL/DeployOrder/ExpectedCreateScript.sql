@@ -635,7 +635,7 @@ EXECUTE 'ALTER DOMAIN "d_u_3" ADD CONSTRAINT "ck_d_u_2" CHECK (value != (''(5)''
 
 -- QUERY START: CreateIndexQuery
 EXECUTE 'CREATE INDEX "i_a_1"
-    ON "t_1" (f_4_s(c1));';
+    ON "t_1" USING BTREE (f_4_s(c1));';
 -- QUERY END: CreateIndexQuery
 
 -- QUERY START: CreateTriggerQuery

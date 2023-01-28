@@ -31,7 +31,7 @@ EXECUTE 'DROP FUNCTION "_DNDBTTemp_f_7_s";';
 
 -- QUERY START: CreateIndexQuery
 EXECUTE 'CREATE INDEX "i_a_1"
-    ON "t_1" (f_4_s(c1));';
+    ON "t_1" USING BTREE (f_4_s(c1));';
 -- QUERY END: CreateIndexQuery
 
 END;

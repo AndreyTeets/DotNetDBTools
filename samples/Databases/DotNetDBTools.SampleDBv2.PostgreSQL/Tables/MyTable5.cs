@@ -345,5 +345,12 @@ namespace DotNetDBTools.SampleDB.PostgreSQL.Tables
         {
             DataType = new VerbatimDataType($"{nameof(MyCompositeType1).Quote()}  [ 99  ]"),
         };
+
+        public Index IDX_MyTable5_1 = new("F7F367DA-088F-48DD-BAD5-2A14A0E77F66")
+        {
+            Expression = $"(length({nameof(MyColumn2).Quote()} || {nameof(MyColumn1).Quote()}) + 1)",
+            Method = IndexMethod.BTree,
+            IncludeColumns = new[] { nameof(MyColumn4), nameof(MyColumn3), nameof(MyColumn5) },
+        };
     }
 }

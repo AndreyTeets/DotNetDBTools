@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.PostgreSQL;
 using static DotNetDBTools.Generation.Core.Definition.CSharpDefinitionGenerationHelper;
@@ -24,13 +25,43 @@ $@"            IdentitySequenceOptions = new()
         }
     }
 
+    protected override void AddIndexColumnsDeclaration(List<string> propsDeclarations, Index index)
+    {
+        PostgreSQLIndex idx = (PostgreSQLIndex)index;
+        if (idx.Expression is not null)
+            propsDeclarations.Add($@"            Expression = {DeclareString(idx.Expression.Code)},");
+        else
+            base.AddIndexColumnsDeclaration(propsDeclarations, index);
+    }
+    protected override void AddAdditionalIndexPropsDeclarations(List<string> propsDeclarations, Index index)
+    {
+        PostgreSQLIndex idx = (PostgreSQLIndex)index;
+        if (idx.IncludeColumns.Count() > 0)
+            propsDeclarations.Add(CreateColumnsDeclaration("IncludeColumns", index.IncludeColumns));
+        propsDeclarations.Add($@"            Method = IndexMethod.{MapIndexMethod(idx.Method)},");
+    }
+
     private static string MapIdentityGenerationKind(string identityGenerationKind)
     {
         return identityGenerationKind switch
         {
-            "ALWAYS" => "Always",
-            "BY DEFAULT" => "ByDefault",
+            PostgreSQLIdentityGenerationKinds.Always => "Always",
+            PostgreSQLIdentityGenerationKinds.ByDefault => "ByDefault",
             _ => throw new InvalidOperationException($"Invalid identityGenerationKind: '{identityGenerationKind}'")
+        };
+    }
+
+    private static string MapIndexMethod(string method)
+    {
+        return method switch
+        {
+            PostgreSQLIndexMethods.BTREE => "BTree",
+            PostgreSQLIndexMethods.HASH => "Hash",
+            PostgreSQLIndexMethods.GIST => "GiST",
+            PostgreSQLIndexMethods.SPGIST => "SPGiST",
+            PostgreSQLIndexMethods.GIN => "GIN",
+            PostgreSQLIndexMethods.BRIN => "BRIN",
+            _ => throw new InvalidOperationException($"Invalid index method: '{method}'")
         };
     }
 

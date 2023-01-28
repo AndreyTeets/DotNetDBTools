@@ -11,17 +11,9 @@ internal class PostgreSQLIndexStatementsGenerator : StatementsGenerator<PostgreS
     {
         string res =
 $@"{GetIdDeclarationText(index, 0)}CREATE{Statements.Unique(index)} INDEX ""{index.Name}""
-    ON ""{index.Parent.Name}"" ({GetColumnsListOrExpression(index)});";
+    ON ""{index.Parent.Name}"" USING {index.Method} ({Statements.ColsOrExpr(index)}){Statements.Include(index)};";
 
         return res;
-    }
-
-    private static string GetColumnsListOrExpression(PostgreSQLIndex index)
-    {
-        if (index.Expression is not null)
-            return index.Expression.Code;
-        else
-            return string.Join(", ", index.Columns.Select(x => $@"""{x}"""));
     }
 
     protected override string GetDropSqlImpl(PostgreSQLIndex index)
@@ -34,5 +26,21 @@ $@"{GetIdDeclarationText(index, 0)}CREATE{Statements.Unique(index)} INDEX ""{ind
         public static string Unique(Index index) =>
 index.Unique ? " UNIQUE" : ""
             ;
+
+        public static string ColsOrExpr(PostgreSQLIndex index)
+        {
+            if (index.Expression is not null)
+                return index.Expression.Code;
+            else
+                return string.Join(", ", index.Columns.Select(x => $@"""{x}"""));
+        }
+
+        public static string Include(PostgreSQLIndex index)
+        {
+            if (index.IncludeColumns.Count() > 0)
+                return $"\n    INCLUDE ({string.Join(", ", index.IncludeColumns.Select(x => $@"""{x}"""))})";
+            else
+                return "";
+        }
     }
 }

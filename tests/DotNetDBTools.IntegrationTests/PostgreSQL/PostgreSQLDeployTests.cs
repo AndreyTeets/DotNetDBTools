@@ -41,6 +41,8 @@ public class PostgreSQLDeployTests : BaseDeployTests<
             .Replace(" ", "")
             .Replace(";", "")
             .Replace("'", "")
+            .Replace("(", "")
+            .Replace(")", "")
             .Replace("::INTEGER", "")
             .Replace("::NUMERIC", "")
             .Replace("::TEXT", "")

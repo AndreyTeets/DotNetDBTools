@@ -1,5 +1,5 @@
 {
-  "$id": "14A71BAE41770267",
+  "$id": "3D61A425E86ABC61",
   "Sequences": [
     {
       "$id": "DbObject { ID: 'f54a1a93-8cd2-4125-aede-b38cc7f8a750', Name: 'MySequence1' }",
@@ -460,6 +460,7 @@
       "Indexes": [
         {
           "$id": "DbObject { ID: '74390b3c-bc39-4860-a42e-12baa400f927', Name: 'IDX_MyTable2_MyIndex1' }",
+          "Method": "BTREE",
           "Expression": null,
           "Columns": [
             "MyColumn1",
@@ -1739,6 +1740,7 @@
       "Indexes": [
         {
           "$id": "DbObject { ID: '1d632285-9914-4c5d-98e6-a618a99bd799', Name: 'IDX_MyTable5_CustomName' }",
+          "Method": "BTREE",
           "Expression": null,
           "Columns": [
             "MyColumn8"

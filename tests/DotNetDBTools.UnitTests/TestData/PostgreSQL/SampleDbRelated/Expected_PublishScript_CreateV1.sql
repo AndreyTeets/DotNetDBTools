@@ -2074,7 +2074,7 @@ LEFT JOIN "MyTable2" t2
 
 -- QUERY START: CreateIndexQuery
 EXECUTE 'CREATE UNIQUE INDEX "IDX_MyTable2_MyIndex1"
-    ON "MyTable2" ("MyColumn1", "MyColumn2");';
+    ON "MyTable2" USING BTREE ("MyColumn1", "MyColumn2");';
 -- QUERY END: CreateIndexQuery
 
 -- QUERY START: InsertDNDBTDbObjectRecordQuery
@@ -2098,7 +2098,7 @@ VALUES
 
 -- QUERY START: CreateIndexQuery
 EXECUTE 'CREATE INDEX "IDX_MyTable5_CustomName"
-    ON "MyTable5" ("MyColumn8");';
+    ON "MyTable5" USING BTREE ("MyColumn8");';
 -- QUERY END: CreateIndexQuery
 
 -- QUERY START: InsertDNDBTDbObjectRecordQuery

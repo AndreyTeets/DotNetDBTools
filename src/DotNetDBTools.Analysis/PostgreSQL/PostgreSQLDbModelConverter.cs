@@ -25,7 +25,7 @@ internal class PostgreSQLDbModelConverter : DbModelConverter<
     {
         if (column.Identity)
         {
-            column.IdentityGenerationKind = "ALWAYS";
+            column.IdentityGenerationKind = PostgreSQLIdentityGenerationKinds.Always;
             column.IdentitySequenceOptions = new PostgreSQLSequenceOptions()
             {
                 StartWith = 1,
@@ -36,5 +36,10 @@ internal class PostgreSQLDbModelConverter : DbModelConverter<
                 Cycle = false,
             };
         }
+    }
+
+    protected override void BuildAdditionalIndexProperties(PostgreSQLIndex index)
+    {
+        index.Method = PostgreSQLIndexMethods.BTREE;
     }
 }

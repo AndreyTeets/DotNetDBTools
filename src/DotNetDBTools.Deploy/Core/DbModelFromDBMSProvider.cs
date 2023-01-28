@@ -293,7 +293,7 @@ internal abstract class DbModelFromDBMSProvider<
     private void BuildTablesIndexes(Dictionary<string, Table> tables)
     {
         TGetIndexesFromDBMSSysInfoQuery query = new();
-        IEnumerable<IndexRecord> indexRecords = QueryExecutor.Query<IndexRecord>(query);
+        IEnumerable<IndexRecord> indexRecords = query.Loader.GetRecords(QueryExecutor, query);
         Dictionary<string, SortedDictionary<int, string>> columnNames = new();
         Dictionary<string, SortedDictionary<int, string>> includeColumnNames = new();
         HashSet<string> addedIndexes = new();

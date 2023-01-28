@@ -1,5 +1,6 @@
 ﻿using DotNetDBTools.Deploy.Core.Queries.DDL;
 using DotNetDBTools.Deploy.Core.Queries.DNDBTSysInfo;
+using DotNetDBTools.Generation.Core;
 using DotNetDBTools.Models.Core;
 using static DotNetDBTools.Deploy.Core.InstanceCreator;
 
@@ -34,7 +35,7 @@ internal abstract class IndexEditor<
     private void CreateIndex(Index index)
     {
         _queryExecutor.Execute(new CreateIndexQuery(index));
-        _queryExecutor.Execute(Create<TInsertDNDBTDbObjectRecordQuery>(index, DbObjectType.Index));
+        _queryExecutor.Execute(Create<TInsertDNDBTDbObjectRecordQuery>(index, DbObjectType.Index, index.GetCode()));
     }
 
     private void DropIndex(Index index)

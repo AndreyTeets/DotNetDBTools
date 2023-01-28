@@ -208,7 +208,9 @@ public class PostgreSQLCodeParserTestsData : BaseCodeParserTestsData
             Name = "IDX_SomeTable1",
             Table = "Contacts".ToLower(),
             Unique = true,
-            Columns = new List<string>() { "Email".ToLower(), "phone" },
+            Expression = "length(Email || \"phone\")",
+            Method = "GIST",
+            IncludeColumns = new List<string>() { "Col4".ToLower(), "Col3" },
         };
     }
 

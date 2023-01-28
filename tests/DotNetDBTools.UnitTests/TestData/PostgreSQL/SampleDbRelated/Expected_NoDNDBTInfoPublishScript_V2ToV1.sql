@@ -19,6 +19,10 @@ EXECUTE 'ALTER TABLE "MyTable2"
 EXECUTE 'DROP INDEX "IDX_MyTable2_MyIndex1";';
 -- QUERY END: DropIndexQuery
 
+-- QUERY START: DropIndexQuery
+EXECUTE 'DROP INDEX "IDX_MyTable5_1";';
+-- QUERY END: DropIndexQuery
+
 -- QUERY START: AlterTableQuery
 EXECUTE 'ALTER TABLE "MyTable1NewName"
     DROP CONSTRAINT "CK_MyTable1_MyCheck1";';
@@ -314,12 +318,12 @@ EXECUTE 'ALTER TABLE "MyTable1"
 
 -- QUERY START: CreateIndexQuery
 EXECUTE 'CREATE UNIQUE INDEX "IDX_MyTable2_MyIndex1"
-    ON "MyTable2" ("MyColumn1", "MyColumn2");';
+    ON "MyTable2" USING BTREE ("MyColumn1", "MyColumn2");';
 -- QUERY END: CreateIndexQuery
 
 -- QUERY START: CreateIndexQuery
 EXECUTE 'CREATE INDEX "IDX_MyTable5_CustomName"
-    ON "MyTable5" ("MyColumn8");';
+    ON "MyTable5" USING BTREE ("MyColumn8");';
 -- QUERY END: CreateIndexQuery
 
 -- QUERY START: CreateForeignKeyQuery

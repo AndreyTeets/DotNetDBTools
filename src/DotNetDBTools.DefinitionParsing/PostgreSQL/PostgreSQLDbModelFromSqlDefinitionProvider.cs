@@ -39,13 +39,17 @@ internal class PostgreSQLDbModelFromSqlDefinitionProvider : DbModelFromSqlDefini
     {
         if (columnModel.Identity)
         {
-            columnModel.IdentityGenerationKind = column.IdentityGenerationKind is null ? "ALWAYS" : column.IdentityGenerationKind;
+            columnModel.IdentityGenerationKind = column.IdentityGenerationKind is null
+                ? PostgreSQLIdentityGenerationKinds.Always
+                : column.IdentityGenerationKind;
             columnModel.IdentitySequenceOptions = MapToSequenceOptionsModel(column.IdentitySequenceOptions);
         }
     }
 
     protected override void BuildAdditionalIndexModelProperties(Index indexModel, IndexInfo index)
     {
+        indexModel.IncludeColumns = index.IncludeColumns;
+        ((PostgreSQLIndex)indexModel).Method = index.Method ?? PostgreSQLIndexMethods.BTREE;
         if (index.Expression is not null)
             ((PostgreSQLIndex)indexModel).Expression = new CodePiece() { Code = index.Expression };
     }

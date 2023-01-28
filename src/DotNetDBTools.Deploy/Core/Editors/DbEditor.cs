@@ -58,7 +58,7 @@ internal abstract class DbEditor<
             foreach (CheckConstraint ck in table.CheckConstraints)
                 QueryExecutor.Execute(Create<TInsertDNDBTDbObjectRecordQuery>(ck, DbObjectType.CheckConstraint, ck.GetExpression()));
             foreach (Index idx in table.Indexes)
-                QueryExecutor.Execute(Create<TInsertDNDBTDbObjectRecordQuery>(idx, DbObjectType.Index));
+                QueryExecutor.Execute(Create<TInsertDNDBTDbObjectRecordQuery>(idx, DbObjectType.Index, idx.GetCode()));
             foreach (Trigger trg in table.Triggers)
                 QueryExecutor.Execute(Create<TInsertDNDBTDbObjectRecordQuery>(trg, DbObjectType.Trigger, trg.GetCreateStatement()));
             foreach (ForeignKey fk in table.ForeignKeys)

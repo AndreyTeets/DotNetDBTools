@@ -992,7 +992,7 @@ VALUES
 
 -- QUERY START: CreateIndexQuery
 EXECUTE 'CREATE UNIQUE INDEX "IDX_MyTable2_MyIndex1"
-    ON "MyTable2" ("MyColumn1NewName", "MyColumn2");';
+    ON "MyTable2" USING BTREE ("MyColumn1NewName", "MyColumn2");';
 -- QUERY END: CreateIndexQuery
 
 -- QUERY START: InsertDNDBTDbObjectRecordQuery
@@ -1011,6 +1011,31 @@ VALUES
     ''Index'',
     ''IDX_MyTable2_MyIndex1'',
     NULL
+);';
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: CreateIndexQuery
+EXECUTE 'CREATE INDEX "IDX_MyTable5_1"
+    ON "MyTable5" USING BTREE ((length("MyColumn2" || "MyColumn1") + 1))
+    INCLUDE ("MyColumn4", "MyColumn3", "MyColumn5");';
+-- QUERY END: CreateIndexQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+EXECUTE 'INSERT INTO "DNDBTDbObjects"
+(
+    "ID",
+    "ParentID",
+    "Type",
+    "Name",
+    "Code"
+)
+VALUES
+(
+    ''f7f367da-088f-48dd-bad5-2a14a0e77f66'',
+    ''6ca51f29-c1bc-4349-b9c1-6f1ea170f162'',
+    ''Index'',
+    ''IDX_MyTable5_1'',
+    ''(length("MyColumn2" || "MyColumn1") + 1)''
 );';
 -- QUERY END: InsertDNDBTDbObjectRecordQuery
 

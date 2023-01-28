@@ -80,9 +80,11 @@ $@"        public ForeignKey {fk.Name} = new(""{fk.ID}"")
             foreach (Index idx in table.Indexes)
             {
                 List<string> propsDeclarations = new();
-                propsDeclarations.Add(CreateColumnsDeclaration("Columns", idx.Columns));
+                AddIndexColumnsDeclaration(propsDeclarations, idx);
                 if (idx.Unique)
                     propsDeclarations.Add($@"            Unique = {DeclareBool(idx.Unique)},");
+
+                AddAdditionalIndexPropsDeclarations(propsDeclarations, idx);
 
                 string idxDeclaration =
 $@"        public Index {idx.Name} = new(""{idx.ID}"")
@@ -157,9 +159,14 @@ namespace {projectNamespace}.Tables
         }
         return res;
     }
-    protected virtual void AddAdditionalColumnPropsDeclarations(List<string> columnDeclarations, Column column) { }
+    protected virtual void AddIndexColumnsDeclaration(List<string> propsDeclarations, Index index)
+    {
+        propsDeclarations.Add(CreateColumnsDeclaration("Columns", index.Columns));
+    }
+    protected virtual void AddAdditionalColumnPropsDeclarations(List<string> propsDeclarations, Column column) { }
+    protected virtual void AddAdditionalIndexPropsDeclarations(List<string> propsDeclarations, Index index) { }
 
-    private static string CreateColumnsDeclaration(string propName, IEnumerable<string> columns)
+    protected static string CreateColumnsDeclaration(string propName, IEnumerable<string> columns)
     {
         return $@"            {propName} = new[] {{ {string.Join(", ", columns.Select(x => $"\"{x}\""))} }},";
     }

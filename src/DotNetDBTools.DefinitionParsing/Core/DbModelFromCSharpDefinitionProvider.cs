@@ -261,13 +261,17 @@ internal abstract class DbModelFromCSharpDefinitionProvider<
                 {
                     ID = index.DNDBT_OBJECT_ID,
                     Name = x.Name,
-                    Columns = index.Columns.ToList(),
+                    Columns = GetIndexColumns(index),
                     Unique = index.Unique,
                 };
                 BuildAdditionalIndexModelProperties(indexModel, index);
                 return (Index)indexModel;
             })
             .ToList();
+    }
+    protected virtual List<string> GetIndexColumns(BaseIndex index)
+    {
+        return index.Columns.ToList();
     }
     protected virtual void BuildAdditionalIndexModelProperties(Index indexModel, BaseIndex index) { }
 

@@ -82,11 +82,18 @@ internal class PostgreSQLGetObjectInfoVisitor : PostgreSQLParserBaseVisitor<Obje
             index.Unique = true;
         foreach (Index_columnContext columnContext in context.index_columns().index_column())
             AddColumnOrSetExpression(columnContext);
+        if (context.including_index() is not null)
+        {
+            foreach (IdentifierContext identifierContext in context.including_index().identifier())
+                index.IncludeColumns.Add(HMs.Unquote(identifierContext.GetText()));
+        }
+        if (context.method is not null)
+            index.Method = context.method.GetText().ToUpper();
         return index;
 
         void AddColumnOrSetExpression(Index_columnContext context)
         {
-            if (context.vex().value_expression_primary().indirection_var() is not null)
+            if (context.vex().value_expression_primary()?.indirection_var() is not null)
                 index.Columns.Add(HMs.Unquote(context.vex().GetText()));
             else
                 index.Expression = HM.GetInitialText(context);

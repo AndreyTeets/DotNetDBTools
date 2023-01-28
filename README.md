@@ -82,7 +82,7 @@ CREATE TABLE "MyTable"
 
 --ID:#{74390B3C-BC39-4860-A42E-12BAA400F927}#
 CREATE UNIQUE INDEX "IDX_MyTable_MyDataColumn2"
-ON "MyTable" ("MyDataColumn2");
+    ON "MyTable" ("MyDataColumn2");
 ```
 
 ## Example usage of additionally generated description classes in business logic

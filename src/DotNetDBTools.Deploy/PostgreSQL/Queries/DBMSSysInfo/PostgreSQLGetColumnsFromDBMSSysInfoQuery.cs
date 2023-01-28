@@ -101,7 +101,9 @@ WHERE c.relkind = 'r'
 
             if (columnModel.Identity)
             {
-                columnModel.IdentityGenerationKind = cr.Identity == "a" ? "ALWAYS" : "BY DEFAULT";
+                columnModel.IdentityGenerationKind = cr.Identity == "a"
+                    ? PostgreSQLIdentityGenerationKinds.Always
+                    : PostgreSQLIdentityGenerationKinds.ByDefault;
                 columnModel.IdentitySequenceOptions = new PostgreSQLSequenceOptions()
                 {
                     StartWith = cr.IdentitySequenceStartWith,

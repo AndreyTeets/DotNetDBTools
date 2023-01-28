@@ -133,10 +133,12 @@ internal abstract class DbModelConverter<
                 IncludeColumns = index.IncludeColumns,
                 Unique = index.Unique,
             };
+            BuildAdditionalIndexProperties(specificDbmsIndex);
             specificDbmsIndexes.Add(specificDbmsIndex);
         };
         return specificDbmsIndexes;
     }
+    protected virtual void BuildAdditionalIndexProperties(TIndex index) { }
 
     protected virtual List<Trigger> ConvertTriggers(IEnumerable<Trigger> triggers)
     {
