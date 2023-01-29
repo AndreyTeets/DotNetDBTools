@@ -87,7 +87,7 @@ public class PostgreSQLCodeParserTestsData : BaseCodeParserTestsData
                     ID = new Guid("A136AE77-B7E4-40C3-824F-BD20DC270A14"),
                     Name = "PK_Table1".ToLower(),
                     Type = ConstraintType.PrimaryKey,
-                    Columns = new List<string>() { "Col1".ToLower(), "Col2".ToLower() },
+                    Columns = new List<string>() { "Col1".ToLower(), "Col2" },
                 },
                 new ConstraintInfo()
                 {
@@ -101,7 +101,7 @@ public class PostgreSQLCodeParserTestsData : BaseCodeParserTestsData
                     ID = new Guid("A336AE77-B7E4-40C3-824F-BD20DC270A14"),
                     Name = "UQ_Table1_Col2Col4".ToLower(),
                     Type = ConstraintType.Unique,
-                    Columns = new List<string>() { "Col2".ToLower(), "Col4" },
+                    Columns = new List<string>() { "Col2", "Col4".ToLower() },
                 },
                 new ConstraintInfo()
                 {
@@ -121,14 +121,14 @@ public class PostgreSQLCodeParserTestsData : BaseCodeParserTestsData
                     Type = ConstraintType.ForeignKey,
                     Columns = new List<string>() { "Col1".ToLower(), "Col2" },
                     RefTable = "Table2".ToLower(),
-                    RefColumns = new List<string>() { "Col2".ToLower(), "Col4".ToLower() },
+                    RefColumns = new List<string>() { "Col2", "Col4".ToLower() },
                 },
                 new ConstraintInfo()
                 {
                     ID = new Guid("A636AE77-B7E4-40C3-824F-BD20DC270A14"),
                     Name = "CK_Table1_Check1".ToLower(),
                     Type = ConstraintType.Check,
-                    Expression = "Col2 != 'Col2 DECIMAL(6, 1) NOT NULL DEFAULT 7.36,'",
+                    Expression = "\"Col2\" != 'Col2 DECIMAL(6, 1) NOT NULL DEFAULT 7.36,'",
                 },
                 new ConstraintInfo()
                 {
@@ -142,7 +142,7 @@ public class PostgreSQLCodeParserTestsData : BaseCodeParserTestsData
                     ID = new Guid("A836AE77-B7E4-40C3-824F-BD20DC270A14"),
                     Name = "CK_Table1_Check3",
                     Type = ConstraintType.Check,
-                    Expression = @"""Col3"" >= 0",
+                    Expression = @"Col3 >= 0",
                 },
             }
         };
@@ -184,7 +184,7 @@ public class PostgreSQLCodeParserTestsData : BaseCodeParserTestsData
                     ID = new Guid("A836AE77-B7E4-40C3-824F-BD20DC270A14"),
                     Name = null,
                     Type = ConstraintType.Check,
-                    Expression = @"""Col3"" >= 0",
+                    Expression = @"Col3 >= 0",
                 },
             }
         };

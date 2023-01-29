@@ -10,6 +10,7 @@ using DotNetDBTools.DefinitionParsing;
 using DotNetDBTools.Deploy;
 using DotNetDBTools.Generation;
 using DotNetDBTools.Generation.Core;
+using DotNetDBTools.IntegrationTests.Utilities;
 using DotNetDBTools.Models.Core;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
@@ -133,9 +134,7 @@ public class PostgreSQLUnitTestsTestDataSqlScriptsValidation
         dbModel1.Should().BeEquivalentTo(dbModel2, options => options
             .RespectingRuntimeTypes()
             .WithStrictOrdering()
-            .Excluding(mi => mi.Name == nameof(DbObject.Parent) && mi.DeclaringType == typeof(DbObject))
-            .Excluding(mi => mi.Name == nameof(CodePiece.DependsOn) && mi.DeclaringType == typeof(CodePiece))
-            .Excluding(mi => mi.Name == nameof(DataType.DependsOn) && mi.DeclaringType == typeof(DataType))
+            .ExcludingDependencies()
             .Excluding(mi => mi.Name == nameof(DbObject.ID) && mi.DeclaringType == typeof(DbObject))
             .Using<CodePiece>(CompareCodePiece).WhenTypeIs<CodePiece>());
     }

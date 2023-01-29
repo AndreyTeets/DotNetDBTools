@@ -32,10 +32,8 @@ public abstract class BaseBuildSqlDefDbModelTests
         Database databaseSql = new DefinitionParsingManager().CreateDbModel(_specificDbmsDbAssemblyV2SqlDef);
         databaseSql.Should().BeEquivalentTo(databaseCSharp, options => options
             .RespectingRuntimeTypes()
-            .WithStrictOrdering()
-            .Excluding(mi => mi.Name == nameof(DbObject.Parent) && mi.DeclaringType == typeof(DbObject))
-            .Excluding(mi => mi.Name == nameof(CodePiece.DependsOn) && mi.DeclaringType == typeof(CodePiece))
-            .Excluding(mi => mi.Name == nameof(DataType.DependsOn) && mi.DeclaringType == typeof(DataType)));
+            .WithoutStrictOrdering()
+            .ExcludingDependencies());
     }
 
     [Fact]
@@ -47,8 +45,6 @@ public abstract class BaseBuildSqlDefDbModelTests
         actualDbModel.Should().BeEquivalentTo(ExpectedDbModelFromListOfSqlStatements, options => options
             .RespectingRuntimeTypes()
             .WithoutStrictOrdering()
-            .Excluding(mi => mi.Name == nameof(DbObject.Parent) && mi.DeclaringType == typeof(DbObject))
-            .Excluding(mi => mi.Name == nameof(CodePiece.DependsOn) && mi.DeclaringType == typeof(CodePiece))
-            .Excluding(mi => mi.Name == nameof(DataType.DependsOn) && mi.DeclaringType == typeof(DataType)));
+            .ExcludingDependencies());
     }
 }

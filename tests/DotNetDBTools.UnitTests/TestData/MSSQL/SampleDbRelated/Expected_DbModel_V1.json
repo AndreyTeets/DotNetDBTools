@@ -1,5 +1,5 @@
 {
-  "$id": "F31292A962BA8F4A",
+  "$id": "4CFF648C98790361",
   "UserDefinedTypes": [
     {
       "$id": "DbObject { ID: '0cd1e71c-cc9c-440f-ac0b-81a1d6f7ddaa', Name: 'MyUserDefinedType1' }",
@@ -126,6 +126,7 @@
         "Columns": [
           "MyColumn3"
         ],
+        "DependsOn": [],
         "ID": "37a45def-f4a0-4be7-8bfb-8fbed4a7d705",
         "Name": "PK_MyTable1",
         "Parent": {
@@ -138,6 +139,7 @@
           "Columns": [
             "MyColumn4"
           ],
+          "DependsOn": [],
           "ID": "f3f08522-26ee-4950-9135-22edf2e4e0cf",
           "Name": "UQ_MyTable1_MyColumn4",
           "Parent": {
@@ -172,6 +174,7 @@
           ],
           "OnUpdate": "NO ACTION",
           "OnDelete": "CASCADE",
+          "DependsOn": [],
           "ID": "d11b2a53-32db-432f-bb6b-f91788844ba9",
           "Name": "FK_MyTable1_MyColumn1_MyTable2_MyColumn1",
           "Parent": {
@@ -236,6 +239,7 @@
         "Columns": [
           "MyColumn1"
         ],
+        "DependsOn": [],
         "ID": "3a43615b-40b3-4a13-99e7-93af7c56e8ce",
         "Name": "PK_MyTable2_CustomName",
         "Parent": {
@@ -254,6 +258,7 @@
           ],
           "IncludeColumns": [],
           "Unique": true,
+          "DependsOn": [],
           "ID": "74390b3c-bc39-4860-a42e-12baa400f927",
           "Name": "IDX_MyTable2_MyIndex1",
           "Parent": {
@@ -323,6 +328,7 @@
         "Columns": [
           "MyColumn2"
         ],
+        "DependsOn": [],
         "ID": "53ad5415-7fea-4a51-bcae-65e349a2e477",
         "Name": "PK_MyTable4",
         "Parent": {
@@ -623,6 +629,7 @@
           "MyColumn2",
           "MyColumn1"
         ],
+        "DependsOn": [],
         "ID": "79384d48-a39b-4a22-900e-066b2ca67ba2",
         "Name": "PK_MyTable5_CustomName",
         "Parent": {
@@ -637,6 +644,7 @@
             "MyColumn3",
             "MyColumn7"
           ],
+          "DependsOn": [],
           "ID": "5293b58a-9f63-4f0f-8d6f-18416ebbd751",
           "Name": "UQ_MyTable5_CustomName",
           "Parent": {
@@ -654,6 +662,7 @@
           ],
           "IncludeColumns": [],
           "Unique": false,
+          "DependsOn": [],
           "ID": "1d632285-9914-4c5d-98e6-a618a99bd799",
           "Name": "IDX_MyTable5_CustomName",
           "Parent": {
@@ -721,6 +730,7 @@
           ],
           "OnUpdate": "NO ACTION",
           "OnDelete": "NO ACTION",
+          "DependsOn": [],
           "ID": "ae453b22-d270-41fc-8184-9ac26b7a0569",
           "Name": "FK_MyTable6_MyTable5_CustomName",
           "Parent": {

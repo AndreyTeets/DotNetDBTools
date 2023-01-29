@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using DotNetDBTools.CodeParsing.Models;
 using static DotNetDBTools.CodeParsing.Generated.PostgreSQLParser;
 using HM = DotNetDBTools.CodeParsing.Core.HelperMethods;
@@ -52,6 +53,23 @@ internal static class PostgreSQLHelperMethods
                 throw new ParseException($"Failed to get function dependency from [{HM.GetInitialText(context)}]");
         }
         return dependency is not null;
+    }
+
+    public static Dependency GetColumnDependency(Indirection_varContext context, out string parentName)
+    {
+        Stack<string> parts = new();
+        parts.Push(Unquote(context.identifier().GetText()));
+        if (context.indirection_list() is not null)
+        {
+            foreach (IndirectionContext item in context.indirection_list().indirection())
+                parts.Push(Unquote(item.col_label().GetText()));
+        }
+
+        Dependency dependency = new() { Type = DependencyType.Column, Name = parts.Pop() };
+        parentName = null;
+        if (parts.Count > 0)
+            parentName = parts.Pop();
+        return dependency;
     }
 
     public static string GetSequenceName(VexContext funcArgContext)

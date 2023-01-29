@@ -24,8 +24,8 @@ EXECUTE 'DROP VIEW "v_a_8";';
 
 -- QUERY START: AlterTableQuery
 EXECUTE 'ALTER TABLE "t_1"
-    ALTER COLUMN "c1" SET DATA TYPE SMALLINT
-        USING ("c1"::text::SMALLINT);';
+    DROP COLUMN "c1",
+    ADD COLUMN "c1" INT NULL DEFAULT 4;';
 -- QUERY END: AlterTableQuery
 
 -- QUERY START: CreateFunctionQuery

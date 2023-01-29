@@ -20,7 +20,7 @@ public abstract class DatabaseDiff
     public List<Trigger> TriggersToCreate { get; set; } = new();
     public List<Trigger> TriggersToDrop { get; set; } = new();
 
-    public List<ForeignKey> UnchangedForeignKeysToRecreateBecauseOfDeps { get; set; } = new();
+    public List<ForeignKey> UnchangedForeignKeysToRecreateBecauseOfChangedReferencedObjects { get; set; } = new();
 
     public List<Script> AddedScripts { get; set; } = new();
     public List<Script> RemovedScripts { get; set; } = new();

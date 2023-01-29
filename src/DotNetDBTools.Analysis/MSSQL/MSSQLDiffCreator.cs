@@ -38,7 +38,7 @@ internal class MSSQLDiffCreator : DiffCreator
         BuildTriggersDiff(dbDiff, newDb, oldDb);
 
         AddDiffsForUnchangedItemsIfMarkedForRedefinition(dbDiff, newDb);
-        ForeignKeysHelper.BuildUnchangedForeignKeysToRecreateBecauseOfDeps(dbDiff, oldDb);
+        ForeignKeysHelper.BuildUnchangedForeignKeysToRecreateBecauseOfChangedReferencedObjects(dbDiff, oldDb);
 
         BuildScriptsDiff(dbDiff, newDb, oldDb);
         return dbDiff;

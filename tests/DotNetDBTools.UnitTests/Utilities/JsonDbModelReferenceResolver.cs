@@ -72,7 +72,11 @@ public class JsonDbModelReferenceResolver : IReferenceResolver
 
             if (property.PropertyType == typeof(List<DbObject>)
                 && (property.DeclaringType == typeof(CodePiece) && property.PropertyName == nameof(CodePiece.DependsOn)
-                    || property.DeclaringType == typeof(DataType) && property.PropertyName == nameof(DataType.DependsOn))
+                    || property.DeclaringType == typeof(DataType) && property.PropertyName == nameof(DataType.DependsOn)
+                    || property.DeclaringType == typeof(PrimaryKey) && property.PropertyName == nameof(DataType.DependsOn)
+                    || property.DeclaringType == typeof(UniqueConstraint) && property.PropertyName == nameof(DataType.DependsOn)
+                    || property.DeclaringType == typeof(ForeignKey) && property.PropertyName == nameof(DataType.DependsOn)
+                    || property.DeclaringType == typeof(Index) && property.PropertyName == nameof(DataType.DependsOn))
                 || property.PropertyType == typeof(DbObject)
                 && property.DeclaringType == typeof(DbObject) && property.PropertyName == nameof(DbObject.Parent))
             {

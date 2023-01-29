@@ -45,7 +45,7 @@ internal abstract class ForeignKeyEditor<
             allForeignKeysToCreate.AddRange(addedTableForeignKeys);
         foreach (TableDiff tableDiff in dbDiff.ChangedTables)
             allForeignKeysToCreate.AddRange(tableDiff.ForeignKeysToCreate);
-        allForeignKeysToCreate.AddRange(dbDiff.UnchangedForeignKeysToRecreateBecauseOfDeps);
+        allForeignKeysToCreate.AddRange(dbDiff.UnchangedForeignKeysToRecreateBecauseOfChangedReferencedObjects);
         return allForeignKeysToCreate;
     }
 
@@ -56,7 +56,7 @@ internal abstract class ForeignKeyEditor<
             allForeignKeysToDrop.AddRange(addedTableForeignKeys);
         foreach (TableDiff tableDiff in dbDiff.ChangedTables)
             allForeignKeysToDrop.AddRange(tableDiff.ForeignKeysToDrop);
-        allForeignKeysToDrop.AddRange(dbDiff.UnchangedForeignKeysToRecreateBecauseOfDeps);
+        allForeignKeysToDrop.AddRange(dbDiff.UnchangedForeignKeysToRecreateBecauseOfChangedReferencedObjects);
         return allForeignKeysToDrop;
     }
 

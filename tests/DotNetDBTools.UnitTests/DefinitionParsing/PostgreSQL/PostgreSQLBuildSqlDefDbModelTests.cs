@@ -84,7 +84,7 @@ public class PostgreSQLBuildSqlDefDbModelTests : BaseBuildSqlDefDbModelTests
                 {
                     ID = new Guid("A136AE77-B7E4-40C3-824F-BD20DC270A14"),
                     Name = "PK_Table1".ToLower(),
-                    Columns = new() { "Col1".ToLower(), "Col2".ToLower() },
+                    Columns = new() { "Col1".ToLower(), "Col2" },
                 },
                 UniqueConstraints = new()
                 {
@@ -98,7 +98,7 @@ public class PostgreSQLBuildSqlDefDbModelTests : BaseBuildSqlDefDbModelTests
                     {
                         ID = new Guid("A336AE77-B7E4-40C3-824F-BD20DC270A14"),
                         Name = "UQ_Table1_Col2Col4".ToLower(),
-                        Columns = new() { "Col2".ToLower(), "Col4" },
+                        Columns = new() { "Col2", "Col4".ToLower() },
                     },
                 },
                 CheckConstraints = new()
@@ -107,7 +107,7 @@ public class PostgreSQLBuildSqlDefDbModelTests : BaseBuildSqlDefDbModelTests
                     {
                         ID = new Guid("A636AE77-B7E4-40C3-824F-BD20DC270A14"),
                         Name = "CK_Table1_Check1".ToLower(),
-                        Expression = new CodePiece() { Code = "Col2 != 'Col2 DECIMAL(6, 1) NOT NULL DEFAULT 7.36,'" },
+                        Expression = new CodePiece() { Code = "\"Col2\" != 'Col2 DECIMAL(6, 1) NOT NULL DEFAULT 7.36,'" },
                     },
                     new CheckConstraint()
                     {
@@ -119,7 +119,7 @@ public class PostgreSQLBuildSqlDefDbModelTests : BaseBuildSqlDefDbModelTests
                     {
                         ID = new Guid("A836AE77-B7E4-40C3-824F-BD20DC270A14"),
                         Name = "CK_Table1_Check3",
-                        Expression = new CodePiece() { Code = @"""Col3"" >= 0" },
+                        Expression = new CodePiece() { Code = @"Col3 >= 0" },
                     },
                 },
                 ForeignKeys = new()
@@ -140,7 +140,7 @@ public class PostgreSQLBuildSqlDefDbModelTests : BaseBuildSqlDefDbModelTests
                         Name = "FK_Table1_Col1Col2_Table2_Col2Col4",
                         ThisColumnNames = new() { "Col1".ToLower(), "Col2" },
                         ReferencedTableName = "Table2".ToLower(),
-                        ReferencedTableColumnNames = new() { "Col2".ToLower(), "Col4".ToLower() },
+                        ReferencedTableColumnNames = new() { "Col2", "Col4".ToLower() },
                         OnUpdate = "NO ACTION",
                         OnDelete = "NO ACTION",
                     },

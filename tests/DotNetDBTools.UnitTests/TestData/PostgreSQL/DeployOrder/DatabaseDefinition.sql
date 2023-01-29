@@ -428,7 +428,7 @@ create view v_a_8 as select c1 from t_1;
 create view v_a_9 as select c1 from v_1;
 
 
---Indexes and triggers depending on functions
+--Indexes and triggers depending on tables/functions
 
 --ID:#{70B777CA-6A71-4882-8DC3-23029C804063}#
 create index i_a_1 on t_1 (f_4_s(c1));

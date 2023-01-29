@@ -131,9 +131,12 @@ internal class PostgreSQLTablesEditor : TableEditor<
             };
             foreach (Column column in tableDiff.ColumnsToAdd.Where(x => x.Default is not null))
             {
-                ColumnDiff columnDiffWithDefaultChange = column.CreateEmptyColumnDiff();
-                columnDiffWithDefaultChange.DefaultToSet = column.Default;
-                tableDiffForSettingColumnsDefault.ColumnsToAlter.Add(columnDiffWithDefaultChange);
+                if (column.Default.DependsOn.Any(IsComplexDependency))
+                {
+                    ColumnDiff columnDiffWithDefaultChange = column.CreateEmptyColumnDiff();
+                    columnDiffWithDefaultChange.DefaultToSet = column.Default;
+                    tableDiffForSettingColumnsDefault.ColumnsToAlter.Add(columnDiffWithDefaultChange);
+                }
             }
 
             foreach (ColumnDiff columnDiff in tableDiff.ColumnsToAlter.Where(x => x.DefaultToSet is not null))
@@ -183,9 +186,12 @@ internal class PostgreSQLTablesEditor : TableEditor<
             };
             foreach (Column column in tableDiff.ColumnsToDrop.Where(x => x.Default is not null))
             {
-                ColumnDiff columnDiffWithDefaultChange = column.CreateEmptyColumnDiff();
-                columnDiffWithDefaultChange.DefaultToDrop = column.Default;
-                tableDiffForDroppingColumnsDefault.ColumnsToAlter.Add(columnDiffWithDefaultChange);
+                if (column.Default.DependsOn.Any(IsComplexDependency))
+                {
+                    ColumnDiff columnDiffWithDefaultChange = column.CreateEmptyColumnDiff();
+                    columnDiffWithDefaultChange.DefaultToDrop = column.Default;
+                    tableDiffForDroppingColumnsDefault.ColumnsToAlter.Add(columnDiffWithDefaultChange);
+                }
             }
 
             foreach (ColumnDiff columnDiff in tableDiff.ColumnsToAlter.Where(x => x.DefaultToDrop is not null))
@@ -273,6 +279,7 @@ internal class PostgreSQLTablesEditor : TableEditor<
             PostgreSQLDomainType x => false,
             PostgreSQLEnumType x => false,
             PostgreSQLRangeType x => false,
+            Column x => false,
             PostgreSQLView x => x.CreateStatement.DependsOn.Any(IsComplexDependency),
             PostgreSQLFunction x => x.CreateStatement.DependsOn.Any(IsComplexDependency),
             PostgreSQLProcedure x => x.CreateStatement.DependsOn.Any(IsComplexDependency),

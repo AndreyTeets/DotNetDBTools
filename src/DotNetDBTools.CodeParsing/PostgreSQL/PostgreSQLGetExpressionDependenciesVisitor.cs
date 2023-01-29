@@ -26,4 +26,10 @@ internal class PostgreSQLGetExpressionDependenciesVisitor : PostgreSQLParserBase
             _dependencies.Add(dependency.Value);
         return base.VisitFunction_call(context);
     }
+
+    public override object VisitIndirection_var([NotNull] Indirection_varContext context)
+    {
+        _dependencies.Add(PostgreSQLHelperMethods.GetColumnDependency(context, out string _));
+        return base.VisitIndirection_var(context);
+    }
 }

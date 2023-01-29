@@ -110,11 +110,11 @@ Also provides declarative means for defining database structure with different s
 + SQLite ((minimal required - 3.26.0, latest tested - 3.39.2)
 
 # State of development
-+ MSSQL - definition (as c#) of only basic "standard relational db entities" and it's deployment+generation seem to work, database analysis using just a few example checks.
-+ MySQL - definition (as c#) of only basic "standard relational db entities" and it's deployment+generation seem to work, database analysis using just a few example checks.
-+ PostgreSQL - definition (as c# and as sql) of almost all "postgres entities" and it's deployment+generation seem to work, database analysis using just a few example checks.
-+ SQLite - definition (as c# and as sql) of all "sqlite entities" and it's deployment+generation seem to work, database analysis using just a few example checks.
-+ Agnostic definition for "standard relational db entities" and it's deployment to all the above DBMS according with corresponding development state of the specific DBMS above.
++ MSSQL - definition (as c# only) and generation of "Tables,Views,Indexes,Triggers,UserDefinedTypes" without specific for this DBMS advanced properties, deployment functionality without dependencies analysis so deploy order for views may be invalid, database analysis using just a few example checks.
++ MySQL - definition (as c# only) and generation of "Tables,Views,Indexes,Triggers" without specific for this DBMS advanced properties, deployment functionality without dependencies analysis so deploy order for views may be invalid, database analysis using just a few example checks.
++ PostgreSQL - definition (as c# and as sql) and generation of "Tables,Views,Indexes,Triggers,Sequences,Types,Functions,Procedures" with only some of the specific for this DBMS advanced properties, deployment functionality without some complex dependencies scenarios like recursive dependencies, database analysis using just a few example checks.
++ SQLite - definition (as c# and as sql) and generation of "Tables,Views,Indexes,Triggers", deployment functionality without dependencies analysis so deploy order for views may be invalid, database analysis using just a few example checks.
++ Agnostic definition for "Tables,Views,Indexes,Triggers" and it's deployment functionality to all the above DBMS according with corresponding development state of the specific DBMS above.
 
 # How to use
 1. Create a netstandard2.0 project for a database description.

@@ -4,6 +4,7 @@ public enum DependencyType
 {
     Sequence,
     DataType,
+    Column,
     TableOrView,
     FunctionOrProcedure,
 }

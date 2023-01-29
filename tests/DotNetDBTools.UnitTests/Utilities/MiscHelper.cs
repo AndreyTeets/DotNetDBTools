@@ -1,8 +1,8 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using DotNetDBTools.Models.Core;
+using FluentAssertions.Equivalency;
 using Newtonsoft.Json;
 
 namespace DotNetDBTools.UnitTests.Utilities;
@@ -13,6 +13,18 @@ internal static class MiscHelper
     {
         string projectDir = $@"../../../../../samples/Databases/{projectName}";
         return TestDatabasesCompiler.CompileSampleDbProject(projectDir);
+    }
+
+    public static EquivalencyAssertionOptions<Database> ExcludingDependencies(this EquivalencyAssertionOptions<Database> options)
+    {
+        return options
+            .Excluding(mi => mi.Name == nameof(DbObject.Parent) && mi.DeclaringType == typeof(DbObject))
+            .Excluding(mi => mi.Name == nameof(CodePiece.DependsOn) && mi.DeclaringType == typeof(CodePiece))
+            .Excluding(mi => mi.Name == nameof(DataType.DependsOn) && mi.DeclaringType == typeof(DataType))
+            .Excluding(mi => mi.Name == nameof(PrimaryKey.DependsOn) && mi.DeclaringType == typeof(PrimaryKey))
+            .Excluding(mi => mi.Name == nameof(UniqueConstraint.DependsOn) && mi.DeclaringType == typeof(UniqueConstraint))
+            .Excluding(mi => mi.Name == nameof(ForeignKey.DependsOn) && mi.DeclaringType == typeof(ForeignKey))
+            .Excluding(mi => mi.Name == nameof(Index.DependsOn) && mi.DeclaringType == typeof(Index));
     }
 
     public static string SerializeToJsonWithReferences<T>(T value)
@@ -51,7 +63,7 @@ internal static class MiscHelper
 
     public static string RemoveSemicolonIfAny(this string input)
     {
-        if (input.EndsWith(";", StringComparison.OrdinalIgnoreCase))
+        if (input.EndsWith(";", System.StringComparison.OrdinalIgnoreCase))
             return input.Remove(input.Length - 1, 1);
         else
             return input;

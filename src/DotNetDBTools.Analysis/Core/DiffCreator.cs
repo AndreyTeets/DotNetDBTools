@@ -137,16 +137,28 @@ internal abstract class DiffCreator
     private void BuildPrimaryKeyDiff<TTableDiff>(TTableDiff tableDiff, Table newTable, Table oldTable)
         where TTableDiff : TableDiff, new()
     {
-        PrimaryKey primaryKeyToCreate = null;
-        PrimaryKey primaryKeyToDrop = null;
-        if (!_comparer.Equals(newTable.PrimaryKey, oldTable.PrimaryKey))
+        if (newTable.PrimaryKey is not null && oldTable.PrimaryKey is not null)
         {
-            primaryKeyToCreate = newTable.PrimaryKey;
-            primaryKeyToDrop = oldTable.PrimaryKey;
+            if (!_comparer.Equals(newTable.PrimaryKey, oldTable.PrimaryKey))
+            {
+                tableDiff.PrimaryKeyToCreate = newTable.PrimaryKey;
+                tableDiff.PrimaryKeyToDrop = oldTable.PrimaryKey;
+                OnChangedItemProcessed(newTable.PrimaryKey, oldTable.PrimaryKey);
+            }
+            else
+            {
+                OnUnchangedItemProcessed(newTable.PrimaryKey);
+            }
         }
-
-        tableDiff.PrimaryKeyToCreate = primaryKeyToCreate;
-        tableDiff.PrimaryKeyToDrop = primaryKeyToDrop;
+        else if (newTable.PrimaryKey is not null && oldTable.PrimaryKey is null)
+        {
+            tableDiff.PrimaryKeyToCreate = newTable.PrimaryKey;
+            OnAddedItemProcessed(newTable.PrimaryKey);
+        }
+        else if (newTable.PrimaryKey is null && oldTable.PrimaryKey is not null)
+        {
+            tableDiff.PrimaryKeyToDrop = oldTable.PrimaryKey;
+        }
     }
 
     private void BuildUniqueConstraintsDiff<TTableDiff>(TTableDiff tableDiff, Table newTable, Table oldTable)

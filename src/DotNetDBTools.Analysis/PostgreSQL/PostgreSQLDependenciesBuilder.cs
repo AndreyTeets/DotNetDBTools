@@ -48,6 +48,10 @@ internal class PostgreSQLDependenciesBuilder : DependenciesBuilder
         Dictionary<string, PostgreSQLFunction> funcNameToFuncMap = database.Functions.ToDictionary(x => x.Name, x => x);
         Dictionary<string, PostgreSQLProcedure> procNameToProcMap = database.Procedures.ToDictionary(x => x.Name, x => x);
 
+        Dictionary<string, Dictionary<string, Column>> tableNameToColumnNameToColumnMap = database.Tables.ToDictionary(
+            x => x.Name,
+            x => x.Columns.ToDictionary(x => x.Name, x => x));
+
         PostgreSQLCodeParser parser = new();
         AddForTypes();
         AddForTableObjects();
@@ -79,6 +83,7 @@ internal class PostgreSQLDependenciesBuilder : DependenciesBuilder
                         () => parser.GetExpressionDependencies(ck.Expression.Code),
                         $"Error while parsing domain type '{type.Name}' check constraint '{ck.Name}' expression");
 
+                    deps.RemoveAll(x => x.Type == DependencyType.Column && x.Name.ToLower() == "value");
                     AddDependencies(ck.Expression.DependsOn, deps);
                 }
             }
@@ -100,11 +105,31 @@ internal class PostgreSQLDependenciesBuilder : DependenciesBuilder
                     if (column.Default is not null)
                     {
                         List<Dependency> deps = ExecuteParsingFunc(
-                        () => parser.GetExpressionDependencies(column.Default.Code),
-                        $"Error while parsing table '{table.Name}' column '{table.Name}' default expression");
+                            () => parser.GetExpressionDependencies(column.Default.Code),
+                            $"Error while parsing table '{table.Name}' column '{table.Name}' default expression");
 
-                        AddDependencies(column.Default.DependsOn, deps);
+                        AddDependencies(column.Default.DependsOn, deps, table.Name);
                     }
+                }
+                if (table.PrimaryKey is not null)
+                {
+                    IEnumerable<Column> referencedColumns = table.Columns.Where(x =>
+                        table.PrimaryKey.Columns.Contains(x.Name));
+
+                    HashSet<Column> dependsOn = new();
+                    foreach (Column column in referencedColumns)
+                        dependsOn.Add(column);
+                    table.PrimaryKey.DependsOn = dependsOn.ToList();
+                }
+                foreach (UniqueConstraint uc in table.UniqueConstraints)
+                {
+                    IEnumerable<Column> referencedColumns = table.Columns.Where(x =>
+                        uc.Columns.Contains(x.Name));
+
+                    HashSet<Column> dependsOn = new();
+                    foreach (Column column in referencedColumns)
+                        dependsOn.Add(column);
+                    uc.DependsOn = dependsOn.ToList();
                 }
                 foreach (CheckConstraint ck in table.CheckConstraints)
                 {
@@ -112,18 +137,37 @@ internal class PostgreSQLDependenciesBuilder : DependenciesBuilder
                         () => parser.GetExpressionDependencies(ck.Expression.Code),
                         $"Error while parsing table '{table.Name}' check constraint '{ck.Name}' expression");
 
-                    AddDependencies(ck.Expression.DependsOn, deps);
+                    AddDependencies(ck.Expression.DependsOn, deps, table.Name);
+                }
+                foreach (ForeignKey fk in table.ForeignKeys)
+                {
+                    IEnumerable<Column> referencedColumns = table.Columns.Where(x =>
+                        fk.ThisColumnNames.Contains(x.Name));
+
+                    HashSet<Column> dependsOn = new();
+                    foreach (Column column in referencedColumns)
+                        dependsOn.Add(column);
+                    fk.DependsOn = dependsOn.ToList();
                 }
                 foreach (PostgreSQLIndex index in table.Indexes)
                 {
                     if (index.Expression is not null)
                     {
                         List<Dependency> deps = ExecuteParsingFunc(
-                        () => parser.GetExpressionDependencies(index.Expression.Code),
-                        $"Error while parsing index '{index.Name}' expression");
+                            () => parser.GetExpressionDependencies(index.Expression.Code),
+                            $"Error while parsing index '{index.Name}' expression");
 
-                        AddDependencies(index.Expression.DependsOn, deps);
+                        AddDependencies(index.Expression.DependsOn, deps, table.Name);
                     }
+
+                    IEnumerable<Column> referencedColumns = table.Columns.Where(x =>
+                        index.Columns.Contains(x.Name)
+                        || index.IncludeColumns.Contains(x.Name));
+
+                    HashSet<Column> dependsOn = new();
+                    foreach (Column column in referencedColumns)
+                        dependsOn.Add(column);
+                    index.DependsOn = dependsOn.ToList();
                 }
                 foreach (PostgreSQLTrigger trigger in table.Triggers)
                 {
@@ -176,7 +220,7 @@ internal class PostgreSQLDependenciesBuilder : DependenciesBuilder
                 destDeps.Add(udtNameToUdtMap[typeNameWithoutArray]);
         }
 
-        void AddDependencies(List<DbObject> destDeps, IEnumerable<Dependency> sourceDeps)
+        void AddDependencies(List<DbObject> destDeps, IEnumerable<Dependency> sourceDeps, string columnTableName = null)
         {
             foreach (Dependency dep in sourceDeps)
             {
@@ -192,6 +236,23 @@ internal class PostgreSQLDependenciesBuilder : DependenciesBuilder
                     if (udtNameToUdtMap.ContainsKey(quotedDataTypeName))
                         destDeps.Add(udtNameToUdtMap[quotedDataTypeName]);
                     // Otherwise it may be a system data type
+                }
+                else if (dep.Type == DependencyType.Column)
+                {
+                    if (columnTableName is null)
+                        throw new Exception($"Parent is missing for column dependency '{dep.Name}'");
+
+                    if (tableNameToColumnNameToColumnMap.ContainsKey(columnTableName))
+                    {
+                        if (tableNameToColumnNameToColumnMap[columnTableName].ContainsKey(dep.Name))
+                            destDeps.Add(tableNameToColumnNameToColumnMap[columnTableName][dep.Name]);
+                        else
+                            throw new Exception($"Table '{columnTableName}' doesn't have corresponding column for column dependency '{dep.Name}'");
+                    }
+                    else
+                    {
+                        throw new Exception($"Table '{columnTableName}' doesn't exist for column dependency '{dep.Name}'");
+                    }
                 }
                 else if (dep.Type == DependencyType.TableOrView)
                 {
@@ -211,7 +272,7 @@ internal class PostgreSQLDependenciesBuilder : DependenciesBuilder
                 }
                 else
                 {
-                    throw new Exception($"Invalid dependency type {dep.Type}");
+                    throw new Exception($"Invalid dependency type '{dep.Type}'");
                 }
             }
         }

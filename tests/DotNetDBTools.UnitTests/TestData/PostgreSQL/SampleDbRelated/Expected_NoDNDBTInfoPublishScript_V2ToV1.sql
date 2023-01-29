@@ -29,11 +29,6 @@ EXECUTE 'ALTER TABLE "MyTable1NewName"
 -- QUERY END: AlterTableQuery
 
 -- QUERY START: AlterTableQuery
-EXECUTE 'ALTER TABLE "MyTable2"
-    ALTER COLUMN "MyColumn2" DROP DEFAULT;';
--- QUERY END: AlterTableQuery
-
--- QUERY START: AlterTableQuery
 EXECUTE 'ALTER TABLE "MyTable5"
     ALTER COLUMN "MyColumn1" DROP DEFAULT,
     ALTER COLUMN "MyColumn201" DROP DEFAULT;';
@@ -298,11 +293,6 @@ LEFT JOIN "MyTable2" t2
 -- QUERY START: AlterTableQuery
 EXECUTE 'ALTER TABLE "MyTable1"
     ALTER COLUMN "MyColumn4" SET DEFAULT 736;';
--- QUERY END: AlterTableQuery
-
--- QUERY START: AlterTableQuery
-EXECUTE 'ALTER TABLE "MyTable2"
-    ALTER COLUMN "MyColumn2" SET DEFAULT ''\x000408'';';
 -- QUERY END: AlterTableQuery
 
 -- QUERY START: AlterTableQuery

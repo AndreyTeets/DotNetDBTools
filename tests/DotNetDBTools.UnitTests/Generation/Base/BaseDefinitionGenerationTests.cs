@@ -46,8 +46,6 @@ public abstract class BaseDefinitionGenerationTests
             .RespectingRuntimeTypes()
             .WithStrictOrdering()
             .Excluding(database => database.Scripts)
-            .Excluding(mi => mi.Name == nameof(DbObject.Parent) && mi.DeclaringType == typeof(DbObject))
-            .Excluding(mi => mi.Name == nameof(CodePiece.DependsOn) && mi.DeclaringType == typeof(CodePiece))
-            .Excluding(mi => mi.Name == nameof(DataType.DependsOn) && mi.DeclaringType == typeof(DataType)));
+            .ExcludingDependencies());
     }
 }

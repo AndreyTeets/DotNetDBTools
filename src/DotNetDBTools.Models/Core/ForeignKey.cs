@@ -9,4 +9,6 @@ public class ForeignKey : DbObject
     public List<string> ReferencedTableColumnNames { get; set; } = new();
     public string OnUpdate { get; set; }
     public string OnDelete { get; set; }
+
+    public List<Column> DependsOn { get; set; } = new();
 }

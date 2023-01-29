@@ -19,7 +19,7 @@ internal class MySQLDiffCreator : DiffCreator
         BuildViewsDiff(dbDiff, newDatabase, oldDatabase);
         BuildIndexesDiff(dbDiff, newDatabase, oldDatabase);
         BuildTriggersDiff(dbDiff, newDatabase, oldDatabase);
-        ForeignKeysHelper.BuildUnchangedForeignKeysToRecreateBecauseOfDeps(dbDiff, oldDatabase);
+        ForeignKeysHelper.BuildUnchangedForeignKeysToRecreateBecauseOfChangedReferencedObjects(dbDiff, oldDatabase);
 
         BuildScriptsDiff(dbDiff, newDatabase, oldDatabase);
         return dbDiff;

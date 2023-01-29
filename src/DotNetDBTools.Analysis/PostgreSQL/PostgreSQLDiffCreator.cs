@@ -44,10 +44,10 @@ internal class PostgreSQLDiffCreator : DiffCreator
 
         BuildIndexesDiff(dbDiff, newDb, oldDb);
         BuildTriggersDiff(dbDiff, newDb, oldDb);
-        Mark_Defaults_CKs_Indexes_Triggers_ForRedefinitionIfDepsChanged(newDb);
+        Mark_Constraints_Indexes_Triggers_ForRedefinitionIfDepsChanged(newDb);
 
         AddDiffsForUnchangedItemsIfMarkedForRedefinition(dbDiff, newDb);
-        ForeignKeysHelper.BuildUnchangedForeignKeysToRecreateBecauseOfDeps(dbDiff, oldDb);
+        ForeignKeysHelper.BuildUnchangedForeignKeysToRecreateBecauseOfChangedReferencedObjects(dbDiff, oldDb);
 
         BuildScriptsDiff(dbDiff, newDb, oldDb);
         return dbDiff;
@@ -72,7 +72,7 @@ internal class PostgreSQLDiffCreator : DiffCreator
     {
         _addedObjects.Add(item.ID);
         _objectsThatRequireRedefinition.Add(item.ID);
-        // TODO don't add table when parsing column deps works
+        // TODO don't add table when parsing column deps works for programmable objects
         if (item is Column column)
             _objectsThatRequireRedefinition.Add(column.Parent.ID);
     }
@@ -83,7 +83,7 @@ internal class PostgreSQLDiffCreator : DiffCreator
         if (!CanBeAlteredWithoutRedefinition(newItem, oldItem))
         {
             _objectsThatRequireRedefinition.Add(newItem.ID);
-            // TODO don't add table when parsing column deps works
+            // TODO don't add table when parsing column deps works for programmable objects
             if (newItem is Column column)
                 _objectsThatRequireRedefinition.Add(column.Parent.ID);
         }
@@ -290,7 +290,7 @@ internal class PostgreSQLDiffCreator : DiffCreator
         }
     }
 
-    private void Mark_Defaults_CKs_Indexes_Triggers_ForRedefinitionIfDepsChanged(PostgreSQLDatabase newDb)
+    private void Mark_Constraints_Indexes_Triggers_ForRedefinitionIfDepsChanged(PostgreSQLDatabase newDb)
     {
         foreach (PostgreSQLDomainType type in newDb.DomainTypes)
         {
@@ -303,8 +303,14 @@ internal class PostgreSQLDiffCreator : DiffCreator
         {
             foreach (Column column in table.Columns.Where(DependencyRequiresDefaultRedefinition))
                 _objectsThatRequireDefaultRedefinition.Add(column.ID);
+            if (table.PrimaryKey is not null && DependencyRequiresRedefinition(table.PrimaryKey))
+                _objectsThatRequireRedefinition.Add(table.PrimaryKey.ID);
+            foreach (UniqueConstraint uc in table.UniqueConstraints.Where(DependencyRequiresRedefinition))
+                _objectsThatRequireRedefinition.Add(uc.ID);
             foreach (CheckConstraint ck in table.CheckConstraints.Where(DependencyRequiresRedefinition))
                 _objectsThatRequireRedefinition.Add(ck.ID);
+            foreach (ForeignKey fk in table.ForeignKeys.Where(DependencyRequiresRedefinition))
+                _objectsThatRequireRedefinition.Add(fk.ID);
             foreach (Index index in table.Indexes.Where(DependencyRequiresRedefinition))
                 _objectsThatRequireRedefinition.Add(index.ID);
             foreach (Trigger trigger in table.Triggers.Where(DependencyRequiresRedefinition))
@@ -395,7 +401,7 @@ internal class PostgreSQLDiffCreator : DiffCreator
             foreach (Table table in newDb.Tables.Where(IsNotAdded))
             {
                 if (table.Columns.Any(RequiresDataTypeOrDefaultRedifinition)
-                    || AnyUnchangedCheckConstraintRequiresRedefinition(table))
+                    || AnyUnchangedConstraintRequiresRedefinition(table))
                 {
                     PostgreSQLTableDiff tableDiff = tableIdToTableDiffMap.ContainsKey(table.ID)
                         ? tableIdToTableDiffMap[table.ID]
@@ -427,12 +433,36 @@ internal class PostgreSQLDiffCreator : DiffCreator
                         }
                     }
 
+                    if (table.PrimaryKey is not null && IsUnchanged(table.PrimaryKey))
+                    {
+                        if (_objectsThatRequireRedefinition.Contains(table.PrimaryKey.ID))
+                        {
+                            tableDiff.PrimaryKeyToCreate = table.PrimaryKey;
+                            tableDiff.PrimaryKeyToDrop = table.PrimaryKey;
+                        }
+                    }
+                    foreach (UniqueConstraint uc in table.UniqueConstraints.Where(IsUnchanged))
+                    {
+                        if (_objectsThatRequireRedefinition.Contains(uc.ID))
+                        {
+                            tableDiff.UniqueConstraintsToCreate.Add(uc);
+                            tableDiff.UniqueConstraintsToDrop.Add(uc);
+                        }
+                    }
                     foreach (CheckConstraint ck in table.CheckConstraints.Where(IsUnchanged))
                     {
                         if (_objectsThatRequireRedefinition.Contains(ck.ID))
                         {
                             tableDiff.CheckConstraintsToCreate.Add(ck);
                             tableDiff.CheckConstraintsToDrop.Add(ck);
+                        }
+                    }
+                    foreach (ForeignKey fk in table.ForeignKeys.Where(IsUnchanged))
+                    {
+                        if (_objectsThatRequireRedefinition.Contains(fk.ID))
+                        {
+                            tableDiff.ForeignKeysToCreate.Add(fk);
+                            tableDiff.ForeignKeysToDrop.Add(fk);
                         }
                     }
                 }
@@ -473,10 +503,16 @@ internal class PostgreSQLDiffCreator : DiffCreator
                     && column.Default is not null;
             }
 
-            bool AnyUnchangedCheckConstraintRequiresRedefinition(Table table)
+            bool AnyUnchangedConstraintRequiresRedefinition(Table table)
             {
-                return table.CheckConstraints.Any(x => IsUnchanged(x)
-                    && _objectsThatRequireRedefinition.Contains(x.ID));
+                return table.PrimaryKey is not null && IsUnchanged(table.PrimaryKey)
+                        && _objectsThatRequireRedefinition.Contains(table.PrimaryKey.ID)
+                    || table.UniqueConstraints.Any(x => IsUnchanged(x)
+                        && _objectsThatRequireRedefinition.Contains(x.ID))
+                    || table.CheckConstraints.Any(x => IsUnchanged(x)
+                        && _objectsThatRequireRedefinition.Contains(x.ID))
+                    || table.ForeignKeys.Any(x => IsUnchanged(x)
+                        && _objectsThatRequireRedefinition.Contains(x.ID));
             }
         }
 
@@ -530,8 +566,12 @@ internal class PostgreSQLDiffCreator : DiffCreator
             PostgreSQLView x => AnyRequireRedefinition(x.CreateStatement.DependsOn),
             PostgreSQLFunction x => AnyRequireRedefinition(x.CreateStatement.DependsOn),
             PostgreSQLProcedure x => AnyRequireRedefinition(x.CreateStatement.DependsOn),
+            PrimaryKey x => AnyRequireRedefinition(x.DependsOn),
+            UniqueConstraint x => AnyRequireRedefinition(x.DependsOn),
             CheckConstraint x => AnyRequireRedefinition(x.Expression.DependsOn),
-            PostgreSQLIndex x => x.Expression is not null && AnyRequireRedefinition(x.Expression.DependsOn),
+            ForeignKey x => AnyRequireRedefinition(x.DependsOn),
+            PostgreSQLIndex x => AnyRequireRedefinition(x.DependsOn)
+                || x.Expression is not null && AnyRequireRedefinition(x.Expression.DependsOn),
             PostgreSQLTrigger x => AnyRequireRedefinition(x.CreateStatement.DependsOn),
             _ => false,
         };

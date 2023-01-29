@@ -20,6 +20,10 @@ internal class DNDBTModelsEqualityComparer : IEqualityComparer<object>
         new PropInfo { Name = nameof(DbObject.Parent), InType = nameof(DbObject) },
         new PropInfo { Name = nameof(CodePiece.DependsOn), InType = nameof(CodePiece) },
         new PropInfo { Name = nameof(DataType.DependsOn), InType = nameof(DataType) },
+        new PropInfo { Name = nameof(PrimaryKey.DependsOn), InType = nameof(PrimaryKey) },
+        new PropInfo { Name = nameof(UniqueConstraint.DependsOn), InType = nameof(UniqueConstraint) },
+        new PropInfo { Name = nameof(ForeignKey.DependsOn), InType = nameof(ForeignKey) },
+        new PropInfo { Name = nameof(Index.DependsOn), InType = nameof(Index) },
     };
 
     public new bool Equals(object x, object y)

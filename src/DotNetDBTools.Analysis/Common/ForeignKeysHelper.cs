@@ -7,7 +7,7 @@ namespace DotNetDBTools.Analysis.Common;
 
 internal static class ForeignKeysHelper
 {
-    public static void BuildUnchangedForeignKeysToRecreateBecauseOfDeps(DatabaseDiff dbDiff, Database oldDb)
+    public static void BuildUnchangedForeignKeysToRecreateBecauseOfChangedReferencedObjects(DatabaseDiff dbDiff, Database oldDb)
     {
         HashSet<ForeignKey> changedForeignKeysToCreate = GetChangedForeignKeysToCreate(dbDiff);
         HashSet<ForeignKey> changedForeignKeysToDrop = GetChangedForeignKeysToDrop(dbDiff);
@@ -17,7 +17,7 @@ internal static class ForeignKeysHelper
         HashSet<ForeignKey> unchangedForeignKeysToRecreateBecauseOfDeps = new(allForeignKeysToDrop);
         unchangedForeignKeysToRecreateBecauseOfDeps.ExceptWith(changedForeignKeysToDrop);
 
-        dbDiff.UnchangedForeignKeysToRecreateBecauseOfDeps = unchangedForeignKeysToRecreateBecauseOfDeps.ToList();
+        dbDiff.UnchangedForeignKeysToRecreateBecauseOfChangedReferencedObjects = unchangedForeignKeysToRecreateBecauseOfDeps.ToList();
     }
 
     private static HashSet<ForeignKey> GetChangedForeignKeysToCreate(DatabaseDiff dbDiff)
@@ -70,6 +70,12 @@ internal static class ForeignKeysHelper
                 columnsChangedOrReferencedByChangedObjects.UnionWith(tableDiff.PrimaryKeyToDrop.Columns.Select(cn => oldTableColumnIDs[cn]));
             foreach (UniqueConstraint uc in tableDiff.UniqueConstraintsToDrop)
                 columnsChangedOrReferencedByChangedObjects.UnionWith(uc.Columns.Select(cn => oldTableColumnIDs[cn]));
+        }
+
+        foreach (Index index in dbDiff.IndexesToDrop.Where(x => x.Unique))
+        {
+            Dictionary<string, Guid> oldTableColumnIDs = oldDbTables[index.Parent.ID].Columns.ToDictionary(c => c.Name, c => c.ID);
+            columnsChangedOrReferencedByChangedObjects.UnionWith(index.Columns.Select(cn => oldTableColumnIDs[cn]));
         }
 
         return columnsChangedOrReferencedByChangedObjects;

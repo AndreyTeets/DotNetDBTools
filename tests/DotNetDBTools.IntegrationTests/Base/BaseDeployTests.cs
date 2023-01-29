@@ -5,6 +5,7 @@ using DotNetDBTools.Analysis;
 using DotNetDBTools.DefinitionParsing;
 using DotNetDBTools.Deploy;
 using DotNetDBTools.Deploy.Core;
+using DotNetDBTools.IntegrationTests.Utilities;
 using DotNetDBTools.Models.Core;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
@@ -204,9 +205,7 @@ public abstract class BaseDeployTests<TDbConnection, TDeployManager>
             EquivalencyAssertionOptions<Database> configuredOptions = options
                 .RespectingRuntimeTypes()
                 .WithStrictOrdering()
-                .Excluding(mi => mi.Name == nameof(DbObject.Parent) && mi.DeclaringType == typeof(DbObject))
-                .Excluding(mi => mi.Name == nameof(CodePiece.DependsOn) && mi.DeclaringType == typeof(CodePiece))
-                .Excluding(mi => mi.Name == nameof(DataType.DependsOn) && mi.DeclaringType == typeof(DataType));
+                .ExcludingDependencies();
 
             if (compareMode.HasFlag(CompareMode.IgnoreIDs))
                 configuredOptions = configuredOptions.Excluding(mi => mi.Name == nameof(DbObject.ID) && mi.DeclaringType == typeof(DbObject));
