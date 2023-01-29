@@ -1,5 +1,5 @@
 {
-  "$id": "A7C5146542422F28",
+  "$id": "1D94DC7B0B1ECF56",
   "Functions": [],
   "Procedures": [],
   "Kind": 2,
@@ -106,7 +106,11 @@
         "Columns": [
           "MyColumn3"
         ],
-        "DependsOn": [],
+        "DependsOn": [
+          {
+            "$ref": "DbObject { ID: '6e95de30-e01a-4fb4-b8b7-8f0c40bb682c', Name: 'MyColumn3' }"
+          }
+        ],
         "ID": "37a45def-f4a0-4be7-8bfb-8fbed4a7d705",
         "Name": "PK_MyTable1",
         "Parent": {
@@ -141,7 +145,11 @@
           ],
           "OnUpdate": "NO ACTION",
           "OnDelete": "CASCADE",
-          "DependsOn": [],
+          "DependsOn": [
+            {
+              "$ref": "DbObject { ID: 'a2f2a4de-1337-4594-ae41-72ed4d05f317', Name: 'MyColumn1' }"
+            }
+          ],
           "ID": "d11b2a53-32db-432f-bb6b-f91788844ba9",
           "Name": "FK_MyTable1_MyColumn1_MyTable2_MyColumn1",
           "Parent": {
@@ -157,7 +165,11 @@
           ],
           "IncludeColumns": [],
           "Unique": true,
-          "DependsOn": [],
+          "DependsOn": [
+            {
+              "$ref": "DbObject { ID: '867ac528-e87e-4c93-b6e3-dd2fcbbb837f', Name: 'MyColumn4' }"
+            }
+          ],
           "ID": "f3f08522-26ee-4950-9135-22edf2e4e0cf",
           "Name": "UQ_MyTable1_MyColumn4",
           "Parent": {
@@ -219,7 +231,11 @@
         "Columns": [
           "MyColumn1"
         ],
-        "DependsOn": [],
+        "DependsOn": [
+          {
+            "$ref": "DbObject { ID: 'c480f22f-7c01-4f41-b282-35e9f5cd1fe3', Name: 'MyColumn1' }"
+          }
+        ],
         "ID": "3a43615b-40b3-4a13-99e7-93af7c56e8ce",
         "Name": "PK_MyTable2",
         "Parent": {
@@ -238,7 +254,14 @@
           ],
           "IncludeColumns": [],
           "Unique": true,
-          "DependsOn": [],
+          "DependsOn": [
+            {
+              "$ref": "DbObject { ID: 'c480f22f-7c01-4f41-b282-35e9f5cd1fe3', Name: 'MyColumn1' }"
+            },
+            {
+              "$ref": "DbObject { ID: '5a0d1926-3270-4eb2-92eb-00be56c7af23', Name: 'MyColumn2' }"
+            }
+          ],
           "ID": "74390b3c-bc39-4860-a42e-12baa400f927",
           "Name": "IDX_MyTable2_MyIndex1",
           "Parent": {
@@ -306,7 +329,11 @@
         "Columns": [
           "MyColumn2"
         ],
-        "DependsOn": [],
+        "DependsOn": [
+          {
+            "$ref": "DbObject { ID: 'a6354ea4-7113-4c14-8047-648f0cfc7163', Name: 'MyColumn2' }"
+          }
+        ],
         "ID": "53ad5415-7fea-4a51-bcae-65e349a2e477",
         "Name": "PK_MyTable4",
         "Parent": {
@@ -572,7 +599,14 @@
           "MyColumn2",
           "MyColumn1"
         ],
-        "DependsOn": [],
+        "DependsOn": [
+          {
+            "$ref": "DbObject { ID: '5309d66f-2030-402e-912e-5547babaa072', Name: 'MyColumn1' }"
+          },
+          {
+            "$ref": "DbObject { ID: '11ef8e25-3691-42d4-b2fa-88d724f73b61', Name: 'MyColumn2' }"
+          }
+        ],
         "ID": "79384d48-a39b-4a22-900e-066b2ca67ba2",
         "Name": "PK_MyTable5",
         "Parent": {
@@ -590,7 +624,11 @@
           ],
           "IncludeColumns": [],
           "Unique": false,
-          "DependsOn": [],
+          "DependsOn": [
+            {
+              "$ref": "DbObject { ID: 'ed044a8a-6858-41e2-a867-9e5b01f226c8', Name: 'MyColumn8' }"
+            }
+          ],
           "ID": "1d632285-9914-4c5d-98e6-a618a99bd799",
           "Name": "IDX_MyTable5_CustomName",
           "Parent": {
@@ -606,7 +644,17 @@
           ],
           "IncludeColumns": [],
           "Unique": true,
-          "DependsOn": [],
+          "DependsOn": [
+            {
+              "$ref": "DbObject { ID: '6ed0ab37-aad3-4294-9ba6-c0921f0e67af', Name: 'MyColumn3' }"
+            },
+            {
+              "$ref": "DbObject { ID: '98fded6c-d486-4a2e-9c9a-1ec31c9d5830', Name: 'MyColumn6' }"
+            },
+            {
+              "$ref": "DbObject { ID: '2502cade-458a-48ee-9421-e6d7850493f7', Name: 'MyColumn7' }"
+            }
+          ],
           "ID": "5293b58a-9f63-4f0f-8d6f-18416ebbd751",
           "Name": "UQ_MyTable5_CustomName",
           "Parent": {
@@ -672,7 +720,14 @@
           ],
           "OnUpdate": "NO ACTION",
           "OnDelete": "NO ACTION",
-          "DependsOn": [],
+          "DependsOn": [
+            {
+              "$ref": "DbObject { ID: 'bfa08c82-5c8f-4ab4-bd41-1f1d85cf3c85', Name: 'MyColumn1' }"
+            },
+            {
+              "$ref": "DbObject { ID: 'a402e2b7-c826-4cfd-a304-97c9bc346ba2', Name: 'MyColumn2' }"
+            }
+          ],
           "ID": "ae453b22-d270-41fc-8184-9ac26b7a0569",
           "Name": "FK_MyTable6_MyTable5_CustomName",
           "Parent": {

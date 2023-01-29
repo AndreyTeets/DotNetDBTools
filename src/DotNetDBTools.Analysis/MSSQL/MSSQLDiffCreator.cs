@@ -13,12 +13,14 @@ namespace DotNetDBTools.Analysis.MSSQL;
 internal class MSSQLDiffCreator : DiffCreator
 {
     private readonly HashSet<Guid> _addedObjects = new();
+    private readonly HashSet<Guid> _changedObjects = new();
     private readonly HashSet<Guid> _objectsThatRequireRedefinition = new();
     private readonly HashSet<Guid> _objectsThatRequireDefaultRedefinition = new();
 
     public override DatabaseDiff CreateDatabaseDiff(Database newDatabase, Database oldDatabase)
     {
         _addedObjects.Clear();
+        _changedObjects.Clear();
         _objectsThatRequireRedefinition.Clear();
         _objectsThatRequireDefaultRedefinition.Clear();
 
@@ -36,6 +38,7 @@ internal class MSSQLDiffCreator : DiffCreator
 
         BuildIndexesDiff(dbDiff, newDb, oldDb);
         BuildTriggersDiff(dbDiff, newDb, oldDb);
+        Mark_Constraints_Indexes_Triggers_ForRedefinitionIfDepsChanged(newDb);
 
         AddDiffsForUnchangedItemsIfMarkedForRedefinition(dbDiff, newDb);
         ForeignKeysHelper.BuildUnchangedForeignKeysToRecreateBecauseOfChangedReferencedObjects(dbDiff, oldDb);
@@ -73,6 +76,7 @@ internal class MSSQLDiffCreator : DiffCreator
 
     protected override void OnChangedItemProcessed<TItem>(TItem newItem, TItem oldItem)
     {
+        _changedObjects.Add(newItem.ID);
         if (!CanBeAlteredWithoutRedefinition(newItem, oldItem))
             _objectsThatRequireRedefinition.Add(newItem.ID);
         MarkObjectForRedefinitionIfDepsChanged(newItem);
@@ -123,6 +127,29 @@ internal class MSSQLDiffCreator : DiffCreator
                 _objectsThatRequireDefaultRedefinition.Add(column.ID);
             }
         }
+        else if (DependencyRequiresRedefinition(dbObject))
+        {
+            _objectsThatRequireRedefinition.Add(dbObject.ID);
+        }
+    }
+
+    private void Mark_Constraints_Indexes_Triggers_ForRedefinitionIfDepsChanged(MSSQLDatabase newDb)
+    {
+        foreach (Table table in newDb.Tables)
+        {
+            if (table.PrimaryKey is not null && DependencyRequiresRedefinition(table.PrimaryKey))
+                _objectsThatRequireRedefinition.Add(table.PrimaryKey.ID);
+            foreach (UniqueConstraint uc in table.UniqueConstraints.Where(DependencyRequiresRedefinition))
+                _objectsThatRequireRedefinition.Add(uc.ID);
+            foreach (CheckConstraint ck in table.CheckConstraints.Where(DependencyRequiresRedefinition))
+                _objectsThatRequireRedefinition.Add(ck.ID);
+            foreach (ForeignKey fk in table.ForeignKeys.Where(DependencyRequiresRedefinition))
+                _objectsThatRequireRedefinition.Add(fk.ID);
+            foreach (Index index in table.Indexes.Where(DependencyRequiresRedefinition))
+                _objectsThatRequireRedefinition.Add(index.ID);
+            foreach (Trigger trigger in table.Triggers.Where(DependencyRequiresRedefinition))
+                _objectsThatRequireRedefinition.Add(trigger.ID);
+        }
     }
 
     private void AddDiffsForUnchangedItemsIfMarkedForRedefinition(MSSQLDatabaseDiff dbDiff, MSSQLDatabase newDb)
@@ -135,7 +162,8 @@ internal class MSSQLDiffCreator : DiffCreator
                 .ToDictionary(x => x.ID, x => (MSSQLTableDiff)x);
             foreach (Table table in newDb.Tables.Where(IsNotAdded))
             {
-                if (table.Columns.Any(RequiresDataTypeOrDefaultRedifinition))
+                if (table.Columns.Any(RequiresDataTypeOrDefaultRedifinition)
+                    || AnyUnchangedConstraintRequiresRedefinition(table))
                 {
                     MSSQLTableDiff tableDiff = tableIdToTableDiffMap.ContainsKey(table.ID)
                         ? tableIdToTableDiffMap[table.ID]
@@ -174,6 +202,57 @@ internal class MSSQLDiffCreator : DiffCreator
                             }
                         }
                     }
+
+                    if (table.PrimaryKey is not null && IsUnchanged(table.PrimaryKey))
+                    {
+                        if (_objectsThatRequireRedefinition.Contains(table.PrimaryKey.ID))
+                        {
+                            tableDiff.PrimaryKeyToCreate = table.PrimaryKey;
+                            tableDiff.PrimaryKeyToDrop = table.PrimaryKey;
+                        }
+                    }
+                    foreach (UniqueConstraint uc in table.UniqueConstraints.Where(IsUnchanged))
+                    {
+                        if (_objectsThatRequireRedefinition.Contains(uc.ID))
+                        {
+                            tableDiff.UniqueConstraintsToCreate.Add(uc);
+                            tableDiff.UniqueConstraintsToDrop.Add(uc);
+                        }
+                    }
+                    foreach (CheckConstraint ck in table.CheckConstraints.Where(IsUnchanged))
+                    {
+                        if (_objectsThatRequireRedefinition.Contains(ck.ID))
+                        {
+                            tableDiff.CheckConstraintsToCreate.Add(ck);
+                            tableDiff.CheckConstraintsToDrop.Add(ck);
+                        }
+                    }
+                    foreach (ForeignKey fk in table.ForeignKeys.Where(IsUnchanged))
+                    {
+                        if (_objectsThatRequireRedefinition.Contains(fk.ID))
+                        {
+                            tableDiff.ForeignKeysToCreate.Add(fk);
+                            tableDiff.ForeignKeysToDrop.Add(fk);
+                        }
+                    }
+                }
+
+                foreach (Index index in table.Indexes.Where(IsUnchanged))
+                {
+                    if (_objectsThatRequireRedefinition.Contains(index.ID))
+                    {
+                        dbDiff.IndexesToCreate.Add(index);
+                        dbDiff.IndexesToDrop.Add(index);
+                    }
+                }
+
+                foreach (Trigger trigger in table.Triggers.Where(IsUnchanged))
+                {
+                    if (_objectsThatRequireRedefinition.Contains(trigger.ID))
+                    {
+                        dbDiff.TriggersToCreate.Add(trigger);
+                        dbDiff.TriggersToDrop.Add(trigger);
+                    }
                 }
             }
 
@@ -193,11 +272,28 @@ internal class MSSQLDiffCreator : DiffCreator
                 return _objectsThatRequireDefaultRedefinition.Contains(column.ID)
                     && column.Default is not null;
             }
+
+            bool AnyUnchangedConstraintRequiresRedefinition(Table table)
+            {
+                return table.PrimaryKey is not null && IsUnchanged(table.PrimaryKey)
+                        && _objectsThatRequireRedefinition.Contains(table.PrimaryKey.ID)
+                    || table.UniqueConstraints.Any(x => IsUnchanged(x)
+                        && _objectsThatRequireRedefinition.Contains(x.ID))
+                    || table.CheckConstraints.Any(x => IsUnchanged(x)
+                        && _objectsThatRequireRedefinition.Contains(x.ID))
+                    || table.ForeignKeys.Any(x => IsUnchanged(x)
+                        && _objectsThatRequireRedefinition.Contains(x.ID));
+            }
         }
 
         bool IsNotAdded(DbObject dbObject)
         {
             return !_addedObjects.Contains(dbObject.ID);
+        }
+
+        bool IsUnchanged(DbObject dbObject)
+        {
+            return !_addedObjects.Contains(dbObject.ID) && !_changedObjects.Contains(dbObject.ID);
         }
     }
 
@@ -206,6 +302,12 @@ internal class MSSQLDiffCreator : DiffCreator
         return dbObject switch
         {
             MSSQLColumn x => AnyRequireRedefinition(x.DataType.DependsOn),
+            PrimaryKey x => AnyRequireRedefinition(x.DependsOn),
+            UniqueConstraint x => AnyRequireRedefinition(x.DependsOn),
+            CheckConstraint x => AnyRequireRedefinition(x.Expression.DependsOn),
+            ForeignKey x => AnyRequireRedefinition(x.DependsOn),
+            MSSQLIndex x => AnyRequireRedefinition(x.DependsOn),
+            MSSQLTrigger x => AnyRequireRedefinition(x.CreateStatement.DependsOn),
             _ => false,
         };
     }
