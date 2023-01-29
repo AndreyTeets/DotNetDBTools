@@ -58,7 +58,7 @@ EXECUTE 'create function f_4_s(x int) returns int language sql immutable as $$se
 -- QUERY END: CreateFunctionQuery
 
 -- QUERY START: CreateProcedureQuery
-EXECUTE 'create procedure p_7_s() language sql as $$select nextval(''s_1'')$$';
+EXECUTE 'create procedure p_7_s() language sql as $$select setval(''s_1'', 77, false)$$';
 -- QUERY END: CreateProcedureQuery
 
 -- QUERY START: CreateViewQuery

@@ -103,6 +103,9 @@ public class PostgreSQLCodeParserTests : BaseCodeParserTests<PostgreSQLCodeParse
 
         List<Dependency> expectedDependencies = new()
         {
+            new Dependency { Type = DependencyType.Sequence, Name = "MySequence1" },
+            new Dependency { Type = DependencyType.Sequence, Name = "MySequence2" },
+            new Dependency { Type = DependencyType.Sequence, Name = "seq_3" },
             new Dependency { Type = DependencyType.DataType, Name = "text" },
             new Dependency { Type = DependencyType.DataType, Name = "xml" },
             new Dependency { Type = DependencyType.DataType, Name = "timestamptz" },
@@ -143,6 +146,7 @@ public class PostgreSQLCodeParserTests : BaseCodeParserTests<PostgreSQLCodeParse
             new Dependency { Type = DependencyType.FunctionOrProcedure, Name = "MyFunc1" },
             new Dependency { Type = DependencyType.FunctionOrProcedure, Name = "MyFunc2".ToLower() },
             new Dependency { Type = DependencyType.FunctionOrProcedure, Name = "MyFunc3" },
+            new Dependency { Type = DependencyType.FunctionOrProcedure, Name = "currvalx" },
             new Dependency { Type = DependencyType.FunctionOrProcedure, Name = "_some_func" },
             new Dependency { Type = DependencyType.FunctionOrProcedure, Name = "min" },
             new Dependency { Type = DependencyType.FunctionOrProcedure, Name = "max" },

@@ -38,8 +38,10 @@ BEGIN
     insert INTO "MyTable1"("MyColumn1")
     VALUES(NEW."MyColumn1" || '$NotFuncBody$' || '$$');
 
-    i = (SELECT "MyFunc1"(44));
+    i = (SELECT "MyFunc1"(NEXTVAL('MySequence1'), setval('MySequence2', 33)));
     i = (select c1 FROM "MyView1" LEFT JOIN LATERAL (SELECT * from "MyTable2") t2 ON true INNER JOIN MyView2 ON TRUE);
+    i := currval('seq_3');
+    i := currvalx('seq_4');
 
     insert INTO "MyTable3"("MyColumn1")
     SELECT "MyColumn1" from MyView3;

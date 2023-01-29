@@ -120,11 +120,11 @@ EXECUTE 'create procedure p_6_s() language sql as $$call p_1_p()$$';
 -- QUERY END: CreateProcedureQuery
 
 -- QUERY START: CreateProcedureQuery
-EXECUTE 'create procedure p_7_s() language sql as $$select nextval(''s_1'')$$';
+EXECUTE 'create procedure p_7_s() language sql as $$select setval(''s_1'', 77, false)$$';
 -- QUERY END: CreateProcedureQuery
 
 -- QUERY START: CreateProcedureQuery
-EXECUTE 'create procedure p_8_p() language plpgsql as $$begin perform nextval(''s_1''); end$$';
+EXECUTE 'create procedure p_8_p() language plpgsql as $$begin perform setval(''s_1'', 88, TRUE); end$$';
 -- QUERY END: CreateProcedureQuery
 
 -- QUERY START: CreateProcedureQuery

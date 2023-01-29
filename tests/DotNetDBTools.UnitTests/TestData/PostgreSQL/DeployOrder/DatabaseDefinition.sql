@@ -68,10 +68,10 @@ create function f_7_s() returns int language sql as $$select nextval('s_1')::int
 create function f_8_p() returns int language plpgsql as $$begin return (select nextval('s_1')); end$$;
 
 --ID:#{7B1EAEFB-E75E-499F-895F-6D3403F98BF6}#
-create procedure p_7_s() language sql as $$select nextval('s_1')$$;
+create procedure p_7_s() language sql as $$select setval('s_1', 77, false)$$;
 
 --ID:#{2FEC9BD1-0129-4EE0-BC4C-F780DAA10C3B}#
-create procedure p_8_p() language plpgsql as $$begin perform nextval('s_1'); end$$;
+create procedure p_8_p() language plpgsql as $$begin perform setval('s_1', 88, TRUE); end$$;
 
 --ID:#{231182BD-DFE1-47D3-A2E8-9A86DFAA8C6C}#
 create function f_2_s(x int) returns int language sql as $$select x + f_3_s()$$;

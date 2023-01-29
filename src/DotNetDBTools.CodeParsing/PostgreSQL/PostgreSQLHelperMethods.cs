@@ -25,7 +25,7 @@ internal static class PostgreSQLHelperMethods
         if (context.schema_qualified_name_for_func_name() is not null)
         {
             string functionName = Unquote(context.schema_qualified_name_for_func_name().GetText());
-            if (functionName.ToLower() == "nextval")
+            if (IsSequenceFunction(functionName))
                 dependency = new Dependency { Type = DependencyType.Sequence, Name = GetSequenceName() };
             else
                 dependency = new Dependency { Type = DependencyType.FunctionOrProcedure, Name = functionName };
@@ -35,6 +35,17 @@ internal static class PostgreSQLHelperMethods
         string GetSequenceName()
         {
             return PostgreSQLHelperMethods.GetSequenceName(context.vex_or_named_notation()[0].vex());
+        }
+
+        bool IsSequenceFunction(string functionName)
+        {
+            return functionName.ToLower() switch
+            {
+                "nextval" => true,
+                "setval" => true,
+                "currval" => true,
+                _ => false,
+            };
         }
     }
 
