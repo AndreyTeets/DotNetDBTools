@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using Dapper;
 using DotNetDBTools.Analysis;
 using DotNetDBTools.Analysis.Errors;
@@ -122,7 +123,8 @@ public class SQLiteUnitTestsTestDataSqlScriptsValidation
     {
         GC.WaitForPendingFinalizers();
         GC.Collect();
-        SqliteConnection.ClearAllPools();
+        GC.WaitForPendingFinalizers();
+        GC.Collect();
 
         string shortenedDbName = databaseName.Substring(0, Math.Min(databaseName.Length, 63));
         SQLiteDatabaseHelper.DropDatabaseIfExists(DbFilesFolder, shortenedDbName);
@@ -130,7 +132,19 @@ public class SQLiteUnitTestsTestDataSqlScriptsValidation
 
         SqliteConnection connection = new();
         connection.ConnectionString = SQLiteDatabaseHelper.CreateConnectionString(DbFilesFolder, shortenedDbName);
+        if (GetSqliteAssemblyMajorVersion() >= 6)
+            connection.ConnectionString += "Pooling=False;";
         return connection;
+
+        static int GetSqliteAssemblyMajorVersion()
+        {
+            string sqliteAssemblyVersion = typeof(SqliteConnection).Assembly
+                .GetCustomAttributes<AssemblyInformationalVersionAttribute>()
+                .SingleOrDefault()
+                .InformationalVersion;
+            int res = int.Parse(sqliteAssemblyVersion.Substring(0, 1));
+            return res;
+        }
     }
 
     private void AssertDbModelEquivalence(Database dbModel1, Database dbModel2)
