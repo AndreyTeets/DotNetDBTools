@@ -45,15 +45,19 @@ internal class SQLiteDbEditor : DbEditor<
         _scriptExecutor.ExecuteScripts(dbDiff, ScriptKind.BeforePublishOnce);
 
         _triggerEditor.DropTriggers(dbDiff);
+        _indexEditor.DropIndexes(dbDiff);
+
         foreach (SQLiteView view in dbDiff.ViewsToDrop)
             DropView(view);
-        _indexEditor.DropIndexes(dbDiff);
+
         _tableEditor.DropTables(dbDiff);
         _tableEditor.AlterTables(dbDiff);
         _tableEditor.CreateTables(dbDiff);
-        _indexEditor.CreateIndexes(dbDiff);
+
         foreach (SQLiteView view in dbDiff.ViewsToCreate)
             CreateView(view);
+
+        _indexEditor.CreateIndexes(dbDiff);
         _triggerEditor.CreateTriggers(dbDiff);
 
         _scriptExecutor.ExecuteScripts(dbDiff, ScriptKind.AfterPublishOnce);

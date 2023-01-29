@@ -277,14 +277,14 @@ internal class PostgreSQLDiffCreator : DiffCreator
             foreach (Column column in table.Columns.Where(DependencyRequiresRedefinition))
             {
                 _objectsThatRequireRedefinition.Add(column.ID);
-                // TODO don't add table when parsing column deps works
+                // TODO don't add table when parsing column deps works for programmable objects
                 _objectsThatRequireRedefinition.Add(column.Parent.ID);
             }
         }
         else if (DependencyRequiresRedefinition(dbObject))
         {
             _objectsThatRequireRedefinition.Add(dbObject.ID);
-            // TODO don't add table when parsing column deps works
+            // TODO don't add table when parsing column deps works for programmable objects
             if (dbObject is Column column)
                 _objectsThatRequireRedefinition.Add(column.Parent.ID);
         }

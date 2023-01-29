@@ -5,13 +5,13 @@ BEGIN TRANSACTION;
 DROP TRIGGER [TR_MyTable2_MyTrigger1];
 -- QUERY END: DropTriggerQuery
 
--- QUERY START: DropViewQuery
-DROP VIEW [MyView1];
--- QUERY END: DropViewQuery
-
 -- QUERY START: DropIndexQuery
 DROP INDEX [IDX_MyTable2_MyIndex1];
 -- QUERY END: DropIndexQuery
+
+-- QUERY START: DropViewQuery
+DROP VIEW [MyView1];
+-- QUERY END: DropViewQuery
 
 -- QUERY START: DropTableQuery
 DROP TABLE [MyTable3];
@@ -134,16 +134,6 @@ CREATE TABLE [MyTable6]
 );
 -- QUERY END: CreateTableQuery
 
--- QUERY START: CreateIndexQuery
-CREATE UNIQUE INDEX [IDX_MyTable2_MyIndex1]
-    ON [MyTable2] ([MyColumn1], [MyColumn2]);
--- QUERY END: CreateIndexQuery
-
--- QUERY START: CreateIndexQuery
-CREATE INDEX [IDX_MyTable5_CustomName]
-    ON [MyTable5] ([MyColumn8]);
--- QUERY END: CreateIndexQuery
-
 -- QUERY START: CreateViewQuery
 CREATE VIEW MyView1 AS
 SELECT
@@ -154,6 +144,16 @@ FROM MyTable1 t1
 LEFT JOIN MyTable2 t2
     ON t2.MyColumn1 = t1.MyColumn1;
 -- QUERY END: CreateViewQuery
+
+-- QUERY START: CreateIndexQuery
+CREATE UNIQUE INDEX [IDX_MyTable2_MyIndex1]
+    ON [MyTable2] ([MyColumn1], [MyColumn2]);
+-- QUERY END: CreateIndexQuery
+
+-- QUERY START: CreateIndexQuery
+CREATE INDEX [IDX_MyTable5_CustomName]
+    ON [MyTable5] ([MyColumn8]);
+-- QUERY END: CreateIndexQuery
 
 -- QUERY START: CreateTriggerQuery
 CREATE TRIGGER [TR_MyTable2_MyTrigger1]

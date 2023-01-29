@@ -688,7 +688,10 @@
       "CreateStatement": {
         "$id": "21918E4E39FF5395",
         "Code": "CREATE VIEW MyView1 AS\nSELECT\n    t1.MyColumn1,\n    t1.MyColumn4,\n    t2.MyColumn2\nFROM MyTable1 t1\nLEFT JOIN MyTable2 t2\n    ON t2.MyColumn1 = t1.MyColumn1",
-        "DependsOn": []
+        "DependsOn": [
+          "DbObject { ID: '299675e6-4faa-4d0f-a36a-224306ba5bcb', Name: 'MyTable1' }",
+          "DbObject { ID: 'bfb9030c-a8c3-4882-9c42-1c6ad025cf8f', Name: 'MyTable2' }"
+        ]
       },
       "ID": "e2569aae-d5da-4a77-b3cd-51adbdb272d9",
       "Name": "MyView1",

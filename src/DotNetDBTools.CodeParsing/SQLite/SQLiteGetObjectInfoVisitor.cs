@@ -5,6 +5,7 @@ using DotNetDBTools.CodeParsing.Generated;
 using DotNetDBTools.CodeParsing.Models;
 using static DotNetDBTools.CodeParsing.Generated.SQLiteParser;
 using HM = DotNetDBTools.CodeParsing.Core.HelperMethods;
+using HMs = DotNetDBTools.CodeParsing.SQLite.SQLiteHelperMethods;
 
 namespace DotNetDBTools.CodeParsing.SQLite;
 
@@ -34,7 +35,7 @@ internal class SQLiteGetObjectInfoVisitor : SQLiteParserBaseVisitor<ObjectInfo>
     private TableInfo GetTableInfo([NotNull] Create_table_stmtContext context)
     {
         TableInfo table = new();
-        table.Name = UnquoteIdentifier(context.table_name().GetText());
+        table.Name = HMs.Unquote(context.table_name().GetText());
         if (!_ignoreIds)
             HM.SetObjectID(table, $"table '{table.Name}'", context.dndbt_id?.Text);
 
@@ -53,7 +54,7 @@ internal class SQLiteGetObjectInfoVisitor : SQLiteParserBaseVisitor<ObjectInfo>
     private ViewInfo GetViewInfo([NotNull] Create_view_stmtContext context)
     {
         ViewInfo view = new();
-        view.Name = UnquoteIdentifier(context.view_name().GetText());
+        view.Name = HMs.Unquote(context.view_name().GetText());
         if (!_ignoreIds)
             HM.SetObjectID(view, $"view '{view.Name}'", context.dndbt_id?.Text);
 
@@ -66,14 +67,14 @@ internal class SQLiteGetObjectInfoVisitor : SQLiteParserBaseVisitor<ObjectInfo>
     private IndexInfo GetIndexInfo([NotNull] Create_index_stmtContext context)
     {
         IndexInfo index = new();
-        index.Name = UnquoteIdentifier(context.index_name().GetText());
+        index.Name = HMs.Unquote(context.index_name().GetText());
         if (!_ignoreIds)
             HM.SetObjectID(index, $"index '{index.Name}'", context.dndbt_id?.Text);
 
-        index.Table = UnquoteIdentifier(context.table_name().GetText());
+        index.Table = HMs.Unquote(context.table_name().GetText());
         if (context.UNIQUE_() is not null)
             index.Unique = true;
-        foreach (string column in context.indexed_column().Select(x => UnquoteIdentifier(x.GetText())))
+        foreach (string column in context.indexed_column().Select(x => HMs.Unquote(x.GetText())))
             index.Columns.Add(column);
         return index;
     }
@@ -81,11 +82,11 @@ internal class SQLiteGetObjectInfoVisitor : SQLiteParserBaseVisitor<ObjectInfo>
     private TriggerInfo GetTriggerInfo([NotNull] Create_trigger_stmtContext context)
     {
         TriggerInfo trigger = new();
-        trigger.Name = UnquoteIdentifier(context.trigger_name().GetText());
+        trigger.Name = HMs.Unquote(context.trigger_name().GetText());
         if (!_ignoreIds)
             HM.SetObjectID(trigger, $"trigger '{trigger.Name}'", context.dndbt_id?.Text);
 
-        trigger.Table = UnquoteIdentifier(context.table_name().GetText());
+        trigger.Table = HMs.Unquote(context.table_name().GetText());
         trigger.CreateStatement = HM.GetInitialText(context);
         if (context.dndbt_id is not null)
             trigger.CreateStatement = trigger.CreateStatement.Remove(0, context.dndbt_id.Text.Length);
@@ -95,11 +96,11 @@ internal class SQLiteGetObjectInfoVisitor : SQLiteParserBaseVisitor<ObjectInfo>
     private ColumnInfo GetTableColumnInfo(Column_defContext context, string tableName, out ConstraintInfo pkConstraintInfo)
     {
         ColumnInfo column = new();
-        column.Name = UnquoteIdentifier(context.column_name().GetText());
+        column.Name = HMs.Unquote(context.column_name().GetText());
         if (!_ignoreIds)
             HM.SetObjectID(column, $"column '{column.Name}' in table '{tableName}'", context.dndbt_id?.Text);
 
-        column.DataType = UnquoteIdentifier(context.type_name().GetText());
+        column.DataType = HMs.Unquote(context.type_name().GetText());
         foreach (Column_constraintContext constraintCtx in context.column_constraint())
             AddColumnConstraint(column, constraintCtx);
 
@@ -171,7 +172,7 @@ internal class SQLiteGetObjectInfoVisitor : SQLiteParserBaseVisitor<ObjectInfo>
     {
         ConstraintInfo constraint = new();
         if (context.name() is not null)
-            constraint.Name = UnquoteIdentifier(context.name().GetText());
+            constraint.Name = HMs.Unquote(context.name().GetText());
         if (!_ignoreIds)
             HM.SetObjectID(constraint, $"constraint '{constraint.Name}' in table '{tableName}'", context.dndbt_id?.Text);
 
@@ -195,26 +196,26 @@ internal class SQLiteGetObjectInfoVisitor : SQLiteParserBaseVisitor<ObjectInfo>
         static void AddPrimaryKeyConstraintInfo(ConstraintInfo constraint, Table_constraintContext context)
         {
             constraint.Type = ConstraintType.PrimaryKey;
-            foreach (string column in context.indexed_column().Select(x => UnquoteIdentifier(x.GetText())))
+            foreach (string column in context.indexed_column().Select(x => HMs.Unquote(x.GetText())))
                 constraint.Columns.Add(column);
         }
 
         static void AddUniqueConstraintInfo(ConstraintInfo constraint, Table_constraintContext context)
         {
             constraint.Type = ConstraintType.Unique;
-            foreach (string column in context.indexed_column().Select(x => UnquoteIdentifier(x.GetText())))
+            foreach (string column in context.indexed_column().Select(x => HMs.Unquote(x.GetText())))
                 constraint.Columns.Add(column);
         }
 
         static void AddForeignKeyConstraintInfo(ConstraintInfo constraint, Table_constraintContext context)
         {
             constraint.Type = ConstraintType.ForeignKey;
-            foreach (string column in context.column_name().Select(x => UnquoteIdentifier(x.GetText())))
+            foreach (string column in context.column_name().Select(x => HMs.Unquote(x.GetText())))
                 constraint.Columns.Add(column);
 
             Foreign_key_clauseContext fkClause = context.foreign_key_clause();
-            constraint.RefTable = UnquoteIdentifier(fkClause.foreign_table().GetText());
-            foreach (string column in fkClause.column_name().Select(x => UnquoteIdentifier(x.GetText())))
+            constraint.RefTable = HMs.Unquote(fkClause.foreign_table().GetText());
+            foreach (string column in fkClause.column_name().Select(x => HMs.Unquote(x.GetText())))
                 constraint.RefColumns.Add(column);
 
             foreach (Foreign_key_action_clauseContext fkActionClause in fkClause.foreign_key_action_clause())
@@ -225,13 +226,5 @@ internal class SQLiteGetObjectInfoVisitor : SQLiteParserBaseVisitor<ObjectInfo>
                     constraint.DeleteAction = HM.GetInitialText(fkActionClause.foreign_key_action());
             }
         }
-    }
-
-    private static string UnquoteIdentifier(string quotedIdentifier)
-    {
-        return quotedIdentifier
-            .Replace("[", "").Replace("]", "")
-            .Replace("`", "")
-            .Replace("\"", "");
     }
 }

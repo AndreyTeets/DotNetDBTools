@@ -113,8 +113,8 @@ Also provides declarative means for defining database structure with different s
 + MSSQL - definition (as c# only) and generation of "Tables,Views,Indexes,Triggers,UserDefinedTypes" without specific for this DBMS advanced properties, deployment functionality without dependencies analysis so deploy order for views may be invalid, database analysis using just a few example checks.
 + MySQL - definition (as c# only) and generation of "Tables,Views,Indexes,Triggers" without specific for this DBMS advanced properties, deployment functionality without dependencies analysis so deploy order for views may be invalid, database analysis using just a few example checks.
 + PostgreSQL - definition (as c# and as sql) and generation of "Tables,Views,Indexes,Triggers,Sequences,Types,Functions,Procedures" with only some of the specific for this DBMS advanced properties, deployment functionality without some complex dependencies scenarios like recursive dependencies, database analysis using just a few example checks.
-+ SQLite - definition (as c# and as sql) and generation of "Tables,Views,Indexes,Triggers", deployment functionality without dependencies analysis so deploy order for views may be invalid, database analysis using just a few example checks.
-+ Agnostic definition for "Tables,Views,Indexes,Triggers" and it's deployment functionality to all the above DBMS according with corresponding development state of the specific DBMS above.
++ SQLite - definition (as c# and as sql) and generation of "Tables,Views,Indexes,Triggers", full deployment functionality, database analysis using just a few example checks.
++ Agnostic - definition (as c#) for "Tables,Views,Indexes,Triggers" and it's deployment functionality to all the above DBMS according with corresponding development state of the specific DBMS above.
 
 # How to use
 1. Create a netstandard2.0 project for a database description.
@@ -357,6 +357,11 @@ public class DotNetDBTools.CodeParsing.PostgreSQLCodeParser
     public List<Dependency> GetFunctionDependencies(string createFunctionStatement, out string language);
     public List<Dependency> GetViewDependencies(string createViewStatement);
     public List<Dependency> GetExpressionDependencies(string expressionStatement)
+}
+
+public class DotNetDBTools.CodeParsing.SQLiteCodeParser
+{
+    public List<Dependency> GetViewDependencies(string createViewStatement);
 }
 
 public static class DotNetDBTools.Analysis.Extensions.DbObjectsExtensions

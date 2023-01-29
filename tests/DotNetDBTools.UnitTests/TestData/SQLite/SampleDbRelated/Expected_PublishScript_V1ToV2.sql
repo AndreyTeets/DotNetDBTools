@@ -55,15 +55,6 @@ DELETE FROM [DNDBTDbObjects]
 WHERE [ID] = 'ee64ffc3-5536-4624-beaf-bc3a61d06a1a';
 -- QUERY END: DeleteDNDBTDbObjectRecordQuery
 
--- QUERY START: DropViewQuery
-DROP VIEW [MyView1];
--- QUERY END: DropViewQuery
-
--- QUERY START: DeleteDNDBTDbObjectRecordQuery
-DELETE FROM [DNDBTDbObjects]
-WHERE [ID] = 'e2569aae-d5da-4a77-b3cd-51adbdb272d9';
--- QUERY END: DeleteDNDBTDbObjectRecordQuery
-
 -- QUERY START: DropIndexQuery
 DROP INDEX [IDX_MyTable2_MyIndex1];
 -- QUERY END: DropIndexQuery
@@ -80,6 +71,15 @@ DROP INDEX [IDX_MyTable5_CustomName];
 -- QUERY START: DeleteDNDBTDbObjectRecordQuery
 DELETE FROM [DNDBTDbObjects]
 WHERE [ID] = '1d632285-9914-4c5d-98e6-a618a99bd799';
+-- QUERY END: DeleteDNDBTDbObjectRecordQuery
+
+-- QUERY START: DropViewQuery
+DROP VIEW [MyView1];
+-- QUERY END: DropViewQuery
+
+-- QUERY START: DeleteDNDBTDbObjectRecordQuery
+DELETE FROM [DNDBTDbObjects]
+WHERE [ID] = 'e2569aae-d5da-4a77-b3cd-51adbdb272d9';
 -- QUERY END: DeleteDNDBTDbObjectRecordQuery
 
 -- QUERY START: DropTableQuery
@@ -506,30 +506,6 @@ VALUES
 );
 -- QUERY END: InsertDNDBTDbObjectRecordQuery
 
--- QUERY START: CreateIndexQuery
-CREATE UNIQUE INDEX [IDX_MyTable2_MyIndex1]
-    ON [MyTable2] ([MyColumn1NewName], [MyColumn2]);
--- QUERY END: CreateIndexQuery
-
--- QUERY START: InsertDNDBTDbObjectRecordQuery
-INSERT INTO [DNDBTDbObjects]
-(
-    [ID],
-    [ParentID],
-    [Type],
-    [Name],
-    [Code]
-)
-VALUES
-(
-    '74390b3c-bc39-4860-a42e-12baa400f927',
-    'bfb9030c-a8c3-4882-9c42-1c6ad025cf8f',
-    'Index',
-    'IDX_MyTable2_MyIndex1',
-    NULL
-);
--- QUERY END: InsertDNDBTDbObjectRecordQuery
-
 -- QUERY START: CreateViewQuery
 CREATE VIEW MyView1 AS
 SELECT
@@ -564,6 +540,30 @@ SELECT
 FROM MyTable1NewName t1
 LEFT JOIN MyTable2 t2
     ON t2.MyColumn1NewName = t1.MyColumn1'
+);
+-- QUERY END: InsertDNDBTDbObjectRecordQuery
+
+-- QUERY START: CreateIndexQuery
+CREATE UNIQUE INDEX [IDX_MyTable2_MyIndex1]
+    ON [MyTable2] ([MyColumn1NewName], [MyColumn2]);
+-- QUERY END: CreateIndexQuery
+
+-- QUERY START: InsertDNDBTDbObjectRecordQuery
+INSERT INTO [DNDBTDbObjects]
+(
+    [ID],
+    [ParentID],
+    [Type],
+    [Name],
+    [Code]
+)
+VALUES
+(
+    '74390b3c-bc39-4860-a42e-12baa400f927',
+    'bfb9030c-a8c3-4882-9c42-1c6ad025cf8f',
+    'Index',
+    'IDX_MyTable2_MyIndex1',
+    NULL
 );
 -- QUERY END: InsertDNDBTDbObjectRecordQuery
 
