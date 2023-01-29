@@ -5,8 +5,21 @@ BEGIN
 EXECUTE 'DROP TRIGGER "tr_a_1" ON "t_1";';
 -- QUERY END: DropTriggerQuery
 
+-- QUERY START: DropForeignKeyQuery
+EXECUTE 'ALTER TABLE "t_d_1"
+    DROP CONSTRAINT "fk_t_d_1";';
+-- QUERY END: DropForeignKeyQuery
+
 -- QUERY START: DropIndexQuery
 EXECUTE 'DROP INDEX "i_a_1";';
+-- QUERY END: DropIndexQuery
+
+-- QUERY START: DropIndexQuery
+EXECUTE 'DROP INDEX "i_t_1_1";';
+-- QUERY END: DropIndexQuery
+
+-- QUERY START: DropIndexQuery
+EXECUTE 'DROP INDEX "i_t_1_2";';
 -- QUERY END: DropIndexQuery
 
 -- QUERY START: DropFunctionQuery
@@ -29,7 +42,11 @@ EXECUTE 'DROP TABLE "t_1";';
 EXECUTE 'CREATE TABLE "t_1"
 (
     "c1" INT NULL DEFAULT 4,
-    CONSTRAINT "ck_t_1" CHECK (c1 != 6)
+    "c2" INT NULL,
+    "c3" TEXT NULL,
+    CONSTRAINT "pk_t_1" PRIMARY KEY ("c3", "c1"),
+    CONSTRAINT "uq_t_1_1" UNIQUE ("c1"),
+    CONSTRAINT "ck_t_1" CHECK (c1 != 6 and c3 != ''zz'')
 );';
 -- QUERY END: CreateTableQuery
 
@@ -49,6 +66,24 @@ EXECUTE 'create view v_a_8 as select c1 from t_1';
 EXECUTE 'CREATE INDEX "i_a_1"
     ON "t_1" USING BTREE (f_4_s(c1));';
 -- QUERY END: CreateIndexQuery
+
+-- QUERY START: CreateIndexQuery
+EXECUTE 'CREATE UNIQUE INDEX "i_t_1_1"
+    ON "t_1" USING BTREE ("c3");';
+-- QUERY END: CreateIndexQuery
+
+-- QUERY START: CreateIndexQuery
+EXECUTE 'CREATE INDEX "i_t_1_2"
+    ON "t_1" USING BTREE ("c3")
+    INCLUDE ("c1");';
+-- QUERY END: CreateIndexQuery
+
+-- QUERY START: CreateForeignKeyQuery
+EXECUTE 'ALTER TABLE "t_d_1"
+    ADD CONSTRAINT "fk_t_d_1" FOREIGN KEY ("c1", "c2")
+        REFERENCES "t_1" ("c3", "c1")
+        ON UPDATE NO ACTION ON DELETE NO ACTION;';
+-- QUERY END: CreateForeignKeyQuery
 
 -- QUERY START: CreateTriggerQuery
 EXECUTE 'create trigger tr_a_1 after insert on t_1 for each row execute function f_5_p()';

@@ -61,7 +61,7 @@ public class PostgreSQLDeployOrderTests
     [InlineData("tp_9", "All required objects depending on type are altered/recreated in correct order when it is changed")]
     [InlineData("t_1", "All required objects depending on table column are altered/recreated in correct order when data type is changed")]
     [InlineData("t_1-2", "All required objects depending on table are recreated in correct order when it is recreated")]
-    [InlineData("t_1-3", "All required objects depending on table column are recreated in correct order when it is recreated")]
+    [InlineData("t_1-3", "No objects depending on table are recreated when unreferenced column is recreated")]
     [InlineData("v_1", "All required objects depending on view are altered/recreated in correct order when it is changed")]
     [InlineData("i_a_1", "Index gets recreated when referenced in expression function is changed")]
     [InlineData("tr_a_1", "Trigger gets recreated when referenced in definition function is changed")]
@@ -150,7 +150,7 @@ public class PostgreSQLDeployOrderTests
                 TestCase(db =>
                 {
                     Table x = db.Tables.Single(x => x.Name == "t_1");
-                    x.Columns.Single().DataType.Name = "SMALLINT";
+                    x.Columns.Single(x => x.Name == "c1").DataType.Name = "SMALLINT";
                 }, caseName, caseDescription);
                 break;
             case "t_1-2":
@@ -164,7 +164,7 @@ public class PostgreSQLDeployOrderTests
                 TestCase(db =>
                 {
                     Table x = db.Tables.Single(x => x.Name == "t_1");
-                    x.Columns.Single().ID = new Guid("8166C051-B5E3-4F71-918C-3469726E7BEF");
+                    x.Columns.Single(x => x.Name == "c2").ID = new Guid("8166C051-B5E3-4F71-918C-3469726E7BEF");
                 }, caseName, caseDescription);
                 break;
             case "v_1":

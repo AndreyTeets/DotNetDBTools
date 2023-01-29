@@ -76,7 +76,7 @@ public class PostgreSQLUnitTestsTestDataSqlScriptsValidation
     }
 
     [Test]
-    public void DeployOrderTests_ExpectedCreateAndUpdateScripts_AreValid()
+    public void DeployOrderTests_ExpectedUpdateScripts_AreValid()
     {
         string[] updateScriptPaths = Directory.GetFiles(DeployOrderTestDataDir, "ExpectedUpdateScript-*.sql");
         foreach (string updateScriptPath in updateScriptPaths)

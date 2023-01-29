@@ -395,7 +395,11 @@ EXECUTE 'CREATE TYPE "tp_u_7" AS
 EXECUTE 'CREATE TABLE "t_1"
 (
     "c1" INT NULL DEFAULT 4,
-    CONSTRAINT "ck_t_1" CHECK (c1 != 6)
+    "c2" INT NULL,
+    "c3" TEXT NULL,
+    CONSTRAINT "pk_t_1" PRIMARY KEY ("c3", "c1"),
+    CONSTRAINT "uq_t_1_1" UNIQUE ("c1"),
+    CONSTRAINT "ck_t_1" CHECK (c1 != 6 and c3 != ''zz'')
 );';
 -- QUERY END: CreateTableQuery
 
@@ -547,6 +551,15 @@ EXECUTE 'CREATE TABLE "t_c_5"
 -- QUERY END: CreateTableQuery
 
 -- QUERY START: CreateTableQuery
+EXECUTE 'CREATE TABLE "t_d_1"
+(
+    "c1" TEXT NULL,
+    "c2" INT NULL,
+    "c3" INT NULL
+);';
+-- QUERY END: CreateTableQuery
+
+-- QUERY START: CreateTableQuery
 EXECUTE 'CREATE TABLE "t_u_4"
 (
     "c1" "tp_u_4" NULL
@@ -637,6 +650,24 @@ EXECUTE 'ALTER DOMAIN "d_u_3" ADD CONSTRAINT "ck_d_u_2" CHECK (value != (''(5)''
 EXECUTE 'CREATE INDEX "i_a_1"
     ON "t_1" USING BTREE (f_4_s(c1));';
 -- QUERY END: CreateIndexQuery
+
+-- QUERY START: CreateIndexQuery
+EXECUTE 'CREATE UNIQUE INDEX "i_t_1_1"
+    ON "t_1" USING BTREE ("c3");';
+-- QUERY END: CreateIndexQuery
+
+-- QUERY START: CreateIndexQuery
+EXECUTE 'CREATE INDEX "i_t_1_2"
+    ON "t_1" USING BTREE ("c3")
+    INCLUDE ("c1");';
+-- QUERY END: CreateIndexQuery
+
+-- QUERY START: CreateForeignKeyQuery
+EXECUTE 'ALTER TABLE "t_d_1"
+    ADD CONSTRAINT "fk_t_d_1" FOREIGN KEY ("c1", "c2")
+        REFERENCES "t_1" ("c3", "c1")
+        ON UPDATE NO ACTION ON DELETE NO ACTION;';
+-- QUERY END: CreateForeignKeyQuery
 
 -- QUERY START: CreateTriggerQuery
 EXECUTE 'create trigger tr_a_1 after insert on t_1 for each row execute function f_5_p()';
