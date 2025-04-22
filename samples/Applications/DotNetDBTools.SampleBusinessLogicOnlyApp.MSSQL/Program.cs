@@ -11,7 +11,7 @@ namespace DotNetDBTools.SampleBusinessLogicOnlyApp.MSSQL
         private const string MsSqlServerHostPort = "5005";
         private const string DatabaseName = "MSSQLSampleDB_BusinessLogicOnlyApp";
 
-        private static readonly string s_connectionString = $"Data Source=127.0.0.1,{MsSqlServerHostPort};Initial Catalog={DatabaseName};Integrated Security=False;User ID=SA;Password={MsSqlServerPassword}";
+        private static readonly string s_connectionString = $"Data Source=127.0.0.1,{MsSqlServerHostPort};Initial Catalog={DatabaseName};Integrated Security=False;User ID=SA;Password={MsSqlServerPassword};TrustServerCertificate=true";
 
         public static void Main()
         {
