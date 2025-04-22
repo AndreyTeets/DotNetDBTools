@@ -35,7 +35,7 @@ namespace {projectNamespace}
 
         private static string GetEmbeddedResourceAsString(string resourceName)
         {{
-            Assembly assembly = Assembly.GetCallingAssembly();
+            Assembly assembly = Assembly.GetExecutingAssembly();
             Stream stream = assembly.GetManifestResourceStream($""{{assembly.GetName().Name}}.{{resourceName}}"");
             if (stream is null)
                 throw new Exception($""Failed to get embedded resource '{{resourceName}}'"");
