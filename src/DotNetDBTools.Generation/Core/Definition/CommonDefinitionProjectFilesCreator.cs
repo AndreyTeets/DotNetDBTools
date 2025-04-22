@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 
 namespace DotNetDBTools.Generation.Core.Definition;
@@ -71,10 +70,10 @@ $@"using DotNetDBTools.Definition;
 
     private static DefinitionSourceFile CreateProjectFile(string projectNamespace, OutputDefinitionKind outputDefinitionKind)
     {
-        string dndbtVersion = Assembly.GetCallingAssembly()
-            .GetCustomAttributes<AssemblyInformationalVersionAttribute>()
-            .SingleOrDefault()
-            .InformationalVersion;
+        string dndbtVersion = typeof(CommonDefinitionProjectFilesCreator).Assembly
+            .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+            ?.InformationalVersion
+            ?.Split('+')[0];
 
         string embeddedResourcesPaths = outputDefinitionKind == OutputDefinitionKind.CSharp
             ? @"Sql\**\*.sql"

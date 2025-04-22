@@ -138,11 +138,11 @@ public class SQLiteUnitTestsTestDataSqlScriptsValidation
 
         static int GetSqliteAssemblyMajorVersion()
         {
-            string sqliteAssemblyVersion = typeof(SqliteConnection).Assembly
-                .GetCustomAttributes<AssemblyInformationalVersionAttribute>()
-                .SingleOrDefault()
-                .InformationalVersion;
-            int res = int.Parse(sqliteAssemblyVersion.Substring(0, 1));
+            string sqliteAssemblyMajorVersionStr = typeof(SqliteConnection).Assembly
+                .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+                ?.InformationalVersion
+                ?.Split('.')[0];
+            int res = int.Parse(sqliteAssemblyMajorVersionStr);
             return res;
         }
     }
