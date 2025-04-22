@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Data;
-using System.Data.SqlClient;
 using DotNetDBTools.Deploy;
 using DotNetDBTools.Deploy.Core;
 using DotNetDBTools.Deploy.MSSQL;
@@ -9,6 +8,7 @@ using DotNetDBTools.IntegrationTests.Utilities;
 using DotNetDBTools.Models.Core;
 using DotNetDBTools.Models.MSSQL;
 using FluentAssertions.Equivalency;
+using Microsoft.Data.SqlClient;
 using static DotNetDBTools.IntegrationTests.Constants;
 
 namespace DotNetDBTools.IntegrationTests.MSSQL;

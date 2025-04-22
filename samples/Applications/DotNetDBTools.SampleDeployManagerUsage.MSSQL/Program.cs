@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Data.SqlClient;
 using System.IO;
 using System.Reflection;
 using Dapper;
 using DotNetDBTools.Deploy;
 using DotNetDBTools.EventsLogger;
 using DotNetDBTools.Generation;
+using Microsoft.Data.SqlClient;
 
 namespace DotNetDBTools.SampleDeployManagerUsage.MSSQL
 {

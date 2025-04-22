@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Threading.Tasks;
 using DotNetDBTools.IntegrationTests.Utilities;
+using Microsoft.Data.SqlClient;
 
 namespace DotNetDBTools.IntegrationTests.MSSQL;
 

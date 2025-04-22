@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Data;
-using System.Data.SqlClient;
 using Dapper;
 using DotNetDBTools.Deploy;
 using DotNetDBTools.EventsLogger;
 using DotNetDBTools.SampleBusinessLogicLib.Agnostic;
+using Microsoft.Data.SqlClient;
 using SqlKata.Compilers;
 
 namespace DotNetDBTools.SampleSelfUpdatingApp.MSSQL
