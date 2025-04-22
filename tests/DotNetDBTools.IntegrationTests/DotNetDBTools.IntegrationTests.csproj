@@ -10,7 +10,7 @@
   <Import Project="$(ProjectDir)..\..\build\props\PKG.FluentAssertions.props" />
 
   <ItemGroup>
-    <PackageReference Include="System.Data.SqlClient" Version="$(SqlClientVersion)" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="$(SqlClientVersion)" />
     <PackageReference Include="MySqlConnector" Version="$(MySqlConnectorVersion)" />
     <PackageReference Include="Npgsql" Version="$(NpgsqlVersion)" />
     <PackageReference Include="Microsoft.Data.Sqlite" Version="$(SqliteVersion)" />

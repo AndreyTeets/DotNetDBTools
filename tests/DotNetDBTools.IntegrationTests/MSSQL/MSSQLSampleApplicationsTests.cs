@@ -1,6 +1,6 @@
-﻿using System.Data.SqlClient;
-using Dapper;
+﻿using Dapper;
 using DotNetDBTools.IntegrationTests.Base;
+using Microsoft.Data.SqlClient;
 using static DotNetDBTools.IntegrationTests.Constants;
 
 namespace DotNetDBTools.IntegrationTests.MSSQL;

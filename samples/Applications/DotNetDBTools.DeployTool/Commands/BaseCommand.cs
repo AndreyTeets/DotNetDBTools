@@ -1,6 +1,6 @@
 ﻿using System.Data;
-using System.Data.SqlClient;
 using DotNetDBTools.Deploy;
+using Microsoft.Data.SqlClient;
 using Microsoft.Data.Sqlite;
 using MySqlConnector;
 using Npgsql;

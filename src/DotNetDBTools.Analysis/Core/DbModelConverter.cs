@@ -135,7 +135,7 @@ internal abstract class DbModelConverter<
             };
             BuildAdditionalIndexProperties(specificDbmsIndex);
             specificDbmsIndexes.Add(specificDbmsIndex);
-        };
+        }
         return specificDbmsIndexes;
     }
     protected virtual void BuildAdditionalIndexProperties(TIndex index) { }
@@ -152,7 +152,7 @@ internal abstract class DbModelConverter<
                 CreateStatement = ConvertCodePiece(trigger.CreateStatement),
             };
             specificDbmsTriggers.Add(specificDbmsTrigger);
-        };
+        }
         return specificDbmsTriggers;
     }
 

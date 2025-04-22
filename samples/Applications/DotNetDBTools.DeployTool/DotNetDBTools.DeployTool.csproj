@@ -12,7 +12,7 @@
     <PackageReference Include="Serilog" Version="$(SerilogVersion)" />
     <PackageReference Include="Serilog.Sinks.Console" Version="$(SerilogSinksConsoleVersion)" />
     <PackageReference Include="Serilog.Sinks.File" Version="$(SerilogSinksFileVersion)" />
-    <PackageReference Include="System.Data.SqlClient" Version="$(SqlClientVersion)" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="$(SqlClientVersion)" />
     <PackageReference Include="MySqlConnector" Version="$(MySqlConnectorVersion)" />
     <PackageReference Include="Npgsql" Version="$(NpgsqlVersion)" />
     <PackageReference Include="Microsoft.Data.Sqlite" Version="$(SqliteVersion)" />

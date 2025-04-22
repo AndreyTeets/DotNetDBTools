@@ -26,9 +26,9 @@
 
     <!--Samples and tests packages-->
     <CommandLineUtilsVersion>4.0.1</CommandLineUtilsVersion>
-    <SqlClientVersion>4.8.3</SqlClientVersion>
+    <SqlClientVersion>5.2.2</SqlClientVersion>
     <MySqlConnectorVersion>2.1.6</MySqlConnectorVersion>
-    <NpgsqlVersion>6.0.3</NpgsqlVersion>
+    <NpgsqlVersion>6.0.13</NpgsqlVersion>
     <SqlKataVersion>2.3.7</SqlKataVersion>
     <SerilogVersion>2.10.0</SerilogVersion>
     <SerilogSinksConsoleVersion>4.0.1</SerilogSinksConsoleVersion>

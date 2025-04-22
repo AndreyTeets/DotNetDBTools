@@ -7,7 +7,7 @@
 
   <ItemGroup>
     <PackageReference Include="Dapper" Version="$(DapperVersion)" />
-    <PackageReference Include="System.Data.SqlClient" Version="$(SqlClientVersion)" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="$(SqlClientVersion)" />
   </ItemGroup>
 
   <ItemGroup>
