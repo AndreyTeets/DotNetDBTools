@@ -25,6 +25,7 @@ internal class MSSQLContainerHelper
             IntegratedSecurity = false,
             UserID = "SA",
             Password = MSSQLServerPassword,
+            TrustServerCertificate = true,
         }.ConnectionString;
 
     public static async Task InitContainer()

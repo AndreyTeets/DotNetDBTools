@@ -21,7 +21,7 @@ namespace DotNetDBTools.SampleDeployManagerUsage.MSSQL
 
         private static readonly string s_mssqlDbAssemblyPath = $"{s_samplesOutputDir}/DotNetDBTools.SampleDB.MSSQL.dll";
         private static readonly string s_mssqlDbV2AssemblyPath = $"{s_samplesOutputDir}/DotNetDBTools.SampleDBv2.MSSQL.dll";
-        private static readonly string s_mssqlConnectionString = $"Data Source=127.0.0.1,{MsSqlServerHostPort};Initial Catalog={MSSQLDatabaseName};Integrated Security=False;User ID=SA;Password={MsSqlServerPassword}";
+        private static readonly string s_mssqlConnectionString = $"Data Source=127.0.0.1,{MsSqlServerHostPort};Initial Catalog={MSSQLDatabaseName};Integrated Security=False;User ID=SA;Password={MsSqlServerPassword};TrustServerCertificate=true";
 
         private static readonly string s_publishToEmptyScriptPath = $"{s_generatedOutputDir}/PublishToEmptyScript.sql";
         private static readonly string s_publishToExistingScriptPath = $"{s_generatedOutputDir}/PublishToExistingScript.sql";
