@@ -38,6 +38,8 @@ jobs:
           curl -LOf https://security.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2.24_amd64.deb
           sudo dpkg -i libssl1.1_1.1.1f-1ubuntu2.24_amd64.deb
           rm -f libssl1.1_1.1.1f-1ubuntu2.24_amd64.deb
+          sudo cp /etc/ssl/openssl.cnf /etc/openssl-1.1-for-manual-override.cnf
+          sudo sed -i 's/openssl_conf = openssl_init/#openssl_conf = openssl_init/g' /etc/openssl-1.1-for-manual-override.cnf
 
       - name: Build
         shell: pwsh
@@ -46,6 +48,8 @@ jobs:
       - name: Test
         shell: pwsh
         run: ./build/scripts/test.ps1
+        env:
+          OPENSSL_CONF: '/etc/openssl-1.1-for-manual-override.cnf'
 
       - name: Upload code coverage
         uses: codecov/codecov-action@v5
