@@ -305,7 +305,7 @@ More information on usage with end-to-end working examples can be found in the [
 
 In order to run the samples, a docker container with the corresponding DBMS has to be started (except for SQLite, which works out of the box). To start containers simply run any (or all) integration test for the chosen DBMS, it will create the appropriate container with the required parameters and leave it running. SampleBusinessLogicOnlyApp.* samples require running the corresponding SampleDeployManagerUsage.* sample first to create the appropriate database.
 
-Building solution requires a java runtime installed (required by the Antlr4BuildTasks package, which generates c# files from ANTLR grammars during the CodeParsing project build). Running samples and tests requires the appropriate for their projects dotnet runtimes installed (currently it's `net6.0` for the DeployTool project and `netcoreapp3.1` for the rest).
+Building solution requires .NET SDK 9.0 (or newer) and JRE 11 (or newer) installed (java is required by the Antlr4BuildTasks package, which generates c# files from ANTLR grammars during the CodeParsing project build). Running samples and tests requires the appropriate for their projects dotnet runtimes installed (currently it's `net9.0` for the DeployTool project and `netcoreapp3.1` for the rest).
 
 Here is a concise list of some potentially helpful classes/methods in other packages:
 ```

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
@@ -23,5 +23,14 @@
   </ItemGroup>
 
   <Import Project="..\DotNetDBTools.EventsLogger\DotNetDBTools.EventsLogger.projitems" Label="Shared" />
+
+  <PropertyGroup>
+    <!--warning NETSDK1206: Found version-specific or distribution-specific runtime identifier(s): alpine-x64, win8-arm.
+    Affected libraries: SQLitePCLRaw.lib.e_sqlite3.linux, SQLitePCLRaw.lib.e_sqlite3.v110_xp.
+    In .NET 8.0 and higher, assets for version-specific and distribution-specific runtime identifiers will not be found by default.
+    See https://aka.ms/dotnet/rid-usage for details.
+    This project is not supposed to be run on alpine-x64/win8-arm, ignore the warning.-->
+    <NoWarn>$(NoWarn);NETSDK1206</NoWarn>
+  </PropertyGroup>
 
 </Project>

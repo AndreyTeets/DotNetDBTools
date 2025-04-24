@@ -11,8 +11,8 @@ internal static class Constants
     public const string Configuration = "Release";
 #endif
     public const string TargetFrameworkNetCore31 = "netcoreapp3.1";
-    public const string TargetFrameworkNet60 = "net6.0";
+    public const string TargetFrameworkNet90 = "net9.0";
 
     public static readonly string ProjectsOutDirPathNetCore31 = $"bin/{Configuration}/{TargetFrameworkNetCore31}";
-    public static readonly string ProjectsOutDirPathNet60 = $"bin/{Configuration}/{TargetFrameworkNet60}";
+    public static readonly string ProjectsOutDirPathNet90 = $"bin/{Configuration}/{TargetFrameworkNet90}";
 }
