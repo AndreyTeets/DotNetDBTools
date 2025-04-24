@@ -1,13 +1,14 @@
 ﻿<Project>
 
   <Import Project="$(MSBuildThisFileDirectory)\build\props\PKG_VERSIONS.props" />
+  <Import Project="$(MSBuildThisFileDirectory)\build\props\PKG.Analyzers.props" />
 
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
+    <AnalysisLevel>latest</AnalysisLevel>
+    <AnalysisMode>All</AnalysisMode>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-    <AnalysisMode>Default</AnalysisMode>
-    <AnalysisLevel>latest</AnalysisLevel>
     <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>

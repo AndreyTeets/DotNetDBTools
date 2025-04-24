@@ -9,13 +9,22 @@
     <Antlr4RuntimeVersion>4.9.3</Antlr4RuntimeVersion>
     <Antlr4BuildTasksVersion>8.17.0</Antlr4BuildTasksVersion>
 
+    <!--Analyzers packages-->
+    <MeziantouAnalyzerVersion>2.0.189</MeziantouAnalyzerVersion>
+    <RoslynatorAnalyzersVersion>4.13.1</RoslynatorAnalyzersVersion>
+    <SonarAnalyzerVersion>10.7.0.110445</SonarAnalyzerVersion>
+
+    <!--Tests analyzers packages-->
+    <NUnitAnalyzersVersion>4.7.0</NUnitAnalyzersVersion>
+    <FluentAssertionsAnalyzersVersion>0.34.1</FluentAssertionsAnalyzersVersion>
+
     <!--Tests system packages-->
+    <CoverletVersion>3.1.2</CoverletVersion>
     <TestSDKVersion>17.0.0</TestSDKVersion>
     <NUnitVersion>3.13.2</NUnitVersion>
     <NUnitAdapterVersion>4.2.1</NUnitAdapterVersion>
     <XUnitVersion>2.4.1</XUnitVersion>
     <XUnitVSRunnerVersion>2.4.3</XUnitVSRunnerVersion>
-    <CoverletVersion>3.1.2</CoverletVersion>
 
     <!--Tests packages-->
     <FluentAssertionsVersion>6.5.1</FluentAssertionsVersion>

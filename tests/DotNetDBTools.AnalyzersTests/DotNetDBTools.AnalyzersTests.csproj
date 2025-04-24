@@ -6,9 +6,9 @@
     <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
   </PropertyGroup>
 
+  <Import Project="$(ProjectDir)..\..\build\props\PKG.coverlet.props" />
   <Import Project="$(ProjectDir)..\..\build\props\PKG.Microsoft.NET.Test.Sdk.props" />
   <Import Project="$(ProjectDir)..\..\build\props\PKG.xunit.props" />
-  <Import Project="$(ProjectDir)..\..\build\props\PKG.coverlet.props" />
 
   <ItemGroup>
     <PackageReference Include="Antlr4.Runtime.Standard" Version="$(Antlr4RuntimeVersion)" />
