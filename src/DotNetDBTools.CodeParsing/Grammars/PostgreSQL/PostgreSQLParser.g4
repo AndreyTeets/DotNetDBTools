@@ -90,7 +90,7 @@ script_transaction
     | (COMMIT | END | ABORT | ROLLBACK) (WORK | TRANSACTION)? (AND NO? CHAIN)?
     | (COMMIT PREPARED | PREPARE TRANSACTION) Character_String_Literal
     | (SAVEPOINT | RELEASE SAVEPOINT?) identifier
-    | ROLLBACK PREPARED Character_String_Literal 
+    | ROLLBACK PREPARED Character_String_Literal
     | ROLLBACK (WORK | TRANSACTION)? TO SAVEPOINT? identifier
     | lock_table
     ;
@@ -186,7 +186,7 @@ table_cols
     ;
 
 vacuum_mode
-    : LEFT_PAREN vacuum_option (COMMA vacuum_option)* RIGHT_PAREN 
+    : LEFT_PAREN vacuum_option (COMMA vacuum_option)* RIGHT_PAREN
     | FULL? FREEZE? VERBOSE? ANALYZE?
     ;
 
@@ -200,10 +200,10 @@ analyze_mode
     ;
 
 boolean_value
-    : TRUE 
-    | FALSE 
-    | OFF 
-    | ON 
+    : TRUE
+    | FALSE
+    | OFF
+    | ON
     | NUMBER_LITERAL
     | character_string // 'true', 'false', 'on', 'off'
     ;
@@ -561,7 +561,7 @@ alter_view_statement
     ;
 
 alter_view_action
-    : ALTER COLUMN? column_name=identifier set_def_column 
+    : ALTER COLUMN? column_name=identifier set_def_column
     | ALTER COLUMN? column_name=identifier drop_def
     | RENAME COLUMN? identifier TO identifier
     | rename_to
@@ -686,7 +686,7 @@ index_columns
     ;
 
 index_column
-    : column=vex operator_class=schema_qualified_name? 
+    : column=vex operator_class=schema_qualified_name?
     (LEFT_PAREN option_with_value (COMMA option_with_value)* RIGHT_PAREN)?
     order_specification? null_ordering?
     ;
@@ -700,9 +700,9 @@ index_where
     ;
 
  create_extension_statement
-    : CREATE EXTENSION if_not_exists? name=identifier 
+    : CREATE EXTENSION if_not_exists? name=identifier
     WITH?
-    (SCHEMA schema=identifier)? 
+    (SCHEMA schema=identifier)?
     (VERSION (identifier | character_string))?
     (FROM (identifier | character_string))?
     CASCADE?
@@ -946,7 +946,7 @@ create_access_method_statement
 access_method_definition
     : ACCESS METHOD identifier TYPE (TABLE | INDEX) HANDLER schema_qualified_name
     ;
- 
+
 create_user_or_role_statement
     : CREATE (USER | ROLE) name=identifier (WITH? user_or_role_option user_or_role_option*)?
     ;
@@ -1000,7 +1000,7 @@ create_tablespace_statement
 
 create_statistics_statement
     : CREATE STATISTICS if_not_exists? name=schema_qualified_name
-    (LEFT_PAREN identifier_list RIGHT_PAREN)? 
+    (LEFT_PAREN identifier_list RIGHT_PAREN)?
     ON identifier COMMA identifier_list
     FROM schema_qualified_name
     ;
@@ -1116,7 +1116,7 @@ rewrite_command
 create_trigger_statement
     : dndbt_id=DNDBT_ID_DECLARATION_COMMENT?
     CREATE (OR REPLACE)? CONSTRAINT? TRIGGER name=identifier (before_true=BEFORE | (INSTEAD OF) | AFTER)
-    (((insert_true=INSERT | delete_true=DELETE | truncate_true=TRUNCATE) 
+    (((insert_true=INSERT | delete_true=DELETE | truncate_true=TRUNCATE)
       | update_true=UPDATE (OF identifier_list)?)OR?)+
     ON table_name=schema_qualified_name
     (FROM referenced_table_name=schema_qualified_name)?
@@ -1219,7 +1219,7 @@ security_label
     ;
 
 comment_member_object
-    : ACCESS METHOD identifier 
+    : ACCESS METHOD identifier
     | (AGGREGATE | PROCEDURE | FUNCTION | ROUTINE) name=schema_qualified_name function_args
     | CAST LEFT_PAREN cast_name RIGHT_PAREN
     | COLLATION identifier
@@ -1378,7 +1378,7 @@ create_schema_element
     ;
 
 create_policy_statement
-    : CREATE POLICY identifier ON schema_qualified_name 
+    : CREATE POLICY identifier ON schema_qualified_name
     (AS (PERMISSIVE | RESTRICTIVE))?
     (FOR event=(ALL | SELECT | INSERT | UPDATE | DELETE))?
     (TO user_name (COMMA user_name)*)?
@@ -1460,17 +1460,17 @@ drop_operator_family_statement
     ;
 
 create_operator_class_statement
-    : CREATE OPERATOR CLASS schema_qualified_name DEFAULT? FOR TYPE data_type 
+    : CREATE OPERATOR CLASS schema_qualified_name DEFAULT? FOR TYPE data_type
     USING identifier (FAMILY schema_qualified_name)? AS
     create_operator_class_option (COMMA create_operator_class_option)*
     ;
 
 create_operator_class_option
-    : OPERATOR unsigned_numeric_literal name=operator_name 
+    : OPERATOR unsigned_numeric_literal name=operator_name
         (LEFT_PAREN (data_type | NONE) COMMA (data_type | NONE) RIGHT_PAREN)?
         (FOR SEARCH | FOR ORDER BY schema_qualified_name)?
-    | FUNCTION unsigned_numeric_literal 
-        (LEFT_PAREN (data_type | NONE) (COMMA (data_type | NONE))? RIGHT_PAREN)? 
+    | FUNCTION unsigned_numeric_literal
+        (LEFT_PAREN (data_type | NONE) (COMMA (data_type | NONE))? RIGHT_PAREN)?
         function_call
     | STORAGE data_type
     ;
@@ -1492,7 +1492,7 @@ alter_conversion_statement
     ;
 
 create_publication_statement
-    : CREATE PUBLICATION identifier 
+    : CREATE PUBLICATION identifier
     (FOR publication_object (COMMA publication_object)* | FOR ALL TABLES)?
     with_storage_parameter?
     ;
@@ -1526,13 +1526,13 @@ alter_rule_statement
     ;
 
 copy_statement
-    : copy_to_statement 
+    : copy_to_statement
     | copy_from_statement
     ;
 
 copy_from_statement
     : COPY table_cols
-    FROM (PROGRAM? Character_String_Literal | STDIN) 
+    FROM (PROGRAM? Character_String_Literal | STDIN)
     (WITH? (LEFT_PAREN copy_option_list RIGHT_PAREN | copy_option_list))?
     (WHERE vex)?
     ;
@@ -1566,7 +1566,7 @@ copy_option
 
 create_view_statement
     : dndbt_id=DNDBT_ID_DECLARATION_COMMENT?
-    CREATE (OR REPLACE)? (TEMP | TEMPORARY)? RECURSIVE? MATERIALIZED? VIEW 
+    CREATE (OR REPLACE)? (TEMP | TEMPORARY)? RECURSIVE? MATERIALIZED? VIEW
     if_not_exists? name=schema_qualified_name column_names=view_columns?
     (USING identifier)?
     (WITH storage_parameter)?
@@ -1879,7 +1879,7 @@ dollar_number
     ;
 
 indirection_list
-    : indirection+ 
+    : indirection+
     | indirection* DOT MULTIPLY
     ;
 
@@ -3298,7 +3298,7 @@ xml_function
     | XMLEXISTS LEFT_PAREN vex PASSING (BY REF)? vex (BY REF)? RIGHT_PAREN
     | XMLPARSE LEFT_PAREN (DOCUMENT | CONTENT) vex RIGHT_PAREN
     | XMLSERIALIZE LEFT_PAREN (DOCUMENT | CONTENT) vex AS data_type RIGHT_PAREN
-    | XMLTABLE LEFT_PAREN 
+    | XMLTABLE LEFT_PAREN
         (XMLNAMESPACES LEFT_PAREN vex AS name=identifier (COMMA vex AS name=identifier)* RIGHT_PAREN COMMA)?
         vex PASSING (BY REF)? vex (BY REF)?
         COLUMNS xml_table_column (COMMA xml_table_column)*
