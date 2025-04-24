@@ -16,7 +16,7 @@ public class MySQLSampleApplicationsTests : BaseSampleApplicationsTests
         ConnectionStringWithoutDb, "MySQLSampleDB_DeployTool");
 
     protected override string DeployToolAssemblyPath =>
-$"{RepoRoot}/samples/Applications/DotNetDBTools.DeployTool/{ProjectsOutDirPathNet60}/DotNetDBTools.DeployTool.dll";
+$"{RepoRoot}/samples/Applications/DotNetDBTools.DeployTool/{ProjectsOutDirPathNet90}/DotNetDBTools.DeployTool.dll";
 
     protected override string SampleDeployManagerUsageAssemblyPath =>
 $"{RepoRoot}/samples/Applications/DotNetDBTools.SampleDeployManagerUsage.MySQL/{ProjectsOutDirPathNetCore31}/DotNetDBTools.SampleDeployManagerUsage.MySQL.dll";

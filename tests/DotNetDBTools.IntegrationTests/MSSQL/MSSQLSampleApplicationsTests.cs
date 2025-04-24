@@ -16,7 +16,7 @@ public class MSSQLSampleApplicationsTests : BaseSampleApplicationsTests
         ConnectionStringWithoutDb, "MSSQLSampleDB_DeployTool");
 
     protected override string DeployToolAssemblyPath =>
-$"{RepoRoot}/samples/Applications/DotNetDBTools.DeployTool/{ProjectsOutDirPathNet60}/DotNetDBTools.DeployTool.dll";
+$"{RepoRoot}/samples/Applications/DotNetDBTools.DeployTool/{ProjectsOutDirPathNet90}/DotNetDBTools.DeployTool.dll";
 
     protected override string SampleDeployManagerUsageAssemblyPath =>
 $"{RepoRoot}/samples/Applications/DotNetDBTools.SampleDeployManagerUsage.MSSQL/{ProjectsOutDirPathNetCore31}/DotNetDBTools.SampleDeployManagerUsage.MSSQL.dll";

@@ -16,7 +16,7 @@ public class SQLiteSampleApplicationsTests : BaseSampleApplicationsTests
         $"{SamplesOutputDirRelToSampleApps}/sqlite_databases", "SQLiteSampleDB_DeployTool");
 
     protected override string DeployToolAssemblyPath =>
-$"{RepoRoot}/samples/Applications/DotNetDBTools.DeployTool/{ProjectsOutDirPathNet60}/DotNetDBTools.DeployTool.dll";
+$"{RepoRoot}/samples/Applications/DotNetDBTools.DeployTool/{ProjectsOutDirPathNet90}/DotNetDBTools.DeployTool.dll";
 
     protected override string SampleDeployManagerUsageAssemblyPath =>
 $"{RepoRoot}/samples/Applications/DotNetDBTools.SampleDeployManagerUsage.SQLite/{ProjectsOutDirPathNetCore31}/DotNetDBTools.SampleDeployManagerUsage.SQLite.dll";
